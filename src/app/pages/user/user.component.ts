@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
   users = [{
     employee: 'Rithik',
     mobile: 9414586325,
-    email: 'k@getMaxListeners.com',
+    email: 'k@get.com',
     department: 'IT'
   },
   {
