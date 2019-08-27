@@ -1,0 +1,70 @@
+<nb-card>
+    <nb-card-header>
+        User
+    </nb-card-header>
+    <nb-card-body>
+        <div class="container">
+            <div class="row ">
+                <div class="col-2">
+                    <div class="form-group">
+                        <input type="text" placeholder="Name" [(ngModel)]="employee" name="name" class="form-control"
+                            required>
+
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="mobile" [(ngModel)]="number"
+                            placeholder="Mobile" required>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" [(ngModel)]="email" placeholder="Email"
+                            required>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <select class="form-control" name="department" [(ngModel)]="department">
+                            <option value="0">Select Department</option>
+                            <option value="1">IT</option>
+                            <option value="2">Support</option>
+                            <option value="3">Sales</option>
+                            <option value="4">Management</option>
+                            <option value="5">Account</option>
+                            <option value="6">HR</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
+
+
+            </div>
+        </div>
+        <table class="table table-border">
+            <thead class="thead">
+                <tr>
+                    <th>S.no</th>
+                    <th>Employee Name</th>
+                    <th>Mobile Number</th>
+                    <th>Email</th>
+                    <th>Department</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users; let i=index;">
+                    <td>{{i +1 }}</td>
+                    <td>{{user.employee}}</td>
+                    <td>{{user.mobile}}</td>
+                    <td>{{user.email }}</td>
+                    <td>{{user.department }}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </nb-card-body>
+
+</nb-card>
