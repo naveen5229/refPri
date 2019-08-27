@@ -19,7 +19,9 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
+  NbCardComponent
 } from '@nebular/theme';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +30,8 @@ import {
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    FormsModule,
+    
 
     ThemeModule.forRoot(),
 

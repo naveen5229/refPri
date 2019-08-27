@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
-import { NbMenuModule } from '@nebular/theme';
+import { NbMenuModule, NbCardModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PagesRoutingModule } from './pages-routing.module';
+import { UserComponent } from './user/user.component';
+import { FormsModule } from '@angular/forms';
+import { ProjectComponent } from './project/project.component';
+import { ModulesComponent } from './modules/modules.component';
 
 @NgModule({
   imports: [
@@ -12,9 +16,14 @@ import { PagesRoutingModule } from './pages-routing.module';
     ThemeModule,
     NbMenuModule,
     DashboardModule,
+    NbCardModule,
+    FormsModule
   ],
   declarations: [
     PagesComponent,
+    UserComponent,
+    ProjectComponent,
+    ModulesComponent,
   ],
 })
 export class PagesModule {

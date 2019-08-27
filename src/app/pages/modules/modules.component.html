@@ -1,0 +1,54 @@
+<nb-card>
+  <nb-card-header>Module</nb-card-header>
+  <nb-card-body>
+    <div class="container">
+      <div class="row ">
+        <div class="col-3">
+          <div class="form-group">
+            <select class="form-control" name="project" [(ngModel)]="projectsName">
+              <option value="0">Select Project</option>
+              <option value="1">Walle8</option>
+              <option value="2">Customer Dashboard</option>
+              <option value="3">Admin Dashboard</option>
+              <option value="4">Partner</option>
+
+            </select>
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="form-group">
+            <input type="text" placeholder="Name" [(ngModel)]="modules.name" name="name" class="form-control" required>
+          </div>
+        </div>
+
+
+        <div class="col-2 ">
+          <button class="btn btn-primary text-capitalize" id="button" (click)="saveModule()">Add</button> </div>
+      </div>
+    </div>
+    <table class="table table-border">
+      <thead class="thead">
+        <tr>
+          <th>S.no</th>
+          <th>Project Name</th>
+          <th>Name</th>
+
+
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let module of modules; let i=index;">
+          <td>{{i +1 }}</td>
+          <td>{{module.project}}</td>
+          <td>{{module.name}}</td>
+
+
+
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>
