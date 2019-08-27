@@ -1,0 +1,33 @@
+<nb-card>
+  <nb-card-header>
+    Project
+  </nb-card-header>
+  <nb-card-body>
+    <div class="container">
+      <div class="row ">
+        <div class="form-group">
+          <input type="text" placeholder="Project Name" [(ngModel)]="project" name="name" class="form-control"
+            required>
+        </div>
+        <div class="col-2 ">
+          <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">Add</button> </div>
+      </div>
+    </div>
+    <table class="table table-border">
+      <thead class="thead">
+        <tr>
+          <th>S.no</th>
+          <th>Project Name</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of projects; let i=index;">
+          <td>{{i +1 }}</td>
+          <td>{{project.project}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>

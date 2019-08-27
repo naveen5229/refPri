@@ -7,4 +7,22 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/dashboard',
     home: true,
   },
+  {
+    title:'User',
+    icon: 'shopping-cart-outline',
+    link: '/pages/user',
+    home: true,
+  },
+  {
+    title:'Project',
+    icon: 'shopping-cart-outline',
+    link: '/pages/project',
+    home: true,
+  },
+  {
+    title:'Module',
+    icon: 'shopping-cart-outline',
+    link: '/pages/modules',
+    home: true,
+  }
 ];

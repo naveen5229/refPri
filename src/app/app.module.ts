@@ -19,8 +19,10 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
+  NbCardComponent
 } from '@nebular/theme';
 import { LoginComponent } from './auth/login/login.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -29,6 +31,8 @@ import { LoginComponent } from './auth/login/login.component';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    FormsModule,
+
 
     ThemeModule.forRoot(),
 
