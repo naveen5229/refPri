@@ -7,7 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  URL:string='';
+
+  URL:string='http://192.168.0.111/itrm_webservices/';
 
   constructor(private http: HttpClient,
     public router: Router,

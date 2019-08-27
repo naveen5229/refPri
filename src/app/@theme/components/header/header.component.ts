@@ -5,6 +5,10 @@ import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ApiService } from '../../../Service/Api/api.service';
+import { UserService } from '../../../Service/user/user.service';
+
 
 @Component({
   selector: 'ngx-header',
@@ -38,22 +42,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private userService: UserData,
-              private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private layoutService: LayoutService,
+    public router: Router,
+    private api: ApiService,
+    public userService: UserService,
+    private breakpointService: NbMediaBreakpointsService) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
-
-    this.userService.getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -90,5 +92,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  logout() {
+    if (confirm('Are you sure to logout?')) {
+      let params = {
+        entrymode: "1",
+        version: "1.1",
+        authkey: this.userService._token
+      }
+      this.api.post('Login/logout', params)
+        .subscribe(res => {
+          if (res['success']) {
+            this.userService._token = '';
+            this.userService._details = null;
+            localStorage.clear();
+            this.router.navigate(['/auth/login']);
+          }
+        },
+          err => {
+          });
+      
+    }
   }
 }
