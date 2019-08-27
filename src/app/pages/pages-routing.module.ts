@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import { ProjectComponent } from './project/project.component';
 import { ModulesComponent } from './modules/modules.component';
+import { TaskAssignComponent } from './task-assign/task-assign.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -25,6 +26,10 @@ const routes: Routes = [{
     {
       path: 'modules',
       component: ModulesComponent,
+    },
+    {
+      path: 'task-assign',
+      component: TaskAssignComponent,
     },
   ],
 }];

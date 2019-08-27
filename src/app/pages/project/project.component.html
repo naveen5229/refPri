@@ -13,7 +13,7 @@
           <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">Add</button> </div>
       </div>
     </div>
-    <table class="table table-border">
+    <table class="table table-border" >
       <thead class="thead">
         <tr>
           <th>S.no</th>
@@ -24,7 +24,7 @@
       <tbody>
         <tr *ngFor="let project of projects; let i=index;">
           <td>{{i +1 }}</td>
-          <td>{{project.project}}</td>
+          <td>{{project.name}}</td>
         </tr>
       </tbody>
     </table>
