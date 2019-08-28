@@ -1,0 +1,60 @@
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+p,
+a,
+label,
+input,
+select,
+textarea,
+.nb-theme-corporate nb-layout .layout {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+input,
+select,
+textarea {
+    padding: 6px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    height: auto !important;
+}
+
+input::placeholder {
+    font-size: 12px !important;
+    line-height: 20px !important;
+}
+
+.tooltip {
+    opacity: 1 !important;
+}
+
+.nb-theme-corporate nb-sidebar {
+    width: 15rem;
+    z-index: 1000 !important;
+}
+
+.nb-theme-corporate nb-sidebar.expanded {
+    width: 15rem;
+}
+
+.menu-sidebar .main-container {
+    width: 15rem !important;
+}
+
+.compacted .main-container {
+    width: auto !important;
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 12px !important;
+    background-color: #C1C1C1 !important;
+}

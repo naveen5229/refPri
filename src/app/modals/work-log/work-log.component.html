@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Work Logs</h5>
+    <button type="button" class="close" aria- label="Close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row row-style">
+        <div class="col" (click)="buyTime.type = 'minutes'; buyTime.time = 5" [ngClass]="buyTime.type == 'minutes' ? 'active-col' : ''">
+            <span>Minutes</span>
+        </div>
+        <div class="col" (click)="buyTime.type = 'hours'; buyTime.time = 2" [ngClass]="buyTime.type == 'hours' ? 'active-col' : ''">
+            <span>Hours</span>
+        </div>
+    </div>
+
+    <div class="btn-container" *ngIf="buyTime.type == 'minutes'">
+        <span *ngFor="let minute of minutes" (click)="buyTime.time = minute" class="btn" [ngClass]="buyTime.time == minute ? 'active-btn' : ''">{{minute}}</span>
+    </div>
+
+    <div class="btn-container" *ngIf="buyTime.type == 'hours'">
+        <span *ngFor="let hour of hours" class="btn" (click)="buyTime.time = hour" [ngClass]="buyTime.time == hour ? 'active-btn' : ''">{{hour}}</span>
+    </div>
+
+    <div class="input-group">
+        <label>{{buyTime.type | titlecase}}</label>
+        <input type="text" name="time" [(ngModel)]="buyTime.time" required>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-danger" type="button" outline (click)="dismiss()" id="cancel" style="cursor: pointer;">Cancel</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary" type="button" outline (click)="buyNow()" id="buy" style="cursor: pointer;">Buy Now
+            </button>
+        </div>
+    </div>
+</div>

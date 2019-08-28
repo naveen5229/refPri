@@ -22,15 +22,15 @@ export class LoginComponent implements OnInit {
 
   constructor(public api: ApiService,
     public router: Router,
-    public common:CommonService,
+    public common: CommonService,
     public user: UserService) {
-    this.showbackground();
+    this.showbackgroundImage();
   }
 
   ngOnInit() {
   }
 
-  showbackground() {
+  showbackgroundImage() {
     let nbCard = document.getElementsByTagName('nb-card')[0];
     nbCard['style']['backgroundImage'] = "url('http://elogist.in./images/app-login-bg.jpg')";
     nbCard['style']['backgroundSize'] = 'cover';
@@ -45,8 +45,10 @@ export class LoginComponent implements OnInit {
     let params = {
       mobileno: this.userDetails.mobile
     }
+    this.common.loading++;
     this.api.post('Login/login', params)
       .subscribe(res => {
+        this.common.loading--;
         if (res['success']) {
           this.listenOTP = true;
           this.otpCount = 30;
@@ -57,6 +59,8 @@ export class LoginComponent implements OnInit {
         }
       },
         err => {
+          this.common.loading--;
+          this.common.showError();
         });
   }
 
@@ -71,19 +75,23 @@ export class LoginComponent implements OnInit {
       mobileno: this.userDetails.mobile,
       otp: this.userDetails.otp
     }
+    this.common.loading++;
     this.api.post('Login/verifyOtp', params)
       .subscribe(res => {
+        this.common.loading--;;
         if (res['success']) {
-          localStorage.setItem('USER_TOKEN', res['data'][0]['authkey']);
-          localStorage.setItem('USER_DETAILS', JSON.stringify(res['data'][0]));
+          localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
+          localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
-          this.router.navigate(['/pages']);
+          this.common.showToast(res['msg']);
+          this.router.navigate(['/pages']);        
         }
       },
         err => {
+          this.common.loading--;
+          this.common.showError();
         });
-
   }
 
 
