@@ -9,6 +9,7 @@ import { UserComponent } from './user/user.component';
 import { FormsModule } from '@angular/forms';
 import { ProjectComponent } from './project/project.component';
 import { ModulesComponent } from './modules/modules.component';
+import { TaskAssignComponent } from './task-assign/task-assign.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { ModulesComponent } from './modules/modules.component';
     UserComponent,
     ProjectComponent,
     ModulesComponent,
+    TaskAssignComponent,
   ],
 })
 export class PagesModule {

@@ -1,0 +1,72 @@
+<nb-card>
+  <nb-card-header>
+    Task Assign
+  </nb-card-header>
+  <nb-card>
+    <nb-card-body>
+      <div class="container">
+        <div class="row ">
+          <div class="col-2">
+            <div class="form-group">
+              <label>Module</label>
+              <input type="text" placeholder="Module Name" [(ngModel)]="module" name="name" class="form-control"
+                required>
+
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" class="form-control" name="title" [(ngModel)]="title" placeholder="Title" required>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label>Description</label>
+              <textarea rows="2" cols="15" placeholder="Description"></textarea>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label>Assigner</label>
+              <input type="text" class="form-control" placeholder="assigner" [(ngModel)]="assigner">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+              <label>Assigned</label>
+              <input type="text" class="form-control" placeholder="assigned" [(ngModel)]="assigned">
+            </div>
+          </div>
+          <div class="col-2 mt-4">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
+
+
+        </div>
+        <table class="table table-border">
+          <thead class="thead">
+            <tr>
+              <th>S.no</th>
+              <th>Module Name</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Assigner</th>
+              <th>Assigned</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of user; let i=index;">
+              <td>{{i +1}}</td>
+              <td>{{user.name}}</td>
+              <td>{{user.mobileno}}</td>
+              <td>{{user.emailid }}</td>
+              <td>{{user.dept_type }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </nb-card-body>
+
+  </nb-card>
