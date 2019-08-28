@@ -22,21 +22,30 @@ export class LoginComponent implements OnInit {
 
   constructor(public api: ApiService,
     public router: Router,
-    public common:CommonService,
+    public common: CommonService,
     public user: UserService) {
-    this.showbackground();
   }
 
   ngOnInit() {
   }
 
-  showbackground() {
+  ngAfterViewInit() {
+    this.removeDummy();
+  }
+
+  removeDummy() {
+    let allTags = document.getElementsByTagName('nb-card-header');
+    document.getElementsByTagName('nb-layout-column')[0]['style']['padding'] = '0px';
+    allTags[0]['style'].display = 'none';
+    console.log('All Tags: ', allTags);
     let nbCard = document.getElementsByTagName('nb-card')[0];
+    // nbCard['style']['backgroundColor'] = "#000";
     nbCard['style']['backgroundImage'] = "url('http://elogist.in./images/app-login-bg.jpg')";
     nbCard['style']['backgroundSize'] = 'cover';
     nbCard['style']['backgroundRepeat'] = 'no-repeat';
     nbCard['style']['backgroundPosition'] = 'bottom';
     nbCard['style']['height'] = '100%';
+
   }
 
   sendOTP() {
