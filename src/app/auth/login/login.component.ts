@@ -24,19 +24,28 @@ export class LoginComponent implements OnInit {
     public router: Router,
     public common: CommonService,
     public user: UserService) {
-    this.showbackgroundImage();
   }
 
   ngOnInit() {
   }
 
-  showbackgroundImage() {
+  ngAfterViewInit() {
+    this.removeDummy();
+  }
+
+  removeDummy() {
+    let allTags = document.getElementsByTagName('nb-card-header');
+    document.getElementsByTagName('nb-layout-column')[0]['style']['padding'] = '0px';
+    allTags[0]['style'].display = 'none';
+    console.log('All Tags: ', allTags);
     let nbCard = document.getElementsByTagName('nb-card')[0];
+    // nbCard['style']['backgroundColor'] = "#000";
     nbCard['style']['backgroundImage'] = "url('http://elogist.in./images/app-login-bg.jpg')";
     nbCard['style']['backgroundSize'] = 'cover';
     nbCard['style']['backgroundRepeat'] = 'no-repeat';
     nbCard['style']['backgroundPosition'] = 'bottom';
     nbCard['style']['height'] = '100%';
+
   }
 
   sendOTP() {
@@ -85,7 +94,7 @@ export class LoginComponent implements OnInit {
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
           this.common.showToast(res['msg']);
-          this.router.navigate(['/pages']);        
+          this.router.navigate(['/pages']);
         }
       },
         err => {

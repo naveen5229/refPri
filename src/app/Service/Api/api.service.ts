@@ -29,8 +29,7 @@ export class ApiService {
       'version': '1.0',
       'entrymode': '3',
       'apptype': 'dashboard',
-      'authkey': this.user._token || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6InZpc2hhbCIsIm1vYmlsZW5vIjoiODIzMzM3MTkzNCIsImVtYWlsIjoidmlzaGFsLmd1cmRhc2FuaUBlbG9naXN0LmluIiwidGltZSI6IjIwMTktMDgtMjZUMTE6MDI6MzIrMDA6MDAifQ.dUHoP3WpjpIyt6yvRZc5Va9OeN--0xgKWis5WQQJHiw'
-    });
+      'authkey': this.user._token ||'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6InZpc2hhbCIsIm1vYmlsZW5vIjoiODIzMzM3MTkzNCIsImVtYWlsIjoidmlzaGFsLmd1cmRhc2FuaUBlbG9naXN0LmluIiwidGltZSI6IjIwMTktMDgtMjhUMDc6MTM6NDYrMDA6MDAifQ.KozJU3ZNLYCLlv6kJu5iZ285ICBVq4tXvzwgo2B6mgo'});
     return headers;
   }
 

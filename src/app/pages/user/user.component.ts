@@ -64,35 +64,25 @@ export class UserComponent implements OnInit {
     this.common.loading--;
     this.getUser()
       this.common.showToast(res['msg'])
-    
+    },
     err => {
       this.common.showError();
     console.log('Error: ', err);
-    }});
+    });
   }
 
   getUser() {
+    this.common.loading++;
+
     this.api.get("Users/getAllUsers").subscribe(res =>{
-      if(res['data'].dept_type  == '1' || 1 ){
-        res['data'].dept_type="IT"
-      }
-      else if(res['data'].dept_type == '2' || 2){
-        res['data'].dept_type="Support";
-      }
-        else if(res['data'].dept_type == '3' || 3){
-          res['data'].dept_type="Account"
-        }
-          else if(res['data'].dept_type == '4' || 4){
-            res['data'].dept_type="Hr"
-          }
-    
-      this.user=res['data'] || [];
-    
-      this.common.showToast(res['msg']);
+      this.common.loading--;
+
+     this.user=res['data'] || [];
+        },
     err => {
       this.common.showError();
     console.log('Error: ', err);
-    }});
+    });
     }
 
   }

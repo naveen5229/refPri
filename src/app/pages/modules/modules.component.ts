@@ -50,7 +50,7 @@ export class ModulesComponent implements OnInit {
     // this.common.loading--;
     // if (res['data'][0].y_id > 0) {
     //   this.common.showToast(res['data'][0].y_msg)
-    // }
+    //} },
     // err => {
     //   this.common.showError();
     // console.log('Error: ', err);
@@ -61,7 +61,7 @@ export class ModulesComponent implements OnInit {
     // this.api.get("").subscribe(res =>{
     //   this.modules[]=res['data'] || [];
     //   this.common.showToast(res['data'][0].y_msg)
-    // 
+    // },
     // err => {
     //   this.common.showError();
     // console.log('Error: ', err);
