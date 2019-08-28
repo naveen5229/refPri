@@ -7,20 +7,20 @@
             <div class="row ">
                 <div class="col-2">
                     <div class="form-group">
-                        <input type="text" placeholder="Name" [(ngModel)]="employee" name="name" class="form-control"
+                        <input type="text" placeholder="Name" [(ngModel)]="users.employee" name="name" class="form-control"
                             required>
 
                     </div>
                 </div>
                 <div class="col-2">
                     <div class="form-group">
-                        <input type="number" class="form-control" name="mobile" [(ngModel)]="number"
+                        <input type="number" class="form-control" name="mobile" [(ngModel)]="users.mobile"
                             placeholder="Mobile" required>
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        <input type="email" class="form-control" name="email" [(ngModel)]="email" placeholder="Email"
+                        <input type="email" class="form-control" name="email" [(ngModel)]="users.email" placeholder="Email"
                             required>
                     </div>
                 </div>
@@ -30,10 +30,10 @@
                             <option value="0">Select Department</option>
                             <option value="1">IT</option>
                             <option value="2">Support</option>
-                            <option value="3">Sales</option>
-                            <option value="4">Management</option>
-                            <option value="5">Account</option>
-                            <option value="6">HR</option>
+                            <option value="6">Sales</option>
+                            <option value="5">Admin</option>
+                            <option value="3">Account</option>
+                            <option value="4">HR</option>
                         </select>
                     </div>
                 </div>
@@ -55,12 +55,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of users; let i=index;">
-                    <td>{{i +1 }}</td>
-                    <td>{{user.employee}}</td>
-                    <td>{{user.mobile}}</td>
-                    <td>{{user.email }}</td>
-                    <td>{{user.department }}</td>
+                <tr *ngFor="let user of user; let i=index;">
+                    <td>{{i +1}}</td>
+                    <td>{{user.name}}</td>
+                    <td>{{user.mobileno}}</td>
+                    <td>{{user.emailid }}</td>
+
+                    <td>{{user.dept_type }}</td>
 
                 </tr>
             </tbody>

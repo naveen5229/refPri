@@ -19,23 +19,28 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
-  NbCardComponent
+  NbCardComponent,
+  NbSpinnerModule
 } from '@nebular/theme';
 import { LoginComponent } from './auth/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AutoSuggestionComponent } from './directives/auto-suggestion/auto-suggestion.component';
+import { DirectiveModule } from './directives/directives.module';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent,
+     LoginComponent,
+    ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-
-
+    NbSpinnerModule,
+    ReactiveFormsModule,
+    DirectiveModule,
     ThemeModule.forRoot(),
-
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
