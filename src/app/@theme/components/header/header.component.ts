@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../Service/Api/api.service';
 import { UserService } from '../../../Service/user/user.service';
+import { CommonService } from '../../../Service/common/common.service';
 
 
 @Component({
@@ -51,6 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public router: Router,
     private api: ApiService,
     public userService: UserService,
+    public common: CommonService,
     private breakpointService: NbMediaBreakpointsService) {
   }
 
@@ -101,18 +103,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
         version: "1.1",
         authkey: this.userService._token
       }
+      this.common.loading++;
       this.api.post('Login/logout', params)
         .subscribe(res => {
+          this.common.loading--;
           if (res['success']) {
             this.userService._token = '';
             this.userService._details = null;
             localStorage.clear();
+            this.common.showToast(res['msg']);
             this.router.navigate(['/auth/login']);
           }
         },
           err => {
+            this.common.loading--;
+            this.common.showError();
           });
-      
     }
   }
 }

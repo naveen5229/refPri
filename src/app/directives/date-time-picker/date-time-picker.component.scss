@@ -1,0 +1,13 @@
+:host ::ng-deep kendo-datepicker input,
+:host ::ng-deep kendo-timepicker input {
+    width: 100%;
+    color: #181818;
+    background-color: #ffffff;
+    border: 2px solid #dadfe6;
+    border-radius: 0.17rem;
+}
+
+kendo-datepicker,
+kendo-timepicker {
+    width: 100%;
+}

@@ -8,7 +8,7 @@ export class UserService {
   _details = null;
 
   constructor() {
-    this._token = localStorage.getItem('USER_TOKEN') || '';
-    this._details = JSON.parse(localStorage.getItem('USER_DETAILS')) || null;   
+    this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
+    this._details = JSON.parse(localStorage.getItem('ITRM_USER_DETAILS')) || null;   
   }
 }

@@ -30,5 +30,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'list-outline',
     link: '/pages/task-assign',
     home: true,
+  },
+  {
+    title:'Work Logs',  
+    icon: 'fas fa-sun',
+    link: '/pages/work-logs',
+    home: true,
   }
 ];
