@@ -5,37 +5,75 @@
     </button>
 </div>
 <div class="modal-body">
-    <div class="row row-style">
-        <div class="col" (click)="buyTime.type = 'minutes'; buyTime.time = 5" [ngClass]="buyTime.type == 'minutes' ? 'active-col' : ''">
-            <span>Minutes</span>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="row  mt-2">
+                    <div class="col-2">
+                        <label>Task:</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" placeholder="Enter Task name" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-2">
+                        <label class="mt-2">Date:</label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+                <div class="row  mt-4">
+                    <div class="col-2">
+                        <label> review user:</label>
+                    </div>
+                    <div class="col-8 ">
+                        <input type="text" class="form-control" placeholder="user Name" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label>Stack:</label>
+                    </div>
+                    <div class="col-8 ">
+                        <input type="text" class="form-control" placeholder="Enter stack name" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row  mt-4">
+                    <div class="col-2">
+                        <label>Total min:</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" placeholder="HH" autocomplete="off">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" placeholder="MM" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-2">
+                        <label>Remark:</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea placeholder="remark" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col" (click)="buyTime.type = 'hours'; buyTime.time = 2" [ngClass]="buyTime.type == 'hours' ? 'active-col' : ''">
-            <span>Hours</span>
-        </div>
-    </div>
-
-    <div class="btn-container" *ngIf="buyTime.type == 'minutes'">
-        <span *ngFor="let minute of minutes" (click)="buyTime.time = minute" class="btn" [ngClass]="buyTime.time == minute ? 'active-btn' : ''">{{minute}}</span>
-    </div>
-
-    <div class="btn-container" *ngIf="buyTime.type == 'hours'">
-        <span *ngFor="let hour of hours" class="btn" (click)="buyTime.time = hour" [ngClass]="buyTime.time == hour ? 'active-btn' : ''">{{hour}}</span>
-    </div>
-
-    <div class="input-group">
-        <label>{{buyTime.type | titlecase}}</label>
-        <input type="text" name="time" [(ngModel)]="buyTime.time" required>
     </div>
 </div>
-
 <div class="modal-footer">
     <div class="row">
         <div class="col">
-            <button class="btn btn-danger" type="button" outline (click)="dismiss()" id="cancel" style="cursor: pointer;">Cancel</button>
+            <button class="btn btn-danger" type="button" id="cancel" style="cursor: pointer;">cancel</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" type="button" outline (click)="buyNow()" id="buy" style="cursor: pointer;">Buy Now
-            </button>
+            <button class="btn btn-primary" type="button" id="submit" style="cursor: pointer;">submit</button>
         </div>
     </div>
+
 </div>
