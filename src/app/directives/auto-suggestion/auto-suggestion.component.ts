@@ -5,7 +5,7 @@ import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectorRef } fro
 
 
 @Component({
-  selector: 'ngx-auto-suggestion',
+  selector: 'auto-suggestion',
   templateUrl: './auto-suggestion.component.html',
   styleUrls: ['./auto-suggestion.component.scss']
 })

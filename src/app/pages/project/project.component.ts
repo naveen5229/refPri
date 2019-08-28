@@ -45,21 +45,26 @@ export class ProjectComponent implements OnInit {
     this.common.loading--;
     this.getProject();
       this.common.showToast(res['msg'])  
+    },
     err => {
       this.common.showError();
     console.log('Error: ', err);
-    }});
+    });
   }
 
 
   getProject(){
+    this.common.loading++;
+
     this.api.get("Projects/getAllProject").subscribe(res =>{
+      this.common.loading--;
+
       this.projects=res['data'] || [];
-      this.common.showToast(res['msg']); 
+    },
     err => {
       this.common.showError();
     console.log('Error: ', err);
-    }});
+    });
     }
   
 

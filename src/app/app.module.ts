@@ -33,12 +33,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent,
-     LoginComponent,
-     WorkLogComponent,
-    ],
-    entryComponents: [
-      WorkLogComponent
-    ],
+    LoginComponent,
+    WorkLogComponent,
+  ],
+  entryComponents: [
+    WorkLogComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
