@@ -70,23 +70,23 @@ editTask(){
   // this.assigned,
 }
 
-deleteTask(){
+deleteTask(id){
  const  params={
-taskId:this.taskList[0].id
+taskId:this.taskList['id']
   }
   console.log("id",params)
 
-this.common.loading++;
-    this.api.post('Task/deleteTask', params).subscribe(res => {
-    this.common.loading--;
-    this.getTaks()
-      this.common.showToast(res['msg'])
-    },
-    err => {
-      this.common.loading--;
+// this.common.loading++;
+//     this.api.post('Task/deleteTask', params).subscribe(res => {
+//     this.common.loading--;
+//     this.getTaks()
+//       this.common.showToast(res['msg'])
+//     },
+//     err => {
+//       this.common.loading--;
 
-      this.common.showError();
-    console.log('Error: ', err);
-    });
+//       this.common.showError();
+//     console.log('Error: ', err);
+//     });
   }
 }
