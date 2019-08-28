@@ -7,6 +7,7 @@ import { UserComponent } from './user/user.component';
 import { ProjectComponent } from './project/project.component';
 import { ModulesComponent } from './modules/modules.component';
 import { TaskAssignComponent } from './task-assign/task-assign.component';
+import { WorkLogsComponent } from './work-logs/work-logs.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -30,6 +31,10 @@ const routes: Routes = [{
     {
       path: 'task-assign',
       component: TaskAssignComponent,
+    },
+    {
+      path: 'work-logs',
+      component: WorkLogsComponent,
     },
   ],
 }];

@@ -11,6 +11,7 @@ import { ProjectComponent } from './project/project.component';
 import { ModulesComponent } from './modules/modules.component';
 import { TaskAssignComponent } from './task-assign/task-assign.component';
 import { DirectiveModule } from '../directives/directives.module';
+import { WorkLogsComponent } from './work-logs/work-logs.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { DirectiveModule } from '../directives/directives.module';
     ProjectComponent,
     ModulesComponent,
     TaskAssignComponent,
+    WorkLogsComponent,
   ],
 })
 export class PagesModule {
