@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ProjectComponent } from './project/project.component';
 import { ModulesComponent } from './modules/modules.component';
 import { TaskAssignComponent } from './task-assign/task-assign.component';
+import { DirectiveModule } from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { TaskAssignComponent } from './task-assign/task-assign.component';
     NbMenuModule,
     DashboardModule,
     NbCardModule,
-    FormsModule
+    FormsModule,
+    DirectiveModule
   ],
   declarations: [
     PagesComponent,
