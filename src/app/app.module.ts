@@ -11,6 +11,8 @@ import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -26,11 +28,17 @@ import { LoginComponent } from './auth/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoSuggestionComponent } from './directives/auto-suggestion/auto-suggestion.component';
 import { DirectiveModule } from './directives/directives.module';
+import { WorkLogComponent } from './modals/work-log/work-log.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent,
-     LoginComponent,
-    ],
+    LoginComponent,
+    WorkLogComponent,
+  ],
+  entryComponents: [
+    WorkLogComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -43,6 +51,7 @@ import { DirectiveModule } from './directives/directives.module';
     ThemeModule.forRoot(),
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
+    NgbModule,
     NbDatepickerModule.forRoot(),
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),
@@ -53,7 +62,7 @@ import { DirectiveModule } from './directives/directives.module';
     CoreModule.forRoot(),
   ],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
 export class AppModule {

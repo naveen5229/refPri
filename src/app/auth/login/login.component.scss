@@ -3,7 +3,7 @@
     margin: auto;
     background: rgba(0, 0, 0, 0.25);
     padding: 20px;
-    height: 100%;
+    height: auto;
     border-radius: 5px;
 }
 
@@ -23,14 +23,14 @@ img {
 }
 
 .title {
-    color: #FF5722;
+    color: #ff5722;
 }
 
 .sub-title {
     color: #fff;
     font-weight: normal;
     font-size: 12px;
-    letter-spacing: .2px;
+    letter-spacing: 0.2px;
     font-family: cursive;
     line-height: 20px;
 }
@@ -41,7 +41,7 @@ input {
     padding: 4px 14px !important;
     font-size: 14px;
     font-weight: 400;
-    border: 1px solid #FF5722 !important;
+    border: 1px solid #ff5722 !important;
     border-radius: 4px;
     font-family: sans-serif;
     width: 85%;
@@ -52,7 +52,7 @@ input {
 
 .btn {
     border-radius: 3px;
-    background: #FF5722 !important;
+    background: #ff5722 !important;
     padding: 7px;
     width: 60%;
     margin: auto;
@@ -95,22 +95,22 @@ span {
 @keyframes blink {
     0% {
         opacity: 0;
-        color: white
+        color: white;
     }
     0% {
         opacity: 0.25;
-        color: white
+        color: white;
     }
     50% {
-        opacity: .5;
-        color: white
+        opacity: 0.5;
+        color: white;
     }
     0% {
         opacity: 0.75;
-        color: #FF5722
+        color: #ff5722;
     }
     100% {
         opacity: 1;
-        color: #FF5722
+        color: #ff5722;
     }
 }

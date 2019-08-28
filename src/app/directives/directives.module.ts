@@ -2,16 +2,18 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoSuggestionComponent } from './auto-suggestion/auto-suggestion.component';
+import { DateTimePickerComponent } from './date-time-picker/date-time-picker.component';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 
 @NgModule({
-   imports: [CommonModule, FormsModule, ReactiveFormsModule,],
+   imports: [CommonModule, FormsModule, ReactiveFormsModule,DateInputsModule],
    exports: [
        CommonModule,
        FormsModule,
        AutoSuggestionComponent,
-  
+       DateTimePickerComponent
    ],
-   declarations: [AutoSuggestionComponent
+   declarations: [AutoSuggestionComponent, DateTimePickerComponent
    ],
    schemas: [CUSTOM_ELEMENTS_SCHEMA],
    providers: [],
