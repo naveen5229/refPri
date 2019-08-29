@@ -5,37 +5,94 @@
     </button>
 </div>
 <div class="modal-body">
-    <div class="row row-style">
-        <div class="col" (click)="buyTime.type = 'minutes'; buyTime.time = 5" [ngClass]="buyTime.type == 'minutes' ? 'active-col' : ''">
-            <span>Minutes</span>
+    <div class="">
+        <div class="row">
+            <div class="col-6">
+                <div class="row  mt-3">
+                    <div class="col-2">
+                        <label>Task:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.task_id" placeholder="Enter Task name" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">
+                        <label>Title:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.title" placeholder="Enter Title name" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row  mt-3">
+                    <div class="col-2">
+                        <label> review user:</label>
+                    </div>
+                    <div class="col-8 ">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.review_user_id" placeholder="user Name" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">
+                        <label>Remark:</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea placeholder="remark" [(ngModel)]="workLog.remark:" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row mt-3">
+                    <div class="col-2">
+                        <label>Stack:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8 ">
+                        <auto-suggestion (onSelected)="workLog.stack_child_id=($event.id)" url="Projects/getAllStack" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">
+                        <label class="mt-2">Date:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="date=$event" [(ngModel)]="workLog.date" [dateTimeValue]="date" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+                <div class="row  mt-3">
+                    <div class="col-2">
+                        <label>Working Hour:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="number" class="form-control" [(ngModel)]="day" placeholder="DD" autocomplete="off">
+                    </div>
+                    <div class="col-2">
+                        <input type="number" class="form-control" [(ngModel)]="hour" placeholder="HH" autocomplete="off">
+                    </div>
+                    <div class="col-2">
+                        <input type="number" class="form-control" [(nuModel)]="min" placeholder="MM" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">
+                        <label>Description:</label>
+                    </div>
+                    <div class="col-8 ml-1">
+                        <textarea placeholder="Description" [(ngModel)]="workLog.description" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col" (click)="buyTime.type = 'hours'; buyTime.time = 2" [ngClass]="buyTime.type == 'hours' ? 'active-col' : ''">
-            <span>Hours</span>
-        </div>
-    </div>
-
-    <div class="btn-container" *ngIf="buyTime.type == 'minutes'">
-        <span *ngFor="let minute of minutes" (click)="buyTime.time = minute" class="btn" [ngClass]="buyTime.time == minute ? 'active-btn' : ''">{{minute}}</span>
-    </div>
-
-    <div class="btn-container" *ngIf="buyTime.type == 'hours'">
-        <span *ngFor="let hour of hours" class="btn" (click)="buyTime.time = hour" [ngClass]="buyTime.time == hour ? 'active-btn' : ''">{{hour}}</span>
-    </div>
-
-    <div class="input-group">
-        <label>{{buyTime.type | titlecase}}</label>
-        <input type="text" name="time" [(ngModel)]="buyTime.time" required>
     </div>
 </div>
-
 <div class="modal-footer">
     <div class="row">
         <div class="col">
-            <button class="btn btn-danger" type="button" outline (click)="dismiss()" id="cancel" style="cursor: pointer;">Cancel</button>
+            <button class="btn btn-danger" type="button" id="cancel" (click)="modalClose()" style="cursor: pointer;">cancel</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" type="button" outline (click)="buyNow()" id="buy" style="cursor: pointer;">Buy Now
-            </button>
+            <button class="btn btn-primary" type="button" id="submit" (click)="addWorkLog()" style="cursor: pointer;">submit</button>
         </div>
     </div>
+
 </div>
