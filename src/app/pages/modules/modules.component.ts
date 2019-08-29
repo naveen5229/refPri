@@ -81,17 +81,15 @@ export class ModulesComponent implements OnInit {
   }
 
   getModule() {
-    // this.api.get("").subscribe(res =>{
-    //   this.modules[]=res['data'] || [];
-    //   this.common.showToast(res['data'][0].y_msg)
-    // },
-    // err => {
-    //   this.common.showError();
-    // console.log('Error: ', err);
-    // });
-    //   })
-    // }
+    this.api.get("Modules/getAllModules").subscribe(res =>{
+      this.modules=res['data'] || [];
+      this.common.showToast(res['data'][0].y_msg)
+    },
+    err => {
+      this.common.showError();
+    console.log('Error: ', err);
+    });
+    }
 
-  }
-
+  
 }
