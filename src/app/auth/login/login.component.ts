@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
     console.log('All Tags: ', allTags);
     let nbCard = document.getElementsByTagName('nb-card')[0];
     // nbCard['style']['backgroundColor'] = "#000";
+    //nbCard['style']['backgroundImage'] = "url('https://images.unsplash.com/photo-1541233349642-6e425fe6190e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80')";
     nbCard['style']['backgroundImage'] = "url('http://elogist.in./images/app-login-bg.jpg')";
     nbCard['style']['backgroundSize'] = 'cover';
     nbCard['style']['backgroundRepeat'] = 'no-repeat';
