@@ -33,7 +33,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title:'Work Logs',  
-    icon: 'fas fa-sun',
+    icon: 'list-outline',
     link: '/pages/work-logs',
     home: true,
   }

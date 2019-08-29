@@ -6,6 +6,7 @@ import { NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 })
 export class CommonService {
   loading = 0;
+  params=null;
   constructor(private toastrService: NbToastrService) { }
 
   showError(msg?, err?) {

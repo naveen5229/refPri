@@ -1,10 +1,10 @@
 <nb-card>
     <nb-card-header>
-        Task Assign
+        Task
     </nb-card-header>
     <nb-card>
         <nb-card-body>
-            <div class="container">
+            <!-- <div class="container">
                 <div class="row ">
                     <div class="col-2">
                         <div class="form-group">
@@ -23,7 +23,7 @@
                     <div class="col-2">
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea rows="2" cols="15" placeholder="Description" [(ngModel)]="description"></textarea>
+                            <textarea rows="2" cols="20" placeholder="Description" [(ngModel)]="description"></textarea>
                         </div>
                     </div>
                     <div class="col-2">
@@ -38,44 +38,53 @@
                             <input type="text" class="form-control" placeholder="assigned" [(ngModel)]="assigned">
                         </div>
                     </div>
-                    <div class="col-2 mt-4">
-                        <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label>Date and Time</label>
+                            <uj-date-time-picker (onChanged)="date=$event" [dateTimeValue]="Date" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
+                        </div>
 
-
-                </div>
-                <table class="table table-border">
-                    <thead class="thead">
-                        <tr>
-                            <th>S.no</th>
-                            <th>Module Name</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Assigner</th>
-                            <th>Assigned</th>
-                            <th>Assign Time</th>
-                            <th>Action</th>
-
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let task of taskList; let i=index;">
-                            <td>{{i+1}}</td>
-                            <!-- <td>{{task.module_id}}</td> -->
-                            <td>{{task.title}}</td>
-                            <td>{{task.description}}</td>
-                            <td>{{task.assignee_emp_id}}</td>
-                            <td>{{task.assigned_emp_id}}</td>
-                            <td>{{task.assigned_emp_id}}</td>
-                            <td>{{task.assign_time}}</td>
-                            <td><i class="far fa-edit" (click)="editTask()"></i><i class="fas fa-trash-alt" (click)="deleteTask()"></i>
-                            </td>
-
-
-                        </tr>
-                    </tbody>
-                </table>
+                    </div> -->
+            <!-- <div class="row mt-1">
+                        <div class="col-12 text-right ">
+                            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
+                    </div> -->
+            <div class="row mt-1">
+                <div class="col-12 text-right">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Add</button> </div>
             </div>
+
+            <table class="table table-border mt-1">
+                <thead class="thead">
+                    <tr>
+                        <th>S.no</th>
+                        <th>Module Name</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Assigner</th>
+                        <th>Assigned</th>
+                        <th>Assign Time</th>
+                        <th>Action</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let task of taskList; let i=index;">
+                        <td>{{i+1}}</td>
+                        <td>{{task.title| titlecase}}</td>
+                        <td>{{task.description}}</td>
+                        <td>{{task.module_name | titlecase}}</td>
+                        <td>{{task.assignee_name | titlecase}}</td>
+                        <td>{{task.assigned_name | titlecase }}</td>
+                        <td>{{task.assign_time}}</td>
+                        <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                        </td>
+
+
+                    </tr>
+                </tbody>
+            </table>
         </nb-card-body>
 
     </nb-card>
