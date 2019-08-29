@@ -43,9 +43,9 @@
         <table class="table table-border">
             <thead class="thead">
                 <tr>
-                    <th>S.no</th>
-                    <th>Employee Name</th>
-                    <th>Mobile Number</th>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
                     <th>Email</th>
                     <th>Department</th>
 
@@ -53,8 +53,8 @@
             </thead>
             <tbody>
                 <tr *ngFor="let user of user; let i=index;">
-                    <td>{{i +1}}</td>
-                    <td>{{user.name}}</td>
+                    <td>0{{i +1}}</td>
+                    <td>{{user.name |titlecase}}</td>
                     <td>{{user.mobileno}}</td>
                     <td>{{user.emailid }}</td>
 

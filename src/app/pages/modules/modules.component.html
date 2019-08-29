@@ -1,54 +1,44 @@
 <nb-card>
-  <nb-card-header>Module</nb-card-header>
-  <nb-card-body>
-    <div class="container">
-      <div class="row ">
-        <div class="col-3">
-          <div class="form-group">
-            <select class="form-control" name="project" [(ngModel)]="projectsName">
-              <option value="0">Select Project</option>
-              <option value="1">Walle8</option>
-              <option value="2">Customer Dashboard</option>
-              <option value="3">Admin Dashboard</option>
-              <option value="4">Partner</option>
+    <nb-card-header>
+        <div class="row ">
+            <div class="col-3">
+                <h5> Module</h5>
+            </div>
+            <div class="col-3">
+                <auto-suggestion [data]="projectName" display="name" (onSelected)="changeRefernceType($event)" inputId="modules.projectId"></auto-suggestion>
 
-            </select>
-          </div>
+            </div>
+            <div class="col-3">
+                <input type="text" placeholder="Module Name" [(ngModel)]="modules.name" name="name" class="form-control" required>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="saveModule()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
         </div>
-
-        <div class="col-3">
-          <div class="form-group">
-            <input type="text" placeholder="Name" [(ngModel)]="modules.name" name="name" class="form-control" required>
-          </div>
-        </div>
-
-
-        <div class="col-2 ">
-          <button class="btn btn-primary text-capitalize" id="button" (click)="saveModule()">Add</button> </div>
-      </div>
-    </div>
-    <table class="table table-border">
-      <thead class="thead">
-        <tr>
-          <th>S.no</th>
-          <th>Project Name</th>
-          <th>Name</th>
+    </nb-card-header>
+    <nb-card-body>
+        <table class="table table-border">
+            <thead class="thead">
+                <tr>
+                    <th>#</th>
+                    <th>Project Name</th>
+                    <th>Name</th>
 
 
 
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let module of modules; let i=index;">
-          <td>{{i +1 }}</td>
-          <td>{{module.project}}</td>
-          <td>{{module.name}}</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let module of modules; let i=index;">
+                    <td>0{{i +1 }}</td>
+                    <td>{{module.project | titlecase}}</td>
+                    <td>{{module.name | titlecase }}</td>
 
 
 
-        </tr>
-      </tbody>
-    </table>
-  </nb-card-body>
+                </tr>
+            </tbody>
+        </table>
+    </nb-card-body>
 
 </nb-card>

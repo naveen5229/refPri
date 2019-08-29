@@ -3,6 +3,10 @@ import { NbCardModule } from '@nebular/theme';
 import { getMaxListeners } from 'cluster';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { Pipe, PipeTransform } from '@angular/core';
+@Pipe({
+  name: 'capitalizeFirst'
+})
 
 @Component({
   selector: 'ngx-user',
@@ -76,8 +80,11 @@ export class UserComponent implements OnInit {
 
     this.api.get("Users/getAllUsers").subscribe(res =>{
       this.common.loading--;
-
+    
      this.user=res['data'] || [];
+    
+
+ 
         },
     err => {
       this.common.showError();
