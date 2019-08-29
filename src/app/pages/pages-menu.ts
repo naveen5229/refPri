@@ -32,8 +32,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title:'Work Logs',  
-    icon: 'briefcase',
+    title: 'Work Logs',
+    icon: 'list-outline',
     link: '/pages/work-logs',
     home: true,
   }

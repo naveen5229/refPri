@@ -27,6 +27,8 @@ export class ProjectComponent implements OnInit {
 
   // }
   // ]
+  projectName=[];
+  projectId=null
   constructor(public common:CommonService,
     public api:ApiService) {
     this.getProject();
@@ -35,6 +37,9 @@ export class ProjectComponent implements OnInit {
   ngOnInit() {
   }
 
+
+
+ 
 
   saveProject() {
     const params = {

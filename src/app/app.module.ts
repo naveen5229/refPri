@@ -30,14 +30,17 @@ import { AutoSuggestionComponent } from './directives/auto-suggestion/auto-sugge
 import { DirectiveModule } from './directives/directives.module';
 import { WorkLogComponent } from './modals/work-log/work-log.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TaskAssignUserComponent } from './modals/task-assign-user/task-assign-user.component';
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
     WorkLogComponent,
+    TaskAssignUserComponent,
   ],
   entryComponents: [
-    WorkLogComponent
+    WorkLogComponent,
+    TaskAssignUserComponent
   ],
   imports: [
     BrowserModule,
