@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Add Component</h5>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-3">
+            <label>Stack</label>
+        </div>
+        <div class="col-7">
+            <auto-suggestion (onSelected)="stackId=($event.id)" url="Projects/getAllStack" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-3">
+            <label>Module:</label>
+        </div>
+        <div class="col-7">
+            <auto-suggestion [data]="moduleList" display="name" placeholder="Enter Module Name" (onSelected)="moduleId=($event.id)"></auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-3">
+            <label>component Name:</label>
+        </div>
+        <div class="col-7 ml-1">
+            <input type="text" class="form-control" [(ngModel)]="componentName" placeholder="Enter Name" autocomplete="off">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col text-right">
+        <button class="btn btn-primary" type="button" id="submit" (click)="addcomponent()" style="cursor: pointer;">submit</button>
+    </div>
+</div>
