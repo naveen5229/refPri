@@ -62,7 +62,7 @@ export class ModulesComponent implements OnInit {
     this.modules.projectId=type.id
   }
 
-  saveModules() {
+  saveModule(){
     const params = {
       project_id: this.modules.projectId,
      name:this.modules.name
@@ -71,9 +71,9 @@ export class ModulesComponent implements OnInit {
     this.common.loading++;
     this.api.post('Modules/addModules', params).subscribe(res => {
     this.common.loading--;
-    if (res['data'][0].y_id > 0) {
-      this.common.showToast(res['data'][0].y_msg)
-    } },
+      this.common.showToast(res['msg'])
+     this.getModule() 
+    },
     err => {
       this.common.showError();
     console.log('Error: ', err);
@@ -82,8 +82,8 @@ export class ModulesComponent implements OnInit {
 
   getModule() {
     this.api.get("Modules/getAllModules").subscribe(res =>{
+  
       this.modules=res['data'] || [];
-      this.common.showToast(res['data'][0].y_msg)
     },
     err => {
       this.common.showError();

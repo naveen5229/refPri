@@ -1,114 +1,158 @@
 <nb-card>
     <nb-card-header>
-        <div class="row">
-            <div class="col-2">
-                <h5>Tasks</h5>
-            </div>
-            <div class="col-2">
+        <h5>Tasks</h5>
+        <!-- <div class="col-2">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign By ME</button> </div>
-        </div>
-        <div class="col-2">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign for me</button> </div>
-        </div>
-        <div class="col-2">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Complete Tasks</button> </div>
-        </div>
-        <div class="col-2">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Wating for Review</button> </div>
-        </div>
-        <div class="col-2">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Review But Change</button> </div>
-        </div>
-        </div>
+
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign for me</button> </div>
+
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Complete Tasks</button> </div>
+
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Wating for Review</button> </div>
+
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Review But Change</button> </div>
+        </div> -->
+
 
 
     </nb-card-header>
     <nb-card>
         <nb-card-body>
-            <!-- <div class="container">
-                <div class="row ">
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label>Module</label>
-                            <input type="text" placeholder="Module Name" [(ngModel)]="module" name="name" class="form-control" required>
+            <div class="tabs_style_main">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'">Assign Task
+                    </li>
 
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" name="title" [(ngModel)]="title" placeholder="Title" required>
+                    <li [ngClass]="activeTab=='Task For Me'?'active':''" (click)="activeTab='Task For Me'">Task For Me
+                    </li>
 
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea rows="2" cols="20" placeholder="Description" [(ngModel)]="description"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label>Assigner</label>
-                            <input type="text" class="form-control" placeholder="assigner" [(ngModel)]="assigner">
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label>Assigned</label>
-                            <input type="text" class="form-control" placeholder="assigned" [(ngModel)]="assigned">
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label>Date and Time</label>
-                            <uj-date-time-picker (onChanged)="date=$event" [dateTimeValue]="Date" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
-                        </div>
+                    <li [ngClass]="activeTab=='Assigned By Me'?'active':''" (click)="activeTab='Assigned By Me'">
+                        Assigned By Me</li>
 
-                    </div> -->
+                    <li [ngClass]="activeTab=='Completed Task'?'active':''" (click)="activeTab='Completed Task'">
+                        Completed Task</li>
+                    <li [ngClass]="activeTab=='Waiting For Review'?'active':''" (click)="activeTab='Waiting For Review'">Waiting For Review</li>
+
+                    <li [ngClass]="activeTab=='Review But Change'?'active':''" (click)="activeTab='Review But Change'">
+                        Review But Change</li>
+
+                    <li [ngClass]="activeTab=='Review List'?'active':''" (click)="activeTab='Review List'">Review List
+                    </li>
+                </ul>
+            </div>
             <!-- <div class="row mt-1">
-                        <div class="col-12 text-right ">
-                            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
-                    </div> -->
-            <div class="row mt-1">
-                <div class="col-6 text-right">
+                <div class="col-2 text-right">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Review List</button> </div>
+                <div class="col-2 text-right">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign Task</button> </div>
+            </div> -->
+            <div *ngIf="activeTab=='Assign Task'">
+                <div class="text-right">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign
+                        Task</button> </div>
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>S.no</th>
+                            <th>Title</th>
+                            <th>Module Name</th>
+                            <th>Description</th>
+                            <th>Assigner</th>
+                            <th>Assigned</th>
+                            <th>Assign Time</th>
+                            <th>Action</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of taskList; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{task.title| titlecase}}</td>
+                            <td>{{task.description}}</td>
+                            <td>{{task.module_name | titlecase}}</td>
+                            <td>{{task.assignee_name | titlecase}}</td>
+                            <td>{{task.assigned_name | titlecase }}</td>
+                            <td>{{task.assign_time}}</td>
+                            <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-6 text-right">
-                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign Task</button> </div>
+
+            <div *ngIf="activeTab=='Completed Task'">
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>S.no</th>
+                            <th>Title</th>
+                            <th>Module Name</th>
+                            <th>Description</th>
+                            <th>Assigner</th>
+                            <th>Assigned</th>
+                            <th>Assign Time</th>
+                            <th>Action</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of complateTask; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{task.title| titlecase}}</td>
+                            <td>{{task.description}}</td>
+                            <td>{{task.module_name | titlecase}}</td>
+                            <td>{{task.assignee_name | titlecase}}</td>
+                            <td>{{task.assigned_name | titlecase }}</td>
+                            <td>{{task.assign_time}}</td>
+                            <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-
-            <table class="table table-border mt-1">
-                <thead class="thead">
-                    <tr>
-                        <th>S.no</th>
-                        <th>Title</th>
-                        <th>Module Name</th>
-                        <th>Description</th>
-                        <th>Assigner</th>
-                        <th>Assigned</th>
-                        <th>Assign Time</th>
-                        <th>Action</th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let task of taskList; let i=index;">
-                        <td>{{i+1}}</td>
-                        <td>{{task.title| titlecase}}</td>
-                        <td>{{task.description}}</td>
-                        <td>{{task.module_name | titlecase}}</td>
-                        <td>{{task.assignee_name | titlecase}}</td>
-                        <td>{{task.assigned_name | titlecase }}</td>
-                        <td>{{task.assign_time}}</td>
-                        <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
-                        </td>
+            <div *ngIf="activeTab=='Assign By Me'">
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>S.no</th>
+                            <th>Title</th>
+                            <th>Module Name</th>
+                            <th>Description</th>
+                            <th>Assigner</th>
+                            <th>Assigned</th>
+                            <th>Assign Time</th>
+                            <th>Action</th>
 
 
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of assigned; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{task.title| titlecase}}</td>
+                            <td>{{task.description}}</td>
+                            <td>{{task.module_name | titlecase}}</td>
+                            <td>{{task.assignee_name | titlecase}}</td>
+                            <td>{{task.assigned_name | titlecase }}</td>
+                            <td>{{task.assign_time}}</td>
+                            <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </nb-card-body>
 
     </nb-card>
