@@ -1,6 +1,27 @@
 <nb-card>
     <nb-card-header>
-        Task
+        <div class="row">
+            <div class="col-2">
+                <h5>Tasks</h5>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign By ME</button> </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign for me</button> </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Complete Tasks</button> </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Wating for Review</button> </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Review But Change</button> </div>
+        </div>
+        </div>
+
+
     </nb-card-header>
     <nb-card>
         <nb-card-body>
@@ -50,16 +71,19 @@
                             <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
                     </div> -->
             <div class="row mt-1">
-                <div class="col-12 text-right">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Add</button> </div>
+                <div class="col-6 text-right">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Review List</button> </div>
+            </div>
+            <div class="col-6 text-right">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign Task</button> </div>
             </div>
 
             <table class="table table-border mt-1">
                 <thead class="thead">
                     <tr>
                         <th>S.no</th>
-                        <th>Module Name</th>
                         <th>Title</th>
+                        <th>Module Name</th>
                         <th>Description</th>
                         <th>Assigner</th>
                         <th>Assigned</th>

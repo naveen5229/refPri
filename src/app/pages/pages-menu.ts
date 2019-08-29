@@ -26,7 +26,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'Task Assign',
+    title: 'Tasks',
     icon: 'list-outline',
     link: '/pages/task-assign',
     home: true,

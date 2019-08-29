@@ -36,6 +36,7 @@ export class TaskAssignUserComponent implements OnInit {
        this.task.assigner=this.common.params.assignee_name,
        this.task.assigned=this.common.params.assigned_name
     }
+  
     this.getModuleList();
     this.assignerList();
     this.assignedList()

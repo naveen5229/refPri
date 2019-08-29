@@ -107,6 +107,7 @@ export class TaskAssignComponent implements OnInit {
       });
   }
   assignTask(){
+    this.common.params=null;
   const activeModal=  this.modalService.open(TaskAssignUserComponent,{ size: 'lg', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
       if (data.response) {

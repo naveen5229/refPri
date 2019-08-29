@@ -9,7 +9,7 @@
             <label>Module:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="moduleName" display="name" placeholder="Enter Module Name" (onSelected)="changeRefernceType($event)" [preSelected]="task.mName ? {name : task.mName} : {name :' '}" inputId="task.module"></auto-suggestion>
+            <auto-suggestion [data]="moduleName" display="name" placeholder="Enter Module Name" (onSelected)="changeRefernceType($event)" [preSelected]="task.mName ? {name : task.mName} : {name :''}" inputId="task.module"></auto-suggestion>
             <!-- 
             <auto-suggestion  (onSelected)="changeRefernceType($event)" display="name">
             </auto-suggestion> -->
