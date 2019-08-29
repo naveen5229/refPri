@@ -51,6 +51,25 @@ export class CommonService {
     return str;
   }
 
+  handleModalSize(type, name, size, sizeType = "px", position = 0) {
+    setTimeout(() => {
+      if (type == "class" && document.getElementsByClassName(name)[position]) {
+        if (document.getElementsByClassName(name)[position]["style"]) {
+          document.getElementsByClassName(name)[position]["style"].maxWidth =
+            size + sizeType;
+        }
+      }
+    }, 10);
+  }
+  handleModalheight(type, name, size, sizeType = "px", position = 0) {
+    setTimeout(() => {
+      if (type == "class") {
+        document.getElementsByClassName(name)[position]["style"].minHeight =
+          size + sizeType;
+      }
+    }, 10);
+  }
+
 }
 
 
