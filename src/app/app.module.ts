@@ -31,16 +31,19 @@ import { DirectiveModule } from './directives/directives.module';
 import { WorkLogComponent } from './modals/work-log/work-log.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskAssignUserComponent } from './modals/task-assign-user/task-assign-user.component';
+import { AddComponentComponent } from './modals/add-component/add-component.component';
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
     WorkLogComponent,
     TaskAssignUserComponent,
+    AddComponentComponent,
   ],
   entryComponents: [
     WorkLogComponent,
-    TaskAssignUserComponent
+    TaskAssignUserComponent,
+    AddComponentComponent
   ],
   imports: [
     BrowserModule,
