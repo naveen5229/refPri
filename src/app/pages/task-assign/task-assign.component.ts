@@ -12,53 +12,57 @@ import { TaskAssignUserComponent } from '../../modals/task-assign-user/task-assi
 
 export class TaskAssignComponent implements OnInit {
   taskList = [];
-  task ={
-    module: null, 
+  task = {
+    module: null,
     title: '',
     description: '',
-    assigner :null,
-    assigned : null,
-    Date : new Date()
+    assigner: null,
+    assigned: null,
+    Date: new Date()
   }
- 
+  activeTab = 'Assign Task';
+  complateTask = [];
+  assigned = []
 
   constructor(public common: CommonService,
     public api: ApiService,
-    public modalService:NgbModal,
-  ){
-            this.getTaks()
+    public modalService: NgbModal,
+  ) {
+    this.getTask();
+    this.getCompleteTask();
+    this.assignByMe()
   }
 
   ngOnInit() {
   }
 
-  // saveUser() {
-  //   const params = {
-  //     module_id: this.task.module,
-  //     title: this.task.title,
-  //     description: this.task.description,
-  //     assignee_emp_id: this.task.assigner,
-  //     assigned_emp_id: this.task.assigned,
-  //     assign_time: this.task.Date
-  //   }
-  //   this.common.loading++;
-  //   this.api.post('Task/addTask', params).subscribe(res => {
-  //     this.common.loading--;
-  //     this.getTaks()
-  //     this.common.showToast(res['msg'])
-  //   },
-  //     err => {
-  //       this.common.loading--;
+  saveUser() {
+    const params = {
+      module_id: this.task.module,
+      title: this.task.title,
+      description: this.task.description,
+      assignee_emp_id: this.task.assigner,
+      assigned_emp_id: this.task.assigned,
+      assign_time: this.task.Date
+    }
+    this.common.loading++;
+    this.api.post('Task/addTask', params).subscribe(res => {
+      this.common.loading--;
+      this.getTask()
+      this.common.showToast(res['msg'])
+    },
+      err => {
+        this.common.loading--;
 
-  //       this.common.showError();
-  //       console.log('Error: ', err);
-  //     });
-  // }
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
 
-  getTaks() {
+  getTask() {
     this.common.loading++;
 
-    this.api.get("Task/getAllTask").subscribe(res => {
+    this.api.get("Task/getTaskWrtEmp").subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
 
@@ -78,12 +82,13 @@ export class TaskAssignComponent implements OnInit {
     // this.task.description = task.description
     // this.task.assigner = task.assignee_name
     // this.task.assigned = task.assigned_name4
-    this.common.params=task;
-    const activeModal=  this.modalService.open(TaskAssignUserComponent,{ size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = task;
+    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-    if (data.response) {
-      this.getTaks()      }  
-  });
+      if (data.response) {
+        this.getTask()
+      }
+    });
   }
 
   deleteTask(task) {
@@ -96,7 +101,7 @@ export class TaskAssignComponent implements OnInit {
     this.common.loading++;
     this.api.post('Task/deleteTask', params).subscribe(res => {
       this.common.loading--;
-      this.getTaks()
+      this.getTask()
       this.common.showToast(res['msg'])
     },
       err => {
@@ -106,11 +111,48 @@ export class TaskAssignComponent implements OnInit {
         console.log('Error: ', err);
       });
   }
-  assignTask(){
-  const activeModal=  this.modalService.open(TaskAssignUserComponent,{ size: 'lg', container: 'nb-layout', backdrop: 'static' });
-      activeModal.result.then(data => {
+
+  assignTask() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
       if (data.response) {
-        this.getTaks()      }  
+        this.getTask()
+      }
     });
+  }
+
+  getCompleteTask() {
+    this.common.loading++;
+
+    this.api.get("Task/getCompletedTaskWrtUser").subscribe(res => {
+      this.common.loading--;
+      console.log("complete", res['data'])
+
+      this.complateTask = res['data'] || [];
+    },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  assignByMe() {
+    this.common.loading++;
+
+    this.api.get("Task/getAssignedTask").subscribe(res => {
+      this.common.loading--;
+      console.log("complete1", res['data'])
+
+      this.assigned = res['data'] || [];
+    },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 }

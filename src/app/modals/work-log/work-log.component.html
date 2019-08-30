@@ -1,7 +1,7 @@
 <div class="modal-header">
     <h5 class="modal-title" id="modal-basic-title">Work Logs</h5>
     <button type="button" class="close" aria- label="Close" (click)="dismiss()">
-      <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
@@ -13,7 +13,8 @@
                         <label>Task:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8">
-                        <input type="text" class="form-control" [(ngModel)]="workLog.task_id" placeholder="Enter Task name" autocomplete="off">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.task_id"
+                            placeholder="Enter Task name" autocomplete="off">
                     </div>
                 </div>
                 <div class="row  mt-3">
@@ -21,10 +22,12 @@
                         <label>component:</label>
                     </div>
                     <div class="col-6 ml-1">
-                        <input type="text" class="form-control" [(ngModel)]="workLog.component" placeholder="user Name" autocomplete="off">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.component" placeholder="user Name"
+                            autocomplete="off">
                     </div>
                     <div class="col-2">
-                        <button class="btn btn-danger" type="button" (click)="addcomponent()" style="cursor: pointer;">+</button>
+                        <button class="btn btn-danger" type="button" (click)="addcomponent()"
+                            style="cursor: pointer;">+</button>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -32,7 +35,8 @@
                         <label>Title:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8">
-                        <input type="text" class="form-control" [(ngModel)]="workLog.title" placeholder="Enter Title name" autocomplete="off">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.title"
+                            placeholder="Enter Title name" autocomplete="off">
                     </div>
                 </div>
                 <div class="row  mt-3">
@@ -40,7 +44,8 @@
                         <label> review user:</label>
                     </div>
                     <div class="col-8 ">
-                        <input type="text" class="form-control" [(ngModel)]="workLog.review_user_id" placeholder="user Name" autocomplete="off">
+                        <input type="text" class="form-control" [(ngModel)]="workLog.review_user_id"
+                            placeholder="user Name" autocomplete="off">
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -58,7 +63,8 @@
                         <label>Stack:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8 ">
-                        <auto-suggestion (onSelected)="workLog.stack_child_id=($event.id)" url="Projects/getAllStack" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+                        <auto-suggestion (onSelected)="workLog.stack_child_id=($event.id)" url="Projects/getAllStack"
+                            display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -66,7 +72,8 @@
                         <label class="mt-2">Date:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8">
-                        <uj-date-time-picker (onChanged)="date=$event" [(ngModel)]="workLog.date" [dateTimeValue]="date" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="date=$event" [(ngModel)]="workLog.date" [dateTimeValue]="date"
+                            [isTime]="false">
                         </uj-date-time-picker>
                     </div>
                 </div>
@@ -75,10 +82,12 @@
                         <label>Working Hour:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-4">
-                        <input type="number" class="form-control" maxlength="2" [(ngModel)]="hour" placeholder="HH" autocomplete="off">
+                        <input type="number" class="form-control" maxlength="2" [(ngModel)]="hour" placeholder="HH"
+                            autocomplete="off">
                     </div>
                     <div class="col-4">
-                        <input type="number" class="form-control" maxlength="2" [(ngModel)]="min" placeholder="MM" autocomplete="off">
+                        <input type="number" class="form-control" maxlength="2" [(ngModel)]="min" placeholder="MM"
+                            autocomplete="off">
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -86,7 +95,8 @@
                         <label>Description:</label>
                     </div>
                     <div class="col-8 ml-1">
-                        <textarea placeholder="Description" [(ngModel)]="workLog.description" class="form-control"></textarea>
+                        <textarea placeholder="Description" [(ngModel)]="workLog.description"
+                            class="form-control"></textarea>
                     </div>
                 </div>
             </div>
@@ -96,10 +106,12 @@
 <div class="modal-footer">
     <div class="row">
         <div class="col">
-            <button class="btn btn-danger" type="button" id="cancel" (click)="modalClose()" style="cursor: pointer;">cancel</button>
+            <button class="btn btn-danger" type="button" id="cancel" (click)="modalClose()"
+                style="cursor: pointer;">cancel</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" type="button" id="submit" (click)="addWorkLog()" style="cursor: pointer;">submit</button>
+            <button class="btn btn-primary" type="button" id="submit" (click)="addWorkLog()"
+                style="cursor: pointer;">submit</button>
         </div>
     </div>
 </div>
