@@ -12,24 +12,25 @@ import { TaskAssignUserComponent } from '../../modals/task-assign-user/task-assi
 
 export class TaskAssignComponent implements OnInit {
   taskList = [];
-  task ={
-    module: null, 
+  task = {
+    module: null,
     title: '',
     description: '',
-    assigner :null,
-    assigned : null,
-    Date : new Date()
+    assigner: null,
+    assigned: null,
+    Date: new Date()
   }
   activeTab = 'Assign Task';
   complateTask = [];
-  assigned=[]
+  assigned = []
 
   constructor(public common: CommonService,
     public api: ApiService,
-    public modalService:NgbModal,
-  ){
-            this.getTask()
-            this.getCompleteTask()
+    public modalService: NgbModal,
+  ) {
+    this.getTask();
+    this.getCompleteTask();
+    this.assignByMe()
   }
 
   ngOnInit() {
@@ -81,12 +82,13 @@ export class TaskAssignComponent implements OnInit {
     // this.task.description = task.description
     // this.task.assigner = task.assignee_name
     // this.task.assigned = task.assigned_name4
-    this.common.params=task;
-    const activeModal=  this.modalService.open(TaskAssignUserComponent,{ size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = task;
+    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-    if (data.response) {
-      this.getTask()      }  
-  });
+      if (data.response) {
+        this.getTask()
+      }
+    });
   }
 
   deleteTask(task) {
@@ -110,16 +112,17 @@ export class TaskAssignComponent implements OnInit {
       });
   }
 
-  assignTask(){
-    this.common.params=null;
-  const activeModal=  this.modalService.open(TaskAssignUserComponent,{ size: 'lg', container: 'nb-layout', backdrop: 'static' });
-      activeModal.result.then(data => {
+  assignTask() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
       if (data.response) {
-        this.getTask()      }  
+        this.getTask()
+      }
     });
   }
 
-  getCompleteTask(){
+  getCompleteTask() {
     this.common.loading++;
 
     this.api.get("Task/getCompletedTaskWrtUser").subscribe(res => {
@@ -136,20 +139,20 @@ export class TaskAssignComponent implements OnInit {
       });
   }
 
-  assignByMe(){
+  assignByMe() {
     this.common.loading++;
 
     this.api.get("Task/getAssignedTask").subscribe(res => {
       this.common.loading--;
       console.log("complete1", res['data'])
 
-      this.assigned= res['data'] || [];
+      this.assigned = res['data'] || [];
     },
       err => {
         this.common.loading--;
 
         this.common.showError();
         console.log('Error: ', err);
-      }); 
+      });
   }
 }

@@ -15,9 +15,9 @@ export class TaskAssignUserComponent implements OnInit {
     title: '',
     description: '',
     assigner: null,
-    assignerName:null,
+    assignerId:null,
     assigned: null,
-    assignedName:null,
+    assignedId:null,
     Date: new Date()
   }
   moduleName=[];
@@ -84,9 +84,9 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
   changeAssined(event) {
-    console.log("item1", event)
-    this.task.assigned = event.id;
-    this.task.assignedName =event.name
+    console.log("item", event)
+    this.task.assigned = event.name;
+    this.task.assignedId=event.id;
   }
 
  
@@ -108,18 +108,20 @@ export class TaskAssignUserComponent implements OnInit {
 
   changeAssignee(event) {
     console.log("item1", event)
-    this.task.assigner = event.id;
-    this.task.assignerName =event.name
+    this.task.assigner = event.name;
+    this.task.assignerId=event.id
 
   }
 
  saveUser() {
+  console.log("id of",this.task.assignerId)
+
     const params = {
       module_id: this.task.module,
       title: this.task.title,
       description: this.task.description,
-      assignee_emp_id: this.task.assigner,
-      assigned_emp_id: this.task.assigned,
+      assignee_emp_id: this.task.assignerId,
+      assigned_emp_id: this.task.assignedId            ,
       assign_time: this.task.Date
     }
     this.common.loading++;

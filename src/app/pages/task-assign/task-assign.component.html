@@ -75,8 +75,8 @@
                             <td>{{task.title| titlecase}}</td>
                             <td>{{task.description}}</td>
                             <td>{{task.module_name | titlecase}}</td>
-                            <td>{{task.assignee_name | titlecase}}</td>
-                            <td>{{task.assigned_name | titlecase }}</td>
+                            <td>{{task.assignee_emp_name | titlecase}}</td>
+                            <td>{{task.assigned_emp_name | titlecase }}</td>
                             <td>{{task.assign_time}}</td>
                             <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
                             </td>
@@ -109,8 +109,8 @@
                             <td>{{task.title| titlecase}}</td>
                             <td>{{task.description}}</td>
                             <td>{{task.module_name | titlecase}}</td>
-                            <td>{{task.assignee_name | titlecase}}</td>
-                            <td>{{task.assigned_name | titlecase }}</td>
+                            <td>{{task.assignee_emp_name | titlecase}}</td>
+                            <td>{{task.assigned_emp_name | titlecase }}</td>
                             <td>{{task.assign_time}}</td>
                             <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
                             </td>
@@ -120,7 +120,7 @@
                     </tbody>
                 </table>
             </div>
-            <div *ngIf="activeTab=='Assign By Me'">
+            <div *ngIf="activeTab=='Assigned By Me'">
                 <table class="table table-border mt-1">
                     <thead class="thead">
                         <tr>
@@ -137,13 +137,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let task of assigned; let i=index;">
+                        <tr *ngFor="let task of assigned ; let i=index;">
                             <td>{{i+1}}</td>
                             <td>{{task.title| titlecase}}</td>
                             <td>{{task.description}}</td>
                             <td>{{task.module_name | titlecase}}</td>
-                            <td>{{task.assignee_name | titlecase}}</td>
-                            <td>{{task.assigned_name | titlecase }}</td>
+                            <td>{{task.assignee_emp_name | titlecase}}</td>
+                            <td>{{task.assigned_emp_name | titlecase }}</td>
                             <td>{{task.assign_time}}</td>
                             <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
                             </td>
