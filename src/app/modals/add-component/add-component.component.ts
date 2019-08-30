@@ -52,6 +52,7 @@ export class AddComponentComponent implements OnInit {
     this.api.post('Components/addComponent',params)
     .subscribe(res => {
      this.common.loading--;
+     this.activeModel.close();
     }, err => {
       this.common.loading--;
       console.log(err);
