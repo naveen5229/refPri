@@ -9,7 +9,7 @@
             <label>Module:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="moduleName" display="name" placeholder="Enter Module Name" (onSelected)="changeRefernceType($event)" [preSelected]="task.mName ? {name : task.mName} : {name :' '}" inputId="task.module"></auto-suggestion>
+            <auto-suggestion [data]="moduleName" display="name" placeholder="Enter Module Name" (onSelected)="changeRefernceType($event)" [preSelected]="task.mName ? {name : task.mName} : {name :''}" inputId="task.module"></auto-suggestion>
             <!-- 
             <auto-suggestion  (onSelected)="changeRefernceType($event)" display="name">
             </auto-suggestion> -->
@@ -37,7 +37,7 @@
         </div>
         <div class="col-6">
             <!-- <input type="text" placeholder="Assigner" [(ngModel)]="task.assigner" name="name" class="form-control" required> -->
-            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Enter Assigner Name" (onSelected)="changeAssined($event)" [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="task.assigner"></auto-suggestion>
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Enter Assigner Name" (onSelected)="changeAssignee($event)" [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="task.assigner"></auto-suggestion>
 
         </div>
     </div>
@@ -46,7 +46,7 @@
             <label>Assigned:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="assignedLists" display="name" placeholder="Enter Assigned Name" (onSelected)="assignedList($event)" [preSelected]="task.assigner ? {name:task.assigned} : {name:''}" inputId="task.assigned"></auto-suggestion>
+            <auto-suggestion [data]="assignedLists" display="name" placeholder="Enter Assigned Name" (onSelected)="changeAssined($event)" [preSelected]="task.assigner ? {name:task.assigned} : {name:''}" inputId="task.assigned"></auto-suggestion>
             <!-- <input type="text" placeholder="Assigned" [(ngModel)]="task.assigned" name="name" class="form-control" required> -->
         </div>
     </div>
