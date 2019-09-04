@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
+import { AddComponentComponent } from '../add-component/add-component.component';
 
 @Component({
   selector: 'ngx-work-log',
@@ -19,10 +20,11 @@ export class WorkLogComponent implements OnInit {
     total_minutes:null,
     remark:null,
     description:null,
+    component:null,
   }
-  day:number=0;
-  hour:number=0;
-  min:number=0;
+  day=null;
+  hour=null;
+  min=null;
 
   constructor(private activeModal: NgbActiveModal,
     public common:CommonService,
@@ -42,7 +44,11 @@ export class WorkLogComponent implements OnInit {
   }
 
   addWorkLog(){
-    this.workLog.total_minutes=(this.day*1440)+(this.hour*60)+(this.min)
+    this.workLog.total_minutes=(this.hour*60)+(this.min);
+  }
+
+  addcomponent(){
+    const activeModal = this.modalService.open(AddComponentComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
   }
 
 }
