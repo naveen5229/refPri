@@ -48,6 +48,7 @@
                     <th>Mobile</th>
                     <th>Email</th>
                     <th>Department</th>
+                    <th>Action</th>
 
                 </tr>
             </thead>
@@ -57,8 +58,8 @@
                     <td>{{user.name |titlecase}}</td>
                     <td>{{user.mobileno}}</td>
                     <td>{{user.emailid }}</td>
-
                     <td>{{user.dept_name }}</td>
+                    <td><i class="fas fa-trash-alt" (click)="deleteUser(user.id,i)"></i></td>
 
                 </tr>
             </tbody>

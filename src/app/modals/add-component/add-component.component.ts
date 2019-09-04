@@ -9,55 +9,77 @@ import { ApiService } from '../../Service/Api/api.service';
   styleUrls: ['./add-component.component.scss']
 })
 export class AddComponentComponent implements OnInit {
+  stacks = [];
+  modules = [];
+  component = {
+    name: '',
+    stack: null,
+    module: null
+  };
 
-  stackId=null;
-  moduleList=[];
-  moduleId=null;
-  componentName=null;
 
-  constructor(public activeModel:NgbActiveModal,
-    public common:CommonService,
-    public api:ApiService) {
-      this.common.handleModalSize('class', 'modal-sm', '500');
-      this.getModuleList();
-     }
+  constructor(public activeModel: NgbActiveModal,
+    public common: CommonService,
+    public api: ApiService) {
+    this.common.handleModalSize('class', 'modal-sm', '500');
+    this.getModules();
+    this.getStacks();
+  }
 
   ngOnInit() {
   }
 
-  dismiss(){
-    this.activeModel.close();
-  }
-
-  getModuleList(){
+  getModules() {
     this.common.loading++;
     this.api.get('Suggestion/getModulesList')
-    .subscribe(res => {
-      this.common.loading--;
-      console.log("list",res);
-      this.moduleList = res['data'];
-    }, err => {
-      this.common.loading--;
-      console.log(err);
-    });
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("list", res);
+        this.modules= res['data'];
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+        this.common.showError();
+      });
   }
 
-  addcomponent(){
-    let params={
-      stackId:this.stackId,
-      moduleId:this.moduleId,
-      componentName:this.componentName
+  getStacks() {
+    this.common.loading++;
+    this.api.get('Projects/getAllStack')
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("list", res);
+        this.stacks = res['data'];
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+        this.common.showError();
+      });
+  }
+
+  addComponent() {
+    let params = {
+      stackId: this.component.stack.id,
+      moduleId: this.component.module.id,
+      componentName: this.component.name
     }
     this.common.loading++;
-    this.api.post('Components/addComponent',params)
-    .subscribe(res => {
-     this.common.loading--;
-     this.activeModel.close();
-    }, err => {
-      this.common.loading--;
-      console.log(err);
-    });
+    this.api.post('Components/addComponent', params)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['success']) {
+          this.common.showToast(res['msg']);
+          this.activeModel.close({ response: res['data'] });
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+        this.common.showError();
+      });
+  }
 
+  dismiss() {
+    this.activeModel.close();
   }
 
 }

@@ -132,7 +132,6 @@ export class TaskAssignUserComponent implements OnInit {
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });

@@ -19,9 +19,7 @@
         </div>
     </div>
     <div class="suggestions" *ngIf="showSuggestions && suggestions.length">
-        <p *ngFor="let suggestion of suggestions; let i = index;" class="suggestion"
-            [ngClass]="activeSuggestion == i ? 'active-suggestion' : classFinder(suggestion)"
-            (click)="selectSuggestion(suggestion)">
+        <p *ngFor="let suggestion of suggestions; let i = index;" class="suggestion" [ngClass]="activeSuggestion == i ? 'active-suggestion' : classFinder(suggestion)" (click)="selectSuggestion(suggestion)">
             {{generateString(suggestion)}}
         </p>
     </div>
@@ -39,7 +37,3 @@
 <!-- How To Use -->
 <!-- <auto-suggestion (onSelected)="selectedUser = $event" url=" Suggestion/getFoAdminList" display="employeename"
 placeholder="Enter User Name" [preSelected]="null"></auto-suggestion> -->
-
-
-
-

@@ -36,5 +36,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'list-outline',
     link: '/pages/work-logs',
     home: true,
+  },
+  {
+    title: 'Add Stack',
+    icon: 'cube-outline',
+    link: '/pages/add-stacks',
+    home: true,
   }
 ];

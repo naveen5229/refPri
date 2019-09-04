@@ -1,0 +1,48 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row ">
+            <div class="col-3">
+                <h5>Add Stack</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-2">
+                <label>Stack Parent:</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion [data]="stacks" (onSelected)="stackParentId=($event.id)" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+            </div>
+            <div class="col-2">
+                <label>Stack child:</label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" [(ngModel)]="stackchildId">
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary" (click)="addStack()">Add</button>
+            </div>
+        </div>
+        <div>
+            <table class="table table-border mt-2">
+                <thead class="thead">
+                    <tr>
+                        <th>#</th>
+                        <th>Stack Parent Name</th>
+                        <th>Stack Child Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let stack of stackChilds; let i=index;">
+                        <td>{{i +1 }}</td>
+                        <td>{{stack.stackname}}</td>
+                        <td>{{stack.name }}</td>
+                        <td><i class="fas fa-trash-alt" (click)="deletestackChild(stack.id,i)"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </nb-card-body>
+</nb-card>
