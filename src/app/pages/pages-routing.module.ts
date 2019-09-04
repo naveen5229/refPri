@@ -8,6 +8,7 @@ import { ProjectComponent } from './project/project.component';
 import { ModulesComponent } from './modules/modules.component';
 import { TaskAssignComponent } from './task-assign/task-assign.component';
 import { WorkLogsComponent } from './work-logs/work-logs.component';
+import { AddStacksComponent } from './add-stacks/add-stacks.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -23,6 +24,10 @@ const routes: Routes = [{
     {
       path: 'project',
       component: ProjectComponent,
+    },
+    {
+      path: 'add-stacks',
+      component: AddStacksComponent,
     },
     {
       path: 'modules',

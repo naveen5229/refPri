@@ -12,6 +12,7 @@ import { ModulesComponent } from './modules/modules.component';
 import { TaskAssignComponent } from './task-assign/task-assign.component';
 import { DirectiveModule } from '../directives/directives.module';
 import { WorkLogsComponent } from './work-logs/work-logs.component';
+import { AddStacksComponent } from './add-stacks/add-stacks.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { WorkLogsComponent } from './work-logs/work-logs.component';
     ModulesComponent,
     TaskAssignComponent,
     WorkLogsComponent,
+    AddStacksComponent,
   ],
 })
 export class PagesModule {

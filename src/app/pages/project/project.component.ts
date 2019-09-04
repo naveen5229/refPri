@@ -8,7 +8,7 @@ import { ApiService } from '../../Service/Api/api.service';
   styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent implements OnInit {
-  project=null;
+  project='';
   projects=[];
   // projects = [{
   //   project: 'partner',
@@ -60,7 +60,6 @@ export class ProjectComponent implements OnInit {
 
   getProject(){
     this.common.loading++;
-
     this.api.get("Projects/getAllProject").subscribe(res =>{
       this.common.loading--;
 
@@ -71,6 +70,25 @@ export class ProjectComponent implements OnInit {
     console.log('Error: ', err);
     });
     }
-  
+
+    deleteProject(projectId,rowIndex){
+      let params = {
+        row_id:projectId
+      }
+      this.common.loading++;
+      this.api.post('Projects/deleteProject', params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("res", res);
+          if (res['success']) {
+            this.common.showToast(res['msg']);
+            this.projects.splice(rowIndex,1);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+          this.common.showError();
+        });
+    }
 
 }

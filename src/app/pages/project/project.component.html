@@ -4,32 +4,34 @@
             <div class="col-3">
                 <h5> Project</h5>
             </div>
-            <div class="col-3">
-                <input type="text" placeholder="Project Name" [(ngModel)]="project" name="name" class="form-control" required>
-
-            </div>
-            <div class="col-3">
-                <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()"><i class="fa fa-plus" aria-hidden="true"></i>
- </button> </div>
         </div>
     </nb-card-header>
     <nb-card-body>
+        <div class="row">
+            <div class="col-3">
+                <input type="text" placeholder="Project Name" [(ngModel)]="project" name="name" class="form-control" required>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">Submit
+                 </button>
+            </div>
+        </div>
 
-        <table class="table table-border">
+        <table class="table table-border mt-2">
             <thead class="thead">
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let project of projects; let i=index;">
                     <td>0{{i +1 }}</td>
                     <td>{{project.name | titlecase}}</td>
+                    <td><i class="fas fa-trash-alt" (click)="deleteProject(project.id,i)"></i></td>
                 </tr>
             </tbody>
         </table>
     </nb-card-body>
-
 </nb-card>

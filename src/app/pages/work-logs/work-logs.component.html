@@ -5,10 +5,50 @@
                 <h5>Work Logs</h5>
             </div>
             <div class="col-10">
-                <button type="button text-right" class="btn btn-primary" (click)="addWorkLogs()">+</button>
+                <button type="button text-right" style="margin-left: 771px;" class="btn btn-primary" (click)="addWorkLogs()"><i class="fa fa-plus"></i></button>
             </div>
         </div>
     </nb-card-header>
     <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'">Pending WorkLogs
+                </li>
+                <li [ngClass]="activeTab=='Task For Me'?'active':''" (click)="activeTab='Task For Me'">Complete WorkLogs
+                </li>
+            </ul>
+        </div>
+        <table *ngIf="workLogs && workLogs.length" class="table table-border mt-1">
+            <thead class="thead">
+                <tr>
+                    <th>S.N</th>
+                    <th>Title</th>
+                    <th>Task</th>
+                    <th>Stack</th>
+                    <th>Component</th>
+                    <th>Date</th>
+                    <th>Working Time</th>
+                    <th>Description</th>
+                    <th>Reviewed By</th>
+                    <th>Remark</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let workLog of workLogs; let i=index;">
+                    <td>{{i +1 }}</td>
+                    <td>{{workLog.title}}</td>
+                    <td>{{workLog.task}}</td>
+                    <td>{{workLog.stack_child_name}}</td>
+                    <td>{{workLog.component_name}}</td>
+                    <td>{{workLog.date | date : 'dd-MMM-yy'}}</td>
+                    <td>{{workLog.total_minutes}}</td>
+                    <td>{{workLog.description}}</td>
+                    <td>{{workLog.review_user_name}}</td>
+                    <td>{{workLog.add_remark}}</td>
+                    <td><i class="fas fa-trash-alt" (click)="deleteWorkLog(workLog.id,i)"></i></td>
+                </tr>
+            </tbody>
+        </table>
     </nb-card-body>
 </nb-card>
