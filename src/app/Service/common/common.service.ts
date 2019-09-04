@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,8 @@ import { NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 export class CommonService {
   loading = 0;
   params=null;
-  constructor(private toastrService: NbToastrService) { }
+  constructor(private toastrService: NbToastrService,
+    private datePipe: DatePipe) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -68,6 +70,20 @@ export class CommonService {
           size + sizeType;
       }
     }, 10);
+  }
+
+  dateFormatter(date) {
+    let d = new Date(date);
+    let year = d.getFullYear();
+    let month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
+    let dat = d.getDate() <= 9 ? "0" + d.getDate() : d.getDate();
+    console.log(year + "-" + month + "-" + dat);
+    return year + "-" + month + "-" + dat;
+  }
+
+  changeDateformate(date) {
+    let d = new Date(date);
+    return this.datePipe.transform(date, "dd-MMM-yyyy");
   }
 
 }

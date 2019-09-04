@@ -10,7 +10,7 @@
             <label>Stack</label>
         </div>
         <div class="col-7">
-            <auto-suggestion (onSelected)="stackId=($event.id)" url="Projects/getAllStack" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+            <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
         </div>
     </div>
     <div class="row mt-2">
@@ -18,7 +18,7 @@
             <label>Module:</label>
         </div>
         <div class="col-7">
-            <auto-suggestion [data]="moduleList" display="name" placeholder="Enter Module Name" (onSelected)="moduleId=($event.id)"></auto-suggestion>
+            <auto-suggestion [data]="modules" display="name" placeholder="Enter Module Name" (onSelected)="component.module = $event.id"></auto-suggestion>
         </div>
     </div>
     <div class="row mt-2">
@@ -26,12 +26,12 @@
             <label>component Name:</label>
         </div>
         <div class="col-7 ml-1">
-            <input type="text" class="form-control" [(ngModel)]="componentName" placeholder="Enter Name" autocomplete="off">
+            <input type="text" class="form-control" [(ngModel)]="component.name" placeholder="Enter Name" autocomplete="off">
         </div>
     </div>
 </div>
 <div class="modal-footer">
     <div class="col text-right">
-        <button class="btn btn-primary" type="button" id="submit" (click)="addcomponent()" style="cursor: pointer;">submit</button>
+        <button class="btn btn-primary" type="button" id="submit" (click)="addComponent()" style="cursor: pointer;">submit</button>
     </div>
 </div>

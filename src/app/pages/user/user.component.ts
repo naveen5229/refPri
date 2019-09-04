@@ -92,4 +92,25 @@ export class UserComponent implements OnInit {
     });
     }
 
+    deleteUser(userId,rowIndex){
+      let params = {
+        user_id: userId
+      }
+      this.common.loading++;
+      this.api.post('Users/deleteUser', params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("res", res);
+          if (res['success']) {
+            this.common.showToast(res['msg']);
+            this.user.splice(rowIndex,1);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+          this.common.showError();
+        });
+
+    }
+
   }
