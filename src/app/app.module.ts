@@ -32,6 +32,8 @@ import { WorkLogComponent } from './modals/work-log/work-log.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskAssignUserComponent } from './modals/task-assign-user/task-assign-user.component';
 import { AddComponentComponent } from './modals/add-component/add-component.component';
+import { TaskStatusCheckComponent } from './modals/task-status-check/task-status-check.component';
+import { ConfirmComponent } from './modals/confirm/confirm.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -39,11 +41,17 @@ import { AddComponentComponent } from './modals/add-component/add-component.comp
     WorkLogComponent,
     TaskAssignUserComponent,
     AddComponentComponent,
+    TaskStatusCheckComponent,
+    ConfirmComponent,
   ],
   entryComponents: [
     WorkLogComponent,
     TaskAssignUserComponent,
-    AddComponentComponent
+    AddComponentComponent,
+    TaskStatusCheckComponent,
+    ConfirmComponent,
+
+
   ],
   imports: [
     BrowserModule,

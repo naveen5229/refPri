@@ -29,12 +29,14 @@ export class TaskAssignUserComponent implements OnInit {
     public common: CommonService) { 
       console.log("task list",this.common.params)
       if(this.common.params != null){
-        this.task.mName=this.common.params.module_name
+        this.task.mName=this.common.params.ModuleName
        this.task.module=this.common.params.module_id,
        this.task.title=this.common.params.title,
-       this.task.description=this.common.params.description,
-       this.task.assigner=this.common.params.assignee_name,
-       this.task.assigned=this.common.params.assigned_name
+       this.task.description=this.common.params.Description,
+       this.task.assigner=this.common.params.AssigneeName,
+       this.task.assigned=this.common.params.AssignerName
+       this.task.assignedId=this.common.params.
+       this.task.assignerId
     }
   
     this.getModuleList();
@@ -115,14 +117,29 @@ export class TaskAssignUserComponent implements OnInit {
 
  saveUser() {
   console.log("id of",this.task.assignerId)
+  console.log("id of 4",this.task.assignedId)
+  console.log("id of 4",this.task.module)
 
+
+    if(this.task.module== null){
+      return this.common.showError("Module name is missing")
+    }
+    else if(this.task.assignerId==null){
+      return this.common.showError("Assigner name is missing")
+
+    }
+    else if(this.task.assignedId==null){
+      return this.common.showError("Assigned name is missing")
+
+    }
     const params = {
-      module_id: this.task.module,
+      moduleId: this.task.module,
       title: this.task.title,
       description: this.task.description,
-      assignee_emp_id: this.task.assignerId,
-      assigned_emp_id: this.task.assignedId            ,
-      assign_time: this.task.Date
+      assigneeEmpId: this.task.assignerId,
+      assignedEmpId: this.task.assignedId,
+      assignTime: this.task.Date,
+      status:0
     }
     this.common.loading++;
     this.api.post('Task/addTask', params).subscribe(res => {
