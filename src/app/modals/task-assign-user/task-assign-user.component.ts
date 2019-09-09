@@ -18,8 +18,10 @@ export class TaskAssignUserComponent implements OnInit {
     assignerId:null,
     assigned: null,
     assignedId:null,
-    Date: new Date()
+    Date: new Date(),
+    id:null
   }
+  btn='Add';
   moduleName=[];
   assignedLists =[];
   assigneeLists =[]
@@ -34,9 +36,11 @@ export class TaskAssignUserComponent implements OnInit {
        this.task.title=this.common.params.title,
        this.task.description=this.common.params.Description,
        this.task.assigner=this.common.params.AssigneeName,
-       this.task.assigned=this.common.params.AssignerName
-       this.task.assignedId=this.common.params.
-       this.task.assignerId
+       this.task.assigned=this.common.params.AssignerName,
+       this.task.assignedId=this.common.params.assigned_emp_id,
+       this.task.assignerId=this.common.params.assignee_emp_id,
+       this.task.id=this.common.params.id
+       this.btn="Update"
     }
   
     this.getModuleList();
@@ -119,7 +123,9 @@ export class TaskAssignUserComponent implements OnInit {
   console.log("id of",this.task.assignerId)
   console.log("id of 4",this.task.assignedId)
   console.log("id of 4",this.task.module)
-
+    if(this.task.id!=null){
+      this.updateData();
+    }
 
     if(this.task.module== null){
       return this.common.showError("Module name is missing")
@@ -143,6 +149,29 @@ export class TaskAssignUserComponent implements OnInit {
     }
     this.common.loading++;
     this.api.post('Task/addTask', params).subscribe(res => {
+      this.common.loading--;
+      this.common.showToast(res['msg'])
+      this.closeModal(true);
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  updateData(){
+    const params = {
+      moduleId: this.task.module,
+      title: this.task.title,
+      description: this.task.description,
+      assigneeEmpId: this.task.assignerId,
+      assigned_emp_id: this.task.assignedId,
+      assign_time: this.task.Date,
+      status:0
+    }
+    this.common.loading++;
+    this.api.post('Task/updateTask', params).subscribe(res => {
       this.common.loading--;
       this.common.showToast(res['msg'])
       this.closeModal(true);

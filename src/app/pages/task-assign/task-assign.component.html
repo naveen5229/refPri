@@ -6,7 +6,7 @@
                 <h5>Tasks</h5>
 
             </div>
-            <div class="text-right">
+            <div class="col text-right">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()"><i
                         class="fa fa-plus"></i></button> </div>
 
@@ -49,7 +49,6 @@
                             <th>Description</th>
                             <th>Module</th>
                             <th>Assigner</th>
-                            <th>Assigned</th>
                             <th>Time</th>
                             <th>Action</th>
 
@@ -59,14 +58,12 @@
                         <tr *ngFor="let task of taskList; let i=index;">
                             <td>0{{i+1}}</td>
                             <td>{{task.Title| titlecase}}</td>
-                            <td>{{task.Description}}</td>
+                            <td>{{task.Description |titlecase}}</td>
                             <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssigneeName | titlecase}}</td>
                             <td>{{task.AssignerName | titlecase }}</td>
-                            <td>{{task.assign_time}}</td>
-                            <td><abbr title="Completed then click it"><i class="fas fa-check-circle"
-                                        (click)="statusComplete(task)"></i></abbr> <abbr title="Waiting for review  then click it"><i class="fa fa-user" aria-hidden="true"
-                                        (click)="waitingForReview(task)"></i></abbr>
+                            <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a'}}</td>
+                            <td><abbr title="Waiting for review  then click it"><i class="fas fa-check-circle"
+                                (click)="waitingForReview(task)"></i></abbr>
                             </td>
 
                         </tr>
@@ -83,7 +80,6 @@
                             <th>Module</th>
                             <th>Description</th>
                             <th>Assigner</th>
-                            <th>Assigned</th>
                             <th>Time</th>
 
                         </tr>
@@ -92,11 +88,10 @@
                         <tr *ngFor="let task of complateTask; let i=index;">
                             <td>0{{i+1}}</td>
                             <td>{{task.Title| titlecase}}</td>
-                            <td>{{task.Description}}</td>
+                            <td>{{task.Description | titlecase}}</td>
                             <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssigneeName | titlecase}}</td>
                             <td>{{task.AssignerName | titlecase }}</td>
-                            <td>{{task.assign_time}}</td>
+                            <td>{{task.assign_time |date :'dd MMM yyyy hh:mm a' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -109,7 +104,6 @@
                             <th>Title</th>
                             <th>Module</th>
                             <th>Description</th>
-                            <th>Assigner</th>
                             <th>Assigned</th>
                             <th>Time</th>
                             <th>Action</th>
@@ -121,19 +115,17 @@
                         <tr *ngFor="let task of assigned ; let i=index;">
                             <td>0{{i+1}}</td>
                             <td>{{task.Title| titlecase}}</td>
-                            <td>{{task.Description}}</td>
-                            <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssignerName | titlecase}}</td>
+                            <td>{{task.Description | titlecase}}</td>
+                            <td>{{task.ModuleName| titlecase}}</td>
                             <td>{{task.AssigneeName | titlecase }}</td>
-                            <td>{{task.assign_time }}</td>
-                            <td>
-                                <div *ngIf="task.status==0">
-                                    <td><i class="far fa-edit" (click)=" editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
-                                </div>
-                                <div *ngIf="task.status==1">
-                                    <td><i class="far fa-edit" (click)=" editTask(task)"></i>
-                                </div>
-                                </td>
+                            <td>{{task.assign_time | date :'dd:MMM:yyyy hh-mm a' }}</td>
+
+                            <div *ngIf="task.status==0">
+                                <td><i class="far fa-edit" (click)=" editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i></td>
+                            </div>
+                            <div *ngIf="task.status==1">
+                                <td><i class="far fa-edit" (click)=" editTask(task)"></i></td>
+                            </div>
                         </tr>
                     </tbody>
                 </table>
@@ -147,25 +139,17 @@
                             <th>Module</th>
                             <th>Description</th>
                             <th>Assigner</th>
-                            <th>Assigned</th>
                             <th>Time</th>
-                            <th>Status</th>
-                            <th>Remark</th>
-                            <th>Action</th>
-
-
-
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let task of review ; let i=index;">
                             <td>0{{i+1}}</td>
                             <td>{{task.Title| titlecase}}</td>
-                            <td>{{task.Description}}</td>
+                            <td>{{task.Description |titlecase}}</td>
                             <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssigneeNamee | titlecase}}</td>
                             <td>{{task.AssignerName | titlecase }}</td>
-                            <td>{{task.assign_time}}</td>
+                            <td>{{task.assign_time | date :'dd:MMM:yyyy hh-mm a'}}</td>
                             <!-- <td><i class="fas fa-eye" (click)="reviewTask(task)"></i> -->
                             <!-- </td> -->
 
@@ -185,10 +169,7 @@
                             <th>Module</th>
                             <th>Description</th>
                             <th>Assigner</th>
-                            <th>Assigned</th>
                             <th>Time</th>
-                            <th>Status</th>
-                            <th>Remark</th>
                             <th>Action</th>
 
 
@@ -199,24 +180,15 @@
                         <tr *ngFor="let task of changeReview; let i=index;">
                             <td>0{{i+1}}</td>
                             <td>{{task.Title| titlecase}}</td>
-                            <td>{{task.Description}}</td>
+                            <td>{{task.Description|titlecase }}</td>
                             <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssigneeName | titlecase}}</td>
                             <td>{{task.AssignerName | titlecase }}</td>
-                            <td>{{task.assign_time}}</td>
+                            <td>{{task.assign_time | date :'dd:MMM:yyyy hh-mm a'}}</td>
                             <!-- <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
                             </td> -->
-                            <td> <select class="form-controlr" name="taskStatus" class="form-control" [(ngModel)]="taskStatus">
-                                    <option value="a">Select Status</option>
-                                    <option value="2">Completed</option>
-                                    <option value="-1">Review But Again Change</option>
-                                    <option value="-2">Reject</option>
-
-                                </select></td>
-                            <td><textarea row="2" cols="15" [(ngModel)]="remark" class="form-control"></textarea>
+                            <td><abbr title="Check and Change then click it"><i class="fas fa-check-circle"
+                                    (click)="waitingForReview(task)"></i></abbr>
                             </td>
-                            <td><button class="btn btn-primary text-capitalize" id="button" (click)="statusChangeRemark(task)">Submit</button>
-
 
 
                         </tr>
@@ -232,7 +204,6 @@
                             <th>Title</th>
                             <th>Description</th>
                             <th>Module </th>
-                            <th>Assigner</th>
                             <th>Assigned</th>
                             <th>Time</th>
                             <th>Status</th>
@@ -248,10 +219,9 @@
                             <td>{{task.Title| titlecase}}</td>
                             <td>{{task.Description}}</td>
                             <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssigneeName | titlecase}}</td>
-                            <td>{{task.AssignerName | titlecase }}</td>
-                            <td>{{task.assign_time}}</td>
-                            <td> <select class="form-controlr" name="taskStatus" class="form-control" [(ngModel)]="taskStatus">
+                            <td>{{task.AssigneeName | titlecase }}</td>
+                            <td>{{task.assign_time | date :'short'}}</td>
+                            <td> <select class="form-control" name="taskStatus" class="form-control" [(ngModel)]="taskStatus">
                                     <option value="a">Select Status</option>
                                     <option value="2">Completed</option>
                                     <option value="-1">Review But Change</option>

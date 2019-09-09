@@ -1,26 +1,34 @@
-// :host ::ng-deep .fa-edit {
-//     font-size: 12px;
-//     margin-right: 10px;
-//     background-color: #3c6ac7;
-//     color: #fff;
-//     border-color: #73a1ff;
-//     padding: 8px;
-//     border-radius: 3px;
-// }
+:host ::ng-deep .fa-edit {
+    // font-size: 12px;
+    margin-right: 10px;
+    //background-color: #3c6ac7;
+    color: #3c6ac7;
+    // border-color: #73a1ff;
+    padding: 2px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 :host ::ng-deep .edit-btn:hover {
     background-color: #0054ff;
 }
 
 :host ::ng-deep .fa-check-circle {
     border-radius: 3px;
-    font-size: 12px;
-    margin-right: 10px
+    //font-size: 12px;
+    margin-right: 10px;
+    color: #3cc743;
+    padding: 2px;
+    cursor: pointer;
 }
 
-:host ::ng-deep .fa-user {
+:host ::ng-deep .fa-trash-alt {
+    //font-size: 12px;
+    margin-right: 10px;
+    color: red;
+    padding: 2px;
     border-radius: 3px;
-    font-size: 12px;
-    margin-right: 10px
+    cursor: pointer;
 }
 
 :host ::ng-deep .fa-eye {

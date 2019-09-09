@@ -94,6 +94,7 @@ export class TaskAssignComponent implements OnInit {
     //  this.task.description = task.Description
     // this.task.assigner = task.AssigneeNamee
     // this.task.assigned = task.AssignerName
+    // console.log("tasssssssssss",task)
     this.common.params = task;
     const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
@@ -104,9 +105,19 @@ export class TaskAssignComponent implements OnInit {
   }
 
   deleteTask(task) {
+    this.common.params = {
+      title: 'Delete Task',
+      description: 'Are you sure you want to delete this task?',
+      btn2: "No",
+      btn1: 'Yes'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
     console.log("task", task)
     const params = {
-      taskId: task.task_id
+      taskId: task.id
     }
     console.log("id", params)
 
@@ -115,14 +126,18 @@ export class TaskAssignComponent implements OnInit {
       this.common.loading--;
       this.getTask()
       this.common.showToast(res['msg'])
-    },
+    
+  },
+ 
       err => {
         this.common.loading--;
 
         this.common.showError();
         console.log('Error: ', err);
+        } );
+      }
       });
-  }
+      }
 
   assignTask() {
     this.common.params = null;
@@ -158,15 +173,15 @@ export class TaskAssignComponent implements OnInit {
           this.getTask()
           this.common.showToast(res['msg'])
         },
-        );
-      }
-    })
+        
     err => {
       this.common.loading--;
 
       this.common.showError();
       console.log('Error: ', err);
-    };
+    });
+  }
+})
   }
 
   waitingForReview(check) {
@@ -191,15 +206,15 @@ export class TaskAssignComponent implements OnInit {
           this.getTask()
           this.common.showToast(res['msg'])
         },
-        );
-      }
-    })
+     
     err => {
       this.common.loading--;
 
       this.common.showError();
       console.log('Error: ', err);
-    };
+    }   );
+  }
+})
   }
 
   reviewTask(review) {
@@ -212,7 +227,7 @@ export class TaskAssignComponent implements OnInit {
     if (this.taskStatus == "-1" || this.taskStatus == "-2") {
       if (this.remark == null) {
 
-        return this.common.showError("Remark is null");
+        return this.common.showError("Remark is required");
       }
     }
     this.changeStatus(review)
