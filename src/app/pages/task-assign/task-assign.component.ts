@@ -38,9 +38,16 @@ export class TaskAssignComponent implements OnInit {
     this.getTask();
     // this.getCompleteTask();
     // this.assignByMe()
+    this.common.refresh = this.refresh.bind(this);
+
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+
+    this.getTask();
   }
 
   saveUser() {
@@ -186,8 +193,8 @@ export class TaskAssignComponent implements OnInit {
 
   waitingForReview(check) {
     this.common.params = {
-      title: 'Closing Stock',
-      description: 'Waiting for Review for  this task?',
+      title: 'Confirm Model',
+      description: 'Are you sure your task is completed?',
       btn2: "No",
       btn1: 'Yes'
     };
@@ -239,7 +246,7 @@ export class TaskAssignComponent implements OnInit {
     const params = {
       status: this.taskStatus,
       taskId: review.id,
-      remark: this.remark
+      review_remark: this.remark
     }
     this.common.loading++;
     this.api.post('Task/updateTaskStatus', params).subscribe(res => {
