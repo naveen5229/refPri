@@ -3,6 +3,8 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskAssignUserComponent } from '../../modals/task-assign-user/task-assign-user.component';
+import { TaskStatusCheckComponent } from '../../modals/task-status-check/task-status-check.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-task-assign',
@@ -20,20 +22,32 @@ export class TaskAssignComponent implements OnInit {
     assigned: null,
     Date: new Date()
   }
+  review = [];
   activeTab = 'Assign Task';
   complateTask = [];
-  assigned = []
+  assigned = [];
+  changeReview = [];
+  taskStatus = "a";
+  pendingReview = [];
+  remark = null;
 
   constructor(public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal,
   ) {
     this.getTask();
-    this.getCompleteTask();
-    this.assignByMe()
+    // this.getCompleteTask();
+    // this.assignByMe()
+    this.common.refresh = this.refresh.bind(this);
+
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+
+    this.getTask();
   }
 
   saveUser() {
@@ -62,11 +76,16 @@ export class TaskAssignComponent implements OnInit {
   getTask() {
     this.common.loading++;
 
-    this.api.get("Task/getTaskWrtEmp").subscribe(res => {
+    this.api.get("Task/getTaskWrtStatus").subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
 
-      this.taskList = res['data'] || [];
+      this.taskList = res['data']["AssignForMe"] || [];
+      this.assigned = res['data']["AssignByMe"] || [];
+      this.complateTask = res['data']["CompleteTask"] || [];
+      this.review = res['data']["WaitingForReview"] || [];
+      this.changeReview = res['data']["ReviewButChange"] || [];
+      this.pendingReview = res['data']["WaitingList"] || [];
     },
       err => {
         this.common.loading--;
@@ -77,11 +96,12 @@ export class TaskAssignComponent implements OnInit {
   }
 
   editTask(task) {
-    // this.task.module = task.module_name;
-    // this.task.title = task.title
-    // this.task.description = task.description
-    // this.task.assigner = task.assignee_name
-    // this.task.assigned = task.assigned_name4
+    // this.task.module = task.ModuleName;
+    //  this.task.title = task.Title
+    //  this.task.description = task.Description
+    // this.task.assigner = task.AssigneeNamee
+    // this.task.assigned = task.AssignerName
+    // console.log("tasssssssssss",task)
     this.common.params = task;
     const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
@@ -92,14 +112,144 @@ export class TaskAssignComponent implements OnInit {
   }
 
   deleteTask(task) {
+    this.common.params = {
+      title: 'Delete Task',
+      description: 'Are you sure you want to delete this task?',
+      btn2: "No",
+      btn1: 'Yes'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
     console.log("task", task)
     const params = {
-      taskId: task.task_id
+      taskId: task.id
     }
     console.log("id", params)
 
     this.common.loading++;
     this.api.post('Task/deleteTask', params).subscribe(res => {
+      this.common.loading--;
+      this.getTask()
+      this.common.showToast(res['msg'])
+    
+  },
+ 
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+        } );
+      }
+      });
+      }
+
+  assignTask() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getTask()
+      }
+    });
+  }
+
+  statusComplete(task) {
+    this.common.params = {
+      title: 'Closing Stock',
+      description: 'Are you sure you complete this task?',
+      btn2: "No",
+      btn1: 'Yes'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
+
+
+        console.log(task);
+        const params = {
+          status: 2,
+          taskId: task.id
+        }
+        this.common.loading++;
+        this.api.post('Task/updateTaskStatus', params).subscribe(res => {
+          this.common.loading--;
+          this.getTask()
+          this.common.showToast(res['msg'])
+        },
+        
+    err => {
+      this.common.loading--;
+
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+})
+  }
+
+  waitingForReview(check) {
+    this.common.params = {
+      title: 'Confirm Model',
+      description: 'Are you sure your task is completed?',
+      btn2: "No",
+      btn1: 'Yes'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
+        console.log(check);
+        const params = {
+          status: 1,
+          taskId: check.id
+        }
+        this.common.loading++;
+        this.api.post('Task/updateTaskStatus', params).subscribe(res => {
+          this.common.loading--;
+          this.getTask()
+          this.common.showToast(res['msg'])
+        },
+     
+    err => {
+      this.common.loading--;
+
+      this.common.showError();
+      console.log('Error: ', err);
+    }   );
+  }
+})
+  }
+
+  reviewTask(review) {
+    this.common.params = review
+    this.modalService.open(TaskStatusCheckComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' })
+  }
+
+  statusChangeRemark(review) {
+    console.log("review", review)
+    if (this.taskStatus == "-1" || this.taskStatus == "-2") {
+      if (this.remark == null) {
+
+        return this.common.showError("Remark is required");
+      }
+    }
+    this.changeStatus(review)
+  }
+
+
+
+  changeStatus(review) {
+    const params = {
+      status: this.taskStatus,
+      taskId: review.id,
+      review_remark: this.remark
+    }
+    this.common.loading++;
+    this.api.post('Task/updateTaskStatus', params).subscribe(res => {
       this.common.loading--;
       this.getTask()
       this.common.showToast(res['msg'])
@@ -112,47 +262,4 @@ export class TaskAssignComponent implements OnInit {
       });
   }
 
-  assignTask() {
-    this.common.params = null;
-    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        this.getTask()
-      }
-    });
-  }
-
-  getCompleteTask() {
-    this.common.loading++;
-
-    this.api.get("Task/getCompletedTaskWrtUser").subscribe(res => {
-      this.common.loading--;
-      console.log("complete", res['data'])
-
-      this.complateTask = res['data'] || [];
-    },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-  }
-
-  assignByMe() {
-    this.common.loading++;
-
-    this.api.get("Task/getAssignedTask").subscribe(res => {
-      this.common.loading--;
-      console.log("complete1", res['data'])
-
-      this.assigned = res['data'] || [];
-    },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-  }
 }
