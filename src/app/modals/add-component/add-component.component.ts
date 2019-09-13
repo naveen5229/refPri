@@ -16,6 +16,7 @@ export class AddComponentComponent implements OnInit {
     stack: null,
     module: null
   };
+  isFormSubmit = false;
 
 
   constructor(public activeModel: NgbActiveModal,
@@ -35,7 +36,7 @@ export class AddComponentComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         console.log("list", res);
-        this.modules= res['data'];
+        this.modules = res['data'];
       }, err => {
         this.common.loading--;
         console.log(err);
@@ -59,10 +60,11 @@ export class AddComponentComponent implements OnInit {
 
   addComponent() {
     let params = {
-      stackId: this.component.stack.id,
-      moduleId: this.component.module.id,
+      stackId: this.component.stack,
+      moduleId: this.component.module,
       componentName: this.component.name
-    }
+    };
+    console.log("")
     this.common.loading++;
     this.api.post('Components/addComponent', params)
       .subscribe(res => {
