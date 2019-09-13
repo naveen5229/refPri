@@ -12,41 +12,114 @@
     <nb-card-body>
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'">Pending WorkLogs
+                <li [ngClass]="activeTab=='Pending WorkLogs'?'active':''" (click)="activeTab='Pending WorkLogs'">Pending
                 </li>
-                <li [ngClass]="activeTab=='Task For Me'?'active':''" (click)="activeTab='Task For Me'">Complete WorkLogs
+                <li [ngClass]="activeTab=='Review WorkLogs'?'active':''" (click)="activeTab='Review WorkLogs'">Review
+                </li>
+                <li [ngClass]="activeTab=='Complete WorkLogs'?'active':''" (click)="activeTab='Complete WorkLogs'">Complete
                 </li>
             </ul>
         </div>
-        <table *ngIf="workLogs && workLogs.length" class="table table-border mt-1">
+        <table *ngIf="activeTab=='Pending WorkLogs'" class="table table-border mt-1">
             <thead class="thead">
                 <tr>
-                    <th>S.N</th>
+                    <th>#</th>
                     <th>Title</th>
                     <th>Task</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Time</th>
                     <th>Stack</th>
                     <th>Component</th>
-                    <th>Date</th>
-                    <th>Working Time</th>
-                    <th>Description</th>
                     <th>Reviewed By</th>
-                    <th>Remark</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let workLog of workLogs; let i=index;">
                     <td>{{i +1 }}</td>
-                    <td>{{workLog.title}}</td>
-                    <td>{{workLog.task}}</td>
-                    <td>{{workLog.stack_child_name}}</td>
-                    <td>{{workLog.component_name}}</td>
+                    <td>{{workLog.Title}}</td>
+                    <td>{{workLog.TaskName}}</td>
+                    <td>{{workLog.Description}}</td>
                     <td>{{workLog.date | date : 'dd-MMM-yy'}}</td>
                     <td>{{workLog.total_minutes}}</td>
-                    <td>{{workLog.description}}</td>
-                    <td>{{workLog.review_user_name}}</td>
-                    <td>{{workLog.add_remark}}</td>
-                    <td><i class="fas fa-trash-alt" (click)="deleteWorkLog(workLog.id,i)"></i></td>
+                    <td>{{workLog.stack_child_name}}</td>
+                    <td>{{workLog.component_name}}</td>
+                    <td>{{workLog.ReviewerName}}</td>
+                    <td><span><i class="fa fa-edit" (click)="addWorkLogs(workLog)"></i>
+                        <i class="fas fa-trash-alt" (click)="deleteWorkLog(workLog,i)"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="activeTab=='Review WorkLogs'">
+            <table class="table table-border mt-1">
+                <thead class="thead">
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Task</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Stack</th>
+                        <th>Component</th>
+                        <th>Reviewed By</th>
+                        <th>Status</th>
+                        <th>Remark</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reviewWorkLog of reviewWorkLogs ; let i=index;">
+                        <td>{{i +1 }}</td>
+                        <td>{{reviewWorkLog.Title}}</td>
+                        <td>{{reviewWorkLog.TaskName}}</td>
+                        <td>{{reviewWorkLog.Description}}</td>
+                        <td>{{reviewWorkLog.date | date : 'dd-MMM-yy'}}</td>
+                        <td>{{reviewWorkLog.total_minutes}}</td>
+                        <td>{{reviewWorkLog.stack_child_name}}</td>
+                        <td>{{reviewWorkLog.component_name}}</td>
+                        <td>{{reviewWorkLog.ReviewerName}}</td>
+                        <td> <select class="form-control" name="taskStatus" class="form-control" [(ngModel)]="taskStatus">
+                                <option value="1">Completed</option>
+                                <option value="-1">Reject</option>
+                            </select></td>
+                        <td><textarea row="2" cols="15" [(ngModel)]="remark" class="form-control"></textarea>
+                        </td>
+                        <td><button class="btn btn-primary text-capitalize" id="button" (click)="changeWorkLogStatus(reviewWorkLog)">save</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <table *ngIf="activeTab=='Complete WorkLogs'" class="table table-border mt-1">
+            <thead class="thead">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Stack</th>
+                    <th>Component</th>
+                    <th>Reviewed By</th>
+                    <th>Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let completeWorkLog of completeWorkLogs; let i=index;">
+                    <td>{{i +1 }}</td>
+                    <td>{{completeWorkLog.Title}}</td>
+                    <td>{{completeWorkLog.TaskName}}</td>
+                    <td>{{completeWorkLog.Description}}</td>
+                    <td>{{completeWorkLog.date | date : 'dd-MMM-yy'}}</td>
+                    <td>{{completeWorkLog.total_minutes}}</td>
+                    <td>{{completeWorkLog.stack_child_name}}</td>
+                    <td>{{completeWorkLog.component_name}}</td>
+                    <td>{{completeWorkLog.ReviewerName}}</td>
+                    <td>{{completeWorkLog.add_remark}}</td>
                 </tr>
             </tbody>
         </table>

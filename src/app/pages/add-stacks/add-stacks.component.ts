@@ -67,9 +67,7 @@ export class AddStacksComponent implements OnInit {
         console.log(err);
       });
   }
-
   
-
   deletestackChild(stackchildId,rowId){
     let params = {
       stackChildId:stackchildId

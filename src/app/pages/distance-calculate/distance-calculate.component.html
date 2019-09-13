@@ -1,0 +1,42 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-3">
+                <h5>Distance Calculate</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-height: 550px;">
+        <div class="row">
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="fill-elt">Name:</label>
+                    <input class="fill-elt form-control" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="fill-elt">From Date:</label>
+                    <uj-date-time-picker (onChanged)="startDate = $event" [dateTimeValue]="startDate">
+                    </uj-date-time-picker>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="fill-elt">To Date</label>
+                    <uj-date-time-picker (onChanged)="endDate = $event" [dateTimeValue]="endDate">
+                    </uj-date-time-picker>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-group">
+                    <button type="button" style="margin-top: 31px;" class="btn btn-primary">Submit</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="map" class="map"></div>
+        </div>
+    </nb-card-body>
+</nb-card>
