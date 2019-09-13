@@ -5,33 +5,44 @@
     </button>
 </div>
 <div class="modal-body">
-    <div class="row">
-        <div class="col-3">
-            <label>Stack</label>
+    <form #formFilling="ngForm" name="component-form" id="component-form" (submit)="formFilling.valid && addComponent()">
+        <div class="row">
+            <div class="col-3">
+                <label>Stack<span class="text-red">*</span></label>
+            </div>
+            <div class="col-7">
+                <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event.id" name="stack" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+            </div>
         </div>
-        <div class="col-7">
-            <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+        <div *ngIf="component.stack == null && isFormSubmit" class="err">
+            <span class="text-red" style="margin-left: 126px;">value is mandatory</span>
         </div>
-    </div>
-    <div class="row mt-2">
-        <div class="col-3">
-            <label>Module:</label>
+        <div class="row mt-2">
+            <div class="col-3">
+                <label>Module:<span class="text-red">*</span></label>
+            </div>
+            <div class="col-7">
+                <auto-suggestion [data]="modules" display="name" name="module" placeholder="Enter Module Name" (onSelected)="component.module = $event.id"></auto-suggestion>
+            </div>
         </div>
-        <div class="col-7">
-            <auto-suggestion [data]="modules" display="name" placeholder="Enter Module Name" (onSelected)="component.module = $event.id"></auto-suggestion>
+        <div *ngIf="component.module==null && isFormSubmit" class="err">
+            <span class="text-red" style="margin-left: 126px;">value is mandatory</span>
         </div>
-    </div>
-    <div class="row mt-2">
-        <div class="col-3">
-            <label>component Name:</label>
+        <div class="row mt-2">
+            <div class="col-3">
+                <label>component Name:<span class="text-red">*</span></label>
+            </div>
+            <div class="col-7 ml-1">
+                <input type="text" class="form-control" name="component" id="component" [(ngModel)]="component.name" placeholder="Enter Name" autocomplete="off" #componentName="ngModel" required>
+            </div>
         </div>
-        <div class="col-7 ml-1">
-            <input type="text" class="form-control" [(ngModel)]="component.name" placeholder="Enter Name" autocomplete="off">
+        <div *ngIf="isFormSubmit && componentName.errors" class="err">
+            <span class="text-red" style="margin-left: 126px;" [hidden]="!componentName.errors.required"> value is mandatory </span>
         </div>
-    </div>
+    </form>
 </div>
 <div class="modal-footer">
     <div class="col text-right">
-        <button class="btn btn-primary" type="button" id="submit" (click)="addComponent()" style="cursor: pointer;">submit</button>
+        <button class="btn btn-primary" form="component-form" id="component" name="addcomponent" (click)="isFormSubmit = true" style="cursor: pointer;">submit</button>
     </div>
 </div>

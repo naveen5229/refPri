@@ -42,5 +42,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'cube-outline',
     link: '/pages/add-stacks',
     home: true,
+  },
+  {
+    title: 'Distance Calculate',
+    icon: 'cube-outline',
+    link: '/pages/distance-calculate',
+    home: true,
   }
 ];

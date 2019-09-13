@@ -9,6 +9,8 @@ import { ModulesComponent } from './modules/modules.component';
 import { TaskAssignComponent } from './task-assign/task-assign.component';
 import { WorkLogsComponent } from './work-logs/work-logs.component';
 import { AddStacksComponent } from './add-stacks/add-stacks.component';
+import { AuthGuard } from '../guards/auth.guard';
+import { DistanceCalculateComponent } from './distance-calculate/distance-calculate.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -20,26 +22,37 @@ const routes: Routes = [{
     {
       path: 'user',
       component: UserComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'project',
       component: ProjectComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'add-stacks',
       component: AddStacksComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'modules',
       component: ModulesComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'task-assign',
       component: TaskAssignComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'work-logs',
       component: WorkLogsComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'distance-calculate',
+      component: DistanceCalculateComponent,
+      canActivate: [AuthGuard]
     },
   ],
 }];

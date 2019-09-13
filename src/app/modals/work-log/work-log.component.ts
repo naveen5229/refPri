@@ -12,9 +12,13 @@ import { ApiService } from '../../Service/Api/api.service';
 export class WorkLogComponent implements OnInit {
 
   tasks = [];
+  taskname = null;
   components = [];
+  componentName=null;
   stacks = [];
   users = [];
+  isFormSubmit = false;
+  rowId=null;
   workLog = {
     taskId: null,
     stackId: null,
@@ -25,8 +29,9 @@ export class WorkLogComponent implements OnInit {
     description: '',
     componentId: null,
     hrs: null,
-    minutes: null
+    minutes: null,
   };
+  reviewedBy=null;
 
   constructor(private activeModal: NgbActiveModal,
     public api: ApiService,
@@ -37,6 +42,27 @@ export class WorkLogComponent implements OnInit {
     this.getComponents();
     this.getStacks();
     this.getUsers();
+
+    if (this.common.params.workLogs) {
+      this.workLog = {
+        taskId: this.common.params.workLogs.task_id,
+        stackId: this.common.params.workLogs.stack_child_id,
+        title: this.common.params.workLogs.title,
+        date: new Date(this.common.params.workLogs.date),
+        reviewUserId: this.common.params.workLogs.review_user_id,
+        remark: this.common.params.workLogs.review_remark,
+        description: this.common.params.workLogs.description,
+        componentId: this.common.params.workLogs.component_id,
+        hrs: this.common.params.workLogs.total_minutes.split(":")[0],
+        minutes: this.common.params.workLogs.total_minutes.split(":")[1],
+      };
+      this.rowId=this.common.params.workLogs.id,
+      this.taskname = this.common.params.workLogs.TaskName;
+      this.reviewedBy=this.common.params.workLogs.ReviewerName;
+      this.componentName=this.common.params.workLogs.component_name;
+      console.log("TaskName",this.taskname);
+    }
+    console.log("worklogs", this.common.params);
   }
 
   ngOnInit() {
@@ -45,7 +71,7 @@ export class WorkLogComponent implements OnInit {
   addcomponent() {
     const activeModal = this.modalService.open(AddComponentComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (data.response) {
+      if (data) {
         this.getComponents();
       }
     });
@@ -118,11 +144,12 @@ export class WorkLogComponent implements OnInit {
       remark: this.workLog.remark,
       description: this.workLog.description,
       componentId: this.workLog.componentId,
+      workLogId:this.rowId
     }
 
     console.log("workLog", this.workLog);
     this.common.loading++;
-    this.api.post('WorkLogs/addWorkLogs', params)
+    this.api.post('WorkLogs/addandUpdateWorkLogs', params)
       .subscribe(res => {
         this.common.loading--;
         console.log("res", res['data']);

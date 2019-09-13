@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit {
   }
 
   sendOTP() {
-    this.listenOTP = true;
     console.log("OTP");
     let params = {
       mobileno: this.userDetails.mobile
