@@ -13,32 +13,62 @@ import { ignoreElements } from 'rxjs/operators';
 export class WorkLogsComponent implements OnInit {
 
   workLogs = [];
+  reviewWorkLogs=[];
+  completeWorkLogs=[];
+  remark='';
+  activeTab = 'Pending WorkLogs';
+  taskStatus=null;
 
   constructor(public modalService: NgbModal,
     public api: ApiService,
     public common: CommonService) {
-    this.getWorkLogs();
+    //this.getWorkLogs();
+    this.getWorkLogs1();
   }
 
   ngOnInit() {
   }
 
-  addWorkLogs() {
+
+  addWorkLogs(workLogs?) {
+    this.common.params={
+      workLogs:workLogs
+    }
+    
+   // workLogs && (this.common.params['workLogs'] = workLogs);
     const activeModal = this.modalService.open(WorkLogComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (data.response) {
-        this.getWorkLogs();
+      if (data) {
+        this.getWorkLogs1();
       }
     });
   }
 
-  getWorkLogs() {
+  // getWorkLogs() {
+  //   this.common.loading++;
+  //   this.api.get("WorkLogs/getAllWorkLogs")
+  //     .subscribe(res => {
+  //       this.common.loading--;
+  //       console.log("res", res['data'])
+  //       this.workLogs = res['data'];
+  //       this.formateWorkingTime();
+  //       console.log("data", this.workLogs);
+  //     }, err => {
+  //       this.common.loading--;
+  //       this.common.showError();
+  //       console.log('Error: ', err);
+  //     });
+  // }
+
+  getWorkLogs1() {
     this.common.loading++;
-    this.api.get("WorkLogs/getAllWorkLogs")
+    this.api.get("WorkLogs/getworLogsWrtStatus")
       .subscribe(res => {
         this.common.loading--;
         console.log("res", res['data'])
-        this.workLogs = res['data'];
+        this.workLogs = res['data']['completed'];
+        this.reviewWorkLogs=res['data']['pending_reviewed'];
+        this.completeWorkLogs=res['data']['reviewed'];
         this.formateWorkingTime();
         console.log("data", this.workLogs);
       }, err => {
@@ -56,11 +86,25 @@ export class WorkLogsComponent implements OnInit {
       if (hour <= 9) hour = "0" + hour;
       workLogs['total_minutes'] = hour + ":" + min;
     });
+    this.reviewWorkLogs.map(reviewWorkLogs => {
+      let min:any = reviewWorkLogs['total_minutes'] % 60;
+      let hour:any = (reviewWorkLogs['total_minutes'] / 60).toFixed(0);
+      if (min <= 9) min = "0" + min;
+      if (hour <= 9) hour = "0" + hour;
+      reviewWorkLogs['total_minutes'] = hour + ":" + min;
+    });
+    this.completeWorkLogs.map(completeWorkLog => {
+      let min:any = completeWorkLog['total_minutes'] % 60;
+      let hour:any = (completeWorkLog['total_minutes'] / 60).toFixed(0);
+      if (min <= 9) min = "0" + min;
+      if (hour <= 9) hour = "0" + hour;
+      completeWorkLog['total_minutes'] = hour + ":" + min;
+    });
   }
 
-  deleteWorkLog(taskId, rowIndex) {
+  deleteWorkLog(workLog, rowIndex) {
     let params = {
-      taskId: taskId
+      id: workLog.id
     };
     console.log("TaskId", params);
     this.common.loading++;
@@ -79,5 +123,28 @@ export class WorkLogsComponent implements OnInit {
         this.common.showError();
       });
   }
+
+  changeWorkLogStatus(workLog){
+      this.common.loading++;
+      let params={
+        status:this.taskStatus,
+        remark:this.remark,
+        workLogId:workLog.id
+      }
+      this.api.post("WorkLogs/updateWorkLogsStatus",params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("res", res['data']);
+          this.getWorkLogs1();
+        },
+          err => {
+            this.common.loading--;
+            this.common.showError();
+            console.log('Error: ', err);
+          });
+  
+
+  }
+
 
 }
