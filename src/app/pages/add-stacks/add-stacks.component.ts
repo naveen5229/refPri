@@ -37,6 +37,12 @@ export class AddStacksComponent implements OnInit {
   }
 
   addStack() {
+    if(this.stackParentId==null){
+      this.common.showError("Stack name is Missing")
+    }
+   else  if(this.stackchildId==null){
+      this.common.showError("Stack child name is Missing")
+    }
     let params = {
       stackParentId:this.stackParentId,
       stackChildName:this.stackchildId,

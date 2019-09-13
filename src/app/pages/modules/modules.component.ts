@@ -10,7 +10,8 @@ import { CommonService } from '../../Service/common/common.service';
 export class ModulesComponent implements OnInit {
    modules={
     projectId:null,
-    name:null
+    name:null,
+    projectName:''
    }
   projectName=[];
   // modules = [{
@@ -43,6 +44,22 @@ export class ModulesComponent implements OnInit {
   ngOnInit() {
   }
 
+  // projectList(){
+  //   this.api.get("Suggestion/getProjectList")
+  //   .subscribe(
+  //     res => {
+  //       this.projectName = res['data']
+  //       console.log("autosugg", this.projectName);
+
+  //     }
+  //   )
+  // }
+
+  // getList(event) {
+  //   this.modules.projectId = event.target.value;
+  //   console.log("event", this.modules.projectId);
+  // }
+
   projectList(){
     this.common.loading++;
 
@@ -63,6 +80,12 @@ export class ModulesComponent implements OnInit {
   }
 
   saveModule(){
+    if(this.modules.projectId==null){
+     return  this.common.showError("Project name is missing")
+    }
+    else if(this.modules.name == null){
+     return  this.common.showError("Module name is missing")
+    }
     const params = {
       project_id: this.modules.projectId,
      name:this.modules.name
@@ -84,6 +107,7 @@ export class ModulesComponent implements OnInit {
     this.api.get("Modules/getAllModules").subscribe(res =>{
   
       this.modules=res['data'] || [];
+      
     },
     err => {
       this.common.showError();
@@ -91,5 +115,33 @@ export class ModulesComponent implements OnInit {
     });
     }
 
+    editModule(modulesData){
+      this.modules.projectName=modulesData.project_name
+
+      this.modules.projectId=modulesData.project_id
+      this.modules.name=modulesData.name
+    }
+
+    deleteModule(userId, rowIndex) {
+      let params = {
+        module_id: userId
+      }
+      console.log("user",params)
+      this.common.loading++;
+      this.api.post('Modules/deleteModule', params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("res", res);
+          if (res['success']) {
+            this.common.showToast(res['msg']);
+            this.getModule()
+          //  this.module.splice(rowIndex, 1);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+          this.common.showError();
+        });
   
+    }
 }

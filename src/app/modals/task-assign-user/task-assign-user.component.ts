@@ -18,8 +18,12 @@ export class TaskAssignUserComponent implements OnInit {
     assignerId:null,
     assigned: null,
     assignedId:null,
-    Date: new Date()
+    Date:new Date(),
+    
+    id:null
   }
+  userDate=null
+  btn='Add';
   moduleName=[];
   assignedLists =[];
   assigneeLists =[]
@@ -29,20 +33,25 @@ export class TaskAssignUserComponent implements OnInit {
     public common: CommonService) { 
       console.log("task list",this.common.params)
       if(this.common.params != null){
-        this.task.mName=this.common.params.module_name
-       this.task.module=this.common.params.module_id,
-       this.task.title=this.common.params.title,
-       this.task.description=this.common.params.description,
-       this.task.assigner=this.common.params.assignee_name,
-       this.task.assigned=this.common.params.assigned_name
+        this.task.mName=this.common.params.ModuleName
+       this.task.module=this.common.params.ModuleId,
+       this.task.title=this.common.params.Title,
+       this.task.description=this.common.params.Description,
+       this.task.assigner=this.common.params.AssigneeName,
+       this.task.assigned=this.common.params.AssignerName,
+       this.task.assignedId=this.common.params.assigned_emp_id,
+       this.task.assignerId=this.common.params.assignee_emp_id,
+       this.task.id=this.common.params.id
+       this.btn="Update"
     }
-  
+
     this.getModuleList();
     this.assignerList();
     this.assignedList()
   }
 
   ngOnInit() {
+
   }
 
   closeModal(response) {
@@ -115,17 +124,66 @@ export class TaskAssignUserComponent implements OnInit {
 
  saveUser() {
   console.log("id of",this.task.assignerId)
+  console.log("id of 4",this.task.assignedId)
+  console.log("id of 4",this.task.module)
+  this.userDate=this.common.dateFormatter(this.task.Date)
 
+    if(this.task.id!=null){
+     return  this.updateData();
+    }
+
+    if(this.task.module== null){
+      return this.common.showError("Module name is missing")
+    }
+    else if(this.task.assignerId==null){
+      return this.common.showError("Assigner name is missing")
+
+    }
+    else if(this.task.assignedId==null){
+      return this.common.showError("Assigned name is missing")
+
+    }
     const params = {
-      module_id: this.task.module,
+      moduleId: this.task.module,
       title: this.task.title,
       description: this.task.description,
-      assignee_emp_id: this.task.assignerId,
-      assigned_emp_id: this.task.assignedId            ,
-      assign_time: this.task.Date
+      assigneeEmpId: this.task.assignerId,
+      assignedEmpId: this.task.assignedId,
+      assignTime: this.userDate,
+      status:0
     }
+    console.log("date checkkkkkkkkkkkk", params)
     this.common.loading++;
     this.api.post('Task/addTask', params).subscribe(res => {
+      this.common.loading--;
+      this.common.showToast(res['msg'])
+      this.closeModal(true);
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  updateData(){
+    console.log("dataaa",this.task.title)
+    this.userDate=this.common.changeDateformat(this.task.Date)
+
+    const params = {
+      moduleId: this.task.module,
+      title: this.task.title,
+      description: this.task.description,
+      //assigneeEmpId: this.task.assignerId,
+      assigned_emp_id: this.task.assignedId,
+      assign_time: this.userDate,
+      status:0,
+      taskId:this.task.id
+
+    }
+    console.log("parammmmmm",params)
+    this.common.loading++;
+    this.api.post('Task/updateTask', params).subscribe(res => {
       this.common.loading--;
       this.common.showToast(res['msg'])
       this.closeModal(true);
