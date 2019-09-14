@@ -42,6 +42,10 @@ export class ProjectComponent implements OnInit {
  
 
   saveProject() {
+    if(this.project='')
+  {
+    return this.common.showError("Select any project");
+  }
     const params = {
       name: this.project,
     }

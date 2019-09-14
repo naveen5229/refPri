@@ -9,14 +9,14 @@
     <nb-card-body>
         <div class="row">
             <div class="col-3">
-                <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name" (onSelected)="changeRefernceType($event)" inputId="modules.projectId"></auto-suggestion>
+                <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name" [preSelected]="modules.projectName? {name:modules.projectName}:''" (onSelected)="changeRefernceType($event)" inputId="modules.projectId"></auto-suggestion>
 
             </div>
             <div class="col-3">
                 <input type="text" placeholder="Module Name" [(ngModel)]="modules.name" name="name" class="form-control" required>
             </div>
             <div class="col-3">
-                <button class="btn btn-primary text-capitalize" id="button" (click)="saveModule()">ADD</button>
+                <button class="btn btn-primary text-capitalize" id="button" (click)="saveModule()">Submit</button>
             </div>
         </div>
         <table class="table table-border mt-2">
@@ -24,7 +24,8 @@
                 <tr>
                     <th>#</th>
                     <th>Project Name</th>
-                    <th>Name</th>
+                    <th>Module Name</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,7 @@
                     <td>0{{i +1 }}</td>
                     <td>{{module.project_name | titlecase}}</td>
                     <td>{{module.name | titlecase }}</td>
+                    <td><i class="far fa-edit" (click)="editModule(module)"></i><i class="fas fa-trash-alt" (click)="deleteModule(module.id,i)"></i></td>
                 </tr>
             </tbody>
         </table>

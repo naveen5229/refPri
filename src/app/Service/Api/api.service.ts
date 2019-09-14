@@ -7,9 +7,12 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  URL: string = 'http://13.126.215.102/booster_webservices/';//vishal local
+  //URL: string = 'http://13.126.215.102/booster_webservices/';//vishal local
   //URL: string = 'http://192.168.1.109/itrm_webservices/';//vishal local
- // URL: string = 'http://13.126.215.102/itrm_webservices/'
+  URL: string = 'http://13.126.215.102/itrm_webservices/'
+  //URL: string = 'http://localhost/itrm_webservices/';//vishal local
+//URL: string = 'http://192.168.1.129/itrm_webservices/';//vishal local
+ //URL: string = 'http://13.126.215.102/itrm_webservices/';
 
   constructor(private http: HttpClient,
     public router: Router,
@@ -31,7 +34,7 @@ export class ApiService {
       'version': '1.0',
       'entrymode': '3',
       'apptype': 'dashboard',
-      'authkey': this.user._token || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6InZpc2hhbCIsIm1vYmlsZW5vIjoiODIzMzM3MTkzNCIsImVtYWlsIjoidmlzaGFsLmd1cmRhc2FuaUBlbG9naXN0LmluIiwidGltZSI6IjIwMTktMDgtMjhUMDc6MTM6NDYrMDA6MDAifQ.KozJU3ZNLYCLlv6kJu5iZ285ICBVq4tXvzwgo2B6mgo'
+      'authkey': this.user._token 
     });
     return headers;
   }

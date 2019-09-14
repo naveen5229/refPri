@@ -15,13 +15,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class UserComponent implements OnInit {
   department = '0';
-  users={
-  email :null,
-  mobile : null,
-  employee: null,
+  users = {
+    email: null,
+    mobile: null,
+    employee: null,
   }
-  user=[];
-  
+  user = [];
+
   // users = [{
   //   employee: 'Rithik',
   //   mobile: 9414586325,
@@ -47,16 +47,25 @@ export class UserComponent implements OnInit {
   //   department: 'HR'
   // }
   // ]
-  
-  constructor(public common:CommonService,
-    public api:ApiService) {
+
+  constructor(public common: CommonService,
+    public api: ApiService) {
     this.getUser()
-    }
+  }
 
   ngOnInit() {
   }
 
   saveUser() {
+    if (this.users.employee == null) {
+      return this.common.showError("Employee name is missing")
+    } 
+    else if (this.users.mobile == null) {
+      return this.common.showError("Employee mobile no. is missing")
+    }
+    else if (this.department == '0') {
+      return this.common.showError("Choose any Department")
+    }
     const params = {
       emailid: this.users.email,
       mobileno: this.users.mobile,
@@ -65,52 +74,59 @@ export class UserComponent implements OnInit {
     }
     this.common.loading++;
     this.api.post('Users/addUser', params).subscribe(res => {
-    this.common.loading--;
-    this.getUser()
+      this.common.loading--;
+      this.getUser()
       this.common.showToast(res['msg'])
     },
-    err => {
-      this.common.showError();
-    console.log('Error: ', err);
-    });
+      err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
   getUser() {
     this.common.loading++;
 
-    this.api.get("Users/getAllUsers").subscribe(res =>{
+    this.api.get("Users/getAllUsers").subscribe(res => {
       this.common.loading--;
-    
-     this.user=res['data'] || [];
-    
 
- 
-        },
-    err => {
-      this.common.showError();
-    console.log('Error: ', err);
-    });
+      this.user = res['data'] || [];
+
+
+
+    },
+      err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  deleteUser(userId, rowIndex) {
+    let params = {
+      user_id: userId
     }
-
-    deleteUser(userId,rowIndex){
-      let params = {
-        user_id: userId
-      }
-      this.common.loading++;
-      this.api.post('Users/deleteUser', params)
-        .subscribe(res => {
-          this.common.loading--;
-          console.log("res", res);
-          if (res['success']) {
-            this.common.showToast(res['msg']);
-            this.user.splice(rowIndex,1);
-          }
-        }, err => {
-          this.common.loading--;
-          console.log(err);
-          this.common.showError();
-        });
-
-    }
+    this.common.loading++;
+    this.api.post('Users/deleteUser', params)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("res", res);
+        if (res['success']) {
+          this.common.showToast(res['msg']);
+          this.user.splice(rowIndex, 1);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+        this.common.showError();
+      });
 
   }
+  editUser(user){
+    console.log("user",user);
+     this.users.email=user.emailid,
+     this.users.mobile=user.mobileno,
+     this.users.employee=user.name,
+     this.department=user.dept_type
+  }
+
+}

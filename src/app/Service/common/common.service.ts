@@ -7,6 +7,8 @@ import { DatePipe } from '@angular/common';
 })
 export class CommonService {
   loading = 0;
+  refresh = null;
+
   params=null;
   constructor(private toastrService: NbToastrService,
     private datePipe: DatePipe) { }
@@ -72,18 +74,50 @@ export class CommonService {
     }, 10);
   }
 
-  dateFormatter(date) {
+  dateFormatter(date, type = "YYYYMMDD", isTime = true, separator = "-") {
     let d = new Date(date);
     let year = d.getFullYear();
     let month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
-    let dat = d.getDate() <= 9 ? "0" + d.getDate() : d.getDate();
-    console.log(year + "-" + month + "-" + dat);
-    return year + "-" + month + "-" + dat;
+    let dat = d.getDate() < 9 ? "0" + d.getDate() : d.getDate();
+
+    // console.log(dat + separator + month + separator + year);
+    if (type == "ddMMYYYY") {
+      return (
+        year +
+        separator +
+        month +
+        separator +
+        dat +
+        (isTime ? " " + this.timeFormatter(date) : "")
+      );
+    } else {
+      return (
+        year +
+        separator +
+        month +
+        separator +
+        dat +
+        (isTime ? " " + this.timeFormatter(date) : "")
+      );
+    }
+  }
+  
+  timeFormatter(date) {
+    let d = new Date(date);
+    let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
+    let minutes = d.getMinutes() <= 9 ? "0" + d.getMinutes() : d.getMinutes();
+    let seconds = d.getSeconds() <= 9 ? "0" + d.getSeconds() : d.getSeconds();
+
+    return hours + ":" + minutes + ":" + seconds;
   }
 
   changeDateformate(date) {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd-MMM-yyyy");
+  }
+  changeDateformat(date) {
+    let d = new Date(date);
+    return this.datePipe.transform(date, "dd-MMM-yyyy hh:mm a");
   }
 
   changeDateformat1(date) {
