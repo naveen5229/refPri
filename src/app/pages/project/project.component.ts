@@ -27,7 +27,7 @@ export class ProjectComponent implements OnInit {
 
   // }
   // ]
-  projectName=[];
+  // projectName=[];
   projectId=null
   constructor(public common:CommonService,
     public api:ApiService) {
@@ -42,13 +42,15 @@ export class ProjectComponent implements OnInit {
  
 
   saveProject() {
-    if(this.project='')
-  {
-    return this.common.showError("Select any project");
-  }
+   console.log("pppppppppppppppppppp",this.project)
+  if(this.project=='')
+ {
+     return this.common.showError("Select any project");
+   }
     const params = {
-      name: this.project,
+       name: this.project,
     }
+    console.log("params",params)
     this.common.loading++;
     this.api.post('Projects/addProject', params).subscribe(res => {
     this.common.loading--;

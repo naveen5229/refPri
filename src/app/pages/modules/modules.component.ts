@@ -33,6 +33,7 @@ export class ModulesComponent implements OnInit {
   //   name: 'rithik'
 
   // }
+  module_id=null
   // ]
   constructor(public api:ApiService,
     public common:CommonService) {
@@ -86,6 +87,7 @@ export class ModulesComponent implements OnInit {
     else if(this.modules.name == null){
      return  this.common.showError("Module name is missing")
     }
+    else if(this.module_id == null){
     const params = {
       project_id: this.modules.projectId,
      name:this.modules.name
@@ -98,9 +100,31 @@ export class ModulesComponent implements OnInit {
      this.getModule() 
     },
     err => {
+      this.common.loading--;
       this.common.showError();
     console.log('Error: ', err);
     });
+  }
+  else{
+    const params={
+      project_id: this.modules.projectId,
+      name:this.modules.name,
+     module_id:this.module_id
+     ,
+    }
+    this.common.loading++;
+    this.api.post('Modules/updateModule', params).subscribe(res => {
+    this.common.loading--;
+      this.common.showToast(res['msg'])
+     this.getModule() 
+    },
+    err => {
+      this.common.loading--;
+
+      this.common.showError();
+    console.log('Error: ', err);
+    });
+  }
   }
 
   getModule() {
@@ -116,10 +140,12 @@ export class ModulesComponent implements OnInit {
     }
 
     editModule(modulesData){
+      console.log("mosssssss",modulesData)
       this.modules.projectName=modulesData.project_name
 
       this.modules.projectId=modulesData.project_id
       this.modules.name=modulesData.name
+       this.module_id  =modulesData.id
     }
 
     deleteModule(userId, rowIndex) {
