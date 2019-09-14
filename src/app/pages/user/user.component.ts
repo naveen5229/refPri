@@ -63,9 +63,14 @@ export class UserComponent implements OnInit {
     if (this.users.employee == null) {
       return this.common.showError("Employee name is missing")
     } 
-    else if (this.users.mobile == null) {
+    else if (this.users.mobile == null ) {
       return this.common.showError("Employee mobile no. is missing")
     }
+    else if(this.users.mobile.length!=10){
+      return this.common.showError("Employee mobile no. is correct")
+
+    } 
+    
     else if (this.department == '0') {
       return this.common.showError("Choose any Department")
     }

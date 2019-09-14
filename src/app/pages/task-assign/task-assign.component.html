@@ -224,14 +224,14 @@
                             <td>{{task.ModuleName | titlecase}}</td>
                             <td>{{task.AssigneeName | titlecase }}</td>
                             <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a'}}</td>
-                            <td> <select class="form-control" name="taskStatus" [(ngModel)]="taskStatus">
+                            <td> <select class="form-control" name="taskStatus" [(ngModel)]="task.status">
                                     <option value="a">Select Status</option>
                                     <option value="2">Completed</option>
                                     <option value="-1">Review But Change</option>
                                     <option value="-2">Reject</option>
 
                                 </select></td>
-                            <td><textarea row="2" cols="15" [(ngModel)]="remark" class="form-control"></textarea>
+                            <td><textarea row="2" cols="15" [(ngModel)]="task.remark" class="form-control"></textarea>
                             </td>
                             <td><button class="btn btn-primary text-capitalize" id="button" (click)="statusChangeRemark(task)">Submit</button>
 
