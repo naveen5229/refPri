@@ -58,7 +58,9 @@
             <label>Date and Time<span class="text-red"></span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker (onChanged)="date=$event" [dateTimeValue]="task.Date" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
+            <!-- <uj-date-time-picker (onChanged)="workLog.date = $event" [(ngModel)]="workLog.date" [dateTimeValue]="workLog.date" [isTime]="false">
+                    </uj-date-time-picker> -->
+            <uj-date-time-picker (onChanged)="task.date=$event" [dateTimeValue]="task.Date" [isTime]="true" [(ngModel)]="task.date" [isStart]="true"> </uj-date-time-picker>
         </div>
 
     </div>

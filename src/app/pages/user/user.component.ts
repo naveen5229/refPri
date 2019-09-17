@@ -20,6 +20,8 @@ export class UserComponent implements OnInit {
     mobile: null,
     employee: null,
   }
+  id=null;
+  btn="Add"
   user = [];
 
   // users = [{
@@ -50,6 +52,7 @@ export class UserComponent implements OnInit {
 
   constructor(public common: CommonService,
     public api: ApiService) {
+    
     this.getUser()
   }
 
@@ -60,12 +63,22 @@ export class UserComponent implements OnInit {
     if (this.users.employee == null) {
       return this.common.showError("Employee name is missing")
     } 
-    else if (this.users.mobile == null) {
+    else if (this.users.mobile == null ) {
       return this.common.showError("Employee mobile no. is missing")
     }
+    else if(this.users.mobile.length!=10){
+      return this.common.showError("Employee mobile no. is correct")
+
+    } 
+    
     else if (this.department == '0') {
       return this.common.showError("Choose any Department")
     }
+    else if(this.id!=null){
+     return  this.editUser();
+    }
+    else if(this.id==null){
+      
     const params = {
       emailid: this.users.email,
       mobileno: this.users.mobile,
@@ -82,6 +95,29 @@ export class UserComponent implements OnInit {
         this.common.showError();
         console.log('Error: ', err);
       });
+    }else{
+      const params={
+        emailid: this.users.email,
+        mobileno: this.users.mobile,
+        name: this.users.employee,
+        dept_type: this.department,
+        updateUserid:this.id
+      }
+       this.common.loading++;
+       this.api.post('Users/updateuser', params)
+         .subscribe(res => {
+           this.common.loading--;
+           console.log("res", res);
+           if (res['success']) {
+             this.common.showToast(res['msg']);
+           }
+         }, err => {
+           this.common.loading--;
+           console.log(err);
+           this.common.showError();
+         }); 
+
+    }
   }
 
   getUser() {
@@ -121,12 +157,17 @@ export class UserComponent implements OnInit {
       });
 
   }
-  editUser(user){
+  editUser(user?){
     console.log("user",user);
-     this.users.email=user.emailid,
-     this.users.mobile=user.mobileno,
-     this.users.employee=user.name,
-     this.department=user.dept_type
+      this.users.email=user.emailid,
+   this.users.mobile=user.mobileno,
+   this.users.employee=user.name,
+   this.department=user.dept_type
+   this.id=user.id
+     this.btn="Update"
+  
+    
   }
-
 }
+
+

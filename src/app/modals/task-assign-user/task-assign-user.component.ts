@@ -18,7 +18,7 @@ export class TaskAssignUserComponent implements OnInit {
     assignerId:null,
     assigned: null,
     assignedId:null,
-    Date:new Date(),
+    date:new Date(),
     
     id:null
   }
@@ -126,7 +126,7 @@ export class TaskAssignUserComponent implements OnInit {
   console.log("id of",this.task.assignerId)
   console.log("id of 4",this.task.assignedId)
   console.log("id of 4",this.task.module)
-  this.userDate=this.common.dateFormatter(this.task.Date)
+  this.userDate=this.common.dateFormatter(this.task.date)
 
     if(this.task.id!=null){
      return  this.updateData();
@@ -168,7 +168,7 @@ export class TaskAssignUserComponent implements OnInit {
 
   updateData(){
     console.log("dataaa",this.task.title)
-    this.userDate=this.common.changeDateformat(this.task.Date)
+    this.userDate=this.common.changeDateformat(this.task.date)
 
     const params = {
       moduleId: this.task.module,
