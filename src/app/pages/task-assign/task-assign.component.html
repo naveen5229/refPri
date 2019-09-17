@@ -187,7 +187,7 @@
                             <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a'}}</td>
                             <!-- <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
                             </td> -->
-                            <td><textarea row="2" cols="15" [(ngModel)]="remark" class="form-control"></textarea>
+                            <td><textarea row="2" cols="15" [(ngModel)]="task.remark" class="form-control"></textarea>
 
                                 <td><abbr title="Check and Change then click it"><i class="fas fa-check-circle"
                                     (click)="waitingForReview(task)"></i></abbr>

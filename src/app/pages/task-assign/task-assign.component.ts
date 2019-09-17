@@ -238,7 +238,7 @@ export class TaskAssignComponent implements OnInit {
     if (task.status == "-1" || task.status == "-2") {
       if (task.remark == null) {
 
-        return this.common.showError("[Please Select Remark");
+        return this.common.showError("Please Select Remark");
       }
     }
 
