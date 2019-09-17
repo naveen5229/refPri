@@ -24,9 +24,14 @@ export class WorkLogsComponent implements OnInit {
     public common: CommonService) {
     //this.getWorkLogs();
     this.getWorkLogs1();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
+  }
+
+  refresh(){
+    this.getWorkLogs1();
   }
 
 
@@ -62,7 +67,7 @@ export class WorkLogsComponent implements OnInit {
 
   getWorkLogs1() {
     this.common.loading++;
-    this.api.get("WorkLogs/getworLogsWrtStatus")
+    this.api.get("WorkLogs/getworkLogsWrtStatus")
       .subscribe(res => {
         this.common.loading--;
         console.log("res", res['data'])
@@ -125,6 +130,11 @@ export class WorkLogsComponent implements OnInit {
   }
 
   changeWorkLogStatus(workLog){
+    if(this.taskStatus==null){
+      this.common.showError("please enter Review Status");
+    }else if(this.remark ==''){
+      this.common.showError("Please Enter review remark");
+    }else{
       this.common.loading++;
       let params={
         status:this.taskStatus,
@@ -142,8 +152,7 @@ export class WorkLogsComponent implements OnInit {
             this.common.showError();
             console.log('Error: ', err);
           });
-  
-
+    }
   }
 
 

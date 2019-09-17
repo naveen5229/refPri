@@ -13,9 +13,16 @@ export class AddStacksComponent implements OnInit {
   stackParentId=null;
   stackchildId=null;
   stackChilds=[];
+  stackParent=null;
 
   constructor(public common:CommonService,
     public api:ApiService) { 
+      this.getStacks();
+      this.getStacksChilds();
+      this.common.refresh = this.refresh.bind(this);
+    }
+
+    refresh(){
       this.getStacks();
       this.getStacksChilds();
     }
@@ -42,24 +49,26 @@ export class AddStacksComponent implements OnInit {
     }
    else  if(this.stackchildId==null){
       this.common.showError("Stack child name is Missing")
-    }
-    let params = {
-      stackParentId:this.stackParentId,
-      stackChildName:this.stackchildId,
-    }
-    this.common.loading++;
-    this.api.post('Projects/addStack', params)
-      .subscribe(res => {
-        this.common.loading--;
-        if (res['success']) {
-          this.common.showToast(res['msg']);
-          this.getStacksChilds();
-        }
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-        this.common.showError();
-      });
+    }else{
+      let params = {
+        stackParentId:this.stackParentId,
+        stackChildName:this.stackchildId,
+      }
+      this.common.loading++;
+      this.api.post('Projects/addStack', params)
+        .subscribe(res => {
+          this.common.loading--;
+          if (res['success']) {
+            this.common.showToast(res['msg']);
+            this.stackchildId=null;
+            this.getStacksChilds();
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+          this.common.showError();
+        });
+    }   
   }
 
   getStacksChilds() {
