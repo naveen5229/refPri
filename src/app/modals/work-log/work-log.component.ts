@@ -149,7 +149,7 @@ export class WorkLogComponent implements OnInit {
 
     console.log("workLog", this.workLog);
     this.common.loading++;
-    this.api.post('WorkLogs/addandUpdateWorkLogs', params)
+    this.api.post('WorkLogs/addAndUpdateWorkLogs', params)
       .subscribe(res => {
         this.common.loading--;
         console.log("res", res['data']);

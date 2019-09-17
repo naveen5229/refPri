@@ -1,4 +1,4 @@
-<nb-card>
+<nb-card style="padding:none">
     <nb-card-header>
         <div class="row">
             <div class="col-3">
@@ -6,12 +6,13 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 550px;">
+    <nb-card-body style="min-height: 650px;">
         <div class="row">
             <div class="col-3">
                 <div class="form-group">
                     <label class="fill-elt">Name:</label>
-                    <input class="fill-elt form-control" />
+                    <auto-suggestion (onSelected)="driverId=($event.id)" url="Suggestion/getElogistDriverList?" display="empname" placeholder="Enter Name" style="width:100%;">
+                    </auto-suggestion>
                 </div>
             </div>
             <div class="col-4">
@@ -30,9 +31,28 @@
             </div>
             <div class="col-1">
                 <div class="form-group">
-                    <button type="button" style="margin-top: 31px;" class="btn btn-primary">Submit</button>
+                    <button type="button" style="margin-top: 31px;" class="btn btn-primary" (click)="getDriverLatLongs()">Submit</button>
                 </div>
-
+            </div>
+        </div>
+        <div class="row">
+            <div style="margin-left: 340px;">
+                <table frame="box" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><b>Start Date</b></th>
+                            <th><b>End Date</b></th>
+                            <th><b>Distance (Kms)</b></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="this.driverLatLong && this.driverLatLong.length">
+                        <tr>
+                            <td>{{travelStartDate | date : 'dd-MMM-yy'}}</td>
+                            <td>{{travelEndDate | date : 'dd-MMM-yy' }}</td>
+                            <td>{{totalDistance}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="row">
