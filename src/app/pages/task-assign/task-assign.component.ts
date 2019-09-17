@@ -251,7 +251,7 @@ export class TaskAssignComponent implements OnInit {
     const params = {
       status: task.status,
       taskId: task.id,
-      review_remark: task.remark
+      remark: task.remark
     }
     console.log("paramssssssssss",params)
     this.common.loading++;
