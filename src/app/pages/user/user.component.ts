@@ -17,7 +17,7 @@ export class UserComponent implements OnInit {
   department = '0';
   users = {
     email: null,
-    mobile: null,
+    mobile: '',
     employee: null,
   }
   id=null;
@@ -63,19 +63,17 @@ export class UserComponent implements OnInit {
     if (this.users.employee == null) {
       return this.common.showError("Employee name is missing")
     } 
-    else if (this.users.mobile == null ) {
+    else if (this.users.mobile == '' ) {
       return this.common.showError("Employee mobile no. is missing")
     }
-    else if(this.users.mobile.length!=10){
-      return this.common.showError("Employee mobile no. is correct")
+    else if(this.users.mobile.length!=10 ){
+      console.log("inner console")
+      return this.common.showError("Employee mobile no. is incorrect")
 
     } 
     
     else if (this.department == '0') {
       return this.common.showError("Choose any Department")
-    }
-    else if(this.id!=null){
-     return  this.editUser();
     }
     else if(this.id==null){
       
@@ -88,6 +86,12 @@ export class UserComponent implements OnInit {
     this.common.loading++;
     this.api.post('Users/addUser', params).subscribe(res => {
       this.common.loading--;
+      this. users = {
+        email: null,
+        mobile: '',
+        employee: null,
+      };
+      this.department = '0';
       this.getUser()
       this.common.showToast(res['msg'])
     },
@@ -107,9 +111,16 @@ export class UserComponent implements OnInit {
        this.api.post('Users/updateuser', params)
          .subscribe(res => {
            this.common.loading--;
+           this.common.showToast(res['msg']);
            console.log("res", res);
            if (res['success']) {
-             this.common.showToast(res['msg']);
+            this. users = {
+              email: null,
+              mobile: '',
+              employee: null,
+            };
+            this.department = '0';
+             
            }
          }, err => {
            this.common.loading--;
@@ -157,14 +168,14 @@ export class UserComponent implements OnInit {
       });
 
   }
-  editUser(user?){
+
+  editUser(user){
     console.log("user",user);
-      this.users.email=user.emailid,
-   this.users.mobile=user.mobileno,
+    this.users.email=user.emailid,
+   this.users.mobile=user.mobileno.toString(),
    this.users.employee=user.name,
    this.department=user.dept_type
    this.id=user.id
-     this.btn="Update"
   
     
   }

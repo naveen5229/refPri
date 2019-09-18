@@ -10,24 +10,7 @@ import { ApiService } from '../../Service/Api/api.service';
 export class ProjectComponent implements OnInit {
   project='';
   projects=[];
-  // projects = [{
-  //   project: 'partner',
-
-  // },
-  // {
-  //   project: 'customer-dashboard',
-
-  // },
-  // {
-  //   project: 'dashboard-admin',
-
-  // },
-  // {
-  //   project: 'Walle8',
-
-  // }
-  // ]
-  // projectName=[];
+  
   projectId=null
   constructor(public common:CommonService,
     public api:ApiService) {
@@ -54,6 +37,7 @@ export class ProjectComponent implements OnInit {
     this.common.loading++;
     this.api.post('Projects/addProject', params).subscribe(res => {
     this.common.loading--;
+    this.project='';
     this.getProject();
       this.common.showToast(res['msg'])  
     },
