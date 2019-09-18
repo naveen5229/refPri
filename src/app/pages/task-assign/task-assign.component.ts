@@ -27,7 +27,7 @@ export class TaskAssignComponent implements OnInit {
   complateTask = [];
   assigned = [];
   changeReview = [];
-  taskStatus = "a";
+  status = "a";
   pendingReview = [];
   remark = null;
 
@@ -231,7 +231,7 @@ export class TaskAssignComponent implements OnInit {
 
   statusChangeRemark(task) {
     console.log("review", task)
-    if (!task.status) {
+    if (task.status == null || 1) {
       return this.common.showError("Please Select Status");
     }
 
