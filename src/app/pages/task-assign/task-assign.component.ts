@@ -253,7 +253,7 @@ export class TaskAssignComponent implements OnInit {
       taskId: task.id,
       remark: task.remark
     }
-    console.log("paramssssssssss",params)
+    console.log("paramssssssssss", params)
     this.common.loading++;
     this.api.post('Task/updateTaskStatus', params).subscribe(res => {
       this.common.loading--;

@@ -18,17 +18,17 @@
         <nb-card-body>
             <div class="tabs_style_main">
                 <ul class="tabs_style text-left">
-                    <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'">My Tasks
+                    <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'; getTask()">My Tasks
                     </li>
-                    <li [ngClass]="activeTab=='Assigned By Me'?'active':''" (click)="activeTab='Assigned By Me'">
+                    <li [ngClass]="activeTab=='Assigned By Me'?'active':''" (click)="activeTab='Assigned By Me'; getTask()">
                         Assigned Tasks</li>
-                    <li [ngClass]="activeTab=='Waiting For Review'?'active':''" (click)="activeTab='Waiting For Review'">Waiting For Review</li>
+                    <li [ngClass]="activeTab=='Waiting For Review'?'active':''" (click)="activeTab='Waiting For Review'; getTask()">Waiting For Review</li>
 
-                    <li [ngClass]="activeTab=='Review But Change'?'active':''" (click)="activeTab='Review But Change'">
+                    <li [ngClass]="activeTab=='Review But Change'?'active':''" (click)="activeTab='Review But Change'; getTask()">
                         Review But Change</li>
-                    <li [ngClass]="activeTab=='Pending Review'?'active':''" (click)="activeTab='Pending Review'">
+                    <li [ngClass]="activeTab=='Pending Review'?'active':''" (click)="activeTab='Pending Review'; getTask()">
                         Pending Review</li>
-                    <li [ngClass]="activeTab=='Completed Task'?'active':''" (click)="activeTab='Completed Task'">
+                    <li [ngClass]="activeTab=='Completed Task'?'active':''" (click)="activeTab='Completed Task'; getTask()">
                         Completed Task</li>
                 </ul>
 
@@ -221,7 +221,7 @@
                             <td>{{task.Title| titlecase}}</td>
                             <td>{{task.Description}}</td>
                             <td>{{task.ModuleName | titlecase}}</td>
-                            <td>{{task.AssigneeName | titlecase }}</td>
+                            <td>{{task.AssignedName | titlecase }}</td>
                             <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
                             <td> <select class="form-control" name="taskStatus" [(ngModel)]="task.status">
                                     <option value="a">Select Status</option>

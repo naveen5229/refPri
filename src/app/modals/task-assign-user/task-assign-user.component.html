@@ -36,20 +36,21 @@
             <label>Assiner:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="assignedLists" display="name" placeholder="Select Assigner Name" (onSelected)="changeAssined($event)" [preSelected]="task.assigner ? {name:task.assigned} : {name:''}" inputId="task.assigned" name="Assigned" required></auto-suggestion>
             <!-- <input type="text" placeholder="Assigned" [(ngModel)]="task.assigned" name="name" class="form-control" required> -->
-
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigner Name" (onSelected)="changeAssigner($event)" name="assigner" [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="task.assigner" required>
+            </auto-suggestion>
         </div>
 
     </div>
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Assigned:<span class="text-red"></span></label>
+            <label>Assigned:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
             <!-- <input type="text" placeholder="Assigner" [(ngModel)]="task.assigner" name="name" class="form-control" required> -->
-            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name" (onSelected)="changeAssignee($event)" name="assigner" [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="task.assigner" required>
-            </auto-suggestion>
+
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name" (onSelected)="changeAssined($event)" [preSelected]="task.assigned ? {name:task.assigned} : {name:''}" inputId="task.assigned" name="Assigned" required></auto-suggestion>
+
 
         </div>
     </div>

@@ -47,7 +47,7 @@ export class TaskAssignUserComponent implements OnInit {
 
     this.getModuleList();
     this.assignerList();
-    this.assignedList()
+    // this.assignedList()
   }
 
   ngOnInit() {
@@ -101,21 +101,21 @@ export class TaskAssignUserComponent implements OnInit {
  
 
 
-  assignedList(){
-    this.common.loading++;
+  // assignedList(){
+  //   this.common.loading++;
 
-    this.api.get('Suggestion/getEmployeeList')
-    .subscribe(res => {
-      this.common.loading--;
-      console.log("list",res);
-      this.assignedLists = res['data'];
-    }, err => {
-      this.common.loading--;
-      console.log(err);
-    });
-  }
+  //   this.api.get('Suggestion/getEmployeeList')
+  //   .subscribe(res => {
+  //     this.common.loading--;
+  //     console.log("list",res);
+  //     this.assignedLists = res['data'];
+  //   }, err => {
+  //     this.common.loading--;
+  //     console.log(err);
+  //   });
+  // }
 
-  changeAssignee(event) {
+  changeAssigner(event) {
     console.log("item1", event)
     this.task.assigner = event.name;
     this.task.assignerId=event.id
@@ -168,7 +168,7 @@ export class TaskAssignUserComponent implements OnInit {
 
   updateData(){
     console.log("dataaa",this.task.title)
-    this.userDate=this.common.changeDateformat(this.task.date)
+    this.userDate=this.common.dateFormatter(this.task.date)
 
     const params = {
       moduleId: this.task.module,

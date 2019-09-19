@@ -58,3 +58,11 @@ input::placeholder {
     width: 12px !important;
     background-color: #C1C1C1 !important;
 }
+
+.cdk-overlay-container {
+    z-index: 99999999999999999 !important;
+}
+
+.nb-theme-default nb-layout .layout .layout-container .content .columns nb-layout-column {
+    padding: 0;
+}
