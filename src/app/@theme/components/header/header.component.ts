@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   currentTheme = 'default';
-
+ userLogin='';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
@@ -54,6 +54,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public userService: UserService,
     public common: CommonService,
     private breakpointService: NbMediaBreakpointsService) {
+ this.userLogin=this.userService._details.name;
+ console.log("----------------", this.userLogin);
+
   }
 
   ngOnInit() {

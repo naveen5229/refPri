@@ -14,26 +14,9 @@ export class ModulesComponent implements OnInit {
     projectName:''
    }
   projectName=[];
-  // modules = [{
-  //   project: 'walle8',
-  //   name: 'goutam'
 
-  // },
-  // {
-  //   project: 'customer-dashboard',
-  //   name: 'lalit'
-
-  // },
-  // {
-  //   project: 'dashboard-admin',
-  //   name: 'vishal'
-  // },
-  // {
-  //   project: 'Walle8',
-  //   name: 'rithik'
-
-  // }
   module_id=null
+  modulesData1=[];
   // ]
   constructor(public api:ApiService,
     public common:CommonService) {
@@ -45,21 +28,6 @@ export class ModulesComponent implements OnInit {
   ngOnInit() {
   }
 
-  // projectList(){
-  //   this.api.get("Suggestion/getProjectList")
-  //   .subscribe(
-  //     res => {
-  //       this.projectName = res['data']
-  //       console.log("autosugg", this.projectName);
-
-  //     }
-  //   )
-  // }
-
-  // getList(event) {
-  //   this.modules.projectId = event.target.value;
-  //   console.log("event", this.modules.projectId);
-  // }
 
   projectList(){
     this.common.loading++;
@@ -130,7 +98,7 @@ export class ModulesComponent implements OnInit {
   getModule() {
     this.api.get("Modules/getAllModules").subscribe(res =>{
   
-      this.modules=res['data'] || [];
+      this.modulesData1=res['data'] || [];
       
     },
     err => {
