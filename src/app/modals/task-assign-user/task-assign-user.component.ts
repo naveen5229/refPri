@@ -171,9 +171,7 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
   updateData(){
-    console.log("dataaa",this.task.title)
-   // this.userDate=this.common.dateFormatter(this.task.date)
-
+    console.log("dataaa",this.task.title);
     const params = {
       moduleId: this.task.module,
       title: this.task.title,
