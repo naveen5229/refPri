@@ -4,6 +4,7 @@ import { WorkLogComponent } from '../../modals/work-log/work-log.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { ignoreElements } from 'rxjs/operators';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-work-logs',
@@ -86,7 +87,8 @@ export class WorkLogsComponent implements OnInit {
   formateWorkingTime() {
     this.workLogs.map(workLogs => {
       let min:any = workLogs['total_minutes'] % 60;
-      let hour:any = (workLogs['total_minutes'] / 60).toFixed(0);
+      let hour:any = Math.floor((workLogs['total_minutes'] / 60));
+      console.log("min",min,hour);
       if (min <= 9) min = "0" + min;
       if (hour <= 9) hour = "0" + hour;
       workLogs['total_minutes'] = hour + ":" + min;
@@ -108,25 +110,39 @@ export class WorkLogsComponent implements OnInit {
   }
 
   deleteWorkLog(workLog, rowIndex) {
-    let params = {
-      id: workLog.id
+
+    this.common.params = {
+      title: 'Confirm Model',
+      description: 'are you sure you want to delete this worklogs?',
+      btn2: "No",
+      btn1: 'Yes'
     };
-    console.log("TaskId", params);
-    this.common.loading++;
-    this.api.post('WorkLogs/deleteWorkLogs', params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("res", res);
-        if (res['success']) {
-          this.common.showToast(res['msg']);
-          this.workLogs.splice(rowIndex, 1);
-          // this.getWorkLogs();
-        }
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-        this.common.showError();
-      });
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
+        let params = {
+          id: workLog.id
+        };
+        console.log("TaskId", params);
+        this.common.loading++;
+        this.api.post('WorkLogs/deleteWorkLogs', params)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log("res", res);
+            if (res['success']) {
+              this.common.showToast(res['msg']);
+              this.workLogs.splice(rowIndex, 1);
+              // this.getWorkLogs();
+            }
+          }, err => {
+            this.common.loading--;
+            console.log(err);
+            this.common.showError();
+          });      
+      }
+    })
+    
   }
 
   changeWorkLogStatus(workLog){

@@ -9,9 +9,6 @@ import { UserService } from '../user/user.service';
 export class ApiService {
   //URL: string = 'http://192.168.1.109/itrm_webservices/';//vishal local
   URL: string = 'http://13.126.215.102/itrm_webservices/'
-  //URL: string = 'http://localhost/itrm_webservices/';//vishal local
-//URL: string = 'http://192.168.1.108/itrm_webservices/';//vishal local
- //URL: string = 'http://13.126.215.102/itrm_webservices/';
 
   constructor(private http: HttpClient,
     public router: Router,
@@ -33,7 +30,7 @@ export class ApiService {
       'version': '1.0',
       'entrymode': '3',
       'apptype': 'dashboard',
-      'authkey': this.user._token 
+      'authkey': this.user._token
     });
     return headers;
   }

@@ -31,6 +31,8 @@ export class WorkLogComponent implements OnInit {
     hrs: null,
     minutes: null,
   };
+  stackName='';
+  stackChildName='';
   reviewedBy=null;
 
   constructor(private activeModal: NgbActiveModal,
@@ -56,6 +58,8 @@ export class WorkLogComponent implements OnInit {
         hrs: this.common.params.workLogs.total_minutes.split(":")[0],
         minutes: this.common.params.workLogs.total_minutes.split(":")[1],
       };
+      this.stackName=this.common.params.workLogs.stack_parent_name;
+      this.stackChildName=this.common.params.workLogs.stack_child_name;
       this.rowId=this.common.params.workLogs.id,
       this.taskname = this.common.params.workLogs.TaskName;
       this.reviewedBy=this.common.params.workLogs.ReviewerName;
@@ -134,20 +138,21 @@ export class WorkLogComponent implements OnInit {
   }
 
   addWorkLog() {
+    console.log("min+>",(parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes))
     let params = {
       task_id: this.workLog.taskId,
       stack_child_id: this.workLog.stackId,
       title: this.workLog.title,
       date: this.common.dateFormatter(this.workLog.date),
       review_user_id: this.workLog.reviewUserId,
-      total_minutes: (this.workLog.hrs * 60) + (this.workLog.minutes),
+      total_minutes: (parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes),
       remark: this.workLog.remark,
       description: this.workLog.description,
       componentId: this.workLog.componentId,
       workLogId:this.rowId
     }
 
-    console.log("workLog", this.workLog);
+    console.log("workLog", params);
     this.common.loading++;
     this.api.post('WorkLogs/addAndUpdateWorkLogs', params)
       .subscribe(res => {

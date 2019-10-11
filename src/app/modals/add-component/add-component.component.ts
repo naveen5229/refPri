@@ -57,6 +57,7 @@ export class AddComponentComponent implements OnInit {
         this.common.showError();
       });
   }
+  
 
   addComponent() {
     let params = {
@@ -64,7 +65,6 @@ export class AddComponentComponent implements OnInit {
       moduleId: this.component.module,
       componentName: this.component.name
     };
-    console.log("")
     this.common.loading++;
     this.api.post('Components/addComponent', params)
       .subscribe(res => {
