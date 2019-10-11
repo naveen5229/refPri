@@ -79,7 +79,6 @@ export class TaskAssignUserComponent implements OnInit {
   changeRefernceType(event) {
     console.log("item", event)
     this.task.module = event.id;
-   this.task.mName=event.name
   }
 
   assignerList(){
