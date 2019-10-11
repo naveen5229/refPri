@@ -9,7 +9,8 @@
             <label>Module:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name']" seperator="-" placeholder="Enter Module Name" [preSelected]="task.mName ? {name:task.mName}: ''" (onSelected)="changeRefernceType($event)" inputId="task.module" required></auto-suggestion>
+            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','projectname']" seperator="-" placeholder="Enter Module Name" [preSelected]="task.mName ? {name:task.mName,projectname:projectName}: ''" (onSelected)="changeRefernceType($event)"
+                inputId="task.module" required></auto-suggestion>
             <!-- 
             <auto-suggestion  (onSelected)="changeRefernceType($event)" display="name">
             </auto-suggestion> -->
@@ -44,7 +45,7 @@
     </div>
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Assigned:<span class="text-red">*</span></label>
+            <label>Assignee:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
             <!-- <input type="text" placeholder="Assigner" [(ngModel)]="task.assigner" name="name" class="form-control" required> -->

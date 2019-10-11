@@ -9,8 +9,7 @@
     <nb-card-body>
         <div class="row">
             <div class="col-3">
-                <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name" [preSelected]="modules.projectName? {name:modules.projectName}:''" (onSelected)="changeRefernceType($event)" inputId="modules.projectId"></auto-suggestion>
-
+                <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name" [preSelected]="modules.projectName? {name:modules.projectName}:{name:''}" (onSelected)="changeRefernceType($event)" inputId="modules.projectId"></auto-suggestion>
             </div>
             <div class="col-3">
                 <input type="text" placeholder="Module Name" [(ngModel)]="modules.name" name="name" class="form-control">

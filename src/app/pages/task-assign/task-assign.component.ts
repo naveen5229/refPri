@@ -46,7 +46,6 @@ export class TaskAssignComponent implements OnInit {
   }
 
   refresh() {
-
     this.getTask();
   }
 

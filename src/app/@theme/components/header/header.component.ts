@@ -54,9 +54,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public userService: UserService,
     public common: CommonService,
     private breakpointService: NbMediaBreakpointsService) {
- this.userLogin=this.userService._details.name;
- console.log("----------------", this.userLogin);
-
+      if(this.userService._details==null ){
+        this.router.navigate(['/auth/login']);
+      }
+      else {
+        
+        this.userLogin=this.userService._details.name || [];
+        console.log("----------------", this.userLogin);
+      }
   }
 
   ngOnInit() {
