@@ -10,8 +10,8 @@ import { ApiService } from '../../Service/Api/api.service';
 })
 export class DistanceCalculateComponent implements OnInit {
 
-  startDate = new Date();
-  endDate = new Date();
+  startDate = null;
+  endDate = null;
   driverId = null;
   driverLatLong = [];
   travelStartDate = null;
@@ -30,25 +30,40 @@ export class DistanceCalculateComponent implements OnInit {
   }
 
   getDriverLatLongs() {
-    this.common.loading++;
-    let params = "driverId=" + this.driverId + "&startTime=" + this.common.changeDateformat1(this.startDate) + "&endTime=" + this.common.changeDateformat1(this.endDate);
-    this.api.get("Drivers/getDriverLatLong?" + params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("res", res['data']);
-        this.driverLatLong = res['data'];
-        if (this.driverLatLong && this.driverLatLong.length) {
-          this.travelStartDate = this.driverLatLong[0].location_fetch_time;
-          this.travelEndDate = this.driverLatLong[this.driverLatLong.length - 1].location_fetch_time;
-          console.log("date1234", this.travelStartDate, this.travelEndDate);
-          this.createrouteMarker();
-          this.calculateDistance();
-        }
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    if (this.driverId==null) {
+      this.common.showError("Please Enter Name");
+      return;
+    } else if (this.startDate==null) {
+      this.common.showError("startDate Is missing");
+      return;
+    } else if (this.endDate==null) {
+      this.common.showError("Enddate Is missing");
+    } else if (this.startDate > this.endDate) {
+      this.common.showError("startDate is always less then EndDate")
+    } else {
+      this.common.loading++;
+      let params = "driverId=" + this.driverId + "&startTime=" + this.common.changeDateformat1(this.startDate) + "&endTime=" + this.common.changeDateformat1(this.endDate);
+      this.api.get("Drivers/getDriverLatLong?" + params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("res", res['data']);
+          this.driverLatLong = res['data'];
+          if (this.driverLatLong && this.driverLatLong.length) {
+            this.travelStartDate = this.driverLatLong[0].location_fetch_time;
+            this.travelEndDate = this.driverLatLong[this.driverLatLong.length - 1].location_fetch_time;
+            console.log("date1234", this.travelStartDate, this.travelEndDate);
+            this.createrouteMarker();
+            this.calculateDistance();
+          }else{
+            alert("NO DATA FOUND");
+          }
+        }, err => {
+          this.common.loading--;
+          this.common.showError();
+          console.log('Error: ', err);
+        });
+    }
+
   }
 
   createrouteMarker() {
@@ -63,12 +78,15 @@ export class DistanceCalculateComponent implements OnInit {
         repeat: '40px'
       }]
     };
-    this.driverLatLong.map((data) => {
+    this.driverLatLong.forEach((data)=>{
       data['color'] = 'FF0000';
       data['subType'] = 'marker';
+    })
+    this.mapService.createMarkers(this.driverLatLong);
+    this.driverLatLong.map((data) => {   
       this.mapService.createPolyPathManual(this.mapService.createLatLng(data.lat, data.long), polygonOption);
     });
-    this.mapService.createMarkers(this.driverLatLong);
+    
   }
 
   calculateDistance() {

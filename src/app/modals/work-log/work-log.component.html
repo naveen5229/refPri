@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form #formFilling="ngForm" name="worklog-form" id="worklog-form" (submit)="formFilling.valid && addWorkLog()">
+    <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="worklog-form" id="worklog-form" (submit)="formFilling.valid && addWorkLog()">
         <div class="row">
             <div class="col-6">
                 <div class="row  mt-2">
@@ -67,7 +67,7 @@
                         <label>Stack:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8 ">
-                        <auto-suggestion [data]="stacks" (onSelected)="workLog.stackId=($event.id)" [display]="['stackname','name']" seperator="-" name="stack" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+                        <auto-suggestion [data]="stacks" (onSelected)="workLog.stackId=($event.id)" [display]="['stackname','name']" seperator="-" name="stack" placeholder="Enter stack Name" style="width:60%;" [preSelected]="{stackname:stackName,name:stackChildName }"></auto-suggestion>
                     </div>
                 </div>
                 <div *ngIf="workLog.stackId==null && isFormSubmit" class="err">
@@ -115,7 +115,7 @@
             <button class="btn btn-danger " type="button " id="cancel " (click)="modalClose() " style="cursor: pointer; ">cancel</button>
         </div>
         <div class="col text-right ">
-            <button class="btn btn-primary " form="worklog-form" type="button " id="submit " (click)="isFormSubmit=true " style="cursor: pointer; ">submit</button>
+            <button class="btn btn-primary " form="worklog-form" type='submit' id="submit " (click)="isFormSubmit=true " style="cursor: pointer; ">submit</button>
         </div>
     </div>
 </div>

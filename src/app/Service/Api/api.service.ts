@@ -7,8 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  //URL: string = 'http://13.126.215.102/booster_webservices/';//vishal local
-  //URL: string = 'http://192.168.1.109/itrm_webservices/';//vishal local
+ // URL: string = 'http://13.126.215.102/booster_webservices/';//vishal local
+ // URL: string = 'http://192.168.0.101/itrm_webservices/';//vishal local
   URL: string = 'http://13.126.215.102/itrm_webservices/'
   //URL: string = 'http://localhost/itrm_webservices/';//vishal local
 //URL: string = 'http://192.168.1.129/itrm_webservices/';//vishal local
