@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-project',
@@ -13,23 +15,28 @@ export class ProjectComponent implements OnInit {
   
   projectId=null
   constructor(public common:CommonService,
-    public api:ApiService) {
+    public api:ApiService,
+    public modalService: NgbModal,
+    ) {
     this.getProject();
   }
 
   ngOnInit() {
   }
 
+ refresh(){
+  this.getProject();
 
+ }
 
  
 
   saveProject() {
-   console.log("pppppppppppppppppppp",this.project)
   if(this.project=='')
  {
      return this.common.showError("Select any project");
    }
+   else if(this.projectId==null){
     const params = {
        name: this.project,
     }
@@ -39,13 +46,36 @@ export class ProjectComponent implements OnInit {
     this.common.loading--;
     this.project='';
     this.getProject();
-      this.common.showToast(res['msg'])  
+      this.common.showToast("Project Created")  
     },
     err => {
       this.common.showError();
     console.log('Error: ', err);
     });
   }
+  else{
+  let params={
+    name: this.project,
+    rowId:this.projectId
+  }
+ console.log("paramsssssssss",params)
+  this.common.loading++;
+  this.api.post('Projects/updateProject', params).subscribe(res => {
+  this.common.loading--;
+ 
+    this.common.showToast(res['msg'])
+   this.getProject() 
+   this.project='';
+  },
+  err => {
+    this.common.loading--;
+
+    this.common.showError();
+  console.log('Error: ', err);
+  });
+}
+}
+
 
 
   getProject(){
@@ -62,6 +92,16 @@ export class ProjectComponent implements OnInit {
     }
 
     deleteProject(projectId,rowIndex){
+      this.common.params = {
+        title: 'Delete Task',
+        description: 'Are you sure you want to delete this project?',
+        btn2: "No",
+        btn1: 'Yes'
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        console.log('res', data);
+        if (data.response) {
       let params = {
         row_id:projectId
       }
@@ -71,7 +111,7 @@ export class ProjectComponent implements OnInit {
           this.common.loading--;
           console.log("res", res);
           if (res['success']) {
-            this.common.showToast(res['msg']);
+            this.common.showToast("Successfully deleted existing project");
             this.projects.splice(rowIndex,1);
           }
         }, err => {
@@ -79,6 +119,13 @@ export class ProjectComponent implements OnInit {
           console.log(err);
           this.common.showError();
         });
-    }
 
+      }
+    });
+  }
+  editProject(list){
+    this.project= list.name
+    this.projectId=list.id
+
+  }
 }

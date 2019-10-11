@@ -9,6 +9,6 @@ export class UserService {
 
   constructor() {
     this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
-    this._details = JSON.parse(localStorage.getItem('ITRM_USER_DETAILS')) || null;   
+    this._details = JSON.parse(localStorage.getItem('ITRM_USER_DETAILS'));   
   }
 }

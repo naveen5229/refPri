@@ -46,7 +46,6 @@ export class TaskAssignComponent implements OnInit {
   }
 
   refresh() {
-
     this.getTask();
   }
 
@@ -230,17 +229,8 @@ export class TaskAssignComponent implements OnInit {
   }
 
   statusChangeRemark(task) {
-    console.log("review", task)
-    if (task.status == null || 1) {
-      return this.common.showError("Please Select Status");
-    }
-
-    if (task.status == "-1" || task.status == "-2") {
-      if (task.remark == null) {
-
-        return this.common.showError("Please Select Remark");
-      }
-    }
+    console.log("review", task) 
+  
 
     this.changeStatus(task)
   }
@@ -248,12 +238,21 @@ export class TaskAssignComponent implements OnInit {
 
 
   changeStatus(task) {
+    if(task.status==1){
+    return this.common.showError("Please Select Status ")
+    }
+    else if (task.status == "-1" || task.status == "-2") {
+      if (task.remark == null) {
+
+        return this.common.showError("Remark is missing");
+      }
+    }
     const params = {
       status: task.status,
       taskId: task.id,
       remark: task.remark
     }
-    console.log("paramssssssssss",params)
+    console.log("paramssssssssss", params)
     this.common.loading++;
     this.api.post('Task/updateTaskStatus', params).subscribe(res => {
       this.common.loading--;

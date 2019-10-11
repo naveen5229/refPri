@@ -29,7 +29,7 @@
                 <tr *ngFor="let project of projects; let i=index;">
                     <td>0{{i +1 }}</td>
                     <td>{{project.name | titlecase}}</td>
-                    <td><i class="fas fa-trash-alt" (click)="deleteProject(project.id,i)"></i></td>
+                    <td><i class="far fa-edit" (click)="editProject(project)"></i><i class="fas fa-trash-alt" (click)="deleteProject(project.id,i)"></i></td>
                 </tr>
             </tbody>
         </table>

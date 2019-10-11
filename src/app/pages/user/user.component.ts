@@ -4,6 +4,8 @@ import { getMaxListeners } from 'cluster';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { Pipe, PipeTransform } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 @Pipe({
   name: 'capitalizeFirst'
 })
@@ -24,41 +26,20 @@ export class UserComponent implements OnInit {
   btn="Add"
   user = [];
 
-  // users = [{
-  //   employee: 'Rithik',
-  //   mobile: 9414586325,
-  //   email: 'k@get.com',
-  //   department: 'IT'
-  // },
-  // {
-  //   employee: 'Pratik',
-  //   mobile: 9414586425,
-  //   email: 'm@gmail.com',
-  //   department: 'Management'
-  // },
-  // {
-  //   employee: 'Vishal',
-  //   mobile: 9414586325,
-  //   email: 't@gmail.com',
-  //   department: 'Support'
-  // },
-  // {
-  //   employee: 'Goutam',
-  //   mobile: 9414576335,
-  //   email: 'k@gmail.com',
-  //   department: 'HR'
-  // }
-  // ]
-
   constructor(public common: CommonService,
-    public api: ApiService) {
-    
-    this.getUser()
+    public api: ApiService,
+    public modalService: NgbModal,
+    ) { 
+    this.getUser();
   }
 
   ngOnInit() {
   }
 
+  refresh() {
+    this.getUser();
+
+  }
   saveUser() {
     if (this.users.employee == null) {
       return this.common.showError("Employee name is missing")
@@ -92,14 +73,19 @@ export class UserComponent implements OnInit {
         employee: null,
       };
       this.department = '0';
+      if(res['success']==true){
       this.getUser()
-      this.common.showToast(res['msg'])
+      this.common.showToast("User Created")
+      }else{
+        this.common.showError(res['msg']);
+      }
     },
       err => {
         this.common.showError();
         console.log('Error: ', err);
       });
-    }else{
+    }
+    else{
       const params={
         emailid: this.users.email,
         mobileno: this.users.mobile,
@@ -119,8 +105,11 @@ export class UserComponent implements OnInit {
               mobile: '',
               employee: null,
             };
+            this.id=null;
+
             this.department = '0';
-             
+            this.getUser();
+
            }
          }, err => {
            this.common.loading--;
@@ -129,6 +118,17 @@ export class UserComponent implements OnInit {
          }); 
 
     }
+  }
+
+  resetUser(){
+    this. users = {
+      email: null,
+      mobile: '',
+      employee: null,
+    };
+    this.id=null;
+
+    this.department = '0';
   }
 
   getUser() {
@@ -149,6 +149,16 @@ export class UserComponent implements OnInit {
   }
 
   deleteUser(userId, rowIndex) {
+    this.common.params = {
+      title: 'Delete Task',
+      description: 'Are you sure you want to delete this user?',
+      btn2: "No",
+      btn1: 'Yes'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
     let params = {
       user_id: userId
     }
@@ -158,7 +168,7 @@ export class UserComponent implements OnInit {
         this.common.loading--;
         console.log("res", res);
         if (res['success']) {
-          this.common.showToast(res['msg']);
+          this.common.showToast(" Sucessfully Delete the existing user");
           this.user.splice(rowIndex, 1);
         }
       }, err => {
@@ -167,7 +177,10 @@ export class UserComponent implements OnInit {
         this.common.showError();
       });
 
-  }
+    }
+  });
+}
+  
 
   editUser(user){
     console.log("user",user);
