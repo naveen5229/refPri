@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-2">
                     <div class="form-group">
-                        <input type="tel" class="form-control" name="mobile" [(ngModel)]="users.mobile" placeholder="Mobile" required>
+                        <input type="text" pattern="[6-9]{1}[0-9]{9}" class="form-control" title="4" maxlength="10" name="mobile" [(ngModel)]="users.mobile" placeholder="Mobile" required>
                     </div>
                 </div>
                 <div class="col-3">
@@ -34,12 +34,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Submit</button> </div>
-
-
+                <div class="col-1">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="resetUser()">Reset</button> </div>
             </div>
         </div>
+
         <table class="table table-border">
             <thead class="thead">
                 <tr>

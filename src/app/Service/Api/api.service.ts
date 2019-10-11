@@ -7,12 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
- // URL: string = 'http://13.126.215.102/booster_webservices/';//vishal local
- // URL: string = 'http://192.168.0.101/itrm_webservices/';//vishal local
+  //URL: string = 'http://192.168.1.109/itrm_webservices/';//vishal local
   URL: string = 'http://13.126.215.102/itrm_webservices/'
-  //URL: string = 'http://localhost/itrm_webservices/';//vishal local
-//URL: string = 'http://192.168.1.129/itrm_webservices/';//vishal local
- //URL: string = 'http://13.126.215.102/itrm_webservices/';
 
   constructor(private http: HttpClient,
     public router: Router,
@@ -34,7 +30,7 @@ export class ApiService {
       'version': '1.0',
       'entrymode': '3',
       'apptype': 'dashboard',
-      'authkey': this.user._token 
+      'authkey': this.user._token
     });
     return headers;
   }

@@ -26,7 +26,8 @@ export class TaskAssignUserComponent implements OnInit {
   btn='Add';
   moduleName=[];
   assignedLists =[];
-  assigneeLists =[]
+  assigneeLists =[];
+  projectName='';
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -37,17 +38,20 @@ export class TaskAssignUserComponent implements OnInit {
        this.task.module=this.common.params.ModuleId,
        this.task.title=this.common.params.Title,
        this.task.description=this.common.params.Description,
-       this.task.assigner=this.common.params.AssigneeName,
-       this.task.assigned=this.common.params.AssignerName,
-       this.task.assignedId=this.common.params.assigned_emp_id,
-       this.task.assignerId=this.common.params.assignee_emp_id,
-       this.task.id=this.common.params.id
+       this.task.assigner=this.common.params.AssignerName,
+       this.task.assigned=this.common.params.AssigneeName,
+       this.task.assignedId=this.common.params._assinedempid,
+       this.task.assignerId=this.common.params._assignerempid,
+       this.task.id=this.common.params.id,
+       this.projectName=this.common.params.ProjectName
+       this.task.date=new Date(this.common.dateFormatter(this.common.params.assign_time))
+      console.log("---------------------------------",this.common.dateFormatter1(this.common.params.assign_time))
        this.btn="Update"
     }
 
     this.getModuleList();
     this.assignerList();
-    this.assignedList()
+    // this.assignedList()
   }
 
   ngOnInit() {
@@ -101,21 +105,21 @@ export class TaskAssignUserComponent implements OnInit {
  
 
 
-  assignedList(){
-    this.common.loading++;
+  // assignedList(){
+  //   this.common.loading++;
 
-    this.api.get('Suggestion/getEmployeeList')
-    .subscribe(res => {
-      this.common.loading--;
-      console.log("list",res);
-      this.assignedLists = res['data'];
-    }, err => {
-      this.common.loading--;
-      console.log(err);
-    });
-  }
+  //   this.api.get('Suggestion/getEmployeeList')
+  //   .subscribe(res => {
+  //     this.common.loading--;
+  //     console.log("list",res);
+  //     this.assignedLists = res['data'];
+  //   }, err => {
+  //     this.common.loading--;
+  //     console.log(err);
+  //   });
+  // }
 
-  changeAssignee(event) {
+  changeAssigner(event) {
     console.log("item1", event)
     this.task.assigner = event.name;
     this.task.assignerId=event.id
@@ -127,7 +131,7 @@ export class TaskAssignUserComponent implements OnInit {
   console.log("id of 4",this.task.assignedId)
   console.log("id of 4",this.task.module)
   this.userDate=this.common.dateFormatter(this.task.date)
-
+ 
     if(this.task.id!=null){
      return  this.updateData();
     }
@@ -147,7 +151,7 @@ export class TaskAssignUserComponent implements OnInit {
       moduleId: this.task.module,
       title: this.task.title,
       description: this.task.description,
-      assigneeEmpId: this.task.assignerId,
+      assignerEmpId: this.task.assignerId,
       assignedEmpId: this.task.assignedId,
       assignTime: this.userDate,
       status:0
@@ -167,15 +171,13 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
   updateData(){
-    console.log("dataaa",this.task.title)
-    this.userDate=this.common.changeDateformat(this.task.date)
-
+    console.log("dataaa",this.task.title);
     const params = {
       moduleId: this.task.module,
       title: this.task.title,
       description: this.task.description,
-      //assigneeEmpId: this.task.assignerId,
-      assigned_emp_id: this.task.assignedId,
+      assignerEmpId: this.task.assignerId,
+      assignedEmpId:  this.task.assignedId,
       assign_time: this.userDate,
       status:0,
       taskId:this.task.id
