@@ -4,8 +4,8 @@
       <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body">
-    <form #formFilling="ngForm" name="component-form" id="component-form" (submit)="formFilling.valid && addComponent()">
+<div class="modal-body">{{formFilling.valid}}
+    <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="component-form" id="component-form" (submit)="formFilling.valid && addComponent()">
         <div class="row">
             <div class="col-3">
                 <label>Stack<span class="text-red">*</span></label>
@@ -41,8 +41,9 @@
         </div>
     </form>
 </div>
+
 <div class="modal-footer">
     <div class="col text-right">
-        <button class="btn btn-primary" form="component-form" id="component" name="addcomponent" (click)="isFormSubmit = true" style="cursor: pointer;">submit</button>
+        <button class="btn btn-primary" type='submit' id='submit' form="component-form" (click)="isFormSubmit = true" style="cursor: pointer;">submit</button>
     </div>
 </div>

@@ -25,7 +25,7 @@
             <div class="col-4">
                 <div class="form-group">
                     <label class="fill-elt">To Date</label>
-                    <uj-date-time-picker (onChanged)="endDate = $event" [dateTimeValue]="endDate">
+                    <uj-date-time-picker (onChanged)="endDate = $event" [dateTimeValue]="endDate" [isStart]="false">
                     </uj-date-time-picker>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                         <tr>
                             <td>{{travelStartDate | date : 'dd-MMM-yy'}}</td>
                             <td>{{travelEndDate | date : 'dd-MMM-yy' }}</td>
-                            <td>{{totalDistance}}</td>
+                            <td>{{totalDistance.toFixed(2)}}</td>
                         </tr>
                     </tbody>
                 </table>
