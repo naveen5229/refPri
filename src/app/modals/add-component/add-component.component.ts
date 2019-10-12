@@ -46,7 +46,7 @@ export class AddComponentComponent implements OnInit {
 
   getStacks() {
     this.common.loading++;
-    this.api.get('Projects/getAllStack')
+    this.api.get('Projects/getAllStackChilds')
       .subscribe(res => {
         this.common.loading--;
         console.log("list", res);
