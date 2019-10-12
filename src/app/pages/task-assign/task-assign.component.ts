@@ -167,7 +167,7 @@ export class TaskAssignComponent implements OnInit {
 
   statusComplete(task) {
     this.common.params = {
-      title: 'Closing Stock',
+      title: 'Complete Task',
       description: 'Are you sure you complete this task?',
       btn2: "No",
       btn1: 'Yes'
@@ -178,12 +178,13 @@ export class TaskAssignComponent implements OnInit {
       if (data.response) {
 
 
-        console.log(task);
+        console.log("tasssssssssssssss",this.endDate);
         const params = {
           status: 2,
           taskId: task.id,
-          reviewTime:task.review_time
+          reviewTime:this.common.dateFormatter(this.common.dateFormatter(this.endDate))
         }
+       console.log("-------------",params)
         this.common.loading++;
         this.api.post('Task/updateTaskStatus', params).subscribe(res => {
           this.common.loading--;
@@ -244,10 +245,16 @@ export class TaskAssignComponent implements OnInit {
 
   statusChangeRemark(task) {
     console.log("review", task) 
-  
 
-    this.changeStatus(task)
+    if (task.status == "2"){
+    this.statusComplete(task)
+
   }
+  else{
+    this.changeStatus(task)
+
+  }
+}
 
 
 
@@ -265,7 +272,7 @@ export class TaskAssignComponent implements OnInit {
       status: task.status,
       taskId: task.id,
       remark: task.remark,
-      reviewTime:task.review_time
+      reviewTime:this.common.dateFormatter(task.review_time)
 
     }
     console.log("paramssssssssss", params)

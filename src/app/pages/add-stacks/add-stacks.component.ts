@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-add-stacks',
@@ -16,6 +18,7 @@ export class AddStacksComponent implements OnInit {
   stackParent=null;
 
   constructor(public common:CommonService,
+    public modalService: NgbModal,
     public api:ApiService) { 
       this.getStacks();
       this.getStacksChilds();
@@ -84,23 +87,37 @@ export class AddStacksComponent implements OnInit {
   }
   
   deletestackChild(stackchildId,rowId){
-    let params = {
-      stackChildId:stackchildId
-    }
-    this.common.loading++;
-    this.api.post('Projects/deleteStackChild', params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("res", res);
-        if (res['success']) {
-          this.common.showToast(res['msg']);
-          this.stackChilds.splice(rowId,1);
+    this.common.params = {
+      title: 'Confirm Model',
+      description: 'are you sure you want to delete this worklogs?',
+      btn2: "No",
+      btn1: 'Yes'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
+        let params = {
+          stackChildId:stackchildId
         }
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-        this.common.showError();
-      });
+        this.common.loading++;
+        this.api.post('Projects/deleteStackChild', params)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log("res", res);
+            if (res['success']) {
+              this.common.showToast(res['msg']);
+              this.stackChilds.splice(rowId,1);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log(err);
+            this.common.showError();
+          });
+            
+      }
+    })
+    
   }
 
 }

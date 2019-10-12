@@ -83,6 +83,8 @@ export class UserComponent implements OnInit {
       }
     },
       err => {
+        this.common.loading--;
+
         this.common.showError();
         console.log('Error: ', err);
       });
