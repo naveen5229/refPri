@@ -19,6 +19,8 @@ export class ProjectComponent implements OnInit {
     public modalService: NgbModal,
     ) {
     this.getProject();
+    this.common.refresh = this.refresh.bind(this);
+
   }
 
   ngOnInit() {

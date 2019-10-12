@@ -31,6 +31,8 @@ export class UserComponent implements OnInit {
     public modalService: NgbModal,
     ) { 
     this.getUser();
+    this.common.refresh = this.refresh.bind(this);
+
   }
 
   ngOnInit() {
