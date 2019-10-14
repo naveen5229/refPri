@@ -19,6 +19,7 @@ export class TaskAssignUserComponent implements OnInit {
     assigned: null,
     assignedId:null,
     date:new Date(),
+    endDate:null,
     
     id:null
   }
@@ -45,10 +46,10 @@ export class TaskAssignUserComponent implements OnInit {
        this.task.id=this.common.params.id,
        this.projectName=this.common.params.ProjectName
        this.task.date=new Date(this.common.dateFormatter(this.common.params.assign_time))
-      console.log("---------------------------------",this.common.dateFormatter1(this.common.params.assign_time))
+      console.log("---------------------------------",this.task.date)
        this.btn="Update"
     }
-
+   this.task.endDate= new Date(new Date().setDate(new Date(this.task.date).getDate() + 1));
     this.getModuleList();
     this.assignerList();
     // this.assignedList()
@@ -79,7 +80,6 @@ export class TaskAssignUserComponent implements OnInit {
   changeRefernceType(event) {
     console.log("item", event)
     this.task.module = event.id;
-   this.task.mName=event.name
   }
 
   assignerList(){
@@ -131,10 +131,8 @@ export class TaskAssignUserComponent implements OnInit {
   console.log("id of 4",this.task.assignedId)
   console.log("id of 4",this.task.module)
   this.userDate=this.common.dateFormatter(this.task.date)
+ this.task.endDate=this.common.dateFormatter(this.task.endDate)
  
-    if(this.task.id!=null){
-     return  this.updateData();
-    }
 
     if(this.task.module== null){
       return this.common.showError("Module name is missing")
@@ -147,6 +145,9 @@ export class TaskAssignUserComponent implements OnInit {
       return this.common.showError("Assigned name is missing")
 
     }
+    else    if(this.task.id!=null){
+      return  this.updateData();
+     }
     const params = {
       moduleId: this.task.module,
       title: this.task.title,
@@ -154,6 +155,7 @@ export class TaskAssignUserComponent implements OnInit {
       assignerEmpId: this.task.assignerId,
       assignedEmpId: this.task.assignedId,
       assignTime: this.userDate,
+      reviewTime:this.task.endDate,
       status:0
     }
     console.log("date checkkkkkkkkkkkk", params)
@@ -180,7 +182,8 @@ export class TaskAssignUserComponent implements OnInit {
       assignedEmpId:  this.task.assignedId,
       assign_time: this.userDate,
       status:0,
-      taskId:this.task.id
+      taskId:this.task.id,
+      reviewTime:this.task.endDate
 
     }
     console.log("parammmmmm",params)

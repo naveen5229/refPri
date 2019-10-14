@@ -34,7 +34,7 @@
     </div>
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Assiner:<span class="text-red">*</span></label>
+            <label>Assigner:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
             <!-- <input type="text" placeholder="Assigned" [(ngModel)]="task.assigned" name="name" class="form-control" required> -->
@@ -57,12 +57,23 @@
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>Date and Time<span class="text-red"></span></label>
+            <label>Start Date <span class="text-red"></span></label>
         </div>
         <div class="col-6">
             <!-- <uj-date-time-picker (onChanged)="workLog.date = $event" [(ngModel)]="workLog.date" [dateTimeValue]="workLog.date" [isTime]="false">
                     </uj-date-time-picker> -->
             <uj-date-time-picker (onChanged)="task.date=$event" [dateTimeValue]="task.date" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
+        </div>
+
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>End Date <span class="text-red"></span></label>
+        </div>
+        <div class="col-6">
+            <!-- <uj-date-time-picker (onChanged)="workLog.date = $event" [(ngModel)]="workLog.date" [dateTimeValue]="workLog.date" [isTime]="false">
+                    </uj-date-time-picker> -->
+            <uj-date-time-picker (onChanged)="task.endDate=$event" [dateTimeValue]="task.endDate" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
         </div>
 
     </div>

@@ -31,6 +31,8 @@ export class UserComponent implements OnInit {
     public modalService: NgbModal,
     ) { 
     this.getUser();
+    this.common.refresh = this.refresh.bind(this);
+
   }
 
   ngOnInit() {
@@ -81,6 +83,8 @@ export class UserComponent implements OnInit {
       }
     },
       err => {
+        this.common.loading--;
+
         this.common.showError();
         console.log('Error: ', err);
       });

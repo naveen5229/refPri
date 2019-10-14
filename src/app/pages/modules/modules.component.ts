@@ -111,10 +111,10 @@ export class ModulesComponent implements OnInit {
         //   name: null,
         //   projectName: ''
         // }
-        this.modules.name=null;
-        this.modules.projectName=null;
-        this.modules.projectId=null;
-        this.projectName=null;
+        // this.modules.name=null;
+        // this.modules.projectName=null;
+        // this.modules.projectId=null;
+        // this.projectName=null;
         this.getModule()
         console.log('modules:::',this.modules)
       

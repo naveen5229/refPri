@@ -5,6 +5,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskAssignUserComponent } from '../../modals/task-assign-user/task-assign-user.component';
 import { TaskStatusCheckComponent } from '../../modals/task-status-check/task-status-check.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { dateFieldName } from '@telerik/kendo-intl';
 
 @Component({
   selector: 'ngx-task-assign',
@@ -20,7 +21,8 @@ export class TaskAssignComponent implements OnInit {
     description: '',
     assigner: null,
     assigned: null,
-    Date: new Date()
+    Date: new Date(),
+
   }
   review = [];
   activeTab = 'Assign Task';
@@ -30,6 +32,7 @@ export class TaskAssignComponent implements OnInit {
   status = "a";
   pendingReview = [];
   remark = null;
+  endDate=new Date();
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -85,6 +88,13 @@ export class TaskAssignComponent implements OnInit {
       this.review = res['data']["WaitingForReview"] || [];
       this.changeReview = res['data']["ReviewButChange"] || [];
       this.pendingReview = res['data']["WaitingList"] || [];
+      this.pendingReview.map(date=>{
+         return date.review_time=date.review_time ? new Date(this.common.dateFormatter(date.review_time)):new Date();
+        });
+      
+      //  this.endDate=new Date(this.common.dateFormatter(this.pendingReview[0]['review_time']));
+      //  console.log("************",this.endDate)
+
     },
       err => {
         this.common.loading--;
@@ -157,7 +167,7 @@ export class TaskAssignComponent implements OnInit {
 
   statusComplete(task) {
     this.common.params = {
-      title: 'Closing Stock',
+      title: 'Complete Task',
       description: 'Are you sure you complete this task?',
       btn2: "No",
       btn1: 'Yes'
@@ -168,11 +178,13 @@ export class TaskAssignComponent implements OnInit {
       if (data.response) {
 
 
-        console.log(task);
+        console.log("tasssssssssssssss",this.endDate);
         const params = {
           status: 2,
-          taskId: task.id
+          taskId: task.id,
+          reviewTime:this.common.dateFormatter(this.common.dateFormatter(this.endDate))
         }
+       console.log("-------------",params)
         this.common.loading++;
         this.api.post('Task/updateTaskStatus', params).subscribe(res => {
           this.common.loading--;
@@ -204,7 +216,10 @@ export class TaskAssignComponent implements OnInit {
         console.log(check);
         const params = {
           status: 1,
-          taskId: check.id
+          taskId: check.id,
+          reviewTime:check.review_time
+
+
         }
         this.common.loading++;
         this.api.post('Task/updateTaskStatus', params).subscribe(res => {
@@ -230,10 +245,16 @@ export class TaskAssignComponent implements OnInit {
 
   statusChangeRemark(task) {
     console.log("review", task) 
-  
 
-    this.changeStatus(task)
+    if (task.status == "2"){
+    this.statusComplete(task)
+
   }
+  else{
+    this.changeStatus(task)
+
+  }
+}
 
 
 
@@ -250,7 +271,9 @@ export class TaskAssignComponent implements OnInit {
     const params = {
       status: task.status,
       taskId: task.id,
-      remark: task.remark
+      remark: task.remark,
+      reviewTime:this.common.dateFormatter(task.review_time)
+
     }
     console.log("paramssssssssss", params)
     this.common.loading++;
