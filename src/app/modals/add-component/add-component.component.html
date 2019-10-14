@@ -4,7 +4,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body">{{formFilling.valid}}
+<div class="modal-body">
     <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="component-form" id="component-form" (submit)="formFilling.valid && addComponent()">
         <div class="row">
             <div class="col-3">
