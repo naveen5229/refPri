@@ -2,7 +2,7 @@
 /dist
 /tmp
 /out-tsc
-
+/itrm
 # dependencies
 /node_modules
 
