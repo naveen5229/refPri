@@ -26,6 +26,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Segment',
+    icon: 'cube-outline',
+    link: '/pages/segment',
+    home: true,
+  },
+  {
     title: 'Tasks',
     icon: 'list-outline',
     link: '/pages/task-assign',

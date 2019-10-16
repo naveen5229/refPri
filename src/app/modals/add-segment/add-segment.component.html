@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <h5>Segment</h5>
+    <button type="button" class="closeModal" (click)="closeModal(false)"><span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Module:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Segment:</label>
+        </div>
+        <div class="col-6">
+            <input type="text" placeholder="Segment" [(ngModel)]="segment" class="form-control">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col text-right ">
+        <button class="btn btn-primary " (click)="addSegment()" type='submit' style="cursor: pointer; ">  Submit</button>
+    </div>
+</div>

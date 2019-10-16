@@ -94,7 +94,7 @@ export class LoginComponent implements OnInit {
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
           this.common.showToast(res['msg']);
-          this.router.navigate(['/pages']);
+          this.router.navigate(['/pages/dashboard']);
         }
       },
         err => {
