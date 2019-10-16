@@ -12,8 +12,11 @@
                     <div class="col-2">
                         <label>Task:<span class="text-red">*</span></label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-6 ml-2">
                         <auto-suggestion [data]="tasks" display="title" placeholder="Enter Task Name" name="task" id="task" (onSelected)="workLog.taskId=($event.id)" [preSelected]="{title: taskname}"></auto-suggestion>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary" type="button" (click)="assignTask()" style="cursor: pointer;"><i class="fa fa-plus"></i></button>
                     </div>
                 </div>
                 <div *ngIf="workLog.taskId==null && isFormSubmit" class="err">
