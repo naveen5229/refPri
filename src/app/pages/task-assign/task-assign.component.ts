@@ -54,7 +54,7 @@ export class TaskAssignComponent implements OnInit {
 
   saveUser() {
     const params = {
-      module_id: this.task.module,
+      segmentId: this.task.module,
       title: this.task.title,
       description: this.task.description,
       assignee_emp_id: this.task.assigner,

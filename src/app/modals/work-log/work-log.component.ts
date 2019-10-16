@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { AddComponentComponent } from '../add-component/add-component.component';
 import { ApiService } from '../../Service/Api/api.service';
+import { TaskAssignUserComponent } from '../task-assign-user/task-assign-user.component';
 
 @Component({
   selector: 'ngx-work-log',
@@ -163,6 +164,16 @@ export class WorkLogComponent implements OnInit {
         this.common.loading--;
         console.log(err);
       });
+  }
+
+  assignTask() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(TaskAssignUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getTasks();
+      }
+    });
   }
 
   modalClose() {
