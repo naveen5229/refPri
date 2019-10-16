@@ -12,11 +12,11 @@
     <nb-card-body>
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='Pending WorkLogs'?'active':''" (click)="activeTab='Pending WorkLogs'">Pending
+                <li [ngClass]="activeTab=='Pending WorkLogs'?'active':''" (click)="activeTab='Pending WorkLogs';getWorkLogs1()">Pending
                 </li>
-                <li [ngClass]="activeTab=='Review WorkLogs'?'active':''" (click)="activeTab='Review WorkLogs'">Review
+                <li [ngClass]="activeTab=='Review WorkLogs'?'active':''" (click)="activeTab='Review WorkLogs';getWorkLogs1()">Review
                 </li>
-                <li [ngClass]="activeTab=='Complete WorkLogs'?'active':''" (click)="activeTab='Complete WorkLogs'">Complete
+                <li [ngClass]="activeTab=='Complete WorkLogs'?'active':''" (click)="activeTab='Complete WorkLogs';getWorkLogs1()">Complete
                 </li>
             </ul>
         </div>

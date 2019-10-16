@@ -34,6 +34,8 @@ import { TaskAssignUserComponent } from './modals/task-assign-user/task-assign-u
 import { AddComponentComponent } from './modals/add-component/add-component.component';
 import { TaskStatusCheckComponent } from './modals/task-status-check/task-status-check.component';
 import { ConfirmComponent } from './modals/confirm/confirm.component';
+import { ListOfEmployeeComponent } from './modals/list-of-employee/list-of-employee.component';
+import { AddSegmentComponent } from './modals/add-segment/add-segment.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -43,6 +45,8 @@ import { ConfirmComponent } from './modals/confirm/confirm.component';
     AddComponentComponent,
     TaskStatusCheckComponent,
     ConfirmComponent,
+    ListOfEmployeeComponent,
+    AddSegmentComponent,
   ],
   entryComponents: [
     WorkLogComponent,
@@ -50,6 +54,8 @@ import { ConfirmComponent } from './modals/confirm/confirm.component';
     AddComponentComponent,
     TaskStatusCheckComponent,
     ConfirmComponent,
+    ListOfEmployeeComponent,
+    AddSegmentComponent
 
 
   ],
