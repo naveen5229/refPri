@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { AddSegmentComponent } from '../add-segment/add-segment.component';
 
 @Component({
   selector: 'ngx-task-assign-user',
@@ -29,10 +30,13 @@ export class TaskAssignUserComponent implements OnInit {
   assignedLists =[];
   assigneeLists =[];
   projectName='';
+  module=[]; 
+segment=''
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
-    public common: CommonService) { 
+    public common: CommonService,
+    public modalService:NgbModal) { 
       console.log("task list",this.common.params)
       if(this.common.params != null){
         this.task.mName=this.common.params.ModuleName
@@ -66,7 +70,7 @@ export class TaskAssignUserComponent implements OnInit {
   getModuleList(){
     this.common.loading++;
 
-    this.api.get('Suggestion/getModulesList')
+    this.api.get('Segment/getAllSegments')
     .subscribe(res => {
       this.common.loading--;
       console.log("list",res);
@@ -77,10 +81,30 @@ export class TaskAssignUserComponent implements OnInit {
     });
   }
 
-  changeRefernceType(event) {
+  // changeModule(event) {
+  //   console.log("item", event)
+  //   this.task.module = event.id;
+  // }
+
+  // getModuleList(){
+  //   this.common.loading++;
+
+  //   this.api.get('Suggestion/getModulesList')
+  //   .subscribe(res => {
+  //     this.common.loading--;
+  //     console.log("list",res);
+  //     this.moduleName = res['data'];
+  //   }, err => {
+  //     this.common.loading--;
+  //     console.log(err);
+  //   });
+  // }
+
+  changeModule(event){
     console.log("item", event)
-    this.task.module = event.id;
+    this.module = event.id;
   }
+  
 
   assignerList(){
     this.common.loading++;
@@ -102,7 +126,15 @@ export class TaskAssignUserComponent implements OnInit {
     this.task.assignedId=event.id;
   }
 
- 
+  addSegment(){
+    const activeModal = this.modalService.open(AddSegmentComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getModuleList();
+        this.assignerList();
+      }
+    });
+ }
 
 
   // assignedList(){
@@ -134,22 +166,22 @@ export class TaskAssignUserComponent implements OnInit {
  this.task.endDate=this.common.dateFormatter(this.task.endDate)
  
 
-    if(this.task.module== null){
-      return this.common.showError("Module name is missing")
-    }
-    else if(this.task.assignerId==null){
-      return this.common.showError("Assigner name is missing")
+    // if(this.task.module== null){
+    //   return this.common.showError("Module name is missing")
+    // }
+    // else if(this.task.assignerId==null){
+    //   return this.common.showError("Assigner name is missing")
 
-    }
-    else if(this.task.assignedId==null){
-      return this.common.showError("Assigned name is missing")
+    // }
+    // else if(this.task.assignedId==null){
+    //   return this.common.showError("Assigned name is missing")
 
-    }
-    else    if(this.task.id!=null){
-      return  this.updateData();
-     }
+    // }
+    // else    if(this.task.id!=null){
+    //   return  this.updateData();
+    //  }
     const params = {
-      moduleId: this.task.module,
+      segmentId: this.module,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,
@@ -175,7 +207,7 @@ export class TaskAssignUserComponent implements OnInit {
   updateData(){
     console.log("dataaa",this.task.title);
     const params = {
-      moduleId: this.task.module,
+      segmentId: this.task.module,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,

@@ -14,6 +14,7 @@ import { DirectiveModule } from '../directives/directives.module';
 import { WorkLogsComponent } from './work-logs/work-logs.component';
 import { AddStacksComponent } from './add-stacks/add-stacks.component';
 import { DistanceCalculateComponent } from './distance-calculate/distance-calculate.component';
+import { SegmentComponent } from './segment/segment.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { DistanceCalculateComponent } from './distance-calculate/distance-calcul
     WorkLogsComponent,
     AddStacksComponent,
     DistanceCalculateComponent,
+    SegmentComponent,
   ],
 })
 export class PagesModule {

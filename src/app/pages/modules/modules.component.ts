@@ -106,11 +106,11 @@ export class ModulesComponent implements OnInit {
         this.common.loading--;
 
         this.common.showToast(res['msg'])
-        // this.modules = {
-        //   projectId: null,
-        //   name: null,
-        //   projectName: ''
-        // }
+        this.modules = {
+          projectId: null,
+          name: null,
+          projectName: ''
+        }
         // this.modules.name=null;
         // this.modules.projectName=null;
         // this.modules.projectId=null;

@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <h5>Employee working</h5>
+    <button type="button" class="closeModal" (click)="closeModal(false)"><span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <table class="table table-border mt-2">
+        <thead class="thead">
+            <tr>
+                <th>#</th>
+                <th>Employee</th>
+                <th>Module</th>
+                <th>Task</th>
+                <th>Start Date </th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0{{i+1}}</td>
+                <td>assingnProject.name | titlecase</td>
+                <td>assingnProject.moduleName | titlecase</td>
+                <td>assingnProject.taskName | titlecase </td>
+                <td>assignProject.startDate | date :'dd MMM yyyy hh:mm a '</td>
+                <td>assignProjec.endDate | date :'dd MMM yyyy hh:mm a '</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
