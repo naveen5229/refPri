@@ -81,11 +81,11 @@
                         <td>{{reviewWorkLog.stack_child_name}}</td>
                         <td>{{reviewWorkLog.component_name}}</td>
                         <td>{{reviewWorkLog.ReviewerName}}</td>
-                        <td> <select class="form-control" name="taskStatus" class="form-control" [(ngModel)]="taskStatus">
+                        <td> <select class="form-control" name="taskStatus" class="form-control" [(ngModel)]="reviewWorkLog.taskStatus">
                                 <option value="1">Completed</option>
                                 <option value="-1">Reject</option>
                             </select></td>
-                        <td><textarea row="2" cols="15" [(ngModel)]="remark" class="form-control"></textarea>
+                        <td><textarea row="2" cols="15" [(ngModel)]="reviewWorkLog.remark" class="form-control"></textarea>
                         </td>
                         <td><button class="btn btn-primary text-capitalize" id="button" (click)="changeWorkLogStatus(reviewWorkLog)">save</button>
                         </td>
