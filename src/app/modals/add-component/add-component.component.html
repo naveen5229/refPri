@@ -22,7 +22,11 @@
                 <label>Module:<span class="text-red">*</span></label>
             </div>
             <div class="col-7">
+<<<<<<< HEAD
                 <auto-suggestion [data]="modules" display="modulename" name="module" placeholder="Enter Module Name" (onSelected)="component.module = $event.module_id"></auto-suggestion>
+=======
+                <auto-suggestion [data]="modules" [display]="['name','modulename']" seperator="-" name="module" placeholder="Enter Module Name" (onSelected)="component.module = $event.module_id"></auto-suggestion>
+>>>>>>> 7e61acdc28417e4f4c93bbb413522370b61016e3
             </div>
         </div>
         <div *ngIf="component.module==null && isFormSubmit" class="err">

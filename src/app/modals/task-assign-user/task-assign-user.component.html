@@ -9,19 +9,21 @@
             <label>Segment:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']" seperator="-" placeholder="Enter Module Name" (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
+            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']" seperator="-" placeholder="Enter Segment Name" [preSelected]="task.mName ? {'name': task.segmentName,'module_name':task.mName,'project_name':projectName} :''"
+                (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
 
             <!-- 
             <auto-suggestion  (onSelected)="changeRefernceType($event)" display="name">
             </auto-suggestion> -->
         </div>
         <div class="col-2">
-            <button class="btn btn-danger" type="button" (click)="addSegment()" style="cursor: pointer;"><i class="fa fa-plus"></i></button>
+            <button class="btn btn-danger" type="button" (click)="addSegment()" style="cursor: pointer;"><i
+                    class="fa fa-plus"></i></button>
         </div>
     </div>
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Title:</label>
+            <label>Title:</label><span class="text-red">*</span>
         </div>
         <div class="col-6">
             <input type="text" placeholder="Title" [(ngModel)]="task.title" class="form-control">

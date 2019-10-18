@@ -7,8 +7,13 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
+<<<<<<< HEAD
    URL: string = 'http://192.168.1.123/itrm_webservices/';//vishal local
 //URL: string = 'http://13.126.215.102/itrm_webservices/'
+=======
+   //URL: string = 'http://192.168.1.114/itrm_webservices/';//vishal local
+  URL: string = 'http://13.126.215.102/itrm_webservices/'
+>>>>>>> 7e61acdc28417e4f4c93bbb413522370b61016e3
 
   constructor(private http: HttpClient,
     public router: Router,
