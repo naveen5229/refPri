@@ -32,7 +32,7 @@ export class AddComponentComponent implements OnInit {
 
   getModules() {
     this.common.loading++;
-    this.api.get('Suggestion/getModulesList')
+    this.api.get('Suggestion/getModules')
       .subscribe(res => {
         this.common.loading--;
         console.log("list", res);

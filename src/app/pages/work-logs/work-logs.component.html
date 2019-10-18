@@ -24,7 +24,6 @@
             <thead class="thead">
                 <tr>
                     <th>#</th>
-                    <th>Title</th>
                     <th>Task</th>
                     <th>Description</th>
                     <th>Date</th>
@@ -38,7 +37,6 @@
             <tbody>
                 <tr *ngFor="let workLog of workLogs; let i=index;">
                     <td>{{i +1 }}</td>
-                    <td>{{workLog.Title}}</td>
                     <td>{{workLog.TaskName}}</td>
                     <td>{{workLog.Description}}</td>
                     <td>{{workLog.date | date : 'dd-MMM-yy'}}</td>
@@ -57,7 +55,6 @@
                 <thead class="thead">
                     <tr>
                         <th>#</th>
-                        <th>Title</th>
                         <th>Task</th>
                         <th>Description</th>
                         <th>Date</th>
@@ -73,7 +70,6 @@
                 <tbody>
                     <tr *ngFor="let reviewWorkLog of reviewWorkLogs ; let i=index;">
                         <td>{{i +1 }}</td>
-                        <td>{{reviewWorkLog.Title}}</td>
                         <td>{{reviewWorkLog.TaskName}}</td>
                         <td>{{reviewWorkLog.Description}}</td>
                         <td>{{reviewWorkLog.date | date : 'dd-MMM-yy'}}</td>
@@ -97,7 +93,6 @@
             <thead class="thead">
                 <tr>
                     <th>#</th>
-                    <th>Title</th>
                     <th>Task</th>
                     <th>Description</th>
                     <th>Date</th>
@@ -111,7 +106,6 @@
             <tbody>
                 <tr *ngFor="let completeWorkLog of completeWorkLogs; let i=index;">
                     <td>{{i +1 }}</td>
-                    <td>{{completeWorkLog.Title}}</td>
                     <td>{{completeWorkLog.TaskName}}</td>
                     <td>{{completeWorkLog.Description}}</td>
                     <td>{{completeWorkLog.date | date : 'dd-MMM-yy'}}</td>
@@ -119,7 +113,7 @@
                     <td>{{completeWorkLog.stack_child_name}}</td>
                     <td>{{completeWorkLog.component_name}}</td>
                     <td>{{completeWorkLog.ReviewerName}}</td>
-                    <td>{{completeWorkLog.add_remark}}</td>
+                    <td>{{completeWorkLog.review_remark}}</td>
                 </tr>
             </tbody>
         </table>
