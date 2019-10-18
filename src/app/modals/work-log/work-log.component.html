@@ -7,6 +7,17 @@
 <div class="modal-body">
     <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="worklog-form" id="worklog-form" (submit)="formFilling.valid && addWorkLog()">
         <div class="row">
+            <div class="col-4">
+            </div>
+            <div class="col-2">
+                <input type="radio" name="workLogStatus" value=1 [(ngModel)]="workLogStatus" checked> Runing
+            </div>
+            <div class="col-2">
+                <input type="radio" name="workLogStatus" value=2 [(ngModel)]="workLogStatus"> Complete
+            </div>
+
+        </div>
+        <div class="row">
             <div class="col-6">
                 <div class="row  mt-2">
                     <div class="col-2">
@@ -44,7 +55,7 @@
                         <input type="text" class="form-control" name="title" id="title" [(ngModel)]="workLog.title" name="title" id="title" placeholder="Enter Title name" autocomplete="off">
                     </div>
                 </div>
-                <div class="row  mt-2">
+                <div *ngIf='workLogStatus==2' class="row  mt-2">
                     <div class="col-2">
                         <label>review user:<span class="text-red">*</span></label>
                     </div>
@@ -52,9 +63,9 @@
                         <auto-suggestion [data]="users" display="name" placeholder="review user" name="reviewuser" (onSelected)="workLog.reviewUserId=($event.id)" [preSelected]="{name: reviewedBy}"></auto-suggestion>
                     </div>
                 </div>
-                <div *ngIf="workLog.reviewUserId==null && isFormSubmit" class="err">
+                <!-- <div *ngIf="workLog.reviewUserId==null && isFormSubmit" class="err">
                     <span class="text-red" style="margin-left: 85px;">value is mandatory</span>
-                </div>
+                </div> -->
                 <div class="row mt-2">
                     <div class="col-2">
                         <label>Remark:</label>

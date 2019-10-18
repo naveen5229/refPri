@@ -20,6 +20,7 @@ export class WorkLogComponent implements OnInit {
   users = [];
   isFormSubmit = false;
   rowId=null;
+  workLogStatus=1;
   workLog = {
     taskId: null,
     stackId: null,
@@ -153,13 +154,24 @@ export class WorkLogComponent implements OnInit {
       workLogId:this.rowId
     }
 
+    if(this.workLogStatus==1){
+      this.workLog.reviewUserId=null;
+
+    }
+
     console.log("workLog", params);
     this.common.loading++;
     this.api.post('WorkLogs/addAndUpdateWorkLogs', params)
       .subscribe(res => {
         this.common.loading--;
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.activeModal.close({ response: res['data'] });
+        } else {
+          this.common.showError(res['data'][0].y_msg)
+        }
         console.log("res", res['data']);
-        this.activeModal.close({ response: res['data'] });
+        
       }, err => {
         this.common.loading--;
         console.log(err);
