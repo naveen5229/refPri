@@ -8,16 +8,22 @@ import { CommonService } from '../../Service/common/common.service';
   styleUrls: ['./task-status-check.component.scss']
 })
 export class TaskStatusCheckComponent implements OnInit {
-  taskStatus=0;
-  constructor(public activeModal:NgbActiveModal,
-    public common:CommonService) {
-  
-   }
+  taskStatus = 0;
+  title = '';
+  remark = '';
+  constructor(public activeModal: NgbActiveModal,
+    public common: CommonService) {
+
+  }
 
   ngOnInit() {
   }
 
   closeModal(response) {
-    this.activeModal.close({response:response});
+    this.activeModal.close({ response: response });
+  }
+
+  assignTask() {
+
   }
 }
