@@ -182,7 +182,7 @@ export class TaskAssignComponent implements OnInit {
         const params = {
           status: 2,
           taskId: task.id,
-          reviewTime:this.common.dateFormatter(this.common.dateFormatter(this.endDate))
+          reviewTime:this.common.dateFormatter(new Date())
         }
        console.log("-------------",params)
         this.common.loading++;
