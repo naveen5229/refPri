@@ -146,15 +146,15 @@ export class WorkLogsComponent implements OnInit {
   }
 
   changeWorkLogStatus(workLog){
-    if(this.taskStatus==null){
+    if(workLog.taskStatus==null){
       this.common.showError("please enter Review Status");
-    }else if(this.remark ==''){
+    }else if(workLog.remark ==''){
       this.common.showError("Please Enter review remark");
     }else{
       this.common.loading++;
       let params={
-        status:this.taskStatus,
-        remark:this.remark,
+        status:workLog.taskStatus,
+        remark:workLog.remark,
         workLogId:workLog.id
       }
       this.api.post("WorkLogs/updateWorkLogsStatus",params)
