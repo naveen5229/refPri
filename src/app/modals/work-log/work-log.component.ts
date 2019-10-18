@@ -20,11 +20,10 @@ export class WorkLogComponent implements OnInit {
   users = [];
   isFormSubmit = false;
   rowId=null;
-  workLogStatus=1;
+  workLogStatus='1';
   workLog = {
     taskId: null,
     stackId: null,
-    title: '',
     date: new Date(),
     reviewUserId: null,
     remark: '',
@@ -51,7 +50,7 @@ export class WorkLogComponent implements OnInit {
       this.workLog = {
         taskId: this.common.params.workLogs.task_id,
         stackId: this.common.params.workLogs.stack_child_id,
-        title: this.common.params.workLogs.Title,
+       // title: this.common.params.workLogs.Title,
         date: new Date(this.common.params.workLogs.date),
         reviewUserId: this.common.params.workLogs.review_user_id,
         remark: this.common.params.workLogs.add_remark,
@@ -144,7 +143,7 @@ export class WorkLogComponent implements OnInit {
     let params = {
       task_id: this.workLog.taskId,
       stack_child_id: this.workLog.stackId,
-      title: this.workLog.title,
+     // title: this.workLog.title,
       date: this.common.dateFormatter(this.workLog.date),
       review_user_id: this.workLog.reviewUserId,
       total_minutes: (parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes),
@@ -154,7 +153,7 @@ export class WorkLogComponent implements OnInit {
       workLogId:this.rowId
     }
 
-    if(this.workLogStatus==1){
+    if(this.workLogStatus=='1'){
       this.workLog.reviewUserId=null;
 
     }
