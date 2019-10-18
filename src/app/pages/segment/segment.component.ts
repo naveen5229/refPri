@@ -91,7 +91,7 @@ id=null;
       },
         err => {
           this.common.loading--;
-          this.common.showError();
+          this.common.showError(err['msg']);
           console.log('Error: ', err);
         });
      } 
