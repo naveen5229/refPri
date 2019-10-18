@@ -47,7 +47,10 @@ segment=''
   }
 
    addSegment(){
-  
+   if(!this.segment){
+      return  this.common.showError("Segment name is missing");
+
+    }
       const params = {
         moduleId: this.module,
         name: this.segment
@@ -61,7 +64,7 @@ segment=''
       },
         err => {
           this.common.loading--;
-          this.common.showError();
+          this.common.showError(err['msg']);
           console.log('Error: ', err);
         });
      } 

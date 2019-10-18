@@ -168,19 +168,21 @@ export class TaskAssignUserComponent implements OnInit {
     this.task.endDate = this.common.dateFormatter(this.task.endDate)
 
 
-    // if(this.task.module== null){
-    //   return this.common.showError("Module name is missing")
-    // }
-    // else if(this.task.assignerId==null){
-    //   return this.common.showError("Assigner name is missing")
+    if(this.task.module== null){
+      return this.common.showError("Module name is missing")
+    }
+    else if(this.task.assignerId==null){
+      return this.common.showError("Assigner name is missing")
 
-    // }
-    // else if(this.task.assignedId==null){
-    //   return this.common.showError("Assigned name is missing")
+    }
+    else if(this.task.assignedId==null){
+      return this.common.showError("Assigned name is missing")
 
-    // }
-    // else    
-    if (this.task.id != null) {
+    }
+    else if(this.task.title ==''){
+      return this.common.showError("Title is missing")
+    }
+    else    if (this.task.id != null) {
       return this.updateData();
     }
     const params = {
@@ -197,8 +199,15 @@ export class TaskAssignUserComponent implements OnInit {
     this.common.loading++;
     this.api.post('Task/addTask', params).subscribe(res => {
       this.common.loading--;
-      this.common.showToast(res['msg'])
+    console.log("+++++++++++++++++++",res['data'][0].y_msg)
+      if(res['data'][0]['y_id']>0){
+      this.common.showToast(res['data'][0].y_msg)
       this.closeModal(true);
+      }
+      else{
+        this.common.showError(res['data'][0].y_msg) 
+      }
+    
     },
       err => {
         this.common.loading--;
