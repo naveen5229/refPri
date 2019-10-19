@@ -1,0 +1,27 @@
+<div class="month-picker">
+    <!-- Month Input -->
+    <div>
+        <input type="text" class="form-control" name="month" [value]="selectedMonth.name + ' - ' + selectedYear" (click)="isVisible = !isVisible" readonly>
+    </div>
+    <!-- Month input end -->
+    <!-- Month Picker -->
+    <div class="month-list" *ngIf="isVisible">
+        <div class="row text-center year-container">
+            <div class="col-4">
+                <i class="fa fa-angle-double-left" (click)="theYear = theYear - 1;"></i>
+            </div>
+            <div class="col-4">
+                {{theYear}}
+            </div>
+            <div class="col-4">
+                <i class="fa fa-angle-double-right" (click)="(currentYear !== theYear) && (theYear = theYear + 1)"></i>
+            </div>
+        </div>
+        <div class="row p-0 m-0">
+            <div class="col-4" *ngFor="let month of months">
+                <button class="btn month-btn" (click)="selectMonth(month)" [ngClass]="(selectedMonth.id == month.id && theYear === selectedYear) ? 'month-btn-active' : ''" [disabled]="currentYear === theYear && currentMonth < month.id">{{month.name}}</button>
+            </div>
+        </div>
+    </div>
+    <!-- Month picker end -->
+</div>
