@@ -25,12 +25,18 @@ id=null;
     public modalService:NgbModal) {
       this.getSegment()
       this.getModuleList()
+      this.common.refresh = this.refresh.bind(this);
+
      }
 
   ngOnInit() {
   }
 
   
+  refresh() {
+    this.getSegment()
+    this.getModuleList()
+  }
   getModuleList(){
     this.common.loading++;
 
