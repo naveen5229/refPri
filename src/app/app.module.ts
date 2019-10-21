@@ -37,6 +37,7 @@ import { TaskStatusCheckComponent } from './modals/task-status-check/task-status
 import { ConfirmComponent } from './modals/confirm/confirm.component';
 import { ListOfEmployeeComponent } from './modals/list-of-employee/list-of-employee.component';
 import { AddSegmentComponent } from './modals/add-segment/add-segment.component';
+import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/worklogs-with-res-user.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -48,6 +49,7 @@ import { AddSegmentComponent } from './modals/add-segment/add-segment.component'
     ConfirmComponent,
     ListOfEmployeeComponent,
     AddSegmentComponent,
+    WorklogsWithResUserComponent,
   ],
   entryComponents: [
     WorkLogComponent,
@@ -56,8 +58,8 @@ import { AddSegmentComponent } from './modals/add-segment/add-segment.component'
     TaskStatusCheckComponent,
     ConfirmComponent,
     ListOfEmployeeComponent,
-    AddSegmentComponent
-
+    AddSegmentComponent,
+    WorklogsWithResUserComponent
 
   ],
   imports: [

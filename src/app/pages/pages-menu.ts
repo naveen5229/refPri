@@ -50,9 +50,21 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Employee Period Report',
+    icon: 'cube-outline',
+    link: '/pages/employee-period-report',
+    home: true,
+  },
+  {
     title: 'Distance Calculate',
     icon: 'cube-outline',
     link: '/pages/distance-calculate',
+    home: true,
+  },
+  {
+    title: 'Employee Monthly Report',
+    icon: 'cube-outline',
+    link: '/pages/employee-monthly-report',
     home: true,
   }
 ];

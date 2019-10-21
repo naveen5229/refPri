@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoSuggestionComponent } from './auto-suggestion/auto-suggestion.component';
 import { DateTimePickerComponent } from './date-time-picker/date-time-picker.component';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+import { MonthPickerComponent } from './month-picker/month-picker.component';
+import { SmartTabelComponent } from './smart-tabel/smart-tabel.component';
 
 @NgModule({
    imports: [CommonModule, FormsModule, ReactiveFormsModule,DateInputsModule],
@@ -11,10 +13,11 @@ import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
        CommonModule,
        FormsModule,
        AutoSuggestionComponent,
-       DateTimePickerComponent
+       DateTimePickerComponent,
+       MonthPickerComponent,
+       SmartTabelComponent
    ],
-   declarations: [AutoSuggestionComponent, DateTimePickerComponent
-   ],
+   declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTabelComponent ],
    schemas: [CUSTOM_ELEMENTS_SCHEMA],
    providers: [],
 })
