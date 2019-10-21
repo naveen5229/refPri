@@ -159,7 +159,7 @@ export class AutoSuggestionComponent implements OnInit {
         }
       });
     } else {
-      displayText = suggestion[this.display];
+      displayText = suggestion ?  suggestion[this.display] : '';
     }
     return displayText;
   }
