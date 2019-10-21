@@ -35,7 +35,8 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       editable: true,
     }
   };
-  attendances=[]
+  attendances=[];
+  formattedAttendancesUser=[]
   constructor(public common:CommonService,
     public api:ApiService,
     public modalService:NgbModal) { }
@@ -108,14 +109,19 @@ export class EmployeeMonthlyReportComponent implements OnInit {
         hour:EmployeAttendanceGroups[key].map(hour=>
           hour.Hour)
     }); 
+    this.formattedAttendancesUser.push({
+        user:EmployeAttendanceGroups[key].map(user=>
+        user._empid),
+        date:EmployeAttendanceGroups[key].map(user=>
+          user._date)
+  }); 
   });
 
  
     this.formattedAttendancesDate=  this.formattedAttendancesDate[0].date
-    console.log("6666666666666666666666",this.formattedAttendances)
-    console.log("-------------------------------",this.formattedAttendancesHours)
+   
 
-    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",this.formattedAttendancesDate)
+    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",this.formattedAttendancesUser)
     //   };
 
     // });
@@ -144,8 +150,8 @@ export class EmployeeMonthlyReportComponent implements OnInit {
     return columns;
   }
 
-  workLogUser(){
-    this.common.params=this.formattedAttendances
+  workLogUser(emp,userDate){
+    this.common.params={emp,userDate}
     const activeModal = this.modalService.open(WorklogsWithResUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
