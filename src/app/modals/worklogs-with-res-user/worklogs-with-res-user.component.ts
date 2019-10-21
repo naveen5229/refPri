@@ -12,7 +12,7 @@ export class WorklogsWithResUserComponent implements OnInit {
   constructor(public common:CommonService,
     public api:ApiService) {
 console.log("thisssssssssssss",this.common.params)
-    this.userWorklogs
+    this.userWorklogs;
    }
 
   ngOnInit() {

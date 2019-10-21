@@ -48,7 +48,7 @@
                             <td>0{{i +1 }}</td>
                             <td>{{emp.name | titlecase}}</td>
                             <!-- <td>{{name.data.hours}}</td> -->
-                            <td (click)="workLogUser()" *ngFor="let info of emp.data">{{info.Hour}}</td>
+                            <td (click)="workLogUser()" style="color:blue" *ngFor="let info of emp.data">{{info.Hour}}</td>
                         </tr>
                     </tbody>
                 </table>
