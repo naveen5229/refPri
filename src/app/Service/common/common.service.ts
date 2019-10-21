@@ -140,6 +140,11 @@ export class CommonService {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd-MMM-yyyy hh:mm a");
   }
+  
+  changeDateformat3(date) {
+    let d = new Date(date);
+    return this.datePipe.transform(date, "dd");
+  }
 
 }
 

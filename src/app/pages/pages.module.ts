@@ -16,6 +16,7 @@ import { AddStacksComponent } from './add-stacks/add-stacks.component';
 import { DistanceCalculateComponent } from './distance-calculate/distance-calculate.component';
 import { SegmentComponent } from './segment/segment.component';
 import { EmployeePeriodReportComponent } from './employee-period-report/employee-period-report.component';
+import { EmployeeMonthlyReportComponent } from './employee-monthly-report/employee-monthly-report.component';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { EmployeePeriodReportComponent } from './employee-period-report/employee
     DistanceCalculateComponent,
     SegmentComponent,
     EmployeePeriodReportComponent,
+    EmployeeMonthlyReportComponent,
   ],
 })
 export class PagesModule {
