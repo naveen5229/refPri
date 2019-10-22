@@ -12,7 +12,7 @@ import { AddSegmentComponent } from '../add-segment/add-segment.component';
 export class TaskAssignUserComponent implements OnInit {
   task = {
     mName: '',
-    module: null,
+    segmentId: null,
     title: '',
     description: '',
     assigner: null,
@@ -39,7 +39,7 @@ export class TaskAssignUserComponent implements OnInit {
     console.log("task list", this.common.params)
     if (this.common.params != null) {
       this.task.mName = this.common.params.ModuleName;
-      this.task.module = this.common.params.segmentid;
+      this.task.segmentId = this.common.params.segmentid;
       this.task.title = this.common.params.Title;
       this.task.segmentName = this.common.params.SegmentName;
       this.task.description = this.common.params.Description;
@@ -77,8 +77,8 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
 
-  changeModule(event) {
-    this.task.module = event.id;
+  changeSegment(event) {
+    this.task.segmentId = event.id;
   }
 
   getAssigneeList() {
@@ -138,7 +138,7 @@ export class TaskAssignUserComponent implements OnInit {
   saveUser() {
     let startDate = this.common.dateFormatter(this.task.date);
     let endDate = this.common.dateFormatter(this.task.endDate);
-    if (this.task.module == null) {
+    if (this.task.segmentId == null) {
       return this.common.showError("Segment name is missing")
     }
     else if (this.task.assignerId == null) {
@@ -156,7 +156,7 @@ export class TaskAssignUserComponent implements OnInit {
       return this.updateData();
     }
     const params = {
-      segmentId: this.task.module,
+      segmentId: this.task.segmentId,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,
@@ -189,7 +189,7 @@ export class TaskAssignUserComponent implements OnInit {
     let startDate = this.common.dateFormatter(this.task.date);
     let endDate = this.common.dateFormatter(this.task.endDate);
     const params = {
-      segmentId: this.task.module,
+      segmentId: this.task.segmentId,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,

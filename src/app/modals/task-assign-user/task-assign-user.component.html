@@ -14,7 +14,7 @@
             <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']"
                 seperator="-" placeholder="Enter Segment Name"
                 [preSelected]="task.mName ? {'name': task.segmentName,'module_name':task.mName,'project_name':projectName} :''"
-                (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
+                (onSelected)="changeSegment($event)" inputId="module" required></auto-suggestion>
         </div>
 
         <div class="col-2">
