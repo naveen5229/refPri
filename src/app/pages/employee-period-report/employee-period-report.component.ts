@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StackReportComponent } from '../../modals/stack-report/stack-report.component';
 
 @Component({
   selector: 'ngx-employee-period-report',
@@ -19,7 +21,9 @@ export class EmployeePeriodReportComponent implements OnInit {
   group = [];
   final = [];
   constructor(public common: CommonService,
-    public api: ApiService) {
+    public api: ApiService,
+    public modalService:NgbModal,
+  ) {
     this.getEmployeeList();
   }
 
@@ -52,7 +56,7 @@ export class EmployeePeriodReportComponent implements OnInit {
       endDate: this.common.dateFormatter(this.endDate),
     };
     this.common.loading++;
-    this.api.post('WorkLogs/getEmployeeReportWithPeriod', params)
+    this.api.post('Report/getEmployeeReportWithPeriod', params)
       .subscribe(res => {
         this.common.loading--;
         this.employeeReport = res['data'];
@@ -94,4 +98,9 @@ export class EmployeePeriodReportComponent implements OnInit {
       });
   }
 
+  stackWiseReport(stackDate,stackId){
+   this.common.params={stackDate,stackId,empId:this.employeeId}
+   this.modalService.open(StackReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  
+  }
 }

@@ -71,7 +71,7 @@ export class EmployeeMonthlyReportComponent implements OnInit {
     };
     
     this.common.loading++;
-    this.api.post('WorkLogs/getEmployeeMonthlyReport', params).subscribe(res => {
+    this.api.post('Report/getEmployeeMonthlyReport', params).subscribe(res => {
       this.common.loading--;
       this.attendances = res['data'];
       //this.table = this.setTable();

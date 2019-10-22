@@ -38,6 +38,7 @@ import { ConfirmComponent } from './modals/confirm/confirm.component';
 import { ListOfEmployeeComponent } from './modals/list-of-employee/list-of-employee.component';
 import { AddSegmentComponent } from './modals/add-segment/add-segment.component';
 import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/worklogs-with-res-user.component';
+import { StackReportComponent } from './modals/stack-report/stack-report.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -50,6 +51,7 @@ import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/wo
     ListOfEmployeeComponent,
     AddSegmentComponent,
     WorklogsWithResUserComponent,
+    StackReportComponent,
   ],
   entryComponents: [
     WorkLogComponent,
@@ -59,7 +61,8 @@ import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/wo
     ConfirmComponent,
     ListOfEmployeeComponent,
     AddSegmentComponent,
-    WorklogsWithResUserComponent
+    WorklogsWithResUserComponent,
+    StackReportComponent
 
   ],
   imports: [
