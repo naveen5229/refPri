@@ -61,8 +61,8 @@
         </div>
         <div class="col-6">
             <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name"
-                (onSelected)="changeAssignee($event)" [preSelected]="task.assigned ? {name:task.assigned} : {name:''}"
-                inputId="assignee" name="Assigned" isMultiSelect="true" required></auto-suggestion>
+                (onSelected)="changeAssignee($event)" [preSelected]="task.assigned" inputId="assignee" name="Assigned"
+                isMultiSelect="true"></auto-suggestion>
         </div>
     </div>
 
