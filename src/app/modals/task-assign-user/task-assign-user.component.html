@@ -1,6 +1,7 @@
 <div class="modal-header">
     <h5>Task Assign</h5>
-    <button type="button" class="closeModal" (click)="closeModal(false)"><span aria-hidden="true">&times;</span>
+    <button type="button" class="closeModal" (click)="closeModal(false)">
+        <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
@@ -8,67 +9,70 @@
         <div class="col-4">
             <label>Segment:<span class="text-red">*</span></label>
         </div>
-        <div class="col-6">
-            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']" seperator="-" placeholder="Enter Segment Name" [preSelected]="task.mName ? {'name': task.segmentName,'module_name':task.mName,'project_name':projectName} :''"
-                (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
 
-            <!-- 
-            <auto-suggestion  (onSelected)="changeRefernceType($event)" display="name">
-            </auto-suggestion> -->
+        <div class="col-6">
+            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']"
+                seperator="-" placeholder="Enter Segment Name"
+                [preSelected]="task.mName ? {'name': task.segmentName,'module_name':task.mName,'project_name':projectName} :''"
+                (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
         </div>
+
         <div class="col-2">
             <button class="btn btn-danger" type="button" (click)="addSegment()" style="cursor: pointer;"><i
                     class="fa fa-plus"></i></button>
         </div>
     </div>
+
     <div class="row mt-2 ">
         <div class="col-4">
             <label>Title:</label><span class="text-red">*</span>
         </div>
         <div class="col-6">
-            <input type="text" placeholder="Title" [(ngModel)]="task.title" class="form-control">
+            <input type="text" placeholder="Title" name="title" [(ngModel)]="task.title" class="form-control">
         </div>
-
     </div>
+
     <div class="row mt-2 ">
         <div class="col-4">
             <label>Description:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Description" [(ngModel)]="task.description" class="form-control"></textarea>
+            <textarea row="2" cols="15" placeholder="Description" name="description" [(ngModel)]="task.description"
+                class="form-control"></textarea>
         </div>
     </div>
+
     <div class="row mt-2 ">
         <div class="col-4">
             <label>Assigner:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
             <!-- <input type="text" placeholder="Assigned" [(ngModel)]="task.assigned" name="name" class="form-control" required> -->
-            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigner Name" (onSelected)="changeAssigner($event)" name="assigner" [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="task.assigner" required>
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigner Name"
+                (onSelected)="changeAssigner($event)" name="assigner"
+                [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="assigner" required>
             </auto-suggestion>
         </div>
-
     </div>
+
     <div class="row mt-2 ">
         <div class="col-4">
             <label>Assignee:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <!-- <input type="text" placeholder="Assigner" [(ngModel)]="task.assigner" name="name" class="form-control" required> -->
-
-            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name" (onSelected)="changeAssined($event)" [preSelected]="task.assigned ? {name:task.assigned} : {name:''}" inputId="task.assigned" name="Assigned" required></auto-suggestion>
-
-
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name"
+                (onSelected)="changeAssignee($event)" [preSelected]="task.assigned ? {name:task.assigned} : {name:''}"
+                inputId="assignee" name="Assigned" isMultiSelect="true" required></auto-suggestion>
         </div>
     </div>
+
     <div class="row mt-2">
         <div class="col-4">
             <label>Start Date <span class="text-red"></span></label>
         </div>
         <div class="col-6">
-            <!-- <uj-date-time-picker (onChanged)="workLog.date = $event" [(ngModel)]="workLog.date" [dateTimeValue]="workLog.date" [isTime]="false">
-                    </uj-date-time-picker> -->
-            <uj-date-time-picker (onChanged)="task.date=$event" [dateTimeValue]="task.date" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
+            <uj-date-time-picker (onChanged)="task.date=$event" [dateTimeValue]="task.date" [isTime]="true"
+                [isStart]="true"> </uj-date-time-picker>
         </div>
 
     </div>
@@ -77,12 +81,11 @@
             <label>End Date <span class="text-red"></span></label>
         </div>
         <div class="col-6">
-            <!-- <uj-date-time-picker (onChanged)="workLog.date = $event" [(ngModel)]="workLog.date" [dateTimeValue]="workLog.date" [isTime]="false">
-                    </uj-date-time-picker> -->
-            <uj-date-time-picker (onChanged)="task.endDate=$event" [dateTimeValue]="task.endDate" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
+            <uj-date-time-picker (onChanged)="task.endDate=$event" [dateTimeValue]="task.endDate" [isTime]="true"
+                [isStart]="true"> </uj-date-time-picker>
         </div>
-
     </div>
+
     <div class="row mt-1">
         <div class="col-12 text-right">
             <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">{{btn}}</button>

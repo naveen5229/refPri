@@ -159,7 +159,7 @@ export class AutoSuggestionComponent implements OnInit {
         }
       });
     } else {
-      displayText = suggestion ?  suggestion[this.display] : '';
+      displayText = suggestion ? suggestion[this.display] : '';
     }
     return displayText;
   }
@@ -217,6 +217,14 @@ export class AutoSuggestionComponent implements OnInit {
     console.log("cleardata");
     this.showSuggestions = false;
     this.suggestions = [];
+  }
+
+  removeSuggestion(index) {
+    if (this.isMultiSelect) {
+      this.selectedSuggestions.splice(index, 1)
+      this.onSelected.emit(this.selectedSuggestions);
+    }
+
   }
 
 }
