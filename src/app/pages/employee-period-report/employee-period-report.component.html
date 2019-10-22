@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let Data of final; let i=index;">
+                        <tr (click)="stackWiseReport(Data.data[0]._sqdate,Data.data[0]._stackid)" style="color:blue" *ngFor="let Data of final; let i=index;">
                             <td>{{i+1}}</td>
                             <td>{{Data.date}}</td>
                             <td *ngFor="let st of Data.data; let j=index;">{{st['Hour']}}</td>

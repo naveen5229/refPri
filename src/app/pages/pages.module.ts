@@ -17,6 +17,8 @@ import { DistanceCalculateComponent } from './distance-calculate/distance-calcul
 import { SegmentComponent } from './segment/segment.component';
 import { EmployeePeriodReportComponent } from './employee-period-report/employee-period-report.component';
 import { EmployeeMonthlyReportComponent } from './employee-monthly-report/employee-monthly-report.component';
+import { SegmentReportComponent } from './segment-report/segment-report.component';
+import { ComponentReportComponent } from './component-report/component-report.component';
 
 @NgModule({
   imports: [
@@ -40,6 +42,8 @@ import { EmployeeMonthlyReportComponent } from './employee-monthly-report/employ
     SegmentComponent,
     EmployeePeriodReportComponent,
     EmployeeMonthlyReportComponent,
+    SegmentReportComponent,
+    ComponentReportComponent,
   ],
 })
 export class PagesModule {

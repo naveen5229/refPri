@@ -14,6 +14,8 @@ import { DistanceCalculateComponent } from './distance-calculate/distance-calcul
 import { SegmentComponent } from './segment/segment.component';
 import { EmployeePeriodReportComponent } from './employee-period-report/employee-period-report.component';
 import { EmployeeMonthlyReportComponent } from './employee-monthly-report/employee-monthly-report.component';
+import { SegmentReportComponent } from './segment-report/segment-report.component';
+import { ComponentReportComponent } from './component-report/component-report.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -70,6 +72,16 @@ const routes: Routes = [{
     {
       path: 'employee-monthly-report',
       component: EmployeeMonthlyReportComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'segment-report',
+      component: SegmentReportComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'component-report',
+      component: ComponentReportComponent,
       canActivate: [AuthGuard]
     },
   ],
