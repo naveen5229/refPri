@@ -1,0 +1,72 @@
+<nb-card style="border: 0px; height: 100%;">
+    <nb-card-header class="employee-report">
+        <h5>Segment Report</h5>
+
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-4">
+                <div class="row row align-items-center">
+                    <div class="col-4">
+                        <label>Segment:</label>
+                    </div>
+                    <div class="col-6">
+                        <auto-suggestion [data]="segmentName" name="name" [display]="['name','module_name','project_name']" seperator="-" placeholder="Enter Segment Name" (onSelected)="changeSegment($event)" inputId="id" required></auto-suggestion>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row row align-items-center">
+                    <div class="col-4 pl-0 pr-0">
+                        <label>From Date :</label>
+                    </div>
+                    <div class="col-8 pl-0">
+                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row align-items-center">
+                    <div class="col-3 pr-0 pl-0">
+                        <label>To Date :</label>
+                    </div>
+                    <div class="col-9">
+                        <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="segmentReport()">Submit</button> </div>
+
+        </div>
+
+        <div class="row" style="margin-top:15px">
+            <table class="table table-border mt-2">
+                <thead class="thead">
+                    <tr>
+                        <th>#</th>
+                        <th>Employee Name</th>
+                        <!-- <th *ngFor="let date of formattedAttendancesDate">{{date}}</th> -->
+                        <!-- <th>Segment</th> -->
+                        <th *ngFor="let stack of stackData; let i=index;">{{stack}}</th>
+
+                        <!-- <th>Hours</th> -->
+
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emp of segmentData; let i=index;">
+                        <td>0{{i +1 }}</td>
+                        <td>{{emp.name | titlecase}}</td>
+                        <td>{{emp.hr}}</td>
+                        <!-- <td>{{emp.stack | titlecase}}</td>
+                        <td>{{emp.hr}}</td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </nb-card-body>
