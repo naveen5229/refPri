@@ -24,14 +24,13 @@ export class TaskAssignUserComponent implements OnInit {
     endDate: null,
     id: null
   }
-  userDate = null
   btn = 'Add';
   moduleName = [];
   assignedLists = [];
   assigneeLists = [];
   projectName = '';
   module = [];
-  segment = ''
+  segment = '';
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -39,19 +38,18 @@ export class TaskAssignUserComponent implements OnInit {
     public modalService: NgbModal) {
     console.log("task list", this.common.params)
     if (this.common.params != null) {
-      this.task.mName = this.common.params.ModuleName
-      this.task.module = this.common.params.SegmentId,
-        this.task.title = this.common.params.Title,
-        this.task.segmentName = this.common.params.SegmentName
-      this.task.description = this.common.params.Description,
-        this.task.assigner = this.common.params.AssignerName,
-        this.task.assigned = this.common.params.AssigneeName,
-        this.task.assignedId = this.common.params._assinedempid,
-        this.task.assignerId = this.common.params._assignerempid,
-        this.task.id = this.common.params.id,
-        this.projectName = this.common.params.ProjectName
+      this.task.mName = this.common.params.ModuleName;
+      this.task.module = this.common.params.SegmentId;
+      this.task.title = this.common.params.Title;
+      this.task.segmentName = this.common.params.SegmentName;
+      this.task.description = this.common.params.Description;
+      this.task.assigner = this.common.params.AssignerName;
+      this.task.assigned = this.common.params.AssigneeName;
+      this.task.assignedId = this.common.params._assinedempid;
+      this.task.assignerId = this.common.params._assignerempid;
+      this.task.id = this.common.params.id;
+      this.projectName = this.common.params.ProjectName;
       this.task.date = new Date(this.common.dateFormatter(this.common.params.assign_time))
-      console.log("---------------------------------", this.task.segmentName)
       this.btn = "Update";
     }
     this.task.endDate = new Date(new Date().setDate(new Date(this.task.date).getDate() + 1));
@@ -72,7 +70,6 @@ export class TaskAssignUserComponent implements OnInit {
     this.api.get('Segment/getAllSegments')
       .subscribe(res => {
         this.common.loading--;
-        console.log("list", res);
         this.moduleName = res['data'];
       }, err => {
         this.common.loading--;
@@ -81,9 +78,7 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
 
-
   changeModule(event) {
-    console.log("item", event)
     this.task.module = event.id;
   }
 
@@ -93,7 +88,6 @@ export class TaskAssignUserComponent implements OnInit {
     this.api.get('Suggestion/getEmployeeList')
       .subscribe(res => {
         this.common.loading--;
-        console.log("list", res);
         this.assigneeLists = res['data'];
       }, err => {
         this.common.loading--;
@@ -102,7 +96,6 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
   changeAssignee(event) {
-    console.log("item", event);
     if (event && event.length) {
       this.task.assignedId = event.map(user => { return { assignee_id: user.id } });
       console.log("AssignId", this.task.assignedId);
@@ -121,14 +114,13 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
   changeAssigner(event) {
-    console.log("item1", event)
     this.task.assigner = event.name;
     this.task.assignerId = event.id
   }
 
   saveUser() {
-    let startDate = this.common.dateFormatter(this.task.date)
-    let endDate = this.common.dateFormatter(this.task.endDate)
+    let startDate = this.common.dateFormatter(this.task.date);
+    let endDate = this.common.dateFormatter(this.task.endDate);
     if (this.task.module == null) {
       return this.common.showError("Module name is missing")
     }
@@ -177,21 +169,21 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
   updateData() {
-    let endDate = this.common.dateFormatter(this.task.endDate)
-    console.log("dataaa", this.task.title);
+    let startDate = this.common.dateFormatter(this.task.date);
+    let endDate = this.common.dateFormatter(this.task.endDate);
     const params = {
       segmentId: this.task.module,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,
       assignedEmpId: this.task.assignedId,
-      assign_time: this.userDate,
+      assign_time: startDate,
       status: 0,
       taskId: this.task.id,
       reviewTime: endDate
     }
 
-    console.log("parammmmmm", params)
+    console.log("params", params)
     this.common.loading++;
     this.api.post('Task/updateTask', params).subscribe(res => {
       this.common.loading--;
