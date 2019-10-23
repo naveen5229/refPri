@@ -78,7 +78,12 @@ export class ModulesComponent implements OnInit {
       this.common.loading++;
       this.api.post('Modules/addModules', params).subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res['msg'])
+        if(res['success'] == false){
+          this.common.showError(res['msg'])  
+        }
+        else{
+          this.common.showToast(res['msg'])  
+
         this.modules = {
           projectId: null,
           name: null,
@@ -90,7 +95,7 @@ export class ModulesComponent implements OnInit {
        this.module_id = null
        this.modulesData1 = [];
         this.getModule()
-      },
+      }},
         err => {
           this.common.loading--;
           this.common.showError();
@@ -110,20 +115,24 @@ export class ModulesComponent implements OnInit {
       this.api.post('Modules/updateModule', params).subscribe(res => {
         this.common.loading--;
 
-        this.common.showToast(res['msg'])
+        if(res['success'] == false){
+          this.common.showError(res['msg'])  
+        }
+        else{
+          this.common.showToast(res['msg'])  
+
         this.modules = {
           projectId: null,
           name: null,
           projectName: ''
-        }
-        // this.modules.name=null;
-        // this.modules.projectName=null;
-        // this.modules.projectId=null;
-        // this.projectName=null;
+       }
+       this.projectName = [];
+ 
+
+       this.module_id = null
+       this.modulesData1 = [];
         this.getModule()
-        console.log('modules:::',this.modules)
-      
-      },
+      }},
         err => {
           this.common.loading--;
 

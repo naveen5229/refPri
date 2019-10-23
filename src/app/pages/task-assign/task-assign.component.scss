@@ -1,75 +1,71 @@
-:host ::ng-deep .fa-edit {
-  color: #3c6ac7;
-  cursor: pointer;
-  display: contents;
-}
-
-:host ::ng-deep .edit-btn:hover {
-  background-color: #0054ff;
+.edit-icon {
+    color: blue;
+    margin-right: 6px;
+    cursor: pointer;
 }
 
 :host ::ng-deep .fa-check {
-  border-radius: 3px;
-  font-size: initial;
-  color: darkblue;
-  margin-right: 10px;
-  padding: 2px;
-  cursor: pointer;
+    border-radius: 3px;
+    font-size: initial;
+    color: darkblue;
+    margin-right: 10px;
+    padding: 2px;
+    cursor: pointer;
 }
 
 :host ::ng-deep .fa-trash-alt {
-  margin-right: 10px;
-  color: red;
-  padding: 2px;
-  border-radius: 3px;
-  cursor: pointer;
+    margin-right: 10px;
+    color: red;
+    padding: 2px;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 :host ::ng-deep .fa-eye {
-  border-radius: 3px;
-  margin-right: 10px;
-  color: #7b0579;
-  padding: 2px;
-  cursor: pointer;
+    border-radius: 3px;
+    margin-right: 10px;
+    color: #7b0579;
+    padding: 2px;
+    cursor: pointer;
 }
 
 :host ::ng-deep .remove:hover {
-  background-color: #fd1361;
-  border-color: #fc0758;
+    background-color: #fd1361;
+    border-color: #fc0758;
 }
 
 .tabs_style {
-  width: 100%;
-  margin: 0px;
-  border-bottom: 2px solid #26a69a;
-  margin-bottom: 10px;
-  padding-left: 5px !important;
-  li {
-    padding: 5px 6px;
-    list-style: none;
-    margin-right: 5px;
-    background-color: #26a69a;
-    border: 2px solid #26a69a;
-    color: #fff;
-    border-bottom: 0px;
-    display: inline-block;
-    border-radius: 5px 5px 0px 0px;
-    font-size: 12px;
-    font-weight: normal;
-    cursor: pointer;
-    &.active {
-      background-color: #fff;
-      color: #26a69a;
-      position: relative;
-      &::after {
-        content: "";
-        display: block;
-        background-color: #fff;
-        height: 10px;
-        width: 100%;
-        position: absolute;
-        left: 0px;
-      }
+    width: 100%;
+    margin: 0px;
+    border-bottom: 2px solid #26a69a;
+    margin-bottom: 10px;
+    padding-left: 5px !important;
+    li {
+        padding: 5px 6px;
+        list-style: none;
+        margin-right: 5px;
+        background-color: #26a69a;
+        border: 2px solid #26a69a;
+        color: #fff;
+        border-bottom: 0px;
+        display: inline-block;
+        border-radius: 5px 5px 0px 0px;
+        font-size: 12px;
+        font-weight: normal;
+        cursor: pointer;
+        &.active {
+            background-color: #fff;
+            color: #26a69a;
+            position: relative;
+            &::after {
+                content: "";
+                display: block;
+                background-color: #fff;
+                height: 10px;
+                width: 100%;
+                position: absolute;
+                left: 0px;
+            }
+        }
     }
-  }
 }

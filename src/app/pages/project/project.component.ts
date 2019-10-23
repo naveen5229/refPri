@@ -47,10 +47,18 @@ export class ProjectComponent implements OnInit {
     this.api.post('Projects/addProject', params).subscribe(res => {
     this.common.loading--;
     this.project='';
-    this.getProject();
+   
+    if(res['success'] == false){
+       this.common.showError(res['msg'])  
+    }
+    else {
       this.common.showToast("Project Created")  
+      this.getProject();
+    }
     },
+
     err => {
+      this.common.loading--;
       this.common.showError();
     console.log('Error: ', err);
     });
@@ -64,11 +72,15 @@ export class ProjectComponent implements OnInit {
   this.common.loading++;
   this.api.post('Projects/updateProject', params).subscribe(res => {
   this.common.loading--;
- 
-    this.common.showToast(res['msg'])
-   this.getProject() 
-   this.project='';
-  },
+  if(res['success'] == false){
+    this.common.showError(res['msg'])  
+ }
+ else {
+   this.common.showToast("Project Created")  
+   this.getProject();
+   this.project=''
+ }
+ },
   err => {
     this.common.loading--;
 
