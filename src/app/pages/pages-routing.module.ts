@@ -16,6 +16,7 @@ import { EmployeePeriodReportComponent } from './employee-period-report/employee
 import { EmployeeMonthlyReportComponent } from './employee-monthly-report/employee-monthly-report.component';
 import { SegmentReportComponent } from './segment-report/segment-report.component';
 import { ComponentReportComponent } from './component-report/component-report.component';
+import { SegmentStackReportComponent } from './segment-stack-report/segment-stack-report.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -82,6 +83,11 @@ const routes: Routes = [{
     {
       path: 'component-report',
       component: ComponentReportComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'segment-stack-report',
+      component: SegmentStackReportComponent,
       canActivate: [AuthGuard]
     },
   ],
