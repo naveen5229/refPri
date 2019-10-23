@@ -13,6 +13,8 @@ export class SegmentReportComponent implements OnInit {
   startDate = new Date();
   endDate = new Date();
   segmentName=[];
+  segmentData=[];
+
   segmentId='';
   stackData=[];
   segmentHours=[];
@@ -20,10 +22,11 @@ export class SegmentReportComponent implements OnInit {
 
   constructor(public common:CommonService,
     public api:ApiService) {
-      this.getAllSegment() 
+      this.getAllSegment() ;
+      this.startDate = new Date(new Date().setDate(new Date(this.endDate).getDate() - 7));
+
 
      }
-     segmentData=[];
 
   ngOnInit() {
   }
@@ -69,6 +72,9 @@ this.api.get('Report/getReportWrtSegment?' + params).subscribe(res => {
   }
 
   arrangement(){
+    this.stackData=[];
+  this.segmentHours=[];
+  this.nameData=[];
     let StackGroups = _.groupBy(this.segmentData, 'name');
     console.log("stacccccccclllkk",StackGroups)
      Object.keys(StackGroups).map(key => {
@@ -82,14 +88,18 @@ this.api.get('Report/getReportWrtSegment?' + params).subscribe(res => {
           hr.hr)
       });
       this.stackData.push({
-        hour:StackGroups[key].map(stack=>
+        stack:StackGroups[key].map(stack=>
           stack.stack)
     }); 
   
   });
-  this.stackData=this.stackData[0].hour
+  this.segmentHours=this.segmentHours[0].hour;
+  this.stackData=this.stackData[0].stack
+
     console.log("----------------------",this.stackData)
     console.log("----------------------",this.segmentHours)
+    console.log("----------------------",this.nameData)
+
 
 
   }

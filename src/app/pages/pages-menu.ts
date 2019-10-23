@@ -85,5 +85,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'cube-outline',
     link: '/pages/component-report',
     home: true,
+  },
+  {
+    title: 'Segment Stack Report',
+    icon: 'cube-outline',
+    link: '/pages/segment-stack-report',
+    home: true,
   }
 ];

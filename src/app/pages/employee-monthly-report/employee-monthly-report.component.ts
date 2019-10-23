@@ -12,9 +12,9 @@ import { WorklogsWithResUserComponent } from '../../modals/worklogs-with-res-use
   styleUrls: ['./employee-monthly-report.component.scss']
 })
 export class EmployeeMonthlyReportComponent implements OnInit {
-  formattedAttendances=[]
-  formattedAttendancesDate=[]
-  formattedAttendancesHours=[]
+  formattedAttendances = []
+  formattedAttendancesDate = []
+  formattedAttendancesHours = []
   dates = {
     start: '',
     end: ''
@@ -25,7 +25,7 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       headings: {
         Name: { placeholder: 'Employee' },
         Hours: { placeholder: 'Hours', editable: true, hideSearch: true },
-        date:{ placeholder: 'Date', editable: true, hideSearch: true }
+        date: { placeholder: 'Date', editable: true, hideSearch: true }
       },
       columns: []
     },
@@ -35,25 +35,25 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       editable: true,
     }
   };
-  attendances=[];
-  formattedAttendancesUser=[]
-  constructor(public common:CommonService,
-    public api:ApiService,
-    public modalService:NgbModal) { }
+  attendances = [];
+  formattedAttendancesUser = []
+  constructor(public common: CommonService,
+    public api: ApiService,
+    public modalService: NgbModal) { }
 
   ngOnInit() {
   }
 
-  showMonthlyWork(){
-    this.formattedAttendances=[]
-    this.formattedAttendancesDate=[]
-    this.formattedAttendancesHours=[]
-     this.table = {
+  showMonthlyWork() {
+    this.formattedAttendances = []
+    this.formattedAttendancesDate = []
+    this.formattedAttendancesHours = []
+    this.table = {
       data: {
         headings: {
           Name: { placeholder: 'Employee' },
           Hours: { placeholder: 'Hours', editable: true, hideSearch: true },
-          date:{ placeholder: 'Date', editable: true, hideSearch: true }
+          date: { placeholder: 'Date', editable: true, hideSearch: true }
 
         },
         columns: []
@@ -65,19 +65,20 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       }
     };
     let params = {
-     
+
       startDate: this.dates.start,
       endDate: this.dates.end
     };
-    
+
     this.common.loading++;
     this.api.post('Report/getEmployeeMonthlyReport', params).subscribe(res => {
       this.common.loading--;
       this.attendances = res['data'];
       //this.table = this.setTable();
+      console.log("++---++-+-+-+-+-+", this.attendances)
       this.table.data.columns = this.getTableColumns(this.formattData());
       this.common.showToast(res['msg'])
-  
+
     },
       err => {
         this.common.loading--;
@@ -87,41 +88,41 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       });
   }
 
-  setTable(){
+  setTable() {
 
   }
 
   formattData() {
     let EmployeAttendanceGroups = _.groupBy(this.attendances, 'Name');
-    console.log("++++++++++++++++",EmployeAttendanceGroups)
-  
+    console.log("++++++++++++++++", EmployeAttendanceGroups)
+
     Object.keys(EmployeAttendanceGroups).map(key => {
       this.formattedAttendances.push({
         name: key,
-     data: EmployeAttendanceGroups[key],
-       // Date:EmployeAttendanceGroups[key][0].Date
+        data: EmployeAttendanceGroups[key],
+        // Date:EmployeAttendanceGroups[key][0].Date
       });
       this.formattedAttendancesDate.push({
-        date:EmployeAttendanceGroups[key].map(date=>
+        date: EmployeAttendanceGroups[key].map(date =>
           date.Date)
       });
       this.formattedAttendancesHours.push({
-        hour:EmployeAttendanceGroups[key].map(hour=>
+        hour: EmployeAttendanceGroups[key].map(hour =>
           hour.Hour)
-    }); 
-    this.formattedAttendancesUser.push({
-        user:EmployeAttendanceGroups[key].map(user=>
-        user._empid),
-        date:EmployeAttendanceGroups[key].map(user=>
+      });
+      this.formattedAttendancesUser.push({
+        user: EmployeAttendanceGroups[key].map(user =>
+          user._empid),
+        date: EmployeAttendanceGroups[key].map(user =>
           user._date)
-  }); 
-  });
+      });
+    });
 
- 
-    this.formattedAttendancesDate=  this.formattedAttendancesDate[0].date
-   
 
-    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",this.formattedAttendancesUser)
+    this.formattedAttendancesDate = this.formattedAttendancesDate[0].date
+
+
+    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", this.formattedAttendancesUser)
     //   };
 
     // });
@@ -129,7 +130,7 @@ export class EmployeeMonthlyReportComponent implements OnInit {
     return this.formattedAttendances;
   }
 
-  
+
   getTableColumns(formattedAttendances) {
     let columns = [];
 
@@ -137,21 +138,20 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       let column = {
         Name: { value: formattedAttendance.Name },
         Hours: { value: formattedAttendance.Hours },
-        Date : { value: formattedAttendance.Hours, Date: formattedAttendance.Date }
+        Date: { value: formattedAttendance.Hours, Date: formattedAttendance.Date }
 
       };
-   
-    
+
       column['params'] = formattedAttendance;
-     
+
       columns.push(column);
       console.log("***********", columns)
     });
     return columns;
   }
 
-  workLogUser(emp,userDate){
-    this.common.params={emp,userDate}
+  workLogUser(emp, userDate) {
+    this.common.params = { emp, userDate }
     const activeModal = this.modalService.open(WorklogsWithResUserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
