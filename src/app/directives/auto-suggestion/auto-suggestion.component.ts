@@ -79,6 +79,10 @@ export class AutoSuggestionComponent implements OnInit {
   }
 
   handlePreSelection() {
+    if (this.isMultiSelect) {
+      this.selectedSuggestions = JSON.parse(JSON.stringify(this.preSelected));
+      return;
+    }
     this.selectedSuggestion = this.preSelected;
     this.searchText = '';
     if (typeof (this.display) != 'object')
