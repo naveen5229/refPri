@@ -12,12 +12,12 @@ import { AddSegmentComponent } from '../add-segment/add-segment.component';
 export class TaskAssignUserComponent implements OnInit {
   task = {
     mName: '',
-    module: null,
+    segmentId: null,
     title: '',
     description: '',
     assigner: null,
     assignerId: null,
-    assigned: null,
+    assigned: [],
     assignedId: [],
     segmentName: null,
     date: new Date(),
@@ -39,18 +39,17 @@ export class TaskAssignUserComponent implements OnInit {
     console.log("task list", this.common.params)
     if (this.common.params != null) {
       this.task.mName = this.common.params.ModuleName;
-      this.task.module = this.common.params.SegmentId;
+      this.task.segmentId = this.common.params.segmentid;
       this.task.title = this.common.params.Title;
       this.task.segmentName = this.common.params.SegmentName;
       this.task.description = this.common.params.Description;
       this.task.assigner = this.common.params.AssignerName;
-      this.task.assigned = this.common.params.AssigneeName;
-      this.task.assignedId = this.common.params._assinedempid;
       this.task.assignerId = this.common.params._assignerempid;
       this.task.id = this.common.params.id;
       this.projectName = this.common.params.ProjectName;
       this.task.date = new Date(this.common.dateFormatter(this.common.params.assign_time))
       this.btn = "Update";
+      this.getAssigneeList();
     }
     this.task.endDate = new Date(new Date().setDate(new Date(this.task.date).getDate() + 1));
     this.getModuleList();
@@ -78,8 +77,26 @@ export class TaskAssignUserComponent implements OnInit {
   }
 
 
-  changeModule(event) {
-    this.task.module = event.id;
+  changeSegment(event) {
+    this.task.segmentId = event.id;
+  }
+
+  getAssigneeList() {
+    const params = {
+      taskId: this.task.id
+    }
+    this.api.post('Task/getAssigneeWrtTask', params)
+      .subscribe(res => {
+        console.log("api data", res);
+        this.task.assigned = res['data'].map(user => {
+          return { name: user.assigneename, id: user._empid }
+        });
+        this.task.assignedId = res['data'].map(user => { return { assignee_id: user._empid } });
+        console.log(this.task.assigned)
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
 
@@ -121,8 +138,8 @@ export class TaskAssignUserComponent implements OnInit {
   saveUser() {
     let startDate = this.common.dateFormatter(this.task.date);
     let endDate = this.common.dateFormatter(this.task.endDate);
-    if (this.task.module == null) {
-      return this.common.showError("Module name is missing")
+    if (this.task.segmentId == null) {
+      return this.common.showError("Segment name is missing")
     }
     else if (this.task.assignerId == null) {
       return this.common.showError("Assigner name is missing")
@@ -139,7 +156,7 @@ export class TaskAssignUserComponent implements OnInit {
       return this.updateData();
     }
     const params = {
-      segmentId: this.task.module,
+      segmentId: this.task.segmentId,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,
@@ -172,11 +189,11 @@ export class TaskAssignUserComponent implements OnInit {
     let startDate = this.common.dateFormatter(this.task.date);
     let endDate = this.common.dateFormatter(this.task.endDate);
     const params = {
-      segmentId: this.task.module,
+      segmentId: this.task.segmentId,
       title: this.task.title,
       description: this.task.description,
       assignerEmpId: this.task.assignerId,
-      assignedEmpId: this.task.assignedId,
+      assignedEmpId: JSON.stringify(this.task.assignedId),
       assign_time: startDate,
       status: 0,
       taskId: this.task.id,
@@ -187,8 +204,13 @@ export class TaskAssignUserComponent implements OnInit {
     this.common.loading++;
     this.api.post('Task/updateTask', params).subscribe(res => {
       this.common.loading--;
-      this.common.showToast(res['msg'])
-      this.closeModal(true);
+      if (res['data'][0]['y_id'] > 0) {
+        this.common.showToast(res['data'][0].y_msg)
+        this.closeModal(true);
+      }
+      else {
+        this.common.showError(res['data'][0].y_msg)
+      }
     },
       err => {
         this.common.loading--;
