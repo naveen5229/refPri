@@ -59,48 +59,37 @@ export class EmployeeMonthlyReportComponent implements OnInit {
         columns: []
       },
       settings: {
-        //hideHeader: true
         hideHeader: true,
         editable: true,
       }
     };
     let params = {
-
       startDate: this.dates.start,
       endDate: this.dates.end
-    };
-
+    };  
     this.common.loading++;
     this.api.post('Report/getEmployeeMonthlyReport', params).subscribe(res => {
       this.common.loading--;
       this.attendances = res['data'];
       //this.table = this.setTable();
       console.log("++---++-+-+-+-+-+", this.attendances)
-      this.table.data.columns = this.getTableColumns(this.formattData());
+      this.formattData()
       this.common.showToast(res['msg'])
-
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
   }
 
-  setTable() {
-
-  }
-
   formattData() {
     let EmployeAttendanceGroups = _.groupBy(this.attendances, 'Name');
     console.log("++++++++++++++++", EmployeAttendanceGroups)
-
     Object.keys(EmployeAttendanceGroups).map(key => {
       this.formattedAttendances.push({
         name: key,
         data: EmployeAttendanceGroups[key],
-        // Date:EmployeAttendanceGroups[key][0].Date
       });
       this.formattedAttendancesDate.push({
         date: EmployeAttendanceGroups[key].map(date =>
@@ -117,38 +106,11 @@ export class EmployeeMonthlyReportComponent implements OnInit {
           user._date)
       });
     });
-
-
     this.formattedAttendancesDate = this.formattedAttendancesDate[0].date
-
-
-    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", this.formattedAttendancesUser)
-    //   };
-
-    // });
     console.log('formattdata', this.formattedAttendances);
     return this.formattedAttendances;
   }
 
-
-  getTableColumns(formattedAttendances) {
-    let columns = [];
-
-    formattedAttendances.map(formattedAttendance => {
-      let column = {
-        Name: { value: formattedAttendance.Name },
-        Hours: { value: formattedAttendance.Hours },
-        Date: { value: formattedAttendance.Hours, Date: formattedAttendance.Date }
-
-      };
-
-      column['params'] = formattedAttendance;
-
-      columns.push(column);
-      console.log("***********", columns)
-    });
-    return columns;
-  }
 
   workLogUser(emp, userDate) {
     this.common.params = { emp, userDate }
