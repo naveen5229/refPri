@@ -69,6 +69,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Module Report',
+    icon: 'file-text-outline',
+    link: '/pages/module-report',
+    home: true
+  },
+  {
     title: 'Segment Report',
     icon: 'cube-outline',
     link: '/pages/segment-report',
