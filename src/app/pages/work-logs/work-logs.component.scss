@@ -1,51 +1,59 @@
- .fa-trash-alt {
-     font-size: 12px;
-     margin-right: 10px;
-     color: red;
-     border-color: red;
-     padding: 8px;
-     border-radius: 3px;
- }
- 
- .tabs_style {
-     width: 100%;
-     margin: 0px;
-     border-bottom: 2px solid #26A69A;
-     margin-bottom: 10px;
-     padding-left: 5px !important;
-     li {
-         padding: 5px 6px;
-         list-style: none;
-         margin-right: 5px;
-         background-color: #26A69A;
-         border: 2px solid #26A69A;
-         color: #fff;
-         border-bottom: 0px;
-         display: inline-block;
-         border-radius: 5px 5px 0px 0px;
-         font-size: 14px;
-         font-weight: normal;
-         cursor: pointer;
-         &.active {
-             background-color: #fff;
-             color: #26A69A;
-             position: relative;
-             &::after {
-                 content: '';
-                 display: block;
-                 background-color: #fff;
-                 height: 10px;
-                 width: 100%;
-                 position: absolute;
-                 left: 0px;
-             }
-         }
-     }
- }
- 
- .table th,
- .table td {
-     padding: 0.50rem;
-     vertical-align: top;
-     border-top: 1px solid #dee2e6;
- }
+.tabs_style {
+  width: 100%;
+  margin: 0px;
+  border-bottom: 2px solid #26a69a;
+  margin-bottom: 10px;
+  padding-left: 5px !important;
+  li {
+    padding: 5px 6px;
+    list-style: none;
+    margin-right: 5px;
+    background-color: #26a69a;
+    border: 2px solid #26a69a;
+    color: #fff;
+    border-bottom: 0px;
+    display: inline-block;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 14px;
+    font-weight: normal;
+    cursor: pointer;
+    &.active {
+      background-color: #fff;
+      color: #26a69a;
+      position: relative;
+      &::after {
+        content: "";
+        display: block;
+        background-color: #fff;
+        height: 10px;
+        width: 100%;
+        position: absolute;
+        left: 0px;
+      }
+    }
+  }
+}
+
+.table th,
+.table td {
+  padding: 0.5rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+:host ::ng-deep .fa-edit {
+  color: #3c6ac7;
+  cursor: pointer;
+  display: contents;
+}
+
+:host ::ng-deep .edit-btn:hover {
+  background-color: #0054ff;
+}
+
+:host ::ng-deep .fa-trash-alt {
+  margin-right: 10px;
+  color: red;
+  padding: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
