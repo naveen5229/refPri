@@ -19,7 +19,6 @@ export class ModuleReportComponent implements OnInit {
   isSubmit = false;
   formattedModuleData = [];
   formattedSegments = [];
-  formattedHours = [];
 
 
   constructor(public common: CommonService,
@@ -92,18 +91,12 @@ export class ModuleReportComponent implements OnInit {
         segment.SegmentName)
       );
 
-      this.formattedHours.push({
-        hour: employeeGroups[key].map(hr =>
-          hr.hr),
-        segment: employeeGroups[key].map(hr =>
-          hr.segment),
-      });
     });
 
-    this.formattedHours = this.formattedHours;
     this.formattedSegments = [...new Set(this.formattedSegments)]
     console.log('formattedSegments', this.formattedSegments);
-    console.log('formattedHours', this.formattedHours);
+    console.log('formattedModuleData', this.formattedModuleData);
+
     return this.formattedModuleData;
 
   }
