@@ -3,6 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StackReportComponent } from '../../modals/stack-report/stack-report.component';
+import * as _ from "lodash";
 
 @Component({
   selector: 'ngx-employee-period-report',
@@ -16,15 +17,19 @@ export class EmployeePeriodReportComponent implements OnInit {
   employeeId = null;
   startDate = new Date();
   endDate = new Date();
-  stack = [];
+  stacks = [];
+  reports = [];
   date = [];
   group = [];
   final = [];
+
   constructor(public common: CommonService,
     public api: ApiService,
-    public modalService:NgbModal,
+    public modalService: NgbModal,
   ) {
     this.getEmployeeList();
+    this.startDate = new Date(new Date().setDate(new Date(this.endDate).getDate() - 7));
+
   }
 
   ngOnInit() {
@@ -45,11 +50,6 @@ export class EmployeePeriodReportComponent implements OnInit {
   }
 
   getEmployeeWiseReport() {
-    this.stack = [];
-    this.date = [];
-    this.group = [];
-    this.final = [];
-    this.employeeReport = [];
     let params = {
       userId: this.employeeId,
       startDate: this.common.dateFormatter(this.startDate),
@@ -59,38 +59,20 @@ export class EmployeePeriodReportComponent implements OnInit {
     this.api.post('Report/getEmployeeReportWithPeriod', params)
       .subscribe(res => {
         this.common.loading--;
-        this.employeeReport = res['data'];
-        for (let i = 0; i < this.employeeReport.length; i++) {
-          this.stack.push(this.employeeReport[i]['Stack']);
-          this.date.push(this.employeeReport[i]['Date']);
-        }
-        console.log("date", this.date);
-        for (let j = 0; j < this.stack.length - 1; j++) {
-          for (let k = 1; k < this.stack.length; k++) {
-            if (this.stack[j] == this.stack[k]) {
-              this.stack.splice(k, 1);
-            }
-          }
-        }
-        for (let j = 0; j < this.date.length - 1; j++) {
-          for (let k = 1; k < this.date.length; k++) {
-            if (this.date[j] == this.date[k]) {
-              this.date.splice(k, 1);
-            }
-          }
-        }
+        this.stacks = [... new Set(Object.keys(_.groupBy(res['data'], 'Stack')))];
+        console.log(this.stacks);
+        let reports = _.groupBy(res['data'], 'Date');
 
-        for (let i = 0; i < this.date.length; i++) {
-          for (let j = 0; j < this.employeeReport.length; j++) {
-            if (this.date[i] == this.employeeReport[j]['Date']) {
-              this.group.push(this.employeeReport[j]);
-            }
-
+        this.reports = Object.keys(reports).map(date => {
+          let stacks = _.groupBy(reports[date], 'Stack');
+          Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => { return sum += parseInt(stk.Total) }, 0));
+          return {
+            date,
+            stacks,
+            data: reports[date]
           }
-          this.final.push({ date: this.date[i], data: this.group });
-          this.group = [];
-        }
-        console.log("stack", this.stack, this.date, this.final);
+        });
+        console.log(this.reports);
       }, err => {
         this.common.loading--;
         console.log(err);
@@ -98,9 +80,12 @@ export class EmployeePeriodReportComponent implements OnInit {
       });
   }
 
-  stackWiseReport(stackDate,stackId){
-   this.common.params={stackDate,stackId,empId:this.employeeId}
+  stackWiseReport(report) {
+    console.log(report.data[0]._sqdate);
+   let  stackDate=report.data[0]._sqdate
+   let stackId=report.data[0]._stackid
+    this.common.params = { stackDate, stackId, empId: this.employeeId }
    this.modalService.open(StackReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  
+
   }
 }

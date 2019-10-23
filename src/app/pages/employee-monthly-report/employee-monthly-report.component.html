@@ -29,7 +29,8 @@
                 </div> -->
             </div>
             <div class="col-2">
-                <button class="btn btn-primary text-capitalize" id="button" (click)="showMonthlyWork()">Submit</button> </div>
+                <button class="btn btn-primary text-capitalize" id="button" (click)="showMonthlyWork()">Submit</button>
+            </div>
 
         </div>
         <div>
@@ -38,17 +39,20 @@
                 <table class="table table-border mt-2">
                     <thead class="thead">
                         <tr>
-                            <th>#</th>
+                            <!-- <th>#</th> -->
                             <th>Employee Name/Date</th>
                             <th *ngFor="let date of formattedAttendancesDate">{{date}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let emp of formattedAttendances; let i=index;">
-                            <td>0{{i +1 }}</td>
+                            <!-- <td>0{{i +1 }}</td> -->
                             <td>{{emp.name | titlecase}}</td>
                             <!-- <td>{{name.data.hours}}</td> -->
-                            <td (click)="workLogUser(info._empid,info._date)" style="color:blue" *ngFor="let info of emp.data">{{info.Hour}}</td>
+                            <td (click)="workLogUser(info._empid,info._date)" style="color:blue" *ngFor="let info of emp.data">
+                                <span *ngIf="info.Hour != 0">{{info.Hour}}</span>
+                                <i class="fa fa-times" style="color:red" *ngIf="info.Hour == 0"></i>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

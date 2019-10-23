@@ -19,6 +19,7 @@ import { EmployeePeriodReportComponent } from './employee-period-report/employee
 import { EmployeeMonthlyReportComponent } from './employee-monthly-report/employee-monthly-report.component';
 import { SegmentReportComponent } from './segment-report/segment-report.component';
 import { ComponentReportComponent } from './component-report/component-report.component';
+import { SegmentStackReportComponent } from './segment-stack-report/segment-stack-report.component';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { ComponentReportComponent } from './component-report/component-report.co
     EmployeeMonthlyReportComponent,
     SegmentReportComponent,
     ComponentReportComponent,
+    SegmentStackReportComponent,
   ],
 })
 export class PagesModule {
