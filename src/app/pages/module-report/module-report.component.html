@@ -49,14 +49,12 @@
       <table class="table table-border">
         <thead class="thead">
           <tr>
-            <th>#</th>
-            <th>Employee Name</th>
+            <th>Employee/Module</th>
             <th *ngFor="let segment of formattedSegments">{{segment}}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let module of formattedModuleData; let i=index;">
-            <td> {{i+1}} </td>
             <td>{{module.name | titlecase}}</td>
             <td *ngFor="let segment of formattedSegments; let i=index;">
               <span *ngIf="module.data[segment]"> {{module.data[segment]}}</span>
