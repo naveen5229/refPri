@@ -51,20 +51,17 @@
           <tr>
             <th>#</th>
             <th>Employee Name</th>
-            <!-- <th *ngFor="let stack of stackData; let i=index;">{{stack}}</th> -->
+            <th *ngFor="let segment of formattedSegments">{{segment}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td> 1 </td>
-            <td> test </td>
-
+          <tr *ngFor="let module of formattedModuleData; let i=index;">
+            <td> {{i+1}} </td>
+            <td>{{module.name | titlecase}}</td>
+            <td *ngFor="let segment of formattedSegments; let i=index;">{{module.data[segment] || -}}</td>
           </tr>
-          <!-- <tr *ngFor="let emp of segmentData; let i=index;">
-                    <td>0{{i +1 }}</td>
-                    <td>{{emp.name | titlecase}}</td>
-                    <td>{{emp.hr}}</td>
-                </tr> -->
+          <tr *ngIf="isSubmit && moduleData.length==0">
+            <label style="color: red; text-align: center;">Data not Availabe</label> </tr>
         </tbody>
       </table>
     </div>

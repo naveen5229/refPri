@@ -3,6 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import * as _ from "lodash";
 
 @Component({
   selector: 'ngx-module-report',
@@ -12,8 +13,14 @@ import { ApiService } from '../../Service/Api/api.service';
 export class ModuleReportComponent implements OnInit {
   moduleList = [];
   moduleId = null;
-  startDate = new Date();
   endDate = new Date();
+  startDate = new Date(new Date().setDate(new Date().getDate() - 7));
+  moduleData = [];
+  isSubmit = false;
+  formattedModuleData = [];
+  formattedSegments = [];
+  formattedHours = [];
+
 
   constructor(public common: CommonService,
     public api: ApiService) {
@@ -43,6 +50,13 @@ export class ModuleReportComponent implements OnInit {
   getModuleReport() {
     let startDate = this.common.dateFormatter(this.startDate);
     let endDate = this.common.dateFormatter(this.endDate);
+    if (!this.moduleId || !this.startDate || !this.endDate) {
+      return this.common.showError("Please Fill All Field ");
+    }
+    if (this.startDate > this.endDate) {
+      return this.common.showError("Start Date Should Be Less Then End Date");
+    }
+
     const params = {
       moduleId: this.moduleId,
       startDate: startDate,
@@ -53,11 +67,48 @@ export class ModuleReportComponent implements OnInit {
     this.api.post("Report/getModuleSegmentWrtPeriod", params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api Data", res);
+        this.moduleData = res['data'] || [];
+        this.isSubmit = true;
+        this.dataFormatted();
       }, err => {
         this.common.loading--;
         console.log(err);
       });
   }
+  dataFormatted() {
+    let employeeGroups = _.groupBy(this.moduleData, 'EmpName');
+    console.log("employeeGroup", employeeGroups)
+    Object.keys(employeeGroups).map(key => {
+      let segments = _.groupBy(employeeGroups[key], 'SegmentName');
+      Object.keys(segments).map(segment => segments[segment] = segments[segment].reduce((sum, seg) => { return sum += parseInt(seg.Hour) }, 0));
+      this.formattedModuleData.push({
+        name: key,
+        data: segments,
+      });
+
+      this.formattedSegments.push(...employeeGroups[key].map(segment =>
+        segment.SegmentName)
+      );
+
+      this.formattedHours.push({
+        hour: employeeGroups[key].map(hr =>
+          hr.hr),
+        segment: employeeGroups[key].map(hr =>
+          hr.segment),
+      });
+    });
+
+    this.formattedHours = this.formattedHours;
+    this.formattedSegments = [...new Set(this.formattedSegments)]
+    console.log('formattedSegments', this.formattedSegments);
+    console.log('formattedHours', this.formattedHours);
+    return this.formattedModuleData;
+
+  }
+
+
+
+
+
 
 }
