@@ -45,7 +45,9 @@
                     <tr *ngFor="let emp of nameData; let i=index;">
                         <!-- <td>0{{i +1 }}</td> -->
                         <td>{{emp.name | titlecase}}</td>
-                        <td *ngFor="let stack of stackData; let i=index;">{{emp.data[stack] || 0}}</td>
+                        <td *ngFor="let stack of stackData; let i=index;">
+                            <span *ngIf="emp.data[stack] != 0">{{emp.data[stack] }}</span>
+                            <i class="fa fa-times" style="color:red" *ngIf="!emp.data[stack]"></i></td>
                         <!-- <td>{{emp.stack | titlecase}}</td>
                   <td>{{emp.hr}}</td> -->
                     </tr>
