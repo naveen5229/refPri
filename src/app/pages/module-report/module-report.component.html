@@ -58,7 +58,7 @@
           <tr *ngFor="let module of formattedModuleData; let i=index;">
             <td> {{i+1}} </td>
             <td>{{module.name | titlecase}}</td>
-            <td *ngFor="let segment of formattedSegments; let i=index;">{{module.data[segment] || -}}</td>
+            <td *ngFor="let segment of formattedSegments; let i=index;">{{module.data[segment] || '-'}}</td>
           </tr>
           <tr *ngIf="isSubmit && moduleData.length==0">
             <label style="color: red; text-align: center;">Data not Availabe</label> </tr>

@@ -76,6 +76,8 @@ export class ModuleReportComponent implements OnInit {
       });
   }
   dataFormatted() {
+    this.formattedModuleData = [];
+    this.formattedSegments = [];
     let employeeGroups = _.groupBy(this.moduleData, 'EmpName');
     console.log("employeeGroup", employeeGroups)
     Object.keys(employeeGroups).map(key => {
