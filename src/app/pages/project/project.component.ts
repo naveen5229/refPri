@@ -69,10 +69,10 @@ export class ProjectComponent implements OnInit {
       this.api.post('Projects/updateProject', params).subscribe(res => {
         this.common.loading--;
         if (res['success'] == false) {
-          this.common.showError(res['msg'])
+          this.common.showError(res['msg']);
         }
         else {
-          this.common.showToast("Project Created")
+          this.common.showToast("Project Update");
           this.getProject();
           this.project = ''
         }
