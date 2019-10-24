@@ -16,6 +16,7 @@ export class ModulesComponent implements OnInit {
     projectName: ''
   }
   projectName = [];
+  filteredItems = [];
 
 
   module_id = null
@@ -113,13 +114,6 @@ export class ModulesComponent implements OnInit {
     this.api.post('Modules/updateModule', params).subscribe(res => {
       this.common.loading--;
 
-      this.common.showToast(res['msg'])
-      this.modules = {
-        projectId: null,
-        name: null,
-        projectName: ''
-      }
-
       if (res['success'] == false) {
         this.common.showError(res['msg'])
       }
@@ -130,10 +124,7 @@ export class ModulesComponent implements OnInit {
           projectId: null,
           name: null,
           projectName: ''
-        }
-
-        this.module_id = null
-        this.modulesData1 = [];
+       } 
         this.getModule()
       }
     },
@@ -149,6 +140,7 @@ export class ModulesComponent implements OnInit {
     this.api.get("Modules/getAllModules").subscribe(res => {
 
       this.modulesData1 = res['data'] || [];
+      this.filterItem();
 
     },
       err => {
@@ -199,4 +191,15 @@ export class ModulesComponent implements OnInit {
       }
     });
   }
+
+  filterItem() {
+    if (!this.modules.name) {
+      this.filteredItems = this.modulesData1;
+      return;
+    }
+    this.filteredItems = this.modulesData1.filter(
+      item => item.name.toLowerCase().includes(this.modules.name.toLowerCase())
+    )
+  }
+
 }
