@@ -46,7 +46,10 @@ export class ProjectComponent implements OnInit {
         this.common.loading--;
         if (res['success'] == false) {
           this.common.showError(res['msg'])
+          this.getProject();
+
         }
+
         else {
           this.common.showToast("Project Created")
           this.getProject();
@@ -70,6 +73,8 @@ export class ProjectComponent implements OnInit {
         this.common.loading--;
         if (res['success'] == false) {
           this.common.showError(res['msg']);
+          this.getProject();
+
         }
         else {
           this.common.showToast("Project Update");

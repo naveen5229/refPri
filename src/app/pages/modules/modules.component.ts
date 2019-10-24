@@ -81,6 +81,8 @@ export class ModulesComponent implements OnInit {
         this.common.loading--;
         if (res['success'] == false) {
           this.common.showError(res['msg'])
+          this.getModule()
+
         }
         else {
           this.common.showToast(res['msg'])
@@ -116,6 +118,8 @@ export class ModulesComponent implements OnInit {
 
       if (res['success'] == false) {
         this.common.showError(res['msg'])
+        this.getModule()
+
       }
       else {
         this.common.showToast(res['msg'])
