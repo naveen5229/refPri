@@ -10,17 +10,17 @@ import * as _ from "lodash";
   styleUrls: ['./segment-stack-report.component.scss']
 })
 export class SegmentStackReportComponent implements OnInit {
-  startDate =new  Date();
+  startDate = new Date();
   endDate = new Date();
-  stackData = [];
+  stackData: any = [];
   segmentHours = [];
   nameData = [];
   segmentData = []
   constructor(public common: CommonService,
     public api: ApiService) {
-      this.startDate = new Date(new Date().setDate(new Date(this.endDate).getDate() - 7));
+    this.startDate = new Date(new Date().setDate(new Date(this.endDate).getDate() - 7));
 
-     }
+  }
 
   ngOnInit() {
   }
@@ -53,7 +53,7 @@ export class SegmentStackReportComponent implements OnInit {
     console.log("stacccccccclllkk", StackGroups)
     Object.keys(StackGroups).map(key => {
       let stacks = _.groupBy(StackGroups[key], 'stack');
-      Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => {return sum += parseInt(stk.hr)}, 0));
+      Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => { return sum += parseInt(stk.hr) }, 0));
       this.nameData.push({
         name: key,
         data: stacks,
@@ -74,7 +74,7 @@ export class SegmentStackReportComponent implements OnInit {
 
     });
     // this.stackData=  _.groupBy(this.segmentData, 'stack');
-    this.segmentHours = this.segmentHours;
+    // this.segmentHours = this.segmentHours;
     this.stackData = [...new Set(this.stackData)]
 
     console.log("----------------------", this.stackData)

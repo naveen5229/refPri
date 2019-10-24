@@ -105,6 +105,7 @@ export class TaskAssignComponent implements OnInit {
   }
 
   editTask(task) {
+    console.log('Task', task);
     // this.task.module = task.ModuleName;
     //  this.task.title = task.Title
     //  this.task.description = task.Description

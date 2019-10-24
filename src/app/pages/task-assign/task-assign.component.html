@@ -67,7 +67,7 @@
                             <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
                             <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
                             <td><abbr title="Waiting for review  then click it"><i class="fas fa-check"
-                                (click)="waitingForReview(task)"></i></abbr>
+                                        (click)="waitingForReview(task)"></i></abbr>
                             </td>
 
                         </tr>
@@ -131,15 +131,10 @@
                             <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a ' }}</td>
                             <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
 
-                            <div *ngIf="task.status==0">
-                                <td><i class="far fa-edit" (click)=" editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i></td>
-                            </div>
-                            <div *ngIf="task.status==1">
-                                <td><i class="far fa-edit" (click)=" editTask(task)"></i></td>
-                            </div>
-                            <div *ngIf="task.status==-1">
-                                <td><i class="far fa-edit" (click)=" editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i></td>
-                            </div>
+                            <td>
+                                <i class="fas fa-edit edit-icon" (click)="editTask(task)"></i>
+                                <i *ngIf="task.status == -1 || task.status == 0" class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -211,7 +206,7 @@
                             <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
                             <td>{{task.review_remark | titlecase}}</td>
                             <td><abbr title="Check and Change then click it"><i class="fas  fa-check"
-                                    (click)="waitingForReview(task)"></i></abbr>
+                                        (click)="waitingForReview(task)"></i></abbr>
                             </td>
 
 
@@ -259,7 +254,8 @@
                             <td><textarea row="2" cols="15" [(ngModel)]="task.remark" class="form-control"></textarea>
                             </td>
                             <td>
-                                <uj-date-time-picker (onChanged)="task.review_time=$event" [dateTimeValue]="task.review_time" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
+                                <uj-date-time-picker (onChanged)="task.review_time=$event" [dateTimeValue]="task.review_time" [isTime]="true" [isStart]="true">
+                                </uj-date-time-picker>
                             </td>
                             <td><button class="btn btn-primary text-capitalize" id="button" (click)="statusChangeRemark(task)">Submit</button>
 
