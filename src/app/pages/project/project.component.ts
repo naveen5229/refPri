@@ -36,8 +36,7 @@ export class ProjectComponent implements OnInit {
   saveProject() {
     if (this.project == '') {
       return this.common.showError("Select any project");
-    }
-    else if (this.projectId == null) {
+    } else if (this.projectId == null) {
       const params = {
         name: this.project,
       }
@@ -45,11 +44,17 @@ export class ProjectComponent implements OnInit {
       this.common.loading++;
       this.api.post('Projects/addProject', params).subscribe(res => {
         this.common.loading--;
-        this.project = '';
-        this.getProject();
-        this.common.showToast("Project Created")
+        if (res['success'] == false) {
+          this.common.showError(res['msg'])
+        }
+        else {
+          this.common.showToast("Project Created")
+          this.getProject();
+        }
       },
+
         err => {
+          this.common.loading--;
           this.common.showError();
           console.log('Error: ', err);
         });
@@ -63,10 +68,14 @@ export class ProjectComponent implements OnInit {
       this.common.loading++;
       this.api.post('Projects/updateProject', params).subscribe(res => {
         this.common.loading--;
-
-        this.common.showToast(res['msg'])
-        this.getProject()
-        this.project = '';
+        if (res['success'] == false) {
+          this.common.showError(res['msg'])
+        }
+        else {
+          this.common.showToast("Project Created")
+          this.getProject();
+          this.project = ''
+        }
       },
         err => {
           this.common.loading--;
@@ -76,8 +85,6 @@ export class ProjectComponent implements OnInit {
         });
     }
   }
-
-
 
   getProject() {
     this.common.loading++;

@@ -17,11 +17,11 @@ export class EmployeePeriodReportComponent implements OnInit {
   employeeId = null;
   startDate = new Date();
   endDate = new Date();
-  stacks = [];
-  reports = [];
-  date = [];
-  group = [];
-  final = [];
+  stacks: any = [];
+  reports: any = [];
+  date: any = [];
+  group: any = [];
+  final: any = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -82,10 +82,10 @@ export class EmployeePeriodReportComponent implements OnInit {
 
   stackWiseReport(report) {
     console.log(report.data[0]._sqdate);
-   let  stackDate=report.data[0]._sqdate
-   let stackId=report.data[0]._stackid
+    let stackDate = report.data[0]._sqdate
+    let stackId = report.data[0]._stackid
     this.common.params = { stackDate, stackId, empId: this.employeeId }
-   this.modalService.open(StackReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.modalService.open(StackReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
   }
 }

@@ -78,15 +78,21 @@ export class ModulesComponent implements OnInit {
       this.common.loading++;
       this.api.post('Modules/addModules', params).subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res['msg'])
-        this.modules = {
-          projectId: null,
-          name: null,
-          projectName: ''
+        if (res['success'] == false) {
+          this.common.showError(res['msg'])
         }
-        this.module_id = null
-        this.modulesData1 = [];
-        this.getModule()
+        else {
+          this.common.showToast(res['msg'])
+
+          this.modules = {
+            projectId: null,
+            name: null,
+            projectName: ''
+          }
+          this.module_id = null
+          this.modulesData1 = [];
+          this.getModule()
+        }
       },
         err => {
           this.common.loading--;
@@ -114,10 +120,24 @@ export class ModulesComponent implements OnInit {
         projectName: ''
       }
 
-      this.getModule()
-      console.log('modules:::', this.modules)
+      if (res['success'] == false) {
+        this.common.showError(res['msg'])
+      }
+      else {
+        this.common.showToast(res['msg'])
 
+        this.modules = {
+          projectId: null,
+          name: null,
+          projectName: ''
+        }
+
+        this.module_id = null
+        this.modulesData1 = [];
+        this.getModule()
+      }
     },
+
       err => {
         this.common.loading--;
 
