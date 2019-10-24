@@ -97,7 +97,7 @@
                         <input type="number" class="form-control" maxlength="2" [(ngModel)]="workLog.hrs" placeholder="HH" autocomplete="off" name="totalTime" id="totalTime" required #totalTime="ngModel">
                     </div>
                     <div class="col-4">
-                        <input type="number" class="form-control" name="time" id="time" [(ngModel)]="workLog.minutes" placeholder="MM" maxlength="10" autocomplete="off">
+                        <input type="text" pattern="[0-9]{2}" class="form-control" name="time" id="time" [(ngModel)]="workLog.minutes" placeholder="MM" maxlength="2" autocomplete="off">
                     </div>
                     <div *ngIf="isFormSubmit && totalTime.errors" class="err">
                         <span class="text-red" style="margin-left: 85px;" [hidden]="!totalTime.errors.required"> value is mandatory </span>

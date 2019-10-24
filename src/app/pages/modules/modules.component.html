@@ -12,7 +12,7 @@
                 <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name" [preSelected]="modules.projectName? {name:modules.projectName}:{name:''}" (onSelected)="changeRefernceType($event)" inputId="modules.projectId" autocomplete="off"></auto-suggestion>
             </div>
             <div class="col-3">
-                <input type="text" placeholder="Module Name" [(ngModel)]="modules.name" name="name" class="form-control">
+                <input type="text" placeholder="Module Name" [(ngModel)]="modules.name" name="name" class="form-control" (input)="filterItem()" autocomplete="off">
             </div>
             <div class="col-3">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="saveModule()">Submit</button>
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let module of modulesData1; let i=index;">
+                <tr *ngFor="let module of filteredItems; let i=index;">
                     <td>0{{i +1 }}</td>
                     <td>{{module.project_name | titlecase}}</td>
                     <td>{{module.name | titlecase }}</td>

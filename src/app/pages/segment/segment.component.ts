@@ -19,6 +19,7 @@ segment = {
   moduleName: '',
   projectName:''
 }
+filteredItems=[]
 id=null;
   constructor( public common:CommonService,
     public api:ApiService,
@@ -60,7 +61,7 @@ id=null;
     this.api.get("Segment/getAllSegments").subscribe(res => {
 
       this.segmentData = res['data'] || [];
-
+    this.filterItem();
     },
       err => {
         this.common.showError();
@@ -187,5 +188,15 @@ id=null;
 
       }
     });
+  }
+
+  filterItem() {
+    if (!this.segment.name) {
+      this.filteredItems = this.segmentData ;
+      return;
+    }
+    this.filteredItems = this.segmentData .filter(
+      item => item.name.toLowerCase().includes(this.segment.name.toLowerCase())
+    )
   }
 }
