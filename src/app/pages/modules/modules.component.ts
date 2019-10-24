@@ -16,7 +16,7 @@ export class ModulesComponent implements OnInit {
     projectName: ''
   }
   projectName = [];
- 
+
 
   module_id = null
   modulesData1 = [];
@@ -36,7 +36,7 @@ export class ModulesComponent implements OnInit {
 
   refresh() {
     this.getModule();
-   this.projectList();
+    this.projectList();
   }
 
   projectList() {
@@ -56,7 +56,7 @@ export class ModulesComponent implements OnInit {
   changeRefernceType(type) {
     console.log("type", type)
     this.modules.projectId = type.id
-    this.modules.projectName=type.name
+    this.modules.projectName = type.name
     return this.modules.name;
   }
 
@@ -67,10 +67,10 @@ export class ModulesComponent implements OnInit {
     } else if (!this.modules.name) {
       return this.common.showError("Module name is missing")
     }
-    else if(this.module_id){
+    else if (this.module_id) {
       this.updateModule()
     }
-     else if (this.module_id == null) {
+    else if (this.module_id == null) {
       const params = {
         project_id: this.modules.projectId,
         name: this.modules.name
@@ -78,48 +78,53 @@ export class ModulesComponent implements OnInit {
       this.common.loading++;
       this.api.post('Modules/addModules', params).subscribe(res => {
         this.common.loading--;
-        if(res['success'] == false){
-          this.common.showError(res['msg'])  
+        if (res['success'] == false) {
+          this.common.showError(res['msg'])
         }
-        else{
-          this.common.showToast(res['msg'])  
+        else {
+          this.common.showToast(res['msg'])
 
-        this.modules = {
-          projectId: null,
-          name: null,
-          projectName: ''
-       }
-       this.projectName = [];
- 
-
-       this.module_id = null
-       this.modulesData1 = [];
-        this.getModule()
-      }},
+          this.modules = {
+            projectId: null,
+            name: null,
+            projectName: ''
+          }
+          this.module_id = null
+          this.modulesData1 = [];
+          this.getModule()
+        }
+      },
         err => {
           this.common.loading--;
           this.common.showError();
           console.log('Error: ', err);
         });
-    } 
+    }
   }
 
-  updateModule(){
-      const params = {
-        project_id: this.modules.projectId,
-        name: this.modules.name,
-        module_id: this.module_id,
-      }
-      
-      this.common.loading++;
-      this.api.post('Modules/updateModule', params).subscribe(res => {
-        this.common.loading--;
+  updateModule() {
+    const params = {
+      project_id: this.modules.projectId,
+      name: this.modules.name,
+      module_id: this.module_id,
+    }
 
-        if(res['success'] == false){
-          this.common.showError(res['msg'])  
-        }
-        else{
-          this.common.showToast(res['msg'])  
+    this.common.loading++;
+    this.api.post('Modules/updateModule', params).subscribe(res => {
+      this.common.loading--;
+
+      this.common.showToast(res['msg'])
+      this.modules = {
+        projectId: null,
+        name: null,
+        projectName: ''
+      }
+
+      if (res['success'] == false) {
+        this.common.showError(res['msg'])
+      }
+      else {
+        this.common.showToast(res['msg'])
 
         this.modules = {
           projectId: null,
@@ -127,13 +132,15 @@ export class ModulesComponent implements OnInit {
           projectName: ''
        } 
         this.getModule()
-      }},
-        err => {
-          this.common.loading--;
+      }
+    },
 
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
   getModule() {
     this.api.get("Modules/getAllModules").subscribe(res => {
@@ -150,7 +157,6 @@ export class ModulesComponent implements OnInit {
   editModule(modulesData) {
     console.log("modata", modulesData)
     this.modules.projectName = modulesData.project_name
-
     this.modules.projectId = modulesData.project_id
     this.modules.name = modulesData.name
     this.module_id = modulesData.id

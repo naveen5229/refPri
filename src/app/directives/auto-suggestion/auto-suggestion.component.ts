@@ -112,7 +112,7 @@ export class AutoSuggestionComponent implements OnInit {
           return this.generateString(suggestion).toLowerCase().includes(this.searchText.toLowerCase());
         }
       });
-      this.suggestions.splice(10, this.suggestions.length - 1);
+      this.suggestions.splice(30, this.suggestions.length - 1);
       return;
     }
     if (this.searchText.length < this.apiHitLimit) return;

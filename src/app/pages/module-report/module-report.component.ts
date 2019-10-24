@@ -15,10 +15,10 @@ export class ModuleReportComponent implements OnInit {
   moduleId = null;
   endDate = new Date();
   startDate = new Date(new Date().setDate(new Date().getDate() - 7));
-  moduleData = [];
+  moduleData: any = [];
   isSubmit = false;
   formattedModuleData = [];
-  formattedSegments = [];
+  formattedSegments: any = [];
 
 
   constructor(public common: CommonService,
