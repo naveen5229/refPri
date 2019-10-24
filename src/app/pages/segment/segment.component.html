@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-3">
                 <auto-suggestion [data]="moduleName" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" [preSelected]="segment.moduleName ? {modulename:segment.moduleName,projectname:segment.projectName}: ''" (onSelected)="changeModule($event)"
-                    inputId="segment.moduleId" required></auto-suggestion>
+                    inputId="segment.moduleId" autocomplete="off" required></auto-suggestion>
             </div>
             <div class="col-3">
                 <input type="text" placeholder="Segment Name" [(ngModel)]="segment.name" name="name" class="form-control">

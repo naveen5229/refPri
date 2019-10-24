@@ -125,12 +125,7 @@ export class ModulesComponent implements OnInit {
           projectId: null,
           name: null,
           projectName: ''
-       }
-       this.projectName = [];
- 
-
-       this.module_id = null
-       this.modulesData1 = [];
+       } 
         this.getModule()
       }},
         err => {

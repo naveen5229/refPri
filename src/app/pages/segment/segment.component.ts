@@ -86,14 +86,20 @@ id=null;
       this.common.loading++;
       this.api.post('Segment/addSegment', params).subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res['msg'])
-        this.segment = {
+        if(res['success'] == false){
+          this.common.showError(res['msg'])  
+       }
+       else {
+         this.common.showToast("Segment Created")
+         this.segment = {
           moduleId: null,
           name: null,
           moduleName: '',
           projectName:''
-        }
-        this.getSegment()
+        }  
+         this.getSegment()
+
+       }
       },
         err => {
           this.common.loading--;
