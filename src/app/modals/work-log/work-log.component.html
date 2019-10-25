@@ -13,7 +13,7 @@
                         <label>Task:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-6 ml-2">
-                        <auto-suggestion [data]="tasks" display="title" placeholder="Enter Task Name" name="task" id="task" (onSelected)="workLog.taskId=($event.id)" [preSelected]="{title: taskname}"></auto-suggestion>
+                        <auto-suggestion [data]="tasks" display="title" placeholder="Enter Task Name" name="task" id="task" (onSelected)="workLog.taskId=($event.id)" [preSelected]="{title: taskname}" autocomplete="off"></auto-suggestion>
                     </div>
                     <div class="col-2">
                         <button class="btn btn-primary" type="button" (click)="assignTask()" style="cursor: pointer;"><i class="fa fa-plus"></i></button>
@@ -27,7 +27,7 @@
                         <label>component:</label>
                     </div>
                     <div class="col-6 ml-2">
-                        <auto-suggestion [data]="components" display="name" name="component" id="component" placeholder="Enter component Name" (onSelected)="workLog.componentId=($event.id)" [preSelected]="{name: componentName}"></auto-suggestion>
+                        <auto-suggestion [data]="components" display="name" name="component" id="component" placeholder="Enter component Name" (onSelected)="workLog.componentId=($event.id)" [preSelected]="{name: componentName}" autocomplete="off"></auto-suggestion>
                     </div>
                     <div class="col-2">
                         <button class="btn btn-danger" type="button" (click)="addcomponent()" style="cursor: pointer;"><i class="fa fa-plus"></i></button>
@@ -53,7 +53,7 @@
                         <label>review user:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="users" display="name" placeholder="review user" name="reviewuser" (onSelected)="workLog.reviewUserId=($event.id)" [preSelected]="{name: reviewedBy}"></auto-suggestion>
+                        <auto-suggestion [data]="users" display="name" placeholder="review user" name="reviewuser" (onSelected)="workLog.reviewUserId=($event.id)" [preSelected]="{name: reviewedBy}" autocomplete="off"></auto-suggestion>
                     </div>
                 </div>
                 <!-- <div *ngIf="workLog.reviewUserId==null && isFormSubmit" class="err">

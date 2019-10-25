@@ -10,7 +10,7 @@
             <label>Module:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" (onSelected)="changeModule($event)" inputId="module" required></auto-suggestion>
+            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" (onSelected)="changeModule($event)" inputId="module" autocomplete="off" required></auto-suggestion>
         </div>
     </div>
     <div class="row mt-2 ">
@@ -18,7 +18,7 @@
             <label>Segment:</label>
         </div>
         <div class="col-6">
-            <input type="text" placeholder="Segment" [(ngModel)]="segment" class="form-control">
+            <input type="text" placeholder="Segment" [(ngModel)]="segment" class="form-control" autocomplete="off">
         </div>
     </div>
 </div>

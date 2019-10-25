@@ -46,7 +46,10 @@ export class ProjectComponent implements OnInit {
         this.common.loading--;
         if (res['success'] == false) {
           this.common.showError(res['msg'])
+          this.getProject();
+
         }
+
         else {
           this.common.showToast("Project Created")
           this.getProject();
@@ -70,6 +73,8 @@ export class ProjectComponent implements OnInit {
         this.common.loading--;
         if (res['success'] == false) {
           this.common.showError(res['msg']);
+          this.getProject();
+
         }
         else {
           this.common.showToast("Project Update");
@@ -118,9 +123,14 @@ export class ProjectComponent implements OnInit {
           .subscribe(res => {
             this.common.loading--;
             console.log("res", res);
-            if (res['success']) {
+            if (res['success'] == true) {
               this.common.showToast("Successfully deleted existing project");
+              this.getProject();
               this.projects.splice(rowIndex, 1);
+            }
+            else{
+              this.common.showError(res['msg']);
+
             }
           }, err => {
             this.common.loading--;
