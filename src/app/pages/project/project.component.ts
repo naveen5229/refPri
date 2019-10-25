@@ -123,9 +123,14 @@ export class ProjectComponent implements OnInit {
           .subscribe(res => {
             this.common.loading--;
             console.log("res", res);
-            if (res['success']) {
+            if (res['success'] == true) {
               this.common.showToast("Successfully deleted existing project");
+              this.getProject();
               this.projects.splice(rowIndex, 1);
+            }
+            else{
+              this.common.showError(res['msg']);
+
             }
           }, err => {
             this.common.loading--;

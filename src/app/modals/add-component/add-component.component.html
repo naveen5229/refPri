@@ -11,7 +11,7 @@
                 <label>Stack<span class="text-red">*</span></label>
             </div>
             <div class="col-7">
-                <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event.id" name="stack" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+                <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event.id" name="stack" display="name" placeholder="Enter stack Name" style="width:60%;" autocomplete="off"></auto-suggestion>
             </div>
         </div>
         <div *ngIf="component.stack == null && isFormSubmit" class="err">
@@ -22,7 +22,7 @@
                 <label>Module:<span class="text-red">*</span></label>
             </div>
             <div class="col-7">
-                <auto-suggestion [data]="modules" display="modulename" name="module" placeholder="Enter Module Name" (onSelected)="component.module = $event.module_id"></auto-suggestion>
+                <auto-suggestion [data]="modules" display="modulename" name="module" placeholder="Enter Module Name" (onSelected)="component.module = $event.module_id" autocomplete="off"></auto-suggestion>
             </div>
         </div>
         <div *ngIf="component.module==null && isFormSubmit" class="err">
@@ -33,7 +33,7 @@
                 <label>component Name:<span class="text-red">*</span></label>
             </div>
             <div class="col-7 ml-1">
-                <input type="text" class="form-control" name="component" id="component" [(ngModel)]="component.name" placeholder="Enter Name" autocomplete="off" #componentName="ngModel" required>
+                <input type="text" class="form-control" name="component" id="component" [(ngModel)]="component.name" placeholder="Enter Name" autocomplete="off" #componentName="ngModel" autocomplete="off" required>
             </div>
         </div>
         <div *ngIf="isFormSubmit && componentName.errors" class="err">

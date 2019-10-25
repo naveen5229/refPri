@@ -1,73 +1,70 @@
 <nb-card>
-  <nb-card-header>
-    <h5>Module Report</h5>
-  </nb-card-header>
-  <nb-card-body style="min-height: 400px;">
-    <div class="row">
-      <div class="col-3">
+    <nb-card-header>
+        <h5>Module Report</h5>
+    </nb-card-header>
+    <nb-card-body style="min-height: 400px;">
         <div class="row">
-          <div class="col-3">
-            <label>Module:</label>
-          </div>
-          <div class="col-9">
-            <auto-suggestion [data]="moduleList" name="moduleId" [display]="['modulename','projectname']" seperator="-"
-              placeholder="Enter Module Name" (onSelected)="getModuleId($event)" inputId="moduleId">
-            </auto-suggestion>
-          </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-3">
+                        <label>Module:</label>
+                    </div>
+                    <div class="col-9">
+                        <auto-suggestion [data]="moduleList" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" (onSelected)="getModuleId($event)" inputId="moduleId" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-4">
+                        <label>From Date :</label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-4">
+                        <label>To Date :</label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 pr-0 pl-0">
+                <button class="btn btn-primary text-capitalize" id="moduleReport" name="moduleReport" (click)="getModuleReport()">Submit</button> </div>
         </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <div class="col-4">
-            <label>From Date :</label>
-          </div>
-          <div class="col-8">
-            <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
-            </uj-date-time-picker>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <div class="col-4">
-            <label>To Date :</label>
-          </div>
-          <div class="col-8">
-            <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false"
-              [isStart]="false">
-            </uj-date-time-picker>
-          </div>
-        </div>
-      </div>
-      <div class="col-1 pr-0 pl-0">
-        <button class="btn btn-primary text-capitalize" id="moduleReport" name="moduleReport"
-          (click)="getModuleReport()">Submit</button> </div>
-    </div>
 
 
-    <div class="row mt-2">
-      <table class="table table-border">
-        <thead class="thead">
-          <tr>
-            <th>Employee/Module</th>
-            <th *ngFor="let segment of formattedSegments">{{segment}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let module of formattedModuleData; let i=index;">
-            <td>{{module.name | titlecase}}</td>
-            <td *ngFor="let segment of formattedSegments; let i=index;">
-              <span *ngIf="module.data[segment]"> {{module.data[segment]}}</span>
+        <div class="row mt-2">
+            <table class="table table-border">
+                <thead class="thead">
+                    <tr>
+                        <th>Employee/Module</th>
+                        <th *ngFor="let segment of formattedSegments">{{segment}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let module of formattedModuleData; let i=index;">
+                        <td>{{module.name | titlecase}}</td>
+                        <td *ngFor="let segment of formattedSegments; let i=index;">
+                            <span *ngIf="module.data[segment]"> {{module.data[segment]}}</span>
 
-              <span> <i class="fa fa-times" style="color:red" *ngIf="!module.data[segment]"></i>
+                            <span> <i class="fa fa-times" style="color:red" *ngIf="!module.data[segment]"></i>
               </span>
-            </td>
-          </tr>
-          <tr *ngIf="isSubmit && moduleData.length==0">
-            <label style="color: red; text-align: center;">Data not Availabe</label> </tr>
-        </tbody>
-      </table>
-    </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="isSubmit && moduleData.length==0">
+                        <label style="color: red; text-align: center;">Data not Availabe</label> </tr>
+                </tbody>
+            </table>
+        </div>
 
 
-  </nb-card-body>
+    </nb-card-body>

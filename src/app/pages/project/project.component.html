@@ -9,7 +9,7 @@
     <nb-card-body>
         <div class="row">
             <div class="col-3">
-                <input type="text" placeholder="Project Name" [(ngModel)]="project" name="name" class="form-control" (input)="filterItem()" required>
+                <input type="text" placeholder="Project Name" [(ngModel)]="project" name="name" class="form-control" (input)="filterItem()" autocomplete="off" required>
             </div>
             <div class="col-3">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">Submit

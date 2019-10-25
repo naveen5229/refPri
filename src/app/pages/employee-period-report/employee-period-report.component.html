@@ -14,7 +14,7 @@
                                     <label>Name:</label>
                                 </div>
                                 <div class="col-8">
-                                    <auto-suggestion [data]="employeeList" display="name" placeholder="Employee Name" name="user-name" (onSelected)="employeeId=($event.id)"></auto-suggestion>
+                                    <auto-suggestion [data]="employeeList" display="name" placeholder="Employee Name" name="user-name" (onSelected)="employeeId=($event.id)" autocomplete="off"></auto-suggestion>
                                 </div>
                             </div>
                         </div>

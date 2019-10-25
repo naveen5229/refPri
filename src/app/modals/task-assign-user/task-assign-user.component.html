@@ -11,10 +11,8 @@
         </div>
 
         <div class="col-6">
-            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']"
-                seperator="-" placeholder="Enter Segment Name"
-                [preSelected]="task.mName ? {'name': task.segmentName,'module_name':task.mName,'project_name':projectName} :''"
-                (onSelected)="changeSegment($event)" inputId="module" required></auto-suggestion>
+            <auto-suggestion [data]="moduleName" name="moduleId" [display]="['name','module_name','project_name']" seperator="-" placeholder="Enter Segment Name" [preSelected]="task.mName ? {'name': task.segmentName,'module_name':task.mName,'project_name':projectName} :''"
+                (onSelected)="changeSegment($event)" inputId="module" autocomplete="off" required></auto-suggestion>
         </div>
 
         <div class="col-2">
@@ -28,7 +26,7 @@
             <label>Title:</label><span class="text-red">*</span>
         </div>
         <div class="col-6">
-            <input type="text" placeholder="Title" name="title" [(ngModel)]="task.title" class="form-control">
+            <input type="text" placeholder="Title" name="title" [(ngModel)]="task.title" class="form-control" autocomplete="off">
         </div>
     </div>
 
@@ -37,8 +35,7 @@
             <label>Description:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Description" name="description" [(ngModel)]="task.description"
-                class="form-control"></textarea>
+            <textarea row="2" cols="15" placeholder="Description" name="description" [(ngModel)]="task.description" class="form-control"></textarea>
         </div>
     </div>
 
@@ -48,9 +45,7 @@
         </div>
         <div class="col-6">
             <!-- <input type="text" placeholder="Assigned" [(ngModel)]="task.assigned" name="name" class="form-control" required> -->
-            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigner Name"
-                (onSelected)="changeAssigner($event)" name="assigner"
-                [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="assigner" required>
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigner Name" (onSelected)="changeAssigner($event)" name="assigner" [preSelected]="task.assigner ? {name:task.assigner} : {name:''}" inputId="assigner" autocomplete="off" required>
             </auto-suggestion>
         </div>
     </div>
@@ -60,9 +55,7 @@
             <label>Assignee:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name"
-                (onSelected)="changeAssignee($event)" [preSelected]="task.assigned" inputId="assignee" name="Assigned"
-                isMultiSelect="true"></auto-suggestion>
+            <auto-suggestion [data]="assigneeLists" display="name" placeholder="Select Assigned Name" (onSelected)="changeAssignee($event)" [preSelected]="task.assigned" inputId="assignee" name="Assigned" isMultiSelect="true" autocomplete="off"></auto-suggestion>
         </div>
     </div>
 
@@ -71,8 +64,7 @@
             <label>Start Date <span class="text-red"></span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker (onChanged)="task.date=$event" [dateTimeValue]="task.date" [isTime]="true"
-                [isStart]="true"> </uj-date-time-picker>
+            <uj-date-time-picker (onChanged)="task.date=$event" [dateTimeValue]="task.date" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
         </div>
 
     </div>
@@ -81,8 +73,7 @@
             <label>End Date <span class="text-red"></span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker (onChanged)="task.endDate=$event" [dateTimeValue]="task.endDate" [isTime]="true"
-                [isStart]="true"> </uj-date-time-picker>
+            <uj-date-time-picker (onChanged)="task.endDate=$event" [dateTimeValue]="task.endDate" [isTime]="true" [isStart]="true"> </uj-date-time-picker>
         </div>
     </div>
 
