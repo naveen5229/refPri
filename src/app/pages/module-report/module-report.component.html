@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let module of formattedModuleData; let i=index;">
-                        <td>{{module.name | titlecase}}</td>
+                        <td>{{module.name}}</td>
                         <td *ngFor="let segment of formattedSegments; let i=index;">
                             <span *ngIf="module.data[segment]"> {{module.data[segment]}}</span>
 

@@ -29,7 +29,7 @@
                     <tbody>
                         <tr *ngFor="let emp of formattedAttendances; let i=index;">
                             <!-- <td>0{{i +1 }}</td> -->
-                            <td>{{emp.name | titlecase}}</td>
+                            <td>{{emp.name}}</td>
                             <!-- <td>{{name.data.hours}}</td> -->
                             <td (click)="workLogUser(info._empid,info._date)" style="color:blue" *ngFor="let info of emp.data">
                                 <span *ngIf="info.Hour != 0">{{info.Hour}}</span>
