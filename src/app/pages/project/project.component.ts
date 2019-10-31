@@ -39,19 +39,18 @@ export class ProjectComponent implements OnInit {
     } else if (this.projectId == null) {
       const params = {
         name: this.project,
+        rowId: null
       }
       console.log("params", params)
       this.common.loading++;
       this.api.post('Projects/addProject', params).subscribe(res => {
         this.common.loading--;
-        if (res['success'] == false) {
-          this.common.showError(res['msg'])
+        if (res['data'][0].z_id > 0) {
+          this.common.showToast(res['data'][0].z_msg);
           this.getProject();
-
         }
-
         else {
-          this.common.showToast("Project Created")
+          this.common.showError(res['data'][0].z_msg);
           this.getProject();
         }
       },
@@ -69,15 +68,14 @@ export class ProjectComponent implements OnInit {
       }
       console.log("paramsssssssss", params)
       this.common.loading++;
-      this.api.post('Projects/updateProject', params).subscribe(res => {
+      this.api.post('Projects/addProject', params).subscribe(res => {
         this.common.loading--;
-        if (res['success'] == false) {
-          this.common.showError(res['msg']);
+        if (res['data'][0].z_id > 0) {
+          this.common.showToast(res['data'][0].z_msg);
           this.getProject();
-
         }
         else {
-          this.common.showToast("Project Update");
+          this.common.showToast(res['data'][0].z_msg);
           this.getProject();
           this.project = ''
         }
@@ -123,14 +121,13 @@ export class ProjectComponent implements OnInit {
           .subscribe(res => {
             this.common.loading--;
             console.log("res", res);
-            if (res['success'] == true) {
-              this.common.showToast("Successfully deleted existing project");
+            if (res['data'][0].z_id > 0) {
+              this.common.showToast(res['data'][0].z_msg);
               this.getProject();
               this.projects.splice(rowIndex, 1);
             }
-            else{
-              this.common.showError(res['msg']);
-
+            else {
+              this.common.showError(res['data'][0].z_msg);
             }
           }, err => {
             this.common.loading--;
