@@ -23,7 +23,7 @@
             <tr *ngFor="let user of userWorkDetail; let i=index;">
                 <!-- <td>0{{i +1 }}</td>
                 <td>{{user.name | titlecase}}</td> -->
-                <td>{{user.date | titlecase }}</td>
+                <td>{{user.date | date :'dd MMM yyyy hh:mm '}}</td>
                 <td>{{user.stack | titlecase}}</td>
                 <td>{{user.project | titlecase }}</td>
                 <td>{{user.module | titlecase}}</td>

@@ -1,13 +1,17 @@
-import { CommonService } from '../../Service/common/common.service';
+import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../Service/Api/api.service';
-import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
+import { CommonService } from '../../Service/common/common.service';
+
 
 
 @Component({
   selector: 'auto-suggestion',
   templateUrl: './auto-suggestion.component.html',
-  styleUrls: ['./auto-suggestion.component.scss']
+  styleUrls: ['./auto-suggestion.component.scss'],
+  host: {
+    '(document:click)': 'hideSuggestions($event)'
+  }
 })
 export class AutoSuggestionComponent implements OnInit {
 
@@ -79,10 +83,6 @@ export class AutoSuggestionComponent implements OnInit {
   }
 
   handlePreSelection() {
-    if (this.isMultiSelect) {
-      this.selectedSuggestions = JSON.parse(JSON.stringify(this.preSelected));
-      return;
-    }
     this.selectedSuggestion = this.preSelected;
     this.searchText = '';
     if (typeof (this.display) != 'object')
@@ -112,7 +112,7 @@ export class AutoSuggestionComponent implements OnInit {
           return this.generateString(suggestion).toLowerCase().includes(this.searchText.toLowerCase());
         }
       });
-      this.suggestions.splice(30, this.suggestions.length - 1);
+      this.suggestions.splice(10, this.suggestions.length - 1);
       return;
     }
     if (this.searchText.length < this.apiHitLimit) return;
@@ -163,7 +163,7 @@ export class AutoSuggestionComponent implements OnInit {
         }
       });
     } else {
-      displayText = suggestion ? suggestion[this.display] : '';
+      displayText = suggestion[this.display];
     }
     return displayText;
   }
@@ -212,7 +212,8 @@ export class AutoSuggestionComponent implements OnInit {
     return className;
   }
 
-  showAllSuggestion() {
+  showAllSuggestion(event) {
+    event.stopPropagation();
     this.showSuggestions = true;
     this.suggestions = this.data;
   }
@@ -222,14 +223,9 @@ export class AutoSuggestionComponent implements OnInit {
     this.showSuggestions = false;
     this.suggestions = [];
   }
-
-  removeSuggestion(index) {
-    if (this.isMultiSelect) {
-      this.selectedSuggestions.splice(index, 1)
-      this.onSelected.emit(this.selectedSuggestions);
-    }
-
+  hideSuggestions() {
+    setTimeout(() =>
+      this.showSuggestions = false, 300);
   }
 
 }
-

@@ -19,6 +19,7 @@ segment = {
   moduleName: '',
   projectName:''
 }
+filteredItems=[]
 id=null;
   constructor( public common:CommonService,
     public api:ApiService,
@@ -60,7 +61,7 @@ id=null;
     this.api.get("Segment/getAllSegments").subscribe(res => {
 
       this.segmentData = res['data'] || [];
-
+    this.filterItem();
     },
       err => {
         this.common.showError();
@@ -86,14 +87,20 @@ id=null;
       this.common.loading++;
       this.api.post('Segment/addSegment', params).subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res['msg'])
-        this.segment = {
+        if(res['success'] == false){
+          this.common.showError(res['msg'])  
+       }
+       else {
+         this.common.showToast("Segment Created")
+         this.segment = {
           moduleId: null,
           name: null,
           moduleName: '',
           projectName:''
-        }
-        this.getSegment()
+        }  
+         this.getSegment()
+
+       }
       },
         err => {
           this.common.loading--;
@@ -181,5 +188,15 @@ id=null;
 
       }
     });
+  }
+
+  filterItem() {
+    if (!this.segment.name) {
+      this.filteredItems = this.segmentData ;
+      return;
+    }
+    this.filteredItems = this.segmentData .filter(
+      item => item.name.toLowerCase().includes(this.segment.name.toLowerCase())
+    )
   }
 }

@@ -12,13 +12,13 @@
                 <label>Stack Parent:</label>
             </div>
             <div class="col-3">
-                <auto-suggestion [data]="stacks" (onSelected)="stackParentId=($event.id)" display="name" placeholder="Enter stack Name" style="width:60%;"></auto-suggestion>
+                <auto-suggestion [data]="stacks" (onSelected)="stackParentId=($event.id)" display="name" placeholder="Enter stack Name" style="width:60%;" autocomplete="off"></auto-suggestion>
             </div>
             <div class="col-2">
                 <label>Stack child:</label>
             </div>
             <div class="col-3">
-                <input type="text" class="form-control" [(ngModel)]="stackchildId">
+                <input type="text" class="form-control" [(ngModel)]="stackchildId" autocomplete="off">
             </div>
             <div class="col-2">
                 <button type="button" class="btn btn-primary" (click)="addStack()">Add</button>

@@ -9,24 +9,7 @@
     <nb-card-body>
         <div class="row">
             <div class="col-3">
-                <!-- <div class="form-group"> -->
                 <month-picker (select)="dates = $event"></month-picker>
-                <!-- <select class="form-control" name="selectMonth" [(ngModel)]="selectMonth">
-          <option value="0">Select Month</option>
-          <option value="1">Jan</option>
-          <option value="2">Feb</option>
-          <option value="3">March</option>
-          <option value="4">April</option>
-          <option value="5">May</option>
-          <option value="6">June</option>
-          <option value="7">July</option>
-          <option value="8">Aug</option>
-          <option value="9">Sep</option>
-          <option value="10">Oct</option>
-          <option value="11">Nov</option>
-          <option value="12">Dec</option>
-      </select>
-                </div> -->
             </div>
             <div class="col-2">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="showMonthlyWork()">Submit</button>
@@ -34,7 +17,6 @@
 
         </div>
         <div>
-            <!-- <smart-table *ngIf="table.data.columns.length" [data]="table.data" [settings]="table.settings"></smart-table> -->
             <div class="row" style="margin-top:15px">
                 <table class="table table-border mt-2">
                     <thead class="thead">
@@ -47,7 +29,7 @@
                     <tbody>
                         <tr *ngFor="let emp of formattedAttendances; let i=index;">
                             <!-- <td>0{{i +1 }}</td> -->
-                            <td>{{emp.name | titlecase}}</td>
+                            <td>{{emp.name}}</td>
                             <!-- <td>{{name.data.hours}}</td> -->
                             <td (click)="workLogUser(info._empid,info._date)" style="color:blue" *ngFor="let info of emp.data">
                                 <span *ngIf="info.Hour != 0">{{info.Hour}}</span>

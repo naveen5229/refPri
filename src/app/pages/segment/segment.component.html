@@ -10,10 +10,10 @@
         <div class="row">
             <div class="col-3">
                 <auto-suggestion [data]="moduleName" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" [preSelected]="segment.moduleName ? {modulename:segment.moduleName,projectname:segment.projectName}: ''" (onSelected)="changeModule($event)"
-                    inputId="segment.moduleId" required></auto-suggestion>
+                    inputId="segment.moduleId" autocomplete="off" required></auto-suggestion>
             </div>
             <div class="col-3">
-                <input type="text" placeholder="Segment Name" [(ngModel)]="segment.name" name="name" class="form-control">
+                <input type="text" placeholder="Segment Name" [(ngModel)]="segment.name" name="name" class="form-control" autocomplete="off" (input)="filterItem()">
             </div>
             <div class="col-3">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="saveSegment()">Submit</button>
@@ -29,10 +29,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let segment of segmentData; let i=index;">
+                <tr *ngFor="let segment of filteredItems; let i=index;">
                     <td>0{{i +1 }}</td>
-                    <td>{{segment.module_name | titlecase}}</td>
-                    <td>{{segment.name | titlecase }}</td>
+                    <td>{{segment.module_name }}</td>
+                    <td>{{segment.name }}</td>
                     <td><i class="far fa-edit" (click)="editSegment(segment)"></i><i class="fas fa-trash-alt" (click)="deleteSegment(segment.id,i)"></i></td>
                 </tr>
             </tbody>
