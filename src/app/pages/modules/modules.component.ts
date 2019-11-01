@@ -17,14 +17,12 @@ export class ModulesComponent implements OnInit {
   }
   projectName = [];
   filteredItems = [];
-
-
   module_id = null
   modulesData1 = [];
+
   constructor(public api: ApiService,
     public common: CommonService,
-    public modalService: NgbModal,
-  ) {
+    public modalService: NgbModal, ) {
     this.getModule();
     this.projectList();
     this.common.refresh = this.refresh.bind(this);
@@ -42,7 +40,6 @@ export class ModulesComponent implements OnInit {
 
   projectList() {
     this.common.loading++;
-
     this.api.get('Suggestion/getProjectList')
       .subscribe(res => {
         this.common.loading--;
@@ -58,6 +55,7 @@ export class ModulesComponent implements OnInit {
     console.log("type", type)
     this.modules.projectId = type.id
     this.modules.projectName = type.name
+    this.filterItem();
     return this.modules.name;
   }
 
@@ -74,28 +72,27 @@ export class ModulesComponent implements OnInit {
     else if (this.module_id == null) {
       const params = {
         project_id: this.modules.projectId,
-        name: this.modules.name
+        name: this.modules.name,
+        module_id: null
       }
       this.common.loading++;
       this.api.post('Modules/addModules', params).subscribe(res => {
         this.common.loading--;
-        if (res['success'] == false) {
-          this.common.showError(res['msg'])
-          this.getModule()
-
+        if (res['data'][0].z_id > 0) {
+          this.common.showToast(res['data'][0].z_msg);
+          this.getModule();
         }
         else {
-          this.common.showToast(res['msg'])
-
+          this.common.showToast(res['data'][0].z_msg);
           this.modules = {
             projectId: null,
             name: null,
             projectName: ''
           }
-          this.module_id = null
-          this.modulesData1 = [];
+          this.module_id = null;
           this.getModule()
         }
+
       },
         err => {
           this.common.loading--;
@@ -113,36 +110,32 @@ export class ModulesComponent implements OnInit {
     }
 
     this.common.loading++;
-    this.api.post('Modules/updateModule', params).subscribe(res => {
+    this.api.post('Modules/addModules', params).subscribe(res => {
       this.common.loading--;
-
-      if (res['success'] == false) {
-        this.common.showError(res['msg'])
-        this.getModule()
-
+      if (res['data'][0].z_id > 0) {
+        this.common.showToast(res['data'][0].z_msg);
+        this.getModule();
       }
       else {
-        this.common.showToast(res['msg'])
-
+        this.common.showToast(res['data'][0].z_msg);
         this.modules = {
           projectId: null,
           name: null,
           projectName: ''
-       } 
+        }
         this.getModule()
       }
     },
 
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
   }
+
   getModule() {
     this.api.get("Modules/getAllModules").subscribe(res => {
-
       this.modulesData1 = res['data'] || [];
       this.filterItem();
 
@@ -181,11 +174,14 @@ export class ModulesComponent implements OnInit {
           .subscribe(res => {
             this.common.loading--;
             console.log("res", res);
-            if (res['success']) {
-              this.common.showToast(res['msg']);
-              this.getModule()
-              //  this.module.splice(rowIndex, 1);
+            if (res['data'][0].z_id > 0) {
+              this.common.showToast(res['data'][0].z_msg);
+              this.getModule();
             }
+            else {
+              this.common.showError(res['data'][0].z_msg);
+            }
+
           }, err => {
             this.common.loading--;
             console.log(err);
@@ -196,14 +192,29 @@ export class ModulesComponent implements OnInit {
     });
   }
 
-  filterItem() {
-    if (!this.modules.name) {
+  filterItem(search?) {
+    console.log("module Id", this.modulesData1);
+    if (!this.modules.name && !this.modules.projectName) {
       this.filteredItems = this.modulesData1;
       return;
     }
-    this.filteredItems = this.modulesData1.filter(
-      item => item.name.toLowerCase().includes(this.modules.name.toLowerCase())
-    )
+    let txt = search || this.modules.projectName;
+    this.filteredItems = this.modulesData1.filter(item => {
+      if (search)
+        return item.name.toLowerCase().includes(txt.trim().toLowerCase())
+      else
+        return item.project_name.toLowerCase().includes(txt.toLowerCase())
+    });
+  }
+
+  unselectProject() {
+    console.log("module Id");
+    if (this.modules.projectName) {
+      document.getElementById('projectName')['value'] = '';
+      this.modules.projectId = null;
+      this.modules.projectName = null;
+      this.filterItem();
+    }
   }
 
 }

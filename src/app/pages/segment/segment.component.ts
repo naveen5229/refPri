@@ -10,58 +10,61 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./segment.component.scss']
 })
 export class SegmentComponent implements OnInit {
-moduleName=[];
-// moduleId=null;
-segmentData=[];
-segment = {
-  moduleId: null,
-  name: null,
-  moduleName: '',
-  projectName:''
-}
-filteredItems=[]
-id=null;
-  constructor( public common:CommonService,
-    public api:ApiService,
-    public modalService:NgbModal) {
-      this.getSegment()
-      this.getModuleList()
-      this.common.refresh = this.refresh.bind(this);
+  moduleName = [];
+  // moduleId=null;
+  segmentData = [];
+  segment = {
+    moduleId: null,
+    name: null,
+    moduleName: '',
+    projectName: ''
+  }
+  filteredItems = []
+  id = null;
+  constructor(public common: CommonService,
+    public api: ApiService,
+    public modalService: NgbModal) {
+    this.getSegment()
+    this.getModuleList()
+    this.common.refresh = this.refresh.bind(this);
 
-     }
+  }
 
   ngOnInit() {
   }
 
-  
+
   refresh() {
     this.getSegment()
     this.getModuleList()
   }
-  getModuleList(){
+  getModuleList() {
     this.common.loading++;
 
     this.api.get('Suggestion/getModules')
-    .subscribe(res => {
-      this.common.loading--;
-      console.log("list",res);
-      this.moduleName = res['data'];
-    }, err => {
-      this.common.loading--;
-      console.log(err);
-    });
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("list", res);
+        this.moduleName = res['data'];
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
-  changeModule(event){
+  changeModule(event) {
     console.log("item", event)
     this.segment.moduleId = event.module_id;
+    this.segment.moduleName = event.modulename;
+    this.segment.projectName = event.projectname;
+    this.filterItem();
   }
 
   getSegment() {
     this.api.get("Segment/getAllSegments").subscribe(res => {
 
       this.segmentData = res['data'] || [];
-    this.filterItem();
+      this.filterItem();
     },
       err => {
         this.common.showError();
@@ -69,17 +72,17 @@ id=null;
       });
   }
 
-  saveSegment(){
+  saveSegment() {
     //console.log(this.modules);
     if (this.segment.moduleId == null) {
       return this.common.showError("Module name is missing")
     } else if (!this.segment.name) {
       return this.common.showError("Segment name is missing")
     }
-    else if(this.id){
+    else if (this.id) {
       this.updateSegment()
     }
-     else if (this.id == null) {
+    else if (this.id == null) {
       const params = {
         moduleId: this.segment.moduleId,
         name: this.segment.name
@@ -87,62 +90,62 @@ id=null;
       this.common.loading++;
       this.api.post('Segment/addSegment', params).subscribe(res => {
         this.common.loading--;
-        if(res['success'] == false){
-          this.common.showError(res['msg'])  
-       }
-       else {
-         this.common.showToast("Segment Created")
-         this.segment = {
-          moduleId: null,
-          name: null,
-          moduleName: '',
-          projectName:''
-        }  
-         this.getSegment()
+        if (res['success'] == false) {
+          this.common.showError(res['msg'])
+        }
+        else {
+          this.common.showToast("Segment Created")
+          this.segment = {
+            moduleId: null,
+            name: null,
+            moduleName: '',
+            projectName: ''
+          }
+          this.getSegment()
 
-       }
+        }
       },
         err => {
           this.common.loading--;
           this.common.showError(err['msg']);
           console.log('Error: ', err);
         });
-     } 
+    }
   }
 
-  updateSegment(){
-      const params = {
-        moduleId: this.segment.moduleId,
-        name: this.segment.name,
-        segmentId: this.id,
-      }
-      
-      this.common.loading++;
-      this.api.post('Segment/updateSegment', params).subscribe(res => {
+  updateSegment() {
+    const params = {
+      moduleId: this.segment.moduleId,
+      name: this.segment.name,
+      segmentId: this.id,
+    }
+
+    this.common.loading++;
+    this.api.post('Segment/updateSegment', params).subscribe(res => {
+      this.common.loading--;
+
+      this.common.showToast(res['msg'])
+
+      //this.segment.name=null;
+      // this.modules.projectName=null;
+      // this.modules.projectId=null;
+      // this.segment = {
+      //   moduleId: null,
+      //   name: null,
+      //   moduleName: '',
+      //   projectName:''
+      // }
+      // this.id=null;
+      this.getSegment()
+      // console.log('modules:::',this.modules)
+
+    },
+      err => {
         this.common.loading--;
 
-        this.common.showToast(res['msg'])
-     
-        //this.segment.name=null;
-        // this.modules.projectName=null;
-        // this.modules.projectId=null;
-        // this.segment = {
-        //   moduleId: null,
-        //   name: null,
-        //   moduleName: '',
-        //   projectName:''
-        // }
-        // this.id=null;
-        this.getSegment()
-       // console.log('modules:::',this.modules)
-      
-      },
-        err => {
-          this.common.loading--;
-
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
   editSegment(segmentData) {
@@ -152,8 +155,8 @@ id=null;
     this.segment.moduleId = segmentData.module_id
     this.segment.projectName = segmentData.project_name
     this.id = segmentData.id
-    this.segment.name =segmentData.name
-  } 
+    this.segment.name = segmentData.name
+  }
 
   deleteSegment(userId, rowIndex) {
     this.common.params = {
@@ -190,13 +193,40 @@ id=null;
     });
   }
 
-  filterItem() {
-    if (!this.segment.name) {
-      this.filteredItems = this.segmentData ;
+  filterItem(search?) {
+    // if (!this.segment.name) {
+    //   this.filteredItems = this.segmentData;
+    //   return;
+    // }
+    // this.filteredItems = this.segmentData.filter(
+    //   item => item.name.toLowerCase().includes(this.segment.name.toLowerCase())
+    // )
+
+    console.log("Module", this.segmentData);
+    if (!this.segment.name && !this.segment.moduleName) {
+      this.filteredItems = this.segmentData;
       return;
     }
-    this.filteredItems = this.segmentData .filter(
-      item => item.name.toLowerCase().includes(this.segment.name.toLowerCase())
-    )
+    let txt = search || this.segment.moduleName;
+    this.filteredItems = this.segmentData.filter(item => {
+      if (search)
+        return item.name.toLowerCase().includes(txt.trim().toLowerCase())
+      else
+        return item.module_name.toLowerCase().includes(txt.toLowerCase())
+    });
+
   }
+
+
+  unselectModule() {
+    console.log("module Id");
+    if (this.segment.moduleName) {
+      document.getElementById('moduleName')['value'] = '';
+      this.segment.moduleId = null;
+      this.segment.moduleName = null;
+      this.segment.projectName = null;
+      this.filterItem();
+    }
+  }
+
 }
