@@ -9,11 +9,15 @@
     <nb-card-body>
         <div class="row">
             <div class="col-3">
-                <auto-suggestion [data]="moduleName" name="moduleId" [display]="['modulename','projectname']" seperator="-" placeholder="Enter Module Name" [preSelected]="segment.moduleName ? {modulename:segment.moduleName,projectname:segment.projectName}: ''" (onSelected)="changeModule($event)"
-                    inputId="segment.moduleId" autocomplete="off" required></auto-suggestion>
+                <auto-suggestion [data]="moduleName" [display]="['modulename','projectname']" seperator="-"
+                    placeholder="Enter Module Name"
+                    [preSelected]="segment.moduleName ? {modulename:segment.moduleName,projectname:segment.projectName}: ''"
+                    (onSelected)="changeModule($event)" inputId="moduleName" autocomplete="off"
+                    (onChange)="unselectModule()"></auto-suggestion>
             </div>
             <div class="col-3">
-                <input type="text" placeholder="Segment Name" [(ngModel)]="segment.name" name="name" class="form-control" autocomplete="off" (input)="filterItem()">
+                <input type="text" placeholder="Segment Name" [(ngModel)]="segment.name" name="name"
+                    class="form-control" autocomplete="off" (input)="filterItem($event.target.value)">
             </div>
             <div class="col-3">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="saveSegment()">Submit</button>
@@ -33,7 +37,8 @@
                     <td>0{{i +1 }}</td>
                     <td>{{segment.module_name }}</td>
                     <td>{{segment.name }}</td>
-                    <td><i class="far fa-edit" (click)="editSegment(segment)"></i><i class="fas fa-trash-alt" (click)="deleteSegment(segment.id,i)"></i></td>
+                    <td><i class="far fa-edit" (click)="editSegment(segment)"></i><i class="fas fa-trash-alt"
+                            (click)="deleteSegment(segment.id,i)"></i></td>
                 </tr>
             </tbody>
         </table>

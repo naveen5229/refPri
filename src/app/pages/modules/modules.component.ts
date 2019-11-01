@@ -209,10 +209,12 @@ export class ModulesComponent implements OnInit {
 
   unselectProject() {
     console.log("module Id");
-    document.getElementById('projectName')['value'] = '';
-    this.modules.projectId = null;
-    this.modules.projectName = null;
-    this.filterItem();
+    if (this.modules.projectName) {
+      document.getElementById('projectName')['value'] = '';
+      this.modules.projectId = null;
+      this.modules.projectName = null;
+      this.filterItem();
+    }
   }
 
 }
