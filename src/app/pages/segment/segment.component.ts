@@ -91,10 +91,10 @@ export class SegmentComponent implements OnInit {
       this.api.post('Segment/addSegment', params).subscribe(res => {
         this.common.loading--;
         if (res['success'] == false) {
-          this.common.showError(res['msg'])
+          this.common.showError(res['msg']);
         }
         else {
-          this.common.showToast("Segment Created")
+          this.common.showToast(res['msg']);
           this.segment = {
             moduleId: null,
             name: null,
@@ -119,30 +119,14 @@ export class SegmentComponent implements OnInit {
       name: this.segment.name,
       segmentId: this.id,
     }
-
     this.common.loading++;
     this.api.post('Segment/updateSegment', params).subscribe(res => {
       this.common.loading--;
-
       this.common.showToast(res['msg'])
-
-      //this.segment.name=null;
-      // this.modules.projectName=null;
-      // this.modules.projectId=null;
-      // this.segment = {
-      //   moduleId: null,
-      //   name: null,
-      //   moduleName: '',
-      //   projectName:''
-      // }
-      // this.id=null;
       this.getSegment()
-      // console.log('modules:::',this.modules)
-
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
@@ -151,7 +135,6 @@ export class SegmentComponent implements OnInit {
   editSegment(segmentData) {
     console.log("modata", segmentData)
     this.segment.moduleName = segmentData.module_name
-
     this.segment.moduleId = segmentData.module_id
     this.segment.projectName = segmentData.project_name
     this.id = segmentData.id
@@ -181,7 +164,6 @@ export class SegmentComponent implements OnInit {
             if (res['success']) {
               this.common.showToast(res['msg']);
               this.getSegment();
-              //  this.module.splice(rowIndex, 1);
             }
           }, err => {
             this.common.loading--;
@@ -194,15 +176,6 @@ export class SegmentComponent implements OnInit {
   }
 
   filterItem(search?) {
-    // if (!this.segment.name) {
-    //   this.filteredItems = this.segmentData;
-    //   return;
-    // }
-    // this.filteredItems = this.segmentData.filter(
-    //   item => item.name.toLowerCase().includes(this.segment.name.toLowerCase())
-    // )
-
-    console.log("Module", this.segmentData);
     if (!this.segment.name && !this.segment.moduleName) {
       this.filteredItems = this.segmentData;
       return;
@@ -219,7 +192,6 @@ export class SegmentComponent implements OnInit {
 
 
   unselectModule() {
-    console.log("module Id");
     if (this.segment.moduleName) {
       document.getElementById('moduleName')['value'] = '';
       this.segment.moduleId = null;

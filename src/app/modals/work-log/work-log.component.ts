@@ -15,12 +15,12 @@ export class WorkLogComponent implements OnInit {
   tasks = [];
   taskname = null;
   components = [];
-  componentName=null;
+  componentName = null;
   stacks = [];
   users = [];
   isFormSubmit = false;
-  rowId=null;
-  workLogStatus='1';
+  rowId = null;
+  workLogStatus = '1';
   workLog = {
     taskId: null,
     stackId: null,
@@ -32,9 +32,9 @@ export class WorkLogComponent implements OnInit {
     hrs: null,
     minutes: null,
   };
-  stackName='';
-  stackChildName='';
-  reviewedBy=null;
+  stackName = '';
+  stackChildName = '';
+  reviewedBy = null;
 
   constructor(private activeModal: NgbActiveModal,
     public api: ApiService,
@@ -42,7 +42,6 @@ export class WorkLogComponent implements OnInit {
     public modalService: NgbModal) {
     this.common.handleModalSize('class', 'modal-lg', '1000');
     this.getTasks();
-    this.getComponents();
     this.getStacks();
     this.getUsers();
 
@@ -50,7 +49,7 @@ export class WorkLogComponent implements OnInit {
       this.workLog = {
         taskId: this.common.params.workLogs.task_id,
         stackId: this.common.params.workLogs.stack_child_id,
-       // title: this.common.params.workLogs.Title,
+        // title: this.common.params.workLogs.Title,
         date: new Date(this.common.params.workLogs.date),
         reviewUserId: this.common.params.workLogs.review_user_id,
         remark: this.common.params.workLogs.add_remark,
@@ -59,13 +58,13 @@ export class WorkLogComponent implements OnInit {
         hrs: this.common.params.workLogs.total_minutes.split(":")[0],
         minutes: this.common.params.workLogs.total_minutes.split(":")[1],
       };
-      this.stackName=this.common.params.workLogs.stack_parent_name;
-      this.stackChildName=this.common.params.workLogs.stack_child_name;
-      this.rowId=this.common.params.workLogs.id,
-      this.taskname = this.common.params.workLogs.TaskName;
-      this.reviewedBy=this.common.params.workLogs.ReviewerName;
-      this.componentName=this.common.params.workLogs.component_name;
-      console.log("TaskName",this.taskname);
+      this.stackName = this.common.params.workLogs.stack_parent_name;
+      this.stackChildName = this.common.params.workLogs.stack_child_name;
+      this.rowId = this.common.params.workLogs.id,
+        this.taskname = this.common.params.workLogs.TaskName;
+      this.reviewedBy = this.common.params.workLogs.ReviewerName;
+      this.componentName = this.common.params.workLogs.component_name;
+      console.log("TaskName", this.taskname);
     }
     console.log("worklogs", this.common.params);
   }
@@ -107,6 +106,23 @@ export class WorkLogComponent implements OnInit {
         console.log(err);
       });
   }
+  selectStackId(id) {
+    this.workLog.stackId = id;
+    if (this.workLog.stackId) {
+      this.getComponents();
+      this.workLog.componentId = null;
+      document.getElementById('componentId')['value'] = '';
+
+    }
+    console.log("id:", id);
+  }
+  unselected() {
+    if (this.workLog.stackId) {
+      document.getElementById('stackId')['value'] = '';
+      this.workLog.stackId = null;
+      this.workLog.componentId = null;
+    }
+  }
 
   getTasks() {
     this.common.loading++;
@@ -124,37 +140,40 @@ export class WorkLogComponent implements OnInit {
   }
 
   getComponents() {
-    this.common.loading++;
-    this.api.get("Components/getAllComponents")
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("res", res['data'])
-        this.components = res['data'] || [];
-      },
-        err => {
+    if (this.workLog.stackId) {
+
+      this.common.loading++;
+      this.api.get("Components/getAllComponents?stackChildId=" + this.workLog.stackId)
+        .subscribe(res => {
           this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+          console.log("res", res['data'])
+          this.components = res['data'] || [];
+        },
+          err => {
+            this.common.loading--;
+            this.common.showError();
+            console.log('Error: ', err);
+          });
+    }
   }
 
   addWorkLog() {
-    console.log("min+>",(parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes))
+    console.log("min+>", (parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes))
     let params = {
       task_id: this.workLog.taskId,
       stack_child_id: this.workLog.stackId,
-     // title: this.workLog.title,
+      // title: this.workLog.title,
       date: this.common.dateFormatter(this.workLog.date),
       review_user_id: this.workLog.reviewUserId,
       total_minutes: (parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes),
       remark: this.workLog.remark,
       description: this.workLog.description,
       componentId: this.workLog.componentId,
-      workLogId:this.rowId
+      workLogId: this.rowId
     }
 
-    if(this.workLogStatus=='1'){
-      this.workLog.reviewUserId=null;
+    if (this.workLogStatus == '1') {
+      this.workLog.reviewUserId = null;
 
     }
 
@@ -170,7 +189,7 @@ export class WorkLogComponent implements OnInit {
           this.common.showError(res['data'][0].y_msg)
         }
         console.log("res", res['data']);
-        
+
       }, err => {
         this.common.loading--;
         console.log(err);

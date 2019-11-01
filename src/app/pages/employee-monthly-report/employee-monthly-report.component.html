@@ -6,7 +6,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body>
+    <nb-card-body style="min-height: 400px;">
         <div class="row">
             <div class="col-3">
                 <month-picker (select)="dates = $event"></month-picker>
@@ -31,7 +31,8 @@
                             <!-- <td>0{{i +1 }}</td> -->
                             <td>{{emp.name}}</td>
                             <!-- <td>{{name.data.hours}}</td> -->
-                            <td (click)="workLogUser(info._empid,info._date)" style="color:blue" *ngFor="let info of emp.data">
+                            <td (click)="workLogUser(info._empid,info._date)" style="color:blue"
+                                *ngFor="let info of emp.data">
                                 <span *ngIf="info.Hour != 0">{{info.Hour}}</span>
                                 <i class="fa fa-times" style="color:red" *ngIf="info.Hour == 0"></i>
                             </td>

@@ -4,10 +4,13 @@ import { CommonService } from '../../Service/common/common.service';
 @Component({
   selector: 'month-picker',
   templateUrl: './month-picker.component.html',
-  styleUrls: ['./month-picker.component.scss']
+  styleUrls: ['./month-picker.component.scss'],
+  host: {
+    '(document:click)': 'hideMonthPicker($event)'
+  }
 })
 export class MonthPickerComponent implements OnInit {
-@Output() select = new EventEmitter();
+  @Output() select = new EventEmitter();
   months = [
     { name: 'JAN', id: '01' },
     { name: 'FEB', id: '02' },
@@ -69,6 +72,9 @@ export class MonthPickerComponent implements OnInit {
       id: ''
     };
   }
-
+  hideMonthPicker() {
+    setTimeout(() =>
+      this.isVisible = false, 5000);
+  }
 
 }

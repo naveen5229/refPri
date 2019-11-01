@@ -6,7 +6,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body>
+    <nb-card-body style="min-height: 400px;">
         <div class="row">
             <div class="col-3">
                 <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name"
@@ -28,6 +28,7 @@
                     <th>#</th>
                     <th>Project Name</th>
                     <th>Module Name</th>
+                    <th>Add By</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -36,6 +37,7 @@
                     <td>0{{i +1 }}</td>
                     <td>{{module.project_name}}</td>
                     <td>{{module.name }}</td>
+                    <td>{{module.addedby}}</td>
                     <td><i class="far fa-edit" (click)="editModule(module)"></i><i class="fas fa-trash-alt"
                             (click)="deleteModule(module.id,i)"></i></td>
                 </tr>

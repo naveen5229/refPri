@@ -1,9 +1,9 @@
-<nb-card style="border: 0px; height: 100%;">
+<nb-card>
     <nb-card-header class="employee-report">
         <h5>Component Report</h5>
 
     </nb-card-header>
-    <nb-card-body>
+    <nb-card-body style="min-height: 400px;">
         <div class="row">
             <div class="col-4">
                 <div class="row row align-items-center">
@@ -11,7 +11,9 @@
                         <label>Component:</label>
                     </div>
                     <div class="col-6">
-                        <auto-suggestion [data]="components" display="name" name="component" inputId="id" placeholder="Enter component Name" (onSelected)="componentId=($event.id)" autocomplete="off"></auto-suggestion>
+                        <auto-suggestion [data]="components" display="name" name="component" inputId="id"
+                            placeholder="Enter component Name" (onSelected)="componentId=($event.id)"
+                            autocomplete="off"></auto-suggestion>
                     </div>
                 </div>
             </div>
@@ -21,7 +23,8 @@
                         <label>From Date :</label>
                     </div>
                     <div class="col-8 pl-0">
-                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate"
+                            [isTime]="false">
                         </uj-date-time-picker>
                     </div>
                 </div>
@@ -32,13 +35,15 @@
                         <label>To Date :</label>
                     </div>
                     <div class="col-9">
-                        <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
+                        <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false"
+                            [isStart]="false">
                         </uj-date-time-picker>
                     </div>
                 </div>
             </div>
             <div class="col-1">
-                <button class="btn btn-primary text-capitalize" id="button" (click)="componentReport()">Submit</button> </div>
+                <button class="btn btn-primary text-capitalize" id="button" (click)="componentReport()">Submit</button>
+            </div>
 
         </div>
 
@@ -55,11 +60,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let emp of nameData; let i=index;">
-                        <tr *ngFor="let emp of nameData; let i=index;">
-                            <!-- <td>0{{i +1 }}</td> -->
-                            <td>{{emp.name}}</td>
-                            <td *ngFor="let segment of segmentHours; let i=index;">{{segment}}</td>
-                        </tr>
+                    <tr *ngFor="let emp of nameData; let i=index;">
+                        <!-- <td>0{{i +1 }}</td> -->
+                        <td>{{emp.name}}</td>
+                        <td *ngFor="let segment of segmentHours; let i=index;">{{segment}}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
