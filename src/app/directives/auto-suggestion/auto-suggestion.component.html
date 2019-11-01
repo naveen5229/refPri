@@ -5,7 +5,8 @@
             <p *ngFor="let selectedSuggestion of selectedSuggestions; let i= index;">
                 <!-- <input [value]="generateString(selectedSuggestion)" readonly> -->
                 <span>{{generateString(selectedSuggestion)}}</span>
-                <i class="fa fa-close" (click)="selectedSuggestions.splice(i,1)"></i>
+                <i class="far fa-times-circle" (click)="removeSuggestion(i)"></i>
+
             </p>
             <span>
                 <input type="text" autocomplete="off" [formControlName]="controlName || 'search'"
@@ -21,7 +22,9 @@
         </div>
     </div>
     <div class="suggestions" *ngIf="showSuggestions && suggestions.length">
-        <p *ngFor="let suggestion of suggestions; let i = index;" class="suggestion" [ngClass]="activeSuggestion == i ? 'active-suggestion' : classFinder(suggestion)" (click)="selectSuggestion(suggestion)">
+        <p *ngFor="let suggestion of suggestions; let i = index;" class="suggestion"
+            [ngClass]="activeSuggestion == i ? 'active-suggestion' : classFinder(suggestion)"
+            (click)="selectSuggestion(suggestion)">
             {{generateString(suggestion)}}
         </p>
     </div>
