@@ -28,7 +28,7 @@
                 </div>
                 <div class="row  mt-2">
                     <div class="col-2">
-                        <label>component:</label>
+                        <label>Component:</label>
                     </div>
                     <div class="col-6 ml-2">
                         <auto-suggestion [data]="components" display="name" inputId="componentId"
@@ -45,7 +45,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-2">
-                        <label>workLog Status:<span class="text-red">*</span></label>
+                        <label>WorkLog Status:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-1"></div>
                     <div class="col-3">
@@ -57,7 +57,7 @@
                 </div>
                 <div *ngIf="workLogStatus=='2'" class="row  mt-2">
                     <div class="col-2">
-                        <label>review user:<span class="text-red">*</span></label>
+                        <label>Review User:<span class="text-red">*</span></label>
                     </div>
                     <div class="col-8">
                         <auto-suggestion [data]="users" display="name" placeholder="review user" name="reviewuser"
@@ -140,11 +140,11 @@
     <div class="row ">
         <div class="col ">
             <button class="btn btn-danger " type="button " id="cancel " (click)="modalClose() "
-                style="cursor: pointer; ">cancel</button>
+                style="cursor: pointer; ">Cancel</button>
         </div>
         <div class="col text-right ">
             <button class="btn btn-primary " form="worklog-form" type='submit' id="submit " (click)="isFormSubmit=true "
-                style="cursor: pointer; ">submit</button>
+                style="cursor: pointer; ">Submit</button>
         </div>
     </div>
 </div>
