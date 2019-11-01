@@ -75,7 +75,7 @@ export class ProjectComponent implements OnInit {
           this.getProject();
         }
         else {
-          this.common.showToast(res['data'][0].z_msg);
+          this.common.showError(res['data'][0].z_msg);
           this.getProject();
           this.project = ''
         }
