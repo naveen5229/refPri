@@ -57,14 +57,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Employee Period Report',
-    icon: 'cube-outline',
+    icon: 'file-text-outline',
     link: '/pages/employee-period-report',
     home: true,
   },
 
   {
     title: 'Employee Monthly Report',
-    icon: 'cube-outline',
+    icon: 'file-text-outline',
     link: '/pages/employee-monthly-report',
     home: true,
   },
@@ -82,19 +82,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Segment Report',
-    icon: 'cube-outline',
+    icon: 'file-text-outline',
     link: '/pages/segment-report',
     home: true,
   },
   {
     title: 'Component Report',
-    icon: 'cube-outline',
+    icon: 'file-text-outline',
     link: '/pages/component-report',
     home: true,
   },
   {
     title: 'Segment Stack Report',
-    icon: 'cube-outline',
+    icon: 'file-text-outline',
     link: '/pages/segment-stack-report',
     home: true,
   }
