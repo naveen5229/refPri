@@ -1,0 +1,66 @@
+<nb-card style="border: 0px; height: 100%;">
+  <nb-card-header class="employee-report">
+    <h5>Employee DayWise Report</h5>
+
+  </nb-card-header>
+  <nb-card-body style="min-height: 400px;">
+    <div class="employee-report">
+      <div class="row">
+        <div class="col-12">
+          <div class="row mb-3">
+            <div class="col-4">
+              <div class="row row align-items-center">
+                <div class="col-4 pl-0 pr-0">
+                  <label>Current Date :</label>
+                </div>
+                <div class="col-8 pl-0">
+                  <uj-date-time-picker (onChanged)="currentDate=$event" [dateTimeValue]="currentDate" [isTime]="false">
+                  </uj-date-time-picker>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 pr-0 pl-0">
+              <button class="btn btn-primary text-capitalize" id="dayReport" name="dayReport"
+                (click)="getDaywiseReport()">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>
+        <table class="table table-border mt-1">
+          <thead class="thead">
+            <tr>
+              <th>#</th>
+              <th>Employee</th>
+              <th>Stack</th>
+              <th>Project</th>
+              <th>Module</th>
+              <th>Segment</th>
+              <th>Component</th>
+              <th>Task</th>
+              <th>Hour</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let report of employeeData; let i = index;">
+              <td>{{i+1}}</td>
+              <td>{{report.employee}}</td>
+              <td>{{report.stack}}</td>
+              <td>{{report.project}}</td>
+              <td>{{report.module}}</td>
+              <td>{{report.segment}}</td>
+              <td>{{report.component}}</td>
+              <td>{{report.task}}</td>
+              <td>{{report.hr}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row" *ngIf="employeeData.length==0">
+        <label style="color: red; text-align: center;">Data not Availabe</label>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>

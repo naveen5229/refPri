@@ -69,6 +69,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Employee DayWise Report',
+    icon: 'file-text-outline',
+    link: '/pages/employee-daywise-report',
+    home: true,
+  },
+  {
     title: 'Module Report',
     icon: 'file-text-outline',
     link: '/pages/module-report',

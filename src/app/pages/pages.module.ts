@@ -21,6 +21,7 @@ import { SegmentReportComponent } from './segment-report/segment-report.componen
 import { ComponentReportComponent } from './component-report/component-report.component';
 import { SegmentStackReportComponent } from './segment-stack-report/segment-stack-report.component';
 import { ModuleReportComponent } from './module-report/module-report.component';
+import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employee-daywise-report.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { ModuleReportComponent } from './module-report/module-report.component';
     ComponentReportComponent,
     SegmentStackReportComponent,
     ModuleReportComponent,
+    EmployeeDaywiseReportComponent,
   ],
 })
 export class PagesModule {
