@@ -66,7 +66,7 @@ export class EmployeeMonthlyReportComponent implements OnInit {
     let params = {
       startDate: this.dates.start,
       endDate: this.dates.end
-    };  
+    };
     this.common.loading++;
     this.api.post('Report/getEmployeeMonthlyReport', params).subscribe(res => {
       this.common.loading--;
@@ -84,7 +84,7 @@ export class EmployeeMonthlyReportComponent implements OnInit {
   }
 
   formattData() {
-    let EmployeAttendanceGroups = _.groupBy(this.attendances, 'Name');
+    let EmployeAttendanceGroups = _.groupBy(this.attendances, 'name');
     console.log("++++++++++++++++", EmployeAttendanceGroups)
     Object.keys(EmployeAttendanceGroups).map(key => {
       this.formattedAttendances.push({
@@ -93,11 +93,11 @@ export class EmployeeMonthlyReportComponent implements OnInit {
       });
       this.formattedAttendancesDate.push({
         date: EmployeAttendanceGroups[key].map(date =>
-          date.Date)
+          date.date)
       });
       this.formattedAttendancesHours.push({
         hour: EmployeAttendanceGroups[key].map(hour =>
-          hour.Hour)
+          hour.hr)
       });
       this.formattedAttendancesUser.push({
         user: EmployeAttendanceGroups[key].map(user =>
