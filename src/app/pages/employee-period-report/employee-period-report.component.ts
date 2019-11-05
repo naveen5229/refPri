@@ -81,8 +81,10 @@ export class EmployeePeriodReportComponent implements OnInit {
   }
 
   stackWiseReport(report, index) {
-    let stackDate = report.data[index]._sqdate
-    let stackId = report.data[index]._stackid
+    console.log("report", report);
+    console.log("index", index);
+    let stackDate = report.data[index]._sqdate;
+    let stackId = report.data[index]._stackid;
     this.common.params = { stackDate, stackId, empId: this.employeeId }
     this.modalService.open(StackReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 

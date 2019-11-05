@@ -10,7 +10,7 @@ import { ApiService } from '../../Service/Api/api.service';
 })
 export class StackReportComponent implements OnInit {
   userID = '';
-  stackDetail = []
+  stackDetail = [];
   constructor(public activeModal: NgbActiveModal,
     public common: CommonService,
     public api: ApiService) {
@@ -21,6 +21,9 @@ export class StackReportComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+  ngDestroy() {
+    this.common.params = '';
   }
 
   closeModal(response) {

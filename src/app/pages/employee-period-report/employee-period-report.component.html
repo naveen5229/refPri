@@ -62,11 +62,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr (click)="stackWiseReport(Data.data[0]._sqdate,Data.data[0]._stackid)" style="color:blue" *ngFor="let report of reports; let i = index;"> -->
                         <tr *ngFor="let report of reports; let i = index;">
-
                             <td>{{report.date}}</td>
-                            <td *ngFor="let stack of stacks; let i = index;" (click)="stackWiseReport(report,i)"
+                            <td *ngFor="let stack of stacks; let j = index;" (click)="stackWiseReport(report,j)"
                                 style="color:blue;cursor: pointer;">{{report.stacks[stack] || 0}}</td>
                         </tr>
                     </tbody>
