@@ -6,7 +6,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 485px; max-height: 410px;">
+    <nb-card-body style="min-height: 445px; max-height: 410px;">
         <div class="row">
             <div class="col-3">
                 <auto-suggestion [data]="moduleName" [display]="['modulename','projectname']" seperator="-"
@@ -23,8 +23,8 @@
                 <button class="btn btn-primary text-capitalize" id="button" (click)="saveSegment()">Submit</button>
             </div>
         </div>
-        <table class="table table-border mt-2">
-            <thead class="thead">
+        <table class="table table-bordered mt-2">
+            <thead class="thead" style="background-color:lightgrey">
                 <tr>
                     <th>#</th>
                     <th>Module Name</th>
