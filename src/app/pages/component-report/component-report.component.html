@@ -10,7 +10,7 @@
                     <div class="col-4">
                         <label>Component:</label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-8">
                         <auto-suggestion [data]="components" display="name" name="component" inputId="id"
                             placeholder="Enter component Name" (onSelected)="componentId=($event.id)"
                             autocomplete="off"></auto-suggestion>
@@ -48,8 +48,8 @@
         </div>
 
         <div class="row" style="margin-top:15px">
-            <table class="table table-border mt-2">
-                <thead class="thead">
+            <table class="table table-bordered mt-2">
+                <thead class="thead" style="background-color:lightgrey">
                     <tr>
                         <!-- <th>#</th> -->
                         <th>Employee/Stack</th>

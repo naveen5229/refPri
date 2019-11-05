@@ -11,7 +11,8 @@
                         <label>From Date :</label>
                     </div>
                     <div class="col-8 pl-0">
-                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate"
+                            [isTime]="false">
                         </uj-date-time-picker>
                     </div>
                 </div>
@@ -22,19 +23,21 @@
                         <label>To Date :</label>
                     </div>
                     <div class="col-9">
-                        <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
+                        <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false"
+                            [isStart]="false">
                         </uj-date-time-picker>
                     </div>
                 </div>
             </div>
             <div class="col-1">
-                <button class="btn btn-primary text-capitalize" id="button" (click)="segmentReport()">Submit</button> </div>
+                <button class="btn btn-primary text-capitalize" id="button" (click)="segmentReport()">Submit</button>
+            </div>
 
         </div>
 
         <div class="row" style="margin-top:15px">
-            <table class="table table-border mt-2">
-                <thead class="thead">
+            <table class="table table-bordered mt-2">
+                <thead class="thead" style="background-color:lightgrey">
                     <tr>
                         <!-- <th>#</th> -->
                         <th>Segment Name/Stack</th>

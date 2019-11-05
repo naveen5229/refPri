@@ -50,10 +50,9 @@ export class SegmentStackReportComponent implements OnInit {
     this.segmentHours = [];
     this.nameData = [];
     let StackGroups = _.groupBy(this.segmentData, 'segmentname');
-    console.log("stacccccccclllkk", StackGroups)
     Object.keys(StackGroups).map(key => {
       let stacks = _.groupBy(StackGroups[key], 'stack');
-      Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => { return sum += parseInt(stk.hr) }, 0));
+      Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => { return sum += stk.hr }, 0));
       this.nameData.push({
         name: key,
         data: stacks,
@@ -76,12 +75,6 @@ export class SegmentStackReportComponent implements OnInit {
     // this.stackData=  _.groupBy(this.segmentData, 'stack');
     // this.segmentHours = this.segmentHours;
     this.stackData = [...new Set(this.stackData)]
-
-    console.log("----------------------", this.stackData)
-    console.log("----------------------", this.segmentHours)
-    console.log("----------------------", this.nameData)
-
-
 
   }
 }

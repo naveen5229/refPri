@@ -12,7 +12,8 @@
                 <label>Stack Parent:</label>
             </div>
             <div class="col-3">
-                <auto-suggestion [data]="stacks" (onSelected)="stackParentId=($event.id)" display="name" placeholder="Enter stack Name" style="width:60%;" autocomplete="off"></auto-suggestion>
+                <auto-suggestion [data]="stacks" (onSelected)="stackParentId=($event.id)" display="name"
+                    placeholder="Enter stack Name" style="width:60%;" autocomplete="off"></auto-suggestion>
             </div>
             <div class="col-2">
                 <label>Stack child:</label>
@@ -25,8 +26,8 @@
             </div>
         </div>
         <div>
-            <table class="table table-border mt-2">
-                <thead class="thead">
+            <table class="table table-bordered mt-2">
+                <thead class="thead" style="background-color:lightgrey">
                     <tr>
                         <th>#</th>
                         <th>Stack Parent Name</th>
@@ -39,7 +40,8 @@
                         <td>{{i +1 }}</td>
                         <td>{{stack.stackname}}</td>
                         <td>{{stack.name }}</td>
-                        <td><i class="fas fa-trash-alt" (click)="deletestackChild(stack.id,i)"></i></td>
+                        <td><i class="fas fa-trash-alt" style="color: red;" (click)="deletestackChild(stack.id,i)"></i>
+                        </td>
                     </tr>
                 </tbody>
             </table>

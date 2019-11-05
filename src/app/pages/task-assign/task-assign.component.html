@@ -18,17 +18,23 @@
         <nb-card-body>
             <div class="tabs_style_main">
                 <ul class="tabs_style text-left">
-                    <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'; getTask()">My Tasks
+                    <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'; getTask()">My
+                        Tasks
                     </li>
-                    <li [ngClass]="activeTab=='Assigned By Me'?'active':''" (click)="activeTab='Assigned By Me'; getTask()">
+                    <li [ngClass]="activeTab=='Assigned By Me'?'active':''"
+                        (click)="activeTab='Assigned By Me'; getTask()">
                         Assigned Tasks</li>
-                    <li [ngClass]="activeTab=='Waiting For Review'?'active':''" (click)="activeTab='Waiting For Review'; getTask()">Waiting For Review</li>
+                    <li [ngClass]="activeTab=='Waiting For Review'?'active':''"
+                        (click)="activeTab='Waiting For Review'; getTask()">Waiting For Review</li>
 
-                    <li [ngClass]="activeTab=='Review But Change'?'active':''" (click)="activeTab='Review But Change'; getTask()">
+                    <li [ngClass]="activeTab=='Review But Change'?'active':''"
+                        (click)="activeTab='Review But Change'; getTask()">
                         Review But Change</li>
-                    <li [ngClass]="activeTab=='Pending Review'?'active':''" (click)="activeTab='Pending Review'; getTask()">
+                    <li [ngClass]="activeTab=='Pending Review'?'active':''"
+                        (click)="activeTab='Pending Review'; getTask()">
                         Pending Review</li>
-                    <li [ngClass]="activeTab=='Completed Task'?'active':''" (click)="activeTab='Completed Task'; getTask()">
+                    <li [ngClass]="activeTab=='Completed Task'?'active':''"
+                        (click)="activeTab='Completed Task'; getTask()">
                         Completed Task</li>
                 </ul>
 
@@ -133,15 +139,16 @@
 
                             <td>
                                 <i class="fas fa-edit edit-icon" (click)="editTask(task)"></i>
-                                <i *ngIf="task.status == -1 || task.status == 0" class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                                <i *ngIf="task.status == -1 || task.status == 0" class="fas fa-trash-alt"
+                                    (click)="deleteTask(task)"></i>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div *ngIf="activeTab=='Waiting For Review'">
-                <table class="table table-border mt-1">
-                    <thead class="thead">
+                <table class="table table-bordered mt-1">
+                    <thead class="thead" style="background-color:lightgrey">
                         <tr>
                             <th>#</th>
                             <th>Title</th>
@@ -254,10 +261,12 @@
                             <td><textarea row="2" cols="15" [(ngModel)]="task.remark" class="form-control"></textarea>
                             </td>
                             <td>
-                                <uj-date-time-picker (onChanged)="task.review_time=$event" [dateTimeValue]="task.review_time" [isTime]="true" [isStart]="true">
+                                <uj-date-time-picker (onChanged)="task.review_time=$event"
+                                    [dateTimeValue]="task.review_time" [isTime]="true" [isStart]="true">
                                 </uj-date-time-picker>
                             </td>
-                            <td><button class="btn btn-primary text-capitalize" id="button" (click)="statusChangeRemark(task)">Submit</button>
+                            <td><button class="btn btn-primary text-capitalize" id="button"
+                                    (click)="statusChangeRemark(task)">Submit</button>
 
                             </td>
                         </tr>

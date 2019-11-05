@@ -7,18 +7,21 @@
             <div class="row ">
                 <div class="col-2">
                     <div class="form-group">
-                        <input type="text" placeholder="Name" [(ngModel)]="users.employee" name="name" class="form-control" autocomplete="off" required>
+                        <input type="text" placeholder="Name" [(ngModel)]="users.employee" name="name"
+                            class="form-control" autocomplete="off" required>
 
                     </div>
                 </div>
                 <div class="col-2">
                     <div class="form-group">
-                        <input type="text" pattern="[6-9]{1}[0-9]{9}" class="form-control" title="4" maxlength="10" name="mobile" [(ngModel)]="users.mobile" placeholder="Mobile" autocomplete="off" required>
+                        <input type="text" pattern="[6-9]{1}[0-9]{9}" class="form-control" title="4" maxlength="10"
+                            name="mobile" [(ngModel)]="users.mobile" placeholder="Mobile" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        <input type="email" class="form-control" name="email" [(ngModel)]="users.email" placeholder="Email" autocomplete="off" required>
+                        <input type="email" class="form-control" name="email" [(ngModel)]="users.email"
+                            placeholder="Email" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="col-3">
@@ -35,14 +38,16 @@
                     </div>
                 </div>
                 <div class="col-1">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Submit</button> </div>
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Submit</button>
+                </div>
                 <div class="col-1">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="resetUser()">Reset</button> </div>
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="resetUser()">Reset</button>
+                </div>
             </div>
         </div>
 
-        <table class="table table-border">
-            <thead class="thead">
+        <table class="table table-bordered mt-2">
+            <thead class="thead" style="background-color:lightgrey">
                 <tr>
                     <th>#</th>
                     <th>Name</th>
@@ -60,7 +65,8 @@
                     <td>{{user.mobileno}}</td>
                     <td>{{user.emailid }}</td>
                     <td>{{user.dept_name }}</td>
-                    <td><i class="far fa-edit" (click)="editUser(user)"></i><i class="fas fa-trash-alt" (click)="deleteUser(user.id,i)"></i></td>
+                    <td><i class="far fa-edit" (click)="editUser(user)"></i><i class="fas fa-trash-alt"
+                            (click)="deleteUser(user.id,i)"></i></td>
 
                 </tr>
             </tbody>

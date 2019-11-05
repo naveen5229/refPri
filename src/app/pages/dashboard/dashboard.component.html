@@ -3,8 +3,8 @@
         <h5>Dashboard</h5>
     </nb-card-header>
     <nb-card-body>
-        <table class="table table-border mt-2">
-            <thead class="thead">
+        <table class="table table-bordered mt-2">
+            <thead class="thead" style="background-color:lightgrey">
                 <tr>
                     <th>#</th>
                     <th>Project</th>
@@ -19,7 +19,8 @@
                     <td>{{dashboardData.project | titlecase}}</td>
                     <td>{{dashboardData.start_date | date :'dd MMM yyyy hh:mm a '}}</td>
                     <td>{{dashboardData.end_date | date :'dd MMM yyyy hh:mm a '}}</td>
-                    <td style="color:#00695C; cursor: pointer;" (click)="countWorkingEmployee()">{{dashboardData.person}}</td>
+                    <td style="color:#00695C; cursor: pointer;" (click)="countWorkingEmployee()">
+                        {{dashboardData.person}}</td>
                 </tr>
             </tbody>
         </table>
