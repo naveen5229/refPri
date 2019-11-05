@@ -54,8 +54,8 @@
         </div>
         <div>
             <div>
-                <table class="table table-border mt-1">
-                    <thead class="thead">
+                <table class="table table-bordered mt-1">
+                    <thead class="thead" style="background-color:lightgrey">
                         <tr>
                             <th>Date/Stack</th>
                             <th *ngFor="let stack of stacks; let i = index;">{{stack}}</th>
@@ -63,11 +63,11 @@
                     </thead>
                     <tbody>
                         <!-- <tr (click)="stackWiseReport(Data.data[0]._sqdate,Data.data[0]._stackid)" style="color:blue" *ngFor="let report of reports; let i = index;"> -->
-                        <tr (click)="stackWiseReport(report)" style="color:blue"
-                            *ngFor="let report of reports; let i = index;">
+                        <tr *ngFor="let report of reports; let i = index;">
 
                             <td>{{report.date}}</td>
-                            <td *ngFor="let stack of stacks; let i = index;">{{report.stacks[stack] || 0}}</td>
+                            <td *ngFor="let stack of stacks; let i = index;" (click)="stackWiseReport(report,i)"
+                                style="color:blue;cursor: pointer;">{{report.stacks[stack] || 0}}</td>
                         </tr>
                     </tbody>
                 </table>
