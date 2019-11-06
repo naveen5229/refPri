@@ -14,11 +14,11 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 export class WorkLogsComponent implements OnInit {
 
   workLogs = [];
-  reviewWorkLogs=[];
-  completeWorkLogs=[];
-  remark='';
+  reviewWorkLogs = [];
+  completeWorkLogs = [];
+  remark = '';
   activeTab = 'Pending WorkLogs';
-  taskStatus=null;
+  taskStatus = null;
 
   constructor(public modalService: NgbModal,
     public api: ApiService,
@@ -31,17 +31,17 @@ export class WorkLogsComponent implements OnInit {
   ngOnInit() {
   }
 
-  refresh(){
+  refresh() {
     this.getWorkLogs1();
   }
 
 
   addWorkLogs(workLogs?) {
-    this.common.params={
-      workLogs:workLogs
+    this.common.params = {
+      workLogs: workLogs
     }
-    
-   // workLogs && (this.common.params['workLogs'] = workLogs);
+
+    // workLogs && (this.common.params['workLogs'] = workLogs);
     const activeModal = this.modalService.open(WorkLogComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data) {
@@ -73,8 +73,8 @@ export class WorkLogsComponent implements OnInit {
         this.common.loading--;
         console.log("res", res['data'])
         this.workLogs = res['data']['completed'];
-        this.reviewWorkLogs=res['data']['pending_reviewed'];
-        this.completeWorkLogs=res['data']['reviewed'];
+        this.reviewWorkLogs = res['data']['pending_reviewed'];
+        this.completeWorkLogs = res['data']['reviewed'];
         this.formateWorkingTime();
         console.log("data", this.workLogs);
       }, err => {
@@ -86,23 +86,23 @@ export class WorkLogsComponent implements OnInit {
 
   formateWorkingTime() {
     this.workLogs.map(workLogs => {
-      let min:any = workLogs['total_minutes'] % 60;
-      let hour:any = Math.floor((workLogs['total_minutes'] / 60));
-      console.log("min",min,hour);
+      let min: any = workLogs['total_minutes'] % 60;
+      let hour: any = Math.floor((workLogs['total_minutes'] / 60));
       if (min <= 9) min = "0" + min;
       if (hour <= 9) hour = "0" + hour;
       workLogs['total_minutes'] = hour + ":" + min;
     });
     this.reviewWorkLogs.map(reviewWorkLogs => {
-      let min:any = reviewWorkLogs['total_minutes'] % 60;
-      let hour:any = (reviewWorkLogs['total_minutes'] / 60).toFixed(0);
+      let min: any = reviewWorkLogs['total_minutes'] % 60;
+      let hour: any = Math.floor((reviewWorkLogs['total_minutes'] / 60));
       if (min <= 9) min = "0" + min;
       if (hour <= 9) hour = "0" + hour;
       reviewWorkLogs['total_minutes'] = hour + ":" + min;
     });
     this.completeWorkLogs.map(completeWorkLog => {
-      let min:any = completeWorkLog['total_minutes'] % 60;
-      let hour:any = (completeWorkLog['total_minutes'] / 60).toFixed(0);
+      let min: any = completeWorkLog['total_minutes'] % 60;
+      let hour: any = Math.floor((completeWorkLog['total_minutes'] / 60));
+
       if (min <= 9) min = "0" + min;
       if (hour <= 9) hour = "0" + hour;
       completeWorkLog['total_minutes'] = hour + ":" + min;
@@ -139,25 +139,25 @@ export class WorkLogsComponent implements OnInit {
             this.common.loading--;
             console.log(err);
             this.common.showError();
-          });      
+          });
       }
     })
-    
+
   }
 
-  changeWorkLogStatus(workLog){
-    if(workLog.taskStatus==null){
+  changeWorkLogStatus(workLog) {
+    if (workLog.taskStatus == null) {
       this.common.showError("please enter Review Status");
-    }else if(workLog.remark ==''){
+    } else if (workLog.remark == '') {
       this.common.showError("Please Enter review remark");
-    }else{
+    } else {
       this.common.loading++;
-      let params={
-        status:workLog.taskStatus,
-        remark:workLog.remark,
-        workLogId:workLog.id
+      let params = {
+        status: workLog.taskStatus,
+        remark: workLog.remark,
+        workLogId: workLog.id
       }
-      this.api.post("WorkLogs/updateWorkLogsStatus",params)
+      this.api.post("WorkLogs/updateWorkLogsStatus", params)
         .subscribe(res => {
           this.common.loading--;
           console.log("res", res['data']);
