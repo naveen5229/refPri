@@ -8,7 +8,8 @@ import { ApiService } from '../../Service/Api/api.service';
   styleUrls: ['./employee-daywise-report.component.scss']
 })
 export class EmployeeDaywiseReportComponent implements OnInit {
-  currentDate = new Date();
+  currentDate = new Date(new Date().setDate(new Date().getDate() - 1));;
+
   employeeData = [];
 
   constructor(public common: CommonService,
