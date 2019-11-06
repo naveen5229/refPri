@@ -223,7 +223,7 @@
             </div>
             <div *ngIf="activeTab=='Pending Review'">
 
-                <table id="pandingReview" style="overflow-x:scroll;display:block;width:100%!important;max-width:1050px;"
+                <table id="pandingReview" style="overflow-x:scroll;display:block;width:165%!important;"
                     class="table table-border mt-1">
                     <thead class="thead">
                         <tr>
@@ -232,12 +232,12 @@
                             <th style="width:8%;">Description</th>
                             <th style="width:8%;">Project</th>
                             <th style="width:8%;">Segment </th>
-                            <th>Assigned</th>
-                            <th>Start Time</th>
-                            <th>Status</th>
-                            <th>Remark</th>
-                            <th>End Time</th>
-                            <th>Action</th>
+                            <th style="width:8%;">Assigned</th>
+                            <th style="width:8%;">Start Time</th>
+                            <th style="width:8%;">Status</th>
+                            <th style="width:8%;">Remark</th>
+                            <th style="width:15%;">End Time</th>
+                            <th style="width:8%;">Action</th>
 
 
 
@@ -245,28 +245,30 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let task of pendingReview ; let i=index;">
-                            <td>0{{i+1}}</td>
-                            <td>{{task.Title}}</td>
-                            <td>{{task.Description}}</td>
-                            <td>{{task.ProjectName}}</td>
-                            <td>{{task.SegmentName}}</td>
-                            <td>{{task.AssigneeName }}</td>
-                            <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
-                            <td> <select class="form-control" name="taskStatus" [(ngModel)]="task.status">
+                            <td style="width:5%;">0{{i+1}}</td>
+                            <td style="width:8%;">{{task.Title}}</td>
+                            <td style="width:8%;">{{task.Description}}</td>
+                            <td style="width:8%;">{{task.ProjectName}}</td>
+                            <td style="width:8%;">{{task.SegmentName}}</td>
+                            <td style="width:8%;">{{task.AssigneeName }}</td>
+                            <td style="width:8%;">{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
+                            <td style="width:8%;"> <select class="form-control" name="taskStatus"
+                                    [(ngModel)]="task.status">
                                     <option value="a">Select Status</option>
                                     <option value="2">Completed</option>
                                     <option value="-1">Review But Change</option>
                                     <option value="-2">Reject</option>
 
                                 </select></td>
-                            <td><textarea row="2" cols="15" [(ngModel)]="task.remark" class="form-control"></textarea>
+                            <td style="width:8%;"><textarea row="2" cols="15" [(ngModel)]="task.remark"
+                                    class="form-control"></textarea>
                             </td>
-                            <td>
+                            <td style="width:15%;">
                                 <uj-date-time-picker (onChanged)="task.review_time=$event"
                                     [dateTimeValue]="task.review_time" [isTime]="true" [isStart]="true">
                                 </uj-date-time-picker>
                             </td>
-                            <td><button class="btn btn-primary text-capitalize" id="button"
+                            <td style="width:8%;"><button class="btn btn-primary text-capitalize" id="button"
                                     (click)="statusChangeRemark(task)">Submit</button>
 
                             </td>
