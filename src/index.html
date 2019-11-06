@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>ITRM</title>
 
-    <base href="/testing/itrm">
+    <base href="/">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -127,6 +127,42 @@
 
         nb-layout-column {
             padding: 0px !important;
+        }
+
+        /* width */
+
+        ::-webkit-scrollbar {
+            width: 12px !important;
+            background-color: #c1c1c1 !important;
+        }
+
+        /* Track */
+
+        ::-webkit-scrollbar-track {
+            /* background: #f1f1f1 !important; */
+            box-shadow: none;
+            border-radius: 0px;
+            background-color: #000;
+        }
+
+        /* Handle */
+
+        ::-webkit-scrollbar-thumb {
+            /* background: #000 !important; */
+            border-radius: 0px !important;
+            background-color: #c1c1c1 !important;
+            background-image: -webkit-linear-gradient(linear,
+                    40% 0%,
+                    75% 84%,
+                    from(#4d9c41),
+                    to(#19911d),
+                    color-stop(0.6, #54de5d)) !important;
+        }
+
+        /* Handle on hover */
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8 !important;
         }
     </style>
     <div id="nb-global-spinner" class="spinner">
