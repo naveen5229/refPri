@@ -102,7 +102,6 @@ export class WorkLogsComponent implements OnInit {
     this.completeWorkLogs.map(completeWorkLog => {
       let min: any = completeWorkLog['total_minutes'] % 60;
       let hour: any = Math.floor((completeWorkLog['total_minutes'] / 60));
-
       if (min <= 9) min = "0" + min;
       if (hour <= 9) hour = "0" + hour;
       completeWorkLog['total_minutes'] = hour + ":" + min;
