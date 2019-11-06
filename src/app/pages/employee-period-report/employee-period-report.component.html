@@ -64,7 +64,7 @@
                     <tbody>
                         <tr *ngFor="let report of reports; let i = index;">
                             <td>{{report.date}}</td>
-                            <td *ngFor="let stack of stacks; let j = index;" (click)="stackWiseReport(report,j)"
+                            <td *ngFor="let stack of stacks; let j = index;" (click)="stackWiseReport(report,stack)"
                                 style="color:blue;cursor: pointer;">{{report.stacks[stack] || 0}}</td>
                         </tr>
                     </tbody>

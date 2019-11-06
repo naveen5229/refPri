@@ -56,11 +56,8 @@ export class SegmentStackReportComponent implements OnInit {
       this.nameData.push({
         name: key,
         data: stacks,
-        // Date:EmployeAttendanceGroups[key][0].Date
       });
-      // this.segmentHours.push(StackGroups[key].map(hr =>
-      //     hr.hr)
-      // );
+
       this.stackData.push(...StackGroups[key].map(stack =>
         stack.stack)
       );
@@ -72,8 +69,6 @@ export class SegmentStackReportComponent implements OnInit {
       });
 
     });
-    // this.stackData=  _.groupBy(this.segmentData, 'stack');
-    // this.segmentHours = this.segmentHours;
     this.stackData = [...new Set(this.stackData)]
 
   }

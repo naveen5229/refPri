@@ -62,7 +62,6 @@ export class EmployeePeriodReportComponent implements OnInit {
         this.stacks = [... new Set(Object.keys(_.groupBy(res['data'], 'stack')))];
         console.log(this.stacks);
         let reports = _.groupBy(res['data'], 'date');
-
         this.reports = Object.keys(reports).map(date => {
           let stacks = _.groupBy(reports[date], 'stack');
           Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => { return sum += stk.total }, 0));
@@ -80,11 +79,14 @@ export class EmployeePeriodReportComponent implements OnInit {
       });
   }
 
-  stackWiseReport(report, index) {
-    console.log("report", report);
-    console.log("index", index);
-    let stackDate = report.data[index]._sqdate;
-    let stackId = report.data[index]._stackid;
+  stackWiseReport(report, stack) {
+
+    let resultedData = report.data.filter(function (ele) {
+      return ele.stack == stack;
+    });
+    console.log("result", resultedData);
+    let stackDate = resultedData[0]._sqdate;
+    let stackId = resultedData[0]._stackid;
     this.common.params = { stackDate, stackId, empId: this.employeeId }
     this.modalService.open(StackReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
