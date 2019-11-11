@@ -64,7 +64,7 @@ export class EmployeePeriodReportComponent implements OnInit {
         let reports = _.groupBy(res['data'], 'date');
         this.reports = Object.keys(reports).map(date => {
           let stacks = _.groupBy(reports[date], 'stack');
-          Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].reduce((sum, stk) => { return sum += stk.total }, 0));
+          Object.keys(stacks).map(stack => stacks[stack] = stacks[stack].map((stk) => { return stk.total; }));
           return {
             date,
             stacks,

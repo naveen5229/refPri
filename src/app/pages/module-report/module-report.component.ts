@@ -81,7 +81,7 @@ export class ModuleReportComponent implements OnInit {
     console.log("employeeGroup", employeeGroups)
     Object.keys(employeeGroups).map(key => {
       let segments = _.groupBy(employeeGroups[key], 'SegmentName');
-      Object.keys(segments).map(segment => segments[segment] = segments[segment].reduce((sum, seg) => { return sum += seg.Hour }, 0));
+      Object.keys(segments).map(segment => segments[segment] = segments[segment].map((seg) => { return seg.Hour }));
       this.formattedModuleData.push({
         name: key,
         data: segments,

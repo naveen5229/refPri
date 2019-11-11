@@ -30,8 +30,8 @@
                             <td>{{emp.name}}</td>
                             <td (click)="workLogUser(info._empid,info._date)" style="color:blue"
                                 *ngFor="let info of emp.data">
-                                <span *ngIf="info.hr != '0:00'">{{info.hr}}</span>
-                                <i class="fa fa-times" style="color:red" *ngIf="info.hr == '0:00'"></i>
+                                <span *ngIf="info.hr != '00:00:00'">{{info.hr}}</span>
+                                <i class="fa fa-times" style="color:red" *ngIf="info.hr == '00:00:00'"></i>
                             </td>
                         </tr>
                     </tbody>
