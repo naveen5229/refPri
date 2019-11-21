@@ -39,6 +39,7 @@ import { ListOfEmployeeComponent } from './modals/list-of-employee/list-of-emplo
 import { AddSegmentComponent } from './modals/add-segment/add-segment.component';
 import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/worklogs-with-res-user.component';
 import { StackReportComponent } from './modals/stack-report/stack-report.component';
+import { AddNewCampaignComponent } from './modals/campaign-modals/add-new-campaign/add-new-campaign.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -52,6 +53,7 @@ import { StackReportComponent } from './modals/stack-report/stack-report.compone
     AddSegmentComponent,
     WorklogsWithResUserComponent,
     StackReportComponent,
+    AddNewCampaignComponent,
   ],
   entryComponents: [
     WorkLogComponent,
@@ -62,7 +64,8 @@ import { StackReportComponent } from './modals/stack-report/stack-report.compone
     ListOfEmployeeComponent,
     AddSegmentComponent,
     WorklogsWithResUserComponent,
-    StackReportComponent
+    StackReportComponent,
+    AddNewCampaignComponent
 
   ],
   imports: [

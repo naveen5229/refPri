@@ -1,0 +1,37 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row ">
+      <div class="col-9">
+        <h5> Add Campaign</h5>
+      </div>
+      <div class="col-3">
+        <button class="btn btn-primary text-capitalize" id="button" (click)="addCampaign()">Add</button>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body style="min-height: 485px;">
+    <div class="row">
+    </div>
+    <!-- <table class="table table-bordered mt-2">
+          <thead class="thead" style="background-color:lightgrey">
+              <tr>
+                  <th>#</th>
+                  <th>Project Name</th>
+                  <th>Module Name</th>
+                  <th>Add By</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let module of filteredItems; let i=index;">
+                  <td>0{{i +1 }}</td>
+                  <td>{{module.project_name}}</td>
+                  <td>{{module.name }}</td>
+                  <td>{{module.addedby}}</td>
+                  <td><i class="far fa-edit" (click)="editModule(module)"></i><i class="fas fa-trash-alt"
+                          (click)="deleteModule(module.id,i)"></i></td>
+              </tr>
+          </tbody>
+      </table> -->
+  </nb-card-body>
+</nb-card>

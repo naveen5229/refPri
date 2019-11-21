@@ -1,0 +1,62 @@
+<div class="modal-header">
+  <h5>Add New Campaign</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container">
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Campaign Name</label>
+      </div>
+      <div class="col-6">
+        <input type="text" class="form-control" name="campaignName" id="campaignName" [(ngModel)]="campaignAdd.name">
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Product Type</label>
+      </div>
+      <div class="col-6">
+        <auto-suggestion [data]="productTypeLis" display="name" placeholder="Product Type" name="productType"
+          id="productType" (onSelected)="campaignAdd.type=($event.id)" autocomplete="off">
+        </auto-suggestion>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Start Time</label>
+      </div>
+      <div class="col-6">
+        <uj-date-time-picker (onChanged)="campaignAdd.startTime = $event" [dateTimeValue]="campaignAdd.startTime"
+          [isTime]="false">
+        </uj-date-time-picker>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>End Time</label>
+      </div>
+      <div class="col-6">
+        <uj-date-time-picker (onChanged)="campaignAdd.endTime = $event" [dateTimeValue]="campaignAdd.endTime"
+          [isTime]="false">
+        </uj-date-time-picker>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div class="row footer">
+    <div class="col ">
+      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary " form="worklog-form" type='submit' id="save"
+        (click)="savecampaign()">Save</button>
+    </div>
+  </div>
+</div>

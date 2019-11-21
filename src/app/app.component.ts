@@ -14,7 +14,7 @@ import { CommonService } from './Service/common/common.service';
 export class AppComponent implements OnInit {
 
   constructor(private analytics: AnalyticsService,
-    public common:CommonService) {
+    public common: CommonService) {
   }
 
   ngOnInit(): void {

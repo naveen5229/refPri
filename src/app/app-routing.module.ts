@@ -17,6 +17,11 @@ const routes: Routes = [
       .then(m => m.PagesModule),
   },
   {
+    path: 'campaign',
+    loadChildren: () => import('../app/campaign/campaign.module')
+      .then(m => m.CampaignModule),
+  },
+  {
     path: 'auth',
     component: NbAuthComponent,
     children: [
