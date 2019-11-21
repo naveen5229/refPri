@@ -41,8 +41,8 @@
         <label>End Time</label>
       </div>
       <div class="col-6">
-        <uj-date-time-picker (onChanged)="campaignAdd.endTime = $event" [dateTimeValue]="campaignAdd.endTime"
-          [isTime]="false">
+        <uj-date-time-picker (onChanged)="campaignAdd.endTime = $event" [isStart]="false"
+          [dateTimeValue]="campaignAdd.endTime" [isTime]="false">
         </uj-date-time-picker>
       </div>
     </div>

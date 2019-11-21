@@ -25,7 +25,7 @@ export class AddNewCampaignComponent implements OnInit {
   }
 
   closeModal() {
-    this.activeModal.close();
+    this.activeModal.close({ response: false });
   }
 
   ngOnInit() {
@@ -44,15 +44,17 @@ export class AddNewCampaignComponent implements OnInit {
   }
 
   savecampaign() {
-    if (this.campaignAdd.endTime > this.campaignAdd.endTime) {
+    if (this.campaignAdd.endTime < this.campaignAdd.startTime) {
       this.common.showError("Date in Invalid");
       return;
     }
+    let startDate = this.common.dateFormatter(this.campaignAdd.startTime);
+    let endDate = this.common.dateFormatter(this.campaignAdd.endTime);
     let params = {
       campaignName: this.campaignAdd.name,
       productType: this.campaignAdd.type,
-      startTime: this.campaignAdd.startTime,
-      endTime: this.campaignAdd.endTime
+      startTime: startDate,
+      endTime: endDate
 
     }
     this.common.loading++;
@@ -60,7 +62,13 @@ export class AddNewCampaignComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
-        console.log(this.productTypeLis);
+        if (res['success'] == true) {
+          this.common.showToast(res['msg']);
+          this.activeModal.close({ response: true });
+        } else {
+          this.common.showError(res['msg']);
+
+        }
       }, err => {
         this.common.loading--;
         console.log(err);

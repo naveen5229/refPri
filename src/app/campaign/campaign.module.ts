@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddCampaignComponent } from './add-campaign/add-campaign.component';
 import { CampaignRoutingModule } from './campaign-routing.module';
@@ -8,10 +8,13 @@ import { NbMenuModule, NbCardModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { DirectiveModule } from '../directives/directives.module';
 
+
+const PAGES_COMPONENTS = [
+  AddCampaignComponent,
+  CampaignComponent
+];
 @NgModule({
-  declarations: [AddCampaignComponent,
-    CampaignComponent
-  ],
+  declarations: [...PAGES_COMPONENTS],
   imports: [
     CommonModule,
     CampaignRoutingModule,
@@ -21,6 +24,10 @@ import { DirectiveModule } from '../directives/directives.module';
     FormsModule,
     DirectiveModule,
 
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  entryComponents: [...PAGES_COMPONENTS],
+  providers: [],
+  exports: [...PAGES_COMPONENTS]
 })
 export class CampaignModule { }

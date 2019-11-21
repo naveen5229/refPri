@@ -19,6 +19,7 @@ import { ComponentReportComponent } from './component-report/component-report.co
 import { SegmentStackReportComponent } from './segment-stack-report/segment-stack-report.component';
 import { ModuleReportComponent } from './module-report/module-report.component';
 import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employee-daywise-report.component';
+import { AddCampaignComponent } from '../campaign/add-campaign/add-campaign.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -101,7 +102,13 @@ const routes: Routes = [{
       path: 'employee-daywise-report',
       component: EmployeeDaywiseReportComponent,
       canActivate: [AuthGuard]
-    }
+    },
+
+    {
+      path: 'add-campaign',
+      component: AddCampaignComponent,
+    },
+
   ],
 }];
 

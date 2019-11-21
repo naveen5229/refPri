@@ -2,11 +2,11 @@ import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 
 @Component({
-  selector: 'smart-tabel',
-  templateUrl: './smart-tabel.component.html',
-  styleUrls: ['./smart-tabel.component.scss']
+  selector: 'smart-table',
+  templateUrl: './smart-table.component.html',
+  styleUrls: ['./smart-table.component.scss']
 })
-export class SmartTabelComponent implements OnInit {
+export class SmartTableComponent implements OnInit {
   @Input() data: any;
   @Input() settings: any;
   objectKeys = Object.keys;
@@ -119,8 +119,8 @@ export class SmartTabelComponent implements OnInit {
     console.info('Sort Counts:', counts);
     this.columns.sort((a, b) => {
       if (this.headings[key].type === 'date') {
-        let firstDate:any = a[key].value ? this.common.dateFormatter(a[key].value) : 0;
-        let secondDate:any = b[key].value ? this.common.dateFormatter(b[key].value) : 0;
+        let firstDate: any = a[key].value ? this.common.dateFormatter(a[key].value) : 0;
+        let secondDate: any = b[key].value ? this.common.dateFormatter(b[key].value) : 0;
         return firstDate - secondDate;
       } else if (counts.time > counts.number) {
         let firstValue = a[key].value ? parseFloat(a[key].value.replace(':', '.')) : 0;
