@@ -1,0 +1,65 @@
+<nb-card style="border:0px;">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-8">
+        <h5>Campaign Master Page</h5>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="tabs_style_main">
+        <ul class="tabs_style text-left">
+          <li [ngClass]="activeTab=='productMaster'?'active':''" (click)="activeTab='productMaster'; getTask()">Product
+            Master </li>
+          <li [ngClass]="activeTab=='actionMaster'?'active':''" (click)="activeTab='actionMaster'; getTask()">
+            Action Master</li>
+          <li [ngClass]="activeTab=='stateMaster'?'active':''" (click)="activeTab='stateMaster'; getTask()">State Master
+          </li>
+
+          <li [ngClass]="activeTab=='remarkMaster'?'active':''" (click)="activeTab='remarkMaster'; getTask()">
+            Remark Master</li>
+          <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getTask()">
+            Campaign State Mapping</li>
+          <li [ngClass]="activeTab=='campaignAction'?'active':''" (click)="activeTab='campaignAction'; getTask()">
+            Campaign Action Mapping</li>
+        </ul>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="dis_all == 'dcs'">
+      <smart-table *ngIf="driverData.length" [data]="table.data" [settings]="table.settings" id="tblsuggestions">
+      </smart-table>
+    </div>
+
+    <div *ngIf="dis_all == '51'">
+      <smart-table *ngIf="onwardDelayData.length" [data]="table2.data" [settings]="table2.settings"
+        id="tblsuggestions2">
+      </smart-table>
+    </div>
+
+    <div *ngIf="dis_all == 'pdf'">
+      <smart-table *ngIf="delayFaults.length" [data]="table3.data" [settings]="table3.settings" id="tblsuggestions3">
+      </smart-table>
+    </div>
+
+    <div *ngIf="dis_all == 'st'">
+      <smart-table *ngIf="shortTarget.length" [data]="table4.data" [settings]="table4.settings" id="tblsuggestions4">
+      </smart-table>
+    </div>
+
+    <div *ngIf="dis_all == '11'">
+      <smart-table *ngIf="longUnLoading && longLoading.length" [data]="table5.data" [settings]="table5.settings"
+        id="tblsuggestions5">
+      </smart-table>
+    </div>
+
+    <div *ngIf="dis_all == '21'">
+      <smart-table *ngIf="longUnLoading && longUnLoading.length" [data]="table6.data" [settings]="table6.settings"
+        id="tblsuggestions6">
+      </smart-table>
+    </div>
+  </nb-card-body>
+</nb-card>

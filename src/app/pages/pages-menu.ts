@@ -115,7 +115,15 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'shopping-cart-outline',
         link: '/pages/add-campaign',
         home: true,
-      },]
+      }, {
+        title: 'Campagin Master',
+        icon: 'shopping-cart-outline',
+        link: '/pages/campaign-master-page',
+        home: true,
+      },
+
+
+    ]
   }
 
 ];

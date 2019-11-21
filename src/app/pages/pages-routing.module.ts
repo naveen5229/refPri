@@ -20,6 +20,7 @@ import { SegmentStackReportComponent } from './segment-stack-report/segment-stac
 import { ModuleReportComponent } from './module-report/module-report.component';
 import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employee-daywise-report.component';
 import { AddCampaignComponent } from '../campaign/add-campaign/add-campaign.component';
+import { CampaignMasterPageComponent } from '../campaign/campaign-master-page/campaign-master-page.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -108,6 +109,11 @@ const routes: Routes = [{
       path: 'add-campaign',
       component: AddCampaignComponent,
     },
+
+    {
+      path: 'campaign-master-page',
+      component: CampaignMasterPageComponent
+    }
 
   ],
 }];

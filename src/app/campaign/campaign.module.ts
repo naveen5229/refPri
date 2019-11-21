@@ -7,11 +7,13 @@ import { ThemeModule } from '../@theme/theme.module';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { DirectiveModule } from '../directives/directives.module';
+import { CampaignMasterPageComponent } from './campaign-master-page/campaign-master-page.component';
 
 
 const PAGES_COMPONENTS = [
   AddCampaignComponent,
-  CampaignComponent
+  CampaignComponent,
+  CampaignMasterPageComponent
 ];
 @NgModule({
   declarations: [...PAGES_COMPONENTS],
