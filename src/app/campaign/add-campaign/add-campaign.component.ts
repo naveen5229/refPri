@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddNewCampaignComponent } from '../../modals/campaign-modals/add-new-campaign/add-new-campaign.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-add-campaign',
@@ -31,6 +32,7 @@ export class AddCampaignComponent implements OnInit {
   }
 
   addCampaign() {
+    this.common.params = { title: "Add Campaign", button: "Add" }
     const activeModal = this.modalService.open(AddNewCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -115,24 +117,61 @@ export class AddCampaignComponent implements OnInit {
   }
 
   actionIcons(campaign) {
-    // let icons = [
-    //   {
-    //     class: "far fa-eye",
-    //     action: this.templatePreview.bind(this, 'Preview', campaign)
-    //   },
-    //   {
-    //     class: "fas fa-user",
-    //     action: this.assign.bind(this, 'Edit', campaign)
-    //   },
-    // ];
-    // this.user.permission.edit && icons.push({ class: "far fa-edit", action: this.addAndEdit.bind(this, 'Edit', campaign) });
-    // this.user.permission.delete && icons.push({ class: 'fas fa-trash-alt', action: this.deleteUserTemplate.bind(this, campaign) });
+    let icons = [
+      { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
+      { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) }
+    ];
+    return icons;
+  }
 
-    // return icons;
+
+  editCampaign(campaign) {
+    let campaignEditData = {
+      rowId: campaign._campaignid,
+      campaignName: campaign.CampaignName,
+      productName: campaign.ProductName,
+      startTime: campaign._sartdate,
+      endTime: campaign._enddate,
+      productId: campaign._productid
+    }
+    this.common.params = { campaignEditData, title: "Edit Campaign", button: "Edit" };
+    const activeModal = this.modalService.open(AddNewCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignData();
+      }
+    });
   }
 
 
 
+  deleteCampaign(row) {
+    let params = {
+      campaignId: row._campaignid,
+    }
+    if (row._campaignid) {
+      this.common.params = {
+        title: 'Delete Campaign ',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Campaigns/deleteCampaign', params)
+            .subscribe(res => {
+              this.common.loading--;
+              this.common.showToast(res['msg']);
+              this.getCampaignData();
+            }, err => {
+              this.common.loading--;
+              console.log('Error: ', err);
+            });
+        }
+      });
+    }
+  }
 
 
 
