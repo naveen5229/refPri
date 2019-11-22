@@ -21,6 +21,7 @@ import { ModuleReportComponent } from './module-report/module-report.component';
 import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employee-daywise-report.component';
 import { AddCampaignComponent } from '../campaign/add-campaign/add-campaign.component';
 import { CampaignMasterPageComponent } from '../campaign/campaign-master-page/campaign-master-page.component';
+import { CampaignTargetComponent } from '../campaign/campaign-target/campaign-target.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -113,6 +114,10 @@ const routes: Routes = [{
     {
       path: 'campaign-master-page',
       component: CampaignMasterPageComponent
+    },
+    {
+      path: 'campaign-target',
+      component: CampaignTargetComponent
     }
 
   ],

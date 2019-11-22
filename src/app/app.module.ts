@@ -40,6 +40,7 @@ import { AddSegmentComponent } from './modals/add-segment/add-segment.component'
 import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/worklogs-with-res-user.component';
 import { StackReportComponent } from './modals/stack-report/stack-report.component';
 import { AddNewCampaignComponent } from './modals/campaign-modals/add-new-campaign/add-new-campaign.component';
+import { TargetCampaignComponent } from './modals/campaign-modals/target-campaign/target-campaign.component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -54,6 +55,7 @@ import { AddNewCampaignComponent } from './modals/campaign-modals/add-new-campai
     WorklogsWithResUserComponent,
     StackReportComponent,
     AddNewCampaignComponent,
+    TargetCampaignComponent,
   ],
   entryComponents: [
     WorkLogComponent,

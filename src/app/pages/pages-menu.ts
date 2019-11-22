@@ -121,7 +121,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/pages/campaign-master-page',
         home: true,
       },
-
+      {
+        title: 'Campagin Target',
+        icon: 'shopping-cart-outline',
+        link: '/pages/campaign-target',
+        home: true,
+      },
 
     ]
   }
