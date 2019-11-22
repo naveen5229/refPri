@@ -67,7 +67,9 @@ import { TargetCampaignComponent } from './modals/campaign-modals/target-campaig
     AddSegmentComponent,
     WorklogsWithResUserComponent,
     StackReportComponent,
-    AddNewCampaignComponent
+    AddNewCampaignComponent,
+    TargetCampaignComponent,
+
 
   ],
   imports: [

@@ -12,21 +12,23 @@ export class TargetCampaignComponent implements OnInit {
 
   title = "";
   button = "Add";
-
-  campaignAdd = {
+  target = {
     rowId: null,
+    campaignId: null,
     name: "",
-    typeId: null,
-    typeName: null,
-    startTime: new Date(),
-    endTime: new Date()
+    mobile: null,
+    potential: null,
+    locationId: null,
+    address: "",
   }
+  campaignDataList = [];
+  locationDataList = [];
 
-  productTypeLis = [];
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal) {
-    this.getProductType();
+    this.getcampaignList();
+    this.getLocationList();
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
 
@@ -47,17 +49,76 @@ export class TargetCampaignComponent implements OnInit {
   ngOnInit() {
   }
 
-  getProductType() {
+  getcampaignList() {
+    this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
+      this.campaignDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  getLocationList() {
+    this.api.get("CampaignSuggestion/getLocation").subscribe(res => {
+      this.locationDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  checkValidation() {
+    if (this.target.potential.length > 4) {
+      return this.common.showError("range Between 0 to 9999")
+    }
+  }
+
+  saveCampaignTarget() {
+    if (!this.target.campaignId || !this.target.name || !this.target.mobile) return this.common.showError("Please Fill Require Field");
+
+    let params = {};
+    if (this.target.rowId) {
+      // params = {
+      //   campaignId: this.campaignAdd.rowId,
+      //   campaignName: this.campaignAdd.name,
+      //   productType: this.campaignAdd.typeId,
+
+
+      // };
+      // url = "Campaigns/updateCampaign";
+    } else {
+      params = {
+        campTargetId: this.target.rowId,
+        campaignId: this.target.campaignId,
+        name: this.target.name,
+        mobileNo: this.target.mobile,
+        potential: this.target.potential,
+        locationId: this.target.locationId,
+        address: this.target.address,
+
+      }
+    }
+
     this.common.loading++;
-    this.api.get('CampaignSuggestion/getProductList')
+    this.api.post("Campaigns/addCampaignTarget", params)
       .subscribe(res => {
         this.common.loading--;
-        this.productTypeLis = res['data'];
-        console.log(this.productTypeLis);
+        console.log(res);
+        if (res['success'] == true) {
+          this.common.showToast(res['msg']);
+          this.activeModal.close({ response: true });
+        } else {
+          this.common.showError(res['msg']);
+
+        }
       }, err => {
         this.common.loading--;
         console.log(err);
       });
   }
+
+
 
 }

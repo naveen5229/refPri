@@ -8,49 +8,66 @@
   <div class="container">
     <div class="row form-group">
       <div class="col-6">
-        <label>Campaign Name</label>
+        <label>Campaign Name <span class="require">*</span></label>
       </div>
       <div class="col-6">
         <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName"
-          id="campaignName" (onSelected)="campaignId=($event.id)" autocomplete="off">
+          id="campaignName" (onSelected)="target.campaignId=($event.id)" autocomplete="off">
         </auto-suggestion>
       </div>
     </div>
+
+
     <div class="row form-group">
       <div class="col-6">
-        <label>Product Type</label>
+        <label>Name <span class="require">*</span></label>
       </div>
       <div class="col-6">
-        <auto-suggestion [data]="productTypeLis" display="name" placeholder="Product Type" name="productType"
-          id="productType" (onSelected)="campaignAdd.typeId=($event.id)" [preSelected]="{name:campaignAdd.typeName}"
-          autocomplete="off">
+        <input type="text" name="name" id="name" [(ngModel)]="target.name" class="form-control" required>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Mobile No. <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <input type="number" name="mobile" id="mobile" [(ngModel)]="target.mobile" class="form-control" required>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Potential</label>
+      </div>
+      <div class="col-6">
+        <input type="number" name="potential" id="potential" (keyup)="checkValidation()" [(ngModel)]="target.potential"
+          class="form-control">
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Location</label>
+      </div>
+      <div class="col-6">
+        <auto-suggestion [data]="locationDataList" display="location" placeholder="Location" name="location"
+          id="location" (onSelected)="target.locationId=($event.id)" autocomplete="off">
         </auto-suggestion>
       </div>
     </div>
 
     <div class="row form-group">
       <div class="col-6">
-        <label>Start Time</label>
+        <label>Address</label>
       </div>
       <div class="col-6">
-        <uj-date-time-picker (onChanged)="campaignAdd.startTime = $event" [dateTimeValue]="campaignAdd.startTime"
-          [isTime]="false">
-        </uj-date-time-picker>
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-6">
-        <label>End Time</label>
-      </div>
-      <div class="col-6">
-        <uj-date-time-picker (onChanged)="campaignAdd.endTime = $event" [isStart]="false"
-          [dateTimeValue]="campaignAdd.endTime" [isTime]="false">
-        </uj-date-time-picker>
+        <textarea name="address" cols="5" rows="5" class="form-control" [(ngModel)]="target.address"></textarea>
       </div>
     </div>
   </div>
 </div>
+
 
 <div class="modal-footer">
   <div class="row footer">
@@ -58,8 +75,7 @@
       <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
     </div>
     <div class="col text-right">
-      <button class="btn btn-primary " form="worklog-form" type='submit' id="save"
-        (click)="savecampaign()">{{button}}</button>
+      <button class="btn btn-primary" type='submit' id="save" (click)="saveCampaignTarget()">{{button}}</button>
     </div>
   </div>
 </div>

@@ -25,9 +25,14 @@ export class CampaignTargetComponent implements OnInit {
     public common: CommonService,
     public modalService: NgbModal) {
     this.getCampaignTargetData();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.getCampaignTargetData();
   }
 
   addCampaignTarget() {
@@ -42,7 +47,7 @@ export class CampaignTargetComponent implements OnInit {
 
   getCampaignTargetData() {
     this.common.loading++;
-    this.api.get('Campaigns/getCampaigns')
+    this.api.get('Campaigns/getCampTarget')
       .subscribe(res => {
         this.common.loading--;
         console.log("api data", res);
