@@ -46,6 +46,7 @@ export class CampaignTargetComponent implements OnInit {
   }
 
   getCampaignTargetData() {
+    this.resetTable();
     this.common.loading++;
     this.api.get('Campaigns/getCampTarget')
       .subscribe(res => {
@@ -123,39 +124,43 @@ export class CampaignTargetComponent implements OnInit {
   actionIcons(campaign) {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
-      { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) }
+      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) }
     ];
     return icons;
   }
 
 
   editCampaign(campaign) {
-    // let campaignEditData = {
-    //   rowId: campaign._campaignid,
-    //   campaignName: campaign.CampaignName,
-    //   productName: campaign.ProductName,
-    //   startTime: campaign._sartdate,
-    //   endTime: campaign._enddate,
-    //   productId: campaign._productid
-    // }
-    // this.common.params = { campaignEditData, title: "Edit Campaign", button: "Edit" };
-    // const activeModal = this.modalService.open(AddNewCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     this.getCampaignTargetData();
-    //   }
-    // });
+    let targetEditData = {
+      rowId: campaign._camptargetid,
+      campaignId: campaign._campid,
+      campaignName: campaign.CampaignName,
+      potential: campaign.Potential,
+      name: campaign.Name,
+      mobile: campaign.MobileNo,
+      locationId: campaign._locationid,
+      locationName: campaign.Location,
+      address: campaign.Address
+
+    }
+    this.common.params = { targetEditData, title: "Edit Target", button: "Edit" };
+    const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignTargetData();
+      }
+    });
   }
 
 
 
   deleteCampaign(row) {
     let params = {
-      campaignId: row._campaignid,
+      campTargetId: row._camptargetid,
     }
-    if (row._campaignid) {
+    if (row._camptargetid) {
       this.common.params = {
-        title: 'Delete Campaign ',
+        title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
       }
 
@@ -163,7 +168,7 @@ export class CampaignTargetComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Campaigns/deleteCampaign', params)
+          this.api.post('Campaigns/removeCampTarget', params)
             .subscribe(res => {
               this.common.loading--;
               this.common.showToast(res['msg']);

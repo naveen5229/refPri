@@ -32,14 +32,25 @@ export class TargetCampaignComponent implements OnInit {
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
 
-    // if (this.common.params && this.common.params.campaignEditData) {
-    //   this.campaignAdd.rowId = this.common.params.campaignEditData.rowId ? this.common.params.campaignEditData.rowId : null;
-    //   this.campaignAdd.name = this.common.params.campaignEditData.campaignName;
-    //   this.campaignAdd.typeId = this.common.params.campaignEditData.productId;
-    //   this.campaignAdd.typeName = this.common.params.campaignEditData.productName;
-    //   this.campaignAdd.startTime = this.common.params.campaignEditData.startTime ? new Date(this.common.params.campaignEditData.startTime) : new Date();
-    //   this.campaignAdd.endTime = this.common.params.campaignEditData.endTime ? new Date(this.common.params.campaignEditData.endTime) : new Date();
-    // }
+    //   rowId: campaign._camptargetid,
+    //   campaignId: campaign._campid,
+    //   campaignName: campaign.CampaignName,
+    //   potential: campaign.Potential,
+    //   name: campaign.Name,
+    //   mobile: campaign.MobileNo,
+    //   locationId: campaign._locationid,
+    //   locationName: campaign.Location,
+    //   address: campaign.Address
+
+
+    //   if (this.common.params && this.common.params.targetEditData) {
+    //     this.target.rowId = this.common.params.targetEditData.rowId ? this.common.params.targetEditData.rowId : null;
+    //     this.target.name = this.common.params.targetEditData.campaignName;
+    //     this.target.typeId = this.common.params.targetEditData.productId;
+    //     this.target.typeName = this.common.params.targetEditData.productName;
+    //     this.target.startTime = this.common.params.targetEditData.startTime ? new Date(this.common.params.targetEditData.startTime) : new Date();
+    //     this.target.endTime = this.common.params.targetEditData.endTime ? new Date(this.common.params.targetEditData.endTime) : new Date();
+    //   }
   }
 
   closeModal() {
@@ -70,7 +81,7 @@ export class TargetCampaignComponent implements OnInit {
       });
   }
   checkValidation() {
-    if (this.target.potential.length > 4) {
+    if (this.target.potential > 4) {
       return this.common.showError("range Between 0 to 9999")
     }
   }
