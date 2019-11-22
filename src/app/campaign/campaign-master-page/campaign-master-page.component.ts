@@ -25,7 +25,14 @@ export class CampaignMasterPageComponent implements OnInit {
   deleteUrl = "CampaignModules/removeProduct";
   deleteParams = {};
   newProduct = "";
-  newAction = ""
+  campaignDataList = [];
+  stateDataList = [];
+  actionDataList = [];
+
+  campaignId = null;
+  stateId = null;
+  actionId = null;
+
   constructor(public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal) {
@@ -39,9 +46,48 @@ export class CampaignMasterPageComponent implements OnInit {
     this.getMasterDyanmicData();
   }
 
+  getcampaignList() {
+    this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
+      console.log("data", res['data']);
+      this.campaignDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  getStateList() {
+    this.api.get("CampaignSuggestion/getStateList").subscribe(res => {
+      console.log("data", res['data']);
+      this.stateDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  getActionList() {
+    this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
+      console.log("data", res['data']);
+      this.actionDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+
   getReportdata(type) {
-    this.url = "";
     this.activeTab = type;
+    this.resetData();
     switch (type) {
       case 'productMaster':
         this.url = "CampaignModules/getProducts";
@@ -59,15 +105,20 @@ export class CampaignMasterPageComponent implements OnInit {
         break;
 
       case 'remarkMaster':
-        console.log('typeof boolean');
+        this.url = "CampaignModules/getRemarks";
+        this.deleteUrl = "CampaignModules/removeRemark";
         break;
 
       case 'campaignState':
-        console.log('typeof boolean');
+        this.url = "Campaigns/getCampStateMapping";
+        this.getcampaignList();
+        this.getStateList();
         break;
 
       case 'campaignAction':
-        console.log('typeof boolean');
+        this.url = "Campaigns/getCampActionMapping";
+        this.getcampaignList();
+        this.getActionList();
         break;
 
     }
@@ -99,7 +150,17 @@ export class CampaignMasterPageComponent implements OnInit {
       });
   }
 
+  resetData() {
+    this.url = "";
+    this.newProduct = "";
+    this.campaignDataList = [];
+    this.stateDataList = [];
+    this.actionDataList = [];
+    this.campaignId = null;
+    this.stateId = null;
+    this.actionId = null;
 
+  }
 
 
   resetTable() {
@@ -184,7 +245,9 @@ export class CampaignMasterPageComponent implements OnInit {
         };
         break;
       case 'remarkMaster':
-        console.log('typeof boolean');
+        this.deleteParams = {
+          remarkId: row._stateid
+        };
         break;
       case 'campaignState':
         console.log('typeof boolean');
@@ -222,13 +285,45 @@ export class CampaignMasterPageComponent implements OnInit {
 
 
   addNewRecord(url) {
+    if (!this.newProduct) return this.common.showError("Please Select Field");
     const params = {
       name: this.newProduct
     };
     this.common.loading++;
     this.api.post(url, params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
+      console.log("data", res['data']);
+      if (res['success'] == true) {
+        this.common.showToast(res['msg']);
+        this.getMasterDyanmicData();
+      }
+      else {
+        this.common.showError(res['msg']);
+      }
+    },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  addCampaignState(url, params, req) {
+    if (!this.campaignId) return this.common.showError("Please Select Campaign");
+    if (!req) return this.common.showError("Please Select " + req);
+
+    this.common.loading++;
+    this.api.post(url, params).subscribe(res => {
+      this.common.loading--;
+      console.log("data", res['data']);
+      if (res['success'] == true) {
+        this.common.showToast(res['msg']);
+        this.getMasterDyanmicData();
+      }
+      else {
+        this.common.showError(res['msg']);
+      }
     },
       err => {
         this.common.loading--;
