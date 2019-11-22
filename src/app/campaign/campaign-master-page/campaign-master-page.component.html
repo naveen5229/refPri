@@ -10,29 +10,76 @@
     <div class="row">
       <div class="tabs_style_main">
         <ul class="tabs_style text-left">
-          <li [ngClass]="activeTab=='productMaster'?'active':''" (click)="activeTab='productMaster'; getTask()">Product
+          <li [ngClass]="activeTab=='productMaster'?'active':''"
+            (click)="activeTab='productMaster'; getReportdata('productMaster')">Product
             Master </li>
-          <li [ngClass]="activeTab=='actionMaster'?'active':''" (click)="activeTab='actionMaster'; getTask()">
+          <li [ngClass]="activeTab=='actionMaster'?'active':''" (click)="activeTab='actionMaster'; getReportdata(
+            'actionMaster')">
             Action Master</li>
-          <li [ngClass]="activeTab=='stateMaster'?'active':''" (click)="activeTab='stateMaster'; getTask()">State Master
+          <li [ngClass]="activeTab=='stateMaster'?'active':''" (click)="activeTab='stateMaster'; getReportdata(
+            'stateMaster')">State Master
           </li>
 
-          <li [ngClass]="activeTab=='remarkMaster'?'active':''" (click)="activeTab='remarkMaster'; getTask()">
+          <li [ngClass]="activeTab=='remarkMaster'?'active':''" (click)="activeTab='remarkMaster'; getReportdata(
+            'remarkMaster')">
             Remark Master</li>
-          <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getTask()">
+          <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getReportdata(
+            'campaignState')">
             Campaign State Mapping</li>
-          <li [ngClass]="activeTab=='campaignAction'?'active':''" (click)="activeTab='campaignAction'; getTask()">
+          <li [ngClass]="activeTab=='campaignAction'?'active':''" (click)="activeTab='campaignAction'; getReportdata(
+            'campaignAction')">
             Campaign Action Mapping</li>
         </ul>
 
       </div>
 
     </div>
+    <div class="mt-2">
+      <div class="row" *ngIf="activeTab=='productMaster'">
+        <div class="col-3">
+          <label>Product Name</label>
+        </div>
+        <div class="col-3">
+          <input type="text" name="addNewProduct" class="form-control" id="addNewProduct" [(ngModel)]="newProduct">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-primary text-capitalize" id="addnew"
+            (click)="addNewRecord('CampaignModules/addProducts')">Add</button>
+        </div>
+      </div>
 
-    <div *ngIf="dis_all == 'dcs'">
-      <smart-table *ngIf="driverData.length" [data]="table.data" [settings]="table.settings" id="tblsuggestions">
+
+      <div class="row" *ngIf="activeTab=='actionMaster'">
+        <div class="col-3">
+          <label>Action Name</label>
+        </div>
+        <div class="col-3">
+          <input type="text" name="newAction" class="form-control" id="newAction" [(ngModel)]="newProduct">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-primary text-capitalize" id="addAction"
+            (click)="addNewRecord('CampaignModules/addAction')">Add</button>
+        </div>
+      </div>
+
+
+      <div class="row" *ngIf="activeTab=='stateMaster'">
+        <div class="col-3">
+          <label>State Name</label>
+        </div>
+        <div class="col-3">
+          <input type="text" name="newState" class="form-control" id="newState" [(ngModel)]="newProduct">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-primary text-capitalize" id="addState"
+            (click)="addNewRecord('CampaignModules/addState')">Add</button>
+        </div>
+      </div>
+      <smart-table *ngIf="productData.length" [data]="table.data" [settings]="table.settings" id="product">
       </smart-table>
     </div>
+
+    <!-- 
 
     <div *ngIf="dis_all == '51'">
       <smart-table *ngIf="onwardDelayData.length" [data]="table2.data" [settings]="table2.settings"
@@ -60,6 +107,6 @@
       <smart-table *ngIf="longUnLoading && longUnLoading.length" [data]="table6.data" [settings]="table6.settings"
         id="tblsuggestions6">
       </smart-table>
-    </div>
+    </div> -->
   </nb-card-body>
 </nb-card>
