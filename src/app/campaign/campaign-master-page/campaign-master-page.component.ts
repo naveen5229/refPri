@@ -24,7 +24,7 @@ export class CampaignMasterPageComponent implements OnInit {
   url = "CampaignModules/getProducts";
   deleteUrl = "CampaignModules/removeProduct";
   deleteParams = {};
-  newProduct = "";
+  newDataName = "";
   campaignDataList = [];
   stateDataList = [];
   actionDataList = [];
@@ -39,6 +39,7 @@ export class CampaignMasterPageComponent implements OnInit {
     this.common.refresh = this.refresh.bind(this);
     this.getMasterDyanmicData();
   }
+
   ngOnInit() {
   }
 
@@ -48,24 +49,21 @@ export class CampaignMasterPageComponent implements OnInit {
 
   getcampaignList() {
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
-      console.log("data", res['data']);
       this.campaignDataList = res['data'];
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
   }
+
   getStateList() {
     this.api.get("CampaignSuggestion/getStateList").subscribe(res => {
-      console.log("data", res['data']);
       this.stateDataList = res['data'];
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
@@ -73,12 +71,10 @@ export class CampaignMasterPageComponent implements OnInit {
 
   getActionList() {
     this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
-      console.log("data", res['data']);
       this.actionDataList = res['data'];
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
@@ -124,11 +120,7 @@ export class CampaignMasterPageComponent implements OnInit {
     }
     this.getMasterDyanmicData();
 
-    console.log("type", type);
-
   }
-
-
 
 
   getMasterDyanmicData() {
@@ -136,30 +128,25 @@ export class CampaignMasterPageComponent implements OnInit {
     this.common.loading++;
     this.api.get(this.url).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
       if (!res['data']) return;
       this.productData = res['data'];
       this.productData.length ? this.setTable() : this.resetTable();
-
-    },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   resetData() {
     this.url = "";
-    this.newProduct = "";
+    this.newDataName = "";
     this.campaignDataList = [];
     this.stateDataList = [];
     this.actionDataList = [];
     this.campaignId = null;
     this.stateId = null;
     this.actionId = null;
-
   }
 
 
@@ -249,13 +236,6 @@ export class CampaignMasterPageComponent implements OnInit {
           remarkId: row._stateid
         };
         break;
-      case 'campaignState':
-        console.log('typeof boolean');
-        break;
-      case 'campaignAction':
-        console.log('typeof boolean');
-        break;
-
     }
 
     if (this.deleteParams) {
@@ -285,9 +265,9 @@ export class CampaignMasterPageComponent implements OnInit {
 
 
   addNewRecord(url) {
-    if (!this.newProduct) return this.common.showError("Please Select Field");
+    if (!this.newDataName) return this.common.showError("Please Select Field");
     const params = {
-      name: this.newProduct
+      name: this.newDataName
     };
     this.common.loading++;
     this.api.post(url, params).subscribe(res => {
@@ -312,11 +292,9 @@ export class CampaignMasterPageComponent implements OnInit {
   addCampaignState(url, params, req) {
     if (!this.campaignId) return this.common.showError("Please Select Campaign");
     if (!req) return this.common.showError("Please Select " + req);
-
     this.common.loading++;
     this.api.post(url, params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data']);
       if (res['success'] == true) {
         this.common.showToast(res['msg']);
         this.getMasterDyanmicData();
@@ -332,5 +310,4 @@ export class CampaignMasterPageComponent implements OnInit {
         console.log('Error: ', err);
       });
   }
-
 }

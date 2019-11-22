@@ -40,7 +40,7 @@
           <label>Product Name</label>
         </div>
         <div class="col-3">
-          <input type="text" name="addNewProduct" class="form-control" id="addNewProduct" [(ngModel)]="newProduct">
+          <input type="text" name="addNewProduct" class="form-control" id="addNewProduct" [(ngModel)]="newDataName">
         </div>
         <div class="col-2">
           <button class="btn btn-primary text-capitalize" id="addnew"
@@ -54,7 +54,7 @@
           <label>Action Name</label>
         </div>
         <div class="col-3">
-          <input type="text" name="newAction" class="form-control" id="newAction" [(ngModel)]="newProduct">
+          <input type="text" name="newAction" class="form-control" id="newAction" [(ngModel)]="newDataName">
         </div>
         <div class="col-2">
           <button class="btn btn-primary text-capitalize" id="addAction"
@@ -68,7 +68,7 @@
           <label>State Name</label>
         </div>
         <div class="col-3">
-          <input type="text" name="newState" class="form-control" id="newState" [(ngModel)]="newProduct">
+          <input type="text" name="state" class="form-control" id="state" [(ngModel)]="newDataName">
         </div>
         <div class="col-2">
           <button class="btn btn-primary text-capitalize" id="addState"
@@ -79,10 +79,10 @@
 
       <div class="row" *ngIf="activeTab=='remarkMaster'">
         <div class="col-3">
-          <label>Remark Name</label>
+          <label>Remark</label>
         </div>
         <div class="col-3">
-          <input type="text" name="newState" class="form-control" id="newState" [(ngModel)]="newProduct">
+          <input type="text" name="remark" class="form-control" id="remark" [(ngModel)]="newDataName">
         </div>
         <div class="col-2">
           <button class="btn btn-primary text-capitalize" id="addState"
