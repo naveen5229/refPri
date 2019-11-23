@@ -1,17 +1,20 @@
 <div class="modal-header">
     <h5 class="modal-title" id="modal-basic-title">Add Component</h5>
     <button type="button" class="close" aria-label="Close" (click)="dismiss()">
-      <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
     </button>
+
 </div>
 <div class="modal-body">
-    <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="component-form" id="component-form" (submit)="formFilling.valid && addComponent()">
+    <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="component-form" id="component-form"
+        (submit)="formFilling.valid && addComponent()">
         <div class="row">
             <div class="col-3">
                 <label>Stack<span class="text-red">*</span></label>
             </div>
             <div class="col-7">
-                <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event.id" name="stack" display="name" placeholder="Enter stack Name" style="width:60%;" autocomplete="off"></auto-suggestion>
+                <auto-suggestion [data]="stacks" (onSelected)="component.stack = $event.id" name="stack" display="name"
+                    placeholder="Enter stack Name" style="width:60%;" autocomplete="off"></auto-suggestion>
             </div>
         </div>
         <div *ngIf="component.stack == null && isFormSubmit" class="err">
@@ -22,7 +25,8 @@
                 <label>Module:<span class="text-red">*</span></label>
             </div>
             <div class="col-7">
-                <auto-suggestion [data]="modules" display="modulename" name="module" placeholder="Enter Module Name" (onSelected)="component.module = $event.module_id" autocomplete="off"></auto-suggestion>
+                <auto-suggestion [data]="modules" display="modulename" name="module" placeholder="Enter Module Name"
+                    (onSelected)="component.module = $event.module_id" autocomplete="off"></auto-suggestion>
             </div>
         </div>
         <div *ngIf="component.module==null && isFormSubmit" class="err">
@@ -33,17 +37,20 @@
                 <label>component Name:<span class="text-red">*</span></label>
             </div>
             <div class="col-7 ml-1">
-                <input type="text" class="form-control" name="component" id="component" [(ngModel)]="component.name" placeholder="Enter Name" autocomplete="off" #componentName="ngModel" autocomplete="off" required>
+                <input type="text" class="form-control" name="component" id="component" [(ngModel)]="component.name"
+                    placeholder="Enter Name" autocomplete="off" #componentName="ngModel" autocomplete="off" required>
             </div>
         </div>
         <div *ngIf="isFormSubmit && componentName.errors" class="err">
-            <span class="text-red" style="margin-left: 126px;" [hidden]="!componentName.errors.required"> value is mandatory </span>
+            <span class="text-red" style="margin-left: 126px;" [hidden]="!componentName.errors.required"> value is
+                mandatory </span>
         </div>
     </form>
 </div>
 
 <div class="modal-footer">
     <div class="col text-right">
-        <button class="btn btn-primary" type='submit' id='submit' form="component-form" (click)="isFormSubmit = true" style="cursor: pointer;">submit</button>
+        <button class="btn btn-primary" type='submit' id='submit' form="component-form" (click)="isFormSubmit = true"
+            style="cursor: pointer;">submit</button>
     </div>
 </div>

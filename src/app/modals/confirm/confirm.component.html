@@ -1,8 +1,8 @@
 <div class="modal-header">
     <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false,-1)">
-  <span aria-hidden="true">&times;</span>
-</button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body">
     <div class="container">
@@ -14,10 +14,12 @@
     <div class="row p-0">
         <div class="col-6">
 
-            <button class="btn btn-danger" type="button" outline (click)="closeModal(false,0)" id="cancel" style="cursor: pointer;">{{btn2}}</button>
+            <button class="btn btn-danger" type="button" outline (click)="closeModal(false,0)" id="cancel"
+                style="cursor: pointer;">{{btn2}}</button>
         </div>
         <div class="col-6 text-right">
-            <button class="btn btn-primary" type="button" outline (click)="closeModal(true,1)" id="submit" style="cursor: pointer;">{{btn1}}</button>
+            <button class="btn btn-primary" type="button" outline (click)="closeModal(true,1)" id="submit"
+                style="cursor: pointer;">{{btn1}}</button>
         </div>
     </div>
 </div>

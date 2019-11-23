@@ -1,0 +1,133 @@
+<div class="modal-header">
+  <h5>{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-3">
+        <label>Campaign Name : </label>
+        <label> <b>{{targetAction.campaignName}}</b></label>
+      </div>
+      <div class="col-md-2">
+        <label>Name : </label>
+        <label> <b>{{targetAction.name}} </b></label>
+      </div>
+      <div class="col-md-4">
+        <label>Location : </label>
+        <label><b>{{targetAction.locationName}}</b></label>
+      </div>
+      <div class="col-md-2">
+        <label>Mobile : </label>
+        <label><b>{{targetAction.mobile}}</b></label>
+      </div>
+    </div>
+
+
+    <div class="row mt-2">
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-3">
+            <label>State</label>
+          </div>
+          <div class="col-md-9">
+            <auto-suggestion [data]="stateDataList" display="name" placeholder="State Name" name="stateName"
+              inputId="stateId" (onChange)="unselected('stateId')" (onSelected)="targetAction.stateId=($event.id)"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Action</label>
+          </div>
+          <div class="col-md-9">
+            <auto-suggestion [data]="actionDataList" display="name" placeholder="Action Name" name="actionName"
+              inputId="actionId" (onChange)="unselected('actionId')" (onSelected)="targetAction.actionId=($event.id)"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-4">
+            <label>Next Action</label>
+          </div>
+          <div class="col-md-8">
+            <auto-suggestion [data]="actionDataList" display="name" placeholder="Next Action Name" name="nextactionName"
+              inputId="nextActionId" (onChange)="unselected('nextActionId')"
+              (onSelected)="targetAction.nextActionId=($event.id)" autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Standard Remark </label>
+          </div>
+          <div class="col-md-9">
+            <auto-suggestion [data]="remarkDataList" display="name" placeholder="Remark" name="standard" id="standard"
+              autocomplete="off" isMultiSelect="true" (onSelected)="selectStandardRemarks($event)">
+            </auto-suggestion>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Remark</label>
+          </div>
+          <div class="col-md-9">
+            <textarea name="remark" cols="5" rows="5" class="form-control" [(ngModel)]="targetAction.remark"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-4">
+            <label>Next Action Target Time</label>
+          </div>
+          <div class="col-md-8">
+            <uj-date-time-picker (onChanged)="targetAction.targetTime = $event"
+              [dateTimeValue]="targetAction.targetTime" [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row footer">
+    <div class="col ">
+      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary" type='submit' id="save" (click)="saveCampaignTargetAction()">{{button}}</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-footer">
+  <div class="row">
+    <div class="mt-2">
+      <smart-table *ngIf="campaignTargetActionData.length" [data]="table.data" [settings]="table.settings">
+      </smart-table>
+    </div>
+  </div>
+
+</div>

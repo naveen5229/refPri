@@ -5,20 +5,20 @@ import { AutoSuggestionComponent } from './auto-suggestion/auto-suggestion.compo
 import { DateTimePickerComponent } from './date-time-picker/date-time-picker.component';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { MonthPickerComponent } from './month-picker/month-picker.component';
-import { SmartTabelComponent } from './smart-tabel/smart-tabel.component';
+import { SmartTableComponent } from './smart-table/smart-table.component';
 
 @NgModule({
-   imports: [CommonModule, FormsModule, ReactiveFormsModule,DateInputsModule],
-   exports: [
-       CommonModule,
-       FormsModule,
-       AutoSuggestionComponent,
-       DateTimePickerComponent,
-       MonthPickerComponent,
-       SmartTabelComponent
-   ],
-   declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTabelComponent ],
-   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-   providers: [],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DateInputsModule],
+    exports: [
+        CommonModule,
+        FormsModule,
+        AutoSuggestionComponent,
+        DateTimePickerComponent,
+        MonthPickerComponent,
+        SmartTableComponent
+    ],
+    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    providers: [],
 })
 export class DirectiveModule { }

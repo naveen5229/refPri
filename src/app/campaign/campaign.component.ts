@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
-import { MENU_ITEMS } from './pages-menu';
+import { MENU_ITEMS } from './campaign-menu';
 
 @Component({
   selector: 'ngx-pages',
-  styleUrls: ['pages.component.scss'],
+  styleUrls: ['campaign.component.scss'],
   template: `
     <ngx-one-column-layout>
       <nb-menu [items]="menu" autoCollapse="true"></nb-menu>
@@ -12,7 +12,7 @@ import { MENU_ITEMS } from './pages-menu';
     </ngx-one-column-layout>
   `,
 })
-export class PagesComponent {
+export class CampaignComponent {
 
   menu = MENU_ITEMS;
 }

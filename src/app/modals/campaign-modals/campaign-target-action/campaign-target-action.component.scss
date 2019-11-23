@@ -1,0 +1,52 @@
+.col-md-3,
+.col-md-2 {
+  padding: 0px;
+  margin: 0px;
+}
+.container {
+  padding: 0px;
+}
+
+:host ::ng-deep .fa-trash-alt {
+  color: red;
+  font-size: 18px;
+  span {
+    position: absolute;
+    display: none;
+    padding: 10px 27px;
+    font-weight: normal;
+    font-size: 11px;
+    left: -10px;
+    top: -28px;
+    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    font-family: Roboto;
+    z-index: 9999;
+  }
+  span::before {
+    content: "Delete";
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: red;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #fff;
+    width: 100%;
+  }
+  span::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid red;
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+  }
+}
+:host ::ng-deep .fa-trash-alt:hover span {
+  display: block;
+}

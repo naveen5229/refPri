@@ -22,16 +22,18 @@ import { ComponentReportComponent } from './component-report/component-report.co
 import { SegmentStackReportComponent } from './segment-stack-report/segment-stack-report.component';
 import { ModuleReportComponent } from './module-report/module-report.component';
 import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employee-daywise-report.component';
+import { CampaignModule } from '../campaign/campaign.module';
 
 @NgModule({
   imports: [
     PagesRoutingModule,
     ThemeModule,
     NbMenuModule,
-    DashboardModule,
     NbCardModule,
     FormsModule,
-    DirectiveModule
+    DirectiveModule,
+    DashboardModule,
+    CampaignModule,
   ],
   declarations: [
     PagesComponent,
