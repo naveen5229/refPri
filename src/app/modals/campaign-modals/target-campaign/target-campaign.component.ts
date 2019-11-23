@@ -87,7 +87,8 @@ export class TargetCampaignComponent implements OnInit {
       });
   }
   checkValidation() {
-    if (this.target.potential > 4) {
+    console.log("Validation", this.target.potential);
+    if (`${this.target.potential}`.length > 4) {
       return this.common.showError("range Between 0 to 9999")
     }
   }
