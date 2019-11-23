@@ -12,7 +12,8 @@
       </div>
       <div class="col-6">
         <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName"
-          id="campaignName" (onSelected)="target.campaignId=($event.id)" autocomplete="off">
+          id="campaignName" (onSelected)="target.campaignId=($event.id)" [preSelected]="{name:target.campaignName}"
+          autocomplete="off">
         </auto-suggestion>
       </div>
     </div>
@@ -52,7 +53,8 @@
       </div>
       <div class="col-6">
         <auto-suggestion [data]="locationDataList" display="location" placeholder="Location" name="location"
-          id="location" (onSelected)="target.locationId=($event.id)" autocomplete="off">
+          id="location" (onSelected)="target.locationId=($event.id)" [preSelected]="{location:target.locationName}"
+          autocomplete="off">
         </auto-suggestion>
       </div>
     </div>

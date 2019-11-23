@@ -15,10 +15,12 @@ export class TargetCampaignComponent implements OnInit {
   target = {
     rowId: null,
     campaignId: null,
+    campaignName: "",
     name: "",
     mobile: null,
     potential: null,
     locationId: null,
+    locationName: "",
     address: "",
   }
   campaignDataList = [];
@@ -31,7 +33,7 @@ export class TargetCampaignComponent implements OnInit {
     this.getLocationList();
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
-
+    console.log(">>>>>>>>>?", this.common.params.targetEditData);
     //   rowId: campaign._camptargetid,
     //   campaignId: campaign._campid,
     //   campaignName: campaign.CampaignName,
@@ -43,14 +45,18 @@ export class TargetCampaignComponent implements OnInit {
     //   address: campaign.Address
 
 
-    //   if (this.common.params && this.common.params.targetEditData) {
-    //     this.target.rowId = this.common.params.targetEditData.rowId ? this.common.params.targetEditData.rowId : null;
-    //     this.target.name = this.common.params.targetEditData.campaignName;
-    //     this.target.typeId = this.common.params.targetEditData.productId;
-    //     this.target.typeName = this.common.params.targetEditData.productName;
-    //     this.target.startTime = this.common.params.targetEditData.startTime ? new Date(this.common.params.targetEditData.startTime) : new Date();
-    //     this.target.endTime = this.common.params.targetEditData.endTime ? new Date(this.common.params.targetEditData.endTime) : new Date();
-    //   }
+    if (this.common.params && this.common.params.targetEditData) {
+      this.target.rowId = this.common.params.targetEditData.rowId ? this.common.params.targetEditData.rowId : null;
+      this.target.campaignId = this.common.params.targetEditData.campaignId ? this.common.params.targetEditData.campaignId : null;
+      this.target.campaignName = this.common.params.targetEditData.campaignName;
+      this.target.name = this.common.params.targetEditData.name;
+      this.target.potential = this.common.params.targetEditData.potential;
+      this.target.mobile = this.common.params.targetEditData.mobile;
+      this.target.locationId = this.common.params.targetEditData.locationId;
+      this.target.locationName = this.common.params.targetEditData.locationName;
+      this.target.address = this.common.params.targetEditData.address;
+
+    }
   }
 
   closeModal() {
@@ -89,27 +95,15 @@ export class TargetCampaignComponent implements OnInit {
   saveCampaignTarget() {
     if (!this.target.campaignId || !this.target.name || !this.target.mobile) return this.common.showError("Please Fill Require Field");
 
-    let params = {};
-    if (this.target.rowId) {
-      // params = {
-      //   campaignId: this.campaignAdd.rowId,
-      //   campaignName: this.campaignAdd.name,
-      //   productType: this.campaignAdd.typeId,
+    const params = {
+      campTargetId: this.target.rowId ? this.target.rowId : null,
+      campaignId: this.target.campaignId,
+      name: this.target.name,
+      mobileNo: this.target.mobile,
+      potential: this.target.potential,
+      locationId: this.target.locationId,
+      address: this.target.address,
 
-
-      // };
-      // url = "Campaigns/updateCampaign";
-    } else {
-      params = {
-        campTargetId: this.target.rowId,
-        campaignId: this.target.campaignId,
-        name: this.target.name,
-        mobileNo: this.target.mobile,
-        potential: this.target.potential,
-        locationId: this.target.locationId,
-        address: this.target.address,
-
-      }
     }
 
     this.common.loading++;

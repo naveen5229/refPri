@@ -83,3 +83,45 @@ input::placeholder {
   outline: none;
   font-size: 30px;
 }
+
+.control-icon.nb-notifications::before {
+  content: "\f0f3";
+  display: block;
+  font-family: "FontAwesome";
+  font-size: 22px;
+  margin-top: 5px;
+}
+
+.fas.fa-file-invoice:before,
+.fas.fa-weight-hanging::before,
+.fas.fa-file-invoice-dollar:before,
+.fas.fa-ticket-alt:before,
+.fas.fa-money-check-alt:before,
+.fas.fa-clipboard-check::before,
+.fas.fa-receipt::before,
+.fas.fa-coins::before,
+.fas.fa-user-cog::before,
+.fas.fa-gas-pump::before,
+.fas.fa-warehouse::before,
+.fas.fa-traffic-light::before,
+.fas.fa-city::before,
+.fas.fa-route::before,
+.fas.fa-file-signature::before,
+.fas.fa-sync-alt::before,
+.fas.fa-map-marked-alt::before,
+.fas.fa-comment-dots::before,
+.fas.fa-address-card::before,
+.fas.fa-file-alt::before,
+.fas.fa-map-marked-alt::before,
+.fas.fa-map-pin::before,
+.fas.fa-info-circle::before,
+.fas.fa-tools::before,
+.fas.fa-badge-check::before,
+.fas.fa-map-marked::before,
+.fas.fa-truck-pickup::before,
+.fas.fa-tachometer-alt::before,
+.fas.fa-chess-king::before,
+.fas.fa-briefcase::before,
+.fas.fa-car-battery::before {
+  font-family: inherit;
+}
