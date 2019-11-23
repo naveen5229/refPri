@@ -4,10 +4,10 @@
   span {
     position: absolute;
     display: none;
-    padding: 10px 36px;
+    padding: 10px 24px;
     font-weight: normal;
     font-size: 11px;
-    left: -26px;
+    left: -12px;
     top: -28px;
     -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
     box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
@@ -48,10 +48,10 @@
   span {
     position: absolute;
     display: none;
-    padding: 10px 36px;
+    padding: 10px 27px;
     font-weight: normal;
     font-size: 11px;
-    left: -26px;
+    left: -10px;
     top: -28px;
     -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
     box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
@@ -87,6 +87,6 @@
 }
 
 :host ::ng-deep .blue {
-  color: blue;
-  font-size: 1em;
+  color: #0606e3;
+  font-size: 16px;
 }

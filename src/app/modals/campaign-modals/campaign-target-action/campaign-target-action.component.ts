@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 @Component({
   selector: 'ngx-campaign-target-action',
@@ -29,10 +30,22 @@ export class CampaignTargetActionComponent implements OnInit {
   stateDataList = [];
   actionDataList = [];
   remarkDataList = [];
+
+  campaignTargetActionData = [];
+  table = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
   constructor(public common: CommonService,
     public api: ApiService,
-    public activeModal: NgbActiveModal) {
-    this.common.handleModalSize('class', 'modal-lg', '1200', 'px');
+    public activeModal: NgbActiveModal,
+    public modalService: NgbModal) {
+    this.common.handleModalSize('class', 'modal-lg', '1300', 'px');
     this.getStateList();
     this.getActionList();
     this.getRemarkList();
@@ -47,7 +60,8 @@ export class CampaignTargetActionComponent implements OnInit {
       this.targetAction.locationId = this.common.params.targetActionData.locationId;
       this.targetAction.locationName = this.common.params.targetActionData.locationName;
 
-    }
+    };
+    this.getTargetActionData();
   }
 
   closeModal() {
@@ -91,6 +105,13 @@ export class CampaignTargetActionComponent implements OnInit {
       });
   }
 
+  unselected(variable) {
+    if (this.targetAction[variable]) {
+      document.getElementById(variable)['value'] = '';
+      this.targetAction[variable] = null;
+    }
+  }
+
 
   selectStandardRemarks(event) {
     console.log("event", event);
@@ -131,6 +152,122 @@ export class CampaignTargetActionComponent implements OnInit {
         this.common.loading--;
         console.log(err);
       });
+  }
+
+
+
+  getTargetActionData() {
+    this.resetTable();
+    this.common.loading++;
+    this.api.get('Campaigns/getCampTarget')
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+        if (!res['data']) return;
+        this.campaignTargetActionData = res['data'];
+        this.campaignTargetActionData.length ? this.setTable() : this.resetTable();
+
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+  }
+
+
+
+  resetTable() {
+    this.table.data = {
+      headings: {},
+      columns: []
+    };
+  }
+
+  setTable() {
+    this.table.data = {
+      headings: this.generateHeadings(),
+      columns: this.getTableColumns()
+    };
+    return true;
+  }
+
+  generateHeadings() {
+    let headings = {};
+    for (var key in this.campaignTargetActionData[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  formatTitle(strval) {
+    let pos = strval.indexOf('_');
+    if (pos > 0) {
+      return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+    } else {
+      return strval.charAt(0).toUpperCase() + strval.substr(1);
+    }
+  }
+
+
+  getTableColumns() {
+    let columns = [];
+    this.campaignTargetActionData.map(campaign => {
+      let column = {};
+      for (let key in this.generateHeadings()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: false,
+            action: null,
+            icons: this.actionIcons(campaign)
+          };
+        } else {
+          column[key] = { value: campaign[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    })
+
+    return columns;
+  }
+
+  actionIcons(campaign) {
+    let icons = [
+      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) }
+    ];
+    return icons;
+  }
+
+
+
+
+  deleteCampaign(row) {
+    let params = {
+      campTarActId: row._camptargetid,
+    }
+    if (row._camptargetid) {
+      this.common.params = {
+        title: 'Delete Record',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Campaigns/removeCampTarget', params)
+            .subscribe(res => {
+              this.common.loading--;
+              this.common.showToast(res['msg']);
+              this.getTargetActionData();
+            }, err => {
+              this.common.loading--;
+              console.log('Error: ', err);
+            });
+        }
+      });
+    }
   }
 
 
