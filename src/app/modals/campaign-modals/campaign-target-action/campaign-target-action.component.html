@@ -9,20 +9,20 @@
 
     <div class="row">
       <div class="col-md-3">
-        <label>Campaign Name : </label>
-        <label> <b>{{targetAction.campaignName}}</b></label>
+        <label><b>Campaign Name : </b> </label>
+        <label> {{ targetAction.campaignName}}</label>
       </div>
       <div class="col-md-2">
-        <label>Name : </label>
-        <label> <b>{{targetAction.name}} </b></label>
+        <label> <b>Name : </b></label>
+        <label> {{ targetAction.name}} </label>
       </div>
       <div class="col-md-4">
-        <label>Location : </label>
-        <label><b>{{targetAction.locationName}}</b></label>
+        <label><b> Location : </b> </label>
+        <label>{{ targetAction.locationName}}</label>
       </div>
       <div class="col-md-2">
-        <label>Mobile : </label>
-        <label><b>{{targetAction.mobile}}</b></label>
+        <label> <b>Mobile : </b> </label>
+        <label>{{ targetAction.mobile}}</label>
       </div>
     </div>
 
@@ -78,8 +78,8 @@
             <label>Standard Remark </label>
           </div>
           <div class="col-md-9">
-            <auto-suggestion [data]="remarkDataList" display="name" placeholder="Remark" name="standard" id="standard"
-              autocomplete="off" isMultiSelect="true" (onSelected)="selectStandardRemarks($event)">
+            <auto-suggestion [data]="remarkDataList" display="name" placeholder="Remark" name="standard"
+              inputId="standard" autocomplete="off" isMultiSelect="true" (onSelected)="selectStandardRemarks($event)">
             </auto-suggestion>
           </div>
         </div>
@@ -111,11 +111,10 @@
     </div>
 
   </div>
-  <div class="row footer">
-    <div class="col ">
-      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
-    </div>
-    <div class="col text-right">
+  <div class="row">
+    <div class="col-md-11 text-right">
+
+      <button class="btn btn-danger mr-3" type="button" id="cancel " (click)="closeModal()">Cancel</button>
       <button class="btn btn-primary" type='submit' id="save" (click)="saveCampaignTargetAction()">{{button}}</button>
     </div>
   </div>

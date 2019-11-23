@@ -20,8 +20,8 @@
       </div>
       <div class="col-6">
         <auto-suggestion [data]="productTypeLis" display="name" placeholder="Product Type" name="productType"
-          id="productType" (onSelected)="campaignAdd.typeId=($event.id)" [preSelected]="{name:campaignAdd.typeName}"
-          autocomplete="off">
+          id="productType" (onChange)="unselected('typeId')" (onSelected)="campaignAdd.typeId=($event.id)"
+          [preSelected]="{name:campaignAdd.typeName}" autocomplete="off">
         </auto-suggestion>
       </div>
     </div>
