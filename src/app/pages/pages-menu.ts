@@ -107,7 +107,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: "Campaign",
-    icon: 'briefcase-outline',
+    icon: 'layers-outline',
     home: true,
     children: [
       {
@@ -117,13 +117,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
         home: true,
       }, {
         title: 'Campagin Master',
-        icon: 'shopping-cart-outline',
+        icon: 'grid-outline',
         link: '/pages/campaign-master-page',
         home: true,
       },
       {
         title: 'Campagin Target',
-        icon: 'shopping-cart-outline',
+        icon: 'award-outline',
         link: '/pages/campaign-target',
         home: true,
       },
