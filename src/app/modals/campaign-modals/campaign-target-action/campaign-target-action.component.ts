@@ -46,9 +46,7 @@ export class CampaignTargetActionComponent implements OnInit {
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
     this.common.handleModalSize('class', 'modal-lg', '1300', 'px');
-    this.getStateList();
-    this.getActionList();
-    this.getRemarkList();
+
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     if (this.common.params && this.common.params.targetActionData) {
@@ -61,6 +59,9 @@ export class CampaignTargetActionComponent implements OnInit {
       this.targetAction.locationName = this.common.params.targetActionData.locationName;
 
     };
+    this.getStateList();
+    this.getActionList();
+    this.getRemarkList();
     this.getTargetActionData();
   }
 
@@ -72,7 +73,7 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   getStateList() {
-    this.api.get("CampaignSuggestion/getStateList").subscribe(res => {
+    this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
       this.stateDataList = res['data'];
     },
       err => {
@@ -83,7 +84,7 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   getActionList() {
-    this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
+    this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
       this.actionDataList = res['data'];
     },
       err => {

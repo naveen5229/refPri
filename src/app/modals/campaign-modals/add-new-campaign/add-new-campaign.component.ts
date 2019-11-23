@@ -17,7 +17,7 @@ export class AddNewCampaignComponent implements OnInit {
     typeId: null,
     typeName: null,
     startTime: new Date(),
-    endTime: new Date()
+    endTime: null
   }
 
   productTypeLis = [];
@@ -57,15 +57,26 @@ export class AddNewCampaignComponent implements OnInit {
         console.log(err);
       });
   }
+  unselected(variable) {
+    if (this.campaignAdd[variable]) {
+      document.getElementById(variable)['value'] = '';
+      this.campaignAdd[variable] = null;
+    }
+  }
 
   savecampaign() {
     let url = "Campaigns/addCampaign";
-    if (this.campaignAdd.endTime < this.campaignAdd.startTime) {
-      this.common.showError("Date in Invalid");
-      return;
+    if (this.campaignAdd.endTime) {
+      if (this.campaignAdd.endTime < this.campaignAdd.startTime) {
+        this.common.showError("EndDate not less then Start Date");
+        return;
+      }
     }
+    if (!this.campaignAdd.name) return this.common.showError("Please Select Campaign Name");
+    if (!this.campaignAdd.typeId) return this.common.showError("Please Select Product Type");
+
     let startDate = this.common.dateFormatter(this.campaignAdd.startTime);
-    let endDate = this.common.dateFormatter(this.campaignAdd.endTime);
+    let endDate = this.campaignAdd.endTime ? this.common.dateFormatter(this.campaignAdd.endTime) : null;
     let params = {};
     if (this.campaignAdd.rowId) {
       params = {

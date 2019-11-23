@@ -7,6 +7,10 @@
   padding: 0px;
 }
 
+:host ::ng-deep .tableFixHead {
+  height: auto !important;
+}
+
 :host ::ng-deep .fa-trash-alt {
   color: red;
   font-size: 18px;
