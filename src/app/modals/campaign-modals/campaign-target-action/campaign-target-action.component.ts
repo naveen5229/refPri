@@ -143,7 +143,8 @@ export class CampaignTargetActionComponent implements OnInit {
         console.log(res);
         if (res['success'] == true) {
           this.common.showToast(res['msg']);
-          this.activeModal.close({ response: true });
+          this.getTargetActionData();
+          this.resetData();
         } else {
           this.common.showError(res['msg']);
 
@@ -159,7 +160,7 @@ export class CampaignTargetActionComponent implements OnInit {
   getTargetActionData() {
     this.resetTable();
     this.common.loading++;
-    this.api.get('Campaigns/getCampTarget')
+    this.api.get('Campaigns/getCampTarAction')
       .subscribe(res => {
         this.common.loading--;
         console.log("api data", res);
@@ -244,9 +245,9 @@ export class CampaignTargetActionComponent implements OnInit {
 
   deleteCampaign(row) {
     let params = {
-      campTarActId: row._camptargetid,
+      campTarActId: row._camptaractid,
     }
-    if (row._camptargetid) {
+    if (row._camptaractid) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -256,7 +257,7 @@ export class CampaignTargetActionComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Campaigns/removeCampTarget', params)
+          this.api.post('Campaigns/removeCampTarAction', params)
             .subscribe(res => {
               this.common.loading--;
               this.common.showToast(res['msg']);
@@ -270,5 +271,20 @@ export class CampaignTargetActionComponent implements OnInit {
     }
   }
 
+
+  resetData() {
+    this.targetAction.campaignId = null;
+    this.targetAction.stateId = null;
+    this.targetAction.actionId = null;
+    this.targetAction.nextActionId = null;
+    this.targetAction.standardRemarkId = [];
+    this.targetAction.remark = "";
+    this.targetAction.targetTime = new Date();
+    document.getElementById('stateId')['value'] = '';
+    document.getElementById('actionId')['value'] = '';
+    document.getElementById('nextActionId')['value'] = '';
+    document.getElementById('standard')['value'] = '';
+
+  }
 
 }
