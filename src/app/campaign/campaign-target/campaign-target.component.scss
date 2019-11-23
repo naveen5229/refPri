@@ -85,3 +85,8 @@
 :host ::ng-deep .fa-trash-alt:hover span {
   display: block;
 }
+
+:host ::ng-deep .blue {
+  color: blue;
+  font-size: 1em;
+}

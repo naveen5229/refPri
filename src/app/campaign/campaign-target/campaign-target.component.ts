@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
+import { CampaignTargetActionComponent } from '../../modals/campaign-modals/campaign-target-action/campaign-target-action.component';
 
 @Component({
   selector: 'ngx-campaign-target',
@@ -111,6 +112,8 @@ export class CampaignTargetComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
+        } else if (key == 'CampaignName') {
+          column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
@@ -151,6 +154,31 @@ export class CampaignTargetComponent implements OnInit {
       }
     });
   }
+
+
+  targetAction(campaign) {
+    let targetActionData = {
+      rowId: campaign._camptargetid,
+      campaignId: campaign._campid,
+      campaignName: campaign.CampaignName,
+      potential: campaign.Potential,
+      name: campaign.Name,
+      mobile: campaign.MobileNo,
+      locationId: campaign._locationid,
+      locationName: campaign.Location,
+      address: campaign.Address
+
+    };
+
+    this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add" };
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignTargetData();
+      }
+    });
+  }
+
 
 
 

@@ -41,37 +41,29 @@ import { WorklogsWithResUserComponent } from './modals/worklogs-with-res-user/wo
 import { StackReportComponent } from './modals/stack-report/stack-report.component';
 import { AddNewCampaignComponent } from './modals/campaign-modals/add-new-campaign/add-new-campaign.component';
 import { TargetCampaignComponent } from './modals/campaign-modals/target-campaign/target-campaign.component';
+import { CampaignTargetActionComponent } from './modals/campaign-modals/campaign-target-action/campaign-target-action.component';
+
+const PAGE_COMPONENTS = [
+  WorkLogComponent,
+  TaskAssignUserComponent,
+  AddComponentComponent,
+  TaskStatusCheckComponent,
+  ConfirmComponent,
+  ListOfEmployeeComponent,
+  AddSegmentComponent,
+  WorklogsWithResUserComponent,
+  StackReportComponent,
+  AddNewCampaignComponent,
+  TargetCampaignComponent,
+  CampaignTargetActionComponent,
+];
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
-    WorkLogComponent,
-    TaskAssignUserComponent,
-    AddComponentComponent,
-    TaskStatusCheckComponent,
-    ConfirmComponent,
-    ListOfEmployeeComponent,
-    AddSegmentComponent,
-    WorklogsWithResUserComponent,
-    StackReportComponent,
-    AddNewCampaignComponent,
-    TargetCampaignComponent,
+    ...PAGE_COMPONENTS
   ],
-  entryComponents: [
-    WorkLogComponent,
-    TaskAssignUserComponent,
-    AddComponentComponent,
-    TaskStatusCheckComponent,
-    ConfirmComponent,
-    ListOfEmployeeComponent,
-    AddSegmentComponent,
-    WorklogsWithResUserComponent,
-    StackReportComponent,
-    AddNewCampaignComponent,
-    TargetCampaignComponent,
-
-
-  ],
+  entryComponents: [...PAGE_COMPONENTS],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

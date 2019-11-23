@@ -34,16 +34,6 @@ export class TargetCampaignComponent implements OnInit {
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     console.log(">>>>>>>>>?", this.common.params.targetEditData);
-    //   rowId: campaign._camptargetid,
-    //   campaignId: campaign._campid,
-    //   campaignName: campaign.CampaignName,
-    //   potential: campaign.Potential,
-    //   name: campaign.Name,
-    //   mobile: campaign.MobileNo,
-    //   locationId: campaign._locationid,
-    //   locationName: campaign.Location,
-    //   address: campaign.Address
-
 
     if (this.common.params && this.common.params.targetEditData) {
       this.target.rowId = this.common.params.targetEditData.rowId ? this.common.params.targetEditData.rowId : null;
