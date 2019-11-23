@@ -12,22 +12,22 @@
         <label>Campaign Name :</label>
         <label> <b>{{targetAction.campaignName}}</b></label>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <label>Name :</label>
         <label> <b>{{targetAction.name}} </b></label>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label>Location : </label>
         <label><b>{{targetAction.locationName}}</b></label>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <label>Mobile :</label>
         <label><b>{{targetAction.mobile}}</b></label>
       </div>
     </div>
 
 
-    <div class="row">
+    <div class="row mt-2">
       <div class="col-md-4">
         <div class="row">
           <div class="col-md-3">
@@ -56,10 +56,10 @@
 
       <div class="col-md-4">
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label>Next Action</label>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-8">
             <auto-suggestion [data]="actionDataList" display="name" placeholder="Action Name" name="actionName"
               id="actionName" (onSelected)="targetAction.nextActionId=($event.id)" autocomplete="off">
             </auto-suggestion>
@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-2">
       <div class="col-md-4">
         <div class="row">
           <div class="col-md-3">

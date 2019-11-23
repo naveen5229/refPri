@@ -95,7 +95,7 @@ export class CampaignTargetActionComponent implements OnInit {
   selectStandardRemarks(event) {
     console.log("event", event);
     if (event && event.length) {
-      this.targetAction.standardRemarkId = event.map(user => { return { assignee_id: user.id } });
+      this.targetAction.standardRemarkId = event.map(remark => { return { remarkId: remark.id } });
       console.log("ID", this.targetAction.standardRemarkId);
     }
 
