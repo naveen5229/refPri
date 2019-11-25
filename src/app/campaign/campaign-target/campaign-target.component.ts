@@ -212,7 +212,7 @@ export class CampaignTargetComponent implements OnInit {
   }
   uploadDataByCsv() {
     this.common.params = { title: "CSV", button: "Upload" };
-    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getCampaignTargetData();

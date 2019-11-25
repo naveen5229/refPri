@@ -43,6 +43,7 @@ import { AddNewCampaignComponent } from './modals/campaign-modals/add-new-campai
 import { TargetCampaignComponent } from './modals/campaign-modals/target-campaign/target-campaign.component';
 import { CampaignTargetActionComponent } from './modals/campaign-modals/campaign-target-action/campaign-target-action.component';
 import { CsvUploadComponent } from './modals/csv-upload/csv-upload.component';
+import { DataMappingComponent } from './modals/campaign-modals/data-mapping/data-mapping.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -57,7 +58,8 @@ const PAGE_COMPONENTS = [
   AddNewCampaignComponent,
   TargetCampaignComponent,
   CampaignTargetActionComponent,
-  CsvUploadComponent
+  CsvUploadComponent,
+  DataMappingComponent,
 ];
 
 @NgModule({

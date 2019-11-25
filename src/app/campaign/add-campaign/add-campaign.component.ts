@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddNewCampaignComponent } from '../../modals/campaign-modals/add-new-campaign/add-new-campaign.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
 
 @Component({
   selector: 'ngx-add-campaign',
@@ -119,7 +120,10 @@ export class AddCampaignComponent implements OnInit {
   actionIcons(campaign) {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
-      { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) }
+      { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) },
+      { class: 'fas fa-grip-horizontal ml-3', action: this.stateMapping.bind(this, campaign) },
+      { class: 'fas fa-grip-horizontal ml-3', action: this.actionMapping.bind(this, campaign) },
+
     ];
     return icons;
   }
@@ -173,6 +177,31 @@ export class AddCampaignComponent implements OnInit {
     }
   }
 
+  stateMapping() {
+    const data = {
+      apiUrl: "CampaignSuggestion/getStateList"
+    }
+    this.common.params = { data, title: "State Mapping", button: "Add" };
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignData();
+      }
+    });
+  }
 
+
+  actionMapping() {
+    const data = {
+      apiUrl: "CampaignSuggestion/getStateList"
+    }
+    this.common.params = { data, title: "Action Mapping", button: "Add" };
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignData();
+      }
+    });
+  }
 
 }

@@ -22,6 +22,7 @@ export class CsvUploadComponent implements OnInit {
     public modalSService: NgbModal) {
     this.title = this.common.params.title;
     this.button = this.common.params.button;
+    this.common.handleModalSize('class', 'modal-lg', '400', 'px');
 
   }
 
