@@ -42,6 +42,7 @@ import { StackReportComponent } from './modals/stack-report/stack-report.compone
 import { AddNewCampaignComponent } from './modals/campaign-modals/add-new-campaign/add-new-campaign.component';
 import { TargetCampaignComponent } from './modals/campaign-modals/target-campaign/target-campaign.component';
 import { CampaignTargetActionComponent } from './modals/campaign-modals/campaign-target-action/campaign-target-action.component';
+import { CsvUploadComponent } from './modals/csv-upload/csv-upload.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -56,12 +57,13 @@ const PAGE_COMPONENTS = [
   AddNewCampaignComponent,
   TargetCampaignComponent,
   CampaignTargetActionComponent,
+  CsvUploadComponent
 ];
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
-    ...PAGE_COMPONENTS
+    ...PAGE_COMPONENTS,
   ],
   entryComponents: [...PAGE_COMPONENTS],
   imports: [

@@ -29,6 +29,7 @@ export class CampaignTargetActionComponent implements OnInit {
   }
   stateDataList = [];
   actionDataList = [];
+  nextactionDataList = [];
   remarkDataList = [];
 
   campaignTargetActionData = [];
@@ -61,6 +62,7 @@ export class CampaignTargetActionComponent implements OnInit {
     };
     this.getStateList();
     this.getActionList();
+    this.getnextActionList();
     this.getRemarkList();
     this.getTargetActionData();
   }
@@ -90,6 +92,18 @@ export class CampaignTargetActionComponent implements OnInit {
     this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
       this.common.loading--;
       this.actionDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  getnextActionList() {
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
+      this.common.loading--;
+      this.nextactionDataList = res['data'];
     },
       err => {
         this.common.loading--;

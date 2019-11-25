@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
 import { CampaignTargetActionComponent } from '../../modals/campaign-modals/campaign-target-action/campaign-target-action.component';
+import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 
 @Component({
   selector: 'ngx-campaign-target',
@@ -209,7 +210,15 @@ export class CampaignTargetComponent implements OnInit {
       });
     }
   }
-
+  uploadDataByCsv() {
+    this.common.params = { title: "CSV", button: "Upload" };
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignTargetData();
+      }
+    });
+  }
 
 
 }
