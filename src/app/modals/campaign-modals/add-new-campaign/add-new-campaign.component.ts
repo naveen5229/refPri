@@ -75,7 +75,7 @@ export class AddNewCampaignComponent implements OnInit {
     if (!this.campaignAdd.name) return this.common.showError("Please Select Campaign Name");
     if (!this.campaignAdd.typeId) return this.common.showError("Please Select Product Type");
 
-    let startDate = this.common.dateFormatter(this.campaignAdd.startTime);
+    let startDate = this.campaignAdd.startTime ? this.common.dateFormatter(this.campaignAdd.startTime) : null;
     let endDate = this.campaignAdd.endTime ? this.common.dateFormatter(this.campaignAdd.endTime) : null;
     let params = {};
     if (this.campaignAdd.rowId) {

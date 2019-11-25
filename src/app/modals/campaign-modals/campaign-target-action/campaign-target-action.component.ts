@@ -73,7 +73,9 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   getStateList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
+      this.common.loading--;
       this.stateDataList = res['data'];
     },
       err => {
@@ -84,7 +86,9 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   getActionList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
+      this.common.loading--;
       this.actionDataList = res['data'];
     },
       err => {
@@ -96,7 +100,9 @@ export class CampaignTargetActionComponent implements OnInit {
 
 
   getRemarkList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getRemarkList").subscribe(res => {
+      this.common.loading--;
       this.remarkDataList = res['data'];
     },
       err => {

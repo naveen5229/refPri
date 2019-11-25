@@ -57,7 +57,9 @@ export class TargetCampaignComponent implements OnInit {
   }
 
   getcampaignList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
+      this.common.loading--;
       this.campaignDataList = res['data'];
     },
       err => {
@@ -67,7 +69,9 @@ export class TargetCampaignComponent implements OnInit {
       });
   }
   getLocationList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getLocation").subscribe(res => {
+      this.common.loading--;
       this.locationDataList = res['data'];
     },
       err => {
