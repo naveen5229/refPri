@@ -12,6 +12,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 export class CampaignTargetActionComponent implements OnInit {
   title = "";
   button = "Add";
+  standards = [];
   targetAction = {
     rowId: null,
     campaignId: null,
@@ -153,7 +154,7 @@ export class CampaignTargetActionComponent implements OnInit {
       nextActId: this.targetAction.nextActionId,
       nextActTarTime: targetTime,
       remark: this.targetAction.remark,
-      remarkIdList: this.targetAction.standardRemarkId,
+      remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
       userCallLogId: null
     };
 
@@ -301,11 +302,7 @@ export class CampaignTargetActionComponent implements OnInit {
     this.targetAction.standardRemarkId = [];
     this.targetAction.remark = "";
     this.targetAction.targetTime = new Date();
-    document.getElementById('stateId')['value'] = '';
-    document.getElementById('actionId')['value'] = '';
-    document.getElementById('nextActionId')['value'] = '';
-    document.getElementById('standard')['value'] = '';
-
+    this.standards = [];
   }
 
 }
