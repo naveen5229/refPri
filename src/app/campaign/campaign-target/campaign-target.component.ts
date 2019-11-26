@@ -113,7 +113,7 @@ export class CampaignTargetComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else if (key == 'CampaignName') {
+        } else if (key == 'Name') {
           column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -176,9 +176,7 @@ export class CampaignTargetComponent implements OnInit {
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add" };
     const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (data.response) {
-        this.getCampaignTargetData();
-      }
+      this.getCampaignTargetData();
     });
   }
 
