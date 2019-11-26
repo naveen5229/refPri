@@ -6,11 +6,10 @@
 </div>
 <div class="modal-body">
   <div class="container">
-
-
-    <div class="checkbox" *ngFor="let list of listOfData">
+    <div class="checkbox" *ngFor="let list of listOfData; let i=index;">
       <label>
-        <input type="checkbox" value="{{list.id}}" (change)="onCheckboxChange(list,$event)">{{list.name}}</label>
+        <input type="checkbox" [name]="'list-' + i" [(ngModel)]="list.ismapped" value="{{list.id}}"
+          (change)="typeId=='stateId' ? onCheckboxChange(list,$event) : selected(list,$event)">{{list.name}}</label>
     </div>
   </div>
 </div>

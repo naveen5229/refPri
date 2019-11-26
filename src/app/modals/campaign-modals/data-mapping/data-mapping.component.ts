@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { create } from 'domain';
 
 @Component({
   selector: 'ngx-data-mapping',
@@ -11,9 +12,12 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class DataMappingComponent implements OnInit {
   title = "";
   button = "Add";
-  apiUrl = "";
+  apiUrl = null;
   listOfData = [];
   checkedList = [];
+  updateUrl = "";
+  updateParams = null;
+  typeId = "";
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -22,7 +26,17 @@ export class DataMappingComponent implements OnInit {
     this.button = this.common.params.button ? this.common.params.button : 'Add';
 
     if (this.common.params && this.common.params.data) {
-      this.apiUrl = this.common.params.data.apiUrl;
+      let str = "?";
+      Object.keys(this.common.params.data.param).forEach(element => {
+        if (str == '?')
+          str += element + "=" + this.common.params.data.param[element];
+        else
+          str += "&" + element + "=" + this.common.params.data.param[element];
+      });
+      this.apiUrl = this.common.params.data.apiUrl + str;
+      this.updateUrl = this.common.params.data.updateUrl;
+      this.updateParams = this.common.params.data.updateParam;
+      this.typeId = this.common.params.data.idType;
       this.getMappingData();
     }
   }
@@ -33,8 +47,11 @@ export class DataMappingComponent implements OnInit {
 
   ngOnInit() {
   }
-  ngDestory() {
+  ngOnDestroy() {
     this.common.params = null;
+    this.updateParams = null;
+    this.updateUrl = null;
+
   }
   getMappingData() {
     this.common.loading++;
@@ -42,6 +59,18 @@ export class DataMappingComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         this.listOfData = res['data'];
+        this.listOfData.filter(ele => {
+          if (this.typeId == "stateId") {
+            if (ele.ismapped) {
+              this.checkedList.push({ stateId: ele.id });
+            }
+          } else {
+            if (ele.ismapped) {
+              this.checkedList.push({ actionId: ele.id });
+            }
+          }
+
+        })
         console.log("APi ", this.listOfData);
       }, err => {
         this.common.loading--;
@@ -50,26 +79,52 @@ export class DataMappingComponent implements OnInit {
   }
 
   onCheckboxChange(option, event) {
+
     if (event.target.checked) {
-      this.checkedList.push({ id: option.id });
+      this.checkedList.push({ stateId: option.id });
     } else {
-      for (var i = 0; i < this.checkedList.length; i++) {
-        if (this.checkedList[i] == option.id) {
-          this.checkedList.splice(i, 1);
+      for (var i = 0; i < this.listOfData.length; i++) {
+        if (this.checkedList[i]['id'] == option.id) {
+          console.log("remove");
+          return this.checkedList.splice(i, 1);
         }
       }
-    }
-    //   console.log("event", event);
-    // if (event && event.length) {
-    //   this.targetAction.standardRemarkId = event.map(remark => { return { remarkId: remark.id } });
-    //   console.log("ID", this.targetAction.standardRemarkId);
-    // }
 
-    console.log("selected Data", this.checkedList);
+    }
+
+  }
+
+  selected(option, event) {
+    if (event.target.checked) {
+      this.checkedList.push({ actionId: option.id });
+    } else {
+      for (var i = 0; i < this.listOfData.length; i++) {
+        if (this.checkedList[i]['id'] == option.id) {
+          console.log("remove");
+          return this.checkedList.splice(i, 1);
+        }
+      }
+
+    }
   }
 
   addMapping() {
+    if (this.typeId == "stateId") {
+      this.updateParams.stateIdList = this.checkedList;
+    } else {
+      this.updateParams.actionIdList = this.checkedList;
 
+    }
+    console.log("selected Data", this.checkedList);
+    this.common.loading++;
+    this.api.post(this.updateUrl, this.updateParams)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("APi data ", res['data']);
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
 
