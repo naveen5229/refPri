@@ -123,6 +123,8 @@ export class AddCampaignComponent implements OnInit {
       { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) },
       { class: 'fas fa-grip-horizontal ml-3', action: this.stateMapping.bind(this, campaign) },
       { class: 'fas fa-handshake ml-3', action: this.actionMapping.bind(this, campaign) },
+      { class: "fas fa-globe-africa ml-2", action: this.viewlocation.bind(this, campaign) },
+
     ];
     return icons;
   }
@@ -192,7 +194,7 @@ export class AddCampaignComponent implements OnInit {
       idType: "stateId",
     }
     this.common.params = { data, title: "State Mapping", button: "Add" };
-    const activeModal = this.modalService.open(DataMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getCampaignData();
@@ -215,7 +217,7 @@ export class AddCampaignComponent implements OnInit {
       idType: "actionId",
     }
     this.common.params = { data, title: "Action Mapping", button: "Add" };
-    const activeModal = this.modalService.open(DataMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getCampaignData();
@@ -223,4 +225,7 @@ export class AddCampaignComponent implements OnInit {
     });
   }
 
+
+  viewlocation(campaign) {
+  }
 }

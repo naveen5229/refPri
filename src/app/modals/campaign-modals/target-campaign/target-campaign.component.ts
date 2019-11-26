@@ -22,6 +22,8 @@ export class TargetCampaignComponent implements OnInit {
     locationId: null,
     locationName: "",
     address: "",
+    lat: null,
+    long: null,
   }
   campaignDataList = [];
   locationDataList = [];
@@ -44,6 +46,8 @@ export class TargetCampaignComponent implements OnInit {
       this.target.mobile = this.common.params.targetEditData.mobile;
       this.target.locationId = this.common.params.targetEditData.locationId;
       this.target.locationName = this.common.params.targetEditData.locationName;
+      this.target.lat = this.common.params.targetEditData.lat;
+      this.target.long = this.common.params.targetEditData.long;
       this.target.address = this.common.params.targetEditData.address;
 
     }
@@ -97,6 +101,8 @@ export class TargetCampaignComponent implements OnInit {
       mobileNo: this.target.mobile,
       potential: this.target.potential,
       locationId: this.target.locationId,
+      lat: this.target.lat,
+      long: this.target.long,
       address: this.target.address,
 
     }

@@ -128,7 +128,7 @@ export class CampaignTargetComponent implements OnInit {
   actionIcons(campaign) {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
-      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) }
+      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
     ];
     return icons;
   }
@@ -144,7 +144,9 @@ export class CampaignTargetComponent implements OnInit {
       mobile: campaign.MobileNo,
       locationId: campaign._locationid,
       locationName: campaign.Location,
-      address: campaign.Address
+      address: campaign.Address,
+      lat: campaign._lat,
+      long: campaign._long
 
     }
     this.common.params = { targetEditData, title: "Edit Target", button: "Edit" };
@@ -219,6 +221,8 @@ export class CampaignTargetComponent implements OnInit {
       }
     });
   }
+
+
 
 
 }

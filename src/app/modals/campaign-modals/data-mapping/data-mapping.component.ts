@@ -84,7 +84,7 @@ export class DataMappingComponent implements OnInit {
       this.checkedList.push({ stateId: option.id });
     } else {
       for (var i = 0; i < this.listOfData.length; i++) {
-        if (this.checkedList[i]['id'] == option.id) {
+        if (this.checkedList[i]['stateId'] == option.id) {
           console.log("remove");
           return this.checkedList.splice(i, 1);
         }
@@ -99,7 +99,7 @@ export class DataMappingComponent implements OnInit {
       this.checkedList.push({ actionId: option.id });
     } else {
       for (var i = 0; i < this.listOfData.length; i++) {
-        if (this.checkedList[i]['id'] == option.id) {
+        if (this.checkedList[i]['actionId'] == option.id) {
           console.log("remove");
           return this.checkedList.splice(i, 1);
         }
@@ -109,17 +109,19 @@ export class DataMappingComponent implements OnInit {
   }
 
   addMapping() {
-    if (this.typeId == "stateId") {
-      this.updateParams.stateIdList = this.checkedList;
-    } else {
-      this.updateParams.actionIdList = this.checkedList;
-
-    }
+    this.typeId == "stateId" ? this.updateParams.stateIdList = this.checkedList : this.updateParams.actionIdList = this.checkedList;
     console.log("selected Data", this.checkedList);
     this.common.loading++;
     this.api.post(this.updateUrl, this.updateParams)
       .subscribe(res => {
         this.common.loading--;
+        if (res['success'] == true) {
+          this.common.showToast(res['msg']);
+          this.activeModal.close({ response: true });
+        } else {
+          this.common.showError(res['msg']);
+
+        }
         console.log("APi data ", res['data']);
       }, err => {
         this.common.loading--;
