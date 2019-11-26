@@ -85,3 +85,135 @@
 :host ::ng-deep .fa-trash-alt:hover span {
   display: block;
 }
+
+:host ::ng-deep .fa-grip-horizontal {
+  color: #07f8d4;
+  font-size: 18px;
+  span {
+    position: absolute;
+    display: none;
+    padding: 10px 48px;
+    font-weight: normal;
+    font-size: 11px;
+    left: -40px;
+    top: -28px;
+    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    font-family: Roboto;
+    z-index: 9999;
+  }
+  span::before {
+    content: "State Mapping";
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #07f8d4;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #fff;
+    width: 100%;
+  }
+  span::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #07f8d4;
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+  }
+}
+:host ::ng-deep .fa-grip-horizontal:hover span {
+  display: block;
+}
+
+:host ::ng-deep .fa-handshake {
+  color: blue;
+  font-size: 18px;
+  span {
+    position: absolute;
+    display: none;
+    padding: 10px 49px;
+    font-weight: normal;
+    font-size: 11px;
+    left: -39px;
+    top: -28px;
+    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    font-family: Roboto;
+    z-index: 9999;
+  }
+  span::before {
+    content: "Action Mapping";
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: blue;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #fff;
+    width: 100%;
+  }
+  span::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid blue;
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+  }
+}
+:host ::ng-deep .fa-handshake:hover span {
+  display: block;
+}
+
+:host ::ng-deep .fa-globe-africa {
+  color: #00ff11;
+  font-size: 18px;
+  span {
+    position: absolute;
+    display: none;
+    padding: 10px 32px;
+    font-weight: normal;
+    font-size: 11px;
+    left: -19px;
+    top: -28px;
+    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    font-family: Roboto;
+    z-index: 9999;
+  }
+  span::before {
+    content: "Loaction";
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #00ff11;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #fff;
+    width: 100%;
+  }
+  span::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #00ff11;
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+  }
+}
+:host ::ng-deep .fa-globe-africa:hover span {
+  display: block;
+}

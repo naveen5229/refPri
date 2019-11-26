@@ -79,7 +79,8 @@
           </div>
           <div class="col-md-9">
             <auto-suggestion [data]="remarkDataList" display="name" placeholder="Remark" name="standard"
-              inputId="standard" autocomplete="off" isMultiSelect="true" (onSelected)="selectStandardRemarks($event)">
+              [inputId]="standard" autocomplete="off" [preSelected]="standards" isMultiSelect="true"
+              (onSelected)="standards = $event">
             </auto-suggestion>
           </div>
         </div>

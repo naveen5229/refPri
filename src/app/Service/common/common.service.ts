@@ -9,7 +9,7 @@ export class CommonService {
   loading = 0;
   refresh = null;
 
-  params=null;
+  params = null;
   constructor(private toastrService: NbToastrService,
     private datePipe: DatePipe) { }
 
@@ -113,7 +113,7 @@ export class CommonService {
     //return dat + "-" + month + "-" + year;
     return year + "-" + month + "-" + dat;
   }
-  
+
   timeFormatter(date) {
     let d = new Date(date);
     let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
@@ -140,11 +140,22 @@ export class CommonService {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd-MMM-yyyy hh:mm a");
   }
-  
+
   changeDateformat3(date) {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd");
   }
+
+
+  getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
 
 }
 

@@ -12,6 +12,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 export class CampaignTargetActionComponent implements OnInit {
   title = "";
   button = "Add";
+  standards = [];
   targetAction = {
     rowId: null,
     campaignId: null,
@@ -29,6 +30,7 @@ export class CampaignTargetActionComponent implements OnInit {
   }
   stateDataList = [];
   actionDataList = [];
+  nextactionDataList = [];
   remarkDataList = [];
 
   campaignTargetActionData = [];
@@ -61,6 +63,7 @@ export class CampaignTargetActionComponent implements OnInit {
     };
     this.getStateList();
     this.getActionList();
+    this.getnextActionList();
     this.getRemarkList();
     this.getTargetActionData();
   }
@@ -73,7 +76,9 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   getStateList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
+      this.common.loading--;
       this.stateDataList = res['data'];
     },
       err => {
@@ -84,8 +89,22 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   getActionList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
+      this.common.loading--;
       this.actionDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  getnextActionList() {
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
+      this.common.loading--;
+      this.nextactionDataList = res['data'];
     },
       err => {
         this.common.loading--;
@@ -96,7 +115,9 @@ export class CampaignTargetActionComponent implements OnInit {
 
 
   getRemarkList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getRemarkList").subscribe(res => {
+      this.common.loading--;
       this.remarkDataList = res['data'];
     },
       err => {
@@ -133,7 +154,7 @@ export class CampaignTargetActionComponent implements OnInit {
       nextActId: this.targetAction.nextActionId,
       nextActTarTime: targetTime,
       remark: this.targetAction.remark,
-      remarkIdList: this.targetAction.standardRemarkId,
+      remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
       userCallLogId: null
     };
 
@@ -281,11 +302,7 @@ export class CampaignTargetActionComponent implements OnInit {
     this.targetAction.standardRemarkId = [];
     this.targetAction.remark = "";
     this.targetAction.targetTime = new Date();
-    document.getElementById('stateId')['value'] = '';
-    document.getElementById('actionId')['value'] = '';
-    document.getElementById('nextActionId')['value'] = '';
-    document.getElementById('standard')['value'] = '';
-
+    this.standards = [];
   }
 
 }

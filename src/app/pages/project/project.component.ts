@@ -97,6 +97,7 @@ export class ProjectComponent implements OnInit {
       this.filterItem();
     },
       err => {
+      this.common.loading--;
         this.common.showError();
         console.log('Error: ', err);
       });

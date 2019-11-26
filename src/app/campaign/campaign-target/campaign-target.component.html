@@ -1,20 +1,23 @@
 <nb-card>
   <nb-card-header>
     <div class="row ">
-      <div class="col-9">
+      <div class="col-6">
         <h5>Campaign Target</h5>
       </div>
       <div class="col-3">
         <button class="btn btn-primary text-capitalize" id="button" (click)="addCampaignTarget()">Add</button>
+      </div>
+      <div class="col-3">
+        <button class="btn btn-primary text-capitalize" id="csv" (click)="uploadDataByCsv()">Csv </button>
       </div>
     </div>
   </nb-card-header>
   <nb-card-body style="min-height: 485px;">
     <div class="row">
       <div class="mt-2">
-        <smart-table *ngIf="campaignTargetData.length" [data]="table.data" [settings]="table.settings"></smart-table>
+        <smart-table *ngIf="campaignTargetData.length" [data]="table.data" [settings]="table.settings">
+        </smart-table>
       </div>
     </div>
-
   </nb-card-body>
 </nb-card>

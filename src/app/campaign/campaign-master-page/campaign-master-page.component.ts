@@ -48,7 +48,9 @@ export class CampaignMasterPageComponent implements OnInit {
   }
 
   getcampaignList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
+      this.common.loading--;
       this.campaignDataList = res['data'];
     },
       err => {
@@ -59,7 +61,9 @@ export class CampaignMasterPageComponent implements OnInit {
   }
 
   getStateList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getStateList").subscribe(res => {
+      this.common.loading--;
       this.stateDataList = res['data'];
     },
       err => {
@@ -70,7 +74,9 @@ export class CampaignMasterPageComponent implements OnInit {
   }
 
   getActionList() {
+    this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
+      this.common.loading--;
       this.actionDataList = res['data'];
     },
       err => {

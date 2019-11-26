@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddNewCampaignComponent } from '../../modals/campaign-modals/add-new-campaign/add-new-campaign.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
 
 @Component({
   selector: 'ngx-add-campaign',
@@ -119,7 +120,11 @@ export class AddCampaignComponent implements OnInit {
   actionIcons(campaign) {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
-      { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) }
+      { class: 'fas fa-trash-alt ml-3', action: this.deleteCampaign.bind(this, campaign) },
+      { class: 'fas fa-grip-horizontal ml-3', action: this.stateMapping.bind(this, campaign) },
+      { class: 'fas fa-handshake ml-3', action: this.actionMapping.bind(this, campaign) },
+      { class: "fas fa-globe-africa ml-2", action: this.viewlocation.bind(this, campaign) },
+
     ];
     return icons;
   }
@@ -146,10 +151,10 @@ export class AddCampaignComponent implements OnInit {
 
 
   deleteCampaign(row) {
-    let params = {
-      campaignId: row._campaignid,
-    }
     if (row._campaignid) {
+      let params = {
+        campaignId: row._campaignid,
+      }
       this.common.params = {
         title: 'Delete Campaign ',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -170,9 +175,57 @@ export class AddCampaignComponent implements OnInit {
             });
         }
       });
+    } else {
+      this.common.showError("Campagin ID Not Available");
     }
   }
 
+  stateMapping(campaign) {
+    const data = {
+      apiUrl: "Campaigns/getCampStateMapping",
+      param: {
+        campaignId: campaign._campaignid
+      },
+      updateUrl: "Campaigns/addCampStateMapping",
+      updateParam: {
+        campaignId: campaign._campaignid,
+        stateIdList: null
+      },
+      idType: "stateId",
+    }
+    this.common.params = { data, title: "State Mapping", button: "Add" };
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignData();
+      }
+    });
+  }
 
 
+  actionMapping(campaign) {
+    const data = {
+      apiUrl: "Campaigns/getCampActionMapping",
+      param: {
+        campaignId: campaign._campaignid
+      },
+      updateUrl: "Campaigns/addCampActionMapping",
+      updateParam: {
+        campaignId: campaign._campaignid,
+        actionIdList: null
+      },
+      idType: "actionId",
+    }
+    this.common.params = { data, title: "Action Mapping", button: "Add" };
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignData();
+      }
+    });
+  }
+
+
+  viewlocation(campaign) {
+  }
 }

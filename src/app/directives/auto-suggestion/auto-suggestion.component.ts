@@ -78,6 +78,9 @@ export class AutoSuggestionComponent implements OnInit {
     if (changes.preSelected) {
       this.preSelected = changes.preSelected.currentValue;
       this.preSelected && this.handlePreSelection();
+      if (this.isMultiSelect) {
+        this.selectedSuggestions = this.preSelected || [];
+      }
     }
 
   }
@@ -225,9 +228,9 @@ export class AutoSuggestionComponent implements OnInit {
   }
 
   hideSuggestions() {
-    setTimeout(() =>
-      this.showSuggestions = false, 300);
+    setTimeout(() => this.showSuggestions = false, 300);
   }
+
   removeSuggestion(index) {
     if (this.isMultiSelect) {
       this.selectedSuggestions.splice(index, 1);

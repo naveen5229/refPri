@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
 import { CampaignTargetActionComponent } from '../../modals/campaign-modals/campaign-target-action/campaign-target-action.component';
+import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 
 @Component({
   selector: 'ngx-campaign-target',
@@ -112,7 +113,7 @@ export class CampaignTargetComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else if (key == 'CampaignName') {
+        } else if (key == 'Name') {
           column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -127,7 +128,7 @@ export class CampaignTargetComponent implements OnInit {
   actionIcons(campaign) {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
-      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) }
+      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
     ];
     return icons;
   }
@@ -143,7 +144,9 @@ export class CampaignTargetComponent implements OnInit {
       mobile: campaign.MobileNo,
       locationId: campaign._locationid,
       locationName: campaign.Location,
-      address: campaign.Address
+      address: campaign.Address,
+      lat: campaign._lat,
+      long: campaign._long
 
     }
     this.common.params = { targetEditData, title: "Edit Target", button: "Edit" };
@@ -173,9 +176,7 @@ export class CampaignTargetComponent implements OnInit {
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add" };
     const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (data.response) {
-        this.getCampaignTargetData();
-      }
+      this.getCampaignTargetData();
     });
   }
 
@@ -209,6 +210,16 @@ export class CampaignTargetComponent implements OnInit {
       });
     }
   }
+  uploadDataByCsv() {
+    this.common.params = { title: "CSV", button: "Upload" };
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignTargetData();
+      }
+    });
+  }
+
 
 
 
