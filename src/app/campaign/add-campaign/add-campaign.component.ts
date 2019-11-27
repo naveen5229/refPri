@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddNewCampaignComponent } from '../../modals/campaign-modals/add-new-campaign/add-new-campaign.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
+import { LocationTargetComponent } from '../../modals/campaign-modals/location-target/location-target.component';
 
 @Component({
   selector: 'ngx-add-campaign',
@@ -227,5 +228,20 @@ export class AddCampaignComponent implements OnInit {
 
 
   viewlocation(campaign) {
+    this.common.loading++;
+    this.api.get('campaigns/getAllTargetWrtCamp?campaignId=' + campaign._campaignid)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+    this.common.params = { title: "Location Target" };
+    const activeModal = this.modalService.open(LocationTargetComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getCampaignData();
+    });
   }
 }

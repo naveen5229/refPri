@@ -43,6 +43,7 @@
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
               "node_modules/leaflet/dist/leaflet.css",
               "src/app/@theme/styles/styles.scss",
+              "node_modules/font-awesome/scss/font-awesome.scss",
               "src/app/style.css"
             ],
             "scripts": [

@@ -23,12 +23,12 @@
           <li [ngClass]="activeTab=='remarkMaster'?'active':''" (click)="activeTab='remarkMaster'; getReportdata(
             'remarkMaster')">
             Remark Master</li>
-          <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getReportdata(
+          <!-- <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getReportdata(
             'campaignState')">
             Campaign State Mapping</li>
           <li [ngClass]="activeTab=='campaignAction'?'active':''" (click)="activeTab='campaignAction'; getReportdata(
             'campaignAction')">
-            Campaign Action Mapping</li>
+            Campaign Action Mapping</li> -->
         </ul>
 
       </div>
@@ -90,7 +90,7 @@
         </div>
       </div>
 
-
+      <!-- 
       <div class="row" *ngIf="activeTab=='campaignState'">
         <div class="col-2">
           <label>Campaign Name</label>
@@ -139,7 +139,7 @@
             (click)="addCampaignState('Campaigns/addCampActionMapping',{campaignId:campaignId,actionId:actionId},actionId)">Add</button>
         </div>
       </div>
-
+ -->
 
       <div class="mt-2">
         <smart-table *ngIf="productData.length" [data]="table.data" [settings]="table.settings" id="product">
