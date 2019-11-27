@@ -17,6 +17,7 @@ export class LocationTargetComponent implements OnInit {
     public api: ApiService,
     private zone: NgZone,
     public modalService: NgbModal) {
+    this.common.handleModalSize("class", "modal-lg", "1200", "px");
     this.title = this.common.params.title ? this.common.params.title : "Location";
   }
 
