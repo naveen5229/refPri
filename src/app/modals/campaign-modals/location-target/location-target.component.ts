@@ -24,12 +24,9 @@ export class LocationTargetComponent implements OnInit {
     private zone: NgZone,
     public modalService: NgbModal) {
     this.common.handleModalSize("class", "modal-lg", "1200", "px");
-    console.log("Data", this.common.params);
-
     this.title = this.common.params.title ? this.common.params.title : "Location";
     this.campaignId = this.common.params.campaignId ? this.common.params.campaignId : null;
-    this.getViewLocationData();
-    console.log("test");
+    if(this.campaignId) this.getViewLocationData();
   }
 
   ngOnInit() {
