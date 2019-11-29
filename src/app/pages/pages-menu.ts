@@ -123,8 +123,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Campagin Target',
-        // <i class="fas fa-text-width"></i>
-        icon: 'fas fa-text-width',
+        icon: 'award-outline',
         link: '/pages/campaign-target',
         home: true,
       },

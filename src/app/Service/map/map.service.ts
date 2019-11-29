@@ -19,6 +19,7 @@ export class MapService {
   polygons = [];
   isMapLoaded = false;
   mapLoadDiv = null;
+  cluster = null;
   lineSymbol = {
     path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
   };
@@ -63,6 +64,10 @@ export class MapService {
     this.map.panTo(latLng);
     if (level != this.map.getZoom())
       this.zoomMap(level);
+  }
+
+  centerAt(latLng) {
+    this.map.panTo(latLng);
   }
 
   zoomMap(zoomValue) {
@@ -124,7 +129,7 @@ export class MapService {
         }]
       }]
     };
-    //$("#"+mapId).heigth(height);
+    //let ("#"+mapId).heigth(height);
     this.map = new google.maps.Map(this.mapDiv, opt);
     this.mapLoadDiv = this.map.getDiv();
     this.bounds = new google.maps.LatLngBounds();
@@ -205,10 +210,10 @@ export class MapService {
     let latLng = { lat: 0, lng: 0 }
     let keys = Object.keys(markerData);
     latLng.lat = parseFloat(markerData[keys.find((element) => {
-      return element == "lat" || element == "y_lat" || element == "x_lat" || element == "x_tlat";
+      return element == "lat" || element == "y_lat" || element == "x_lat" || element == "x_tlat" || element == "_lat";
     })]);
     latLng.lng = parseFloat(markerData[keys.find((element) => {
-      return element == "lng" || element == "long" || element == "x_long" || element == "x_tlong";
+      return element == "lng" || element == "long" || element == "x_long" || element == "x_tlong" || element == "_long";
     })]);
     return latLng;
   }
@@ -298,15 +303,20 @@ export class MapService {
         if (changeBounds)
           this.setBounds(latlng);
       }
-      thisMarkers.push(marker);
       this.markers.push(marker);
+      thisMarkers.push(marker);
+
       //  marker.addListener('mouseover', this.infoWindow.bind(this, marker, show ));
 
       //  marker.addListener('click', fillSite.bind(this,item.lat,item.long,item.name,item.id,item.city,item.time,item.type,item.type_id));
       //  marker.addListener('mouseover', showInfoWindow.bind(this, marker, show ));
+
+
     }
     return thisMarkers;
   }
+
+
 
   createCirclesOnPostion(center, radius) {
     console.log("center,radius", center, radius);
@@ -327,7 +337,7 @@ export class MapService {
     //console.log("index",index);
     //.log("test",test);
     //console.log("item",item);
-    console.log('Evtype:', evtype);
+    // console.log('Evtype:', evtype);
     if (this.markers[id]) {
       if (this.markers[id].getAnimation() == null && evtype == 1) {
         this.markers[id].setAnimation(google.maps.Animation.BOUNCE);
@@ -357,17 +367,21 @@ export class MapService {
     }
   }
 
-  resetMarker(reset = true, boundsReset = true) {
-    for (let i = 0; i < this.markers.length; i++) {
-      if (this.markers[i])
-        this.markers[i].setMap(null);
+  resetMarker(reset = true, boundsReset = true, markers?) {
+    let actualMarker = markers || this.markers;
+    for (let i = 0; i < actualMarker.length; i++) {
+      if (actualMarker[i])
+        console.log("reset");
+
+      actualMarker[i].setMap(null);
     }
     if (reset)
-      this.markers = [];
+      actualMarker = [];
     if (boundsReset) {
       this.bounds = new google.maps.LatLngBounds();
     }
   }
+
   resetBounds() {
     this.bounds = new google.maps.LatLngBounds();
     for (let index = 0; index < this.markers.length; index++) {
@@ -572,6 +586,5 @@ export class MapService {
       });
     });
   }
-
 
 }
