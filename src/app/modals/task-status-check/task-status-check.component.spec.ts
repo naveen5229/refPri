@@ -8,9 +8,9 @@ describe('TaskStatusCheckComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TaskStatusCheckComponent ]
+      declarations: [TaskStatusCheckComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

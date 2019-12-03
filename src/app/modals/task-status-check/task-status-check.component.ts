@@ -5,7 +5,7 @@ import { CommonService } from '../../Service/common/common.service';
 @Component({
   selector: 'ngx-task-status-check',
   templateUrl: './task-status-check.component.html',
-  styleUrls: ['./task-status-check.component.scss']
+  styleUrls: ['./task-status-check.component.scss'],
 })
 export class TaskStatusCheckComponent implements OnInit {
   taskStatus = 0;
