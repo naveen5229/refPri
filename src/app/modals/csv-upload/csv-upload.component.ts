@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorReportComponent } from '../error-report/error-report.component';
 
 @Component({
   selector: 'ngx-csv-upload',
@@ -21,7 +22,7 @@ export class CsvUploadComponent implements OnInit {
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
-    public modalSService: NgbModal) {
+    public modalService: NgbModal) {
     this.title = this.common.params.title;
     this.button = this.common.params.button;
     this.common.handleModalSize('class', 'modal-lg', '450', 'px');
@@ -88,11 +89,17 @@ export class CsvUploadComponent implements OnInit {
         this.common.loading--;
         this.common.showToast(res["msg"]);
 
-        // if (errorData.length) {
-        //   this.common.params = { errorData, ErrorReportComponent, title: 'Document Verification' };
-        //   const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-        // }
-        this.activeModal.close({ response: true });
+        let successData = res['data']['success'];
+        let errorData = res['data']['fail'];
+        console.log("error: ", errorData);
+        alert(res["msg"]);
+        this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+        const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+        activeModal.result.then(data => {
+          if (data.response) {
+            this.activeModal.close({ response: true });
+          }
+        });
       }, err => {
         this.common.loading--;
         console.log(err);

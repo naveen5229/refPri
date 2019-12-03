@@ -8,9 +8,9 @@ describe('TaskAssignUserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TaskAssignUserComponent ]
+      declarations: [TaskAssignUserComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
