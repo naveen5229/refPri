@@ -26,7 +26,8 @@ export class CampaignTargetActionComponent implements OnInit {
     nextActionId: null,
     standardRemarkId: [],
     remark: null,
-    targetTime: new Date()
+    targetTime: new Date(),
+    campTargetId:0
   }
   stateDataList = [];
   actionDataList = [];
@@ -59,6 +60,7 @@ export class CampaignTargetActionComponent implements OnInit {
       this.targetAction.mobile = this.common.params.targetActionData.mobile;
       this.targetAction.locationId = this.common.params.targetActionData.locationId;
       this.targetAction.locationName = this.common.params.targetActionData.locationName;
+      this.targetAction.campTargetId = this.common.params.targetActionData.camptargetid;
 
     };
     this.getStateList();
@@ -180,9 +182,11 @@ export class CampaignTargetActionComponent implements OnInit {
 
 
   getTargetActionData() {
+    let campTargetId=this.targetAction.campTargetId;
     this.resetTable();
+    const params =  "campTargetId=" + campTargetId;
     this.common.loading++;
-    this.api.get('Campaigns/getCampTarAction')
+    this.api.get('Campaigns/getCampTarAction?'+params)
       .subscribe(res => {
         this.common.loading--;
         console.log("api data", res);

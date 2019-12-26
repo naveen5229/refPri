@@ -169,7 +169,8 @@ export class CampaignTargetComponent implements OnInit {
       mobile: campaign.MobileNo,
       locationId: campaign._locationid,
       locationName: campaign.Location,
-      address: campaign.Address
+      address: campaign.Address,
+      camptargetid: campaign._camptargetid
 
     };
 
