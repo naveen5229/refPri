@@ -24,15 +24,43 @@ export class TargetCampaignComponent implements OnInit {
     address: "",
     lat: null,
     long: null,
+    fleetcategoryid:0,
+    fleetcategoryname:"",
+    primaryOwnerid:0,
+    primaryownername:''
   }
   campaignDataList = [];
   locationDataList = [];
+  primaryownerDataList = [];
+  fleetcategoryList = [
+    {
+      "id": 1,
+      "name": "Very Small (0 - 15)"
+  },
+  {
+      "id": 2,
+      "name": "Small (16 - 50)"
+  },
+  {
+      "id": 3,
+      "name": "Medium (51 - 200)"
+  },
+  {
+    "id": 4,
+    "name": "Large (201 - 400)"
+  },
+  {
+    "id": 5,
+    "name": "Corporate (401 > )"
+ },
+  ];
 
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal) {
     this.getcampaignList();
-    this.getLocationList();
+    //this.getLocationList();
+    //this.getPrimaryOwnerList();
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     console.log(">>>>>>>>>?", this.common.params.targetEditData);
@@ -49,6 +77,10 @@ export class TargetCampaignComponent implements OnInit {
       this.target.lat = this.common.params.targetEditData.lat;
       this.target.long = this.common.params.targetEditData.long;
       this.target.address = this.common.params.targetEditData.address;
+      this.target.fleetcategoryid = this.common.params.targetEditData.potCat;
+      this.target.primaryOwnerid = this.common.params.targetEditData.priOwnId;
+      this.target.primaryownername = this.common.params.targetEditData.priOwnname;
+      this.target.fleetcategoryname = this.common.params.targetEditData.potCatname;
 
     }
   }
@@ -84,6 +116,18 @@ export class TargetCampaignComponent implements OnInit {
         console.log('Error: ', err);
       });
   }
+  getPrimaryOwnerList() {
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getPrimaryOwner").subscribe(res => {
+      this.common.loading--;
+      this.primaryownerDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
   checkValidation() {
     console.log("Validation", this.target.potential);
     if (`${this.target.potential}`.length > 4) {
@@ -104,7 +148,8 @@ export class TargetCampaignComponent implements OnInit {
       lat: this.target.lat,
       long: this.target.long,
       address: this.target.address,
-
+      potentialCat:this.target.fleetcategoryid,
+      primaryOwner:this.target.primaryOwnerid
     }
 
     this.common.loading++;

@@ -25,10 +25,14 @@ export class CampaignTargetComponent implements OnInit {
       hideHeader: true
     }
   };
+  campaignid=0;
+  campaignname='';
+  campaignDataList = [];
   constructor(public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal) {
-    this.getCampaignTargetData();
+   // this.getCampaignTargetData();
+    this.getcampaignList();
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -36,11 +40,22 @@ export class CampaignTargetComponent implements OnInit {
   }
 
   refresh() {
-    this.getCampaignTargetData();
+    this.getcampaignList();
   }
-
+  getcampaignList() {
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
+      this.common.loading--;
+      this.campaignDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
   addCampaignTarget() {
-    this.common.params = { title: "Add Target ", button: "Add" }
+    this.common.params = { title: "Add Lead ", button: "Add" }
     const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -50,9 +65,11 @@ export class CampaignTargetComponent implements OnInit {
   }
 
   getCampaignTargetData() {
+    const params = {campId: this.campaignid}
+    console.log('get camp id',params);
     this.resetTable();
     this.common.loading++;
-    this.api.get('Campaigns/getCampTarget')
+    this.api.get('Campaigns/getCampTarget?campId='+this.campaignid)
       .subscribe(res => {
         this.common.loading--;
         console.log("api data", res);
@@ -65,6 +82,7 @@ export class CampaignTargetComponent implements OnInit {
         console.log(err);
       });
   }
+  
 
 
 
@@ -115,9 +133,9 @@ export class CampaignTargetComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else if (key == 'Name') {
+        } else if (key == 'MobileNo') {
           column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
-        } else if (key == 'CampaignName') {
+        } else if (key == 'Company') {
           column[key] = { value: campaign[key], class: 'blue', action: this.addContactAction.bind(this, campaign) };
         }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -150,10 +168,14 @@ export class CampaignTargetComponent implements OnInit {
       locationName: campaign.Location,
       address: campaign.Address,
       lat: campaign._lat,
-      long: campaign._long
+      long: campaign._long,
+      potCat: campaign.potCat,
+      priOwnId: campaign.priOwnId,
+      potCatname: campaign['Fleet Category'],
+      priOwnname: campaign.PrimaryOwner,
 
     }
-    this.common.params = { targetEditData, title: "Edit Target", button: "Edit" };
+    this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };
     const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -178,8 +200,8 @@ export class CampaignTargetComponent implements OnInit {
 
     };
 
-    this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add" };
-    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = { targetActionData, title: "Campaign Target Contacts", button: "Add" };
+    const activeModal = this.modalService.open(AddContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignTargetData();
     });
@@ -201,8 +223,8 @@ export class CampaignTargetComponent implements OnInit {
 
     };
 
-    this.common.params = { targetActionData, title: "Add Contact Details", button: "Add" };
-    const activeModal = this.modalService.open(AddContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add" };
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignTargetData();
     });

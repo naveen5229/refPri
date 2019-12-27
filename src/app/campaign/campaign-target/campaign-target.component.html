@@ -1,8 +1,8 @@
 <nb-card>
   <nb-card-header>
-    <div class="row ">
+    <div class="row">
       <div class="col-6">
-        <h5>Campaign Target</h5>
+        <h5>Campaign Dashboard</h5>
       </div>
       <div class="col-3">
         <button class="btn btn-primary text-capitalize" id="button" (click)="addCampaignTarget()">Add</button>
@@ -10,6 +10,20 @@
       <div class="col-3">
         <button class="btn btn-primary text-capitalize" id="csv" (click)="uploadDataByCsv()">Csv </button>
       </div>
+    </div>
+    <div class="row" style="margin-top: 45px;">
+         <div class="col-2">
+            <label>Campaign Name</label>
+          </div>
+          <div class="col-4">
+            <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName"
+            id="campaignName" (onSelected)="campaignid=($event.id)" [preSelected]="{name:campaignname}"
+            autocomplete="off">
+          </auto-suggestion>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-primary" type='submit' id="save" (click)="getCampaignTargetData()">Submit</button>
+          </div>
     </div>
   </nb-card-header>
   <nb-card-body style="min-height: 485px;">

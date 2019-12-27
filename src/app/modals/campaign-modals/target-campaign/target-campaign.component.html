@@ -33,26 +33,47 @@
         <label>Mobile No. <span class="require">*</span></label>
       </div>
       <div class="col-6">
-        <input type="number" name="mobile" id="mobile" [(ngModel)]="target.mobile" class="form-control" required>
+        <input type="number" name="mobile" id="mobile" [(ngModel)]="target.mobile" max="10" class="form-control" required>
       </div>
     </div>
-
     <div class="row form-group">
       <div class="col-6">
-        <label>Potential</label>
+        <label>Fleet Category </label>
       </div>
       <div class="col-6">
-        <input type="number" name="potential" id="potential" (focusout)="checkValidation()"
+        <auto-suggestion [data]="fleetcategoryList" display="name" placeholder="Fleet Category" name="fleetcategory"
+          id="fleetcategory" (onSelected)="target.fleetcategoryid=($event.id)" [preSelected]="{name:target.fleetcategoryname}"
+          autocomplete="off">
+        </auto-suggestion>
+      </div>
+    </div>
+    <div class="row form-group" *ngIf="target.fleetcategoryid !=0">
+      <div class="col-6">
+        <label>Fleet Size</label>
+      </div>
+      <div class="col-6">
+        <input type="number" name="potential" id="potential"
           [(ngModel)]="target.potential" class="form-control">
       </div>
     </div>
-
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Primary Owner </label>
+      </div>
+      <div class="col-6">
+        <auto-suggestion  url="CampaignSuggestion/getPrimaryOwner" display="name" placeholder="Primary Owner" name="campaignName" 
+          id="campaignName" (onSelected)="target.primaryOwnerid=($event.id)" [preSelected]="{name:target.primaryownername}"
+          autocomplete="off">
+        </auto-suggestion>
+      </div>
+    </div>
     <div class="row form-group">
       <div class="col-6">
         <label>Location</label>
       </div>
       <div class="col-6">
-        <auto-suggestion [data]="locationDataList" display="location" placeholder="Location" name="location"
+        
+        <auto-suggestion  url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location"
           id="location" (onSelected)="target.locationId=($event.id);target.lat=($event.lat);target.long=($event.long)"
           [preSelected]="{location:target.locationName}" autocomplete="off">
         </auto-suggestion>

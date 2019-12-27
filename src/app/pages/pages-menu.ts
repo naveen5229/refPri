@@ -122,7 +122,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
         home: true,
       },
       {
-        title: 'Campagin Target',
+        title: 'Campagin Dashboard',
         icon: 'award-outline',
         link: '/pages/campaign-target',
         home: true,
