@@ -14,6 +14,7 @@ export class AddNewCampaignComponent implements OnInit {
   campaignAdd = {
     rowId: null,
     name: "",
+    campaignType: 1,
     typeId: null,
     typeName: null,
     startTime: new Date(),
@@ -65,6 +66,7 @@ export class AddNewCampaignComponent implements OnInit {
   }
 
   savecampaign() {
+    console.log(this.campaignAdd);
     let url = "Campaigns/addCampaign";
     if (this.campaignAdd.endTime) {
       if (this.campaignAdd.endTime < this.campaignAdd.startTime) {
@@ -82,13 +84,16 @@ export class AddNewCampaignComponent implements OnInit {
       params = {
         campaignId: this.campaignAdd.rowId,
         campaignName: this.campaignAdd.name,
+        campaignType: this.campaignAdd.campaignType,
         productType: this.campaignAdd.typeId,
         startTime: startDate,
         endTime: endDate
 
       };
+      console.log(params);
       url = "Campaigns/updateCampaign";
-    } else {
+    }
+     else {
       params = {
         campaignName: this.campaignAdd.name,
         productType: this.campaignAdd.typeId,

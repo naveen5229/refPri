@@ -7,6 +7,22 @@
 <div class="modal-body">
   <div class="container">
    
+
+    
+    <div class="row">
+      <div class="col-md-2">
+        <label>Primary Mobile Number:-</label>
+      </div>
+      <div class="col-md-2">
+        <label>{{targetAction.show_mobile}}</label>
+      </div>
+      <div class="col-md-3">
+        <label>Address:-</label>
+      </div>
+      <div class="col-md-3">
+        <label>{{targetAction.show_address}}</label>
+      </div>
+  </div>
      
         <div class="row">
           <div class="col-md-3">
@@ -22,9 +38,21 @@
             <label>Mobile No.</label>
           </div>
           <div class="col-md-4">
-            <input type="text" placeholder="Mobile No" [(ngModel)]="targetAction.mobile" class="form-control" autocomplete="off">
+            <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            type = "number"
+            maxlength = "10" placeholder="Mobile No" [(ngModel)]="targetAction.mobile" class="form-control" autocomplete="off" required>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <label>Address</label>
+          </div>
+          <div class="col-md-4">
+            <input type="text" placeholder="Address" [(ngModel)]="targetAction.address" class="form-control" autocomplete="off">
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-md-3">
             <label>Email</label>

@@ -18,10 +18,27 @@
       </div>
     </div>
 
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Campaign Type <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-6">
+            <input type="radio" name="transporter" [(ngModel)]="target.campaignType" [value]="1" >
+            <label>FO / Transporter</label>
+          </div>
+          <div class="col-6">
+            <input type="radio" name="corporate" [(ngModel)]="target.campaignType" [value]="2" >
+            <label>Corporate</label>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="row form-group">
       <div class="col-6">
-        <label>Name <span class="require">*</span></label>
+        <label>Company Name <span class="require">*</span></label>
       </div>
       <div class="col-6">
         <input type="text" name="name" id="name" [(ngModel)]="target.name" class="form-control" required>
@@ -30,7 +47,7 @@
 
     <div class="row form-group">
       <div class="col-6">
-        <label>Mobile No. <span class="require">*</span></label>
+        <label> Primary Mobile No. <span class="require">*</span></label>
       </div>
       <div class="col-6">
         <input type="number" name="mobile" id="mobile" [(ngModel)]="target.mobile" max="10" class="form-control" required>

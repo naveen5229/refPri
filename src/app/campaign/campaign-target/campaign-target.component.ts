@@ -75,6 +75,7 @@ export class CampaignTargetComponent implements OnInit {
         console.log("api data", res);
         if (!res['data']) return;
         this.campaignTargetData = res['data'];
+        console.log(this.campaignTargetData);
         this.campaignTargetData.length ? this.setTable() : this.resetTable();
 
       }, err => {
@@ -133,9 +134,11 @@ export class CampaignTargetComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else if (key == 'MobileNo') {
-          column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
-        } else if (key == 'Company') {
+        } 
+        // else if (key == 'MobileNo') {
+        //   column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
+        // } 
+        else if (key == 'Company') {
           column[key] = { value: campaign[key], class: 'blue', action: this.addContactAction.bind(this, campaign) };
         }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -151,31 +154,39 @@ export class CampaignTargetComponent implements OnInit {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
       { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
+      { class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign)},
+
     ];
     return icons;
   }
 
 
   editCampaign(campaign) {
+   console.log(campaign);
+
     let targetEditData = {
       rowId: campaign._camptargetid,
       campaignId: campaign._campid,
-      campaignName: campaign.CampaignName,
-      potential: campaign.Potential,
-      name: campaign.Name,
-      mobile: campaign.MobileNo,
+      // campainType:campaign
+      campaignName: campaign._campaignname,
+      potential: campaign.FleetSize,
+      name: campaign.Company,
+      mobile: campaign._mobileno,
       locationId: campaign._locationid,
       locationName: campaign.Location,
-      address: campaign.Address,
+      address: campaign._address,
       lat: campaign._lat,
       long: campaign._long,
-      potCat: campaign.potCat,
-      priOwnId: campaign.priOwnId,
+      potCat: campaign._potcat,
+      priOwnId: campaign._priownid,
       potCatname: campaign['Fleet Category'],
-      priOwnname: campaign.PrimaryOwner,
+      priOwnname: campaign['Primary Owner'],
 
     }
+    
     this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };
+    // console.log(this.common.params);
+
     const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -192,10 +203,10 @@ export class CampaignTargetComponent implements OnInit {
       campaignName: campaign.CampaignName,
       potential: campaign.Potential,
       name: campaign.Name,
-      mobile: campaign.MobileNo,
+      mobile: campaign._mobileno,
       locationId: campaign._locationid,
       locationName: campaign.Location,
-      address: campaign.Address,
+      address: campaign._address,
       camptargetid: campaign._camptargetid
 
     };

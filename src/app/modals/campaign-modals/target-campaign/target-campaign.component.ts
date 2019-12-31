@@ -17,6 +17,7 @@ export class TargetCampaignComponent implements OnInit {
     campaignId: null,
     campaignName: "",
     name: "",
+    campaignType: 1,
     mobile: null,
     potential: null,
     locationId: null,
@@ -51,7 +52,7 @@ export class TargetCampaignComponent implements OnInit {
   },
   {
     "id": 5,
-    "name": "Corporate (401 > )"
+    "name": "Huge (401 > )"
  },
   ];
 
@@ -81,8 +82,10 @@ export class TargetCampaignComponent implements OnInit {
       this.target.primaryOwnerid = this.common.params.targetEditData.priOwnId;
       this.target.primaryownername = this.common.params.targetEditData.priOwnname;
       this.target.fleetcategoryname = this.common.params.targetEditData.potCatname;
+      this.target.campaignType = 1;
 
     }
+    console.log(this.target.fleetcategoryid);
   }
 
   closeModal() {
@@ -136,11 +139,14 @@ export class TargetCampaignComponent implements OnInit {
   }
 
   saveCampaignTarget() {
+    console.log(this.target.campaignType);
+
     if (!this.target.campaignId || !this.target.name || !this.target.mobile) return this.common.showError("Please Fill Require Field");
 
     const params = {
       campTargetId: this.target.rowId ? this.target.rowId : null,
       campaignId: this.target.campaignId,
+      campaignType: this.target.campaignType,
       name: this.target.name,
       mobileNo: this.target.mobile,
       potential: this.target.potential,

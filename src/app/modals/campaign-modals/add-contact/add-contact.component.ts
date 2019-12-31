@@ -14,8 +14,11 @@ export class AddContactComponent implements OnInit {
   button = "Add";
   standards = [];
   targetAction = {
+    show_mobile:'',
+    show_address:'',
     name: "",
-    mobile:0,
+    mobile:'',
+    address:'',
     email: '',   
     campTargetId:0
   }
@@ -44,6 +47,8 @@ export class AddContactComponent implements OnInit {
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     if (this.common.params && this.common.params.targetActionData) {
       this.targetAction.campTargetId = this.common.params.targetActionData.camptargetid;
+      this.targetAction.show_address = this.common.params.targetActionData.address;
+      this.targetAction.show_mobile = this.common.params.targetActionData.mobile;
     };
     this.getTargetActionData();
   }
@@ -178,6 +183,7 @@ export class AddContactComponent implements OnInit {
       campTargetId: this.targetAction.campTargetId,
       name: this.targetAction.name,
       mobileno: this.targetAction.mobile,
+      address: this.targetAction.address,
       email: this.targetAction.email,
      
     };
