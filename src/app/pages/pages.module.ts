@@ -23,6 +23,9 @@ import { SegmentStackReportComponent } from './segment-stack-report/segment-stac
 import { ModuleReportComponent } from './module-report/module-report.component';
 import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employee-daywise-report.component';
 import { CampaignModule } from '../campaign/campaign.module';
+import { AdminToolComponent } from './admin-tool/admin-tool.component';
+import { TicketCallMappingComponent } from './ticket-call-mapping/ticket-call-mapping.component';
+import { DailyReportComponent } from './daily-report/daily-report.component';
 
 @NgModule({
   imports: [
@@ -52,6 +55,9 @@ import { CampaignModule } from '../campaign/campaign.module';
     SegmentStackReportComponent,
     ModuleReportComponent,
     EmployeeDaywiseReportComponent,
+    AdminToolComponent,
+    TicketCallMappingComponent,
+    DailyReportComponent
   ],
 })
 export class PagesModule {

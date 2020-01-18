@@ -1,6 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
@@ -22,6 +21,9 @@ import { EmployeeDaywiseReportComponent } from './employee-daywise-report/employ
 import { AddCampaignComponent } from '../campaign/add-campaign/add-campaign.component';
 import { CampaignMasterPageComponent } from '../campaign/campaign-master-page/campaign-master-page.component';
 import { CampaignTargetComponent } from '../campaign/campaign-target/campaign-target.component';
+import { AdminToolComponent } from './admin-tool/admin-tool.component';
+import { TicketCallMappingComponent } from './ticket-call-mapping/ticket-call-mapping.component';
+import { DailyReportComponent } from './daily-report/daily-report.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -118,6 +120,18 @@ const routes: Routes = [{
     {
       path: 'campaign-target',
       component: CampaignTargetComponent
+    },
+    {
+      path: 'admin-tool',
+      component: AdminToolComponent
+    },
+    {
+      path: 'ticket-call-mapping',
+      component: TicketCallMappingComponent
+    },
+    {
+      path: 'daily-report',
+      component: DailyReportComponent
     }
 
   ],

@@ -9,8 +9,11 @@ import {
   NbResetPasswordComponent,
 } from '@nebular/auth';
 import { LoginComponent } from './auth/login/login.component';
+import { AdminToolComponent } from './pages/admin-tool/admin-tool.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
+
   {
     path: 'pages',
     loadChildren: () => import('../app/pages/pages.module')

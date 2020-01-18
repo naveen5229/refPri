@@ -1,0 +1,62 @@
+
+
+<div class="modal-header">
+  <h6 style="height: 50px;" class="modal-title" id="modal-basic-title">Save Admin</h6>
+
+  <div class="col-md-10 text-right">
+      <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Admin/searchAdmin"
+          [display]="['name','mobileno']" seperator="-"
+          placeholder="Search By Mobile No. / Name" [preSelected]="preSelected">
+        </auto-suggestion>
+  </div>
+<br>
+  <div class="row">
+    <div class="col-lg-4">
+      <label>Name :-</label>
+    </div>
+    <div class="col-lg-8">
+      <input type="text" class="form-control " [(ngModel)]='Fouser.name' placeholder="Name" required>
+    </div>
+  </div>
+<br>
+  <div class="row">
+    <div class="col-lg-4">
+      <label>Mobile Number :-</label>
+    </div>
+    <div class="col-lg-8">
+      <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+      class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">    </div>
+    </div>
+<br>
+    
+        <div>
+          <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="onCancel()">Cancel</button>
+        </div>
+        <div >
+          <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="updateAdmin()">Update</button>
+        </div>
+        <div style="float: right;" >
+          <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="saveAdmin()">Save</button>
+        </div>
+
+  
+    <!-- <div class="row" style="margin-top:20px; margin-bottom:20px;  float: right;" >
+    </div> -->
+
+    <!-- <div *ngIf="Fouser.id" class="row" style="margin-top:20px; margin-bottom:20px;  float: right;" >
+    </div> -->
+
+  <!-- <div class="row" style="margin-top:20px; margin-bottom:20px;  float: right;" >
+  </div> -->
+        
+  
+</div>

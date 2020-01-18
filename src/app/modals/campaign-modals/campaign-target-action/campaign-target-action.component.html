@@ -13,7 +13,7 @@
         <label> {{ targetAction.campaignName}}</label>
       </div>
       <div class="col-md-2">
-        <label> <b>Name : </b></label>
+        <label> <b>Company Name : </b></label>
         <label> {{ targetAction.name}} </label>
       </div>
       <div class="col-md-4">
@@ -92,7 +92,7 @@
             <label>Remark</label>
           </div>
           <div class="col-md-9">
-            <textarea name="remark" cols="5" rows="5" class="form-control" [(ngModel)]="targetAction.remark"></textarea>
+            <textarea maxlength="1000" name="remark" cols="5" rows="5" class="form-control" [(ngModel)]="targetAction.remark"></textarea>
           </div>
         </div>
       </div>

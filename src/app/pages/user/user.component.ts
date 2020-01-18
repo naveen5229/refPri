@@ -6,6 +6,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { Pipe, PipeTransform } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { SaveadminComponent } from '../../modals/saveadmin/saveadmin.component';
 @Pipe({
   name: 'capitalizeFirst'
 })
@@ -42,6 +43,7 @@ export class UserComponent implements OnInit {
     this.getUser();
 
   }
+  
   saveUser() {
     if (this.users.employee == null) {
       return this.common.showError("Employee name is missing")
@@ -143,8 +145,6 @@ export class UserComponent implements OnInit {
 
       this.user = res['data'] || [];
 
-
-
     },
       err => {
         this.common.showError();
@@ -183,7 +183,7 @@ export class UserComponent implements OnInit {
 
     }
   });
-}
+} 
   
 
   editUser(user){
@@ -193,8 +193,6 @@ export class UserComponent implements OnInit {
    this.users.employee=user.name,
    this.department=user.dept_type
    this.id=user.id
-  
-    
   }
 }
 

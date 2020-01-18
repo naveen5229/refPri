@@ -15,7 +15,9 @@ export class CsvUploadComponent implements OnInit {
   button = "upload";
   upload = {
     csv: null,
-    campaignId: null
+    campaignId: null,
+    campaignType: 1,
+
   }
   csv: any;
   campaignDataList = [];
@@ -78,31 +80,33 @@ export class CsvUploadComponent implements OnInit {
   uploadCsv() {
     const params = {
       CmpTarCsv: this.upload.csv,
-      campaignId: this.upload.campaignId
+      campaignId: this.upload.campaignId,
+      campaignType: this.upload.campaignType
     };
-    if (!params.CmpTarCsv && !params.campaignId) {
-      return this.common.showError("Select  Option First");
-    }
-    this.common.loading++;
-    this.api.post('Campaigns/ImportCampTargetCsv', params)
-      .subscribe(res => {
-        this.common.loading--;
-        this.common.showToast(res["msg"]);
+    console.log(params);
+    // if (!params.CmpTarCsv && !params.campaignId) {
+    //   return this.common.showError("Select  Option First");
+    // }
+    // this.common.loading++;
+    // this.api.post('Campaigns/ImportCampTargetCsv', params)
+    //   .subscribe(res => {
+    //     this.common.loading--;
+    //     this.common.showToast(res["msg"]);
 
-        let successData = res['data']['success'];
-        let errorData = res['data']['fail'];
-        console.log("error: ", errorData);
-        alert(res["msg"]);
-        this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
-        const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-        activeModal.result.then(data => {
-          if (data.response) {
-            this.activeModal.close({ response: true });
-          }
-        });
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
+    //     let successData = res['data']['success'];
+    //     let errorData = res['data']['fail'];
+    //     console.log("error: ", errorData);
+    //     alert(res["msg"]);
+    //     this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+    //     const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    //     activeModal.result.then(data => {
+    //       if (data.response) {
+    //         this.activeModal.close({ response: true });
+    //       }
+    //     });
+    //   }, err => {
+    //     this.common.loading--;
+    //     console.log(err);
+    //   });
   }
 }

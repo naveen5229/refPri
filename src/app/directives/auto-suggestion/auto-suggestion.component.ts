@@ -159,6 +159,7 @@ export class AutoSuggestionComponent implements OnInit {
     let displayText = '';
     if (this.displayType == 'array') {
       this.display.map((display, index) => {
+
         if (index != this.display.length - 1) {
           displayText += suggestion[display] + ' ' + this.seperator + ' ';
         } else {

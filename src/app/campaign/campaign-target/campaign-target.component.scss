@@ -1,3 +1,11 @@
+@media  print {
+  #tollUsage{
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+ 
+}
 :host ::ng-deep .fa-edit {
   color: green;
   font-size: 18px;
@@ -129,9 +137,20 @@
 :host ::ng-deep .fa-address-book:hover span {
   display: block;
 }
+.print-icon {
+  font-size: 35px;
+  color: rgb(136, 160, 196);
+}
 
+.pdf-icon {
+  font-size: 40px;
+  color: #9F0001;
+}
 
-
+.exel-icon {
+  font-size: 40px;
+  color: #217346;
+}
 
 
 :host ::ng-deep .blue {

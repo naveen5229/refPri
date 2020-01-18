@@ -82,7 +82,7 @@ export class TargetCampaignComponent implements OnInit {
       this.target.primaryOwnerid = this.common.params.targetEditData.priOwnId;
       this.target.primaryownername = this.common.params.targetEditData.priOwnname;
       this.target.fleetcategoryname = this.common.params.targetEditData.potCatname;
-      this.target.campaignType = 1;
+      this.target.campaignType = this.common.params.targetEditData.campainType;
 
     }
     console.log(this.target.fleetcategoryid);
@@ -139,7 +139,6 @@ export class TargetCampaignComponent implements OnInit {
   }
 
   saveCampaignTarget() {
-    console.log(this.target.campaignType);
 
     if (!this.target.campaignId || !this.target.name || !this.target.mobile) return this.common.showError("Please Fill Require Field");
 
@@ -157,6 +156,7 @@ export class TargetCampaignComponent implements OnInit {
       potentialCat:this.target.fleetcategoryid,
       primaryOwner:this.target.primaryOwnerid
     }
+    console.log(params);
 
     this.common.loading++;
     this.api.post("Campaigns/addCampaignTarget", params)

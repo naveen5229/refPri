@@ -19,6 +19,24 @@
     </div>
 
     <div class="row form-group">
+      <div class="col-6">
+        <label>Campaign Type <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-6">
+            <input type="radio" name="transporter" [(ngModel)]="upload.campaignType" [value]="1" >
+            <label>FO / Transporter</label>
+          </div>
+          <div class="col-6">
+            <input type="radio" name="corporate" [(ngModel)]="upload.campaignType" [value]="2" >
+            <label>Corporate</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
       <div class="col-md-6">
         <label>Campaign Csv <span class="require">*</span></label>
       </div>

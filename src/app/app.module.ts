@@ -47,7 +47,10 @@ import { DataMappingComponent } from './modals/campaign-modals/data-mapping/data
 import { LocationTargetComponent } from './modals/campaign-modals/location-target/location-target.component';
 import { ErrorReportComponent } from './modals/error-report/error-report.component';
 import { AddContactComponent } from './modals/campaign-modals/add-contact/add-contact.component';
-
+import { SaveadminComponent } from './modals/saveadmin/saveadmin.component';
+import { PrintPreviewComponent } from './modals/print-preview/print-preview.component';
+import { SendmessageComponent } from './modals/sendmessage/sendmessage.component';
+import { GenericModelComponent } from './modals/generic-model/generic-model.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -65,14 +68,20 @@ const PAGE_COMPONENTS = [
   DataMappingComponent,
   LocationTargetComponent,
   ErrorReportComponent,
-  AddContactComponent
-
+  AddContactComponent,
+  SaveadminComponent,
+  PrintPreviewComponent,
+  SendmessageComponent,
+  GenericModelComponent
 ];
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
     ...PAGE_COMPONENTS,
+    SendmessageComponent,
+    GenericModelComponent,
+ 
   ],
   entryComponents: [...PAGE_COMPONENTS],
   imports: [
@@ -102,7 +111,5 @@ const PAGE_COMPONENTS = [
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
-
 })
-export class AppModule {
-}
+export class AppModule {}

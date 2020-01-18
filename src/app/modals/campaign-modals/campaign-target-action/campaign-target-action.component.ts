@@ -148,6 +148,10 @@ export class CampaignTargetActionComponent implements OnInit {
 
   saveCampaignTargetAction() {
 
+    if(this.targetAction.stateId == null || this.targetAction.actionId == null || this.targetAction.nextActionId == null) {
+      this.common.showError('Please Fill All Mandatory Field');
+    }
+    else {
     let targetTime = this.common.dateFormatter(this.targetAction.targetTime);
     const params = {
       campTargetId: this.targetAction.rowId,
@@ -159,7 +163,7 @@ export class CampaignTargetActionComponent implements OnInit {
       remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
       userCallLogId: null
     };
-
+console.log(params);
     this.common.loading++;
     this.api.post("Campaigns/addCampTargetAction ", params)
       .subscribe(res => {
@@ -177,6 +181,7 @@ export class CampaignTargetActionComponent implements OnInit {
         this.common.loading--;
         console.log(err);
       });
+    }
   }
 
 

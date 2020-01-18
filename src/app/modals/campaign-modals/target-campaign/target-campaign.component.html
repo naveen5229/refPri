@@ -50,7 +50,9 @@
         <label> Primary Mobile No. <span class="require">*</span></label>
       </div>
       <div class="col-6">
-        <input type="number" name="mobile" id="mobile" [(ngModel)]="target.mobile" max="10" class="form-control" required>
+        <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+        type = "number"
+        maxlength = "10" placeholder="Mobile No" name="mobile" id="mobile" [(ngModel)]="target.mobile" class="form-control" autocomplete="off" required>
       </div>
     </div>
     <div class="row form-group">
