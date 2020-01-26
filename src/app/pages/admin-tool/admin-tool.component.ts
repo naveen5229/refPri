@@ -23,7 +23,5 @@ export class AdminToolComponent implements OnInit {
     const activeModal = this.modalService.open(SaveadminComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
      }
     
-  sendWwMsg() {
-    const activeModal = this.modalService.open(SendmessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  }
+  
 }

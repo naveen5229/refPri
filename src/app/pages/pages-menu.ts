@@ -24,6 +24,24 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'list-outline',
         link: '/pages/daily-report',
         home: true,
+      },
+      {
+        title: 'Daily-Partner-Report',
+        icon: 'list-outline',
+        link: '/pages/daily-partner-report',
+        home: true,
+      },
+      {
+        title: 'WW-Tools',
+        icon: 'file-text-outline',
+        link: '/pages/ww-tools',
+        home: true,
+      },
+      {
+        title: 'Task',
+        icon: 'file-text-outline',
+        link: '/pages/task',
+        home: true,
       }
     ]
   },

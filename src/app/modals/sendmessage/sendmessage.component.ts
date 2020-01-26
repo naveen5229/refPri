@@ -32,7 +32,7 @@ export class SendmessageComponent implements OnInit {
   public activeModal: NgbActiveModal,
   public modalService: NgbModal) {
     this.getMessageData();
-    this.common.handleModalSize('class', 'modal-lg', '450', 'px');
+    this.common.handleModalSize('class', 'modal-lg', '750', 'px');
    }
 
   ngOnInit() {
@@ -88,6 +88,7 @@ export class SendmessageComponent implements OnInit {
   }
  
   SendMsg() {
+    console.log(this.contact_type);
     if (this.contact_type == '' || this.message == '' ) {
       this.common.showError('Please Fill All Fild');
     } else{

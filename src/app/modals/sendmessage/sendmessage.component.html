@@ -27,13 +27,19 @@
       <div class="col-6">
         <div class="row">
           <div class="col-6">
-            <input name="contact_type" [(ngModel)]="contact_type" maxlength="4" minlength="3">
+            <!-- <input name="contact_type" [(ngModel)]="contact_type" maxlength="4" minlength="3"> -->
             <!-- <input type="radio" name="transporter" [(ngModel)]="upload.campaignType" [value]="1" >
             <label>FO / Transporter</label>
           </div>
           <div class="col-6">
             <input type="radio" name="corporate" [(ngModel)]="upload.campaignType" [value]="2" >
             <label>Corporate</label> -->
+            <select class="form-control" name="contact_type" [(ngModel)]="contact_type">
+              <option value="FOU">FOU</option>
+              <option value="PTN">PTN</option>
+              <option value="ADM">ADM</option>
+              <option value="UKN">UKN</option>
+          </select>
           </div>
         </div>
       </div>
@@ -44,17 +50,13 @@
         <label>Message <span class="require">*</span></label>
       </div>
       <div class="col-6">
-        <div class="row">
-          <div class="col-6">
-            <textarea name="message" [(ngModel)]="message"></textarea>
+            <textarea style="resize: vertical;" rows="10" cols="50"  name="message" [(ngModel)]="message"></textarea>
             <!-- <input type="radio" name="transporter" [(ngModel)]="upload.campaignType" [value]="1" >
             <label>FO / Transporter</label>
           </div>
           <div class="col-6">
             <input type="radio" name="corporate" [(ngModel)]="upload.campaignType" [value]="2" >
             <label>Corporate</label> -->
-          </div>
-        </div>
       </div>
     </div>
 

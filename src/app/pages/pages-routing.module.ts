@@ -24,6 +24,9 @@ import { CampaignTargetComponent } from '../campaign/campaign-target/campaign-ta
 import { AdminToolComponent } from './admin-tool/admin-tool.component';
 import { TicketCallMappingComponent } from './ticket-call-mapping/ticket-call-mapping.component';
 import { DailyReportComponent } from './daily-report/daily-report.component';
+import { DailyPartnerReportComponent } from './daily-partner-report/daily-partner-report.component';
+import { WwToolsComponent } from './ww-tools/ww-tools.component';
+import { TaskComponent } from './task/task.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -132,6 +135,18 @@ const routes: Routes = [{
     {
       path: 'daily-report',
       component: DailyReportComponent
+    },
+    {
+      path: 'daily-partner-report',
+      component: DailyPartnerReportComponent
+    },
+    {
+      path: 'ww-tools',
+      component: WwToolsComponent
+    },
+    {
+      path: 'task',
+      component: TaskComponent
     }
 
   ],

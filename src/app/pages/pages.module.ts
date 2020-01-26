@@ -26,6 +26,9 @@ import { CampaignModule } from '../campaign/campaign.module';
 import { AdminToolComponent } from './admin-tool/admin-tool.component';
 import { TicketCallMappingComponent } from './ticket-call-mapping/ticket-call-mapping.component';
 import { DailyReportComponent } from './daily-report/daily-report.component';
+import { DailyPartnerReportComponent } from './daily-partner-report/daily-partner-report.component';
+import { WwToolsComponent } from './ww-tools/ww-tools.component';
+import { TaskComponent } from './task/task.component';
 
 @NgModule({
   imports: [
@@ -57,7 +60,10 @@ import { DailyReportComponent } from './daily-report/daily-report.component';
     EmployeeDaywiseReportComponent,
     AdminToolComponent,
     TicketCallMappingComponent,
-    DailyReportComponent
+    DailyReportComponent,
+    DailyPartnerReportComponent,
+    WwToolsComponent,
+    TaskComponent
   ],
 })
 export class PagesModule {

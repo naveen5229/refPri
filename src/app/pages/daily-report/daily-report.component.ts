@@ -85,7 +85,7 @@ export class DailyReportComponent implements OnInit {
         {
           column[key] ={value:ticket[key], class:'admin',isHTML:true, action: ''}
         }
-        else if(key =="abs_call_time")
+        else if(key == ticket["_call_rep_href"])
         {
           column[key] ={value:ticket[key], class:'blue',isHTML:true, action: this.showdata.bind(this, ticket)}
         }
@@ -102,7 +102,6 @@ export class DailyReportComponent implements OnInit {
       }
       columns.push(column);
     });
-      // console.log(columns);
     return columns;
 
   }

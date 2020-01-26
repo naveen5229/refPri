@@ -1,0 +1,13 @@
+<nb-card>
+  <nb-card-header>
+    <h5>Daily Partner Report</h5>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <smart-table *ngIf="reportList && reportList.length>0" [data]="table.data" [settings]="table.settings"
+        id="dailyPertnerReport">
+      </smart-table>
+      <div class="row no-record" *ngIf="reportList.length==0" style="text-align: center; color: red;">No Data Available</div>
+    </div>
+  </nb-card-body>
+</nb-card>

@@ -1,0 +1,60 @@
+<nb-card>
+  <nb-card-header class="employee-report">
+    <h5>WW Tools</h5>
+</nb-card-header>
+
+  <nb-card-body style="min-height: 450px;  padding-top: 15px; padding-left: 5px;">
+
+    <fieldset>
+
+      <legend>Upload CSV</legend>
+<br>
+      <div class="row">
+
+        <div class="col-12">
+          <button value="Send WW MSG" class="btn btn-primary" id="button" (click)="sendWwMsg()" style="float: left;">Send WW MSG</button>                         
+        </div>
+
+      </div>
+    </fieldset>
+<br>
+    <fieldset>
+      <legend>Reset Contacts</legend>
+      <br>
+      <div class="row">
+        <div class="col-5" >
+            <auto-suggestion (onSelected)="contactDetails($event)" url="WhatsappWeb/getContacts.json"
+              [display]="['contact_mobile', 'type']" seperator="-" placeholder="Enter Contact Name" style="width:40%;" autocomplete="off"
+              inputId="contact_id">
+            </auto-suggestion>
+        </div>
+
+        <div class="col-3">
+          <button value="Reset" class="btn btn-primary" id="button" (click)="resetContacts('reset')" style="float: left;">Reset</button>                         
+        </div>
+       
+        <div class="col-4" >
+          <button value="Reset All" class="btn btn-primary" id="button" (click)="resetContacts('resetAll')" style="float: right;">Reset All</button>                         
+        </div>
+
+      </div>
+    </fieldset>
+<br>
+    <fieldset>
+      <legend>Reports</legend>
+<br>      
+      <div class="row">
+
+        <div class="col-6" >
+          <button value="Pending Message" class="btn btn-primary" id="button" (click)="pendingMsgActiveContacts('pendingMsg')" >Pending Message</button>                         
+          <button style="margin-left: 20px;" value="Active Contacts" class="btn btn-primary" id="button" (click)="pendingMsgActiveContacts('activeContacts')" >Active Contacts</button>                         
+
+        </div>
+
+        
+       
+      </div>
+    </fieldset> 
+
+  </nb-card-body>
+</nb-card>
