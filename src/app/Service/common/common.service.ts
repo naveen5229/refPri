@@ -26,7 +26,13 @@ export class CommonService {
     message += err ? ' Error Code: ' + err.status : '';
     this.showToast(message, "danger");
   }
-
+  generateArray(length) {
+    let generatedArray = [];
+    for (let i = 0; i < length; i++) {
+      generatedArray.push(i + 1);
+    }
+    return generatedArray;
+  }
   showToast(body, type?, duration?, title?) {
     // toastTypes = ["success", "info", "warning", "primary", "danger", "default"]
     const config = {
@@ -368,14 +374,14 @@ export class CommonService {
         doc.setFont("times", "bold", "text-center");
         doc.text(center_heading, x - hdglen - 50, y);
       }
-      if (lower_left_heading != "undefined" && lower_left_heading != null && lower_left_heading != '') {
-        let xpos = 35;
-        y = 65;
-        doc.setFont("times", "bold", "text-center");
-        doc.text(lower_left_heading, xpos, y);
-      }
-      doc.text(time, 30, 60);
-      y = 15;
+      // if (lower_left_heading != "undefined" && lower_left_heading != null && lower_left_heading != '') {
+      //   let xpos = 35;
+      //   y = 65;
+      //   doc.setFont("times", "bold", "text-center");
+      //   doc.text(lower_left_heading, xpos, y);
+      // }
+      // doc.text(time, 30, 60);
+      // y = 15;
       doc.addImage(eltimg, 'JPEG', (pageWidth - 110), 15, 50, 50, 'logo', 'NONE', 0);
       doc.setFontSize(12);
 

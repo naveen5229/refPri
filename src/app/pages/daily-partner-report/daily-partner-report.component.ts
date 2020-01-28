@@ -22,33 +22,30 @@ export class DailyPartnerReportComponent implements OnInit {
   headings = [];
   valobj = {};
   reportList = [];
+  reportId = null;
   constructor(public common: CommonService,
     public api: ApiService) { 
-      this.getReportData();
+      // this.getReportData();
     }
 
   ngOnInit() {
   }
 
-  getReportData() {
-    this.reportList = [];
-    this.table = {
-      data: {
-        headings: {},
-        columns: []
-      },
-      settings: {
-        hideHeader: true
-      }
-    };
-   
+  reportDetails(event) {
+    this.reportId = event.id;
+    console.log(event);
+  }
+
+  getMiscData() {
+    const params =
+      "id=" + this.reportId ;
     this.common.loading++;
-    this.api.get('Users/getDailyPartnerReport.json?')
+    this.api.get('Users/getMiscReport.json?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log('res:', res);
         this.reportList = res['data'] || [];
-        this.reportList.length ? this.setTable() : this.resetTable();
+        this.reportList.length ? this.setTable() : '';
 
       }, err => {
         this.common.loading--;
@@ -56,12 +53,38 @@ export class DailyPartnerReportComponent implements OnInit {
       });
   }
 
-  resetTable() {
-    this.table.data = {
-      headings: {},
-      columns: []
-    };
-  }
+  // getReportData() {
+  //   this.reportList = [];
+  //   this.table = {
+  //     data: {
+  //       headings: {},
+  //       columns: []
+  //     },
+  //     settings: {
+  //       hideHeader: true
+  //     }
+  //   };
+   
+  //   this.common.loading++;
+  //   this.api.get('Users/getDailyPartnerReport.json?')
+  //     .subscribe(res => {
+  //       this.common.loading--;
+  //       console.log('res:', res);
+  //       this.reportList = res['data'] || [];
+  //       this.reportList.length ? this.setTable() : this.resetTable();
+
+  //     }, err => {
+  //       this.common.loading--;
+  //       console.log(err);
+  //     });
+  // }
+
+  // resetTable() {
+  //   this.table.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
 
   setTable() {
     this.table.data = {
@@ -80,7 +103,7 @@ export class DailyPartnerReportComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
-    headings['Actions'] = {title: 'Actions', placeholder: this.formatTitle('Actions')}
+    // headings['Actions'] = {title: 'Actions', placeholder: this.formatTitle('Actions')}
     return headings;
   }
 
@@ -100,16 +123,16 @@ export class DailyPartnerReportComponent implements OnInit {
     this.reportList.map(report => {
       let column = {};
       for (let key in this.generateHeadings()) {
-        if (key== 'Actions') {
-          column[key] = {
-            value: "",
-            isHTML: true,
-            action: null,
-          //  icons: this.actionIcons(report)
-          };
-        } else {
+        // if (key== 'Actions') {
+        //   column[key] = {
+        //     value: "",
+        //     isHTML: true,
+        //     action: null,
+        //   //  icons: this.actionIcons(report)
+        //   };
+        // } else {
           column[key] = { value: report[key], class: 'black', action: '' };
-        }
+        // }
       }
       columns.push(column);
     });

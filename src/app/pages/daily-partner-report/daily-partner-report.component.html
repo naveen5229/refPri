@@ -1,13 +1,30 @@
 <nb-card>
   <nb-card-header>
-    <h5>Daily Partner Report</h5>
+    <h5>Miscellaneous Reports</h5>
   </nb-card-header>
-  <nb-card-body>
-    <div class="row">
-      <smart-table *ngIf="reportList && reportList.length>0" [data]="table.data" [settings]="table.settings"
-        id="dailyPertnerReport">
-      </smart-table>
-      <div class="row no-record" *ngIf="reportList.length==0" style="text-align: center; color: red;">No Data Available</div>
+  <nb-card-body style="min-height: 400px;">
+    <div class="row" >
+      <div class="col-5" >
+          <auto-suggestion (onSelected)="reportDetails($event)" url="Users/getReportNames.json"
+            [display]="['name']" seperator="-" placeholder="Enter Report Name" style="width:40%;" autocomplete="off"
+            inputId="contact_id">
+          </auto-suggestion>
+      </div>
+
+      <div class="col-2" >
+        <button value="show" class="btn btn-primary" id="button" (click)="getMiscData()" style="float: left;">Show</button>                         
     </div>
+    <div class="col-2 text-right">
+      <button (click)="common.getPDFFromTableId('dailyPartnerReport')" class="btn btn-primary">View Pdf</button>
+      </div>
+    </div>  
+<br>
+<br>
+    <div class="row" >
+      <smart-table *ngIf="reportList && reportList.length>0" [data]="table.data" [settings]="table.settings"
+        id="dailyPartnerReport">
+      </smart-table>
+      <!-- <div class="row no-record" *ngIf="reportList.length==0" style="text-align: center; color: red;">No Data Available</div> -->
+    </div> 
   </nb-card-body>
 </nb-card>

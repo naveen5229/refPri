@@ -26,34 +26,38 @@
       <div *ngIf="task_type == 1">
         <div class="container">
           <div class="row ">
-            <div class="col-4">
+            <div class="col-3">
               <div class="form-group">
                 <label>User</label>
               <auto-suggestion (onSelected)="selectedNormalUser($event)" url="Admin/searchAdmin.json" [display]="['name']"
-                seperator="-" placeholder="Search User" autocomplete="off" inputId="id">
+                seperator="-" placeholder="Search User" autocomplete="off" inputId="id" [preSelected]='{name: normalTask.userName}'>
               </auto-suggestion>
               </div>
             </div>
-            <div class="col-4">                
+            <div class="col-3">                
                   <div class="form-group">
                     <label>Last Date</label>
                     <uj-date-time-picker [mind]="normalTask.date" [isStart]="true"  [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date" > </uj-date-time-picker>
                   </div>
             </div>
-            <div class="col-4">
+            <div class="col-3">
                 <div class="form-group">
                   <label>Task</label>
                   <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"
                     class="form-control"></textarea>
                 </div>
             </div>
+            <div class="col-3">
+              <div class="form-group" style="display: flex;
+              align-items: center;
+              justify-content: center;">
+                <input type="checkbox" [checked]="normalTask.isUrgent" (change)="normalTask.isUrgent = !normalTask.isUrgent"/>
+              <label style="margin-left: 5px;;"><strong>Urgent</strong></label>
+              </div>
+            </div>
           </div>
           <div class="row mt-1">
-            <div class="col-6 text-left">
-              <input type="checkbox" [checked]="normalTask.isUrgent" (change)="normalTask.isUrgent = !normalTask.isUrgent"/>
-              <label style="margin-left: 5px;;"><strong>Urgent</strong></label>
-            </div>
-            <div class="col-6 text-right">
+            <div class="col-12 text-right">
               <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser('normalTask')">Save</button>
             </div>
           </div>
@@ -69,15 +73,15 @@
         <div class="row ">
           <div class="col-4">
             <div class="form-group">
-              <label>Discription</label>
-              <input style="width: 100%;" type="discription" placeholder="Discription" class="form-control" [(ngModel)]="scheduledTask.discription">
+              <label>Description</label>
+              <input style="width: 100%;" type="description" placeholder="Description" class="form-control" [(ngModel)]="scheduledTask.description">
             </div>
           </div>
           <div class="col-4">                
                 <div class="form-group">
                   <label>Primary User</label>
             <auto-suggestion (onSelected)="selectedPrimarUser($event)" url="Admin/searchAdmin.json" [display]="['name']"
-              seperator="-" placeholder="Primary User" autocomplete="off" inputId="id">
+              seperator="-" placeholder="Primary User" autocomplete="off" inputId="id" [preSelected]='{name: scheduledTask.primaryUser}'>
             </auto-suggestion>
                 </div>
           </div>
@@ -85,7 +89,7 @@
               <div class="form-group">
                 <label>Escalation User</label>
                 <auto-suggestion (onSelected)="selectedEscalationUser($event)" url="Admin/searchAdmin.json" [display]="['name']"
-                  seperator="-" placeholder="Escalation User" autocomplete="off" inputId="id">
+                  seperator="-" placeholder="Escalation User" autocomplete="off" inputId="id" [preSelected]='{name: scheduledTask.escalationUser}'> 
                 </auto-suggestion>
               </div>
           </div>
@@ -93,7 +97,7 @@
             <div class="form-group">
               <label>Reporting User</label>
               <auto-suggestion (onSelected)="selectedReportingUser($event)" url="Admin/searchAdmin.json"
-                [display]="['name']" seperator="-" placeholder="Reporting User" autocomplete="off" inputId="id">
+                [display]="['name']" seperator="-" placeholder="Reporting User" autocomplete="off" inputId="id" [preSelected]='{name: scheduledTask.reportingUser}'>
               </auto-suggestion>
             </div>
         </div>
@@ -161,12 +165,12 @@
               <th>#</th>
               <th>Title</th>
               <th>Description</th>
-              <th>Project</th>
+              <!-- <th>Project</th>
               <th>Segment</th>
               <th>Assigner</th>
               <th>Start Time</th>
               <th>End Time</th>
-              <th>Action</th>
+              <th>Action</th> -->
 
             </tr>
           </thead>
@@ -175,14 +179,14 @@
               <td>0{{i+1}}</td>
               <td>{{task.Title }}</td>
               <td>{{task.Description }}</td>
-              <td>{{task.ProjectName }}</td>
+              <!-- <td>{{task.ProjectName }}</td>
               <td>{{task.SegmentName }}</td>
               <td>{{task.AssignerName }}</td>
               <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
               <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
               <td><abbr title="Waiting for review  then click it"><i class="fas fa-check"
                     (click)="waitingForReview(task)"></i></abbr>
-              </td>
+              </td> -->
 
             </tr>
           </tbody>
@@ -198,15 +202,13 @@
               <th>#</th>
               <th>Title</th>
               <th>Description</th>
-              <th>Project</th>
+              <!-- <th>Project</th>
               <th>Segment</th>
               <th>Assigner</th>
               <th>Start Time</th>
               <th>End Time</th>
               <th>Remark</th>
-              <th>Action</th>
-
-
+              <th>Action</th> -->
 
             </tr>
           </thead>
@@ -215,17 +217,17 @@
               <td>0{{i+1}}</td>
               <td>{{task.Title }}</td>
               <td>{{task.Description }}</td>
-              <td>{{task.ProjectName }}</td>
+              <!-- <td>{{task.ProjectName }}</td>
               <td>{{task.SegmentName}}</td>
               <td>{{task.AssignerName }}</td>
-              <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
+              <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td> -->
               <!-- <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
                           </td> -->
-              <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+              <!-- <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
               <td>{{task.review_remark}}</td>
               <td><abbr title="Check and Change then click it"><i class="fas  fa-check"
                     (click)="waitingForReview(task)"></i></abbr>
-              </td>
+              </td> -->
 
 
             </tr>

@@ -26,7 +26,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
         home: true,
       },
       {
-        title: 'Daily-Partner-Report',
+        title: 'Miscellaneous-Report',
         icon: 'list-outline',
         link: '/pages/daily-partner-report',
         home: true,
