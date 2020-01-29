@@ -33,15 +33,15 @@ export class TaskComponent implements OnInit {
   }
   selectedPrimarUser(event) {
     console.log(event);
-    this.scheduledTask.primaryUser = event.name;
+    this.scheduledTask.primaryUser = event.id;
   }
   selectedEscalationUser(event) {
     console.log(event);
-    this.scheduledTask.escalationUser = event.name;
+    this.scheduledTask.escalationUser = event.id;
   }
   selectedReportingUser(event) {
     console.log(event);
-    this.scheduledTask.reportingUser = event.name;
+    this.scheduledTask.reportingUser = event.id;
   }
 
   saveUser(buttonType) {
@@ -68,7 +68,7 @@ export class TaskComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         this.normalTask = new NormalTask('', new Date(), '', false);
-        // this.getTask()
+        this.getNormalTask()
         this.common.showToast("Task Created Successfully..!")
       },
         err => {
@@ -144,7 +144,7 @@ export class TaskComponent implements OnInit {
     this.api.get("Admin/getNormalTask").subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
-      this.normalTaskList = res['data']["AssignForMe"] || [];
+      this.normalTaskList = res['data'] || [];
      
       
       //  this.endDate=new Date(this.common.dateFormatter(this.pendingReview[0]['review_time']));
