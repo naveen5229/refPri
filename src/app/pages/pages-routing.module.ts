@@ -27,6 +27,7 @@ import { DailyReportComponent } from './daily-report/daily-report.component';
 import { DailyPartnerReportComponent } from './daily-partner-report/daily-partner-report.component';
 import { WwToolsComponent } from './ww-tools/ww-tools.component';
 import { TaskComponent } from './task/task.component';
+import { TaskScheduledComponent } from './task-scheduled/task-scheduled.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -147,6 +148,10 @@ const routes: Routes = [{
     {
       path: 'task',
       component: TaskComponent
+    },
+    {
+      path: 'task-scheduled',
+      component: TaskScheduledComponent
     }
 
   ],

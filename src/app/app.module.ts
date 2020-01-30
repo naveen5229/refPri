@@ -51,6 +51,7 @@ import { SaveadminComponent } from './modals/saveadmin/saveadmin.component';
 import { PrintPreviewComponent } from './modals/print-preview/print-preview.component';
 import { SendmessageComponent } from './modals/sendmessage/sendmessage.component';
 import { GenericModelComponent } from './modals/generic-model/generic-model.component';
+import { TaskStatusChangeComponent } from './modals/task-status-change/task-status-change.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -72,7 +73,8 @@ const PAGE_COMPONENTS = [
   SaveadminComponent,
   PrintPreviewComponent,
   SendmessageComponent,
-  GenericModelComponent
+  GenericModelComponent,
+  TaskStatusChangeComponent
 ];
 
 @NgModule({
@@ -81,7 +83,7 @@ const PAGE_COMPONENTS = [
     ...PAGE_COMPONENTS,
     SendmessageComponent,
     GenericModelComponent,
- 
+
   ],
   entryComponents: [...PAGE_COMPONENTS],
   imports: [
@@ -112,4 +114,4 @@ const PAGE_COMPONENTS = [
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }

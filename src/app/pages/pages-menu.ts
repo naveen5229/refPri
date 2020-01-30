@@ -42,6 +42,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'file-text-outline',
         link: '/pages/task',
         home: true,
+      },
+      {
+        title: 'Task-Scheduled',
+        icon: 'file-text-outline',
+        link: '/pages/task-scheduled',
+        home: true,
       }
     ]
   },
