@@ -104,25 +104,25 @@
         <div class="col-4">
           <div class="form-group">
             <label>Logic Type</label>
-            <input type="number" style="width: 100%;" placeholder="Logic Type" class="form-control" [(ngModel)]="scheduledTask.logicType">
+            <input type="number"  maxlength="1" style="width: 100%;" placeholder="Logic Type" class="form-control" [(ngModel)]="scheduledTask.logicType">
           </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <label>Schedule Param</label>
-          <input style="width: 100%;" type="number" placeholder="Schedule Params" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
+          <input style="width: 100%;" type="number" maxlength="1" placeholder="Schedule Params" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
         </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <label>Days</label>
-          <input style="width: 100%;" type="number" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
+          <input style="width: 100%;" type="number" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
         </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <label>Hours</label>
-          <input style="width: 100%;" type="number" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
+          <input style="width: 100%;" type="number"  placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
         </div>
       </div>
         </div>
@@ -149,92 +149,52 @@
             Tasks
           </li>
 
-          <li [ngClass]="activeTab=='Scheduled Task'?'active':''" (click)="activeTab='Scheduled Task'; getScheduledTask()">
+          <li [ngClass]="activeTab=='Scheduled Master Task'?'active':''" (click)="activeTab='Scheduled Master Task'; getMasterScheduledTask()">
             Scheduled Task
+          </li>
+
+          <li [ngClass]="activeTab=='Scheduled Task'?'active':''" (click)="activeTab='Scheduled Task'; getScheduledTask()">
+            Scheduled Task Master
           </li>
 
         </ul>
 
       </div>
       
-      <div *ngIf="activeTab=='Normal Task'">
 
-        <table class="table table-border mt-1">
-          <thead class="thead">
-            <tr>
-              <th>#</th>
-              <!-- <th>Title</th> -->
-              <th>Description</th>
-              <!-- <th>Project</th>
-              <th>Segment</th>
-              <th>Assigner</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-              <th>Action</th> -->
+        <div *ngIf="activeTab=='Normal Task'">
 
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let task of normalTaskList; let i=index;">
-              <td>0{{i+1}}</td>
-              <!-- <td>{{task.Title }}</td> -->
-              <td>{{task.description }}</td>
-              <!-- <td>{{task.ProjectName }}</td>
-              <td>{{task.SegmentName }}</td>
-              <td>{{task.AssignerName }}</td>
-              <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
-              <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
-              <td><abbr title="Waiting for review  then click it"><i class="fas fa-check"
-                    (click)="waitingForReview(task)"></i></abbr>
-              </td> -->
+        <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings"
+        id="normalTaskList">
+        </smart-table>
 
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        </div>
 
+        <div *ngIf="activeTab=='Scheduled Master Task'">
 
+        <smart-table *ngIf="scheduleMasterTaskList.length!=0" [data]="tableMasterSchedule.data" [settings]="tableMasterSchedule.settings"
+        id="scheduleMasterTaskList">
+        </smart-table>
+  
+        </div>
 
-      <div *ngIf="activeTab=='Scheduled Task'">
-        <table class="table table-border mt-1">
-          <thead class="thead">
-            <tr>
-              <th>#</th>
-              <th>Title</th>
-              <th>Description</th>
-              <!-- <th>Project</th>
-              <th>Segment</th>
-              <th>Assigner</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-              <th>Remark</th>
-              <th>Action</th> -->
+        <div *ngIf="activeTab=='Scheduled Task'">
 
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let task of scheduledTaskList; let i=index;">
-              <td>0{{i+1}}</td>
-              <td>{{task.Title }}</td>
-              <td>{{task.Description }}</td>
-              <!-- <td>{{task.ProjectName }}</td>
-              <td>{{task.SegmentName}}</td>
-              <td>{{task.AssignerName }}</td>
-              <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td> -->
-              <!-- <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
-                          </td> -->
-              <!-- <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
-              <td>{{task.review_remark}}</td>
-              <td><abbr title="Check and Change then click it"><i class="fas  fa-check"
-                    (click)="waitingForReview(task)"></i></abbr>
-              </td> -->
+          <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings"
+          id="scheduledTaskList">
+          </smart-table>
+    
+        </div>
 
-
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
     </nb-card-body>
 
   </nb-card>
+
+  <script> 
+    $(function() { 
+        $("input[name='numonly']").on('input', function(e) { 
+            $(this).val($(this).val().replace(/[^0-9]/g, '')); 
+        }); 
+    }); 
+</script>
