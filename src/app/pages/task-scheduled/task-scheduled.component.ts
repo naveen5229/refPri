@@ -34,6 +34,28 @@ export class TaskScheduledComponent implements OnInit {
       hideHeader: true
     }
   };
+  dailyParam = [
+    { id: 1, name: 1 },
+    { id: 2, name: 2 },
+    { id: 3, name: 3 }
+  ];
+  weeklyParam = [
+    { id: 0, name: 'Sunday' },
+    { id: 1, name: 'Monday' },
+    { id: 2, name: 'Tuesday' },
+    { id: 3, name: 'Wednesday' },
+    { id: 4, name: 'Thrusday' },
+    { id: 5, name: 'Friday' },
+    { id: 6, name: 'Saturday' }
+  ];
+  monthlyParam = [
+    { id: 1, name: 1 },
+    { id: 2, name: 2 },
+    { id: 3, name: 3 },
+    { id: 5, name: 4 },
+    { id: 5, name: 5 }
+  ];
+
   constructor(public common: CommonService, public api: ApiService) {
     // this.getScheduledTask();
   }
@@ -98,7 +120,9 @@ export class TaskScheduledComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         this.scheduledTask = new ScheduleTask('', '', '', '', null, null, '', '');
-        this.common.showToast('Task Created Successfully..!')
+        this.common.showToast('Task Created Successfully..!');
+        this.getScheduledTask();
+        this.activeTab = 'ScheduledTaskMaster';
       },
         err => {
           this.common.loading--;
@@ -240,6 +264,15 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
         }
+        let bg_color = "#fff";
+        if (ticket._status == -1) {
+          bg_color = "red";
+        } else if (ticket._status == 2) {
+          bg_color = "#008080c7";
+        } else if (ticket._status == 5) {
+          bg_color = "gray";
+        }
+        column['style'] = { 'background': bg_color };
       }
       columns.push(column);
     });
