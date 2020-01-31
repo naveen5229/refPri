@@ -13,6 +13,7 @@ import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 import {
   NbChatModule,
@@ -87,6 +88,7 @@ const PAGE_COMPONENTS = [
   ],
   entryComponents: [...PAGE_COMPONENTS],
   imports: [
+    NgxQRCodeModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,

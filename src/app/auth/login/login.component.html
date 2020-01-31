@@ -23,12 +23,17 @@
     <div *ngIf="listenOTP">
         <form #otpForm="ngForm" (submit)="otpForm.valid && login()">
             <div class="form-group">
-                <input name="otp" id="input-otp" #otp="ngModel" placeholder="OTP number" class="form-control" [(ngModel)]="userDetails.otp" pattern="[0-9]+" minlength="4" maxlength="4" autocomplete="off" required>
+                <!-- <input name="otp" id="input-otp" #otp="ngModel" placeholder="OTP number" class="form-control" [(ngModel)]="userDetails.otp" pattern="[0-9]+" minlength="4" maxlength="4" autocomplete="off" required>
                 <div *ngIf="otp.errors && formSubmit">
                     <div class="error" [hidden]="!otp.errors.required">OTP is required</div>
                     <div class="error" [hidden]="!otp.errors.minlength">OTP must be 04 digit long</div>
                     <div class="error" [hidden]="!otp.errors.pattern">Invalid OTP number</div>
-                </div>
+                </div> -->
+                <div class="qrClass">
+                    <ngx-qrcode [qrc-element-type]="elementType" [qrc-value]="qrCode + '-itrm'" qrc-class="qr-class"
+                      qrc-errorCorrectionLevel="M">
+                    </ngx-qrcode>
+                  </div>
             </div>
             <p class="resendOtp" *ngIf="otpCount && listenOTP">Resend OTP in {{otpCount}} seconds..</p>
             <p class="resendOtp" style="cursor:pointer;" *ngIf="!otpCount && listenOTP" (click)="sendOTP()">Resend OTP</p>
@@ -37,4 +42,6 @@
             </button>
         </form>
     </div>
+
+  
 </div>
