@@ -3,7 +3,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: "Open Sans", sans-serif !important;
+    font-family: "Open Sans", sans-serif !important;
 }
 
 p,
@@ -13,83 +13,85 @@ input,
 select,
 textarea,
 .nb-theme-corporate nb-layout .layout {
-  font-family: "Poppins", sans-serif !important;
+    font-family: "Poppins", sans-serif !important;
 }
 
 input,
 select,
 textarea {
-  padding: 6px !important;
-  font-size: 12px !important;
-  line-height: 16px !important;
-  height: auto !important;
+    padding: 6px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    height: auto !important;
 }
 
 input::placeholder {
-  font-size: 12px !important;
-  line-height: 20px !important;
+    font-size: 12px !important;
+    line-height: 20px !important;
 }
 
 .tooltip {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 .nb-theme-corporate nb-sidebar {
-  width: 15rem;
-  z-index: 1000 !important;
+    width: 15rem;
+    z-index: 1000 !important;
 }
 
 .nb-theme-corporate nb-sidebar.expanded {
-  width: 15rem;
+    width: 15rem;
 }
 
 .menu-sidebar .main-container {
-  width: 15rem !important;
+    width: 15rem !important;
 }
 
 .compacted .main-container {
-  width: auto !important;
+    width: auto !important;
 }
+
 
 /* width */
 
 ::-webkit-scrollbar {
-  width: 12px !important;
-  background-color: #c1c1c1 !important;
+    width: 12px !important;
+    background-color: #c1c1c1 !important;
 }
 
 .cdk-overlay-container {
-  z-index: 99999999999999999 !important;
+    z-index: 99999999999999999 !important;
 }
 
 .nb-theme-default nb-layout .layout .layout-container .content .columns nb-layout-column {
-  padding: 0;
+    padding: 0;
 }
 
 .modal-header {
-  padding: 3px 15px !important;
-  background-color: #26a69a;
+    padding: 3px 15px !important;
+    background-color: #26a69a;
 }
+
 .modal-header h5 {
-  color: #fff;
+    color: #fff;
 }
 
 .modal-header .close {
-  background: transparent;
-  color: #fff !important;
-  opacity: 1;
-  padding: 8px 20px;
-  margin: -10px -1rem -1rem auto;
-  outline: none;
-  font-size: 30px;
+    background: transparent;
+    color: #fff !important;
+    opacity: 1;
+    padding: 8px 20px;
+    margin: -10px -1rem -1rem auto;
+    outline: none;
+    font-size: 30px;
 }
 
 .control-icon.nb-notifications::before {
-  content: "\f0f3";
-  display: block;
-  font-family: "FontAwesome";
-  font-size: 22px;
-  margin-top: 5px;
+    content: "\f0f3";
+    display: block;
+    font-family: "FontAwesome";
+    font-size: 22px;
+    margin-top: 5px;
 }
 
 .fas.fa-file-invoice:before,
@@ -123,5 +125,9 @@ input::placeholder {
 .fas.fa-chess-king::before,
 .fas.fa-briefcase::before,
 .fas.fa-car-battery::before {
-  font-family: inherit;
+    font-family: inherit;
+}
+
+.k-animation-container {
+    z-index: 999 !important;
 }

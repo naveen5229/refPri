@@ -9,7 +9,7 @@ import { ScheduleTask } from '../../classes/schedule-task'
   styleUrls: ['./task-scheduled.component.scss']
 })
 export class TaskScheduledComponent implements OnInit {
-  activeTab = 'ScheduledTaskMaster';
+  activeTab = '';
   primaryId = null;
   escalationId = null;
   reportingId = null;
@@ -35,31 +35,28 @@ export class TaskScheduledComponent implements OnInit {
     }
   };
   constructor(public common: CommonService, public api: ApiService) {
-    this.getScheduledTask();
+    // this.getScheduledTask();
   }
 
   ngOnInit() { }
 
   selectedPrimarUser(event) {
-    console.log(event);
     this.scheduledTask.primaryUser = event.name;
     this.primaryId = event.id;
   }
   selectedEscalationUser(event) {
-    console.log(event);
     this.scheduledTask.escalationUser = event.name;
     this.escalationId = event.id;
   }
   selectedReportingUser(event) {
-    console.log(event);
     this.scheduledTask.reportingUser = event.name;
     this.reportingId = event.id;
   }
 
   saveUser() {
-    console.log(this.scheduledTask.description, this.scheduledTask.primaryUser,
-      this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
-      this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
+    // console.log(this.scheduledTask.description, this.scheduledTask.primaryUser,
+    //   this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
+    //   this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
 
     if (this.scheduledTask.description == '') {
       return this.common.showError("Description is missing")
@@ -119,9 +116,7 @@ export class TaskScheduledComponent implements OnInit {
       this.resetTableMasterSchedule();
       this.resetTableAllTask();
       this.scheduledTaskList = res['data'] || [];
-      console.log(this.scheduledTaskList);
       this.setTableSchedule();
-      console.log(this.tableSchedule);
     },
       err => {
         this.common.loading--;
@@ -141,9 +136,7 @@ export class TaskScheduledComponent implements OnInit {
       this.resetTableMasterSchedule();
       this.resetTableAllTask();
       this.allTaskList = res['data'] || [];
-      console.log(this.allTaskList);
       this.setTableAllTask();
-      console.log(this.tableAllTask);
     },
       err => {
         this.common.loading--;
@@ -180,7 +173,7 @@ export class TaskScheduledComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
-    console.log(headings);
+    // console.log(headings);
     return headings;
   }
 
@@ -193,7 +186,6 @@ export class TaskScheduledComponent implements OnInit {
         if (key == "admin_name") {
           column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
         }
-
         else if (key == 'Action') {
           column[key] = {
             value: "",
@@ -225,7 +217,7 @@ export class TaskScheduledComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
-    console.log(headings);
+    // console.log(headings);
     return headings;
   }
 
@@ -238,7 +230,6 @@ export class TaskScheduledComponent implements OnInit {
         if (key == "admin_name") {
           column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
         }
-
         else if (key == 'Action') {
           column[key] = {
             value: "",

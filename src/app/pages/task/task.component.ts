@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NormalTask } from '../../classes/normal-task';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-task',
@@ -11,7 +12,6 @@ import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
-
   activeTab = 'TasksForMe';
   task_type = 1;
   userId = null;
@@ -57,13 +57,13 @@ export class TaskComponent implements OnInit {
   ngOnInit() { }
 
   selectedNormalUser(event) {
-    console.log(event);
+    // console.log(event);
     this.userId = event.id;
     this.normalTask.userName = event.name;
   }
 
   saveUser() {
-    console.log(this.normalTask.userName, this.normalTask.date, this.normalTask.task, this.normalTask.isUrgent);
+    // console.log(this.normalTask.userName, this.normalTask.date, this.normalTask.task, this.normalTask.isUrgent);
     if (this.normalTask.userName == '') {
       return this.common.showError("User Name is missing")
     }
@@ -124,48 +124,6 @@ export class TaskComponent implements OnInit {
       });
   }
 
-  getTaskByMe() { //not used
-    this.common.loading++;
-    let params = {
-      type: -101
-    }
-    this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
-      this.common.loading--;
-      console.log("data", res['data'])
-      this.resetTableMasterSchedule();
-      this.resetTableNormal();
-      this.resetTableSchedule();
-      this.scheduleMasterTaskList = res['data'] || [];
-      this.setTableMasterSchedule();
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-  }
-
-  getScheduledTask() { //not used
-    this.common.loading++;
-    this.api.get("AdminTask/getScheduledTask").subscribe(res => {
-      this.common.loading--;
-      console.log("data", res['data'])
-      this.resetTableMasterSchedule();
-      this.resetTableNormal();
-      this.resetTableSchedule();
-      this.scheduledTaskList = res['data'] || [];
-      console.log(this.scheduledTaskList);
-      this.setTableSchedule();
-      console.log(this.tableSchedule);
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-  }
-
-
   resetTableMasterSchedule() {
     this.tableMasterSchedule.data = {
       headings: {},
@@ -192,6 +150,7 @@ export class TaskComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
+      // headings['style'] = { title: '_style' }
     }
     return headings;
   }
@@ -211,12 +170,11 @@ export class TaskComponent implements OnInit {
     let headings = {};
     for (var key in this.scheduledTaskList[0]) {
       // console.log(key.charAts(0));
-
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
-    console.log(headings);
+    // console.log(headings);
     return headings;
   }
 
@@ -252,7 +210,6 @@ export class TaskComponent implements OnInit {
   }
 
   getTableColumnsNormal() {
-    console.log(this.generateHeadingsNormal());
     let columns = [];
     this.normalTaskList.map(ticket => {
       let column = {};
@@ -265,7 +222,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket)
+            icons: this.actionIcons(ticket, 101)
           };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
@@ -277,9 +234,7 @@ export class TaskComponent implements OnInit {
 
   }
 
-
   getTableColumnsMasterSchedule() {
-    console.log(this.generateHeadingsMasterSchedule());
     let columns = [];
     this.scheduleMasterTaskList.map(ticket => {
       let column = {};
@@ -287,13 +242,12 @@ export class TaskComponent implements OnInit {
         if (key == "admin_name") {
           column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
         }
-
         else if (key == 'Action') {
           column[key] = {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket, -101)
           };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
@@ -306,7 +260,6 @@ export class TaskComponent implements OnInit {
   }
 
   getTableColumnsSchedule() {
-    console.log(this.generateHeadingsSchedule());
     let columns = [];
     this.scheduledTaskList.map(ticket => {
       let column = {};
@@ -314,13 +267,12 @@ export class TaskComponent implements OnInit {
         if (key == "admin_name") {
           column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
         }
-
         else if (key == 'Action') {
           column[key] = {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket, 103)
           };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
@@ -333,26 +285,61 @@ export class TaskComponent implements OnInit {
 
   }
 
-
-  actionIcons(ticket) {
+  actionIcons(ticket, type) {
     let icons = [
-      { class: "far fa-edit", action: this.editTicket.bind(this, ticket) },
+      { class: "far fa-edit", action: this.editTicket.bind(this, ticket, type) },
     ];
+    if (type == -101) {
+      icons = [
+        { class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type) },
+      ];
+    }
     return icons;
   }
 
-  editTicket(ticket) {
+  editTicket(ticket, type) {
+    console.log("type:", type);
     let ticketEditData = {
       ticketId: ticket._tktid,
       statusId: ticket._status
     }
     this.common.params = { ticketEditData, title: "Change Ticket Status", button: "Edit" };
-    const activeModal = this.modalService.open(TaskStatusChangeComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(TaskStatusChangeComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        this.getTaskByType(101);
+        this.getTaskByType(type);
       }
     });
+  }
+
+  deleteTicket(ticket, type) {
+    if (ticket._refid) {
+      let params = {
+        taskId: ticket._refid,
+      }
+      this.common.params = {
+        title: 'Delete Ticket ',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('AdminTask/deleteTicket', params)
+            .subscribe(res => {
+              this.common.loading--;
+              this.common.showToast(res['msg']);
+              this.getTaskByType(type);
+            }, err => {
+              this.common.loading--;
+              console.log('Error: ', err);
+            });
+        }
+      });
+    } else {
+      this.common.showError("Task ID Not Available");
+    }
   }
 
 

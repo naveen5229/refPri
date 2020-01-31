@@ -2,7 +2,7 @@
   <nb-card-header>
     <div class="row">
       <div class="col-10">
-        <h5>Tasks</h5>
+        <h5>Scheduled Task</h5>
       </div>
     </div>
 
@@ -23,8 +23,8 @@
               <div class="form-group">
                 <label>Primary User</label>
                 <auto-suggestion (onSelected)="selectedPrimarUser($event)" url="Admin/searchAdmin.json"
-                  [display]="['name']" seperator="-" placeholder="Primary User" autocomplete="off" inputId="id"
-                  [preSelected]='{name: scheduledTask.primaryUser}'>
+                  [display]="['name']" seperator="-" placeholder="Primary User" autocomplete="off" name="primaryUser"
+                  inputId="primaryUserId" [preSelected]='{name: scheduledTask.primaryUser}'>
                 </auto-suggestion>
               </div>
             </div>
@@ -32,8 +32,8 @@
               <div class="form-group">
                 <label>Escalation User</label>
                 <auto-suggestion (onSelected)="selectedEscalationUser($event)" url="Admin/searchAdmin.json"
-                  [display]="['name']" seperator="-" placeholder="Escalation User" autocomplete="off" inputId="id"
-                  [preSelected]='{name: scheduledTask.escalationUser}'>
+                  [display]="['name']" seperator="-" placeholder="Escalation User" autocomplete="off"
+                  name="escalationUser" inputId="scalationUserId" [preSelected]='{name: scheduledTask.escalationUser}'>
                 </auto-suggestion>
               </div>
             </div>
@@ -41,8 +41,8 @@
               <div class="form-group">
                 <label>Reporting User</label>
                 <auto-suggestion (onSelected)="selectedReportingUser($event)" url="Admin/searchAdmin.json"
-                  [display]="['name']" seperator="-" placeholder="Reporting User" autocomplete="off" inputId="id"
-                  [preSelected]='{name: scheduledTask.reportingUser}'>
+                  [display]="['name']" seperator="-" placeholder="Reporting User" autocomplete="off"
+                  name="reportingUser" inputId="reportingUserId" [preSelected]='{name: scheduledTask.reportingUser}'>
                 </auto-suggestion>
               </div>
             </div>
@@ -74,15 +74,12 @@
                   [(ngModel)]="scheduledTask.hours">
               </div>
             </div>
-          </div>
-
-          <div class="row mt-1">
-            <div class="col-12 text-right">
-              <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Save</button>
+            <div class="col-4 text-right">
+              <button class="btn btn-primary text-capitalize mt-4" id="button" (click)="saveUser()">Save</button>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
 
       <!-- Tabs      -->
@@ -111,10 +108,10 @@
     </nb-card-body>
   </nb-card>
 
-  <script>
+  <!-- <script>
     $(function () {
       $("input[name='numonly']").on('input', function (e) {
         $(this).val($(this).val().replace(/[^0-9]/g, ''));
       });
     }); 
-  </script>
+  </script> -->
