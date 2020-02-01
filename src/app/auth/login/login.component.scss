@@ -116,4 +116,9 @@ span {
 }
 .qrClass {
     text-align: center;
+   
+  }
+  :host ::ng-deep .qr-class img{
+      height: 200px;
+      width: 200px;
   }

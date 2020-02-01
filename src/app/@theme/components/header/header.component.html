@@ -20,9 +20,11 @@
             <button class="form-control refresh" (click)="refresh()"><i class="icon ion-refresh"></i></button>
         </nb-action>
         <nb-action class="user-action" *nbIsGranted="['view', 'user']">
-            <nb-user [nbContextMenu]="userMenu" [name]="user?.name" [picture]="user?.picture" (click)="logout()">
-                <i class="fa fa-user"></i>
-            </nb-user>
+            <button class="form-control refresh" (click)="logout()"><i class="icon ion-log-out"></i> </button>
+
+            <!-- <nb-user [nbContextMenu]="userMenu" [name]="user?.name" [picture]="user?.picture" (click)="logout()">
+                <i class="fa fa-sign-out"></i>   
+                     </nb-user> -->
         </nb-action>
     </nb-actions>
 </div>
