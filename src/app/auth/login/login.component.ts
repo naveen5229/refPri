@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit {
     }, 120000);
     this.interval = setInterval(() => {
       this.login();
-    }, 10000);
+    }, 5000);
   }
 
   otpResendActive() {
@@ -111,14 +111,14 @@ export class LoginComponent implements OnInit {
     this.common.loading++;
     this.api.post('Login/verifyOtp', params)
       .subscribe(res => {
-        clearInterval(this.interval);
-        this.common.loading--;;
+        this.common.loading--;
         if (res['success']) {
+          this.common.showToast(res['msg']);
+          clearInterval(this.interval);
           localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
           localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
-          this.common.showToast(res['msg']);
           this.router.navigate(['/pages/dashboard']);
         }
       },
@@ -128,5 +128,11 @@ export class LoginComponent implements OnInit {
         });
   }
 
-
+  backToLogin() {
+    this.listenOTP = false;
+    this.otpCount = 0;
+    this.qrCode = null;
+    this.formSubmit = false;
+    clearInterval(this.interval);
+  }
 }

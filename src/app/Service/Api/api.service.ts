@@ -25,11 +25,11 @@ export class ApiService {
   }
 
   setHeaders() {
-    const entryMode = '3';
+    const entryMode = '1';
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': '3',
+      'entrymode': '1',
       'apptype': 'dashboard',
       'authkey': this.user._token
     });
