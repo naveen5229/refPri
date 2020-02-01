@@ -13,7 +13,7 @@ export class TaskScheduledComponent implements OnInit {
   primaryId = null;
   escalationId = null;
   reportingId = null;
-  scheduledTask = new ScheduleTask('', '', '', '', null, null, '', '');
+  scheduledTask = new ScheduleTask('', '', '', '', 1, 1, '', '');
   scheduledTaskList = [];
   tableSchedule = {
     data: {
@@ -34,33 +34,53 @@ export class TaskScheduledComponent implements OnInit {
       hideHeader: true
     }
   };
-  dailyParam = [
-    { id: 1, name: 1 },
-    { id: 2, name: 2 },
-    { id: 3, name: 3 }
-  ];
+  allScheduleTaskList = [];
+  tableAllScheduleTask = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  dailyParam = [];
   weeklyParam = [
     { id: 0, name: 'Sunday' },
     { id: 1, name: 'Monday' },
     { id: 2, name: 'Tuesday' },
     { id: 3, name: 'Wednesday' },
-    { id: 4, name: 'Thrusday' },
+    { id: 4, name: 'Thursday' },
     { id: 5, name: 'Friday' },
     { id: 6, name: 'Saturday' }
   ];
-  monthlyParam = [
-    { id: 1, name: 1 },
-    { id: 2, name: 2 },
-    { id: 3, name: 3 },
-    { id: 5, name: 4 },
-    { id: 5, name: 5 }
-  ];
+  monthlyParam = [];
 
   constructor(public common: CommonService, public api: ApiService) {
-    // this.getScheduledTask();
+    this.createScheduleParams();
   }
 
   ngOnInit() { }
+
+  createScheduleParams() {
+    for (let dd = 0; dd < 24; dd++) {
+      let tempD = { id: dd, name: dd };
+      this.dailyParam.push(tempD);
+    }
+    for (let mm = 1; mm <= 31; mm++) {
+      let tempM = { id: mm, name: mm };
+      this.monthlyParam.push(tempM);
+    }
+  }
+
+  onChangeLogicType() {
+    if (this.scheduledTask.logicType == 3) {
+      this.scheduledTask.scheduleParam = 1;
+    } else {
+      this.scheduledTask.scheduleParam = 0;
+    }
+
+  }
 
   selectedPrimarUser(event) {
     this.scheduledTask.primaryUser = event.name;
@@ -119,7 +139,7 @@ export class TaskScheduledComponent implements OnInit {
       this.api.post('AdminTask/createScheduleTask', params).subscribe(res => {
         console.log(res);
         this.common.loading--;
-        this.scheduledTask = new ScheduleTask('', '', '', '', null, null, '', '');
+        this.scheduledTask = new ScheduleTask('', '', '', '', 1, 1, '', '');
         this.common.showToast('Task Created Successfully..!');
         this.getScheduledTask();
         this.activeTab = 'ScheduledTaskMaster';
@@ -149,18 +169,24 @@ export class TaskScheduledComponent implements OnInit {
       });
   }
 
-  getAllTask() {
+  getAllTask(type) {
     this.common.loading++;
     let params = {//all task for admin
-      type: -1
+      type: type
     }
     this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
       this.resetTableMasterSchedule();
       this.resetTableAllTask();
-      this.allTaskList = res['data'] || [];
-      this.setTableAllTask();
+      this.resetTableAllScheduleTask();
+      if (type == -1) {
+        this.allTaskList = res['data'] || [];
+        this.setTableAllTask();
+      } else if (type == -2) {
+        this.allScheduleTaskList = res['data'] || [];
+        this.setTableAllScheduleTask();
+      }
     },
       err => {
         this.common.loading--;
@@ -177,6 +203,12 @@ export class TaskScheduledComponent implements OnInit {
   }
   resetTableAllTask() {
     this.tableAllTask.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  resetTableAllScheduleTask() {
+    this.tableAllScheduleTask.data = {
       headings: {},
       columns: []
     };
@@ -218,7 +250,7 @@ export class TaskScheduledComponent implements OnInit {
             // icons: this.actionIcons(pending)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'due_time') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
       }
       columns.push(column);
@@ -262,15 +294,66 @@ export class TaskScheduledComponent implements OnInit {
             // icons: this.actionIcons(pending)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = "#fff";
+        let bg_color = this.common.taskBgColor.pending;
         if (ticket._status == -1) {
-          bg_color = "red";
+          bg_color = this.common.taskBgColor.reject;
         } else if (ticket._status == 2) {
-          bg_color = "#008080c7";
+          bg_color = this.common.taskBgColor.ack;
         } else if (ticket._status == 5) {
-          bg_color = "gray";
+          bg_color = this.common.taskBgColor.complete;
+        }
+        column['style'] = { 'background': bg_color };
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  setTableAllScheduleTask() {
+    this.tableAllScheduleTask.data = {
+      headings: this.generateHeadingsAllScheduleTask(),
+      columns: this.getTableColumnsAllScheduleTask()
+    };
+    return true;
+  }
+  generateHeadingsAllScheduleTask() {
+    let headings = {};
+    for (var key in this.allScheduleTaskList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+
+  getTableColumnsAllScheduleTask() {
+    let columns = [];
+    this.allScheduleTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsAllScheduleTask()) {
+        if (key == "admin_name") {
+          column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
+        }
+        else if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(pending)
+          };
+        } else {
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+        let bg_color = this.common.taskBgColor.pending;
+        if (ticket._status == -1) {
+          bg_color = this.common.taskBgColor.reject;
+        } else if (ticket._status == 2) {
+          bg_color = this.common.taskBgColor.ack;
+        } else if (ticket._status == 5) {
+          bg_color = this.common.taskBgColor.complete;
         }
         column['style'] = { 'background': bg_color };
       }

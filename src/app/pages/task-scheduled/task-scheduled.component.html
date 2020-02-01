@@ -5,7 +5,6 @@
                 <h5>Scheduled Task</h5>
             </div>
         </div>
-
     </nb-card-header>
     <nb-card>
         <nb-card-body>
@@ -42,12 +41,10 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label>Logic Type</label>
-                                <!-- <input type="number" maxlength="1" style="width: 100%;" placeholder="Logic Type" class="form-control"
-                  [(ngModel)]="scheduledTask.logicType"> -->
-                                <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (onChange)="scheduledTask.scheduleParam=''">
-                                  <option value="1">Daily</option>
-                                  <option value="2">Weekly</option>
-                                  <option value="3">Monthly</option>
+                                <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (change)="onChangeLogicType()">
+                                    <option value=1>Daily</option>
+                                    <option value=2>Weekly</option>
+                                    <option value=3>Monthly</option>
                                 </select>
                             </div>
                         </div>
@@ -56,15 +53,12 @@
                                 <label>Schedule Param</label>
                                 <!-- <input style="width: 100%;" type="number" maxlength="1" placeholder="Schedule Params" class="form-control" [(ngModel)]="scheduledTask.scheduleParam"> -->
                                 <select *ngIf="scheduledTask.logicType==1 || scheduledTask.logicType=='' " class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
-                                  <option value="">Select Schedule Params</option>
                                   <option *ngFor= "let dd of dailyParam" [value]="dd.id">{{dd.name}}</option>
                                 </select>
                                 <select *ngIf="scheduledTask.logicType==2" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
-                                  <option value="">Select Schedule Params</option>
                                   <option *ngFor= "let dd of weeklyParam" [value]="dd.id">{{dd.name}}</option>
                                 </select>
                                 <select *ngIf="scheduledTask.logicType==3" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
-                                  <option value="">Select Schedule Params</option>
                                   <option *ngFor= "let dd of monthlyParam" [value]="dd.id">{{dd.name}}</option>
                                 </select>
                             </div>
@@ -95,8 +89,11 @@
                     <li [ngClass]="activeTab=='ScheduledTaskMaster'?'active':''" (click)="activeTab='ScheduledTaskMaster'; getScheduledTask()">
                         Scheduled Task Master
                     </li>
-                    <li [ngClass]="activeTab=='allTask'?'active':''" (click)="activeTab='allTask'; getAllTask()">
+                    <li [ngClass]="activeTab=='allTask'?'active':''" (click)="activeTab='allTask'; getAllTask(-1)">
                         All Task
+                    </li>
+                    <li [ngClass]="activeTab=='allScheduleTask'?'active':''" (click)="activeTab='allScheduleTask'; getAllTask(-2)">
+                        All Scheduled Task
                     </li>
                 </ul>
             </div>
@@ -107,6 +104,10 @@
             </div>
             <div *ngIf="activeTab=='allTask'">
                 <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='allScheduleTask'">
+                <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList">
                 </smart-table>
             </div>
         </nb-card-body>

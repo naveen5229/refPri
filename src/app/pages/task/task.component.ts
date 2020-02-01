@@ -224,15 +224,15 @@ export class TaskComponent implements OnInit {
             icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 101)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = "#fff";
+        let bg_color = this.common.taskBgColor.pending;
         if (ticket._status == -1) {
-          bg_color = "red";
+          bg_color = this.common.taskBgColor.reject;
         } else if (ticket._status == 2) {
-          bg_color = "#008080c7";
+          bg_color = this.common.taskBgColor.ack;
         } else if (ticket._status == 5) {
-          bg_color = "gray";
+          bg_color = this.common.taskBgColor.complete;
         }
         column['style'] = { 'background': bg_color };
       }
@@ -258,15 +258,15 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, -101)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = "#fff";
+        let bg_color = this.common.taskBgColor.pending;
         if (ticket._status == -1) {
-          bg_color = "red";
+          bg_color = this.common.taskBgColor.reject;
         } else if (ticket._status == 2) {
-          bg_color = "#008080c7";
+          bg_color = this.common.taskBgColor.ack;
         } else if (ticket._status == 5) {
-          bg_color = "gray";
+          bg_color = this.common.taskBgColor.complete;
         }
         column['style'] = { 'background': bg_color };
       }
@@ -292,15 +292,15 @@ export class TaskComponent implements OnInit {
             icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = "#fff";
+        let bg_color = this.common.taskBgColor.pending;
         if (ticket._status == -1) {
-          bg_color = "red";
+          bg_color = this.common.taskBgColor.reject;
         } else if (ticket._status == 2) {
-          bg_color = "#008080c7";
+          bg_color = this.common.taskBgColor.ack;
         } else if (ticket._status == 5) {
-          bg_color = "gray";
+          bg_color = this.common.taskBgColor.complete;
         }
         column['style'] = { 'background': bg_color };
       }

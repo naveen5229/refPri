@@ -3,7 +3,7 @@ import { NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 import { DatePipe } from '@angular/common';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
- import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 
@@ -17,6 +17,12 @@ export class CommonService {
   refresh = null;
 
   params = null;
+  taskBgColor = {
+    pending: "#fff",
+    ack: "yellow",
+    complete: "#32cd32b3",
+    reject: "red"
+  }
   constructor(private toastrService: NbToastrService,
     // private http: Http,
     private datePipe: DatePipe) { }
@@ -84,8 +90,8 @@ export class CommonService {
       // let imgHeight = isLandscape ? 208 : 295;
       // var heightLeft = imgHeight;
 
-      var imgWidth = 210; 
-      var pageHeight = 295;  
+      var imgWidth = 210;
+      var pageHeight = 295;
       var imgHeight = canvas.height * imgWidth / canvas.width;
       var heightLeft = imgHeight;
 
@@ -527,6 +533,20 @@ export class CommonService {
     new Angular5Csv(info, "report.csv");
   }
 
+  findRemainingTime(time) {
+    if (time > 59) {
+      let minutes = Math.floor((time / 60));
+      return minutes + ' mins'
+    } else if (time > 44) {
+      return '45 secs'
+    } else if (time > 29) {
+      return '30 secs'
+    } else if (time > 14) {
+      return '15 secs'
+    } else {
+      return '0 sec'
+    }
+  }
 
 }
 
