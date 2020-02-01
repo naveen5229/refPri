@@ -7,8 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  URL: string = 'http://192.168.1.100/itrm_webservices/';//komal local
-  // URL: string = 'https://dev.elogist.in/itrm_webservices/'
+  // URL: string = 'http://192.168.1.100/itrm_webservices/';//komal local
+  URL: string = 'https://dev.elogist.in/itrm_webservices/'
 
 
   constructor(private http: HttpClient,
