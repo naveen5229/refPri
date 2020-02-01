@@ -1,93 +1,84 @@
 <nb-card>
-  <nb-card-header>
-    <div class="row">
-      <div class="col-10">
-        <h5>Tasks</h5>
-      </div>
-    </div>
-  </nb-card-header>
-  <nb-card>
-    <nb-card-body>
-      <!-- Normal Task Form      -->
-      <div>
-        <div class="container">
-          <div class="row ">
-            <div class="col-3">
-              <div class="form-group">
-                <label>User</label>
-                <auto-suggestion (onSelected)="selectedNormalUser($event)" url="Admin/searchAdmin.json"
-                  [display]="['name']" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser"
-                  inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
-                </auto-suggestion>
-              </div>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-10">
+                <h5>Tasks</h5>
             </div>
-            <div class="col-3">
-              <div class="form-group">
-                <label>Last Date</label>
-                <uj-date-time-picker [mind]="normalTask.date" [isStart]="true" [isTime]="false"
-                  (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
-                </uj-date-time-picker>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <label>Task</label>
-                <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control"
-                  [(ngModel)]="normalTask.task" class="form-control"></textarea>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group urgent_task">
-                <input type="checkbox" [checked]="normalTask.isUrgent"
-                  (change)="normalTask.isUrgent = !normalTask.isUrgent" />
-                <label><strong>Urgent</strong></label>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-1">
-            <div class="col-12 text-right">
-              <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Save</button>
-            </div>
-          </div>
         </div>
+    </nb-card-header>
+    <nb-card>
+        <nb-card-body>
+            <!-- Normal Task Form      -->
+            <div>
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>User</label>
+                                <auto-suggestion (onSelected)="selectedNormalUser($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
+                                </auto-suggestion>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>Last Date</label>
+                                <uj-date-time-picker [mind]="normalTask.date" [isStart]="true" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+                                </uj-date-time-picker>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>Task</label>
+                                <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group urgent_task">
+                                <label><strong>Urgent</strong></label>
+                                <input type="checkbox" [checked]="normalTask.isUrgent" (change)="normalTask.isUrgent = !normalTask.isUrgent" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12 text-right">
+                            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Save</button>
+                        </div>
+                    </div>
+                </div>
 
-      </div>
+            </div>
 
-      <!-- Tabs      -->
-      <div class="tabs_style_main">
-        <ul class="tabs_style text-left">
-          <li [ngClass]="activeTab=='TasksForMe'?'active':''" (click)="activeTab='TasksForMe'; getTaskByType(101)">
-            Tasks For Me
-          </li>
-          <li [ngClass]="activeTab=='TasksByMe'?'active':''" (click)="activeTab='TasksByMe'; getTaskByType(-101)">
-            Tasks By Me
-          </li>
-          <li [ngClass]="activeTab=='ScheduledTask'?'active':''"
-            (click)="activeTab='ScheduledTask'; getTaskByType(103)">
-            Scheduled Task
-          </li>
-        </ul>
-      </div>
+            <!-- Tabs      -->
+            <div class="tabs_style_main">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTab=='TasksForMe'?'active':''" (click)="activeTab='TasksForMe'; getTaskByType(101)">
+                        Tasks For Me
+                    </li>
+                    <li [ngClass]="activeTab=='TasksByMe'?'active':''" (click)="activeTab='TasksByMe'; getTaskByType(-101)">
+                        Tasks By Me
+                    </li>
+                    <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
+                        Scheduled Task
+                    </li>
+                </ul>
+            </div>
 
-      <div *ngIf="activeTab=='TasksForMe'">
-        <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings"
-          id="normalTaskList">
-        </smart-table>
-      </div>
-      <div *ngIf="activeTab=='TasksByMe'">
-        <smart-table *ngIf="scheduleMasterTaskList.length!=0" [data]="tableMasterSchedule.data"
-          [settings]="tableMasterSchedule.settings" id="scheduleMasterTaskList">
-        </smart-table>
-      </div>
-      <div *ngIf="activeTab=='ScheduledTask'">
-        <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings"
-          id="scheduledTaskList">
-        </smart-table>
-      </div>
-    </nb-card-body>
-  </nb-card>
+            <div *ngIf="activeTab=='TasksForMe'">
+                <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='TasksByMe'">
+                <smart-table *ngIf="scheduleMasterTaskList.length!=0" [data]="tableMasterSchedule.data" [settings]="tableMasterSchedule.settings" id="scheduleMasterTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='ScheduledTask'">
+                <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
+                </smart-table>
+            </div>
+        </nb-card-body>
+    </nb-card>
 
-  <!-- <script>
+    <!-- <script>
     $(function () {
       $("input[name='numonly']").on('input', function (e) {
         $(this).val($(this).val().replace(/[^0-9]/g, ''));

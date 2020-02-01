@@ -82,8 +82,8 @@ export class TaskComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         this.normalTask = new NormalTask('', new Date(), '', false);
-        this.getTaskByType(101);
-        this.activeTab = 'TasksForMe';
+        this.getTaskByType(-101);
+        this.activeTab = 'TasksByMe';
         this.common.showToast("Task Created Successfully..!")
       },
         err => {
@@ -150,7 +150,6 @@ export class TaskComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
-      // headings['style'] = { title: '_style' }
     }
     return headings;
   }
@@ -222,11 +221,20 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, 101)
+            icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 101)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+        let bg_color = this.common.taskBgColor.pending;
+        if (ticket._status == -1) {
+          bg_color = this.common.taskBgColor.reject;
+        } else if (ticket._status == 2) {
+          bg_color = this.common.taskBgColor.ack;
+        } else if (ticket._status == 5) {
+          bg_color = this.common.taskBgColor.complete;
+        }
+        column['style'] = { 'background': bg_color };
       }
       columns.push(column);
     });
@@ -250,8 +258,17 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, -101)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+        let bg_color = this.common.taskBgColor.pending;
+        if (ticket._status == -1) {
+          bg_color = this.common.taskBgColor.reject;
+        } else if (ticket._status == 2) {
+          bg_color = this.common.taskBgColor.ack;
+        } else if (ticket._status == 5) {
+          bg_color = this.common.taskBgColor.complete;
+        }
+        column['style'] = { 'background': bg_color };
       }
       columns.push(column);
     });
@@ -272,15 +289,24 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, 103)
+            icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+        let bg_color = this.common.taskBgColor.pending;
+        if (ticket._status == -1) {
+          bg_color = this.common.taskBgColor.reject;
+        } else if (ticket._status == 2) {
+          bg_color = this.common.taskBgColor.ack;
+        } else if (ticket._status == 5) {
+          bg_color = this.common.taskBgColor.complete;
+        }
+        column['style'] = { 'background': bg_color };
       }
       columns.push(column);
     });
-    console.log(columns);
+    // console.log(columns);
     return columns;
 
   }
