@@ -534,18 +534,37 @@ export class CommonService {
   }
 
   findRemainingTime(time) {
-    if (time > 59) {
-      let minutes = Math.floor((time / 60));
-      return minutes + ' mins'
-    } else if (time > 44) {
-      return '45 secs'
-    } else if (time > 29) {
-      return '30 secs'
-    } else if (time > 14) {
-      return '15 secs'
-    } else {
-      return '0 sec'
+    if (time <= 0) {
+      return "0:0:0";
     }
+    let seconds = time;
+    let days = Math.floor(seconds / (3600 * 24));
+    seconds -= days * 3600 * 24;
+    let hrs = Math.floor(seconds / 3600);
+    seconds -= hrs * 3600;
+    let mnts = Math.floor(seconds / 60);
+    seconds -= mnts * 60;
+    let due_time = "";
+    if (days > 0) {
+      due_time = days + " days, " + hrs + ":" + mnts + ":" + seconds;
+      return due_time;
+    } else {
+      due_time = hrs + ":" + mnts + ":" + seconds;
+      return due_time;
+    }
+    // console.log("due_time:", due_time);
+    // if (time > 59) {
+    //   let minutes = Math.floor((time / 60));
+    //   return minutes + ' mins'
+    // } else if (time > 44) {
+    //   return '45 secs'
+    // } else if (time > 29) {
+    //   return '30 secs'
+    // } else if (time > 14) {
+    //   return '15 secs'
+    // } else {
+    //   return '0 sec'
+    // }
   }
 
 }
