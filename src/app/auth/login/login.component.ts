@@ -14,10 +14,12 @@ export class LoginComponent implements OnInit {
     mobile: '',
     otp: '',
   };
-
+  qrCode = null;
+  elementType: 'url' | 'canvas' | 'img' = 'url';
   listenOTP = false;
   otpCount = 0;
-
+  loginType = 1;
+  interval = null;
   formSubmit = false;
 
   constructor(public api: ApiService,
@@ -50,9 +52,15 @@ export class LoginComponent implements OnInit {
   }
 
   sendOTP() {
-    console.log("OTP");
+    this.qrCode = Math.floor(Math.random() * 1000000);
+    if (this.qrCode.length != 6) {
+      this.qrCode = Math.floor(Math.random() * 1000000);
+    }
+    this.qrCode = this.qrCode.toString();
+    console.log("OTP", this,this.qrCode);
     let params = {
-      mobileno: this.userDetails.mobile
+      mobileno: this.userDetails.mobile,
+      qrcode: this.qrCode
     }
     this.common.loading++;
     this.api.post('Login/login', params)
@@ -61,39 +69,56 @@ export class LoginComponent implements OnInit {
         if (res['success']) {
           this.listenOTP = true;
           this.otpCount = 30;
+          this.qrCodeRegenrate();
           this.otpResendActive();
           this.common.showToast(res['msg']);
         } else {
           this.common.showError(res['msg']);
         }
-      },
-        err => {
+      },err => {
           this.common.loading--;
           this.common.showError();
         });
   }
 
+  qrCodeRegenrate() {
+    setTimeout(() => {
+      this.listenOTP = false;
+      this.otpCount = 0;
+      this.formSubmit = false;
+      this.qrCode = null;
+    }, 120000);
+    this.interval = setInterval(() => {
+      this.login();
+    }, 5000);
+  }
+
   otpResendActive() {
+    --this.otpCount
     if (this.otpCount > 0) {
-      setTimeout(this.otpResendActive.bind(this, --this.otpCount), 1000);
+      setTimeout(this.otpResendActive.bind(this), 1000);
     }
   }
 
   login() {
+    if (this.otpCount <= 0) {
+      clearInterval(this.interval);
+    }
     let params = {
       mobileno: this.userDetails.mobile,
-      otp: this.userDetails.otp
+      qrcode: this.qrCode
     }
     this.common.loading++;
     this.api.post('Login/verifyOtp', params)
       .subscribe(res => {
-        this.common.loading--;;
+        this.common.loading--;
         if (res['success']) {
+          this.common.showToast(res['msg']);
+          clearInterval(this.interval);
           localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
           localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
-          this.common.showToast(res['msg']);
           this.router.navigate(['/pages/dashboard']);
         }
       },
@@ -103,5 +128,11 @@ export class LoginComponent implements OnInit {
         });
   }
 
-
+  backToLogin() {
+    this.listenOTP = false;
+    this.otpCount = 0;
+    this.qrCode = null;
+    this.formSubmit = false;
+    clearInterval(this.interval);
+  }
 }

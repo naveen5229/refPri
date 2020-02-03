@@ -7,8 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  URL: string = 'http://localhost/itrm_webservices/';//komal local
-  // URL: string = 'https://dev.elogist.in/itrm_webservices/'
+  // URL: string = 'http://192.168.1.100/itrm_webservices/';//komal local
+  URL: string = 'https://dev.elogist.in/itrm_webservices/'
 
 
   constructor(private http: HttpClient,
@@ -25,11 +25,11 @@ export class ApiService {
   }
 
   setHeaders() {
-    const entryMode = '3';
+    const entryMode = '1';
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': '3',
+      'entrymode': '1',
       'apptype': 'dashboard',
       'authkey': this.user._token
     });
