@@ -53,6 +53,7 @@ import { PrintPreviewComponent } from './modals/print-preview/print-preview.comp
 import { SendmessageComponent } from './modals/sendmessage/sendmessage.component';
 import { GenericModelComponent } from './modals/generic-model/generic-model.component';
 import { TaskStatusChangeComponent } from './modals/task-status-change/task-status-change.component';
+import { TaskMessageComponent } from './modals/task-message/task-message.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -75,7 +76,8 @@ const PAGE_COMPONENTS = [
   PrintPreviewComponent,
   SendmessageComponent,
   GenericModelComponent,
-  TaskStatusChangeComponent
+  TaskStatusChangeComponent,
+  TaskMessageComponent
 ];
 
 @NgModule({

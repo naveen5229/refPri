@@ -95,6 +95,12 @@
                     <li [ngClass]="activeTab=='allScheduleTask'?'active':''" (click)="activeTab='allScheduleTask'; getAllTask(-2)">
                         All Scheduled Task
                     </li>
+                    <li [ngClass]="activeTab=='unacknowledgedNormalTask'?'active':''" (click)="activeTab='unacknowledgedNormalTask'; getAllTask(-3)">
+                        Unacknowledged Task
+                    </li>
+                    <li [ngClass]="activeTab=='unacknowledgedScheduledTask'?'active':''" (click)="activeTab='unacknowledgedScheduledTask'; getAllTask(-4)">
+                        Unacknowledged Scheduled Task
+                    </li>
                 </ul>
             </div>
 
@@ -110,13 +116,13 @@
                 <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList">
                 </smart-table>
             </div>
+            <div *ngIf="activeTab=='unacknowledgedNormalTask'">
+                <smart-table *ngIf="unacknowledgedNormalTaskList.length!=0" [data]="tableUnacknowledgedNormalTask.data" [settings]="tableUnacknowledgedNormalTask.settings" id="unacknowledgedNormalTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='unacknowledgedScheduledTask'">
+                <smart-table *ngIf="unacknowledgedScheduledTaskList.length!=0" [data]="tableUnacknowledgedScheduledTask.data" [settings]="tableUnacknowledgedScheduledTask.settings" id="unacknowledgedScheduledTaskList">
+                </smart-table>
+            </div>
         </nb-card-body>
     </nb-card>
-
-    <!-- <script>
-    $(function () {
-      $("input[name='numonly']").on('input', function (e) {
-        $(this).val($(this).val().replace(/[^0-9]/g, ''));
-      });
-    }); 
-  </script> -->

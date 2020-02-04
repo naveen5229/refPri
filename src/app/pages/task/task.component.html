@@ -60,6 +60,9 @@
                     <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
                         Scheduled Task
                     </li>
+                    <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask'; getTaskByType(-102)">
+                        Completed Task
+                    </li>
                 </ul>
             </div>
 
@@ -73,6 +76,10 @@
             </div>
             <div *ngIf="activeTab=='ScheduledTask'">
                 <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='allCompletedTask'">
+                <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList">
                 </smart-table>
             </div>
         </nb-card-body>

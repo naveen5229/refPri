@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h5>{{title | titlecase}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="row mt-1">
+        <div class="col-3">
+            <label>Comment:</label>
+        </div>
+        <div class="col-6">
+            <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+        </div>
+        <div class="col-3 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTicketMessage()">Save
+          </button>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <table class="table table-bordered mt-2">
+            <thead class="thead">
+                <tr>
+                    <th>Comment</th>
+                    <th>Added By</th>
+                    <th>Added Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let msg of messageList; let i = index;">
+                    <td>{{msg.comment}}</td>
+                    <td>{{msg.added_by}}</td>
+                    <td>{{msg.added_date}}</td>
+                </tr>
+                <tr *ngIf="messageList.length==0" class="text-center">
+                    <td *ngIf="showLoading" colspan="3">
+                        <div class="spinner-border"></div>
+                    </td>
+                    <td *ngIf="!showLoading" colspan="3">No Comments</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

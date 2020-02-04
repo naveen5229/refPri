@@ -5,6 +5,7 @@ import { NormalTask } from '../../classes/normal-task';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 
 @Component({
   selector: 'ngx-task',
@@ -22,6 +23,7 @@ export class TaskComponent implements OnInit {
   normalTaskList = [];
   scheduledTaskList = [];
   scheduleMasterTaskList = [];
+  allCompletedTaskList = [];
 
   tableNormal = {
     data: {
@@ -42,6 +44,15 @@ export class TaskComponent implements OnInit {
     }
   };
   tableSchedule = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  tableAllCompleted = {
     data: {
       headings: {},
       columns: []
@@ -106,6 +117,7 @@ export class TaskComponent implements OnInit {
       this.resetTableMasterSchedule();
       this.resetTableNormal();
       this.resetTableSchedule();
+      this.resetTableAllCompleted();
       if (type == 101) {
         this.normalTaskList = res['data'] || [];
         this.setTableNormal();
@@ -115,6 +127,9 @@ export class TaskComponent implements OnInit {
       } else if (type == 103) {
         this.scheduledTaskList = res['data'] || [];
         this.setTableSchedule();
+      } else if (type == -102) {
+        this.allCompletedTaskList = res['data'] || [];
+        this.setTableAllCompleted();
       }
     },
       err => {
@@ -138,6 +153,12 @@ export class TaskComponent implements OnInit {
   }
   resetTableNormal() {
     this.tableNormal.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  resetTableAllCompleted() {
+    this.tableAllCompleted.data = {
       headings: {},
       columns: []
     };
@@ -207,6 +228,51 @@ export class TaskComponent implements OnInit {
     };
     return true;
   }
+  setTableAllCompleted() {
+    this.tableAllCompleted.data = {
+      headings: this.generateHeadingsAllCompleted(),
+      columns: this.getTableColumnsAllCompleted()
+    };
+    return true;
+  }
+
+  generateHeadingsAllCompleted() {
+    // console.log(this.dailyReportList);
+    let headings = {};
+    for (var key in this.allCompletedTaskList[0]) {
+      // console.log(key.charAts(0));
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+  getTableColumnsAllCompleted() {
+    let columns = [];
+    this.allCompletedTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsAllCompleted()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+          };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, 103) };
+
+        } else {
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    // console.log(columns);
+    return columns;
+
+  }
 
   getTableColumnsNormal() {
     let columns = [];
@@ -223,6 +289,9 @@ export class TaskComponent implements OnInit {
             action: null,
             icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 101)
           };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, 101) };
+
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -257,6 +326,9 @@ export class TaskComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, -101)
           };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -101) };
+
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -291,6 +363,9 @@ export class TaskComponent implements OnInit {
             action: null,
             icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
           };
+        } else if (key == 'sc_task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, 103) };
+
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -366,6 +441,17 @@ export class TaskComponent implements OnInit {
     } else {
       this.common.showError("Task ID Not Available");
     }
+  }
+
+  ticketMessage(ticket, type) {
+    console.log("type:", type);
+    let ticketEditData = {
+      ticketId: ticket._tktid,
+      statusId: ticket._status
+    }
+    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
+    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => { });
   }
 
 

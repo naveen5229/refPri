@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
-import { ScheduleTask } from '../../classes/schedule-task'
+import { ScheduleTask } from '../../classes/schedule-task';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 
 @Component({
   selector: 'ngx-task-scheduled',
@@ -56,7 +58,28 @@ export class TaskScheduledComponent implements OnInit {
   ];
   monthlyParam = [];
 
-  constructor(public common: CommonService, public api: ApiService) {
+  unacknowledgedNormalTaskList = [];
+  unacknowledgedScheduledTaskList = [];
+  tableUnacknowledgedNormalTask = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  tableUnacknowledgedScheduledTask = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
     this.createScheduleParams();
   }
 
@@ -180,12 +203,20 @@ export class TaskScheduledComponent implements OnInit {
       this.resetTableMasterSchedule();
       this.resetTableAllTask();
       this.resetTableAllScheduleTask();
+      this.resetTableUnacknowledgedNormalTask();
+      this.resetTableUnacknowledgedScheduledTask();
       if (type == -1) {
         this.allTaskList = res['data'] || [];
         this.setTableAllTask();
       } else if (type == -2) {
         this.allScheduleTaskList = res['data'] || [];
         this.setTableAllScheduleTask();
+      } else if (type == -3) {
+        this.unacknowledgedNormalTaskList = res['data'] || [];
+        this.setTableUnacknowledgedNormalTask();
+      } else if (type == -4) {
+        this.unacknowledgedScheduledTaskList = res['data'] || [];
+        this.setTableUnacknowledgedScheduledTask();
       }
     },
       err => {
@@ -209,6 +240,18 @@ export class TaskScheduledComponent implements OnInit {
   }
   resetTableAllScheduleTask() {
     this.tableAllScheduleTask.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  resetTableUnacknowledgedNormalTask() {
+    this.tableUnacknowledgedNormalTask.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  resetTableUnacknowledgedScheduledTask() {
+    this.tableUnacknowledgedScheduledTask.data = {
       headings: {},
       columns: []
     };
@@ -293,6 +336,9 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             // icons: this.actionIcons(pending)
           };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -1) };
+
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -344,6 +390,9 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             // icons: this.actionIcons(pending)
           };
+        } else if (key == 'sc_task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -2) };
+
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -363,6 +412,96 @@ export class TaskScheduledComponent implements OnInit {
     return columns;
   }
 
+  // start unack normal task
+  setTableUnacknowledgedNormalTask() {
+    this.tableUnacknowledgedNormalTask.data = {
+      headings: this.generateHeadingsUnacknowledgedNormalTask(),
+      columns: this.getTableColumnsUnacknowledgedNormalTask()
+    };
+    return true;
+  }
+  generateHeadingsUnacknowledgedNormalTask() {
+    let headings = {};
+    for (var key in this.unacknowledgedNormalTaskList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+
+  getTableColumnsUnacknowledgedNormalTask() {
+    let columns = [];
+    this.unacknowledgedNormalTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsUnacknowledgedNormalTask()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(pending)
+          };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -2) };
+
+        } else {
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end unack normal task
+
+  // start unack scheduled task
+  setTableUnacknowledgedScheduledTask() {
+    this.tableUnacknowledgedScheduledTask.data = {
+      headings: this.generateHeadingsUnacknowledgedScheduledTask(),
+      columns: this.getTableColumnsUnacknowledgedScheduledTask()
+    };
+    return true;
+  }
+  generateHeadingsUnacknowledgedScheduledTask() {
+    let headings = {};
+    for (var key in this.unacknowledgedScheduledTaskList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+
+  getTableColumnsUnacknowledgedScheduledTask() {
+    let columns = [];
+    this.unacknowledgedScheduledTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsUnacknowledgedScheduledTask()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(pending)
+          };
+        } else if (key == 'sc_task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -2) };
+
+        } else {
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end unack scheduled task
+
   formatTitle(strval) {
     let pos = strval.indexOf('_');
     if (pos > 0) {
@@ -372,5 +511,15 @@ export class TaskScheduledComponent implements OnInit {
     }
   }
 
+  ticketMessage(ticket, type) {
+    console.log("type:", type);
+    let ticketEditData = {
+      ticketId: ticket._tktid,
+      statusId: ticket._status
+    }
+    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
+    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => { });
+  }
 
 }
