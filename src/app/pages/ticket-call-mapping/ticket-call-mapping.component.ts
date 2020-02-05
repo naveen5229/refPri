@@ -116,7 +116,11 @@ export class TicketCallMappingComponent implements OnInit {
           ticketId: request._id
         };
         const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-
+        activeModal.result.then(data => {
+          if (!data.response) {
+            this.getTicketData();
+          }
+        });
       }
 
  
