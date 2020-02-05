@@ -64,7 +64,7 @@ export class AddProjectComponent implements OnInit {
         // this.closeModal(true);
         if (res['data'][0]['y_id'] > 0) {
           this.common.showToast(res['data'][0].y_msg)
-          // this.closeModal(true);
+          this.closeModal(true);
         }
         else {
           this.common.showError(res['data'][0].y_msg)
