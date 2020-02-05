@@ -24,8 +24,9 @@ export class TicketCallRatingComponent implements OnInit {
 
   ngOnInit() {
   }
-  closeModal(response) {
-    this.activeModal.close({response:response});
+  closeModal(currentRate) {
+    // console.log(response);
+    this.activeModal.close(currentRate);
   }
 
   SendRating() {
@@ -34,17 +35,17 @@ export class TicketCallRatingComponent implements OnInit {
       currentRate: this.currentRate,
       isFutureRef: this.isFutureRef
     };
+    this.closeModal(this.currentRate);
+
       this.common.loading++
     this.api.post('Users/setUserTicketRating', params).subscribe( res => {
         this.common.loading--
-        this.closeModal(null);
         this.common.showToast[res['msg']];
         console.log(res);
     }, err => {
       this.common.loading--;
       console.log(err);
     });
-    console.log(params);
   }
 
 }

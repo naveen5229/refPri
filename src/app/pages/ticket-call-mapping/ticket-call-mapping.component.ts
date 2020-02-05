@@ -13,7 +13,7 @@ import { TicketCallRatingComponent } from '../../modals/ticket-call-rating/ticke
 export class TicketCallMappingComponent implements OnInit {
   endTime = new Date();
   startTime = new Date();
-
+  currentRate = '';
   ticketList = [];
 
   table = {
@@ -70,7 +70,7 @@ export class TicketCallMappingComponent implements OnInit {
 
   getTableColumns() {
     let columns = [];
-    this.ticketList.map(ticket => {
+    this.ticketList.map((ticket, index) => {
       let column = {};
       for (let key in this.generateHeadings()) {
         if (key == 'Action') {
@@ -78,7 +78,7 @@ export class TicketCallMappingComponent implements OnInit {
             value: ticket._rating,
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket)
+            icons: this.actionIcons(ticket, index)
           };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
@@ -89,14 +89,13 @@ export class TicketCallMappingComponent implements OnInit {
     return columns;
 
   }
-  actionIcons(request) {
- 
-    
+  actionIcons(request, index) {
+      // request._rating = this.currentRate;
     
         let icons = [
           {
             class:  "icon fas fa-star",
-            action: this.editData.bind(this, request),
+            action: this.editData.bind(this, request, index),
             value: request._rating
           },
           // {
@@ -110,16 +109,21 @@ export class TicketCallMappingComponent implements OnInit {
     
       }
     
-      editData(request) {
+      editData(request, index) {
+
         this.common.params = {
           rating: request._rating,
           ticketId: request._id
         };
         const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-        activeModal.result.then(data => {
-          if (!data.response) {
-            this.getTicketData();
-          }
+        activeModal.result.then(response => {
+          this.table.data.columns[index].Action.value = response;
+          console.log(this.table.data);
+          this.currentRate = response;
+          // if (response.response) {
+          //   console.log(response);
+          //   // this.getTicketData();
+          // }
         });
       }
 
