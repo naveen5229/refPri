@@ -1,0 +1,83 @@
+<div class="modal-header">
+    <h5>New Task</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label class="form-check-inline">
+            <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isProject" (click)="normalTask.projectId = null">
+            StandAlone
+          </label>
+        </div>
+        <div class="col-6">
+            <label class="form-check-inline">
+            <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isProject">
+            Project
+          </label>
+        </div>
+    </div>
+    <div class="row mt-2 " *ngIf="isProject==1">
+        <div class="col-4">
+            <label>Project:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="selectedProject($event)" url="AdminTask/serachProject.json" [display]="['project_desc']" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
+            </auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>User:<span class="text-red">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="selectedNormalUser($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Task Description:</label><span class="text-red">*</span>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>CC users:<span class="text-red">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Last Date <span class="text-red"></span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="normalTask.date" [isStart]="true" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Urgent:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="normalTask.isUrgent" (change)="normalTask.isUrgent = !normalTask.isUrgent" />
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">{{btn}}</button>
+        </div>
+    </div>
+</div>
