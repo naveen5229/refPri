@@ -6,6 +6,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+import { TaskNewComponent } from '../../modals/task-new/task-new.component';
+import { AddProjectComponent } from '../../modals/add-project/add-project.component';
 
 @Component({
   selector: 'ngx-task',
@@ -19,11 +21,13 @@ export class TaskComponent implements OnInit {
   primaryId = null;
   escalationId = null;
   reportingId = null;
-  normalTask = new NormalTask('', new Date(), '', false);
+  // normalTask = new NormalTask('', new Date(), '', false);
   normalTaskList = [];
   scheduledTaskList = [];
   scheduleMasterTaskList = [];
   allCompletedTaskList = [];
+  ccTaskList = [];
+  projectTaskList = [];
 
   tableNormal = {
     data: {
@@ -61,50 +65,83 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
+  tableCCTask = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  tableProjectTask = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
     this.getTaskByType(101);
   }
 
   ngOnInit() { }
 
-  selectedNormalUser(event) {
-    // console.log(event);
-    this.userId = event.id;
-    this.normalTask.userName = event.name;
+  showProjectPopup() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(AddProjectComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
-
-  saveUser() {
-    // console.log(this.normalTask.userName, this.normalTask.date, this.normalTask.task, this.normalTask.isUrgent);
-    if (this.normalTask.userName == '') {
-      return this.common.showError("User Name is missing")
-    }
-    else if (this.normalTask.task == '') {
-      return this.common.showError("Task  is missing")
-    }
-    else {
-      const params = {
-        userId: this.userId,
-        date: this.common.dateFormatter(this.normalTask.date),
-        task: this.normalTask.task,
-        isUrgent: this.normalTask.isUrgent,
-      }
-      this.common.loading++;
-      this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
-        console.log(res);
-        this.common.loading--;
-        this.normalTask = new NormalTask('', new Date(), '', false);
+  showTaskPopup() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(TaskNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
         this.getTaskByType(-101);
         this.activeTab = 'TasksByMe';
-        this.common.showToast("Task Created Successfully..!")
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
-    }
-
+      }
+    });
   }
+
+  // selectedNormalUser(event) {
+  //   // console.log(event);
+  //   this.userId = event.id;
+  //   this.normalTask.userName = event.name;
+  // }
+
+  // saveUser() {
+  //   // console.log(this.normalTask.userName, this.normalTask.date, this.normalTask.task, this.normalTask.isUrgent);
+  //   if (this.normalTask.userName == '') {
+  //     return this.common.showError("User Name is missing")
+  //   }
+  //   else if (this.normalTask.task == '') {
+  //     return this.common.showError("Task  is missing")
+  //   }
+  //   else {
+  //     const params = {
+  //       userId: this.userId,
+  //       date: this.common.dateFormatter(this.normalTask.date),
+  //       task: this.normalTask.task,
+  //       isUrgent: this.normalTask.isUrgent,
+  //     }
+  //     this.common.loading++;
+  //     this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
+  //       console.log(res);
+  //       this.common.loading--;
+  //       this.normalTask = new NormalTask('', new Date(), '', false);
+  //       this.getTaskByType(-101);
+  //       this.activeTab = 'TasksByMe';
+  //       this.common.showToast("Task Created Successfully..!")
+  //     },
+  //       err => {
+  //         this.common.loading--;
+  //         this.common.showError();
+  //         console.log('Error: ', err);
+  //       });
+  //   }
+
+  // }
 
   getTaskByType(type) {
     this.common.loading++;
@@ -118,6 +155,8 @@ export class TaskComponent implements OnInit {
       this.resetTableNormal();
       this.resetTableSchedule();
       this.resetTableAllCompleted();
+      this.resetTableCCTask();
+      this.resetTableProjectTask();
       if (type == 101) {
         this.normalTaskList = res['data'] || [];
         this.setTableNormal();
@@ -130,6 +169,12 @@ export class TaskComponent implements OnInit {
       } else if (type == -102) {
         this.allCompletedTaskList = res['data'] || [];
         this.setTableAllCompleted();
+      } else if (type == -5) {
+        this.ccTaskList = res['data'] || [];
+        this.setTableCCTask();
+      } else if (type == -6) {
+        this.projectTaskList = res['data'] || [];
+        this.setTableProjectTask();
       }
     },
       err => {
@@ -159,6 +204,18 @@ export class TaskComponent implements OnInit {
   }
   resetTableAllCompleted() {
     this.tableAllCompleted.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  resetTableCCTask() {
+    this.tableCCTask.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  resetTableProjectTask() {
+    this.tableProjectTask.data = {
       headings: {},
       columns: []
     };
@@ -385,6 +442,102 @@ export class TaskComponent implements OnInit {
     return columns;
 
   }
+
+  // start cc task list
+  setTableCCTask() {
+    this.tableCCTask.data = {
+      headings: this.generateHeadingsCCTask(),
+      columns: this.getTableColumnsCCTask()
+    };
+    return true;
+  }
+
+  generateHeadingsCCTask() {
+    // console.log(this.dailyReportList);
+    let headings = {};
+    for (var key in this.ccTaskList[0]) {
+      // console.log(key.charAts(0));
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+  getTableColumnsCCTask() {
+    let columns = [];
+    this.ccTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsCCTask()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+          };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -5) };
+
+        } else {
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    // console.log(columns);
+    return columns;
+
+  }
+  // end cc task list
+
+  // start project task list
+  setTableProjectTask() {
+    this.tableProjectTask.data = {
+      headings: this.generateHeadingsProjectTask(),
+      columns: this.getTableColumnsProjectTask()
+    };
+    return true;
+  }
+
+  generateHeadingsProjectTask() {
+    // console.log(this.dailyReportList);
+    let headings = {};
+    for (var key in this.projectTaskList[0]) {
+      // console.log(key.charAts(0));
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+  getTableColumnsProjectTask() {
+    let columns = [];
+    this.projectTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsProjectTask()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, -6)
+          };
+        } else if (key == 'task_desc') {
+          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -6) };
+
+        } else {
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    // console.log(columns);
+    return columns;
+
+  }
+  // end project task list
 
   actionIcons(ticket, type) {
     let icons = [

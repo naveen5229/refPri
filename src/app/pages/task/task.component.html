@@ -4,12 +4,21 @@
             <div class="col-10">
                 <h5>Tasks</h5>
             </div>
+            <div class="col text-right">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="showProjectPopup()">
+                    add Project
+                </button>
+            </div>
+            <div class="col text-right">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="showTaskPopup()"><i
+                        class="fa fa-plus"></i></button>
+            </div>
         </div>
     </nb-card-header>
     <nb-card>
         <nb-card-body>
             <!-- Normal Task Form      -->
-            <div>
+            <!-- <div>
                 <div class="container">
                     <div class="row ">
                         <div class="col-3">
@@ -46,7 +55,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> -->
 
             <!-- Tabs      -->
             <div class="tabs_style_main">
@@ -62,6 +71,12 @@
                     </li>
                     <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask'; getTaskByType(-102)">
                         Completed Task
+                    </li>
+                    <li [ngClass]="activeTab=='ccTask'?'active':''" (click)="activeTab='ccTask'; getTaskByType(-5)">
+                        CC Task
+                    </li>
+                    <li [ngClass]="activeTab=='projectTask'?'active':''" (click)="activeTab='projectTask'; getTaskByType(-6)">
+                        Project Task
                     </li>
                 </ul>
             </div>
@@ -80,6 +95,14 @@
             </div>
             <div *ngIf="activeTab=='allCompletedTask'">
                 <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='ccTask'">
+                <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='projectTask'">
+                <smart-table *ngIf="projectTaskList.length!=0" [data]="tableProjectTask.data" [settings]="tableProjectTask.settings" id="tableProjectTaskList">
                 </smart-table>
             </div>
         </nb-card-body>
