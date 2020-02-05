@@ -54,6 +54,7 @@ import { SendmessageComponent } from './modals/sendmessage/sendmessage.component
 import { GenericModelComponent } from './modals/generic-model/generic-model.component';
 import { TaskStatusChangeComponent } from './modals/task-status-change/task-status-change.component';
 import { TaskMessageComponent } from './modals/task-message/task-message.component';
+import { TicketCallRatingComponent } from './modals/ticket-call-rating/ticket-call-rating.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -77,7 +78,8 @@ const PAGE_COMPONENTS = [
   SendmessageComponent,
   GenericModelComponent,
   TaskStatusChangeComponent,
-  TaskMessageComponent
+  TaskMessageComponent,
+  TicketCallRatingComponent
 ];
 
 @NgModule({
@@ -86,6 +88,7 @@ const PAGE_COMPONENTS = [
     ...PAGE_COMPONENTS,
     SendmessageComponent,
     GenericModelComponent,
+    TicketCallRatingComponent,
 
   ],
   entryComponents: [...PAGE_COMPONENTS],

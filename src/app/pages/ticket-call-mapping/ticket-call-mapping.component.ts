@@ -3,6 +3,8 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { TicketCallRatingComponent } from '../../modals/ticket-call-rating/ticket-call-rating.component';
+
 @Component({
   selector: 'ngx-ticket-call-mapping',
   templateUrl: './ticket-call-mapping.component.html',
@@ -39,17 +41,14 @@ export class TicketCallMappingComponent implements OnInit {
     };
   }
   generateHeadings() {
-    console.log(this.ticketList);
     let headings = {};
     for (var key in this.ticketList[0]) {
-      console.log(key.charAt(0));
 
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
     return headings;
-    // console.log(headings);
   }
 
   formatTitle(strval) {
@@ -76,10 +75,10 @@ export class TicketCallMappingComponent implements OnInit {
       for (let key in this.generateHeadings()) {
         if (key == 'Action') {
           column[key] = {
-            value: "",
+            value: ticket._rating,
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket)
           };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
@@ -87,10 +86,44 @@ export class TicketCallMappingComponent implements OnInit {
       }
       columns.push(column);
     });
-      console.log(columns);
     return columns;
 
   }
+  actionIcons(request) {
+ 
+    
+    
+        let icons = [
+          {
+            class:  "icon fas fa-star",
+            action: this.editData.bind(this, request),
+            value: request._rating
+          },
+          // {
+          //   class: "icon fa fa-check green",
+          //   // action: this.openConfirmModal.bind(this, request),
+          // },
+    
+        ];
+        return icons;
+      
+    
+      }
+    
+      editData(request) {
+        this.common.params = {
+          rating: request._rating,
+          ticketId: request._id
+        };
+        const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+        activeModal.result.then(data => {
+          if (!data.response) {
+            this.getTicketData();
+          }
+        });
+      }
+
+ 
 
   getTicketData() {
     this.ticketList = [];
@@ -109,16 +142,13 @@ export class TicketCallMappingComponent implements OnInit {
     const params =
       "startDate=" + startdate +
       "&endDate=" + enddate;
-      console.log(params);
     this.common.loading++;
     this.api.get('Users/getUserTicketCallMapping.json?' + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
         this.ticketList = res['data'] || [];
         this.ticketList.length ? this.setTable() : this.resetTable();
 
-        console.log(this.ticketList);
 
       }, err => {
         this.common.loading--;
