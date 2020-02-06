@@ -5,7 +5,7 @@
 </button>
 </div>
 <div class="modal-body">
-    <div class="row mt-2 ">
+    <!-- <div class="row mt-2 ">
         <div class="col-4">
             <label>Description:</label><span class="text-red">*</span>
         </div>
@@ -18,23 +18,47 @@
             <label>Owner:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedOwner($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Search Owner" autocomplete="off" name="ownerId" inputId="ownerId">
+            <auto-suggestion (onSelected)="selectedOwner($event)" [data]="userList" [display]="['name']" seperator="-" placeholder="Search Owner" autocomplete="off" name="ownerId" inputId="ownerId">
             </auto-suggestion>
         </div>
     </div>
-
     <div class="row mt-2 ">
         <div class="col-4">
             <label>Users:<span class="text-red">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Select Users" (onSelected)="changeUsers($event)" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userList" [display]="['name']" seperator="-" placeholder="Select Users" (onSelected)="changeUsers($event)" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">{{btn}}</button>
+        </div>
+    </div>
+ -->
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <textarea row="2" cols="15" placeholder="Enter Description" name="projectDesc" class="form-control" [(ngModel)]="project.projectDesc"></textarea>
+        </div>
+        <div class="col-3">
+            <auto-suggestion (onSelected)="project.owner = $event" [data]="userList" display="name" seperator="-" placeholder="Search Owner" [preSelected]="project.owner.id ? { name: project.owner.name} : {name: ''}" autocomplete="off" name="ownerId" inputId="ownerId">
+            </auto-suggestion>
+        </div>
+        <div class="col-3">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Users" [preSelected]="project.users" (onSelected)="project.users = $event" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+        </div>
+        <div class="col-2 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">{{btn}}</button>
         </div>
     </div>
 
     <div class="row mt-1">
-        <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">{{btn}}</button>
+        <smart-table *ngIf="projectList.length!=0" [data]="tableProjectList.data" [settings]="tableProjectList.settings" id="tableProjectList">
+        </smart-table>
+
+        <div *ngIf="projectList.length==0" class="col-12 text-center">
+            <div *ngIf="showLoading" class="spinner-border"></div>
+            <div *ngIf="!showLoading">No Project</div>
         </div>
     </div>
 </div>
