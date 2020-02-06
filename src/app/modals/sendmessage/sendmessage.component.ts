@@ -10,8 +10,13 @@ import { ErrorReportComponent } from '../error-report/error-report.component';
 })
 export class SendmessageComponent implements OnInit {
 
-  message = '';
+  message = null;
+  imageTextFirst = 1;
+  uploadeImage = null;
+  order = [];
+  imagesUrl = [];
   contact_type = 'UKN';
+  showOrder = false;
   mesaageData = {
     admin_id : '',
     admin_name: '',
@@ -68,7 +73,7 @@ export class SendmessageComponent implements OnInit {
         this.common.loading--;
         let file = event.target.files[0];
         console.log(file);
-        if (file.type == "application/vnd.ms-excel") {
+        if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {
         }
         else {
           alert("valid Format Are : csv");
@@ -88,18 +93,34 @@ export class SendmessageComponent implements OnInit {
   }
  
   SendMsg() {
-    console.log(this.contact_type);
-    if (this.contact_type == '' || this.message == '' ) {
-      this.common.showError('Please Fill All Fild');
-    } else{
-    console.log(this.contact_type.length);
+    this.order = [];
+    if (this.message == null && this.imagesUrl.length)  {
+        this.order.push('imgs');
+    }
+    if (this.message != null && !this.imagesUrl.length)  {
+      this.order.push('msg');
+  }
+  if (this.message != null && this.imagesUrl.length)  {
+      if(this.imageTextFirst == 1) {
+        this.order.push('imgs', 'msg');
+      }
+      else {
+        this.order.push('msg', 'imgs');
+      }
+}
+console.log(this.order.length);
+if (!this.order.length ) {
+  this.common.showError('Please Fill All Field');
+} else{
     const params = {
+      order: this.order,
+      imgs: this.imagesUrl,
       contactsCsv: this.csv,
       adminId: this.mesaageData.admin_id,
       msg: this.message,
       contactType: this.contact_type
     };
-    console.log(params.contactType.split);
+    console.log(params);
     this.common.loading++;
     this.api.post('WhatsappWeb/importContactsCsv', params)
     .subscribe(res => {
@@ -122,4 +143,27 @@ export class SendmessageComponent implements OnInit {
     });
   }
 }
+
+handleFileSelectionImage(event, index) {
+  // this.common.loading++;
+  let file = event.target.files[0];
+  console.log("Type", file.type);
+  if (file.type == "image/jpeg" || file.type == "image/jpg" ||
+    file.type == "image/png" || file.type == "application/pdf" ) {
+    this.common.showToast("SuccessFull File Selected");
+  }
+  else {
+    this.common.showError("valid Format Are : jpeg,png,jpg");
+    return false;
+  }
+  let promises = [];
+  for(let file of event.target.files)
+    promises.push(this.common.getBase64(file));
+    console.log(promises);
+  Promise.all(promises).then(results => this.imagesUrl = results)
+  .catch(err =>console.error(err));
+  
+}
+
+
 }

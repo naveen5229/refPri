@@ -207,10 +207,10 @@ export class CommonService {
   }
 
 
-  getBase64(file) {
+  getBase64(files) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(files);
       reader.onload = () => resolve(reader.result);
       reader.onerror = error => reject(error);
     });

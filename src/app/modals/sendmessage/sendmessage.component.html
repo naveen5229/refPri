@@ -47,16 +47,44 @@
 
     <div class="row form-group">
       <div class="col-6">
-        <label>Message <span class="require">*</span></label>
+        <label>Images <span class="require">*</span></label>
       </div>
       <div class="col-6">
-            <textarea style="resize: vertical;" rows="10" cols="50"  name="message" [(ngModel)]="message"></textarea>
+            <input type="file" multiple name="ww-image" id="ww-image" (change)="handleFileSelectionImage($event)" >
             <!-- <input type="radio" name="transporter" [(ngModel)]="upload.campaignType" [value]="1" >
             <label>FO / Transporter</label>
           </div>
           <div class="col-6">
             <input type="radio" name="corporate" [(ngModel)]="upload.campaignType" [value]="2" >
             <label>Corporate</label> -->
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Message <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+            <textarea style="resize: vertical;" rows="10" cols="50"  name="message" [(ngModel)]="message"></textarea>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf='imagesUrl.length && message != null'>
+      <div class="col-6">
+        <label>Order By <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <div class="row" style="margin-left: 15px;">
+            <div class="col-6">
+              <input id="imageFirst" type="radio" class="custom-control-input" [(ngModel)]="imageTextFirst" value="1" name="imageFirst" >
+              <label class="custom-control-label" for="imageFirst">Image First</label>
+            </div>
+            <div class="col-6">
+              <input id="textFirst" type="radio" class="custom-control-input" [(ngModel)]="imageTextFirst" value="2" name="textFirst" >
+              <label class="custom-control-label" for="textFirst">Text First</label>
+            </div>
+        </div>
+            
       </div>
     </div>
 
