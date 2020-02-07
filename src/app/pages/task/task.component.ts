@@ -21,6 +21,7 @@ export class TaskComponent implements OnInit {
   primaryId = null;
   escalationId = null;
   reportingId = null;
+  adminList = [];
   // normalTask = new NormalTask('', new Date(), '', false);
   normalTaskList = [];
   scheduledTaskList = [];
@@ -85,16 +86,32 @@ export class TaskComponent implements OnInit {
   };
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
     this.getTaskByType(101);
+    this.getAllAdmin();
   }
 
   ngOnInit() { }
 
+  getAllAdmin() {
+    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.adminList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    },
+      err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
   showProjectPopup() {
-    this.common.params = null;
+    this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(AddProjectComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
   showTaskPopup() {
-    this.common.params = null;
+    this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(TaskNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -315,11 +332,9 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+            // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+            icons: this.actionIcons(ticket, -102)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, 103) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -344,11 +359,9 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 101)
+            // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 101)
+            icons: this.actionIcons(ticket, 101)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, 101) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -383,9 +396,6 @@ export class TaskComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, -101)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -101) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -418,11 +428,9 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+            // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+            icons: this.actionIcons(ticket, 103)
           };
-        } else if (key == 'sc_task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, 103) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -475,10 +483,8 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             action: null,
             // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, 103)
+            icons: this.actionIcons(ticket, -5)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -5) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -522,11 +528,8 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: (ticket._status == 5 || ticket._status == -1) ? '' : this.actionIcons(ticket, -6)
+            icons: this.actionIcons(ticket, -6)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -6) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -541,12 +544,22 @@ export class TaskComponent implements OnInit {
 
   actionIcons(ticket, type) {
     let icons = [
-      { class: "far fa-edit", action: this.editTicket.bind(this, ticket, type) },
+      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type) },
     ];
-    if (type == -101) {
+
+    if (ticket._unreadcount > 0) {
       icons = [
-        { class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type) },
+        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type) },
       ];
+    }
+
+    if (type == -101) {
+      icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type) });
+    } else if (type == 101 || type == 103 || type == -102) {
+      if ((ticket._status == 5 || ticket._status == -1)) {
+      } else {
+        icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type) });
+      }
     }
     return icons;
   }

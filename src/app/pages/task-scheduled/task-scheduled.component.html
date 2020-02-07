@@ -96,10 +96,10 @@
                         All Scheduled Task
                     </li>
                     <li [ngClass]="activeTab=='unacknowledgedNormalTask'?'active':''" (click)="activeTab='unacknowledgedNormalTask'; getAllTask(-3)">
-                        Unacknowledged Task
+                        Pending Task
                     </li>
                     <li [ngClass]="activeTab=='unacknowledgedScheduledTask'?'active':''" (click)="activeTab='unacknowledgedScheduledTask'; getAllTask(-4)">
-                        Unacknowledged Scheduled Task
+                        Pending Scheduled Task
                     </li>
                 </ul>
             </div>

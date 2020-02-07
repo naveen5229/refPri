@@ -334,11 +334,8 @@ export class TaskScheduledComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket, -1)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -1) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -388,11 +385,8 @@ export class TaskScheduledComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket, -2)
           };
-        } else if (key == 'sc_task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -2) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -441,11 +435,8 @@ export class TaskScheduledComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket, -2)
           };
-        } else if (key == 'task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -2) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -486,11 +477,8 @@ export class TaskScheduledComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(pending)
+            icons: this.actionIcons(ticket, -2)
           };
-        } else if (key == 'sc_task_desc') {
-          column[key] = { value: ticket[key], class: 'black', action: this.ticketMessage.bind(this, ticket, -2) };
-
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -520,6 +508,18 @@ export class TaskScheduledComponent implements OnInit {
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => { });
+  }
+
+  actionIcons(ticket, type) {
+    let icons = [
+      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type) },
+    ];
+    if (ticket._unreadcount > 0) {
+      icons = [
+        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type) },
+      ];
+    }
+    return icons;
   }
 
 }

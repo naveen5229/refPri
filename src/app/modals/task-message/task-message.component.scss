@@ -8,3 +8,32 @@
         padding: 2px;
     }
 }
+
+.chat_block {
+    max-height: 70vh;
+    overflow: auto;
+}
+
+.active_chat {
+    float: right;
+    text-align: right;
+    background: #007bff6e;
+    border: 1px solid #007bff6e;
+}
+
+.other_chat {
+    background-color: #c1c1c1;
+    border: 1px solid gray;
+}
+
+.other_chat,
+.active_chat {
+    max-width: 80%;
+    margin-bottom: 1px;
+    border-radius: 10px;
+    padding: 0 10px;
+    span {
+        display: flow-root;
+        font-size: 10px;
+    }
+}
