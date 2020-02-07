@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <div class="row mt-2 ">
-        <div class="col-4">
+        <div class="col-6">
             <label class="form-check-inline">
             <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isProject" (click)="normalTask.projectId = null">
             StandAlone
@@ -21,7 +21,7 @@
     </div>
     <div class="row mt-2 " *ngIf="isProject=='1'">
         <div class="col-4">
-            <label>Project:</label>
+            <label>Project:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" [display]="['project_desc']" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
@@ -30,7 +30,7 @@
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>User:<span class="text-red">*</span></label>
+            <label>User:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" [display]="['name']" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
@@ -40,7 +40,7 @@
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Task Description:</label><span class="text-red">*</span>
+            <label>Task Description:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
@@ -58,7 +58,7 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Last Date: <span class="text-red">*</span></label>
+            <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <uj-date-time-picker [mind]="normalTask.date" [isStart]="true" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">

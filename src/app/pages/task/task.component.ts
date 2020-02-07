@@ -544,21 +544,21 @@ export class TaskComponent implements OnInit {
 
   actionIcons(ticket, type) {
     let icons = [
-      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type) },
+      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: '' },
     ];
 
     if (ticket._unreadcount > 0) {
       icons = [
-        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type) },
+        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount },
       ];
     }
 
     if (type == -101) {
-      icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type) });
+      icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '' });
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
       } else {
-        icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type) });
+        icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       }
     }
     return icons;
