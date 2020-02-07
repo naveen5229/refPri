@@ -5,8 +5,8 @@
   </button>
 </div>
 <div class="modal-body">
-    <div class="row mt-1">
-        <div class="col-12 chat_block" *ngFor="let msg of messageList;">
+    <div class="row mt-1 chat_block">
+        <div class="col-12" *ngFor="let msg of messageList;">
             <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                 {{msg.comment}}
                 <span>{{msg.added_date}}</span>
