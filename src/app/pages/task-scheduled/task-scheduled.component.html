@@ -11,36 +11,36 @@
             <div>
                 <div class="container">
                     <div class="row ">
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Description</label>
+                                <label>Description<span class="text-danger">*</span></label>
                                 <input style="width: 100%;" type="description" placeholder="Description" class="form-control" [(ngModel)]="scheduledTask.description">
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Primary User</label>
-                                <auto-suggestion (onSelected)="selectedPrimarUser($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Primary User" autocomplete="off" name="primaryUser" inputId="primaryUserId" [preSelected]='{name: scheduledTask.primaryUser}'>
+                                <label>Primary User<span class="text-danger">*</span></label>
+                                <auto-suggestion (onSelected)="scheduledTask.primaryUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Primary User" autocomplete="off" name="primaryUser" inputId="primaryUserId" [preSelected]="scheduledTask.primaryUser.id ? {name: scheduledTask.primaryUser.name}:{name:''}">
                                 </auto-suggestion>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Escalation User</label>
-                                <auto-suggestion (onSelected)="selectedEscalationUser($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Escalation User" autocomplete="off" name="escalationUser" inputId="scalationUserId" [preSelected]='{name: scheduledTask.escalationUser}'>
+                                <label>Escalation User<span class="text-danger">*</span></label>
+                                <auto-suggestion (onSelected)="scheduledTask.escalationUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Escalation User" autocomplete="off" name="escalationUser" inputId="scalationUserId" [preSelected]="scheduledTask.escalationUser.id ? {name: scheduledTask.escalationUser.name}:{name:''}">
                                 </auto-suggestion>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Reporting User</label>
-                                <auto-suggestion (onSelected)="selectedReportingUser($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Reporting User" autocomplete="off" name="reportingUser" inputId="reportingUserId" [preSelected]='{name: scheduledTask.reportingUser}'>
+                                <label>Reporting User<span class="text-danger">*</span></label>
+                                <auto-suggestion (onSelected)="scheduledTask.reportingUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Reporting User" autocomplete="off" name="reportingUser" inputId="reportingUserId" [preSelected]="scheduledTask.reportingUser.id ? {name: scheduledTask.reportingUser.name}:{name:''}">
                                 </auto-suggestion>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Logic Type</label>
+                                <label>Logic Type<span class="text-danger">*</span></label>
                                 <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (change)="onChangeLogicType()">
                                     <option value=1>Daily</option>
                                     <option value=2>Weekly</option>
@@ -48,10 +48,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Schedule Param</label>
-                                <!-- <input style="width: 100%;" type="number" maxlength="1" placeholder="Schedule Params" class="form-control" [(ngModel)]="scheduledTask.scheduleParam"> -->
+                                <label>Schedule Param<span class="text-danger">*</span></label>
                                 <select *ngIf="scheduledTask.logicType==1 || scheduledTask.logicType=='' " class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
                                   <option *ngFor= "let dd of dailyParam" [value]="dd.id">{{dd.name}}</option>
                                 </select>
@@ -63,20 +62,28 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Days</label>
+                                <label>Days<span class="text-danger">*</span></label>
                                 <input style="width: 100%;" type="number" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Hours</label>
+                                <label>Hours<span class="text-danger">*</span></label>
                                 <input style="width: 100%;" type="number" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
                             </div>
                         </div>
-                        <div class="col-4 text-right">
-                            <button class="btn btn-primary text-capitalize mt-4" id="button" (click)="saveUser()">Save</button>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="mr-1">Is Active</label>
+                                <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button class="btn btn-primary text-capitalize" id="button" (click)="saveScheduleTask()">Save</button>
                         </div>
                     </div>
 
@@ -89,26 +96,82 @@
                     <li [ngClass]="activeTab=='ScheduledTaskMaster'?'active':''" (click)="activeTab='ScheduledTaskMaster'; getScheduledTask()">
                         Scheduled Task Master
                     </li>
-                    <li [ngClass]="activeTab=='allTask'?'active':''" (click)="activeTab='allTask'; getAllTask(-1)">
-                        All Task
+                    <li [ngClass]="activeTab=='normalTask'?'active':''" (click)="activeTab='normalTask';activeTabNormal=''">
+                        Normal Task
                     </li>
-                    <li [ngClass]="activeTab=='allScheduleTask'?'active':''" (click)="activeTab='allScheduleTask'; getAllTask(-2)">
-                        All Scheduled Task
+                    <li [ngClass]="activeTab=='scheduledTask'?'active':''" (click)="activeTab='scheduledTask';activeTabScheduled=''">
+                        Scheduled Task
                     </li>
-                    <li [ngClass]="activeTab=='unacknowledgedNormalTask'?'active':''" (click)="activeTab='unacknowledgedNormalTask'; getAllTask(-3)">
+                    <!-- <li [ngClass]="activeTab=='unacknowledgedNormalTask'?'active':''" (click)="activeTab='unacknowledgedNormalTask'; getAllTask(-3)">
                         Pending Task
                     </li>
                     <li [ngClass]="activeTab=='unacknowledgedScheduledTask'?'active':''" (click)="activeTab='unacknowledgedScheduledTask'; getAllTask(-4)">
                         Pending Scheduled Task
-                    </li>
+                    </li> -->
                 </ul>
             </div>
+            <!-- start:normal task subtab -->
+            <div *ngIf="activeTab=='normalTask'">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTabNormal=='pending'?'active':''" (click)="activeTabNormal='pending'; getAllTask(-3)">
+                        Pending Task
+                    </li>
+                    <li [ngClass]="activeTabNormal=='ack'?'active':''" (click)="activeTabNormal='ack'; getAllTask(-33)">
+                        Ack Task
+                    </li>
+                    <li [ngClass]="activeTabNormal=='completed'?'active':''" (click)="activeTabNormal='completed'; getAllTask(-1)">
+                        Completed Task
+                    </li>
+                </ul>
+
+                <div *ngIf="activeTabNormal=='pending'">
+                    <smart-table *ngIf="unacknowledgedNormalTaskList.length!=0" [data]="tableUnacknowledgedNormalTask.data" [settings]="tableUnacknowledgedNormalTask.settings" id="unacknowledgedNormalTaskList">
+                    </smart-table>
+                </div>
+                <div *ngIf="activeTabNormal=='ack'">
+                    <smart-table *ngIf="ackNormalTaskList.length!=0" [data]="tableAckNormalTask.data" [settings]="tableAckNormalTask.settings" id="ackNormalTaskList">
+                    </smart-table>
+                </div>
+                <div *ngIf="activeTabNormal=='completed'">
+                    <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList">
+                    </smart-table>
+                </div>
+            </div>
+            <!-- end:normal task subtab -->
+            <!-- start:scheduled task subtab -->
+            <div *ngIf="activeTab=='scheduledTask'">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTabScheduled=='pending'?'active':''" (click)="activeTabScheduled='pending'; getAllTask(-4)">
+                        Pending Task
+                    </li>
+                    <li [ngClass]="activeTabScheduled=='ack'?'active':''" (click)="activeTabScheduled='ack'; getAllTask(-44)">
+                        Ack Task
+                    </li>
+                    <li [ngClass]="activeTabScheduled=='completed'?'active':''" (click)="activeTabScheduled='completed'; getAllTask(-2)">
+                        Completed Task
+                    </li>
+                </ul>
+
+                <div *ngIf="activeTabScheduled=='pending'">
+                    <smart-table *ngIf="unacknowledgedScheduledTaskList.length!=0" [data]="tableUnacknowledgedScheduledTask.data" [settings]="tableUnacknowledgedScheduledTask.settings" id="unacknowledgedScheduledTaskList">
+                    </smart-table>
+                </div>
+                <div *ngIf="activeTabScheduled=='ack'">
+                    <smart-table *ngIf="ackScheduleTaskList.length!=0" [data]="tableAckScheduleTask.data" [settings]="tableAckScheduleTask.settings" id="ackScheduleTaskList">
+                    </smart-table>
+                </div>
+                <div *ngIf="activeTabScheduled=='completed'">
+                    <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList">
+                    </smart-table>
+                </div>
+            </div>
+            <!-- end:scheduled task subtab -->
 
             <div *ngIf="activeTab=='ScheduledTaskMaster'">
                 <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
                 </smart-table>
             </div>
-            <div *ngIf="activeTab=='allTask'">
+            <!-- <div *ngIf="activeTab=='allTask'">
                 <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList">
                 </smart-table>
             </div>
@@ -123,6 +186,6 @@
             <div *ngIf="activeTab=='unacknowledgedScheduledTask'">
                 <smart-table *ngIf="unacknowledgedScheduledTaskList.length!=0" [data]="tableUnacknowledgedScheduledTask.data" [settings]="tableUnacknowledgedScheduledTask.settings" id="unacknowledgedScheduledTaskList">
                 </smart-table>
-            </div>
+            </div> -->
         </nb-card-body>
     </nb-card>

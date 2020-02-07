@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
@@ -10,6 +10,7 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-message.component.scss']
 })
 export class TaskMessageComponent implements OnInit {
+  @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
   ticketId = 0;
@@ -30,7 +31,19 @@ export class TaskMessageComponent implements OnInit {
     console.log("user_details:", this.userService._details)
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
 
   closeModal(response) {
     this.activeModal.close({ response: response });
@@ -50,13 +63,17 @@ export class TaskMessageComponent implements OnInit {
       if (res['success']) {
         this.messageList = res['data'] || [];
         if (this.messageList.length > 0) {
-          let lastMsgIdTemp = this.messageList[this.messageList.length - 1]._id;
-          if (this.lastMsgId != lastMsgIdTemp) {
-            this.lastMsgId = lastMsgIdTemp;
-            this.lastMessageRead();
+          let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
+          console.log("msgListOfOther:", msgListOfOther);
+          if (msgListOfOther.length > 0) {
+            let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
+            if (this.lastMsgId != lastMsgIdTemp) {
+              this.lastMsgId = lastMsgIdTemp;
+              this.lastMessageRead();
+            }
+            console.log("lastMsgIdTemp:", lastMsgIdTemp);
           }
           console.log("lastMsgId:", this.lastMsgId);
-          console.log("lastMsgIdTemp:", lastMsgIdTemp);
         }
       } else {
         this.common.showError(res['data'])

@@ -9,31 +9,44 @@
     }
 }
 
+.modal-body {
+    padding-top: 0;
+}
+
 .chat_block {
     max-height: 70vh;
     overflow: auto;
+    background: ghostwhite;
+    margin-top: 0!important;
 }
 
 .active_chat {
     float: right;
     text-align: right;
-    background: #007bff6e;
-    border: 1px solid #007bff6e;
+    background: #1def1d2e;
+    border: 1px solid #1def1d2e;
 }
 
 .other_chat {
-    background-color: #c1c1c1;
-    border: 1px solid gray;
+    float: left;
+    background-color: #fff;
+    border: 1px solid lightgray;
 }
 
 .other_chat,
 .active_chat {
-    max-width: 80%;
+    max-width: 90%;
     margin-bottom: 1px;
     border-radius: 10px;
     padding: 0 10px;
     span {
         display: flow-root;
         font-size: 10px;
+    }
+}
+
+.bottom-block {
+    .button-box {
+        display: inline-grid;
     }
 }

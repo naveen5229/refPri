@@ -1,10 +1,4 @@
-.edit-icon {
-    color: blue;
-    margin-right: 6px;
-    cursor: pointer;
-}
-
- :host ::ng-deep .fa-check {
+:host ::ng-deep .fa-check {
     border-radius: 3px;
     font-size: initial;
     color: darkblue;
@@ -70,10 +64,29 @@
     }
 }
 
+:host ::ng-deep .fa-edit {
+    color: green;
+    font-size: 18px;
+}
+
 :host ::ng-deep .fa-comments {
     font-size: 18px;
     margin-right: 5px;
-    &.new-comment {
-        color: red;
+    color: limegreen;
+    &.new-comment span {
+        min-width: 13px;
+        min-height: 13px;
+        display: block;
+        border-radius: 50%;
+        position: absolute;
+        top: -3px;
+        left: 1px;
+        padding: 1px;
+        font-size: 8px;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 11px;
+        background: transparent;
     }
 }

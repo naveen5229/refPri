@@ -5,7 +5,7 @@
   </button>
 </div>
 <div class="modal-body">
-    <div class="row mt-1 chat_block">
+    <div class="row mt-1 chat_block" #chat_block>
         <div class="col-12" *ngFor="let msg of messageList;">
             <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                 {{msg.comment}}
@@ -21,11 +21,11 @@
         </div>
     </div>
 
-    <div class="row mt-1">
+    <div class="row mt-1 bottom-block">
         <div class="col-9">
             <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
         </div>
-        <div class="col-3 text-right">
+        <div class="col-3 text-right button-box">
             <button class="btn btn-primary text-capitalize" id="button" (click)="saveTicketMessage()">Send
           </button>
         </div>
