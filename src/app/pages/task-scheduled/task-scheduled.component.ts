@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
-import { ScheduleTask } from '../../classes/schedule-task';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
 
 @Component({
   selector: 'ngx-task-scheduled',
@@ -12,10 +12,11 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
 })
 export class TaskScheduledComponent implements OnInit {
   activeTab = '';
+  activeTabNormal = '';
+  activeTabScheduled = '';
   primaryId = null;
   escalationId = null;
   reportingId = null;
-  // scheduledTask = new ScheduleTask(null, '', '', '', '', 1, 1, '', '', true);
   scheduledTask = {
     taskId: null,
     description: "",
@@ -31,8 +32,8 @@ export class TaskScheduledComponent implements OnInit {
       id: '',
       name: ''
     },
-    logicType: 1,
-    scheduleParam: 1,
+    // logicType: 1,
+    // scheduleParam: 1,
     days: "",
     hours: "",
     isActive: true
@@ -87,17 +88,6 @@ export class TaskScheduledComponent implements OnInit {
       hideHeader: true
     }
   };
-  dailyParam = [];
-  weeklyParam = [
-    { id: 0, name: 'Sunday' },
-    { id: 1, name: 'Monday' },
-    { id: 2, name: 'Tuesday' },
-    { id: 3, name: 'Wednesday' },
-    { id: 4, name: 'Thursday' },
-    { id: 5, name: 'Friday' },
-    { id: 6, name: 'Saturday' }
-  ];
-  monthlyParam = [];
 
   unacknowledgedNormalTaskList = [];
   unacknowledgedScheduledTaskList = [];
@@ -120,9 +110,12 @@ export class TaskScheduledComponent implements OnInit {
     }
   };
   adminList = [];
+  searchTask = {
+    startDate: <any>"",
+    endDate: <any>""
+  }
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
-    this.createScheduleParams();
     this.getAllAdmin();
   }
 
@@ -142,26 +135,6 @@ export class TaskScheduledComponent implements OnInit {
       });
   }
 
-  createScheduleParams() {
-    for (let dd = 0; dd < 24; dd++) {
-      let tempD = { id: dd, name: dd };
-      this.dailyParam.push(tempD);
-    }
-    for (let mm = 1; mm <= 31; mm++) {
-      let tempM = { id: mm, name: mm };
-      this.monthlyParam.push(tempM);
-    }
-  }
-
-  onChangeLogicType() {
-    if (this.scheduledTask.logicType == 3) {
-      this.scheduledTask.scheduleParam = 1;
-    } else {
-      this.scheduledTask.scheduleParam = 0;
-    }
-
-  }
-
   selectedPrimarUser(event) {
     this.scheduledTask.primaryUser = event.name;
     this.primaryId = event.id;
@@ -176,9 +149,9 @@ export class TaskScheduledComponent implements OnInit {
   }
 
   saveScheduleTask() {
-    console.log(this.scheduledTask.description, this.scheduledTask.primaryUser,
-      this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
-      this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
+    // console.log(this.scheduledTask.description, this.scheduledTask.primaryUser,
+    //   this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
+    //   this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
 
     if (this.scheduledTask.description == '') {
       return this.common.showError("Description is missing")
@@ -192,12 +165,12 @@ export class TaskScheduledComponent implements OnInit {
     else if (this.scheduledTask.reportingUser.id == '') {
       return this.common.showError("Reporting User is missing")
     }
-    else if (this.scheduledTask.logicType < 0) {
-      return this.common.showError("Logic Type is missing")
-    }
-    else if (this.scheduledTask.scheduleParam < 0) {
-      return this.common.showError("Schedule Param is missing")
-    }
+    // else if (this.scheduledTask.logicType < 0) {
+    //   return this.common.showError("Logic Type is missing")
+    // }
+    // else if (this.scheduledTask.scheduleParam < 0) {
+    //   return this.common.showError("Schedule Param is missing")
+    // }
     else if (this.scheduledTask.days == '') {
       return this.common.showError("Day is missing")
     }
@@ -211,8 +184,8 @@ export class TaskScheduledComponent implements OnInit {
         primaryUser: this.scheduledTask.primaryUser.id,
         escalationUser: this.scheduledTask.escalationUser.id,
         reportingUser: this.scheduledTask.reportingUser.id,
-        logicType: this.scheduledTask.logicType,
-        scheduleParam: this.scheduledTask.scheduleParam,
+        // logicType: this.scheduledTask.logicType,
+        // scheduleParam: this.scheduledTask.scheduleParam,
         days: this.scheduledTask.days,
         hours: this.scheduledTask.hours,
         isActive: this.scheduledTask.isActive
@@ -221,34 +194,11 @@ export class TaskScheduledComponent implements OnInit {
       this.api.post('AdminTask/createScheduleTask', params).subscribe(res => {
         console.log(res);
         this.common.loading--;
-        // this.common.showToast('Task Created Successfully..!');
-        // this.getScheduledTask();
-        // this.activeTab = 'ScheduledTaskMaster';
         if (res['code'] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0].y_msg)
-            // this.scheduledTask = new ScheduleTask(null, '', '', '', '', 1, 1, '', '', true);
-            this.scheduledTask = {
-              taskId: null,
-              description: "",
-              primaryUser: {
-                id: '',
-                name: ''
-              },
-              escalationUser: {
-                id: '',
-                name: ''
-              },
-              reportingUser: {
-                id: '',
-                name: ''
-              },
-              logicType: 1,
-              scheduleParam: 1,
-              days: "",
-              hours: "",
-              isActive: true
-            };
+
+            this.resetScheduleTask();
             this.getScheduledTask();
             this.activeTab = 'ScheduledTaskMaster';
           } else {
@@ -266,13 +216,36 @@ export class TaskScheduledComponent implements OnInit {
     }
   }
 
+  resetScheduleTask() {
+    this.scheduledTask = {
+      taskId: null,
+      description: "",
+      primaryUser: {
+        id: '',
+        name: ''
+      },
+      escalationUser: {
+        id: '',
+        name: ''
+      },
+      reportingUser: {
+        id: '',
+        name: ''
+      },
+      // logicType: 1,
+      // scheduleParam: 1,
+      days: "",
+      hours: "",
+      isActive: true
+    };
+  }
+
   getScheduledTask() {
     this.common.loading++;
     this.api.get("AdminTask/getScheduledTask").subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
-      this.resetTableMasterSchedule();
-      this.resetTableAllTask();
+      this.resetSmartTableData();
       this.scheduledTaskList = res['data'] || [];
       this.setTableSchedule();
     },
@@ -283,21 +256,17 @@ export class TaskScheduledComponent implements OnInit {
       });
   }
 
-  getAllTask(type) {
+  getAllTask(type, startDate = null, endDate = null) {
     this.common.loading++;
     let params = {//all task for admin
-      type: type
+      type: type,
+      startDate: startDate,
+      endDate: endDate
     }
     this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
-      this.resetTableMasterSchedule();
-      this.resetTableAllTask();
-      this.resetTableAllScheduleTask();
-      this.resetTableUnacknowledgedNormalTask();
-      this.resetTableUnacknowledgedScheduledTask();
-      this.resetTableAckNormalTask();
-      this.resetTableAckScheduledTask();
+      console.log("data", res['data']);
+      this.resetSmartTableData();
       if (type == -1) {
         this.allTaskList = res['data'] || [];
         this.setTableAllTask();
@@ -325,45 +294,31 @@ export class TaskScheduledComponent implements OnInit {
       });
   }
 
-  resetTableMasterSchedule() {
+  resetSmartTableData() {
     this.tableSchedule.data = {
       headings: {},
       columns: []
     };
-  }
-  resetTableAllTask() {
     this.tableAllTask.data = {
       headings: {},
       columns: []
     };
-  }
-  resetTableAllScheduleTask() {
     this.tableAllScheduleTask.data = {
       headings: {},
       columns: []
     };
-  }
-  resetTableUnacknowledgedNormalTask() {
     this.tableUnacknowledgedNormalTask.data = {
       headings: {},
       columns: []
     };
-  }
-  resetTableUnacknowledgedScheduledTask() {
     this.tableUnacknowledgedScheduledTask.data = {
       headings: {},
       columns: []
     };
-  }
-
-  resetTableAckNormalTask() {
     this.tableAckNormalTask.data = {
       headings: {},
       columns: []
     };
-  }
-
-  resetTableAckScheduledTask() {
     this.tableAckScheduleTask.data = {
       headings: {},
       columns: []
@@ -452,15 +407,8 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = this.common.taskBgColor.pending;
-        if (ticket._status == -1) {
-          bg_color = this.common.taskBgColor.reject;
-        } else if (ticket._status == 2) {
-          bg_color = this.common.taskBgColor.ack;
-        } else if (ticket._status == 5) {
-          bg_color = this.common.taskBgColor.complete;
-        }
-        column['style'] = { 'background': bg_color };
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -503,15 +451,8 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = this.common.taskBgColor.pending;
-        if (ticket._status == -1) {
-          bg_color = this.common.taskBgColor.reject;
-        } else if (ticket._status == 2) {
-          bg_color = this.common.taskBgColor.ack;
-        } else if (ticket._status == 5) {
-          bg_color = this.common.taskBgColor.complete;
-        }
-        column['style'] = { 'background': bg_color };
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -553,6 +494,8 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -595,6 +538,8 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -636,6 +581,8 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -677,6 +624,8 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -720,6 +669,7 @@ export class TaskScheduledComponent implements OnInit {
   actionIconsMaster(task) {
     let icons = [
       { class: "far fa-edit", action: this.editScheduleTask.bind(this, task) },
+      { class: "fa fa-calendar", action: this.addScheduleTaskparam.bind(this, task) },
     ];
     return icons;
   }
@@ -746,15 +696,34 @@ export class TaskScheduledComponent implements OnInit {
         id: task._reporting_user_id,
         name: task.rep_user
       },
-      logicType: task._logic_type,
-      scheduleParam: task._schedule_param,
+      // logicType: task._logic_type,
+      // scheduleParam: task._schedule_param,
       days: JSON.stringify(days),
       hours: JSON.stringify(hrs),
       isActive: task._is_active
     };
 
     console.log("edit scheduledTask:", this.scheduledTask);
+  }
 
+  searchAllCompletedTask(type) {
+    console.log("searchTask:", this.searchTask);
+    let startDate = this.common.dateFormatter(this.searchTask.startDate);
+    let endDate = this.common.dateFormatter(this.searchTask.endDate);
+    if (startDate && endDate) {
+      if (type == 'scheduled') {
+        this.getAllTask(-2, startDate, endDate);
+      } else {
+        this.getAllTask(-1, startDate, endDate);
+      }
+    }
+  }
+
+  addScheduleTaskparam(task, type) {
+    console.log("type:", type);
+    this.common.params = { taskId: task._id, title: "Add task param", button: "Save" };
+    const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => { });
   }
 
 }

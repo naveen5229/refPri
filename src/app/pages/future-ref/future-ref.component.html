@@ -1,0 +1,17 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-9">
+                <h5>Future Reference</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div>
+                <smart-table *ngIf="futureRefList.length!=0" [data]="tableFutureRefList.data" [settings]="tableFutureRefList.settings" id="tableFutureRefList">
+                </smart-table>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

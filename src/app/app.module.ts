@@ -57,6 +57,7 @@ import { TaskMessageComponent } from './modals/task-message/task-message.compone
 import { TicketCallRatingComponent } from './modals/ticket-call-rating/ticket-call-rating.component';
 import { TaskNewComponent } from './modals/task-new/task-new.component';
 import { AddProjectComponent } from './modals/add-project/add-project.component';
+import { TaskScheduleNewComponent } from './modals/task-schedule-new/task-schedule-new.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -83,7 +84,8 @@ const PAGE_COMPONENTS = [
   TaskMessageComponent,
   TicketCallRatingComponent,
   TaskNewComponent,
-  AddProjectComponent
+  AddProjectComponent,
+  TaskScheduleNewComponent
 ];
 
 @NgModule({

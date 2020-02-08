@@ -48,6 +48,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',
         home: true,
+      },
+      {
+        title: 'Future-Ref',
+        icon: 'file-text-outline',
+        link: '/pages/future-ref',
+        home: true,
       }
     ]
   },

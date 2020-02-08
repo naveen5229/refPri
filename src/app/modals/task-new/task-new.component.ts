@@ -10,12 +10,22 @@ import { NormalTask } from '../../classes/normal-task';
   styleUrls: ['./task-new.component.scss']
 })
 export class TaskNewComponent implements OnInit {
-  normalTask = new NormalTask('', new Date(), '', false, null, null);
+  normalTask = new NormalTask('', new Date(), '', false, null, [], null);
+  // normalTask = {
+  //   userName: "",
+  //   date: new Date(),
+  //   task:"",
+  //   isUrgent: false,
+  //   projectId: null,
+  //   ccUsers: null,
+  //   parentTaskId: null
+  // };
   btn = 'Save';
   userId = null;
   isProject = "";
   projectList = [];
   userList = [];
+  parentTaskDesc = "";
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -24,12 +34,16 @@ export class TaskNewComponent implements OnInit {
     console.log("task list", this.common.params);
     if (this.common.params != null) {
       this.userList = this.common.params.userList;
+      if (this.common.params.parentTaskId) {
+        this.normalTask.parentTaskId = this.common.params.parentTaskId;
+        this.parentTaskDesc = this.common.params.parentTaskDesc;
+        console.log("normalTask:", this.normalTask);
+      }
     }
     this.getProjectList()
   }
 
   ngOnInit() {
-
   }
   getProjectList() {
     this.api.get("AdminTask/serachProject.json").subscribe(res => {
@@ -86,13 +100,15 @@ export class TaskNewComponent implements OnInit {
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
         ccUsers: JSON.stringify(this.normalTask.ccUsers),
+        parentTaskId: this.normalTask.parentTaskId
       }
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
-          this.normalTask = new NormalTask('', new Date(), '', false, null, null)
+          // this.normalTask = new NormalTask('', new Date(), '', false, null, null, null);
+          this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0].y_msg)
             this.closeModal(true);
@@ -110,5 +126,18 @@ export class TaskNewComponent implements OnInit {
         });
     }
 
+  }
+
+  resetTask() {
+    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null);
+    // this.normalTask = {
+    //   userName: "",
+    //   date: new Date(),
+    //   task:"",
+    //   isUrgent: false,
+    //   projectId: null,
+    //   ccUsers: null,
+    //   parentTaskId: null
+    // };
   }
 }

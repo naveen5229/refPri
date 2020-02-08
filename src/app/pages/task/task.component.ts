@@ -84,6 +84,10 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
+  searchTask = {
+    startDate: <any>"",
+    endDate: <any>""
+  }
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
     this.getTaskByType(101);
     this.getAllAdmin();
@@ -111,7 +115,7 @@ export class TaskComponent implements OnInit {
     const activeModal = this.modalService.open(AddProjectComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
   showTaskPopup() {
-    this.common.params = { userList: this.adminList };
+    this.common.params = { userList: this.adminList, parentTaskId: null };
     const activeModal = this.modalService.open(TaskNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -121,59 +125,23 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  // selectedNormalUser(event) {
-  //   // console.log(event);
-  //   this.userId = event.id;
-  //   this.normalTask.userName = event.name;
-  // }
-
-  // saveUser() {
-  //   // console.log(this.normalTask.userName, this.normalTask.date, this.normalTask.task, this.normalTask.isUrgent);
-  //   if (this.normalTask.userName == '') {
-  //     return this.common.showError("User Name is missing")
-  //   }
-  //   else if (this.normalTask.task == '') {
-  //     return this.common.showError("Task  is missing")
-  //   }
-  //   else {
-  //     const params = {
-  //       userId: this.userId,
-  //       date: this.common.dateFormatter(this.normalTask.date),
-  //       task: this.normalTask.task,
-  //       isUrgent: this.normalTask.isUrgent,
-  //     }
-  //     this.common.loading++;
-  //     this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
-  //       console.log(res);
-  //       this.common.loading--;
-  //       this.normalTask = new NormalTask('', new Date(), '', false);
-  //       this.getTaskByType(-101);
-  //       this.activeTab = 'TasksByMe';
-  //       this.common.showToast("Task Created Successfully..!")
-  //     },
-  //       err => {
-  //         this.common.loading--;
-  //         this.common.showError();
-  //         console.log('Error: ', err);
-  //       });
-  //   }
-
-  // }
-
-  getTaskByType(type) {
+  getTaskByType(type, startDate = null, endDate = null) {
     this.common.loading++;
     let params = {
-      type: type
+      type: type,
+      startDate: startDate,
+      endDate: endDate
     }
     this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
-      this.resetTableMasterSchedule();
-      this.resetTableNormal();
-      this.resetTableSchedule();
-      this.resetTableAllCompleted();
-      this.resetTableCCTask();
-      this.resetTableProjectTask();
+      // this.resetTableMasterSchedule();
+      // this.resetTableNormal();
+      // this.resetTableSchedule();
+      // this.resetTableAllCompleted();
+      // this.resetTableCCTask();
+      // this.resetTableProjectTask();
+      this.reserSmartTableData();
       if (type == 101) {
         this.normalTaskList = res['data'] || [];
         this.setTableNormal();
@@ -232,6 +200,32 @@ export class TaskComponent implements OnInit {
     };
   }
   resetTableProjectTask() {
+    this.tableProjectTask.data = {
+      headings: {},
+      columns: []
+    };
+  }
+  reserSmartTableData() {
+    this.tableMasterSchedule.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableSchedule.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableNormal.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableAllCompleted.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableCCTask.data = {
+      headings: {},
+      columns: []
+    };
     this.tableProjectTask.data = {
       headings: {},
       columns: []
@@ -338,6 +332,8 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -365,15 +361,8 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = this.common.taskBgColor.pending;
-        if (ticket._status == -1) {
-          bg_color = this.common.taskBgColor.reject;
-        } else if (ticket._status == 2) {
-          bg_color = this.common.taskBgColor.ack;
-        } else if (ticket._status == 5) {
-          bg_color = this.common.taskBgColor.complete;
-        }
-        column['style'] = { 'background': bg_color };
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -399,15 +388,8 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = this.common.taskBgColor.pending;
-        if (ticket._status == -1) {
-          bg_color = this.common.taskBgColor.reject;
-        } else if (ticket._status == 2) {
-          bg_color = this.common.taskBgColor.ack;
-        } else if (ticket._status == 5) {
-          bg_color = this.common.taskBgColor.complete;
-        }
-        column['style'] = { 'background': bg_color };
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -434,15 +416,8 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
-        let bg_color = this.common.taskBgColor.pending;
-        if (ticket._status == -1) {
-          bg_color = this.common.taskBgColor.reject;
-        } else if (ticket._status == 2) {
-          bg_color = this.common.taskBgColor.ack;
-        } else if (ticket._status == 5) {
-          bg_color = this.common.taskBgColor.complete;
-        }
-        column['style'] = { 'background': bg_color };
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -488,6 +463,8 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -533,6 +510,8 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
       }
       columns.push(column);
     });
@@ -559,6 +538,7 @@ export class TaskComponent implements OnInit {
       if ((ticket._status == 5 || ticket._status == -1)) {
       } else {
         icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
+        icons.push({ class: "fa fa-arrow-circle-right", action: this.createChildTicket.bind(this, ticket, type), txt: '' });
       }
     }
     return icons;
@@ -618,6 +598,26 @@ export class TaskComponent implements OnInit {
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => { });
+  }
+
+  createChildTicket(ticket, type) {
+    this.common.params = { userList: this.adminList, parentTaskId: ticket._refid, parentTaskDesc: ticket.task_desc };
+    const activeModal = this.modalService.open(TaskNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getTaskByType(-101);
+        this.activeTab = 'TasksByMe';
+      }
+    });
+  }
+
+  searchAllCompletedTask() {
+    console.log("searchTask:", this.searchTask);
+    let startDate = this.common.dateFormatter(this.searchTask.startDate);
+    let endDate = this.common.dateFormatter(this.searchTask.endDate);
+    if (startDate && endDate) {
+      this.getTaskByType(-102, startDate, endDate);
+    }
   }
 
 

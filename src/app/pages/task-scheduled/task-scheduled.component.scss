@@ -67,12 +67,14 @@
 :host ::ng-deep .fa-edit {
     color: green;
     font-size: 18px;
+    cursor: pointer;
 }
 
 :host ::ng-deep .fa-comments {
     font-size: 18px;
     margin-right: 5px;
     color: limegreen;
+    cursor: pointer;
     &.new-comment span {
         min-width: 13px;
         min-height: 13px;
@@ -89,4 +91,11 @@
         line-height: 11px;
         background: transparent;
     }
+}
+
+:host ::ng-deep .fa-calendar {
+    color: green;
+    font-size: 18px;
+    margin-left: 5px;
+    cursor: pointer;
 }

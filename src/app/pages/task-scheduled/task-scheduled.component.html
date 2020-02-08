@@ -38,7 +38,7 @@
                                 </auto-suggestion>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <!-- <div class="col-sm-4">
                             <div class="form-group">
                                 <label>Logic Type<span class="text-danger">*</span></label>
                                 <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (change)="onChangeLogicType()">
@@ -61,7 +61,7 @@
                                   <option *ngFor= "let dd of monthlyParam" [value]="dd.id">{{dd.name}}</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label>Days<span class="text-danger">*</span></label>
@@ -83,6 +83,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 text-right">
+                            <button class="btn btn-primary text-capitalize mr-2" id="button" (click)="resetScheduleTask()">Reset</button>
                             <button class="btn btn-primary text-capitalize" id="button" (click)="saveScheduleTask()">Save</button>
                         </div>
                     </div>
@@ -102,12 +103,6 @@
                     <li [ngClass]="activeTab=='scheduledTask'?'active':''" (click)="activeTab='scheduledTask';activeTabScheduled=''">
                         Scheduled Task
                     </li>
-                    <!-- <li [ngClass]="activeTab=='unacknowledgedNormalTask'?'active':''" (click)="activeTab='unacknowledgedNormalTask'; getAllTask(-3)">
-                        Pending Task
-                    </li>
-                    <li [ngClass]="activeTab=='unacknowledgedScheduledTask'?'active':''" (click)="activeTab='unacknowledgedScheduledTask'; getAllTask(-4)">
-                        Pending Scheduled Task
-                    </li> -->
                 </ul>
             </div>
             <!-- start:normal task subtab -->
@@ -133,6 +128,19 @@
                     </smart-table>
                 </div>
                 <div *ngIf="activeTabNormal=='completed'">
+                    <div class="row" style="z-index: 1;">
+                        <div class="col-4">
+                            <uj-date-time-picker [mind]="searchTask.startDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
+                            </uj-date-time-picker>
+                        </div>
+                        <div class="col-4">
+                            <uj-date-time-picker [mind]="searchTask.endDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
+                            </uj-date-time-picker>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask('normal')">Search</button>
+                        </div>
+                    </div>
                     <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList">
                     </smart-table>
                 </div>
@@ -161,6 +169,19 @@
                     </smart-table>
                 </div>
                 <div *ngIf="activeTabScheduled=='completed'">
+                    <div class="row" style="z-index: 1;">
+                        <div class="col-4">
+                            <uj-date-time-picker [mind]="searchTask.startDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
+                            </uj-date-time-picker>
+                        </div>
+                        <div class="col-4">
+                            <uj-date-time-picker [mind]="searchTask.endDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
+                            </uj-date-time-picker>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask('scheduled')">Search</button>
+                        </div>
+                    </div>
                     <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList">
                     </smart-table>
                 </div>
@@ -171,21 +192,5 @@
                 <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
                 </smart-table>
             </div>
-            <!-- <div *ngIf="activeTab=='allTask'">
-                <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='allScheduleTask'">
-                <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='unacknowledgedNormalTask'">
-                <smart-table *ngIf="unacknowledgedNormalTaskList.length!=0" [data]="tableUnacknowledgedNormalTask.data" [settings]="tableUnacknowledgedNormalTask.settings" id="unacknowledgedNormalTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='unacknowledgedScheduledTask'">
-                <smart-table *ngIf="unacknowledgedScheduledTaskList.length!=0" [data]="tableUnacknowledgedScheduledTask.data" [settings]="tableUnacknowledgedScheduledTask.settings" id="unacknowledgedScheduledTaskList">
-                </smart-table>
-            </div> -->
         </nb-card-body>
     </nb-card>
