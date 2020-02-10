@@ -14,7 +14,7 @@
           </select>
         </div>
         <div class="col-5">
-            <select *ngIf="scheduledTask.logicType==1 || scheduledTask.logicType=='' " class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
+            <select *ngIf="scheduledTask.logicType == 1" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
                 <option *ngFor= "let dd of dailyParam" [value]="dd.id">{{dd.name}}</option>
             </select>
             <select *ngIf="scheduledTask.logicType==2" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
