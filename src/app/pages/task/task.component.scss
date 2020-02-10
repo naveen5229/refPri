@@ -106,6 +106,16 @@
     cursor: pointer;
 }
 
+:host ::ng-deep {
+    .fa,
+    .fas {
+        font-size: 18px;
+    }
+    .isRemind {
+        color: red;
+    }
+}
+
 .urgent_task {
     display: flex;
     align-items: center;

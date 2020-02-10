@@ -1,0 +1,82 @@
+<div class="modal-header">
+    <h5>{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div *ngIf="!showHours">
+            <div class="text-center">
+                <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true; dateTime = date.date" class="btn-date">{{date.name}}</span>
+            </div>
+            <div class="input-group">
+                <label>Date</label>
+                <!-- <uj-date-time-picker [mind]="reminder.date" [isStart]="true" [isTime]="true" (onChanged)="reminder.date =$event ;onChangeDate($event)" [dateTimeValue]="reminder.date">
+                </uj-date-time-picker> -->
+                <uj-date-time-picker [isStart]="true" [isTime]="true" (onChanged)="onChangeDate($event)" [dateTimeValue]="dateTime">
+                </uj-date-time-picker>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveReminder()">{{btn}}</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="main-view" *ngIf="showHours">
+    <div class="overlay" (click)="dismiss(false)" id="close_modal_btn"></div>
+    <div class="custom-modal">
+        <div class="custom-modal-header" id="modal_title">
+            <span *ngIf="showHours" (click)="showHours = false;" class="back-btn">
+              <ion-icon name="ios-arrow-back"></ion-icon>
+              <span>Back</span>
+            </span>
+            Reminder Time
+        </div>
+        <div class="custom-modal-content">
+            <!-- <div *ngIf="!showHours">
+                <div text-center>
+                    <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true;" class="btn">{{date.name}}</span>
+                </div>
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="text" name="time" [value]="reminder.date | date : 'dd MMM yyyy'" (tap)="getDate()" required>
+                </div>
+            </div> -->
+            <div *ngIf="showHours">
+                <div text-center>
+                    <span *ngFor="let hour of hours[0]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-1" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+                <div text-center>
+                    <span *ngFor="let hour of hours[1]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-2" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+                <div text-center>
+                    <span *ngFor="let hour of hours[2]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-3" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+                <div text-center>
+                    <span *ngFor="let hour of hours[3]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-4" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="custom-modal-footer">
+            <ion-row>
+                <ion-col text-center>
+                    <button ion-button class="modal-footer-btn" type="button" outline (click)="dismiss(false)" id="cancel" style="background: #f2f2f2;">Cancel</button>
+                </ion-col>
+                <ion-col text-right>
+                    <button ion-button class="modal-footer-btn forward-btn" type="button" outline (click)="setReminder(true)" id="action-btn" style="color: #fff;">Set Reminder</button>
+                </ion-col>
+            </ion-row>
+        </div> -->
+    </div>
+</div>
