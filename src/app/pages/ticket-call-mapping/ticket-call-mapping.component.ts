@@ -57,7 +57,7 @@ export class TicketCallMappingComponent implements OnInit {
       return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
     } else {
       return strval.charAt(0).toUpperCase() + strval.substr(1);
-     }
+    }
   }
 
   setTable() {
@@ -90,44 +90,47 @@ export class TicketCallMappingComponent implements OnInit {
 
   }
   actionIcons(request, index) {
-      // request._rating = this.currentRate;
-    
-        let icons = [
-          {
-            class:  "icon fas fa-star",
-            action: this.editData.bind(this, request, index),
-            value: request._rating
-          },
-          // {
-          //   class: "icon fa fa-check green",
-          //   // action: this.openConfirmModal.bind(this, request),
-          // },
-    
-        ];
-        return icons;
-      
-    
-      }
-    
-      editData(request, index) {
+    // request._rating = this.currentRate;
 
-        this.common.params = {
-          rating: request._rating,
-          ticketId: request._id
-        };
-        const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-        activeModal.result.then(response => {
-          this.table.data.columns[index].Action.value = response;
-          console.log(this.table.data);
-          this.currentRate = response;
-          // if (response.response) {
-          //   console.log(response);
-          //   // this.getTicketData();
-          // }
-        });
-      }
+    let icons = [
+      {
+        class: "icon fas fa-star",
+        action: this.editData.bind(this, request, index),
+        value: request._rating
+      },
+      // {
+      //   class: "icon fa fa-check green",
+      //   // action: this.openConfirmModal.bind(this, request),
+      // },
 
- 
+    ];
+    return icons;
+
+
+  }
+
+  editData(request, index) {
+
+    this.common.params = {
+      rating: request._rating,
+      ticketId: request._id
+    };
+    const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(response => {
+      if (!response) {
+        return;
+      }
+      this.table.data.columns[index].Action.value = response;
+      console.log(this.table.data);
+      this.currentRate = response;
+      // if (response.response) {
+      //   console.log(response);
+      //   // this.getTicketData();
+      // }
+    });
+  }
+
+
 
   getTicketData() {
     this.ticketList = [];

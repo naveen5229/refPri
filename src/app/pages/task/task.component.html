@@ -52,6 +52,19 @@
                 </smart-table>
             </div>
             <div *ngIf="activeTab=='allCompletedTask'">
+                <div class="row" style="z-index: 999;">
+                    <div class="col-4">
+                        <uj-date-time-picker [mind]="searchTask.startDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-4">
+                        <uj-date-time-picker [mind]="searchTask.endDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask()">Search</button>
+                    </div>
+                </div>
                 <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList">
                 </smart-table>
             </div>

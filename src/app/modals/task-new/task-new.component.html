@@ -5,6 +5,11 @@
   </button>
 </div>
 <div class="modal-body">
+    <div class="row" *ngIf="normalTask.parentTaskId>0">
+        <div class="col-12 text-center">
+            {{parentTaskDesc}}
+        </div>
+    </div>
     <div class="row mt-2 ">
         <div class="col-6">
             <label class="form-check-inline">
@@ -24,16 +29,16 @@
             <label>Project:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" [display]="['project_desc']" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
+            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
             </auto-suggestion>
         </div>
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>User:<span class="text-danger">*</span></label>
+            <label>Assign To:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" [display]="['name']" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
+            <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
             </auto-suggestion>
         </div>
     </div>
@@ -52,7 +57,7 @@
             <label>CC users:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" [display]="['name']" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
         </div>
     </div>
 

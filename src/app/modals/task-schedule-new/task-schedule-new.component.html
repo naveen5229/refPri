@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h5>Schedule Task Action</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2 ">
+        <div class="col-5">
+            <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (change)="onChangeLogicType()">
+              <option value=1>Daily</option>
+              <option value=2>Weekly</option>
+              <option value=3>Monthly</option>
+          </select>
+        </div>
+        <div class="col-5">
+            <select *ngIf="scheduledTask.logicType==1 || scheduledTask.logicType=='' " class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
+                <option *ngFor= "let dd of dailyParam" [value]="dd.id">{{dd.name}}</option>
+            </select>
+            <select *ngIf="scheduledTask.logicType==2" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
+                <option *ngFor= "let dd of weeklyParam" [value]="dd.id">{{dd.name}}</option>
+            </select>
+            <select *ngIf="scheduledTask.logicType==3" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
+                <option *ngFor= "let dd of monthlyParam" [value]="dd.id">{{dd.name}}</option>
+            </select>
+        </div>
+
+        <div class="col-2 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTaskParam()">Add</button>
+        </div>
+    </div>
+    <div>
+        <smart-table *ngIf="scheduledTaskParamList.length!=0" [data]="tableAckScheduleTaskParam.data" [settings]="tableAckScheduleTaskParam.settings" id="tableAckScheduleTaskParam">
+        </smart-table>
+    </div>
+</div>
