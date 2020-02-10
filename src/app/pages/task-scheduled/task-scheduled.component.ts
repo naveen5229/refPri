@@ -669,7 +669,7 @@ export class TaskScheduledComponent implements OnInit {
   actionIconsMaster(task) {
     let icons = [
       { class: "far fa-edit", action: this.editScheduleTask.bind(this, task) },
-      { class: "fa fa-calendar", action: this.addScheduleTaskparam.bind(this, task) },
+      { class: "fa fa-calendar-alt", action: this.addScheduleTaskparam.bind(this, task) },
     ];
     return icons;
   }
@@ -721,7 +721,7 @@ export class TaskScheduledComponent implements OnInit {
 
   addScheduleTaskparam(task, type) {
     console.log("type:", type);
-    this.common.params = { taskId: task._id, title: "Add task param", button: "Save" };
+    this.common.params = { taskId: task._id, title: "Schedule task action", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => { });
   }
