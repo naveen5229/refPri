@@ -32,6 +32,7 @@
  :host ::ng-deep .remove:hover {
     background-color: #fd1361;
     border-color: #fc0758;
+    cursor: pointer;
 }
 
 .tabs_style {
@@ -73,6 +74,51 @@
 :host ::ng-deep .fa-edit {
     color: green;
     font-size: 18px;
+    cursor: pointer;
+}
+
+:host ::ng-deep .fa-comments {
+    font-size: 18px;
+    margin-right: 5px;
+    color: limegreen;
+    cursor: pointer;
+    &.new-comment span {
+        min-width: 13px;
+        min-height: 13px;
+        display: block;
+        border-radius: 50%;
+        position: absolute;
+        top: -3px;
+        left: 1px;
+        padding: 1px;
+        font-size: 8px;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 11px;
+        background: transparent;
+    }
+}
+
+:host ::ng-deep .fa-link {
+    font-size: 18px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+:host ::ng-deep {
+    .fa,
+    .fas {
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .fa-bell {
+        color: gray
+    }
+    .isRemind {
+        color: red;
+        // background-image: url("assets/images/alarm-bell.svg");
+    }
 }
 
 .urgent_task {

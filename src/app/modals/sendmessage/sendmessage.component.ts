@@ -144,7 +144,7 @@ if (!this.order.length ) {
   }
 }
 
-handleFileSelectionImage(event, index) {
+handleFileSelectionImage(event) {
   // this.common.loading++;
   let file = event.target.files[0];
   console.log("Type", file.type);

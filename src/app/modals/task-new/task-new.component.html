@@ -5,8 +5,13 @@
   </button>
 </div>
 <div class="modal-body">
+    <div class="row" *ngIf="normalTask.parentTaskId>0">
+        <div class="col-12 text-center">
+            {{parentTaskDesc}}
+        </div>
+    </div>
     <div class="row mt-2 ">
-        <div class="col-4">
+        <div class="col-6">
             <label class="form-check-inline">
             <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isProject" (click)="normalTask.projectId = null">
             StandAlone
@@ -21,26 +26,26 @@
     </div>
     <div class="row mt-2 " *ngIf="isProject=='1'">
         <div class="col-4">
-            <label>Project:</label>
+            <label>Project:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedProject($event)" url="AdminTask/serachProject.json" [display]="['project_desc']" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
+            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
             </auto-suggestion>
         </div>
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>User:<span class="text-red">*</span></label>
+            <label>Assign To:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedNormalUser($event)" url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
+            <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]='{name: normalTask.userName}'>
             </auto-suggestion>
         </div>
     </div>
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Task Description:</label><span class="text-red">*</span>
+            <label>Task Description:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
@@ -49,16 +54,16 @@
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>CC users:<span class="text-red">*</span></label>
+            <label>CC users:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion url="Admin/searchAdmin.json" [display]="['name']" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
         </div>
     </div>
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Last Date <span class="text-red"></span></label>
+            <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <uj-date-time-picker [mind]="normalTask.date" [isStart]="true" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
@@ -77,7 +82,14 @@
 
     <div class="row mt-1">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">{{btn}}</button>
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTask()">{{btn}}</button>
         </div>
     </div>
+    <!-- start: task mapping -->
+    <div class="row" *ngIf="normalTask.parentTaskId>0 && taskMapping.length > 0">
+        <div class="col-12">Task Mapping</div>
+        <smart-table *ngIf="taskMapping.length!=0" [data]="tableTaskMapping.data" [settings]="tableTaskMapping.settings" id="taskMapping">
+        </smart-table>
+    </div>
+    <!-- end: task mapping -->
 </div>
