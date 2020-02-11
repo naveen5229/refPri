@@ -19,12 +19,14 @@ export class TaskMessageComponent implements OnInit {
   showLoading = true;
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
+  lastSeenId = 0;
   constructor(public activeModal: NgbActiveModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     if (this.common.params != null) {
       this.title = this.common.params.title;
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
+      this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
       this.getMessageList();
     }
 
@@ -93,7 +95,7 @@ export class TaskMessageComponent implements OnInit {
     this.api.post('AdminTask/readLastMessage', params).subscribe(res => {
       console.log("messageList:", res['data']);
       if (res['code'] > 0) {
-
+        this.lastSeenId = this.lastMsgId;
       } else {
         this.common.showError(res['msg'])
       }

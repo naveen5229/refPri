@@ -595,6 +595,18 @@ export class CommonService {
     }
   }
 
+  getDate(days = null, addType = null) {
+    let tempDate = new Date();
+    if (days && days != "") {
+      if (addType && addType == 'minus') {
+        tempDate.setDate(tempDate.getDate() - days);
+      } else {
+        tempDate.setDate(tempDate.getDate() + days);
+      }
+    }
+    return tempDate;
+  }
+
 }
 
 

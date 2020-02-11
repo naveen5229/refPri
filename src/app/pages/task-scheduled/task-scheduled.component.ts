@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
+import { ReminderComponent } from '../../modals/reminder/reminder.component';
 
 @Component({
   selector: 'ngx-task-scheduled',
@@ -663,6 +664,11 @@ export class TaskScheduledComponent implements OnInit {
         { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount },
       ];
     }
+    if (ticket._isremind == 1) {
+      icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
+    } else {
+      icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+    }
     return icons;
   }
 
@@ -724,6 +730,32 @@ export class TaskScheduledComponent implements OnInit {
     this.common.params = { taskId: task._id, title: "Schedule task action", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => { });
+  }
+
+
+  showReminderPopup(ticket, type) {
+    this.common.params = { ticketId: ticket._tktid, title: "Add Reminder", btn: "Set Reminder" };
+    const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+      }
+    });
+  }
+
+  checkReminderSeen(ticket, type) {
+    let params = {
+      ticket_id: ticket._tktid
+    };
+    this.common.loading++;
+    this.api.post('AdminTask/checkReminderSeen', params)
+      .subscribe(res => {
+        this.common.loading--;
+        this.common.showToast(res['msg']);
+        this.getAllTask(type);
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
   }
 
 }

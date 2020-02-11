@@ -58,6 +58,7 @@ import { TicketCallRatingComponent } from './modals/ticket-call-rating/ticket-ca
 import { TaskNewComponent } from './modals/task-new/task-new.component';
 import { AddProjectComponent } from './modals/add-project/add-project.component';
 import { TaskScheduleNewComponent } from './modals/task-schedule-new/task-schedule-new.component';
+import { ReminderComponent } from './modals/reminder/reminder.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -85,7 +86,8 @@ const PAGE_COMPONENTS = [
   TicketCallRatingComponent,
   TaskNewComponent,
   AddProjectComponent,
-  TaskScheduleNewComponent
+  TaskScheduleNewComponent,
+  ReminderComponent
 ];
 
 @NgModule({
