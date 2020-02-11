@@ -13,7 +13,7 @@
 
 <div class="modal-body">
   <div class="row">
-    <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Admin/searchAdmin"
+    <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Admin/searchAdmin?getAll=true"
           [display]="['name','mobileno']" seperator="-"
           placeholder="Search By Mobile No. / Name" [preSelected]="preSelected">
         </auto-suggestion>
@@ -37,7 +37,25 @@
       class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">    </div>
     </div>
 <br>
-    
+<div class="row" *ngIf='Fouser.id'>
+  <div class="col-lg-4">
+    <label>Status :-</label>
+  </div>
+  <div class="col-lg-8">
+    <div class="row" style="margin-left: 15px;">
+      <div class="col-6">
+        <input id="isactive" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" [value]="true" name="isactive" >
+        <label class="custom-control-label" for="isactive">Active</label>
+      </div>
+      <div class="col-6">
+        <input id="deactive" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" [value]="false" name="isactive" >
+        <label class="custom-control-label" for="isactive">DeActive</label>
+      </div>
+  </div>
+  </div>
+</div>
+    <br>
+    <br>
         <div>
           <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="onCancel()">Cancel</button>
         </div>

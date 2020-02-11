@@ -149,11 +149,11 @@ handleFileSelectionImage(event, index) {
   let file = event.target.files[0];
   console.log("Type", file.type);
   if (file.type == "image/jpeg" || file.type == "image/jpg" ||
-    file.type == "image/png" || file.type == "application/pdf" ) {
+    file.type == "image/png" || file.type == "application/pdf" || file.type == "image/gif") {
     this.common.showToast("SuccessFull File Selected");
   }
   else {
-    this.common.showError("valid Format Are : jpeg,png,jpg");
+    this.common.showError("valid Format Are : jpeg,png,jpg,pdf,gif");
     return false;
   }
   let promises = [];

@@ -18,8 +18,9 @@ export class SaveadminComponent implements OnInit {
     id: null,
     name: null,
     mobileNo: null,
-  };
+    isActive: ''
 
+  };
 
   name = null;
   mobile = null;
@@ -72,6 +73,7 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
+    this.Fouser.isActive = value.isActive;
     // return this.Fouser.Foid;
     console.log("", value);
     console.log(this.Fouser);
@@ -115,7 +117,8 @@ export class SaveadminComponent implements OnInit {
     let param = {
       id: this.Fouser.id,
       name: this.Fouser.name,
-      mobile: this.Fouser.mobileNo
+      mobile: this.Fouser.mobileNo,
+      isActive: this.Fouser.isActive
     }
     console.log(param);
     if (this.Fouser.name == null) {

@@ -15,6 +15,7 @@ import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 export class CommonService {
   loading = 0;
   refresh = null;
+  tempLineBreak = {};
 
   params = null;
   taskBgColor = {
@@ -245,7 +246,7 @@ export class CommonService {
   }
 
 
-  getPDFFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?) {
+  getPDFFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?) {
     // console.log("Action Data:", doNotIncludes); return;
     //remove table cols with del class
     let tblelt = document.getElementById(tblEltId);
@@ -404,8 +405,14 @@ export class CommonService {
       );
     };
 
+    if(hdgCols.length < 7) {
+       this.tempLineBreak = { fontSize: 10, cellPadding: 6, minCellHeight: 11, minCellWidth: 10, cellWidth: 70, valign: 'middle', halign: 'center' };
+    }
+    else {
+       this.tempLineBreak = { fontSize: 10, cellPadding: 3, minCellHeight: 11, minCellWidth: 10, cellWidth: 40, valign: 'middle', halign: 'center' };
 
-    let tempLineBreak = { fontSize: 10, cellPadding: 3, minCellHeight: 11, minCellWidth: 10, cellWidth: 40, valign: 'middle', halign: 'center' };
+    }
+
     doc.autoTable({
       head: hdg_coll,
       body: rows,
@@ -420,7 +427,7 @@ export class CommonService {
         valign: 'middle'
 
       },
-      styles: tempLineBreak,
+      styles: this.tempLineBreak,
       columnStyles: { text: { cellWidth: 40, halign: 'center', valign: 'middle' } },
 
     });
