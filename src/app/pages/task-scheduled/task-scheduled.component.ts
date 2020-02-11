@@ -663,9 +663,15 @@ export class TaskScheduledComponent implements OnInit {
       icons = [
         { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount },
       ];
+    } else if (ticket._unreadcount == -1) {
+      icons = [
+        { class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: '' },
+      ];
     }
     if (ticket._isremind == 1) {
       icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
+    } else if (ticket._isremind == 2) {
+      icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
     } else {
       icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
     }

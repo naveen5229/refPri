@@ -113,11 +113,17 @@
         cursor: pointer;
     }
     .fa-bell {
-        color: gray
+        color: gray;
     }
     .isRemind {
         color: red;
         // background-image: url("assets/images/alarm-bell.svg");
+    }
+    .reminderAdded {
+        color: #ffba12;
+    }
+    .no-comment {
+        color: gray;
     }
 }
 
