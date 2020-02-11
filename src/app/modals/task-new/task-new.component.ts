@@ -11,21 +11,22 @@ import { NormalTask } from '../../classes/normal-task';
 })
 export class TaskNewComponent implements OnInit {
   normalTask = new NormalTask('', new Date(), '', false, null, [], null);
-  // normalTask = {
-  //   userName: "",
-  //   date: new Date(),
-  //   task:"",
-  //   isUrgent: false,
-  //   projectId: null,
-  //   ccUsers: null,
-  //   parentTaskId: null
-  // };
   btn = 'Save';
   userId = null;
   isProject = "";
   projectList = [];
   userList = [];
   parentTaskDesc = "";
+  taskMapping = [];
+  tableTaskMapping = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -38,6 +39,7 @@ export class TaskNewComponent implements OnInit {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
         this.parentTaskDesc = this.common.params.parentTaskDesc;
         console.log("normalTask:", this.normalTask);
+        this.getTaskMapping(this.normalTask.parentTaskId);
       }
     }
     this.getProjectList()
@@ -130,14 +132,75 @@ export class TaskNewComponent implements OnInit {
 
   resetTask() {
     this.normalTask = new NormalTask('', new Date(), '', false, null, [], null);
-    // this.normalTask = {
-    //   userName: "",
-    //   date: new Date(),
-    //   task:"",
-    //   isUrgent: false,
-    //   projectId: null,
-    //   ccUsers: null,
-    //   parentTaskId: null
-    // };
   }
+
+  // start task mapping list
+  getTaskMapping(taskId) {
+    let params = {
+      task_id: taskId,
+    };
+    console.log('Params: ', params);
+    this.tableTaskMapping = {
+      data: {
+        headings: {},
+        columns: []
+      },
+      settings: {
+        hideHeader: true
+      }
+    };
+    this.api.post('AdminTask/getTaskMapping.json', params)
+      .subscribe(res => {
+        console.log(res);
+        if (res['code'] > 0) {
+          this.taskMapping = res['data'] || [];
+          this.setTableTaskMapping();
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        console.error(err);
+        this.common.showError();
+      });
+  }
+
+  setTableTaskMapping() {
+    this.tableTaskMapping.data = {
+      headings: this.generateHeadingsTaskMapping(),
+      columns: this.getTableColumnsTaskMapping()
+    };
+    return true;
+  }
+
+  generateHeadingsTaskMapping() {
+    let headings = {};
+    for (var key in this.taskMapping[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+  getTableColumnsTaskMapping() {
+    let columns = [];
+    this.taskMapping.map(task => {
+      let column = {};
+      for (let key in this.generateHeadingsTaskMapping()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(task)
+          };
+        } else {
+          column[key] = { value: task[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end task mapping list
+
 }

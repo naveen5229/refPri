@@ -59,7 +59,6 @@ import { TaskNewComponent } from './modals/task-new/task-new.component';
 import { AddProjectComponent } from './modals/add-project/add-project.component';
 import { TaskScheduleNewComponent } from './modals/task-schedule-new/task-schedule-new.component';
 import { ReminderComponent } from './modals/reminder/reminder.component';
-import { TaskChainComponent } from './modals/task-chain/task-chain.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -88,8 +87,7 @@ const PAGE_COMPONENTS = [
   TaskNewComponent,
   AddProjectComponent,
   TaskScheduleNewComponent,
-  ReminderComponent,
-  TaskChainComponent
+  ReminderComponent
 ];
 
 @NgModule({

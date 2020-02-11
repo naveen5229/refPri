@@ -10,11 +10,11 @@ import { CommonService } from '../../Service/common/common.service';
 })
 export class ReminderComponent implements OnInit {
   btn = 'Set Reminder';
-  title = "Add Reminder";
+  title = "Reminder";
   ticketId = null;
   reminder = {
     date: '',
-    time: ''
+    time: '16'
   };
   dates = [{
     name: 'Today',
@@ -33,7 +33,7 @@ export class ReminderComponent implements OnInit {
     [21, 22, 23, 24]
   ];
   showHours = false;
-  dateTime = new Date(); //for datetime popup
+  dateTime: any = "";//new Date(); //for datetime popup
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
@@ -82,36 +82,15 @@ export class ReminderComponent implements OnInit {
         this.common.loading--;
         if (res['code'] > 0) {
           this.closeModal(true);
+          this.common.showToast(res['msg']);
+        } else {
+          this.common.showError(res['msg']);
         }
-        this.common.showToast(res['msg']);
       }, err => {
         console.error(err);
         this.common.showError();
         this.common.loading--;
       });
-  }
-
-  getDate() {
-    // this.datePicker.show({
-    // titleText: 'Select Time',
-    // okText: 'Save',
-    // todayText: "Today",
-    // date: new Date(),
-    // minDate: new Date(),
-    // mode: 'datetime',
-    // allowOldDates: false,
-    // androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_DARK
-    // }).then(
-    // date => {
-    // console.log('Got date: ', date);
-    // this.reminder.date = this.common.dateFormatter(date);
-    // this.showHours = true;
-    // },
-    // err => {
-    // console.log('Error occurred while getting date: ', err);
-    // this.common.showToast('Error occurred while getting date: ' + err);
-    // }
-    // );
   }
 
   onChangeDate(event) {

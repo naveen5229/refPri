@@ -85,4 +85,11 @@
             <button class="btn btn-primary text-capitalize" id="button" (click)="saveTask()">{{btn}}</button>
         </div>
     </div>
+    <!-- start: task mapping -->
+    <div class="row" *ngIf="normalTask.parentTaskId>0 && taskMapping.length > 0">
+        <div class="col-12">Task Mapping</div>
+        <smart-table *ngIf="taskMapping.length!=0" [data]="tableTaskMapping.data" [settings]="tableTaskMapping.settings" id="taskMapping">
+        </smart-table>
+    </div>
+    <!-- end: task mapping -->
 </div>

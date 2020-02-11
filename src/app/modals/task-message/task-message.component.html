@@ -11,7 +11,7 @@
                 {{msg.comment}}
                 <span>{{msg.added_date}}</span>
             </div>
-            <div *ngIf="loginUserId != msg._userid" class="other_chat">
+            <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'shake animated slow':''">
                 {{msg.comment}}
                 <span>{{msg.added_by +" "+msg.added_date}}</span>
             </div>

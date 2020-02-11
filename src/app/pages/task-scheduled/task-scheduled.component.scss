@@ -99,3 +99,17 @@
     margin-left: 5px;
     cursor: pointer;
 }
+
+:host ::ng-deep {
+    .fa,
+    .fas {
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .fa-bell {
+        color: gray
+    }
+    .isRemind {
+        color: red;
+    }
+}

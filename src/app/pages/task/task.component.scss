@@ -100,7 +100,7 @@
     }
 }
 
-:host ::ng-deep .fa-arrow-circle-right {
+:host ::ng-deep .fa-link {
     font-size: 18px;
     margin-right: 5px;
     cursor: pointer;
@@ -110,9 +110,14 @@
     .fa,
     .fas {
         font-size: 18px;
+        cursor: pointer;
+    }
+    .fa-bell {
+        color: gray
     }
     .isRemind {
         color: red;
+        // background-image: url("assets/images/alarm-bell.svg");
     }
 }
 

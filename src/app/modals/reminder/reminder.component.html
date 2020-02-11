@@ -8,12 +8,10 @@
     <div class="row">
         <div *ngIf="!showHours">
             <div class="text-center">
-                <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true; dateTime = date.date" class="btn-date">{{date.name}}</span>
+                <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true; onChangeHour()" class="btn-date">{{date.name}}</span>
             </div>
             <div class="input-group">
                 <label>Date</label>
-                <!-- <uj-date-time-picker [mind]="reminder.date" [isStart]="true" [isTime]="true" (onChanged)="reminder.date =$event ;onChangeDate($event)" [dateTimeValue]="reminder.date">
-                </uj-date-time-picker> -->
                 <uj-date-time-picker [isStart]="true" [isTime]="true" (onChanged)="onChangeDate($event)" [dateTimeValue]="dateTime">
                 </uj-date-time-picker>
             </div>
@@ -27,12 +25,7 @@
     </div>
 </div>
 
-
-
-
-
-
-
+<!-- start: show hours popup -->
 <div class="main-view" *ngIf="showHours">
     <div class="overlay" (click)="dismiss(false)" id="close_modal_btn"></div>
     <div class="custom-modal">
@@ -44,15 +37,6 @@
             Reminder Time
         </div>
         <div class="custom-modal-content">
-            <!-- <div *ngIf="!showHours">
-                <div text-center>
-                    <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true;" class="btn">{{date.name}}</span>
-                </div>
-                <div class="input-group">
-                    <label>Date</label>
-                    <input type="text" name="time" [value]="reminder.date | date : 'dd MMM yyyy'" (tap)="getDate()" required>
-                </div>
-            </div> -->
             <div *ngIf="showHours">
                 <div text-center>
                     <span *ngFor="let hour of hours[0]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-1" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
@@ -68,15 +52,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="custom-modal-footer">
-            <ion-row>
-                <ion-col text-center>
-                    <button ion-button class="modal-footer-btn" type="button" outline (click)="dismiss(false)" id="cancel" style="background: #f2f2f2;">Cancel</button>
-                </ion-col>
-                <ion-col text-right>
-                    <button ion-button class="modal-footer-btn forward-btn" type="button" outline (click)="setReminder(true)" id="action-btn" style="color: #fff;">Set Reminder</button>
-                </ion-col>
-            </ion-row>
-        </div> -->
     </div>
 </div>
+<!-- end: show hours popup -->

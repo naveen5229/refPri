@@ -9,7 +9,6 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { AddProjectComponent } from '../../modals/add-project/add-project.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
-import { TaskChainComponent } from '../../modals/task-chain/task-chain.component';
 
 @Component({
   selector: 'ngx-task',
@@ -331,9 +330,9 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, -102)
           };
         } else if (key == 'time_left') {
-          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: this.showReminderPopup.bind(this, ticket, -102) };
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -361,9 +360,9 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, 101)
           };
         } else if (key == 'time_left') {
-          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: this.showReminderPopup.bind(this, ticket, 101) };
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -390,9 +389,9 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, -101)
           };
         } else if (key == 'time_left') {
-          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: this.showReminderPopup.bind(this, ticket, -101) };
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -419,9 +418,9 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, 103)
           };
         } else if (key == 'time_left') {
-          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: this.showReminderPopup.bind(this, ticket, 103) };
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -467,9 +466,9 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, -5)
           };
         } else if (key == 'time_left') {
-          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: this.showReminderPopup.bind(this, ticket, -5) };
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -516,9 +515,9 @@ export class TaskComponent implements OnInit {
             icons: this.actionIcons(ticket, -6)
           };
         } else if (key == 'time_left') {
-          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: this.showReminderPopup.bind(this, ticket, -6) };
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -548,13 +547,16 @@ export class TaskComponent implements OnInit {
       if ((ticket._status == 5 || ticket._status == -1)) {
       } else {
         icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
-        icons.push({ class: "fa fa-arrow-circle-right", action: this.createChildTicket.bind(this, ticket, type), txt: '' });
       }
     }
-    if (ticket._isremind == 1) {
-      icons.push({ class: "fa fa-clock isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
+    if (type == 101 || type == -101) {
+      icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '' });
     }
-    icons.push({ class: "fa fa-eye", action: this.showTaskChainPopup.bind(this, ticket, type), txt: '' });
+    if (ticket._isremind == 1) {
+      icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
+    } else {
+      icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+    }
 
     return icons;
   }
@@ -608,7 +610,8 @@ export class TaskComponent implements OnInit {
     console.log("type:", type);
     let ticketEditData = {
       ticketId: ticket._tktid,
-      statusId: ticket._status
+      statusId: ticket._status,
+      lastSeenId: ticket._lastreadid,
     }
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
@@ -658,15 +661,6 @@ export class TaskComponent implements OnInit {
         this.common.loading--;
         console.log('Error: ', err);
       });
-  }
-
-  showTaskChainPopup(ticket, type) {
-    this.common.params = { ticketId: ticket.taskId, title: "Ticket Mapping" };
-    const activeModal = this.modalService.open(TaskChainComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-      }
-    });
   }
 
 }
