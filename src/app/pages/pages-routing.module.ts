@@ -28,6 +28,7 @@ import { DailyPartnerReportComponent } from './daily-partner-report/daily-partne
 import { WwToolsComponent } from './ww-tools/ww-tools.component';
 import { TaskComponent } from './task/task.component';
 import { TaskScheduledComponent } from './task-scheduled/task-scheduled.component';
+import { FutureRefComponent } from './future-ref/future-ref.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -152,6 +153,10 @@ const routes: Routes = [{
     {
       path: 'task-scheduled',
       component: TaskScheduledComponent
+    },
+    {
+      path: 'future-ref',
+      component: FutureRefComponent
     }
 
   ],

@@ -30,6 +30,7 @@ import { DailyPartnerReportComponent } from './daily-partner-report/daily-partne
 import { WwToolsComponent } from './ww-tools/ww-tools.component';
 import { TaskComponent } from './task/task.component';
 import { TaskScheduledComponent } from './task-scheduled/task-scheduled.component';
+import { FutureRefComponent } from './future-ref/future-ref.component';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ import { TaskScheduledComponent } from './task-scheduled/task-scheduled.componen
     DailyPartnerReportComponent,
     WwToolsComponent,
     TaskComponent,
-    TaskScheduledComponent
+    TaskScheduledComponent,
+    FutureRefComponent
   ],
 })
 export class PagesModule {

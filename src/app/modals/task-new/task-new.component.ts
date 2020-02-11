@@ -10,20 +10,54 @@ import { NormalTask } from '../../classes/normal-task';
   styleUrls: ['./task-new.component.scss']
 })
 export class TaskNewComponent implements OnInit {
-  normalTask = new NormalTask('', new Date(), '', false, null, null);
+  normalTask = new NormalTask('', new Date(), '', false, null, [], null);
+  // normalTask = {
+  //   userName: "",
+  //   date: new Date(),
+  //   task:"",
+  //   isUrgent: false,
+  //   projectId: null,
+  //   ccUsers: null,
+  //   parentTaskId: null
+  // };
   btn = 'Save';
   userId = null;
   isProject = "";
+  projectList = [];
+  userList = [];
+  parentTaskDesc = "";
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal) {
-    console.log("task list", this.common.params)
+    console.log("task list", this.common.params);
+    if (this.common.params != null) {
+      this.userList = this.common.params.userList;
+      if (this.common.params.parentTaskId) {
+        this.normalTask.parentTaskId = this.common.params.parentTaskId;
+        this.parentTaskDesc = this.common.params.parentTaskDesc;
+        console.log("normalTask:", this.normalTask);
+      }
+    }
+    this.getProjectList()
   }
 
   ngOnInit() {
-
+  }
+  getProjectList() {
+    this.api.get("AdminTask/serachProject.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.projectList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    },
+      err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
   closeModal(response) {
@@ -46,15 +80,17 @@ export class TaskNewComponent implements OnInit {
     if (event && event.length) {
       this.normalTask.ccUsers = event.map(user => { return { user_id: user.id } });
       console.log("ccUsers", this.normalTask.ccUsers);
+    } else {
+      this.normalTask.ccUsers = [];
     }
   }
 
-  saveUser() {
+  saveTask() {
     if (this.normalTask.userName == '') {
       return this.common.showError("User Name is missing")
     }
     else if (this.normalTask.task == '') {
-      return this.common.showError("Task  is missing")
+      return this.common.showError("Task is missing")
     }
     else {
       const params = {
@@ -64,14 +100,24 @@ export class TaskNewComponent implements OnInit {
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
         ccUsers: JSON.stringify(this.normalTask.ccUsers),
+        parentTaskId: this.normalTask.parentTaskId
       }
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         console.log(res);
         this.common.loading--;
-        this.normalTask = new NormalTask('', new Date(), '', false, null, null)
-        this.common.showToast("Task Created Successfully..!")
-        this.closeModal(true);
+        if (res['code'] > 0) {
+          // this.normalTask = new NormalTask('', new Date(), '', false, null, null, null);
+          this.resetTask();
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0].y_msg)
+            this.closeModal(true);
+          } else {
+            this.common.showError(res['data'][0].y_msg)
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
       },
         err => {
           this.common.loading--;
@@ -80,5 +126,18 @@ export class TaskNewComponent implements OnInit {
         });
     }
 
+  }
+
+  resetTask() {
+    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null);
+    // this.normalTask = {
+    //   userName: "",
+    //   date: new Date(),
+    //   task:"",
+    //   isUrgent: false,
+    //   projectId: null,
+    //   ccUsers: null,
+    //   parentTaskId: null
+    // };
   }
 }

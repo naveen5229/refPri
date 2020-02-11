@@ -574,6 +574,27 @@ export class CommonService {
     // }
   }
 
+  taskStatusBg(status) {
+    let bg_color = this.taskBgColor.pending;
+    if (status == -1) {
+      bg_color = this.taskBgColor.reject;
+    } else if (status == 2) {
+      bg_color = this.taskBgColor.ack;
+    } else if (status == 5) {
+      bg_color = this.taskBgColor.complete;
+    }
+    return bg_color;
+  }
+
+  formatTitle(strval) {
+    let pos = strval.indexOf('_');
+    if (pos > 0) {
+      return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+    } else {
+      return strval.charAt(0).toUpperCase() + strval.substr(1);
+    }
+  }
+
 }
 
 
