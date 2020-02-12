@@ -136,17 +136,11 @@ export class TaskComponent implements OnInit {
     this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
-      // this.resetTableMasterSchedule();
-      // this.resetTableNormal();
-      // this.resetTableSchedule();
-      // this.resetTableAllCompleted();
-      // this.resetTableCCTask();
-      // this.resetTableProjectTask();
       this.reserSmartTableData();
-      if (type == 101) {
+      if (type == 101) {//normal task pending (task for me)
         this.normalTaskList = res['data'] || [];
         this.setTableNormal();
-      } else if (type == -101) {
+      } else if (type == -101) { //task by me
         this.scheduleMasterTaskList = res['data'] || [];
         this.setTableMasterSchedule();
       } else if (type == 103) {
@@ -637,10 +631,12 @@ export class TaskComponent implements OnInit {
 
   searchAllCompletedTask() {
     console.log("searchTask:", this.searchTask);
-    let startDate = this.common.dateFormatter(this.searchTask.startDate);
-    let endDate = this.common.dateFormatter(this.searchTask.endDate);
-    if (startDate && endDate) {
+    if (this.searchTask.startDate && this.searchTask.endDate) {
+      let startDate = this.common.dateFormatter(this.searchTask.startDate);
+      let endDate = this.common.dateFormatter(this.searchTask.endDate);
       this.getTaskByType(-102, startDate, endDate);
+    } else {
+      this.common.showError("Select start date and end date");
     }
   }
 

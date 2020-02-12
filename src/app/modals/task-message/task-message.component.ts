@@ -96,7 +96,9 @@ export class TaskMessageComponent implements OnInit {
       console.log("messageList:", res['data']);
       if (res['code'] > 0) {
         if (this.lastSeenId < this.lastMsgId) {
-          this.lastSeenId = this.lastMsgId;
+          setTimeout(() => {
+            this.lastSeenId = this.lastMsgId;
+          }, 5000);
         }
       } else {
         this.common.showError(res['msg'])

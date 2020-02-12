@@ -720,14 +720,16 @@ export class TaskScheduledComponent implements OnInit {
 
   searchAllCompletedTask(type) {
     console.log("searchTask:", this.searchTask);
-    let startDate = this.common.dateFormatter(this.searchTask.startDate);
-    let endDate = this.common.dateFormatter(this.searchTask.endDate);
-    if (startDate && endDate) {
+    if (this.searchTask.startDate && this.searchTask.endDate) {
+      let startDate = this.common.dateFormatter(this.searchTask.startDate);
+      let endDate = this.common.dateFormatter(this.searchTask.endDate);
       if (type == 'scheduled') {
         this.getAllTask(-2, startDate, endDate);
       } else {
         this.getAllTask(-1, startDate, endDate);
       }
+    } else {
+      this.common.showError("Select start date and end date");
     }
   }
 
