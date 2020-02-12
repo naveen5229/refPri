@@ -1,7 +1,6 @@
 import { Component, OnInit, Directive } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
-import { NormalTask } from '../../classes/normal-task';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
@@ -23,7 +22,6 @@ export class TaskComponent implements OnInit {
   escalationId = null;
   reportingId = null;
   adminList = [];
-  // normalTask = new NormalTask('', new Date(), '', false);
   normalTaskList = [];
   scheduledTaskList = [];
   scheduleMasterTaskList = [];
@@ -139,22 +137,22 @@ export class TaskComponent implements OnInit {
       this.reserSmartTableData();
       if (type == 101) {//normal task pending (task for me)
         this.normalTaskList = res['data'] || [];
-        this.setTableNormal();
+        this.setTableNormal(type);
       } else if (type == -101) { //task by me
         this.scheduleMasterTaskList = res['data'] || [];
-        this.setTableMasterSchedule();
+        this.setTableMasterSchedule(type);
       } else if (type == 103) {
         this.scheduledTaskList = res['data'] || [];
-        this.setTableSchedule();
+        this.setTableSchedule(type);
       } else if (type == -102) {
         this.allCompletedTaskList = res['data'] || [];
-        this.setTableAllCompleted();
+        this.setTableAllCompleted(type);
       } else if (type == -5) {
         this.ccTaskList = res['data'] || [];
-        this.setTableCCTask();
+        this.setTableCCTask(type);
       } else if (type == -6) {
         this.projectTaskList = res['data'] || [];
-        this.setTableProjectTask();
+        this.setTableProjectTask(type);
       }
     },
       err => {
@@ -232,7 +230,7 @@ export class TaskComponent implements OnInit {
     for (var key in this.normalTaskList[0]) {
       // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     return headings;
@@ -243,7 +241,7 @@ export class TaskComponent implements OnInit {
     for (var key in this.scheduleMasterTaskList[0]) {
       // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     return headings;
@@ -254,47 +252,47 @@ export class TaskComponent implements OnInit {
     for (var key in this.scheduledTaskList[0]) {
       // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     // console.log(headings);
     return headings;
   }
 
-  formatTitle(strval) {
-    let pos = strval.indexOf('_');
-    if (pos > 0) {
-      return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
-    } else {
-      return strval.charAt(0).toUpperCase() + strval.substr(1);
-    }
-  }
+  // formatTitle(strval) {
+  //   let pos = strval.indexOf('_');
+  //   if (pos > 0) {
+  //     return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+  //   } else {
+  //     return strval.charAt(0).toUpperCase() + strval.substr(1);
+  //   }
+  // }
 
-  setTableNormal() {
+  setTableNormal(type) {
     this.tableNormal.data = {
       headings: this.generateHeadingsNormal(),
-      columns: this.getTableColumnsNormal()
+      columns: this.getTableColumnsNormal(type)
     };
     return true;
   }
-  setTableMasterSchedule() {
+  setTableMasterSchedule(type) {
     this.tableMasterSchedule.data = {
       headings: this.generateHeadingsMasterSchedule(),
-      columns: this.getTableColumnsMasterSchedule()
+      columns: this.getTableColumnsMasterSchedule(type)
     };
     return true;
   }
-  setTableSchedule() {
+  setTableSchedule(type) {
     this.tableSchedule.data = {
       headings: this.generateHeadingsSchedule(),
-      columns: this.getTableColumnsSchedule()
+      columns: this.getTableColumnsSchedule(type)
     };
     return true;
   }
-  setTableAllCompleted() {
+  setTableAllCompleted(type) {
     this.tableAllCompleted.data = {
       headings: this.generateHeadingsAllCompleted(),
-      columns: this.getTableColumnsAllCompleted()
+      columns: this.getTableColumnsAllCompleted(type)
     };
     return true;
   }
@@ -305,13 +303,13 @@ export class TaskComponent implements OnInit {
     for (var key in this.allCompletedTaskList[0]) {
       // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     // console.log(headings);
     return headings;
   }
-  getTableColumnsAllCompleted() {
+  getTableColumnsAllCompleted(type) {
     let columns = [];
     this.allCompletedTaskList.map(ticket => {
       let column = {};
@@ -321,7 +319,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, -102)
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -338,7 +336,7 @@ export class TaskComponent implements OnInit {
 
   }
 
-  getTableColumnsNormal() {
+  getTableColumnsNormal(type) {
     let columns = [];
     this.normalTaskList.map(ticket => {
       let column = {};
@@ -351,7 +349,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, 101)
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -367,7 +365,7 @@ export class TaskComponent implements OnInit {
 
   }
 
-  getTableColumnsMasterSchedule() {
+  getTableColumnsMasterSchedule(type) {
     let columns = [];
     this.scheduleMasterTaskList.map(ticket => {
       let column = {};
@@ -380,7 +378,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, -101)
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -396,7 +394,7 @@ export class TaskComponent implements OnInit {
 
   }
 
-  getTableColumnsSchedule() {
+  getTableColumnsSchedule(type) {
     let columns = [];
     this.scheduledTaskList.map(ticket => {
       let column = {};
@@ -409,7 +407,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, 103)
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -427,10 +425,10 @@ export class TaskComponent implements OnInit {
   }
 
   // start cc task list
-  setTableCCTask() {
+  setTableCCTask(type) {
     this.tableCCTask.data = {
       headings: this.generateHeadingsCCTask(),
-      columns: this.getTableColumnsCCTask()
+      columns: this.getTableColumnsCCTask(type)
     };
     return true;
   }
@@ -441,13 +439,13 @@ export class TaskComponent implements OnInit {
     for (var key in this.ccTaskList[0]) {
       // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     // console.log(headings);
     return headings;
   }
-  getTableColumnsCCTask() {
+  getTableColumnsCCTask(type) {
     let columns = [];
     this.ccTaskList.map(ticket => {
       let column = {};
@@ -457,7 +455,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, -5)
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -476,10 +474,10 @@ export class TaskComponent implements OnInit {
   // end cc task list
 
   // start project task list
-  setTableProjectTask() {
+  setTableProjectTask(type) {
     this.tableProjectTask.data = {
       headings: this.generateHeadingsProjectTask(),
-      columns: this.getTableColumnsProjectTask()
+      columns: this.getTableColumnsProjectTask(type)
     };
     return true;
   }
@@ -490,13 +488,13 @@ export class TaskComponent implements OnInit {
     for (var key in this.projectTaskList[0]) {
       // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     // console.log(headings);
     return headings;
   }
-  getTableColumnsProjectTask() {
+  getTableColumnsProjectTask(type) {
     let columns = [];
     this.projectTaskList.map(ticket => {
       let column = {};
@@ -506,7 +504,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(ticket, -6)
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -543,6 +541,7 @@ export class TaskComponent implements OnInit {
       icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '' });
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
+        icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '' });
       } else {
         icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       }
@@ -550,12 +549,15 @@ export class TaskComponent implements OnInit {
     if (type == 101 || type == -101) {
       icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '' });
     }
-    if (ticket._isremind == 1) {
-      icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
-    } else if (ticket._isremind == 2) {
-      icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+    if ((ticket._status == 5 || ticket._status == -1)) {
     } else {
-      icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+      if (ticket._isremind == 1) {
+        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
+      } else if (ticket._isremind == 2) {
+        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+      } else {
+        icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+      }
     }
 
     return icons;
@@ -606,6 +608,42 @@ export class TaskComponent implements OnInit {
     }
   }
 
+  reactiveTicket(ticket, type) {
+    if (ticket._tktid) {
+      let params = {
+        ticketId: ticket._tktid,
+        statusId: 0
+      }
+      this.common.params = {
+        title: 'Reactive Ticket',
+        description: `<b>&nbsp;` + 'Are You Sure To Reactive This Record' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] > 0) {
+              this.common.showToast(res['msg']);
+              this.getTaskByType(type);
+            }
+            else {
+              this.common.showError(res['data']);
+            }
+          },
+            err => {
+              this.common.loading--;
+              this.common.showError();
+              console.log('Error: ', err);
+            });
+        }
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
+  }
+
   ticketMessage(ticket, type) {
     console.log("type:", type);
     let ticketEditData = {
@@ -645,6 +683,7 @@ export class TaskComponent implements OnInit {
     const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
+        this.getTaskByType(type);
       }
     });
   }
