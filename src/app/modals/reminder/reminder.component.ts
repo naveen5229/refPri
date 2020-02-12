@@ -56,7 +56,7 @@ export class ReminderComponent implements OnInit {
   }
 
   // start:
-  async saveReminder(data) {
+  async saveReminder() {
     if (!this.reminder.date) {
       this.common.showToast('Select A Date!');
       return;

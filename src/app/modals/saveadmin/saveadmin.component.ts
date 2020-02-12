@@ -73,10 +73,10 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
-    this.Fouser.isActive = value.isActive;
+    this.Fouser.isActive = value.isActive.toString();
     // return this.Fouser.Foid;
     console.log("", value);
-    console.log(this.Fouser);
+    console.log(typeof( this.Fouser.isActive));
   }
 
   saveAdmin() {
@@ -118,7 +118,8 @@ export class SaveadminComponent implements OnInit {
       id: this.Fouser.id,
       name: this.Fouser.name,
       mobile: this.Fouser.mobileNo,
-      isActive: this.Fouser.isActive
+      isActive:  Boolean(JSON.parse(this.Fouser.isActive))
+
     }
     console.log(param);
     if (this.Fouser.name == null) {
