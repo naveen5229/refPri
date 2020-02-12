@@ -95,7 +95,11 @@ export class TaskMessageComponent implements OnInit {
     this.api.post('AdminTask/readLastMessage', params).subscribe(res => {
       console.log("messageList:", res['data']);
       if (res['code'] > 0) {
-        this.lastSeenId = this.lastMsgId;
+        if (this.lastSeenId < this.lastMsgId) {
+          setTimeout(() => {
+            this.lastSeenId = this.lastMsgId;
+          }, 5000);
+        }
       } else {
         this.common.showError(res['msg'])
       }

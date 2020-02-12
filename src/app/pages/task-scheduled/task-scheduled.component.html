@@ -130,11 +130,11 @@
                 <div *ngIf="activeTabNormal=='completed'">
                     <div class="row" style="z-index: 999;">
                         <div class="col-4">
-                            <uj-date-time-picker [mind]="searchTask.startDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
+                            <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
                             </uj-date-time-picker>
                         </div>
                         <div class="col-4">
-                            <uj-date-time-picker [mind]="searchTask.endDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
+                            <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
                             </uj-date-time-picker>
                         </div>
                         <div class="col-4">
@@ -171,11 +171,11 @@
                 <div *ngIf="activeTabScheduled=='completed'">
                     <div class="row" style="z-index: 999;">
                         <div class="col-4">
-                            <uj-date-time-picker [mind]="searchTask.startDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
+                            <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
                             </uj-date-time-picker>
                         </div>
                         <div class="col-4">
-                            <uj-date-time-picker [mind]="searchTask.endDate" [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
+                            <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
                             </uj-date-time-picker>
                         </div>
                         <div class="col-4">

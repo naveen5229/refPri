@@ -73,9 +73,9 @@ export class CsvUploadComponent implements OnInit {
       })
   }
 
-  // sampleCsv() {
-  //   window.open("http://13.126.215.102/sample/csv/sample_document_upload.csv");
-  // }
+  sampleCsv() {
+    window.open(this.api.URL + "sample/sampleCampaignCsv.csv");
+  }
 
   uploadCsv() {
     const params = {
@@ -84,29 +84,29 @@ export class CsvUploadComponent implements OnInit {
       campaignType: this.upload.campaignType
     };
     console.log(params);
-    // if (!params.CmpTarCsv && !params.campaignId) {
-    //   return this.common.showError("Select  Option First");
-    // }
-    // this.common.loading++;
-    // this.api.post('Campaigns/ImportCampTargetCsv', params)
-    //   .subscribe(res => {
-    //     this.common.loading--;
-    //     this.common.showToast(res["msg"]);
+    if (!params.CmpTarCsv && !params.campaignId) {
+      return this.common.showError("Select Option First");
+    }
+    this.common.loading++;
+    this.api.post('Campaigns/ImportCampTargetCsv', params)
+      .subscribe(res => {
+        this.common.loading--;
+        this.common.showToast(res["msg"]);
 
-    //     let successData = res['data']['success'];
-    //     let errorData = res['data']['fail'];
-    //     console.log("error: ", errorData);
-    //     alert(res["msg"]);
-    //     this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
-    //     const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    //     activeModal.result.then(data => {
-    //       if (data.response) {
-    //         this.activeModal.close({ response: true });
-    //       }
-    //     });
-    //   }, err => {
-    //     this.common.loading--;
-    //     console.log(err);
-    //   });
+        let successData = res['data']['success'];
+        let errorData = res['data']['fail'];
+        console.log("error: ", errorData);
+        alert(res["msg"]);
+        this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+        const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+        activeModal.result.then(data => {
+          if (data.response) {
+            this.activeModal.close({ response: true });
+          }
+        });
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 }
