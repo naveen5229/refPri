@@ -58,7 +58,8 @@ export class CsvUploadComponent implements OnInit {
       .then(res => {
         this.common.loading--;
         let file = event.target.files[0];
-        if (file.type == "application/vnd.ms-excel") {
+        console.log("file-type:", file.type);
+        if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {
         }
         else {
           alert("valid Format Are : csv");
