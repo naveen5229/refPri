@@ -30,9 +30,7 @@ export class DailyReportComponent implements OnInit {
     public modalService: NgbModal,
     private http: HttpClient,
     public api: ApiService) { 
-      this.http.get('test.txt').subscribe(data => {
-        console.log(data);
-    })
+      
 
     }
 

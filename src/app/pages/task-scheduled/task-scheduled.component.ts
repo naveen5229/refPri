@@ -416,6 +416,7 @@ export class TaskScheduledComponent implements OnInit {
     console.log(columns);
     return columns;
   }
+
   setTableAllScheduleTask() {
     this.tableAllScheduleTask.data = {
       headings: this.generateHeadingsAllScheduleTask(),
@@ -423,6 +424,7 @@ export class TaskScheduledComponent implements OnInit {
     };
     return true;
   }
+  
   generateHeadingsAllScheduleTask() {
     let headings = {};
     for (var key in this.allScheduleTaskList[0]) {
@@ -513,6 +515,7 @@ export class TaskScheduledComponent implements OnInit {
     };
     return true;
   }
+
   generateHeadingsUnacknowledgedScheduledTask() {
     let headings = {};
     for (var key in this.unacknowledgedScheduledTaskList[0]) {
