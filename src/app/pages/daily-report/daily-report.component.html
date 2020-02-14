@@ -1,41 +1,38 @@
 <nb-card>
-  <nb-card-header>
-    <div class="row">
-      <div class="col-6">
-        <h5>Daily Report</h5>
-      </div>
-    </div>
-<br>
-<br>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6">
+                <h5>Daily Report</h5>
+            </div>
+        </div>
+        <br>
+        <br>
 
-<div class="row">
-    <div class="col-4">
-      <label>Start Date</label>
-      <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
-      </uj-date-time-picker>
-    </div>
-    <div class="col-4">
-      <label>End Date</label>
-      <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false"
-        [isStart]="false">
-      </uj-date-time-picker>
-    </div>
-    <div class="col-4">
-      <button type="submit" id="submit" (click)="getDailyReport()" class="btn btn-primary" style="margin-top: 20px;"> Submit
-      </button>
-      <button type="submit" id="submit" (click)="callLogs()" class="btn btn-primary" style="margin-top: 20px; float: right;"> Last Call Logs
-      </button>
-    </div>
-  </div>
+        <div class="row">
+            <div class="col-3">
+                <label>Start Date</label>
+                <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-3">
+                <label>End Date</label>
+                <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-6 text-right mt-4">
+                <button type="submit" id="submit" (click)="getDailyReport()" class="btn btn-primary mr-2">Submit</button>
+                <button id="walle8Campaign" (click)="getWalle8CampaignPurposeWise()" class="btn btn-primary mr-2">W8 Campaign Purpose Wise</button>
+                <button type="submit" id="submit" (click)="callLogs()" class="btn btn-primary">Last Call Logs</button>
+            </div>
+        </div>
 
-  </nb-card-header>
-  <nb-card-body style="min-height: 485px;">
-    
-        
-          <smart-table *ngIf="dailyReportList.length!=0" [data]="table.data" [settings]="table.settings"
-            id="dailyReportList">
-          </smart-table>
-          <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
-      
-  </nb-card-body>
+    </nb-card-header>
+    <nb-card-body style="min-height: 485px;">
+
+
+        <smart-table *ngIf="dailyReportList.length!=0" [data]="table.data" [settings]="table.settings" id="dailyReportList">
+        </smart-table>
+        <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
+
+    </nb-card-body>
 </nb-card>
