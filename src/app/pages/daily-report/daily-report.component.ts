@@ -29,10 +29,8 @@ export class DailyReportComponent implements OnInit {
   constructor(public common: CommonService,
     public modalService: NgbModal,
     private http: HttpClient,
-    public api: ApiService) {
-    // this.http.get('test.txt').subscribe(data => {
-    //   console.log(data);
-    // })
+    public api: ApiService) { 
+      
 
   }
 

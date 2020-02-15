@@ -54,6 +54,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'file-text-outline',
         link: '/pages/future-ref',
         home: true,
+      },
+      {
+        title: 'Call-KPI',
+        icon: 'file-text-outline',
+        link: '/pages/call-kpi',
+        home: true,
       }
     ]
   },
