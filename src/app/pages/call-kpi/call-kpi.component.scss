@@ -2,21 +2,21 @@
     width: 200px;
     color: blue;
 }
-::ng-deep .pink{
-    color: rgba(255, 99, 132, 1),
+::ng-deep .red{
+    color: red,
     ;
 }
-::ng-deep .sky{
-    color: rgba(54, 162, 235, 1);
+::ng-deep .brown{
+    color: brown;
 }
-::ng-deep .yellow{
-    color: rgba(255, 206, 86, 1);
+::ng-deep .magenta{
+    color: magenta;
 }
 ::ng-deep .green{
-    color: rgba(34,139,34, 1);
+    color: green;
 }
-::ng-deep .light{
-    color: rgba(138, 43, 226, 1)
+::ng-deep .purple{
+    color: purple;
 }
 :host ::ng-deep{
     th:nth-child(2){

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { ChartService } from '../../Service/Chart/chart.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import * as Chart from 'chart.js'
 
 @Component({
@@ -17,7 +19,7 @@ export class CallKpiComponent implements OnInit {
   canvas3: any;
   canvas: any;
   ctx: any;
-  myChart1: any;
+   myChart1: any;
   myChart2: any;
   myChart3: any;
   endTime = new Date();
@@ -40,7 +42,8 @@ export class CallKpiComponent implements OnInit {
 
   constructor(public common: CommonService,
     public modalService: NgbModal,
-    public api: ApiService) {
+    public api: ApiService,
+    public chart: ChartService) {
      this.startTime.setDate(this.startTime.getDate()-1) 
      this.startTime.setHours(0);
      this.startTime.setMinutes(0);
@@ -156,22 +159,11 @@ export class CallKpiComponent implements OnInit {
           column[key] ={value:ticket[key], class:'blue',isHTML:true, action: this.showdata.bind(this, ticket)}
 
         }
-        else if (key == "Tk. Cnt." || key == "Tk. Dur.") {
-          column[key] = { value: ticket[key], class: 'pink', action: '' };
+        else if (ticket["_href"].includes(key)) {
+          column[key] ={value:ticket[key], class:'blue',isHTML:true, action: this.callDetails.bind(this, ticket)}
         }
-        else if (key == "FO Cnt." || key == "FO Dur.") {
-          column[key] = { value: ticket[key], class: 'sky', action: '' };
-        }
-        else if (key == "Pt. Cnt." || key == "Pt. Dur.") {
-          column[key] = { value: ticket[key], class: 'yellow', action: '' };
-        }
-        else if (key == "Ad. Cnt." || key == "Ad. Dur.") {
-          column[key] = { value: ticket[key], class: 'green', action: '' };
-        }
-        else if (key == "Ot. Cnt." || key == "Ot. Dur.") {
-          column[key] = { value: ticket[key], class: 'light', action: '' };
-        }
-        
+       
+ 
         else if (key == 'Action') {
           column[key] = {
             value: "",
@@ -180,7 +172,7 @@ export class CallKpiComponent implements OnInit {
             // icons: this.actionIcons(pending)
           };
         } else {
-          column[key] = { value: ticket[key], class: 'black', action: '' };
+          column[key] = { value: typeof(ticket[key]) == 'object' ? ticket[key]['value'] : ticket[key], class: ticket[key]['class'] , action: '' };
         }
       }
       columns.push(column);
@@ -191,101 +183,63 @@ export class CallKpiComponent implements OnInit {
 
   showdata(doc)
   {
+    let chartData1 = {
+      canvas: document.getElementById('myChart1'),
+      data: [doc['_type_cnt']['incoming'], doc['_type_cnt']['outgoing'], doc['_type_cnt']['missed'], doc['_type_cnt']['other']],
+      labels: ["Incoming", "Outgoing", "Missed", "Others"],
+      showLegend: true
+    }
 
-    this.canvas = document.getElementById('myChart1');
-    this.ctx = this.canvas.getContext('2d');
-    let data = [doc['_type_cnt']['incoming'], doc['_type_cnt']['outgoing'], doc['_type_cnt']['missed'], doc['_type_cnt']['other']];
-    console.log('Data:', data);
-    this.myChart1 = new Chart(this.ctx, {
-      type: 'pie',
-      data: {
-          labels: ["Incoming", "Outgoing", "Missed", "Others"],
-          datasets: [{
-              label: '# of Votes',
-              data: [doc['_type_cnt']['incoming'], doc['_type_cnt']['outgoing'], doc['_type_cnt']['missed'], doc['_type_cnt']['other']],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(34, 139, 34, 1)',                
-                  'rgba(138, 43, 226, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-        responsive: true,
-        display:true,
-        legend: {
-          display: true
-        },
-        
-      }
-    });
+    let chartData2 = {
+      canvas: document.getElementById('myChart2'),
+      data: [doc['Tk. Cnt.']['value'] , doc['FO Cnt.']['value'] , doc['Pt. Cnt.']['value'], doc['Ad. Cnt.']['value'] , doc['Ot. Cnt.']['value'] ],
+      labels: ["Tickets", "FO", "Partner", "Admin", "Others"],
+      bgColor: [doc['Tk. Cnt.']['class'] , doc['FO Cnt.']['class'] , doc['Pt. Cnt.']['class'], doc['Ad. Cnt.']['class'] , doc['Ot. Cnt.']['class'] ],
+      showLegend: false
+    }
 
+    let chartData3 = {
+      canvas: document.getElementById('myChart3'),
+      data: [doc['Tk. Dur.']['value'] , doc['FO Dur.']['value'] , doc['Pt. Dur.']['value'] , doc['Ad. Dur.']['value'] , doc['Ot. Dur.']['value'] ],
+      labels: ["Tickets", "FO", "Partner", "Admin", "Others"],
+      bgColor: [doc['Tk. Dur.']['class'] , doc['FO Dur.']['class'] , doc['Pt. Dur.']['class'] , doc['Ad. Dur.']['class'] , doc['Ot. Dur.']['class'] ],
+      showLegend: false
+    }
+    this.chart.generatePieChart([chartData1, chartData2, chartData3]);
 
-    this.canvas = document.getElementById('myChart2');
-    this.ctx = this.canvas.getContext('2d');
-    this.myChart2 = new Chart(this.ctx, {
-      type: 'pie',
-      data: {
-        labels: ["Tickets", "FO", "Partner", "Admin", "Others"],
-        datasets: [{
-              label: '# of Votes', 
-              data: [doc['_call_cnt']['tickets'], doc['_call_cnt']['fo'], doc['_call_cnt']['partner'], doc['_call_cnt']['admin'],  doc['_call_cnt']['other']],
-              backgroundColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(34,139,34)',                
-                'rgba(138, 43, 226, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-        responsive: true,
-        display:true,
-        legend: {
-          display: false
-        },
-      }
-    });
-    console.log(this.myChart2);
-
-
-    this.canvas = document.getElementById('myChart3');
-    this.ctx = this.canvas.getContext('2d');
-    this.myChart3 = new Chart(this.ctx, {
-      type: 'pie',
-      data: {
-          labels: ["Tickets", "FO", "Partner", "Admin", "Others"],
-          datasets: [{
-              label: '# of Votes',
-              data: [doc['_call_dur']['tickets'], doc['_call_dur']['fo'], doc['_call_dur']['partner'], doc['_call_dur']['admin'],  doc['_call_dur']['other']],
-              backgroundColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(34,139,34)',                
-                'rgba(138, 43, 226, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-        responsive: true,
-        display:true,
-        legend: {
-          display: false
-        },
-      }
-    });
-    
     this.showLabel = true;
-    console.log("----------123123:", doc);
 
   }
 
+  callDetails(callData) {
+    let dataparams = {
+      view: {
+        api: 'Users/getAdminCallKpis.json',
+        param: {
+          
+             startDate: this.common.dateFormatter(this.startTime),
+             endDate: this.common.dateFormatter(this.endTime),
+             shiftStart: this.common.timeFormatter1(this.shiftStart),
+             shiftEnd: this.common.timeFormatter1(this.shiftEnd),
+             adminId: callData['_admin_id']
+        
+          
+        }
+      },
+      // viewModal: {
+      //   api: 'TripExpenseVoucher/getRouteTripSummaryDril',
+      //   param: {
+      //     startDate: '_start',
+      //     endDate: '_end',
+      //     type: '_type',
+      //     levelId: '_id'
+      //   }
+      // }
+      title: "Call Log Details"
+    }
+    this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
 
 }
