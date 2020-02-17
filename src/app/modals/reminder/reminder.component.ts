@@ -51,8 +51,7 @@ export class ReminderComponent implements OnInit {
 
   closeModal(response) {
     this.activeModal.close({
-      response: response,
-      data: this.reminder
+      response: response
     });
   }
 

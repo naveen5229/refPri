@@ -32,7 +32,7 @@ export class DailyReportComponent implements OnInit {
     public api: ApiService) { 
       
 
-    }
+  }
 
   ngOnInit() {
   }
@@ -62,7 +62,7 @@ export class DailyReportComponent implements OnInit {
       return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
     } else {
       return strval.charAt(0).toUpperCase() + strval.substr(1);
-     }
+    }
   }
 
   setTable() {
@@ -79,13 +79,11 @@ export class DailyReportComponent implements OnInit {
     this.dailyReportList.map(ticket => {
       let column = {};
       for (let key in this.generateHeadings()) {
-        if(key =="admin_name")
-        {
-          column[key] ={value:ticket[key], class:'admin',isHTML:true, action: ''}
+        if (key == "admin_name") {
+          column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
         }
-        else if(key == ticket["_call_rep_href"])
-        {
-          column[key] ={value:ticket[key], class:'blue',isHTML:true, action: this.showdata.bind(this, ticket)}
+        else if (key == ticket["_call_rep_href"]) {
+          column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.showdata.bind(this, ticket) }
         }
         else if (key == 'Action') {
           column[key] = {
@@ -104,8 +102,7 @@ export class DailyReportComponent implements OnInit {
 
   }
 
-  showdata(doc)
-  {
+  showdata(doc) {
     let dataparams = {
       view: {
         api: 'Users/getAdminCallLogReport',
@@ -129,10 +126,10 @@ export class DailyReportComponent implements OnInit {
     this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  
-    
-    
-    console.log("----------123123:",doc);
+
+
+
+    console.log("----------123123:", doc);
 
   }
 
@@ -154,7 +151,7 @@ export class DailyReportComponent implements OnInit {
     const params =
       "startDate=" + startdate +
       "&endDate=" + enddate;
-      // console.log(params);
+    // console.log(params);
     this.common.loading++;
     this.api.get('Users/getDailyReport.json?' + params)
       .subscribe(res => {
@@ -162,7 +159,7 @@ export class DailyReportComponent implements OnInit {
         // console.log('res:', res);
         this.dailyReportList = res['data'] || [];
         console.log(this.dailyReportList);
-        
+
         this.dailyReportList.length ? this.setTable() : this.resetTable();
 
         console.log(this.dailyReportList);
@@ -198,5 +195,26 @@ export class DailyReportComponent implements OnInit {
     this.common.params = { data: dataparams };
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
-  
+
+  getWalle8CampaignPurposeWise() {
+    if (this.startTime && this.endTime) {
+      let dataparams = {
+        view: {
+          api: 'Users/getWalle8CampaignPurposeWise',
+          param: {
+            startDate: this.common.dateFormatter(this.startTime),
+            endDate: this.common.dateFormatter(this.endTime)
+          }
+        },
+        title: "Walle8 Campaign Purpose Wise"
+      }
+      // this.common.handleModalSize('class', 'modal-lg', '1100');
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    } else {
+      this.common.showError("Select start date and end date");
+    }
+
+  }
+
 }
