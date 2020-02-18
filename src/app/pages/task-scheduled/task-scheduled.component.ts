@@ -455,6 +455,7 @@ export class TaskScheduledComponent implements OnInit {
     };
     return true;
   }
+  
   generateHeadingsAllScheduleTask() {
     let headings = {};
     for (var key in this.allScheduleTaskList[0]) {
@@ -545,6 +546,7 @@ export class TaskScheduledComponent implements OnInit {
     };
     return true;
   }
+
   generateHeadingsUnacknowledgedScheduledTask() {
     let headings = {};
     for (var key in this.unacknowledgedScheduledTaskList[0]) {

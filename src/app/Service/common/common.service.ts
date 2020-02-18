@@ -184,6 +184,31 @@ export class CommonService {
     return hours + ":" + minutes + ":" + seconds;
   }
 
+  timeFormatter1(date) {
+    let d = new Date(date);
+    let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
+    let minutes = d.getMinutes() <= 9 ? "0" + d.getMinutes() : d.getMinutes();
+    let seconds = d.getSeconds() <= 9 ? "0" + d.getSeconds() : d.getSeconds();
+
+    return hours + ":" + minutes + ":" + seconds;
+  }
+
+  getStartShift(date) {
+    let d = new Date(date);
+    let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
+    let minutes = d.getMinutes() <= 9 ? "0" + d.getMinutes() : d.getMinutes();
+    let seconds = d.getSeconds() <= 9 ? "0" + d.getSeconds() : d.getSeconds();
+
+    return hours + ":" + minutes + ":" + seconds;
+  }
+  getEndShift(date) {
+    let d = new Date(date);
+    let hours = d.setHours(9);
+    let minutes = d.setMinutes(30);
+    // let seconds = d.getSeconds() <= 9 ? "0" + d.getSeconds() : d.getSeconds();
+
+    return hours + ":" + minutes + ":" ;
+  }
   changeDateformate(date) {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd-MMM-yyyy");

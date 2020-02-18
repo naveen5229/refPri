@@ -1,0 +1,25 @@
+::ng-deep .blue{
+    width: 200px;
+    color: blue;
+}
+::ng-deep .red{
+    color: red,
+    ;
+}
+::ng-deep .brown{
+    color: brown;
+}
+::ng-deep .magenta{
+    color: magenta;
+}
+::ng-deep .green{
+    color: green;
+}
+::ng-deep .purple{
+    color: purple;
+}
+:host ::ng-deep{
+    th:nth-child(2){
+        width: 200px;
+    }
+}

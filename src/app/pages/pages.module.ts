@@ -31,6 +31,7 @@ import { WwToolsComponent } from './ww-tools/ww-tools.component';
 import { TaskComponent } from './task/task.component';
 import { TaskScheduledComponent } from './task-scheduled/task-scheduled.component';
 import { FutureRefComponent } from './future-ref/future-ref.component';
+import { CallKpiComponent } from './call-kpi/call-kpi.component';
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import { FutureRefComponent } from './future-ref/future-ref.component';
     WwToolsComponent,
     TaskComponent,
     TaskScheduledComponent,
-    FutureRefComponent
+    FutureRefComponent,
+    CallKpiComponent
   ],
 })
 export class PagesModule {
