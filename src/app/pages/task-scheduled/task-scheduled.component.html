@@ -103,6 +103,9 @@
                     <li [ngClass]="activeTab=='scheduledTask'?'active':''" (click)="activeTab='scheduledTask';activeTabScheduled=''">
                         Scheduled Task
                     </li>
+                    <li [ngClass]="activeTab=='userReport'?'active':''" (click)="activeTab='userReport';getUserReport()">
+                        User Report
+                    </li>
                 </ul>
             </div>
             <!-- start:normal task subtab -->
@@ -190,6 +193,10 @@
 
             <div *ngIf="activeTab=='ScheduledTaskMaster'">
                 <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='userReport'">
+                <smart-table *ngIf="userReportList.length!=0" [data]="tableUserReportList.data" [settings]="tableUserReportList.settings" id="userReportList">
                 </smart-table>
             </div>
         </nb-card-body>

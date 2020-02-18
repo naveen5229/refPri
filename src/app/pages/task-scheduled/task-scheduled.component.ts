@@ -92,6 +92,17 @@ export class TaskScheduledComponent implements OnInit {
     }
   };
 
+  userReportList = [];
+  tableUserReportList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   unacknowledgedNormalTaskList = [];
   unacknowledgedScheduledTaskList = [];
   tableUnacknowledgedNormalTask = {
@@ -259,6 +270,21 @@ export class TaskScheduledComponent implements OnInit {
       });
   }
 
+  getUserReport() {
+    this.common.loading++;
+    this.api.get("AdminTask/userReport").subscribe(res => {
+      this.common.loading--;
+      console.log("data", res['data'])
+      this.resetSmartTableData();
+      this.userReportList = res['data'] || [];
+      this.setTableUserReportList();
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
   getAllTask(type, startDate = null, endDate = null) {
     this.common.loading++;
     let params = {//all task for admin
@@ -323,6 +349,10 @@ export class TaskScheduledComponent implements OnInit {
       columns: []
     };
     this.tableAckScheduleTask.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableUserReportList.data = {
       headings: {},
       columns: []
     };
@@ -637,14 +667,48 @@ export class TaskScheduledComponent implements OnInit {
   }
   // end ack scheduled task
 
-  // formatTitle(strval) {
-  //   let pos = strval.indexOf('_');
-  //   if (pos > 0) {
-  //     return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
-  //   } else {
-  //     return strval.charAt(0).toUpperCase() + strval.substr(1);
-  //   }
-  // }
+  // start user report list
+  setTableUserReportList() {
+    this.tableUserReportList.data = {
+      headings: this.generateHeadingsTableUserReportList(),
+      columns: this.getTableColumnsTableUserReportList()
+    };
+    return true;
+  }
+  generateHeadingsTableUserReportList() {
+    let headings = {};
+    for (var key in this.userReportList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+
+  getTableColumnsTableUserReportList() {
+    let columns = [];
+    this.userReportList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsTableUserReportList()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(ticket, type)
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+        // column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end user report list
 
   ticketMessage(ticket, type) {
     console.log("type:", type);
