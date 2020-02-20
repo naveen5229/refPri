@@ -1,0 +1,77 @@
+<div class="modal-header">
+    <h5>Add Installer</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+    <div class="container">
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Name:-<span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" type="text" [(ngModel)]="installerData.name">
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Mobile Number:-<span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <input class="form-control" type="text" [(ngModel)]="installerData.mobileno">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Partner:-<span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <auto-suggestion [data]="partnerList" [display]="['admin_name','admin_mobile']" seperator="-" placeholder="select Partner" (onSelected)="selectedAdmin($event)" autocomplete="off" name="partnerId" inputId="partnerId">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Is App:-<span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <input type="checkbox" [checked]="installerData.isApp" (change)="installerData.isApp = !installerData.isApp" />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>Location:-<span class="require">*</span></label>
+            </div>
+            <div class="col-md-6">
+                <div class="col-10" style="display: inline-block;padding:0;">
+                    <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="endname" placeholder="Location" [value]="vehicleTrip.endName"
+                        [preSelected]='{location:vehicleTrip.endName}'>
+                    </auto-suggestion>
+                </div>
+                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                    <label class="btn-primary" style="padding:7px" (click)="searchString='----'; takeAction(null);"><i
+            class="fa fa-plus"></i></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="row footer">
+        <div class="col ">
+            <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary " type='submit' id="save" (click)="SendMsg()">Send</button>
+        </div>
+    </div>
+</div>

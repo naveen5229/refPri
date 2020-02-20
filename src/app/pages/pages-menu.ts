@@ -191,6 +191,24 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
 
     ]
-  }
+  },
+  // {
+  //   title: "Grid",
+  //   icon: 'layers-outline',
+  //   home: true,
+  //   children: [
+  //     {
+  //       title: 'Field-Support-Request',
+  //       icon: 'plus-square-outline',
+  //       link: '/pages/field-support-request',
+  //       home: true,
+  //     }, {
+  //       title: 'Installer',
+  //       icon: 'grid-outline',
+  //       link: '/pages/installer',
+  //       home: true,
+  //     },
+  //   ]
+  // }
 
 ];

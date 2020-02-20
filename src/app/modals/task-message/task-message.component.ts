@@ -20,6 +20,11 @@ export class TaskMessageComponent implements OnInit {
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
   lastSeenId = 0;
+  userListByTask = [];
+  adminList = [];
+  newCCUserId = null;
+  taskId = null;
+  ticketType = null;
   constructor(public activeModal: NgbActiveModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     if (this.common.params != null) {
@@ -27,7 +32,11 @@ export class TaskMessageComponent implements OnInit {
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
       this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
+      this.taskId = this.common.params.ticketEditData.taskId;
+      this.ticketType = this.common.params.ticketEditData.taskType;
       this.getMessageList();
+      this.getAllUserByTask();
+      this.getAllAdmin();
     }
 
     console.log("user_details:", this.userService._details)
@@ -139,6 +148,68 @@ export class TaskMessageComponent implements OnInit {
           console.log('Error: ', err);
         });
     }
+  }
+
+  getAllUserByTask() {
+    // this.showLoading = true;
+    let params = {
+      ticketId: this.ticketId,
+      ticketType: this.ticketType
+    }
+    this.api.post('AdminTask/getAllUserByTask', params).subscribe(res => {
+      // this.showLoading = false;
+      console.log("userListByTask:", res['data']);
+      if (res['success']) {
+        this.userListByTask = res['data'] || [];
+      } else {
+        this.common.showError(res['data'])
+      }
+    },
+      err => {
+        this.showLoading = false;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  addNewCCUserToTask() {
+    if (this.ticketId > 0 && this.newCCUserId > 0) {
+      let params = {
+        ticketId: this.ticketId,
+        taskId: this.taskId,
+        ccUserId: this.newCCUserId
+      }
+      this.common.loading++;
+      this.api.post('AdminTask/addNewCCUserToTask', params).subscribe(res => {
+        this.common.loading--;
+        if (res['success']) {
+          this.getAllUserByTask();
+        } else {
+          this.common.showError(res['data']);
+        }
+      },
+        err => {
+          this.common.loading--;
+          this.common.showError();
+          console.log('Error: ', err);
+        });
+    } else {
+      this.common.showError("Select CC user")
+    }
+  }
+
+  getAllAdmin() {
+    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.adminList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    },
+      err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
 }

@@ -185,12 +185,12 @@ export class TaskScheduledComponent implements OnInit {
     // else if (this.scheduledTask.scheduleParam < 0) {
     //   return this.common.showError("Schedule Param is missing")
     // }
-    else if (this.scheduledTask.days == '') {
-      return this.common.showError("Day is missing")
-    }
-    else if (this.scheduledTask.hours == '') {
-      return this.common.showError("Hour is missing")
-    }
+    // else if (this.scheduledTask.days == '') {
+    //   return this.common.showError("Day is missing")
+    // }
+    // else if (this.scheduledTask.hours == '') {
+    //   return this.common.showError("Hour is missing")
+    // }
     else {
       const params = {
         taskId: this.scheduledTask.taskId,
@@ -278,12 +278,11 @@ export class TaskScheduledComponent implements OnInit {
       this.resetSmartTableData();
       this.userReportList = res['data'] || [];
       this.setTableUserReportList();
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   getAllTask(type, startDate = null, endDate = null) {
     this.common.loading++;
@@ -455,7 +454,7 @@ export class TaskScheduledComponent implements OnInit {
     };
     return true;
   }
-  
+
   generateHeadingsAllScheduleTask() {
     let headings = {};
     for (var key in this.allScheduleTaskList[0]) {
@@ -716,10 +715,12 @@ export class TaskScheduledComponent implements OnInit {
     console.log("type:", type);
     let ticketEditData = {
       ticketId: ticket._tktid,
-      statusId: ticket._status
+      statusId: ticket._status,
+      taskId: (ticket._tktype == 101 || ticket._tktype == 102) ? ticket._refid : null,
+      taskType: ticket._tktype
     }
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
-    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => { });
   }
 

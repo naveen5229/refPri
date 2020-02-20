@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h5>Assign Installer</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Select Installer:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="selectedInstaller($event)" url="Installer/searchInstaller" display="name" seperator="-" placeholder="Search Installer" autocomplete="off" name="installer" inputId="installer">
+            </auto-suggestion>
+        </div>
+    </div>
+    <div class="row" *ngIf="partnerName">
+        <div class="col-4">
+            <label>Partner:</label>
+        </div>
+        <div class="col-6">
+            <label>{{partnerName}}</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="assignInstallerToFieldSupportRequest()">{{btn}}</button>
+        </div>
+    </div>
+</div>

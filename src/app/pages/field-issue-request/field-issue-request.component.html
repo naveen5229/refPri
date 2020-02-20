@@ -1,0 +1,38 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-9">
+                <h5>Field Support Request</h5>
+            </div>
+            <div class="col-3 text-right">
+                <button (click)="addRequest()" class="btn btn-primary">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <!-- Tabs      -->
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='initialRequest'?'active':''" (click)="activeTab='initialRequest'; getFieldSupportRequestByType(1)">
+                    Initial Requests
+                </li>
+                <li [ngClass]="activeTab=='assignedRequest'?'active':''" (click)="activeTab='assignedRequest'; getFieldSupportRequestByType(2)">
+                    Assigned Requests
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="activeTab=='initialRequest'">
+            <smart-table [data]="table.data" [settings]="table.settings" id="transactions">
+            </smart-table>
+            <!-- <div class="row no-record" *ngIf="installerlist.length==0">No Data Available</div> -->
+        </div>
+        <div *ngIf="activeTab=='assignedRequest'">
+            <smart-table [data]="tableAssignReqList.data" [settings]="tableAssignReqList.settings" id="tableAssignReqList">
+            </smart-table>
+        </div>
+
+    </nb-card-body>
+</nb-card>
