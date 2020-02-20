@@ -650,9 +650,11 @@ export class TaskComponent implements OnInit {
       ticketId: ticket._tktid,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,
+      taskId: (ticket._tktype == 101 || ticket._tktype == 102) ? ticket._refid : null,
+      taskType: ticket._tktype
     }
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
-    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => { });
   }
 

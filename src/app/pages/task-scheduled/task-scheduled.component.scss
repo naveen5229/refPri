@@ -112,3 +112,9 @@
         color: gray;
     }
 }
+
+:host ::ng-deep {
+    th:nth-child(2) {
+        width: 300px !important;
+    }
+}

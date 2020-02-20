@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h5>Approve Field Support Request</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Installer:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="selectedInstaller($event)" [data]="installerList" display="name" seperator="-" placeholder="Search Installer" autocomplete="off" name="installer" inputId="installer" [preSelected]="(approveForm.installer.id>0)?{name:approveForm.installer.name}:{name:''}">
+            </auto-suggestion>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>Partner:</label>
+        </div>
+        <div class="col-6">
+            <label>{{approveForm.partner.name}}</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="approveFieldSupportRequest()">{{btn}}</button>
+        </div>
+    </div>
+</div>
