@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <title>ITRM</title>
+    <!-- <base href="/testing/itrm/"> -->
     <base href="/">
-    <!-- <base href="/"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -13,14 +13,12 @@
     <!-- google map api -->
 
     <!-- Production -->
-    <!-- <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7Wk-pXb6r4rYUPQtvR19jjK2WkYaFYOs&libraries=visualization,geometry,places,drawing">
-        </script> -->
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7Wk-pXb6r4rYUPQtvR19jjK2WkYaFYOs&libraries=visualization,geometry,places,drawing">
+    </script> -->
 
-    <!-- Develpment -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBvP2-rohuqEkzDNZspC9skUHSfIrp7S8g&libraries=visualization,geometry,places,drawing">
-        </script>
+    <!-- Development -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBvP2-rohuqEkzDNZspC9skUHSfIrp7S8g&libraries=visualization,geometry,places,drawing">
+    </script>
 
     <!-- google map api end -->
 
@@ -28,9 +26,8 @@
     <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Poppins:400,500,600,700" rel="stylesheet">
 
-    <script
-        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-        </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
 
 </head>
 
@@ -42,32 +39,29 @@
             0% {
                 transform: rotate(0)
             }
-
             100% {
                 transform: rotate(360deg)
             }
         }
-
+        
         @-moz-keyframes spin {
             0% {
                 -moz-transform: rotate(0)
             }
-
             100% {
                 -moz-transform: rotate(360deg)
             }
         }
-
+        
         @keyframes spin {
             0% {
                 transform: rotate(0)
             }
-
             100% {
                 transform: rotate(360deg)
             }
         }
-
+        
         .spinner {
             position: fixed;
             top: 0;
@@ -78,7 +72,7 @@
             background: #000000;
             overflow: hidden
         }
-
+        
         .spinner div:first-child {
             display: block;
             position: relative;
@@ -92,14 +86,14 @@
             transform: translate3d(0, 0, 0);
             animation: spin 2s linear infinite
         }
-
+        
         .spinner div:first-child:after,
         .spinner div:first-child:before {
             content: '';
             position: absolute;
             border-radius: 50%
         }
-
+        
         .spinner div:first-child:before {
             top: 5px;
             left: 5px;
@@ -109,7 +103,7 @@
             -webkit-animation: spin 3s linear infinite;
             animation: spin 3s linear infinite
         }
-
+        
         .spinner div:first-child:after {
             top: 15px;
             left: 15px;
@@ -118,52 +112,43 @@
             box-shadow: 0 3px 3px 0 rgba(61, 175, 255, 1);
             animation: spin 1.5s linear infinite
         }
-
+        
         .nb-theme-default nb-layout .layout {
             padding: none !important
         }
-
+        
         .nb-theme-default .cdk-overlay-container {
             z-index: 9999999999999;
         }
-
+        
         nb-layout-column {
             padding: 0px !important;
         }
-
         /* width */
-
-        ::-webkit-scrollbar {
+        
+         ::-webkit-scrollbar {
             width: 12px !important;
             background-color: #c1c1c1 !important;
         }
-
         /* Track */
-
-        ::-webkit-scrollbar-track {
+        
+         ::-webkit-scrollbar-track {
             /* background: #f1f1f1 !important; */
             box-shadow: none;
             border-radius: 0px;
             background-color: #000;
         }
-
         /* Handle */
-
-        ::-webkit-scrollbar-thumb {
+        
+         ::-webkit-scrollbar-thumb {
             /* background: #000 !important; */
             border-radius: 0px !important;
             background-color: #c1c1c1 !important;
-            background-image: -webkit-linear-gradient(linear,
-                    40% 0%,
-                    75% 84%,
-                    from(#4d9c41),
-                    to(#19911d),
-                    color-stop(0.6, #54de5d)) !important;
+            background-image: -webkit-linear-gradient(linear, 40% 0%, 75% 84%, from(#4d9c41), to(#19911d), color-stop(0.6, #54de5d)) !important;
         }
-
         /* Handle on hover */
-
-        ::-webkit-scrollbar-thumb:hover {
+        
+         ::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8 !important;
         }
     </style>

@@ -13,6 +13,7 @@ import { ApproveFieldSupportRequestComponent } from '../../modals/approve-field-
   styleUrls: ['./field-issue-request.component.scss']
 })
 export class FieldIssueRequestComponent implements OnInit {
+  activeTab = "";
   issueReqList = [];
   table = {
     data: {

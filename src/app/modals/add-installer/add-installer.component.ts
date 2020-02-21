@@ -44,7 +44,7 @@ export class AddInstallerComponent implements OnInit {
   placementSite = null;
   placementSuggestion = [];
   ref_page = null;
-
+  partnerList = [];
 
   constructor(public activeModal: NgbActiveModal,
     public modalService: NgbModal,
@@ -58,6 +58,7 @@ export class AddInstallerComponent implements OnInit {
   addInstaller() {
 
   }
+  selectedAdmin(event) { }
   selectLocation(place) {
     console.log("palce", place);
     this.placementSite = place.id;
@@ -107,7 +108,7 @@ export class AddInstallerComponent implements OnInit {
 
   }
 
-  closeModal() {
+  closeModal(response) {
     // this.activeModal.close();
   }
 }

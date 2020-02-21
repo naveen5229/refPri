@@ -7,8 +7,9 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
+  URL: string = 'http://localhost/itrm_webservices/';//komal local
   // URL: string = 'http://192.168.1.100/itrm_webservices/';//komal local
-  URL: string = 'https://dev.elogist.in/itrm_webservices/'
+  // URL: string = 'https://dev.elogist.in/itrm_webservices/'
 
   URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
 
@@ -47,13 +48,12 @@ export class ApiService {
   }
 
   setHeadersBooster() {
-    const entryMode = '1';
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': '1',
+      'entrymode': '2',
       'apptype': 'dashboard',
-      'authkey': this.user._token
+      'authkey': this.user._details.authkey_booster
     });
     return headers;
   }

@@ -33,7 +33,7 @@
                 <label>Partner:-<span class="require">*</span></label>
             </div>
             <div class="col-6">
-                <auto-suggestion [data]="partnerList" [display]="['admin_name','admin_mobile']" seperator="-" placeholder="select Partner" (onSelected)="selectedAdmin($event)" autocomplete="off" name="partnerId" inputId="partnerId">
+                <auto-suggestion [data]="partnerList" display="admin_name" seperator="-" placeholder="select Partner" (onSelected)="selectedAdmin($event)" autocomplete="off" name="partnerId" inputId="partnerId">
                 </auto-suggestion>
             </div>
         </div>
@@ -68,10 +68,10 @@
 <div class="modal-footer">
     <div class="row footer">
         <div class="col ">
-            <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(false)">Cancel</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary " type='submit' id="save" (click)="SendMsg()">Send</button>
+            <button class="btn btn-primary " type='submit' id="save" (click)="addInstaller()">Send</button>
         </div>
     </div>
 </div>
