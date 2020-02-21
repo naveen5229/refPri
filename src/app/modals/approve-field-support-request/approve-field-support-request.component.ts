@@ -56,7 +56,7 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
     this.api.post("Installer/getInstallerListByPartner.json", params).subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.installerListByPartner = res['data'];
+        this.installerList = res['data'];
       } else {
         this.common.showError(res['msg']);
       }
@@ -81,11 +81,11 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
     }
   }
 
-  approveFieldSupportRequest() {
+  approveFieldSupportRequest(status) {
     if (this.approveForm.requestId == '') {
       return this.common.showError("Request Id is missing")
     }
-    else if (this.approveForm.installer.id == '') {
+    else if (status == 1 && (this.approveForm.installer.id == '' || !this.approveForm.installer.id)) {
       return this.common.showError("Installer is missing")
     }
     else if (this.approveForm.partner.id == '') {
@@ -95,7 +95,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
       const params = {
         requestId: this.approveForm.requestId,
         installerId: this.approveForm.installer.id,
-        partnerId: this.approveForm.partner.id
+        partnerId: this.approveForm.partner.id,
+        status: status
       }
       this.common.loading++;
       this.api.post('Grid/approvedFieldSupportRequestByPartner', params).subscribe(res => {

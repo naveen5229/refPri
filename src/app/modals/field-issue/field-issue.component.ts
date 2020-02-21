@@ -76,8 +76,8 @@ export class FieldIssueComponent implements OnInit {
       this.requestData = {
         requestId: this.common.params.request._id,
         partner: {
-          id: this.common.params.request._partner_id,
-          name: this.common.params.request.partner_name
+          id: this.common.params.request._provider_id,
+          name: this.common.params.request._provider_name
         },
         company: {
           id: this.common.params.request._company_id,
@@ -173,6 +173,8 @@ export class FieldIssueComponent implements OnInit {
   selectPartner(event) {
     this.requestData.partner.id = event.id;
     this.requestData.partner.name = event.name;
+    this.requestData.company.id = null;
+    this.requestData.company.name = '';
     if (event.id) {
       this.api.get("Suggestion/getCompanyName?search=&partnerId=" + event.id).subscribe(res => {
         console.log("getCompanyName:", res);

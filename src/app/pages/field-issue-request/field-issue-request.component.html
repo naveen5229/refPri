@@ -15,22 +15,65 @@
         <!-- Tabs      -->
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='initialRequest'?'active':''" (click)="activeTab='initialRequest'; getFieldSupportRequestByType(1)">
-                    Initial Requests
+                <li [ngClass]="activeTab=='pendingRequest'?'active':''" (click)="activeTab='pendingRequest'; getFieldSupportRequestByType(1)">
+                    Pending Requests
                 </li>
                 <li [ngClass]="activeTab=='assignedRequest'?'active':''" (click)="activeTab='assignedRequest'; getFieldSupportRequestByType(2)">
                     Assigned Requests
                 </li>
+                <li [ngClass]="activeTab=='approvedRequest'?'active':''" (click)="activeTab='approvedRequest'; getFieldSupportRequestByType(3)">
+                    Approved Requests
+                </li>
+                <li [ngClass]="activeTab=='completedRequest'?'active':''" (click)="activeTab='completedRequest'; getFieldSupportRequestByType(4)">
+                    Completed Requests
+                </li>
+                <li [ngClass]="activeTab=='pendingTkt'?'active':''" (click)="activeTab='pendingTkt'; getFieldSupportTicketByType(1)">
+                    Pending Tickets
+                </li>
+                <li [ngClass]="activeTab=='ackTkt'?'active':''" (click)="activeTab='ackTkt'; getFieldSupportTicketByType(2)">
+                    Ack Tickets
+                </li>
+                <li [ngClass]="activeTab=='completedTkt'?'active':''" (click)="activeTab='completedTkt'; getFieldSupportTicketByType(3)">
+                    Completed Tickets
+                </li>
+                <li [ngClass]="activeTab=='rejectedTkt'?'active':''" (click)="activeTab='rejectedTkt'; getFieldSupportTicketByType(4)">
+                    Rejected Tickets
+                </li>
             </ul>
         </div>
 
-        <div *ngIf="activeTab=='initialRequest'">
+        <div *ngIf="activeTab=='pendingRequest'">
             <smart-table [data]="table.data" [settings]="table.settings" id="transactions">
             </smart-table>
             <!-- <div class="row no-record" *ngIf="installerlist.length==0">No Data Available</div> -->
         </div>
         <div *ngIf="activeTab=='assignedRequest'">
             <smart-table [data]="tableAssignReqList.data" [settings]="tableAssignReqList.settings" id="tableAssignReqList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='approvedRequest'">
+            <smart-table [data]="tableApprovedReqList.data" [settings]="tableApprovedReqList.settings" id="tableApprovedReqList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='completedRequest'">
+            <smart-table [data]="tableCompletedReqList.data" [settings]="tableCompletedReqList.settings" id="tableCompletedReqList">
+            </smart-table>
+        </div>
+
+        <div *ngIf="activeTab=='pendingTkt'">
+            <smart-table [data]="tablePendingTicketList.data" [settings]="tablePendingTicketList.settings" id="tablePendingTicketList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ackTkt'">
+            <smart-table [data]="tableAckTicketList.data" [settings]="tableAckTicketList.settings" id="tableAckTicketList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='completedTkt'">
+            <smart-table [data]="tableCompletedTicketList.data" [settings]="tableCompletedTicketList.settings" id="tableCompletedTicketList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='rejectedTkt'">
+            <smart-table [data]="tableRejectedTicketList.data" [settings]="tableRejectedTicketList.settings" id="tableRejectedTicketList">
             </smart-table>
         </div>
 
