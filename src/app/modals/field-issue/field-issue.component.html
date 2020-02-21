@@ -11,10 +11,11 @@
         <div class="row">
             <div class="col-3" style="text-align: center;">
                 <span style="color: red;">*</span>
-                <label>Select Company:-</label>
+                <label>Select Partner:-</label>
             </div>
             <div class="col-3">
-                <auto-suggestion (onSelected)="selectCompany($event)" url="Suggestion/getCompanyName" [preSelected]="(requestData.company.id>0)?{name:requestData.company.name}:{name:''}" inputId="companyName" display="name" placeholder="Search By Name" apiMethod="getItrm">
+                <auto-suggestion (onSelected)="selectPartner($event)" url="Suggestion/getCompanyName" [preSelected]="(requestData.partner.id>0)?{name:requestData.partner.name}:{name:''}" display="name" placeholder="Search By Name" autocomplete="off" name="partnerId"
+                    inputId="partnerId">
                 </auto-suggestion>
             </div>
             <div class="col-3" style="text-align: center;">
@@ -22,7 +23,29 @@
                 <label>Request Type:-</label>
             </div>
             <div class="col-3">
-                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type">
+                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type" autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
+        <br>
+    </fieldset>
+    <!--  -->
+    <fieldset>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Select Company:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectCompany($event)" url="Suggestion/getCompanyName" [preSelected]="(requestData.company.id>0)?{name:requestData.company.name}:{name:''}" inputId="companyName" display="name" placeholder="Search By Name" autocomplete="off">
+                </auto-suggestion>
+            </div>
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Request Type:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type" autocomplete="off">
                 </auto-suggestion>
             </div>
         </div>
@@ -36,7 +59,6 @@
                 <input type="text" class="form-control" maxlength="10" placeholder="Registration Number" [(ngModel)]="requestData.regno">
             </div>
             <div class="col-3" style="text-align: center;">
-                <span style="color: red;">*</span>
                 <label>Device Model:-</label>
             </div>
             <div class="col-3">
@@ -100,7 +122,7 @@
             <div class="col-3">
                 <div class="col-10" style="display: inline-block;padding:0;">
                     <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="endname" placeholder="Location" [value]="vehicleTrip.endName"
-                        [preSelected]='{location:vehicleTrip.endName}'>
+                        [preSelected]='{location:vehicleTrip.endName}' autocomplete="off" [apiMethod]="'getBooster'">
                     </auto-suggestion>
                 </div>
                 <div class="col-2" style="display: inline-block;padding: 0!important;">

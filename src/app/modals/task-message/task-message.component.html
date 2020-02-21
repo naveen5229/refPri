@@ -37,31 +37,31 @@
             <table width="100%">
                 <tr>
                     <td>AssignBy:</td>
-                    <td>{{(userListByTask.taskUsers)?userListByTask.taskUsers[0].assignby:''}}</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}</td>
                 </tr>
                 <tr>
                     <td>AssignTo:</td>
-                    <td>{{(userListByTask.taskUsers)?userListByTask.taskUsers[0].assignto:''}}</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}</td>
                 </tr>
-                <tr *ngIf="userListByTask.taskUsers && userListByTask.taskUsers[0].project_owner">
+                <tr *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
                     <td>ProjectOwner:</td>
-                    <td>{{(userListByTask.taskUsers)?userListByTask.taskUsers[0].project_owner:''}}</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}</td>
                 </tr>
-                <tr *ngIf="userListByTask.projectUsers && userListByTask.projectUsers.length>0">
+                <tr *ngIf="userListByTask['projectUsers'] && userListByTask['projectUsers'].length>0">
                     <td>ProjectUsers:</td>
                     <td><span *ngFor="let pu of userListByTask.projectUsers;let i = index">{{(i>0)?',':''}}{{pu.project_user}}</span></td>
                 </tr>
-                <tr *ngIf="userListByTask.ccUsers && userListByTask.ccUsers.length>0">
+                <tr *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
                     <td>CCUsers:</td>
                     <td><span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{(i>0)?',':''}}{{ccu.cc_user}}</span></td>
                 </tr>
-                <tr *ngIf="userListByTask.taskUsers && userListByTask.taskUsers[0].esc_user">
+                <tr *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
                     <td>EscUser:</td>
-                    <td>{{(userListByTask.taskUsers)?userListByTask.taskUsers[0].rep_user:''}}</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr>
-                <tr *ngIf="userListByTask.taskUsers && userListByTask.taskUsers[0].rep_user">
+                <tr *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].rep_user">
                     <td>RepUser:</td>
-                    <td>{{(userListByTask.taskUsers)?userListByTask.taskUsers[0].rep_user:''}}</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr>
                 <tr *ngIf="taskId && taskId>0">
                     <td></td>

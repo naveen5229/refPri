@@ -35,6 +35,7 @@ export class AutoSuggestionComponent implements OnInit {
   @Input() isNoDataFoundEmit: boolean;
   @Input() isMultiSelect: boolean;
   @Input() bGConditions: any[] = [];
+  @Input() apiMethod: string = 'get';
 
   counter = 0;
   searchText = '';
@@ -47,7 +48,6 @@ export class AutoSuggestionComponent implements OnInit {
   selectedSuggestions = [];
   isAllData = false;
   suggestionApiHitTimer: any = null;
-
 
   constructor(public api: ApiService,
     private cdr: ChangeDetectorRef,
@@ -130,7 +130,7 @@ export class AutoSuggestionComponent implements OnInit {
       params = '&'
     }
     params += 'search=' + this.searchText;
-    this.api.get(this.url + params)
+    this.api[this.apiMethod](this.url + params)
       .subscribe(res => {
         this.suggestions = res['data'];
         if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({ search: this.searchText });

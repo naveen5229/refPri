@@ -47,13 +47,12 @@ export class ApiService {
   }
 
   setHeadersBooster() {
-    const entryMode = '1';
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': '1',
+      'entrymode': '2',
       'apptype': 'dashboard',
-      'authkey': this.user._token
+      'authkey': this.user._details.authkey_booster
     });
     return headers;
   }

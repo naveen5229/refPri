@@ -39,6 +39,10 @@ export class FieldIssueComponent implements OnInit {
   deviceModals = [];
   requestData = {
     requestId: null,
+    partner: {
+      id: 0,
+      name: ''
+    },
     company: {
       id: 0,
       name: ''
@@ -71,6 +75,10 @@ export class FieldIssueComponent implements OnInit {
     if (this.common.params != null) {
       this.requestData = {
         requestId: this.common.params.request._id,
+        partner: {
+          id: this.common.params.request._partner_id,
+          name: this.common.params.request.partner_name
+        },
         company: {
           id: this.common.params.request._company_id,
           name: this.common.params.request.company_name
@@ -160,6 +168,10 @@ export class FieldIssueComponent implements OnInit {
   selectDeviceModal(selectedDevieModel) {
     this.requestData.device_model.id = selectedDevieModel.id;
     this.requestData.device_model.name = selectedDevieModel.name;
+  }
+  selectPartner(event) {
+    this.requestData.partner.id = event.id;
+    this.requestData.partner.name = event.name;
   }
 
   addRequest() {
