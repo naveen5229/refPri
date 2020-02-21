@@ -30,6 +30,8 @@ import { TaskComponent } from './task/task.component';
 import { TaskScheduledComponent } from './task-scheduled/task-scheduled.component';
 import { FutureRefComponent } from './future-ref/future-ref.component';
 import { CallKpiComponent } from './call-kpi/call-kpi.component';
+import { FieldIssueRequestComponent } from './field-issue-request/field-issue-request.component';
+import { InstallerComponent } from './installer/installer.component';
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -162,6 +164,14 @@ const routes: Routes = [{
     {
       path: 'call-kpi',
       component: CallKpiComponent
+    },
+    {
+      path: 'field-support-request',
+      component: FieldIssueRequestComponent
+    },
+    {
+      path: 'installer',
+      component: InstallerComponent
     }
 
   ],

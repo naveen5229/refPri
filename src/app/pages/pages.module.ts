@@ -32,6 +32,8 @@ import { TaskComponent } from './task/task.component';
 import { TaskScheduledComponent } from './task-scheduled/task-scheduled.component';
 import { FutureRefComponent } from './future-ref/future-ref.component';
 import { CallKpiComponent } from './call-kpi/call-kpi.component';
+import { FieldIssueRequestComponent } from './field-issue-request/field-issue-request.component';
+import { InstallerComponent } from './installer/installer.component';
 
 @NgModule({
   imports: [
@@ -69,7 +71,9 @@ import { CallKpiComponent } from './call-kpi/call-kpi.component';
     TaskComponent,
     TaskScheduledComponent,
     FutureRefComponent,
-    CallKpiComponent
+    CallKpiComponent,
+    FieldIssueRequestComponent,
+    InstallerComponent
   ],
 })
 export class PagesModule {

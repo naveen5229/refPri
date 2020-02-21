@@ -13,76 +13,67 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card>
-        <nb-card-body>
-            <!-- Tabs      -->
-            <div class="tabs_style_main">
-                <ul class="tabs_style text-left">
-                    <li [ngClass]="activeTab=='TasksForMe'?'active':''" (click)="activeTab='TasksForMe'; getTaskByType(101)">
-                        Tasks For Me
-                    </li>
-                    <li [ngClass]="activeTab=='TasksByMe'?'active':''" (click)="activeTab='TasksByMe'; getTaskByType(-101)">
-                        Tasks By Me
-                    </li>
-                    <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
-                        Scheduled Task
-                    </li>
-                    <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask'; getTaskByType(-102)">
-                        Completed Task
-                    </li>
-                    <li [ngClass]="activeTab=='ccTask'?'active':''" (click)="activeTab='ccTask'; getTaskByType(-5)">
-                        CC Task
-                    </li>
-                    <li [ngClass]="activeTab=='projectTask'?'active':''" (click)="activeTab='projectTask'; getTaskByType(-6)">
-                        Project Task
-                    </li>
-                </ul>
-            </div>
+    <nb-card-body>
+        <!-- Tabs      -->
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='TasksForMe'?'active':''" (click)="activeTab='TasksForMe'; getTaskByType(101)">
+                    Tasks For Me
+                </li>
+                <li [ngClass]="activeTab=='TasksByMe'?'active':''" (click)="activeTab='TasksByMe'; getTaskByType(-101)">
+                    Tasks By Me
+                </li>
+                <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
+                    Scheduled Task
+                </li>
+                <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask'; getTaskByType(-102)">
+                    Completed Task
+                </li>
+                <li [ngClass]="activeTab=='ccTask'?'active':''" (click)="activeTab='ccTask'; getTaskByType(-5)">
+                    CC Task
+                </li>
+                <li [ngClass]="activeTab=='projectTask'?'active':''" (click)="activeTab='projectTask'; getTaskByType(-6)">
+                    Project Task
+                </li>
+            </ul>
+        </div>
 
-            <div *ngIf="activeTab=='TasksForMe'">
-                <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='TasksByMe'">
-                <smart-table *ngIf="scheduleMasterTaskList.length!=0" [data]="tableMasterSchedule.data" [settings]="tableMasterSchedule.settings" id="scheduleMasterTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='ScheduledTask'">
-                <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='allCompletedTask'">
-                <div class="row" style="z-index: 999;">
-                    <div class="col-4">
-                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
-                        </uj-date-time-picker>
-                    </div>
-                    <div class="col-4">
-                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
-                        </uj-date-time-picker>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask()">Search</button>
-                    </div>
+        <div *ngIf="activeTab=='TasksForMe'">
+            <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='TasksByMe'">
+            <smart-table *ngIf="scheduleMasterTaskList.length!=0" [data]="tableMasterSchedule.data" [settings]="tableMasterSchedule.settings" id="scheduleMasterTaskList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ScheduledTask'">
+            <smart-table *ngIf="scheduledTaskList.length!=0" [data]="tableSchedule.data" [settings]="tableSchedule.settings" id="scheduledTaskList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='allCompletedTask'">
+            <div class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.startDate=$event" [dateTimeValue]="searchTask.startDate">
+                    </uj-date-time-picker>
                 </div>
-                <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList">
-                </smart-table>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchTask.endDate=$event" [dateTimeValue]="searchTask.endDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask()">Search</button>
+                </div>
             </div>
-            <div *ngIf="activeTab=='ccTask'">
-                <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
-                </smart-table>
-            </div>
-            <div *ngIf="activeTab=='projectTask'">
-                <smart-table *ngIf="projectTaskList.length!=0" [data]="tableProjectTask.data" [settings]="tableProjectTask.settings" id="tableProjectTaskList">
-                </smart-table>
-            </div>
-        </nb-card-body>
-    </nb-card>
-
-    <!-- <script>
-    $(function () {
-      $("input[name='numonly']").on('input', function (e) {
-        $(this).val($(this).val().replace(/[^0-9]/g, ''));
-      });
-    }); 
-  </script> -->
+            <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ccTask'">
+            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='projectTask'">
+            <smart-table *ngIf="projectTaskList.length!=0" [data]="tableProjectTask.data" [settings]="tableProjectTask.settings" id="tableProjectTaskList">
+            </smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>

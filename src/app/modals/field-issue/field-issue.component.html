@@ -1,0 +1,130 @@
+<div class="modal-header">
+    <h6 class="modal-title" id="modal-basic-title">Raise Field Support Request</h6>
+    <div class="col-md-3 text-right">
+        <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+<div class="modal-body">
+    <fieldset>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Select Company:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectCompany($event)" url="Suggestion/getCompanyName" [preSelected]="(requestData.company.id>0)?{name:requestData.company.name}:{name:''}" inputId="companyName" display="name" placeholder="Search By Name" apiMethod="getItrm">
+                </auto-suggestion>
+            </div>
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Request Type:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type">
+                </auto-suggestion>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <label>Reg. Number:-</label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" maxlength="10" placeholder="Registration Number" [(ngModel)]="requestData.regno">
+            </div>
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Device Model:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectDeviceModal($event)" [data]="deviceModals" display="name" placeholder="Device Modal" inputId="deviceModel" [preSelected]="(requestData.device_model.id>0)?{name:requestData.device_model.name}:{name:''}">
+                </auto-suggestion>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend style="font-size: 16px;">Driver Info<span class="require"></span></legend>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <label>Name:-</label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" placeholder="Driver Name" [(ngModel)]="requestData.driver_name">
+            </div>
+            <div class="col-3" style="text-align: center;">
+                <label>Mobile Number:-</label>
+            </div>
+            <div class="col-3">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="form-control" maxlength="10" type="number" [(ngModel)]='requestData.driver_mobileno' placeholder="Mobile Number">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend style="font-size: 16px;">Supervisor Info<span class="require">*</span></legend>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Name:-</label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" maxlength="10" placeholder="Supervisor Name" [(ngModel)]="requestData.supervisor_name">
+            </div>
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Mobile Number:-</label>
+            </div>
+            <div class="col-3">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="form-control" maxlength="10" type="number" [(ngModel)]='requestData.supervisor_mobileno' placeholder="Mobile Number">
+            </div>
+        </div>
+    </fieldset>
+    <br>
+    <fieldset>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <label>Service Provider:-</label>
+            </div>
+            <div class="col-3">
+                <select class="form-control" [(ngModel)]="requestData.sim_provider_id">
+          <option value="0">Airtel</option>
+          <option value="1">Vodafone</option>
+        </select>
+            </div>
+            <div class="col-3" style="text-align: center;">
+                <span style="color: red;">*</span>
+                <label>Location:-</label>
+            </div>
+            <div class="col-3">
+                <div class="col-10" style="display: inline-block;padding:0;">
+                    <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="endname" placeholder="Location" [value]="vehicleTrip.endName"
+                        [preSelected]='{location:vehicleTrip.endName}'>
+                    </auto-suggestion>
+                </div>
+                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                    <label class="btn-primary" style="padding:7px" (click)="searchString='----'; takeAction(null);"><i
+            class="fa fa-plus"></i></label>
+                </div>
+            </div>
+            <div class="col-1" style="text-align: center;"></div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-3" style="text-align: center;">
+                <label>Remark:-</label>
+            </div>
+            <div class="col-3">
+                <textarea type="text" class="form-control" maxlength="150" placeholder="Remark" [(ngModel)]="requestData.remark"></textarea>
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-12">
+            <button style="float: right;" type="submit" id="submit" (click)="addRequest()" class="btn btn-primary"> Add</button>
+        </div>
+    </div>
+
+</div>
