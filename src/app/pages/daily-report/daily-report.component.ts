@@ -85,6 +85,9 @@ export class DailyReportComponent implements OnInit {
         else if (key == ticket["_call_rep_href"]) {
           column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.showdata.bind(this, ticket) }
         }
+        else if (key == ticket["_href_camp"]) {
+          column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.showCallData.bind(this, ticket) }
+        }
         else if (key == 'Action') {
           column[key] = {
             value: "",
@@ -131,6 +134,57 @@ export class DailyReportComponent implements OnInit {
 
     console.log("----------123123:", doc);
 
+  }
+
+  showCallData(doc) {
+    let dataparams = {
+      view: {
+        api: 'Users/getAdminCampaignReport',
+        param: {
+          adminId: doc['_admin_id'],
+          startDate: this.common.dateFormatter(this.startTime),
+          endDate: this.common.dateFormatter(this.endTime),
+        }
+      },
+      // viewModal: {
+      //   api: 'TripExpenseVoucher/getRouteTripSummaryDril',
+      //   param: {
+      //     startDate: '_start',
+      //     endDate: '_end',
+      //     type: '_type',
+      //     levelId: '_id'
+      //   }
+      // }
+      title: "Admin Call Log Details"
+    }
+    this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  showCallData1() {
+    let dataparams = {
+      view: {
+        api: 'Users/getWalle8CampaignAdminWise',
+        param: {
+          startDate: this.common.dateFormatter(this.startTime),
+          endDate: this.common.dateFormatter(this.endTime),
+        }
+      },
+      // viewModal: {
+      //   api: 'TripExpenseVoucher/getRouteTripSummaryDril',
+      //   param: {
+      //     startDate: '_start',
+      //     endDate: '_end',
+      //     type: '_type',
+      //     levelId: '_id'
+      //   }
+      // }
+      title: "Admin Call Log Details"
+    }
+    this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   getDailyReport() {
