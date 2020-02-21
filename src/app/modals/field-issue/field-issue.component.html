@@ -14,16 +14,8 @@
                 <label>Select Partner:-</label>
             </div>
             <div class="col-3">
-                <auto-suggestion (onSelected)="selectPartner($event)" url="Suggestion/getCompanyName" [preSelected]="(requestData.partner.id>0)?{name:requestData.partner.name}:{name:''}" display="name" placeholder="Search By Name" autocomplete="off" name="partnerId"
+                <auto-suggestion (onSelected)="selectPartner($event)" url="Partners/getPartnerListBySearch" [preSelected]="(requestData.partner.id>0)?{name:requestData.partner.name}:{name:''}" display="name" placeholder="Search By Name" autocomplete="off" name="partnerId"
                     inputId="partnerId">
-                </auto-suggestion>
-            </div>
-            <div class="col-3" style="text-align: center;">
-                <span style="color: red;">*</span>
-                <label>Request Type:-</label>
-            </div>
-            <div class="col-3">
-                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type" autocomplete="off">
                 </auto-suggestion>
             </div>
         </div>
@@ -37,7 +29,7 @@
                 <label>Select Company:-</label>
             </div>
             <div class="col-3">
-                <auto-suggestion (onSelected)="selectCompany($event)" url="Suggestion/getCompanyName" [preSelected]="(requestData.company.id>0)?{name:requestData.company.name}:{name:''}" inputId="companyName" display="name" placeholder="Search By Name" autocomplete="off">
+                <auto-suggestion (onSelected)="selectCompany($event)" [data]="companyList" [preSelected]="(requestData.company.id>0)?{name:requestData.company.name}:{name:''}" inputId="companyName" name="companyName" display="name" placeholder="Search By Name" autocomplete="off">
                 </auto-suggestion>
             </div>
             <div class="col-3" style="text-align: center;">
@@ -45,7 +37,8 @@
                 <label>Request Type:-</label>
             </div>
             <div class="col-3">
-                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type" autocomplete="off">
+                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type" name="request_type"
+                    autocomplete="off">
                 </auto-suggestion>
             </div>
         </div>

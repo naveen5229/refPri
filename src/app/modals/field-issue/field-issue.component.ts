@@ -169,9 +169,19 @@ export class FieldIssueComponent implements OnInit {
     this.requestData.device_model.id = selectedDevieModel.id;
     this.requestData.device_model.name = selectedDevieModel.name;
   }
+  companyList = [];
   selectPartner(event) {
     this.requestData.partner.id = event.id;
     this.requestData.partner.name = event.name;
+    if (event.id) {
+      this.api.get("Suggestion/getCompanyName?search=&partnerId=" + event.id).subscribe(res => {
+        console.log("getCompanyName:", res);
+        this.companyList = res['data'];
+      }, err => {
+        this.common.showError();
+        console.log(err);
+      });
+    }
   }
 
   addRequest() {
