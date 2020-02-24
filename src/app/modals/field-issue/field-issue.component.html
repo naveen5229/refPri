@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h6 class="modal-title" id="modal-basic-title">Raise Field Support Request</h6>
-    <div class="col-md-3 text-right">
+    <div class="text-right">
         <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -115,7 +115,7 @@
             <div class="col-3">
                 <div class="col-10" style="display: inline-block;padding:0;">
                     <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="locationName" name="locationName" placeholder="Location"
-                        [value]="vehicleTrip.endName" [preSelected]='{location:vehicleTrip.endName}' autocomplete="off" [apiMethod]="'getBooster'">
+                        [value]="requestData.location" [preSelected]='{location:requestData.location}' autocomplete="off" [apiMethod]="'getBooster'">
                     </auto-suggestion>
                 </div>
                 <div class="col-2" style="display: inline-block;padding: 0!important;">

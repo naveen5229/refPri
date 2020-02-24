@@ -19,7 +19,7 @@ export class CallKpiComponent implements OnInit {
   canvas3: any;
   canvas: any;
   ctx: any;
-   myChart1: any;
+  myChart1: any;
   myChart2: any;
   myChart3: any;
   endTime = new Date();
@@ -28,6 +28,7 @@ export class CallKpiComponent implements OnInit {
   shiftEnd = new Date();
   showLabel = false;
   callKpiList = [];
+  temCharts = [];
 
   table = {
     data: {
@@ -44,27 +45,27 @@ export class CallKpiComponent implements OnInit {
     public modalService: NgbModal,
     public api: ApiService,
     public chart: ChartService) {
-     this.startTime.setDate(this.startTime.getDate()-1) 
-     this.startTime.setHours(0);
-     this.startTime.setMinutes(0);
-     this.startTime.setSeconds(0);
-     this.endTime.setDate(this.endTime.getDate()-1)
-     this.endTime.setHours(23);
-     this.endTime.setMinutes(59);
-     this.endTime.setSeconds(59);
-     this.shiftStart.setHours(9)
-     this.shiftStart.setMinutes(30)
-     this.shiftEnd.setHours(18)
-     this.shiftEnd.setMinutes(30)
-     this.getCallKpi();
-     setTimeout(() => {
+    this.startTime.setDate(this.startTime.getDate() - 1)
+    this.startTime.setHours(0);
+    this.startTime.setMinutes(0);
+    this.startTime.setSeconds(0);
+    this.endTime.setDate(this.endTime.getDate() - 1)
+    this.endTime.setHours(23);
+    this.endTime.setMinutes(59);
+    this.endTime.setSeconds(59);
+    this.shiftStart.setHours(9)
+    this.shiftStart.setMinutes(30)
+    this.shiftEnd.setHours(18)
+    this.shiftEnd.setMinutes(30)
+    this.getCallKpi();
+    setTimeout(() => {
       this.showdata(this.callKpiList[0]);
-     }, 3000);
+    }, 3000);
     //  const doc = this.getCallKpi();
-      // this.shiftStart.setDate(this.endTime.getDate()-1)
-      // this.endTime.setDate(this.endTime.getDate()-1)
-      // console.log(this.shiftStart.getTime());
-    }
+    // this.shiftStart.setDate(this.endTime.getDate()-1)
+    // this.endTime.setDate(this.endTime.getDate()-1)
+    // console.log(this.shiftStart.getTime());
+  }
 
   ngOnInit() {
   }
@@ -89,11 +90,11 @@ export class CallKpiComponent implements OnInit {
     const params =
       "startDate=" + startdate +
       "&endDate=" + enddate +
-      "&shiftStart="  + shiftStart +
+      "&shiftStart=" + shiftStart +
       "&shiftEnd=" + shiftEnd;
-      console.log(params);
-      console.log(shiftStart);
-      console.log(typeof(shiftStart));
+    console.log(params);
+    console.log(shiftStart);
+    console.log(typeof (shiftStart));
     this.common.loading++;
     this.api.get('Users/getAdminCallKpis.json?' + params)
       .subscribe(res => {
@@ -101,7 +102,7 @@ export class CallKpiComponent implements OnInit {
         // console.log('res:', res);
         this.callKpiList = res['data'] || [];
         console.log(this.callKpiList);
-        
+
         this.callKpiList.length ? this.setTable() : this.resetTable();
         return this.callKpiList[0];
         console.log(this.callKpiList);
@@ -137,7 +138,7 @@ export class CallKpiComponent implements OnInit {
       return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
     } else {
       return strval.charAt(0).toUpperCase() + strval.substr(1);
-     }
+    }
   }
 
   setTable() {
@@ -154,16 +155,15 @@ export class CallKpiComponent implements OnInit {
     this.callKpiList.map(ticket => {
       let column = {};
       for (let key in this.generateHeadings()) {
-        if(key == "Admin Name")
-        {
-          column[key] ={value:ticket[key], class:'blue',isHTML:true, action: this.showdata.bind(this, ticket)}
+        if (key == "Admin Name") {
+          column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.showdata.bind(this, ticket) }
 
         }
         else if (ticket["_href"].includes(key)) {
-          column[key] ={value:ticket[key], class:'blue',isHTML:true, action: this.callDetails.bind(this, ticket)}
+          column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.callDetails.bind(this, ticket) }
         }
-       
- 
+
+
         else if (key == 'Action') {
           column[key] = {
             value: "",
@@ -172,7 +172,7 @@ export class CallKpiComponent implements OnInit {
             // icons: this.actionIcons(pending)
           };
         } else {
-          column[key] = { value: typeof(ticket[key]) == 'object' ? ticket[key]['value'] : ticket[key], class: ticket[key]['class'] , action: '' };
+          column[key] = { value: typeof (ticket[key]) == 'object' ? ticket[key]['value'] : ticket[key], class: ticket[key]['class'], action: '' };
         }
       }
       columns.push(column);
@@ -181,8 +181,10 @@ export class CallKpiComponent implements OnInit {
 
   }
 
-  showdata(doc)
-  {
+  showdata(doc) {
+    this.temCharts.forEach(ele => ele.destroy());
+    console.log(doc);
+
     let chartData1 = {
       canvas: document.getElementById('myChart1'),
       data: [doc['_type_cnt']['incoming'], doc['_type_cnt']['outgoing'], doc['_type_cnt']['missed'], doc['_type_cnt']['other']],
@@ -192,20 +194,20 @@ export class CallKpiComponent implements OnInit {
 
     let chartData2 = {
       canvas: document.getElementById('myChart2'),
-      data: [doc['Tk. Cnt.']['value'] , doc['FO Cnt.']['value'] , doc['Pt. Cnt.']['value'], doc['Ad. Cnt.']['value'] , doc['Ot. Cnt.']['value'] ],
+      data: [doc['Tk. Cnt.']['value'], doc['FO Cnt.']['value'], doc['Pt. Cnt.']['value'], doc['Ad. Cnt.']['value'], doc['Ot. Cnt.']['value']],
       labels: ["Tickets", "FO", "Partner", "Admin", "Others"],
-      bgColor: [doc['Tk. Cnt.']['class'] , doc['FO Cnt.']['class'] , doc['Pt. Cnt.']['class'], doc['Ad. Cnt.']['class'] , doc['Ot. Cnt.']['class'] ],
+      bgColor: [doc['Tk. Cnt.']['class'], doc['FO Cnt.']['class'], doc['Pt. Cnt.']['class'], doc['Ad. Cnt.']['class'], doc['Ot. Cnt.']['class']],
       showLegend: false
     }
 
     let chartData3 = {
       canvas: document.getElementById('myChart3'),
-      data: [doc['Tk. Dur.']['value'] , doc['FO Dur.']['value'] , doc['Pt. Dur.']['value'] , doc['Ad. Dur.']['value'] , doc['Ot. Dur.']['value'] ],
+      data: [doc['Tk. Dur.']['value'], doc['FO Dur.']['value'], doc['Pt. Dur.']['value'], doc['Ad. Dur.']['value'], doc['Ot. Dur.']['value']],
       labels: ["Tickets", "FO", "Partner", "Admin", "Others"],
-      bgColor: [doc['Tk. Dur.']['class'] , doc['FO Dur.']['class'] , doc['Pt. Dur.']['class'] , doc['Ad. Dur.']['class'] , doc['Ot. Dur.']['class'] ],
+      bgColor: [doc['Tk. Dur.']['class'], doc['FO Dur.']['class'], doc['Pt. Dur.']['class'], doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
       showLegend: false
     }
-    this.chart.generatePieChart([chartData1, chartData2, chartData3]);
+    this.temCharts = this.chart.generatePieChart([chartData1, chartData2, chartData3]);
 
     this.showLabel = true;
 
@@ -216,14 +218,14 @@ export class CallKpiComponent implements OnInit {
       view: {
         api: 'Users/getAdminCallKpis.json',
         param: {
-          
-             startDate: this.common.dateFormatter(this.startTime),
-             endDate: this.common.dateFormatter(this.endTime),
-             shiftStart: this.common.timeFormatter1(this.shiftStart),
-             shiftEnd: this.common.timeFormatter1(this.shiftEnd),
-             adminId: callData['_admin_id']
-        
-          
+
+          startDate: this.common.dateFormatter(this.startTime),
+          endDate: this.common.dateFormatter(this.endTime),
+          shiftStart: this.common.timeFormatter1(this.shiftStart),
+          shiftEnd: this.common.timeFormatter1(this.shiftEnd),
+          adminId: callData['_admin_id']
+
+
         }
       },
       // viewModal: {

@@ -14,6 +14,7 @@ import { ApproveFieldSupportRequestComponent } from '../../modals/approve-field-
 })
 export class FieldIssueRequestComponent implements OnInit {
   activeTab = "";
+  activeTabTicket = '';
   issueReqList = [];
   table = {
     data: {
@@ -185,7 +186,7 @@ export class FieldIssueRequestComponent implements OnInit {
           this.assignReqList.length ? this.setTableAssignReqList() : this.resetSmartTableData();
         } else if (type == 3) {
           this.approvedReqList = res['data'] || [];
-          this.approvedReqList.length ? this.setTableCompletedReqList() : this.resetSmartTableData();
+          this.approvedReqList.length ? this.setTableApprovedReqList() : this.resetSmartTableData();
         } else if (type == 4) {
           this.completedReqList = res['data'] || [];
           this.completedReqList.length ? this.setTableCompletedReqList() : this.resetSmartTableData();
@@ -282,7 +283,7 @@ export class FieldIssueRequestComponent implements OnInit {
   // end : assigned field request list
   // start: approved field request list
   setTableApprovedReqList() {
-    this.tableAssignReqList.data = {
+    this.tableApprovedReqList.data = {
       headings: this.generateHeadingsApprovedReqList(),
       columns: this.getTableColumnsApprovedReqList()
     };

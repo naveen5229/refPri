@@ -1,7 +1,11 @@
 import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { state } from '@angular/animations';
+import { stat } from 'fs';
+import { CompileShallowModuleMetadata } from '@angular/compiler';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+
 declare var google: any;
 
 @Component({
@@ -9,11 +13,13 @@ declare var google: any;
   templateUrl: './location-selection.component.html',
   styleUrls: ['./location-selection.component.scss']
 })
+
 export class LocationSelectionComponent implements OnInit {
   title = '';
   placeholder = '';
   map: any;
-  @ViewChild('map', { static: false }) mapElement: ElementRef;
+  // @ViewChild('map', { static: false }) mapElement: ElementRef;
+  @ViewChild('map', { static: true }) mapElement: ElementRef;
   name = null;
   location = {
     lat: 26.9124336,
@@ -59,15 +65,15 @@ export class LocationSelectionComponent implements OnInit {
       } else {
         this.loadMap();
       }
-      this.autoSuggestion();
       this.geocoder = new google.maps.Geocoder;
     }, 1000);
+    console.log("search:");
   }
 
   loadMap(lat = 26.9124336, lng = 75.78727090000007) {
     let mapOptions = {
       center: new google.maps.LatLng(lat, lng),
-      zoom: 8,
+      zoom: 12,
       disableDefaultUI: true,
       mapTypeControl: false,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -75,6 +81,9 @@ export class LocationSelectionComponent implements OnInit {
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     google.maps.event.addListener(this.map, 'click', evt => { this.updateLocationByClick(evt) });
     this.createMarker(lat, lng);
+    setTimeout(() => {
+      this.autoSuggestion();
+    }, 2000);
   }
 
   resetData() {
@@ -91,7 +100,9 @@ export class LocationSelectionComponent implements OnInit {
   }
 
   autoSuggestion() {
+    console.log("search2:");
     var source = document.getElementById('location');
+    console.log("search3:", source);
     var options = {
       componentRestrictions: { country: ['in', 'bd', 'np'] },
       language: 'en',
@@ -190,7 +201,7 @@ export class LocationSelectionComponent implements OnInit {
         distLong: this.location.dislng
       };
       this.common.loading++;
-      this.api.postBooster('sitesOperation/insertLocationDetails', params)
+      this.api.getBooster('sitesOperation/insertLocationDetails', params)
         .subscribe(res => {
           console.log(res);
           this.common.loading--;
@@ -213,5 +224,5 @@ export class LocationSelectionComponent implements OnInit {
     }
 
   }
-
 }
+

@@ -10,35 +10,35 @@ export class ChartService {
   constructor() { }
 
   generatePieChart(charDatas) {
-
+    let charts = [];
     charDatas.forEach(chartData => {
-      this.ctx = chartData.canvas.getContext('2d');
-    this.myChart = new Chart(this.ctx, {
-      type: 'pie',
-      data: {
+      charts.push(new Chart(chartData.canvas.getContext('2d'), {
+        type: 'pie',
+        data: {
           labels: chartData.labels,
           datasets: [{
-              label: '# of Votes',
-              data: chartData.data,
-              backgroundColor: chartData.bgColor ? chartData.bgColor : [
-                'purple',
-                'green',
-                'red',
-                'brown',                
-                'magenta'
+            label: '# of Votes',
+            data: chartData.data,
+            backgroundColor: chartData.bgColor ? chartData.bgColor : [
+              'purple',
+              'green',
+              'red',
+              'brown',
+              'magenta'
             ],
-              borderWidth: 1
+            borderWidth: 1
           }]
-      },
-      options: {
-        responsive: true,
-        display:true,
-        legend: {
-          display: chartData.showLegend
         },
-        
-      }
-    });
-    });
+        options: {
+          responsive: true,
+          display: true,
+          legend: {
+            display: chartData.showLegend
+          },
+
+        }
+      }));
+    })
+    return charts;
   }
 }

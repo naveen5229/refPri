@@ -27,10 +27,10 @@
                 <li [ngClass]="activeTab=='completedRequest'?'active':''" (click)="activeTab='completedRequest'; getFieldSupportRequestByType(4)">
                     Completed Requests
                 </li>
-                <li [ngClass]="activeTab=='pendingTkt'?'active':''" (click)="activeTab='pendingTkt'; getFieldSupportTicketByType(1)">
-                    Pending Tickets
+                <li [ngClass]="activeTab=='installerTkt'?'active':''" (click)="activeTab='installerTkt';activeTabTicket=''">
+                    Installer Tickets
                 </li>
-                <li [ngClass]="activeTab=='ackTkt'?'active':''" (click)="activeTab='ackTkt'; getFieldSupportTicketByType(2)">
+                <!-- <li [ngClass]="activeTab=='ackTkt'?'active':''" (click)="activeTab='ackTkt'; getFieldSupportTicketByType(2)">
                     Ack Tickets
                 </li>
                 <li [ngClass]="activeTab=='completedTkt'?'active':''" (click)="activeTab='completedTkt'; getFieldSupportTicketByType(3)">
@@ -38,7 +38,7 @@
                 </li>
                 <li [ngClass]="activeTab=='rejectedTkt'?'active':''" (click)="activeTab='rejectedTkt'; getFieldSupportTicketByType(4)">
                     Rejected Tickets
-                </li>
+                </li> -->
             </ul>
         </div>
 
@@ -60,22 +60,41 @@
             </smart-table>
         </div>
 
-        <div *ngIf="activeTab=='pendingTkt'">
-            <smart-table [data]="tablePendingTicketList.data" [settings]="tablePendingTicketList.settings" id="tablePendingTicketList">
-            </smart-table>
+        <!-- start:installer tkt subtab -->
+        <div *ngIf="activeTab=='installerTkt'">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTabTicket=='pending'?'active':''" (click)="activeTabTicket='pending'; getFieldSupportTicketByType(1)">
+                    Pending
+                </li>
+                <li [ngClass]="activeTabTicket=='ack'?'active':''" (click)="activeTabTicket='ack'; getFieldSupportTicketByType(2)">
+                    Ack
+                </li>
+                <li [ngClass]="activeTabTicket=='completed'?'active':''" (click)="activeTabTicket='completed'; getFieldSupportTicketByType(3)">
+                    Completed
+                </li>
+                <li [ngClass]="activeTabTicket=='rejected'?'active':''" (click)="activeTabTicket='rejected'; getFieldSupportTicketByType(4)">
+                    Rejected
+                </li>
+            </ul>
+
+            <div *ngIf="activeTabTicket=='pending'">
+                <smart-table [data]="tablePendingTicketList.data" [settings]="tablePendingTicketList.settings" id="tablePendingTicketList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTabTicket=='ack'">
+                <smart-table [data]="tableAckTicketList.data" [settings]="tableAckTicketList.settings" id="tableAckTicketList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTabTicket=='completed'">
+                <smart-table [data]="tableCompletedTicketList.data" [settings]="tableCompletedTicketList.settings" id="tableCompletedTicketList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTabTicket=='rejected'">
+                <smart-table [data]="tableRejectedTicketList.data" [settings]="tableRejectedTicketList.settings" id="tableRejectedTicketList">
+                </smart-table>
+            </div>
         </div>
-        <div *ngIf="activeTab=='ackTkt'">
-            <smart-table [data]="tableAckTicketList.data" [settings]="tableAckTicketList.settings" id="tableAckTicketList">
-            </smart-table>
-        </div>
-        <div *ngIf="activeTab=='completedTkt'">
-            <smart-table [data]="tableCompletedTicketList.data" [settings]="tableCompletedTicketList.settings" id="tableCompletedTicketList">
-            </smart-table>
-        </div>
-        <div *ngIf="activeTab=='rejectedTkt'">
-            <smart-table [data]="tableRejectedTicketList.data" [settings]="tableRejectedTicketList.settings" id="tableRejectedTicketList">
-            </smart-table>
-        </div>
+        <!-- end:installer tkt subtab -->
 
     </nb-card-body>
 </nb-card>

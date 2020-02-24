@@ -128,7 +128,26 @@ input::placeholder {
     font-family: inherit;
 }
 
+.bg-lightblue {
+    background: lightblue;
+}
 
-/* .k-animation-container {
-    z-index: 999 !important;
-} */
+.bg-lavender {
+    background: lavender;
+}
+
+.bg-lavenderblush {
+    background: lavenderblush;
+}
+
+.bg-lightcyan {
+    background: lightcyan;
+}
+
+.bg-aliceblue {
+    background: aliceblue;
+}
+
+.pac-container {
+    z-index: 2147483647 !important;
+}
