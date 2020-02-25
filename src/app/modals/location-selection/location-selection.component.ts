@@ -1,7 +1,11 @@
 import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { state } from '@angular/animations';
+import { stat } from 'fs';
+import { CompileShallowModuleMetadata } from '@angular/compiler';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+
 declare var google: any;
 
 @Component({
@@ -9,11 +13,13 @@ declare var google: any;
   templateUrl: './location-selection.component.html',
   styleUrls: ['./location-selection.component.scss']
 })
+
 export class LocationSelectionComponent implements OnInit {
   title = '';
   placeholder = '';
   map: any;
-  @ViewChild('map', { static: false }) mapElement: ElementRef;
+  // @ViewChild('map', { static: false }) mapElement: ElementRef;
+  @ViewChild('map', { static: true }) mapElement: ElementRef;
   name = null;
   location = {
     lat: 26.9124336,
@@ -22,7 +28,8 @@ export class LocationSelectionComponent implements OnInit {
     district: 'jaipur',
     state: 'Rajasthan',
     dislat: 0.27092289999999863,
-    dislng: 0.3012657000000445
+    dislng: 0.3012657000000445,
+    address: "Jaipur, Rajasthan, India"
   };
   data = [];
   r_id = null;
@@ -44,7 +51,8 @@ export class LocationSelectionComponent implements OnInit {
       district: null,
       state: null,
       dislat: null,
-      dislng: null
+      dislng: null,
+      address: null
     } : this.location;
   }
 
@@ -59,7 +67,6 @@ export class LocationSelectionComponent implements OnInit {
       } else {
         this.loadMap();
       }
-      this.autoSuggestion();
       this.geocoder = new google.maps.Geocoder;
     }, 1000);
   }
@@ -67,7 +74,7 @@ export class LocationSelectionComponent implements OnInit {
   loadMap(lat = 26.9124336, lng = 75.78727090000007) {
     let mapOptions = {
       center: new google.maps.LatLng(lat, lng),
-      zoom: 8,
+      zoom: 12,
       disableDefaultUI: true,
       mapTypeControl: false,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -75,6 +82,9 @@ export class LocationSelectionComponent implements OnInit {
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     google.maps.event.addListener(this.map, 'click', evt => { this.updateLocationByClick(evt) });
     this.createMarker(lat, lng);
+    setTimeout(() => {
+      this.autoSuggestion();
+    }, 2000);
   }
 
   resetData() {
@@ -82,6 +92,7 @@ export class LocationSelectionComponent implements OnInit {
     this.location.district = null;
     this.location.state = null;
     this.name = null;
+    this.location.address = null;
   }
 
   updateLocationByClick(evt) {
@@ -91,7 +102,7 @@ export class LocationSelectionComponent implements OnInit {
   }
 
   autoSuggestion() {
-    var source = document.getElementById('location');
+    var source = document.getElementById('locationSearch');
     var options = {
       componentRestrictions: { country: ['in', 'bd', 'np'] },
       language: 'en',
@@ -131,7 +142,13 @@ export class LocationSelectionComponent implements OnInit {
       } else if (!this.location.district && element['types'][0] == "administrative_area_level_4") {
         this.location.district = element.long_name;
       }
+
     });
+    let tempAddress = place.formatted_address.split(',');
+    tempAddress.pop();
+    tempAddress.pop();
+    // console.log("tempAdd:", tempAdd.join());
+    this.location.address = tempAddress.join(",");
     this.location.lat = place.geometry.location.lat();
     this.location.lng = place.geometry.location.lng();
     this.location.dislat = place.geometry.viewport.getNorthEast().lat() - place.geometry.viewport.getSouthWest().lat();
@@ -157,6 +174,9 @@ export class LocationSelectionComponent implements OnInit {
       position: new google.maps.LatLng(lat, lng),
       draggable: true
     });
+    google.maps.event.addListener(this.marker, 'dragend', () => {
+      this.geocoder.geocode({ 'location': this.marker.getPosition() }, this.getAddress.bind(this));
+    });
   }
 
   getAddress(results, status) {
@@ -179,39 +199,12 @@ export class LocationSelectionComponent implements OnInit {
     if (!event) {
       this.activeModal.close();
     } else if (this.verifyLocation()) {
-      let params = {
-        locationId: null,
-        locationName: this.location.name,
-        district: this.location.district,
-        state: this.location.state,
-        locationLat: this.location.lat,
-        locationLong: this.location.lng,
-        distLat: this.location.dislat,
-        distLong: this.location.dislng
-      };
-      this.common.loading++;
-      this.api.postBooster('sitesOperation/insertLocationDetails', params)
-        .subscribe(res => {
-          console.log(res);
-          this.common.loading--;
-          this.data = res['data'];
-          if (this.data[0]['r_id'] < 0) {
-            this.common.showError(res['data'][0]['r_msg']);
-          }
-          else {
-            this.common.showToast("Success");
-            this.r_id = this.data[0].r_locid;
-            this.activeModal.close({ location: this.location, id: this.r_id });
-          }
-        }, err => {
-          console.log(err);
-          this.common.loading--;
-        });
+      this.activeModal.close({ location: this.location });
     } else {
       this.common.showError("Invalid Location");
       this.resetData();
     }
 
   }
-
 }
+

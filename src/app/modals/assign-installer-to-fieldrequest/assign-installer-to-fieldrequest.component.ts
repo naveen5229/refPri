@@ -13,10 +13,16 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
   btn = 'Send approval to partner';
   approveForm = {
     requestId: null,
-    installerId: null,
-    partnerId: null
+    installer: {
+      id: null,
+      name: ''
+    },
+    partner: {
+      id: null,
+      name: ''
+    }
   };
-  partnerName = "";
+  installerList = [];
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -33,15 +39,34 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
 
   ngOnInit() {
   }
-  getPartnerNameByInstaller(installerId) {
-    let params = {
-      installerId: installerId
+
+  closeModal(response) {
+    this.activeModal.close({ response: response });
+  }
+
+  selectedInstaller(event) {
+    this.approveForm.installer.id = event.id;
+    this.approveForm.installer.name = event.name;
+  }
+
+  selectPartner(event) {
+    this.approveForm.partner.id = event.id;
+    this.approveForm.partner.name = event.name;
+    this.approveForm.installer.id = null;
+    this.approveForm.installer.id = '';
+    this.installerList = [];
+    if (event.id) {
+      this.installerListByPartner();
     }
-    this.api.post("Grid/getPartnerNameByInstaller.json", params).subscribe(res => {
+  }
+  installerListByPartner() {
+    let params = {
+      partnerId: this.approveForm.partner.id
+    }
+    this.api.post("Installer/getInstallerListByPartner.json", params).subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.approveForm.partnerId = res['data']['partnerId'];
-        this.partnerName = res['data']['partnerName'];
+        this.installerList = res['data'];
       } else {
         this.common.showError(res['msg']);
       }
@@ -52,40 +77,22 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
       });
   }
 
-  closeModal(response) {
-    this.activeModal.close({ response: response });
-  }
-
-  selectedInstaller(event) {
-    this.approveForm.installerId = event.id;
-    if (event.id) {
-      this.approveForm.partnerId = event.partnerid;
-      this.partnerName = event.partner_name;
-    } else {
-      this.approveForm.partnerId = null;
-      this.partnerName = "";
-    }
-  }
-
-  // selectedProject(event) {
-  //   console.log("selectedProject:", event);
-  //   this.normalTask.projectId = event.id;
-  // }
   assignInstallerToFieldSupportRequest() {
     if (this.approveForm.requestId == '') {
       return this.common.showError("Request Id is missing")
     }
-    else if (this.approveForm.installerId == '') {
-      return this.common.showError("Installer is missing")
-    }
-    else if (this.approveForm.partnerId == '') {
+    // else if (this.approveForm.installer.id == '') {
+    //   return this.common.showError("Installer is missing")
+    // }
+    else if (this.approveForm.partner.id == '') {
       return this.common.showError("Partner is missing")
     }
     else {
       const params = {
         requestId: this.approveForm.requestId,
-        installerId: this.approveForm.installerId,
-        partnerId: this.approveForm.partnerId
+        installerId: this.approveForm.installer.id,
+        partnerId: this.approveForm.partner.id,
+        status: 0
       }
       this.common.loading++;
       this.api.post('Grid/assignInstallerToFieldSupportRequest', params).subscribe(res => {

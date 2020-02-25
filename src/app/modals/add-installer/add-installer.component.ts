@@ -10,6 +10,7 @@ import { LocationSelectionComponent } from '../location-selection/location-selec
 })
 export class AddInstallerComponent implements OnInit {
   installerData = {
+    installerId: null,
     name: '',
     mobileno: '',
     partner: {
@@ -17,63 +18,56 @@ export class AddInstallerComponent implements OnInit {
       name: ''
     },
     isApp: false,
-    baseLat: 25.01,
-    baseLong: 26.01
+    location: '',
+    baseLat: '',
+    baseLong: ''
   }
-  vehicleStatus = null;
   keepGoing = true;
   searchString = '';
-  isNotified = false;
-  vehicleTrip = {
-    endLat: null,
-    endLng: null,
-    endName: null,
-    targetTime: null,
-    id: null,
-    regno: null,
-
-    startName: null,
-
-    placementType: null,
-    vehicleId: null,
-    siteId: null,
-    locationType: 'city',
-    allowedHaltHours: null
-  };
-  placements = null;
-  placementSite = null;
-  placementSuggestion = [];
-  ref_page = null;
-  partnerList = [];
+  // partnerList = [];
 
   constructor(public activeModal: NgbActiveModal,
     public modalService: NgbModal,
     public api: ApiService,
     public common: CommonService) {
+    console.log('edit params', this.common.params)
+    if (this.common.params != null && this.common.params.installer) {
+      this.installerData = {
+        installerId: this.common.params.installer._id,
+        partner: {
+          id: this.common.params.installer._partnerid,
+          name: this.common.params.installer.partner_name
+        },
+        name: this.common.params.installer.name,
+        mobileno: this.common.params.installer.mobileno,
+        isApp: this.common.params.installer._isapp,
+        location: this.common.params.installer.location,
+        baseLat: this.common.params.installer._base_lat,
+        baseLong: this.common.params.installer._base_long
+      }
+      console.log("edit data:", this.installerData);
+    }
 
   }
   ngOnInit() {
   }
 
-  addInstaller() {
 
+  selectedPartner(event) {
+    this.installerData.partner.id = event.id;
+    this.installerData.partner.name = event.name;
   }
-  selectedAdmin(event) { }
   selectLocation(place) {
     console.log("palce", place);
-    this.placementSite = place.id;
-    this.vehicleTrip.siteId = null;
-    this.vehicleTrip.endLat = place.lat;
-    this.vehicleTrip.endLng = place.long;
-    this.vehicleTrip.endName = place.location || place.name;
+    this.installerData.baseLat = place.lat;
+    this.installerData.baseLong = place.long;
+    this.installerData.location = place.location || place.name;
   }
 
   onChangeAuto(search) {
-    this.placementSite = null;
-    this.vehicleTrip.siteId = null;
-    this.vehicleTrip.endLat = null;
-    this.vehicleTrip.endLng = null;
-    this.vehicleTrip.endName = null;
+    this.installerData.baseLat = null;
+    this.installerData.baseLong = null;
+    this.installerData.location = null;
     this.searchString = search;
     console.log('..........', search);
   }
@@ -89,15 +83,13 @@ export class AddInstallerComponent implements OnInit {
         this.keepGoing = false;
         activeModal.result.then(res => {
           if (res != null) {
-            console.log('response----', res, res.location, res.id);
+            console.log('new-response----', res, res.location);
             this.keepGoing = true;
             if (res.location.lat) {
-              this.vehicleTrip.endName = res.location.name;
-
-              (<HTMLInputElement>document.getElementById('endname')).value = this.vehicleTrip.endName;
-              this.vehicleTrip.endLat = res.location.lat;
-              this.vehicleTrip.endLng = res.location.lng;
-              this.placementSite = res.id;
+              this.installerData.location = res.location.address;
+              (<HTMLInputElement>document.getElementById('location')).value = this.installerData.location;
+              this.installerData.baseLat = res.location.lat;
+              this.installerData.baseLong = res.location.lng;
               this.keepGoing = true;
             }
           }
@@ -109,6 +101,43 @@ export class AddInstallerComponent implements OnInit {
   }
 
   closeModal(response) {
-    // this.activeModal.close();
+    this.activeModal.close({ response: response });
+  }
+
+  addInstaller() {
+    let params = {
+      installerId: this.installerData.installerId,
+      name: this.installerData.name,
+      mobileno: this.installerData.mobileno,
+      partnerid: this.installerData.partner.id,
+      isapp: this.installerData.isApp,
+      location: this.installerData.location,
+      baseLat: this.installerData.baseLat,
+      baseLong: this.installerData.baseLong
+    }
+    console.log(params);
+
+    if (this.installerData.name == '' || this.installerData.mobileno == '' ||
+      this.installerData.partner.id == null || this.installerData.location == null || this.installerData.location == ''
+      || this.installerData.baseLat == null || this.installerData.baseLat == '' || this.installerData.baseLong == null || this.installerData.baseLong == '') {
+      this.common.showError('Please Fill All Mandatory Fields');
+      return false;
+    }
+    this.common.loading++;
+    this.api.post('Installer/addNewInstaller', params)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log(res);
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.closeModal(true);
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 }

@@ -10,30 +10,8 @@ import { LocationSelectionComponent } from '../location-selection/location-selec
   styleUrls: ['./field-issue.component.scss']
 })
 export class FieldIssueComponent implements OnInit {
-  vehicleStatus = null;
   keepGoing = true;
   searchString = '';
-  isNotified = false;
-  vehicleTrip = {
-    endLat: null,
-    endLng: null,
-    endName: null,
-    targetTime: null,
-    id: null,
-    regno: null,
-
-    startName: null,
-
-    placementType: null,
-    vehicleId: null,
-    siteId: null,
-    locationType: 'city',
-    allowedHaltHours: null
-  };
-  placements = null;
-  placementSite = null;
-  placementSuggestion = [];
-  ref_page = null;
   companiesList = [];
   requestTypes = [];
   deviceModals = [];
@@ -112,19 +90,19 @@ export class FieldIssueComponent implements OnInit {
   ngOnInit() {
   }
 
-  getCompanyDetails() {
-    this.common.loading++;
-    this.api.get("Suggestion/getCompanyName.json?")
-      .subscribe(res => {
-        this.common.loading--;
-        this.companiesList = res['data'] || [];
-        console.log(this.requestTypes);
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log(err);
-      });
-  }
+  // getCompanyDetails() {
+  //   this.common.loading++;
+  //   this.api.get("Suggestion/getCompanyName.json?")
+  //     .subscribe(res => {
+  //       this.common.loading--;
+  //       this.companiesList = res['data'] || [];
+  //       console.log(this.requestTypes);
+  //     }, err => {
+  //       this.common.loading--;
+  //       this.common.showError();
+  //       console.log(err);
+  //     });
+  // }
 
   getRequestType() {
     this.common.loading++;
@@ -173,6 +151,8 @@ export class FieldIssueComponent implements OnInit {
   selectPartner(event) {
     this.requestData.partner.id = event.id;
     this.requestData.partner.name = event.name;
+    this.requestData.company.id = null;
+    this.requestData.company.name = '';
     if (event.id) {
       this.api.get("Suggestion/getCompanyName?search=&partnerId=" + event.id).subscribe(res => {
         console.log("getCompanyName:", res);
@@ -197,8 +177,8 @@ export class FieldIssueComponent implements OnInit {
       deviceModelId: this.requestData.device_model.id,
       simProviderId: this.requestData.sim_provider_id,
       location: this.requestData.location,
-      lat: 2323.33,
-      long: 34234.33,
+      lat: this.requestData.lat,
+      long: this.requestData.long,
       remark: this.requestData.remark
     }
     console.log(params);
@@ -234,19 +214,15 @@ export class FieldIssueComponent implements OnInit {
 
   selectLocation(place) {
     console.log("palce", place);
-    this.placementSite = place.id;
-    this.vehicleTrip.siteId = null;
-    this.vehicleTrip.endLat = place.lat;
-    this.vehicleTrip.endLng = place.long;
-    this.vehicleTrip.endName = place.location || place.name;
+    this.requestData.lat = place.lat;
+    this.requestData.long = place.long;
+    this.requestData.location = place.location || place.name;
   }
 
   onChangeAuto(search) {
-    this.placementSite = null;
-    this.vehicleTrip.siteId = null;
-    this.vehicleTrip.endLat = null;
-    this.vehicleTrip.endLng = null;
-    this.vehicleTrip.endName = null;
+    this.requestData.lat = null;
+    this.requestData.long = null;
+    this.requestData.location = null;
     this.searchString = search;
     console.log('..........', search);
   }
@@ -262,22 +238,21 @@ export class FieldIssueComponent implements OnInit {
         this.keepGoing = false;
         activeModal.result.then(res => {
           if (res != null) {
-            console.log('response----', res, res.location, res.id);
+            console.log('new-response----', res, res.location);
             this.keepGoing = true;
             if (res.location.lat) {
-              this.vehicleTrip.endName = res.location.name;
+              this.requestData.location = res.location.address;
 
-              (<HTMLInputElement>document.getElementById('endname')).value = this.vehicleTrip.endName;
-              this.vehicleTrip.endLat = res.location.lat;
-              this.vehicleTrip.endLng = res.location.lng;
-              this.placementSite = res.id;
+              (<HTMLInputElement>document.getElementById('locationName')).value = this.requestData.location;
+              this.requestData.lat = res.location.lat;
+              this.requestData.long = res.location.lng;
               this.keepGoing = true;
             }
           }
         })
 
       }
-    }, 1000);
+    }, 200);
 
   }
 

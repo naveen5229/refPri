@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h6 class="modal-title" id="modal-basic-title">Raise Field Support Request</h6>
-    <div class="col-md-3 text-right">
+    <div class="text-right">
         <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -55,7 +55,7 @@
                 <label>Device Model:-</label>
             </div>
             <div class="col-3">
-                <auto-suggestion (onSelected)="selectDeviceModal($event)" [data]="deviceModals" display="name" placeholder="Device Modal" inputId="deviceModel" [preSelected]="(requestData.device_model.id>0)?{name:requestData.device_model.name}:{name:''}">
+                <auto-suggestion (onSelected)="selectDeviceModal($event)" [data]="deviceModals" display="name" placeholder="Device Modal" inputId="deviceModel" name="deviceModel" [preSelected]="(requestData.device_model.id>0)?{name:requestData.device_model.name}:{name:''}">
                 </auto-suggestion>
             </div>
         </div>
@@ -85,7 +85,7 @@
                 <label>Name:-</label>
             </div>
             <div class="col-3">
-                <input type="text" class="form-control" maxlength="10" placeholder="Supervisor Name" [(ngModel)]="requestData.supervisor_name">
+                <input type="text" class="form-control" placeholder="Supervisor Name" [(ngModel)]="requestData.supervisor_name">
             </div>
             <div class="col-3" style="text-align: center;">
                 <span style="color: red;">*</span>
@@ -114,8 +114,8 @@
             </div>
             <div class="col-3">
                 <div class="col-10" style="display: inline-block;padding:0;">
-                    <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="endname" placeholder="Location" [value]="vehicleTrip.endName"
-                        [preSelected]='{location:vehicleTrip.endName}' autocomplete="off" [apiMethod]="'getBooster'">
+                    <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="locationName" name="locationName" placeholder="Location"
+                        [value]="requestData.location" [preSelected]='{location:requestData.location}' autocomplete="off" [apiMethod]="'getBooster'">
                     </auto-suggestion>
                 </div>
                 <div class="col-2" style="display: inline-block;padding: 0!important;">

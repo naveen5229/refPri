@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-6">
+        <div class="col-9">
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
@@ -33,43 +33,41 @@
                 </div>
             </div>
         </div>
-        <div class="col-6" style="border-left:1px solid black;">
+        <div class="col-3 p-0" style="border-left:1px solid black;">
             <table width="100%">
-                <tr>
-                    <td>AssignBy:</td>
+                <tr valign="top" class="bg-lightblue">
+                    <td>By:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}</td>
                 </tr>
-                <tr>
-                    <td>AssignTo:</td>
+                <tr valign="top" class="bg-lavender">
+                    <td>To:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}</td>
                 </tr>
-                <tr *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
-                    <td>ProjectOwner:</td>
+                <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
+                    <td>PO:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}</td>
                 </tr>
-                <tr *ngIf="userListByTask['projectUsers'] && userListByTask['projectUsers'].length>0">
-                    <td>ProjectUsers:</td>
-                    <td><span *ngFor="let pu of userListByTask.projectUsers;let i = index">{{(i>0)?',':''}}{{pu.project_user}}</span></td>
+                <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['projectUsers'] && userListByTask['projectUsers'].length>0">
+                    <td>PU:</td>
+                    <td><span *ngFor="let pu of userListByTask.projectUsers;let i = index">{{pu.project_user}}<br></span></td>
                 </tr>
-                <tr *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
-                    <td>CCUsers:</td>
-                    <td><span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{(i>0)?',':''}}{{ccu.cc_user}}</span></td>
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td>CC:</td>
+                    <td><span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{ccu.cc_user}}<br></span></td>
                 </tr>
-                <tr *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
-                    <td>EscUser:</td>
+                <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
+                    <td>EU:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr>
-                <tr *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].rep_user">
-                    <td>RepUser:</td>
+                <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].rep_user">
+                    <td>RU:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr>
-                <tr *ngIf="taskId && taskId>0">
-                    <td></td>
-                    <td>
+                <tr valign="top" *ngIf="taskId && taskId>0">
+                    <td colspan="2" class="pt-2">
                         <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
                         </auto-suggestion>
-                        <br>
-                        <button class="btn btn-primary btn-sm" (click)="addNewCCUserToTask()">Add CC User</button>
+                        <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
                     </td>
                 </tr>
             </table>

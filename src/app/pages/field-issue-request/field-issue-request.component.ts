@@ -14,6 +14,7 @@ import { ApproveFieldSupportRequestComponent } from '../../modals/approve-field-
 })
 export class FieldIssueRequestComponent implements OnInit {
   activeTab = "";
+  activeTabTicket = '';
   issueReqList = [];
   table = {
     data: {
@@ -28,6 +29,73 @@ export class FieldIssueRequestComponent implements OnInit {
 
   assignReqList = [];
   tableAssignReqList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+
+  };
+
+  approvedReqList = [];
+  tableApprovedReqList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  completedReqList = [];
+  tableCompletedReqList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  pendingTicketList = [];
+  tablePendingTicketList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+
+  };
+  ackTicketList = [];
+  tableAckTicketList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+
+  };
+  completedTicketList = [];
+  tableCompletedTicketList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+
+  };
+  rejectedTicketList = [];
+  tableRejectedTicketList = {
     data: {
       headings: {},
       columns: []
@@ -71,6 +139,30 @@ export class FieldIssueRequestComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableApprovedReqList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableCompletedReqList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tablePendingTicketList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableAckTicketList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableCompletedTicketList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableRejectedTicketList.data = {
+      headings: {},
+      columns: []
+    };
   }
 
   // showIssueRequest() {
@@ -92,6 +184,12 @@ export class FieldIssueRequestComponent implements OnInit {
         } else if (type == 2) {
           this.assignReqList = res['data'] || [];
           this.assignReqList.length ? this.setTableAssignReqList() : this.resetSmartTableData();
+        } else if (type == 3) {
+          this.approvedReqList = res['data'] || [];
+          this.approvedReqList.length ? this.setTableApprovedReqList() : this.resetSmartTableData();
+        } else if (type == 4) {
+          this.completedReqList = res['data'] || [];
+          this.completedReqList.length ? this.setTableCompletedReqList() : this.resetSmartTableData();
         }
         console.log(this.issueReqList);
       }, err => {
@@ -171,7 +269,7 @@ export class FieldIssueRequestComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIconsForApprove(request)
+            // icons: this.actionIconsForApprove(request)
           };
         } else {
           column[key] = { value: request[key], class: 'black', action: '' };
@@ -183,6 +281,90 @@ export class FieldIssueRequestComponent implements OnInit {
     return columns;
   }
   // end : assigned field request list
+  // start: approved field request list
+  setTableApprovedReqList() {
+    this.tableApprovedReqList.data = {
+      headings: this.generateHeadingsApprovedReqList(),
+      columns: this.getTableColumnsApprovedReqList()
+    };
+    console.log('Table:', this.table.data);
+    return true;
+  }
+
+  generateHeadingsApprovedReqList() {
+    let headings = {};
+    for (var key in this.approvedReqList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsApprovedReqList() {
+    let columns = [];
+    this.approvedReqList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsApprovedReqList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : approved field request list
+  // start: completed field request list
+  setTableCompletedReqList() {
+    this.tableCompletedReqList.data = {
+      headings: this.generateHeadingsCompletedReqList(),
+      columns: this.getTableColumnsCompletedReqList()
+    };
+    console.log('Table:', this.table.data);
+    return true;
+  }
+
+  generateHeadingsCompletedReqList() {
+    let headings = {};
+    for (var key in this.completedReqList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsCompletedReqList() {
+    let columns = [];
+    this.completedReqList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsCompletedReqList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : completed field request list
 
   actionIcons(request) {
     let icons = [
@@ -268,5 +450,208 @@ export class FieldIssueRequestComponent implements OnInit {
       this.common.showError("Request-Id is missing");
     }
   }
+
+  // start tck
+
+  getFieldSupportTicketByType(type = null) {
+    this.issueReqList = [];
+    this.resetSmartTableData();
+    let param = "";
+    if (type) {
+      param = "?type=" + type;
+    }
+    this.common.loading++;
+    this.api.get('Installer/getInstallerRequestList' + param)
+      .subscribe(res => {
+        this.common.loading--;
+        // console.log('res:', res);
+        if (type == 1) {
+          this.pendingTicketList = res['data'] || [];
+          this.pendingTicketList.length ? this.setTablePendingTicketTable() : this.resetSmartTableData();
+        } else if (type == 2) {
+          this.ackTicketList = res['data'] || [];
+          this.ackTicketList.length ? this.setTableAckTicketList() : this.resetSmartTableData();
+        } else if (type == 3) {
+          this.completedTicketList = res['data'] || [];
+          this.completedTicketList.length ? this.setTableCompletedTicketList() : this.resetSmartTableData();
+        } else if (type == 4) {
+          this.rejectedTicketList = res['data'] || [];
+          this.rejectedTicketList.length ? this.setTableRejectedTicketList() : this.resetSmartTableData();
+        }
+        console.log(this.issueReqList);
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+  }
+  // end tkt
+  // start: pending tkt list
+  setTablePendingTicketTable() {
+    this.tablePendingTicketList.data = {
+      headings: this.generateHeadingsPendingTicketList(),
+      columns: this.getTableColumnsPendingTicketList()
+    };
+    console.log('Table:', this.table.data);
+    return true;
+  }
+
+  generateHeadingsPendingTicketList() {
+    let headings = {};
+    for (var key in this.pendingTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsPendingTicketList() {
+    let columns = [];
+    this.pendingTicketList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsPendingTicketList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : pending tkt list
+  // start: ack tkt list
+  setTableAckTicketList() {
+    this.tableAckTicketList.data = {
+      headings: this.generateHeadingsAckTicketList(),
+      columns: this.getTableColumnsAckTicketList()
+    };
+    console.log('Table:', this.table.data);
+    return true;
+  }
+
+  generateHeadingsAckTicketList() {
+    let headings = {};
+    for (var key in this.ackTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsAckTicketList() {
+    let columns = [];
+    this.ackTicketList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsAckTicketList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : ack tkt list
+  // start: completed tkt list
+  setTableCompletedTicketList() {
+    this.tableAckTicketList.data = {
+      headings: this.generateHeadingsCompletedTicketList(),
+      columns: this.getTableColumnsCompletedTicketList()
+    };
+    console.log('Table:', this.table.data);
+    return true;
+  }
+
+  generateHeadingsCompletedTicketList() {
+    let headings = {};
+    for (var key in this.completedTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsCompletedTicketList() {
+    let columns = [];
+    this.completedTicketList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsCompletedTicketList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : completed tkt list
+  // start: rejected tkt list
+  setTableRejectedTicketList() {
+    this.tableRejectedTicketList.data = {
+      headings: this.generateHeadingsRejectedTicketList(),
+      columns: this.getTableColumnsRejectedTicketList()
+    };
+    console.log('Table:', this.table.data);
+    return true;
+  }
+
+  generateHeadingsRejectedTicketList() {
+    let headings = {};
+    for (var key in this.rejectedTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsRejectedTicketList() {
+    let columns = [];
+    this.rejectedTicketList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsRejectedTicketList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : rejected tkt list
 
 }

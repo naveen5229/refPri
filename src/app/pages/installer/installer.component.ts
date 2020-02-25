@@ -3,6 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddInstallerComponent } from '../../modals/add-installer/add-installer.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'installer',
@@ -14,7 +15,7 @@ export class InstallerComponent implements OnInit {
   installerData = {
     name: ''
   }
-  table = {
+  tableInstallerList = {
     data: {
       headings: {},
       columns: []
@@ -26,30 +27,34 @@ export class InstallerComponent implements OnInit {
 
   constructor(public modalService: NgbModal,
     public common: CommonService,
-    public api: ApiService) { }
+    public api: ApiService) {
+    this.getInstallerList();
+  }
 
   ngOnInit() {
   }
 
-  addInstaller() {
-    const activeModal = this.modalService.open(AddInstallerComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  showInstallerModal(mode = null) {
+    if (mode != 'edit') {
+      this.common.params = null;
+    }
+    const activeModal = this.modalService.open(AddInstallerComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getInstallerList();
+      }
+    })
   }
 
   getInstallerList() {
     this.common.loading++;
-    this.api.get("Grid/getInstallerList.json?").subscribe(
+    this.api.get("Installer/getInstallerList.json?").subscribe(
       res => {
         this.common.loading--;
         console.log("datA", res);
-        if (res['data'] == null) {
-          this.common.showToast('No Tag For This Vehicle!!');
-          this.installerlist = [];
-          return;
-        }
-        else {
-          this.installerlist = res['data'] || [];
-          this.installerlist.length ? this.setTable() : this.resetTable();
-        }
+        this.installerlist = res['data'] || [];
+        this.installerlist.length ? this.setTableInstallerList() : this.resetSmartTable();
+
       },
       err => {
         this.common.loading--;
@@ -58,49 +63,41 @@ export class InstallerComponent implements OnInit {
     );
   }
 
-  resetTable() {
-    this.table.data = {
+  resetSmartTable() {
+    this.tableInstallerList.data = {
       headings: {},
       columns: []
     };
   }
 
-  setTable() {
-    this.table.data = {
-      headings: this.generateHeadings(),
-      columns: this.getTableColumns()
+  setTableInstallerList() {
+    this.tableInstallerList.data = {
+      headings: this.generateHeadingsInstallerList(),
+      columns: this.getTableColumnsInstallerList()
     };
+    console.log("tableInstallerList:", this.tableInstallerList);
     return true;
   }
 
-  generateHeadings() {
+  generateHeadingsInstallerList() {
     let headings = {};
     for (var key in this.installerlist[0]) {
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     return headings;
   }
 
-  formatTitle(strval) {
-    let pos = strval.indexOf('_');
-    if (pos > 0) {
-      return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
-    } else {
-      return strval.charAt(0).toUpperCase() + strval.substr(1);
-    }
-  }
-
-  getTableColumns() {
+  getTableColumnsInstallerList() {
     let columns = [];
     this.installerlist.map(installer => {
       let column = {};
-      for (let key in this.generateHeadings()) {
-        if (key == 'Action') {
+      for (let key in this.generateHeadingsInstallerList()) {
+        if (key == 'Action' || key == 'action') {
           column[key] = {
             value: "",
-            isHTML: false,
+            isHTML: true,
             action: null,
             icons: this.actionIcons(installer)
           };
@@ -113,14 +110,46 @@ export class InstallerComponent implements OnInit {
 
     return columns;
   }
-  actionIcons(request) {
+  actionIcons(installer) {
     let icons = [
-      {
-        class: " icon fa fa-paper-plane blue",
-        // action: this.openIssueRequestModal.bind(this, request),
-      }
+      { class: "fa fa-edit", action: this.editInstaller.bind(this, installer) },
+      { class: "fa fa-trash", action: this.deleteInstaller.bind(this, installer) },
     ];
     return icons;
+  }
+
+  editInstaller(installer) {
+    this.common.params = { installer, title: "Edit Installer", button: "Edit" };
+    this.showInstallerModal('edit');
+  }
+  deleteInstaller(installer) {
+    if (installer._id) {
+      let params = {
+        installerId: installer._id
+      }
+      this.common.params = {
+        title: 'Delete Installer',
+        description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Installer/deleteInstaller', params)
+            .subscribe(res => {
+              this.common.loading--;
+              this.common.showToast(res['msg']);
+              this.getInstallerList();
+            }, err => {
+              this.common.loading--;
+              console.log('Error: ', err);
+            });
+        }
+      });
+    } else {
+      this.common.showError("Installer ID Not Available");
+    }
   }
 
 }
