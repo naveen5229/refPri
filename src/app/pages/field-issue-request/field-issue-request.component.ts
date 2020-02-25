@@ -269,7 +269,7 @@ export class FieldIssueRequestComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIconsForApprove(request)
+            // icons: this.actionIconsForApprove(request)
           };
         } else {
           column[key] = { value: request[key], class: 'black', action: '' };

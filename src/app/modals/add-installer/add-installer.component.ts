@@ -83,10 +83,10 @@ export class AddInstallerComponent implements OnInit {
         this.keepGoing = false;
         activeModal.result.then(res => {
           if (res != null) {
-            console.log('response----', res, res.location, res.id);
+            console.log('new-response----', res, res.location);
             this.keepGoing = true;
             if (res.location.lat) {
-              this.installerData.location = res.location.name;
+              this.installerData.location = res.location.address;
               (<HTMLInputElement>document.getElementById('location')).value = this.installerData.location;
               this.installerData.baseLat = res.location.lat;
               this.installerData.baseLong = res.location.lng;

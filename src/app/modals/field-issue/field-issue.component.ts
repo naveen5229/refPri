@@ -54,8 +54,8 @@ export class FieldIssueComponent implements OnInit {
       this.requestData = {
         requestId: this.common.params.request._id,
         partner: {
-          id: this.common.params.request._provider_id,
-          name: this.common.params.request._provider_name
+          id: this.common.params.request._partner_id,
+          name: this.common.params.request.partner_name
         },
         company: {
           id: this.common.params.request._company_id,
@@ -177,8 +177,8 @@ export class FieldIssueComponent implements OnInit {
       deviceModelId: this.requestData.device_model.id,
       simProviderId: this.requestData.sim_provider_id,
       location: this.requestData.location,
-      lat: 2323.33,
-      long: 34234.33,
+      lat: this.requestData.lat,
+      long: this.requestData.long,
       remark: this.requestData.remark
     }
     console.log(params);
@@ -238,10 +238,10 @@ export class FieldIssueComponent implements OnInit {
         this.keepGoing = false;
         activeModal.result.then(res => {
           if (res != null) {
-            console.log('response----', res, res.location, res.id);
+            console.log('new-response----', res, res.location);
             this.keepGoing = true;
             if (res.location.lat) {
-              this.requestData.location = res.location.name;
+              this.requestData.location = res.location.address;
 
               (<HTMLInputElement>document.getElementById('locationName')).value = this.requestData.location;
               this.requestData.lat = res.location.lat;
@@ -252,7 +252,7 @@ export class FieldIssueComponent implements OnInit {
         })
 
       }
-    }, 1000);
+    }, 200);
 
   }
 
