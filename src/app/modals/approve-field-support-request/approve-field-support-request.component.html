@@ -7,7 +7,7 @@
 <div class="modal-body">
     <div class="row mt-2">
         <div class="col-4">
-            <label>Partner:</label>
+            <label>Partner:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <label>{{approveForm.partner.name}}</label>
@@ -15,7 +15,7 @@
     </div>
     <div class="row">
         <div class="col-4">
-            <label>Installer:<span class="text-danger">*</span></label>
+            <label>Installer:</label>
         </div>
         <div class="col-6">
             <auto-suggestion (onSelected)="selectedInstaller($event)" [data]="installerList" display="name" seperator="-" placeholder="Search Installer" autocomplete="off" name="installer" inputId="installer" [preSelected]="(approveForm.installer.id>0)?{name:approveForm.installer.name}:{name:''}">
@@ -25,8 +25,8 @@
 
     <div class="row mt-2">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize mr-2 rejectBtn" (click)="approveFieldSupportRequest(status=-1)">Reject</button>
-            <button class="btn btn-primary text-capitalize" (click)="approveFieldSupportRequest(status=1)">{{btn}}</button>
+            <button class="btn btn-primary text-capitalize mr-2 rejectBtn" (click)="approveFieldSupportRequest(-1)">Reject</button>
+            <button class="btn btn-primary text-capitalize" (click)="approveFieldSupportRequest(1)">{{btn}}</button>
         </div>
     </div>
 </div>

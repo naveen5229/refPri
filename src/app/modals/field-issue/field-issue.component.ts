@@ -90,20 +90,6 @@ export class FieldIssueComponent implements OnInit {
   ngOnInit() {
   }
 
-  // getCompanyDetails() {
-  //   this.common.loading++;
-  //   this.api.get("Suggestion/getCompanyName.json?")
-  //     .subscribe(res => {
-  //       this.common.loading--;
-  //       this.companiesList = res['data'] || [];
-  //       console.log(this.requestTypes);
-  //     }, err => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log(err);
-  //     });
-  // }
-
   getRequestType() {
     this.common.loading++;
     this.api.get("Grid/getRequestType")

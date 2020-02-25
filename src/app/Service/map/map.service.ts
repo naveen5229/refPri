@@ -105,7 +105,7 @@ export class MapService {
     return marker;
   }
 
-  mapIntialize(div = "map", zoom = 18, lat = 25, long = 75, showUI = false) {
+  mapIntialize(div = "map", zoom = 12, lat = 25, long = 75, showUI = false) {
     if (this.isMapLoaded) {
       // document.getElementById(div).innerHTML="";
       // document.getElementById(div).append(this.mapLoadDiv.innerHTML);
@@ -210,10 +210,10 @@ export class MapService {
     let latLng = { lat: 0, lng: 0 }
     let keys = Object.keys(markerData);
     latLng.lat = parseFloat(markerData[keys.find((element) => {
-      return element == "lat" || element == "y_lat" || element == "x_lat" || element == "x_tlat" || element == "_lat";
+      return element == "lat" || element == "y_lat" || element == "x_lat" || element == "x_tlat" || element == "_lat" || element == "base_lat";
     })]);
     latLng.lng = parseFloat(markerData[keys.find((element) => {
-      return element == "lng" || element == "long" || element == "x_long" || element == "x_tlong" || element == "_long";
+      return element == "lng" || element == "long" || element == "x_long" || element == "x_tlong" || element == "_long" || element == "base_long";
     })]);
     return latLng;
   }

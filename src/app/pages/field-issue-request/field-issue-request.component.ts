@@ -424,7 +424,7 @@ export class FieldIssueRequestComponent implements OnInit {
   openAssignInstallerToFieldrequestModal(request) {
     console.log("request:", request);
     if (request._id) {
-      this.common.params = { requestId: request._id };
+      this.common.params = { requestId: request._id, lat: request._lat, long: request._long, location: request.location };
       const activeModal = this.modalService.open(AssignInstallerToFieldrequestComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {

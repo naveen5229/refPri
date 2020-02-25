@@ -30,4 +30,18 @@
             <button class="btn btn-primary text-capitalize" id="button" (click)="assignInstallerToFieldSupportRequest()">{{btn}}</button>
         </div>
     </div>
+
+    <!-- start:map -->
+    <div class="row">
+        <div class="col-2">
+            <label class="font-weight-bold">Address</label>
+        </div>
+        <div class="col-10">
+            {{(mainLocation)?mainLocation:'N.A'}}
+        </div>
+    </div>
+    <div class="map-container">
+        <div #map id="map"> </div>
+    </div>
+    <!-- end:map -->
 </div>
