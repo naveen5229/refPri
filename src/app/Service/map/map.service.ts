@@ -89,7 +89,7 @@ export class MapService {
     }
   }
 
-  createSingleMarker(latLng) {
+  createSingleMarker(latLng, defaultIcon = false) {
     var icon = {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 4,
@@ -98,9 +98,10 @@ export class MapService {
       strokeWeight: 1
     };
     var marker = new google.maps.Marker({
-      icon: icon,
+      icon: (defaultIcon) ? google.maps.Animation.DROP : icon,
       position: latLng,
-      map: this.map
+      map: this.map,
+      // animation: google.maps.Animation.DROP,
     });
     return marker;
   }
@@ -218,7 +219,7 @@ export class MapService {
     return latLng;
   }
 
-  createMarkers(markers, dropPoly = false, changeBounds = true, infoKeys?, afterClick?) {
+  createMarkers(markers, dropPoly = false, changeBounds = true, infoKeys?, afterClick?, infoOnMouse = false) {
     let thisMarkers = [];
     let infoWindows = [];
     console.log("Markers", markers);
@@ -299,6 +300,25 @@ export class MapService {
             infoWindow.open(this.map);
             afterClick(markers[index]);
           });
+
+          if (infoOnMouse) {// start:showInfowindow on mouserover by sunil-26-02-2020
+            google.maps.event.addListener(marker, 'mouseover', function (evt) {
+              this.infoStart = new Date().getTime();
+              for (let infoIndex = 0; infoIndex < infoWindows.length; infoIndex++) {
+                const element = infoWindows[infoIndex];
+                if (element)
+                  element.close();
+              }
+              infoWindow.setContent("<span style='color:blue'>Info</span> <br> " + displayText);
+              infoWindow.setPosition(evt.latLng); // or evt.latLng
+              infoWindow.open(this.map);
+            });
+            google.maps.event.addListener(marker, 'mouseout', function (evt) {
+              // this.infoStart = new Date().getTime();
+              infoWindow.close();
+              infoWindow.opened = false;
+            });
+          }
         }
         if (changeBounds)
           this.setBounds(latlng);

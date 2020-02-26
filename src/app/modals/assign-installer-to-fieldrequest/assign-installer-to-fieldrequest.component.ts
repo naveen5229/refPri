@@ -34,8 +34,6 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
   // map
   mainLocation = "";
   nearestInstallerlist = [];
-  // map: any;
-  // @ViewChild('map', { static: false }) mapElement: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -157,7 +155,7 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
   }
   createNearestInstallerMarkers() {
     console.log('test api call', this.requestData);
-    this.mapService.createSingleMarker(new google.maps.LatLng(this.requestData.lat, this.requestData.long));
+    let singleMarker = this.mapService.createSingleMarker(new google.maps.LatLng(this.requestData.lat, this.requestData.long), true);
     this.mapService.createMarkers(this.nearestInstallerlist, false, false, ['name', 'partner_name'], (installer) => {
       console.log('inner call');
       this.approveForm.installer.id = installer.id;
@@ -165,12 +163,34 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
       this.approveForm.partner.id = installer.partnerid;
       this.approveForm.partner.name = installer.partner_name;
       console.log('Installer:', installer);
+    }, true);
+    let infoWindow = null;
+    this.mapService.addListerner(singleMarker, 'mouseover', () => {
+      let insideInfo = new Date().getTime();
+      // if (infoWindow) {
+      //   infoWindow.close();
+      // }
+      infoWindow = this.mapService.createInfoWindow();
+      infoWindow.opened = false;
+      infoWindow.setContent(`
+      <span style='color:blue'>Info</span><br>
+      <span style='max-width:200px;display: block'>address :${this.mainLocation}</span>`);
+      infoWindow.setPosition(this.mapService.createLatLng(this.requestData.lat, this.requestData.long));
+      infoWindow.open(this.mapService.map);
+      setTimeout(() => {
+        infoWindow.close();
+        infoWindow.opened = false;
+      }, 1000);
     });
+    // this.mapService.addListerner(singleMarker, 'mouseout', function (evt) {
+    //   infoWindow.close();
+    //   infoWindow.opened = false;
+    // });
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.mapService.mapIntialize('map', 10, this.requestData.lat, this.requestData.long);
+      this.mapService.mapIntialize('map', 12, this.requestData.lat, this.requestData.long);
       this.getNearestInstallerList();
     }, 200);
   }
