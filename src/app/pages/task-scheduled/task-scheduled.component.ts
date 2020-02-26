@@ -524,8 +524,10 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'expdate' && ticket['time_left'] <= 0) {
+          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'high_periority' && ticket[key]) ? 'black font-weight-bold' : 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -570,7 +572,7 @@ export class TaskScheduledComponent implements OnInit {
             icons: this.actionIcons(ticket, type)
           };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'time_left' && ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -612,8 +614,10 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'expdate' && ticket['time_left'] <= 0) {
+          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'high_periority' && ticket[key]) ? 'black font-weight-bold' : 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -656,7 +660,7 @@ export class TaskScheduledComponent implements OnInit {
             icons: this.actionIcons(ticket, type)
           };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'time_left' && ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };

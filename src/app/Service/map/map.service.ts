@@ -89,7 +89,7 @@ export class MapService {
     }
   }
 
-  createSingleMarker(latLng) {
+  createSingleMarker(latLng, defaultIcon = false) {
     var icon = {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 4,
@@ -98,14 +98,15 @@ export class MapService {
       strokeWeight: 1
     };
     var marker = new google.maps.Marker({
-      icon: icon,
+      icon: (defaultIcon) ? google.maps.Animation.DROP : icon,
       position: latLng,
-      map: this.map
+      map: this.map,
+      // animation: google.maps.Animation.DROP,
     });
     return marker;
   }
 
-  mapIntialize(div = "map", zoom = 18, lat = 25, long = 75, showUI = false) {
+  mapIntialize(div = "map", zoom = 12, lat = 25, long = 75, showUI = false) {
     if (this.isMapLoaded) {
       // document.getElementById(div).innerHTML="";
       // document.getElementById(div).append(this.mapLoadDiv.innerHTML);
@@ -210,15 +211,15 @@ export class MapService {
     let latLng = { lat: 0, lng: 0 }
     let keys = Object.keys(markerData);
     latLng.lat = parseFloat(markerData[keys.find((element) => {
-      return element == "lat" || element == "y_lat" || element == "x_lat" || element == "x_tlat" || element == "_lat";
+      return element == "lat" || element == "y_lat" || element == "x_lat" || element == "x_tlat" || element == "_lat" || element == "base_lat";
     })]);
     latLng.lng = parseFloat(markerData[keys.find((element) => {
-      return element == "lng" || element == "long" || element == "x_long" || element == "x_tlong" || element == "_long";
+      return element == "lng" || element == "long" || element == "x_long" || element == "x_tlong" || element == "_long" || element == "base_long";
     })]);
     return latLng;
   }
 
-  createMarkers(markers, dropPoly = false, changeBounds = true, infoKeys?, afterClick?) {
+  createMarkers(markers, dropPoly = false, changeBounds = true, infoKeys?, afterClick?, infoOnMouse = false) {
     let thisMarkers = [];
     let infoWindows = [];
     console.log("Markers", markers);
@@ -299,6 +300,25 @@ export class MapService {
             infoWindow.open(this.map);
             afterClick(markers[index]);
           });
+
+          if (infoOnMouse) {// start:showInfowindow on mouserover by sunil-26-02-2020
+            google.maps.event.addListener(marker, 'mouseover', function (evt) {
+              this.infoStart = new Date().getTime();
+              for (let infoIndex = 0; infoIndex < infoWindows.length; infoIndex++) {
+                const element = infoWindows[infoIndex];
+                if (element)
+                  element.close();
+              }
+              infoWindow.setContent("<span style='color:blue'>Info</span> <br> " + displayText);
+              infoWindow.setPosition(evt.latLng); // or evt.latLng
+              infoWindow.open(this.map);
+            });
+            google.maps.event.addListener(marker, 'mouseout', function (evt) {
+              // this.infoStart = new Date().getTime();
+              infoWindow.close();
+              infoWindow.opened = false;
+            });
+          }
         }
         if (changeBounds)
           this.setBounds(latlng);

@@ -6,16 +6,23 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-6">
+        <!-- <div class="col-6">
             <label>Select Partner:<span class="text-danger">*</span></label>
-        </div>
-        <div class="col-6">
-            <auto-suggestion (onSelected)="selectPartner($event)" url="Partners/getPartnerListBySearch" [preSelected]="(approveForm.partner.id>0)?{name:approveForm.partner.name}:{name:''}" display="name" placeholder="Search By Name" autocomplete="off" name="partnerId"
+        </div> -->
+        <div class="col-4">
+            <auto-suggestion (onSelected)="selectPartner($event)" url="Partners/getPartnerListBySearch" [preSelected]="(approveForm.partner.id>0)?{name:approveForm.partner.name}:{name:''}" display="name" placeholder="Select Partner" autocomplete="off" name="partnerId"
                 inputId="partnerId">
             </auto-suggestion>
         </div>
+        <div class="col-4">
+            <auto-suggestion (onSelected)="selectedInstaller($event)" [data]="installerList" display="name" seperator="-" placeholder="Select Installer" autocomplete="off" name="installer" inputId="installer" [preSelected]="(approveForm.installer.id>0)?{name:approveForm.installer.name}:{name:''}">
+            </auto-suggestion>
+        </div>
+        <div class="col-4 text-right">
+            <button class="btn btn-primary text-capitalize btn-sm" id="button" (click)="assignInstallerToFieldSupportRequest()">{{btn}}</button>
+        </div>
     </div>
-    <div class="row mt-2">
+    <!-- <div class="row mt-2">
         <div class="col-6">
             <label>Select Installer:</label>
         </div>
@@ -29,5 +36,19 @@
         <div class="col-12 text-right">
             <button class="btn btn-primary text-capitalize" id="button" (click)="assignInstallerToFieldSupportRequest()">{{btn}}</button>
         </div>
+    </div> -->
+
+    <!-- start:map -->
+    <div class="row mt-2">
+        <div class="col-2">
+            <label class="font-weight-bold">Address:</label>
+        </div>
+        <div class="col-10">
+            {{(mainLocation)?mainLocation:'N.A'}}
+        </div>
     </div>
+    <div class="map-container mt-2">
+        <div #map id="map"> </div>
+    </div>
+    <!-- end:map -->
 </div>
