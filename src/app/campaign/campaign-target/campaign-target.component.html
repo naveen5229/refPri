@@ -1,47 +1,89 @@
 <nb-card>
-  <nb-card-header>
-    <div class="row">
-      <div class="col-6">
-        <h5>Campaign Dashboard</h5>
-      </div>
-      <div class="col-3">
-        <button class="btn btn-primary text-capitalize" id="csv" (click)="uploadDataByCsv()">Csv </button>
-      </div>
-      <div class="col-3" style="float: right;">
-        <button class="btn btn-primary text-capitalize" id="button" (click)="addCampaignTarget()">Add</button>
-      </div>
-    </div>
-    <div class="row" style="margin-top: 45px;">
-         <div class="col-2">
-            <label>Campaign Name</label>
-          </div>
-          <div class="col-3">
-            <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName"
-            id="campaignName" (onSelected)="campaignid=($event.id)" [preSelected]="{name:campaignname}"
-            autocomplete="off">
-          </auto-suggestion>
-          </div>
-          <div class="col-3">
-            <button class="btn btn-primary" type='submit' id="save" (click)="getCampaignTargetData()">Submit</button>
-          </div>
-          <div class="col-4">
-            <span style="margin-bottom: 10px; display: block; float: left; margin-right: 20px;">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6">
+                <h5>Campaign Dashboard</h5>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary text-capitalize" id="csv" (click)="uploadDataByCsv()">Csv </button>
+            </div>
+            <div class="col-3" style="float: right;">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="addCampaignTarget()">Add</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3">
+                <label>Campaign Name</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName" id="campaignName" (onSelected)="campaignid=($event.id); onCampaignSelect()" [preSelected]="{name:campaignname}" autocomplete="off">
+                </auto-suggestion>
+            </div>
+            <div class="col-6">
+                <span style="margin-bottom: 10px; display: block; float: right; margin-right: 20px;">
+                  <span class="pdf-icon" title="PDF Export" (click)="printPDF('tollUsage');" style="cursor: pointer;"><i
+                    class="fa fa-file-pdf"></i></span>
+                <span class="exel-icon" title="CSV Export" (click)="printCSV('tollUsage')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
+                </span>
+                <!-- <span (click)="printTable()" class="doNotPrint print-icon iconsize"><i class="fa fa-print"></i></span> -->
+            </div>
+        </div>
+        <div class="row mt-3" style="z-index: 999; font-size: 12px;">
+            <div class="col-2">
+                <label>State</label>
+                <auto-suggestion [data]="stateDataList" display="name" placeholder="Select State" name="campaignStateName" inputId="campaignStateName" (onSelected)="filterParam.stateId=($event.id)" autocomplete="off">
+                </auto-suggestion>
+            </div>
+            <div class="col-2">
+                <label>Start Date</label>
+                <uj-date-time-picker (onChanged)="filterParam.startDate=($event)" [dateTimeValue]="filterParam.startDate" [isTime]="false">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <label>End Date</label>
+                <uj-date-time-picker (onChanged)="filterParam.endDate=($event)" [dateTimeValue]="filterParam.endDate" [isTime]="false" [isStart]="false">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <label>Next Action Start Date</label>
+                <uj-date-time-picker (onChanged)="filterParam.nextActionstartDate=($event)" [dateTimeValue]="filterParam.nextActionstartDate" [isTime]="false">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <label>Next Action End Date</label>
+                <uj-date-time-picker (onChanged)="filterParam.nextActionendDate=($event)" [dateTimeValue]="filterParam.nextActionendDate" [isTime]="false" [isStart]="false">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-2 mt-4">
+                <button class="btn btn-primary" type='submit' id="save" (click)="getCampaignTargetData()">Submit</button>
+            </div>
+        </div>
+        <!-- <div class="row" style="margin-top: 45px;">
+            <div class="col-2">
+                <label>Campaign Name</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName" id="campaignName" (onSelected)="campaignid=($event.id)" [preSelected]="{name:campaignname}" autocomplete="off">
+                </auto-suggestion>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary" type='submit' id="save" (click)="getCampaignTargetData()">Submit</button>
+            </div>
+            <div class="col-4">
+                <span style="margin-bottom: 10px; display: block; float: left; margin-right: 20px;">
               <span class="pdf-icon" title="PDF Export" (click)="printPDF('tollUsage');" style="cursor: pointer;"><i
                   class="fa fa-file-pdf"></i></span>
-              <span class="exel-icon" title="CSV Export" (click)="printCSV('tollUsage')"
-                style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
-            </span>
-            <!-- <span (click)="printTable()" class="doNotPrint print-icon iconsize"><i class="fa fa-print"></i></span> -->
-          </div>
-          
-    </div>
-  </nb-card-header>
-  <nb-card-body style="min-height: 485px;">
-    <div class="row">
-      <div class="mt-2">
-        <smart-table *ngIf="campaignTargetData.length" [data]="table.data" [settings]="table.settings" id="tollUsage" class="table_data">
-        </smart-table>
-      </div>
-    </div>
-  </nb-card-body>
+                <span class="exel-icon" title="CSV Export" (click)="printCSV('tollUsage')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
+                </span>
+            </div>
+        </div> -->
+    </nb-card-header>
+    <nb-card-body style="min-height: 485px;">
+        <div class="row">
+            <div class="mt-2">
+                <smart-table *ngIf="campaignTargetData.length" [data]="table.data" [settings]="table.settings" id="tollUsage" class="table_data">
+                </smart-table>
+            </div>
+        </div>
+    </nb-card-body>
 </nb-card>

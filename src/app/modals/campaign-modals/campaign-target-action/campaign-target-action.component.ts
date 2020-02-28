@@ -27,7 +27,7 @@ export class CampaignTargetActionComponent implements OnInit {
     standardRemarkId: [],
     remark: null,
     targetTime: new Date(),
-    campTargetId:0
+    campTargetId: 0
   }
   stateDataList = [];
   actionDataList = [];
@@ -63,9 +63,21 @@ export class CampaignTargetActionComponent implements OnInit {
       this.targetAction.campTargetId = this.common.params.targetActionData.camptargetid;
 
     };
-    this.getStateList();
-    this.getActionList();
-    this.getnextActionList();
+    if (this.common.params && this.common.params.stateDataList) {
+      this.stateDataList = this.common.params.stateDataList;
+    } else {
+      this.getStateList();
+    }
+    if (this.common.params && this.common.params.actionDataList) {
+      this.actionDataList = this.common.params.actionDataList;
+    } else {
+      this.getActionList();
+    }
+    if (this.common.params && this.common.params.nextactionDataList) {
+      this.nextactionDataList = this.common.params.nextactionDataList;
+    } else {
+      this.getnextActionList();
+    }
     this.getRemarkList();
     this.getTargetActionData();
   }
@@ -148,50 +160,50 @@ export class CampaignTargetActionComponent implements OnInit {
 
   saveCampaignTargetAction() {
 
-    if(this.targetAction.stateId == null || this.targetAction.actionId == null || this.targetAction.nextActionId == null) {
+    if (this.targetAction.stateId == null || this.targetAction.actionId == null || this.targetAction.nextActionId == null) {
       this.common.showError('Please Fill All Mandatory Field');
     }
     else {
-    let targetTime = this.common.dateFormatter(this.targetAction.targetTime);
-    const params = {
-      campTargetId: this.targetAction.rowId,
-      stateId: this.targetAction.stateId,
-      actionId: this.targetAction.actionId,
-      nextActId: this.targetAction.nextActionId,
-      nextActTarTime: targetTime,
-      remark: this.targetAction.remark,
-      remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
-      userCallLogId: null
-    };
-console.log(params);
-    this.common.loading++;
-    this.api.post("Campaigns/addCampTargetAction ", params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log(res);
-        if (res['success'] == true) {
-          this.common.showToast(res['msg']);
-          this.getTargetActionData();
-          this.resetData();
-        } else {
-          this.common.showError(res['msg']);
+      let targetTime = this.common.dateFormatter(this.targetAction.targetTime);
+      const params = {
+        campTargetId: this.targetAction.rowId,
+        stateId: this.targetAction.stateId,
+        actionId: this.targetAction.actionId,
+        nextActId: this.targetAction.nextActionId,
+        nextActTarTime: targetTime,
+        remark: this.targetAction.remark,
+        remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
+        userCallLogId: null
+      };
+      console.log(params);
+      this.common.loading++;
+      this.api.post("Campaigns/addCampTargetAction ", params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log(res);
+          if (res['success'] == true) {
+            this.common.showToast(res['msg']);
+            this.getTargetActionData();
+            this.resetData();
+          } else {
+            this.common.showError(res['msg']);
 
-        }
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
     }
   }
 
 
 
   getTargetActionData() {
-    let campTargetId=this.targetAction.campTargetId;
+    let campTargetId = this.targetAction.campTargetId;
     this.resetTable();
-    const params =  "campTargetId=" + campTargetId;
+    const params = "campTargetId=" + campTargetId;
     this.common.loading++;
-    this.api.get('Campaigns/getCampTarAction?'+params)
+    this.api.get('Campaigns/getCampTarAction?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log("api data", res);

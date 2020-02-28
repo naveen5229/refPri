@@ -27,15 +27,25 @@ export class CampaignTargetComponent implements OnInit {
       hideHeader: true
     }
   };
-  campaignid=0;
-  campaignname='';
+  campaignid = 0;
+  campaignname = '';
   campaignDataList = [];
+  filterParam = {
+    stateId: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    nextActionstartDate: new Date(),
+    nextActionendDate: new Date()
+  }
+  stateDataList = [];
+  actionDataList = [];
+  nextactionDataList = [];
   constructor(public api: ApiService,
     public common: CommonService,
     public user: UserService,
     public renderer: Renderer,
     public modalService: NgbModal) {
-   // this.getCampaignTargetData();
+    // this.getCampaignTargetData();
     this.getcampaignList();
     this.common.refresh = this.refresh.bind(this);
   }
@@ -79,7 +89,7 @@ export class CampaignTargetComponent implements OnInit {
 
     style.type = 'text/css';
     style.media = 'print';
- 
+
     if (style['styleSheet']) {
       style['styleSheet'].cssText = css;
     } else {
@@ -98,11 +108,21 @@ export class CampaignTargetComponent implements OnInit {
     }, 1000);
   }
   getCampaignTargetData() {
-    const params = {campId: this.campaignid}
-    console.log('get camp id',params);
+    let startdate = this.common.dateFormatter(this.filterParam.startDate);
+    let enddate = this.common.dateFormatter(this.filterParam.endDate);
+    let nextActionstartDate = this.common.dateFormatter(this.filterParam.nextActionstartDate);
+    let nextActionendDate = this.common.dateFormatter(this.filterParam.nextActionendDate);
+    // const params = { campId: this.campaignid }
+    const params = "campId=" + this.campaignid +
+      "&stateId=" + this.filterParam.stateId +
+      "&startDate=" + startdate +
+      "&endDate=" + enddate +
+      "&nextActionstartDate=" + nextActionstartDate +
+      "&nextActionendDate=" + nextActionendDate;
+    console.log('filterParam:', params);
     this.resetTable();
     this.common.loading++;
-    this.api.get('Campaigns/getCampTarget?campId='+this.campaignid)
+    this.api.get('Campaigns/getCampTarget?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log("api data", res);
@@ -116,13 +136,13 @@ export class CampaignTargetComponent implements OnInit {
         console.log(err);
       });
   }
-  
+
   printPDF(tblEltId) {
     this.common.loading++;
     // let userid = this.user._customer.id;
     // if (this.user._loggedInBy == "customer")
-      // console.log(userid);
-    this.api.get('Campaigns/getCampTarget?campId='+this.campaignid)
+    // console.log(userid);
+    this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid)
       .subscribe(res => {
         console.log(res);
         this.common.loading--;
@@ -137,18 +157,22 @@ export class CampaignTargetComponent implements OnInit {
   }
 
   printCSV(tblEltId) {
-    this.common.loading++;
-    this.api.get('Campaigns/getCampTarget?campId='+this.campaignid)
-      .subscribe(res => {
-        this.common.loading--;
-        let fodata = res['data'];
-        let left_heading = fodata['name'];
-        let center_heading = "Toll Usage";
-        this.common.getCSVFromTableId(tblEltId, left_heading, center_heading);
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
+    if (this.campaignid > 0) {
+      this.common.loading++;
+      this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid)
+        .subscribe(res => {
+          this.common.loading--;
+          let fodata = res['data'];
+          let left_heading = fodata['name'];
+          let center_heading = "Toll Usage";
+          this.common.getCSVFromTableId(tblEltId, left_heading, center_heading);
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
+    } else {
+      this.common.showError("Campaign is missing");
+    }
   }
 
 
@@ -199,13 +223,13 @@ export class CampaignTargetComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } 
+        }
         // else if (key == 'MobileNo') {
         //   column[key] = { value: campaign[key], class: 'blue', action: this.targetAction.bind(this, campaign) };
         // } 
         else if (key == 'Company') {
           column[key] = { value: campaign[key], class: 'blue', action: this.addContactAction.bind(this, campaign) };
-        }else {
+        } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -219,7 +243,7 @@ export class CampaignTargetComponent implements OnInit {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
       { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
-      { class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign)},
+      { class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign) },
 
     ];
     return icons;
@@ -227,12 +251,12 @@ export class CampaignTargetComponent implements OnInit {
 
 
   editCampaign(campaign) {
-   console.log(campaign);
+    console.log(campaign);
 
     let targetEditData = {
       rowId: campaign._camptargetid,
       campaignId: campaign._campid,
-      campainType:campaign._camtype,
+      campainType: campaign._camtype,
       campaignName: campaign._campaignname,
       potential: campaign.FleetSize,
       name: campaign.Company,
@@ -248,7 +272,7 @@ export class CampaignTargetComponent implements OnInit {
       priOwnname: campaign['Primary Owner'],
 
     }
-    
+
     this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };
     // console.log(this.common.params);
 
@@ -283,7 +307,7 @@ export class CampaignTargetComponent implements OnInit {
     });
   }
 
-  
+
   addContactAction(campaign) {
     let targetActionData = {
       rowId: campaign._camptargetid,
@@ -299,7 +323,7 @@ export class CampaignTargetComponent implements OnInit {
 
     };
     console.log(campaign);
-    this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add" };
+    this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: this.stateDataList, actionDataList: this.actionDataList, nextactionDataList: this.nextactionDataList };
     const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignTargetData();
@@ -347,6 +371,50 @@ export class CampaignTargetComponent implements OnInit {
     });
   }
 
-  
+  onCampaignSelect() {
+    if (this.campaignid > 0) {
+      this.getStateList();
+      this.getActionList();
+      this.getnextActionList();
+    }
+  }
+
+  getStateList() {
+    // this.common.loading++;
+    this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.campaignid).subscribe(res => {
+      // this.common.loading--;
+      this.stateDataList = res['data'];
+    },
+      err => {
+        // this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  getActionList() {
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.campaignid).subscribe(res => {
+      this.common.loading--;
+      this.actionDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+  getnextActionList() {
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
+      this.common.loading--;
+      this.nextactionDataList = res['data'];
+    },
+      err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
 
 }
