@@ -26,7 +26,7 @@
                 <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
                     Scheduled Task
                 </li>
-                <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask'; getTaskByType(-102)">
+                <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask';resetSearchTask(); getTaskByType(-102)">
                     Completed Task
                 </li>
                 <li [ngClass]="activeTab=='ccTask'?'active':''" (click)="activeTab='ccTask'; getTaskByType(-5)">

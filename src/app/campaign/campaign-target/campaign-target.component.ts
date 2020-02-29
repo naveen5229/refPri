@@ -31,11 +31,14 @@ export class CampaignTargetComponent implements OnInit {
   campaignname = '';
   campaignDataList = [];
   filterParam = {
-    stateId: null,
-    startDate: new Date(),
-    endDate: new Date(),
-    nextActionstartDate: new Date(),
-    nextActionendDate: new Date()
+    state: {
+      id: null,
+      name: ''
+    },
+    startDate: this.common.getDate(-2),
+    endDate: this.common.getDate(),
+    nextActionstartDate: this.common.getDate(),
+    nextActionendDate: this.common.getDate()
   }
   stateDataList = [];
   actionDataList = [];
@@ -55,6 +58,19 @@ export class CampaignTargetComponent implements OnInit {
 
   refresh() {
     this.getcampaignList();
+    this.resetFilter();
+  }
+  resetFilter() {
+    this.filterParam = {
+      state: {
+        id: null,
+        name: ''
+      },
+      startDate: this.common.getDate(-2),
+      endDate: this.common.getDate(),
+      nextActionstartDate: this.common.getDate(),
+      nextActionendDate: this.common.getDate()
+    }
   }
   getcampaignList() {
     this.common.loading++;
@@ -108,33 +124,36 @@ export class CampaignTargetComponent implements OnInit {
     }, 1000);
   }
   getCampaignTargetData() {
-    let startdate = this.common.dateFormatter(this.filterParam.startDate);
-    let enddate = this.common.dateFormatter(this.filterParam.endDate);
-    let nextActionstartDate = this.common.dateFormatter(this.filterParam.nextActionstartDate);
-    let nextActionendDate = this.common.dateFormatter(this.filterParam.nextActionendDate);
-    // const params = { campId: this.campaignid }
-    const params = "campId=" + this.campaignid +
-      "&stateId=" + this.filterParam.stateId +
-      "&startDate=" + startdate +
-      "&endDate=" + enddate +
-      "&nextActionstartDate=" + nextActionstartDate +
-      "&nextActionendDate=" + nextActionendDate;
-    console.log('filterParam:', params);
-    this.resetTable();
-    this.common.loading++;
-    this.api.get('Campaigns/getCampTarget?' + params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("api data", res);
-        if (!res['data']) return;
-        this.campaignTargetData = res['data'];
-        console.log(this.campaignTargetData);
-        this.campaignTargetData.length ? this.setTable() : this.resetTable();
+    if (this.campaignid > 0) {
+      let startdate = this.common.dateFormatter(this.filterParam.startDate);
+      let enddate = this.common.dateFormatter(this.filterParam.endDate);
+      // let nextActionstartDate = this.common.dateFormatter(this.filterParam.nextActionstartDate);
+      // let nextActionendDate = this.common.dateFormatter(this.filterParam.nextActionendDate);
+      const params = "campId=" + this.campaignid +
+        "&stateId=" + this.filterParam.state.id +
+        "&startDate=" + startdate +
+        "&endDate=" + enddate;
+      // "&nextActionstartDate=" + nextActionstartDate +
+      // "&nextActionendDate=" + nextActionendDate;
+      console.log('filterParam:', params);
+      this.resetTable();
+      this.common.loading++;
+      this.api.get('Campaigns/getCampTarget?' + params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("api data", res);
+          if (!res['data']) return;
+          this.campaignTargetData = res['data'];
+          console.log(this.campaignTargetData);
+          this.campaignTargetData.length ? this.setTable() : this.resetTable();
 
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
+    } else {
+      this.common.showError("Campaign is missing");
+    }
   }
 
   printPDF(tblEltId) {

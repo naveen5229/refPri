@@ -125,8 +125,8 @@ export class TaskScheduledComponent implements OnInit {
   };
   adminList = [];
   searchTask = {
-    startDate: <any>"",
-    endDate: <any>""
+    startDate: <any>this.common.getDate(-2),
+    endDate: <any>this.common.getDate()
   }
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
@@ -134,6 +134,12 @@ export class TaskScheduledComponent implements OnInit {
   }
 
   ngOnInit() { }
+  resetSearchTask() {
+    this.searchTask = {
+      startDate: <any>this.common.getDate(-2),
+      endDate: <any>this.common.getDate()
+    }
+  }
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
