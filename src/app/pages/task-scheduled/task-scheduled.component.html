@@ -97,10 +97,10 @@
                     <li [ngClass]="activeTab=='ScheduledTaskMaster'?'active':''" (click)="activeTab='ScheduledTaskMaster'; getScheduledTask()">
                         Scheduled Task Master
                     </li>
-                    <li [ngClass]="activeTab=='normalTask'?'active':''" (click)="activeTab='normalTask';activeTabNormal=''">
+                    <li [ngClass]="activeTab=='normalTask'?'active':''" (click)="activeTab='normalTask';activeTabNormal='';resetSearchTask()">
                         Normal Task
                     </li>
-                    <li [ngClass]="activeTab=='scheduledTask'?'active':''" (click)="activeTab='scheduledTask';activeTabScheduled=''">
+                    <li [ngClass]="activeTab=='scheduledTask'?'active':''" (click)="activeTab='scheduledTask';activeTabScheduled=''; resetSearchTask()">
                         Scheduled Task
                     </li>
                     <li [ngClass]="activeTab=='userReport'?'active':''" (click)="activeTab='userReport';getUserReport()">
