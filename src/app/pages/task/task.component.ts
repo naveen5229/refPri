@@ -8,6 +8,7 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { AddProjectComponent } from '../../modals/add-project/add-project.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
+import { TaskTodoComponent } from '../../modals/task-todo/task-todo.component';
 
 @Component({
   selector: 'ngx-task',
@@ -715,5 +716,83 @@ export class TaskComponent implements OnInit {
         console.log('Error: ', err);
       });
   }
+
+  // start :todo list
+  taskTodoList = [];
+  tableTaskTodoList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  showTaskTodoPopup() {
+    this.common.params = null;
+    const activeModalTodo = this.modalService.open(TaskTodoComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModalTodo.result.then(data => {
+      if (data.response) {
+      }
+    });
+  }
+  getTaskTodoList() {
+    this.tableTaskTodoList.data = {
+      headings: {},
+      columns: []
+    };
+    this.api.get('AdminTask/getTodoTaskList.json')
+      .subscribe(res => {
+        console.log(res);
+        if (res['code'] > 0) {
+          this.taskTodoList = res['data'] || [];
+          this.setTableTaskTodoList();
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        console.error(err);
+        this.common.showError();
+      });
+  }
+
+  setTableTaskTodoList() {
+    this.tableTaskTodoList.data = {
+      headings: this.generateHeadingsTaskTodoList(),
+      columns: this.getTableColumnsTaskTodoList()
+    };
+    return true;
+  }
+
+  generateHeadingsTaskTodoList() {
+    let headings = {};
+    for (var key in this.taskTodoList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+  getTableColumnsTaskTodoList() {
+    let columns = [];
+    this.taskTodoList.map(task => {
+      let column = {};
+      for (let key in this.generateHeadingsTaskTodoList()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(task)
+          };
+        } else {
+          column[key] = { value: task[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  //  end: todo list
 
 }

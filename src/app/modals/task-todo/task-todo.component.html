@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h5>New Task ToDo</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Description:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Description" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Date:</label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="taskTodoForm.date" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTaskTodo()">{{btn}}</button>
+        </div>
+    </div>
+
+    <!-- start: task todo list -->
+    <!-- <div class="row">
+        <div class="col-12">Task ToDo List</div>
+        <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="taskMapping">
+        </smart-table>
+    </div> -->
+    <!-- end: task todo list -->
+</div>

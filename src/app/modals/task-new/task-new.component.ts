@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NormalTask } from '../../classes/normal-task';
+import { UserService } from '../../Service/user/user.service';
 
 @Component({
   selector: 'ngx-task-new',
@@ -31,7 +32,8 @@ export class TaskNewComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
-    public modalService: NgbModal) {
+    public modalService: NgbModal,
+    public userService: UserService) {
     console.log("task list", this.common.params);
     if (this.common.params != null) {
       this.userList = this.common.params.userList;
@@ -93,6 +95,9 @@ export class TaskNewComponent implements OnInit {
     }
     else if (this.normalTask.task == '') {
       return this.common.showError("Task is missing")
+    }
+    else if (!this.userId) {
+      return this.common.showError("Please assign a user")
     }
     else {
       const params = {
