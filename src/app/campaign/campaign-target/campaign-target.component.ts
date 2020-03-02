@@ -41,6 +41,7 @@ export class CampaignTargetComponent implements OnInit {
     nextActionendDate: this.common.getDate()
   }
   stateDataList = [];
+  stateDataListTemp = []; //use only for dropdown for empty value show
   actionDataList = [];
   nextactionDataList = [];
   constructor(public api: ApiService,
@@ -125,10 +126,15 @@ export class CampaignTargetComponent implements OnInit {
   }
   getCampaignTargetData() {
     if (this.campaignid > 0) {
-      let startdate = this.common.dateFormatter(this.filterParam.startDate);
-      let enddate = this.common.dateFormatter(this.filterParam.endDate);
+      console.log("filterParam:", this.filterParam);
+      let startdate = (this.filterParam.startDate) ? this.common.dateFormatter(this.filterParam.startDate) : null;
+      let enddate = (this.filterParam.endDate) ? this.common.dateFormatter(this.filterParam.endDate) : null;
       // let nextActionstartDate = this.common.dateFormatter(this.filterParam.nextActionstartDate);
       // let nextActionendDate = this.common.dateFormatter(this.filterParam.nextActionendDate);
+      if (!this.filterParam.startDate || !this.filterParam.endDate) {
+        this.common.showError("Start Date or End Date is missing");
+        return false;
+      }
       const params = "campId=" + this.campaignid +
         "&stateId=" + this.filterParam.state.id +
         "&startDate=" + startdate +
@@ -403,6 +409,23 @@ export class CampaignTargetComponent implements OnInit {
     this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.campaignid).subscribe(res => {
       // this.common.loading--;
       this.stateDataList = res['data'];
+      this.stateDataListTemp = this.stateDataList;
+      let stateDataListTemp = [];
+      if (this.stateDataList && this.stateDataList.length > 0) {
+        for (let i = 0; i < this.stateDataList.length; i++) {
+          stateDataListTemp.push({
+            "id": this.stateDataList[i].id,
+            "name": this.stateDataList[i].name
+          });
+          console.log("stateDataListTemp index:", i);
+        }
+        stateDataListTemp.push({
+          "id": -1,
+          "name": "N/A"
+        });
+      }
+      console.log("stateDataListTemp:", stateDataListTemp)
+      this.stateDataListTemp = stateDataListTemp;
     },
       err => {
         // this.common.loading--;

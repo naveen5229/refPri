@@ -35,6 +35,9 @@
                 <li [ngClass]="activeTab=='projectTask'?'active':''" (click)="activeTab='projectTask'; getTaskByType(-6)">
                     Project Task
                 </li>
+                <!-- <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList'; getTodoList()">
+                    ToDo List
+                </li> -->
             </ul>
         </div>
 
@@ -73,6 +76,15 @@
         </div>
         <div *ngIf="activeTab=='projectTask'">
             <smart-table *ngIf="projectTaskList.length!=0" [data]="tableProjectTask.data" [settings]="tableProjectTask.settings" id="tableProjectTaskList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='todoList'">
+            <div class="col-12 text-right">
+                <button class="btn btn-primary btn-sm" (click)="showTaskTodoPopup()" title="Add ToDo">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="taskMapping">
             </smart-table>
         </div>
     </nb-card-body>
