@@ -13,6 +13,7 @@ export class TaskTodoComponent implements OnInit {
     taskTodoId: null,
     desc: "",
     date: this.common.getDate(),
+    isUrgent: false
   };
   btn = 'Save';;
   userList = [];
@@ -52,9 +53,10 @@ export class TaskTodoComponent implements OnInit {
       const params = {
         date: this.common.dateFormatter(this.taskTodoForm.date),
         desc: this.taskTodoForm.desc,
+        isUrgent: this.taskTodoForm.isUrgent,
         taskTodoId: this.taskTodoForm.taskTodoId
       }
-      console.log("todo params:", params); return false;
+      console.log("todo params:", params);
       this.common.loading++;
       this.api.post('AdminTask/addTodoTask', params).subscribe(res => {
         console.log(res);
@@ -62,10 +64,10 @@ export class TaskTodoComponent implements OnInit {
         if (res['code'] > 0) {
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
-            this.common.showToast(res['data'][0].y_msg)
+            this.common.showToast(res['data'][0].y_msg);
             this.closeModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg)
+            this.common.showError(res['data'][0].y_msg);
           }
         } else {
           this.common.showError(res['msg']);
@@ -84,11 +86,8 @@ export class TaskTodoComponent implements OnInit {
       taskTodoId: null,
       desc: "",
       date: this.common.getDate(),
+      isUrgent: false
     };
   }
-
-  // start task todo list
-
-  // end task todo list
 
 }
