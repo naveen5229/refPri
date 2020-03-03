@@ -733,10 +733,11 @@ export class TaskComponent implements OnInit {
     const activeModalTodo = this.modalService.open(TaskTodoComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModalTodo.result.then(data => {
       if (data.response) {
+        this.getTodoTaskList();
       }
     });
   }
-  getTaskTodoList() {
+  getTodoTaskList() {
     this.tableTaskTodoList.data = {
       headings: {},
       columns: []
@@ -778,12 +779,12 @@ export class TaskComponent implements OnInit {
     this.taskTodoList.map(task => {
       let column = {};
       for (let key in this.generateHeadingsTaskTodoList()) {
-        if (key == 'Action') {
+        if (key == 'Action' || key == 'action') {
           column[key] = {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(task)
+            icons: (task._status == 0) ? this.actionIconsToDo(task) : ''
           };
         } else {
           column[key] = { value: task[key], class: 'black', action: '' };
@@ -792,6 +793,42 @@ export class TaskComponent implements OnInit {
       columns.push(column);
     });
     return columns;
+  }
+  actionIconsToDo(task) {
+    let icons = [
+      { class: "fa fa-edit", action: this.updateTodoTask.bind(this, task), txt: '' },
+    ];
+    return icons;
+  }
+  updateTodoTask(task) {
+    if (task._id) {
+      let params = {
+        todoTaskId: task._id,
+        status: 1
+      }
+      this.common.params = {
+        title: 'Update ToDo task ',
+        description: `<b>&nbsp;` + 'Are Sure To Update This Record' + `<b>`,
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('AdminTask/updateTodoTask', params)
+            .subscribe(res => {
+              this.common.loading--;
+              this.common.showToast(res['msg']);
+              this.getTodoTaskList();
+            }, err => {
+              this.common.loading--;
+              console.log('Error: ', err);
+            });
+        }
+      });
+    } else {
+      this.common.showError("Task ID Not Available");
+    }
   }
   //  end: todo list
 
