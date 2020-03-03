@@ -9,6 +9,7 @@ import { CommonService } from '../../Service/common/common.service';
   styleUrls: ['./task-todo.component.scss']
 })
 export class TaskTodoComponent implements OnInit {
+  minDateShow = this.common.getDate();
   taskTodoForm = {
     taskTodoId: null,
     desc: "",
@@ -51,7 +52,7 @@ export class TaskTodoComponent implements OnInit {
     }
     else {
       const params = {
-        date: this.common.dateFormatter(this.taskTodoForm.date),
+        date: (this.taskTodoForm.date) ? this.common.dateFormatter(this.taskTodoForm.date) : null,
         desc: this.taskTodoForm.desc,
         isUrgent: this.taskTodoForm.isUrgent,
         taskTodoId: this.taskTodoForm.taskTodoId
@@ -64,10 +65,10 @@ export class TaskTodoComponent implements OnInit {
         if (res['code'] > 0) {
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
-            this.common.showToast(res['data'][0].y_msg);
+            this.common.showToast(res['msg']);
             this.closeModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg);
+            this.common.showError(res['msg']);
           }
         } else {
           this.common.showError(res['msg']);

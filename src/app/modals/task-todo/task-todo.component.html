@@ -20,7 +20,7 @@
             <label>Date:</label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="taskTodoForm.date" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
+            <uj-date-time-picker [mind]="minDateShow" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
             </uj-date-time-picker>
         </div>
     </div>

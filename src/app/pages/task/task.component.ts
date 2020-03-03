@@ -785,6 +785,7 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             action: null,
             icons: (task._status == 0) ? this.actionIconsToDo(task) : ''
+            // isCheckbox: true
           };
         } else {
           column[key] = { value: task[key], class: 'black', action: '' };
@@ -808,7 +809,7 @@ export class TaskComponent implements OnInit {
       }
       this.common.params = {
         title: 'Update ToDo task ',
-        description: `<b>&nbsp;` + 'Are Sure To Update This Record' + `<b>`,
+        description: `<b>&nbsp;` + 'Are you sure to complete this task' + `<b>`,
       }
 
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
