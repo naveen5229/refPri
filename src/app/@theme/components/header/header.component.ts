@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   currentTheme = 'default';
- userLogin='';
+  userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
@@ -54,14 +54,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public userService: UserService,
     public common: CommonService,
     private breakpointService: NbMediaBreakpointsService) {
-      if(this.userService._details==null ){
-        this.router.navigate(['/auth/login']);
-      }
-      else {
-        
-        this.userLogin=this.userService._details.name || [];
-        console.log("----------------", this.userLogin);
-      }
+    if (this.userService._details == null) {
+      this.router.navigate(['/auth/login']);
+    }
+    else {
+
+      this.userLogin = this.userService._details.name || [];
+      console.log("----------------", this.userLogin);
+    }
   }
 
   ngOnInit() {
@@ -118,7 +118,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
           if (res['success']) {
             this.userService._token = '';
             this.userService._details = null;
-            localStorage.clear();
+
+            localStorage.removeItem('ITRM_USER_TOKEN');
+            localStorage.removeItem('ITRM_USER_DETAILS');
+
             this.common.showToast(res['msg']);
             this.router.navigate(['/auth/login']);
           }
