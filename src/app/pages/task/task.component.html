@@ -79,12 +79,24 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='todoList'">
-            <div class="col-12 text-right">
-                <button class="btn btn-primary btn-sm" (click)="showTaskTodoPopup()" title="Add ToDo">
-                    <i class="fa fa-plus"></i>
-                </button>
+            <div class="row mb-2">
+                <div class="col-5">
+                    <textarea row="4" cols="15" placeholder="Enter Description" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"></textarea>
+                </div>
+                <div class="col-3">
+                    <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-2">
+                    <label>
+                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" />
+                    High-Priority</label>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-sm" (click)="saveTaskTodo()" title="Save ToDo">save</button>
+                </div>
             </div>
-            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="taskMapping">
+            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList">
             </smart-table>
         </div>
     </nb-card-body>

@@ -571,7 +571,7 @@ export class FieldIssueRequestComponent implements OnInit {
   // end : ack tkt list
   // start: completed tkt list
   setTableCompletedTicketList() {
-    this.tableAckTicketList.data = {
+    this.tableCompletedTicketList.data = {
       headings: this.generateHeadingsCompletedTicketList(),
       columns: this.getTableColumnsCompletedTicketList()
     };

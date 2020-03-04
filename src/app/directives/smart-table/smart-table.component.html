@@ -80,7 +80,7 @@
 
                     <!-- Checkbox -->
                     <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && column[heading].isCheckbox">
-                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)">
+                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)" [checked]="column[heading].value">
                     </div>
                     <!-- CheckBox END -->
 

@@ -8,7 +8,6 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { AddProjectComponent } from '../../modals/add-project/add-project.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
-import { TaskTodoComponent } from '../../modals/task-todo/task-todo.component';
 
 @Component({
   selector: 'ngx-task',
@@ -88,6 +87,24 @@ export class TaskComponent implements OnInit {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
   }
+  minDateTodo = this.common.getDate();
+  taskTodoForm = {
+    taskTodoId: null,
+    desc: "",
+    date: this.common.getDate(),
+    isUrgent: false
+  };
+
+  taskTodoList = [];
+  tableTaskTodoList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
     this.getTaskByType(101);
     this.getAllAdmin();
@@ -265,15 +282,6 @@ export class TaskComponent implements OnInit {
     // console.log(headings);
     return headings;
   }
-
-  // formatTitle(strval) {
-  //   let pos = strval.indexOf('_');
-  //   if (pos > 0) {
-  //     return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
-  //   } else {
-  //     return strval.charAt(0).toUpperCase() + strval.substr(1);
-  //   }
-  // }
 
   setTableNormal(type) {
     this.tableNormal.data = {
@@ -718,25 +726,6 @@ export class TaskComponent implements OnInit {
   }
 
   // start :todo list
-  taskTodoList = [];
-  tableTaskTodoList = {
-    data: {
-      headings: {},
-      columns: []
-    },
-    settings: {
-      hideHeader: true
-    }
-  };
-  showTaskTodoPopup() {
-    this.common.params = null;
-    const activeModalTodo = this.modalService.open(TaskTodoComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-    activeModalTodo.result.then(data => {
-      if (data.response) {
-        this.getTodoTaskList();
-      }
-    });
-  }
   getTodoTaskList() {
     this.tableTaskTodoList.data = {
       headings: {},
@@ -774,18 +763,17 @@ export class TaskComponent implements OnInit {
     }
     return headings;
   }
+
   getTableColumnsTaskTodoList() {
     let columns = [];
     this.taskTodoList.map(task => {
       let column = {};
       for (let key in this.generateHeadingsTaskTodoList()) {
-        if (key == 'Action' || key == 'action') {
+        if (key == 'Completed' || key == 'completed') {
           column[key] = {
-            value: "",
-            isHTML: true,
-            action: null,
-            icons: (task._status == 0) ? this.actionIconsToDo(task) : ''
-            // isCheckbox: true
+            value: task[key],
+            action: this.updateTodoTask.bind(this, task),
+            isCheckbox: true
           };
         } else {
           column[key] = { value: task[key], class: 'black', action: '' };
@@ -795,42 +783,77 @@ export class TaskComponent implements OnInit {
     });
     return columns;
   }
+
   actionIconsToDo(task) {
     let icons = [
       { class: "fa fa-edit", action: this.updateTodoTask.bind(this, task), txt: '' },
     ];
     return icons;
   }
+
   updateTodoTask(task) {
     if (task._id) {
       let params = {
         todoTaskId: task._id,
-        status: 1
+        status: (task._status == 1) ? 0 : 1
       }
-      this.common.params = {
-        title: 'Update ToDo task ',
-        description: `<b>&nbsp;` + 'Are you sure to complete this task' + `<b>`,
-      }
+      this.common.loading++;
+      this.api.post('AdminTask/updateTodoTask', params)
+        .subscribe(res => {
+          this.common.loading--;
+          this.common.showToast(res['msg']);
+          this.getTodoTaskList();
+        }, err => {
+          this.common.loading--;
+          console.log('Error: ', err);
+        });
 
-      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-      activeModal.result.then(data => {
-        if (data.response) {
-          this.common.loading++;
-          this.api.post('AdminTask/updateTodoTask', params)
-            .subscribe(res => {
-              this.common.loading--;
-              this.common.showToast(res['msg']);
-              this.getTodoTaskList();
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
-        }
-      });
     } else {
       this.common.showError("Task ID Not Available");
     }
   }
+
+  saveTaskTodo() {
+    if (this.taskTodoForm.desc == '') {
+      return this.common.showError("Description is missing")
+    }
+    else {
+      const params = {
+        date: (this.taskTodoForm.date) ? this.common.dateFormatter(this.taskTodoForm.date) : null,
+        desc: this.taskTodoForm.desc,
+        isUrgent: this.taskTodoForm.isUrgent,
+        taskTodoId: this.taskTodoForm.taskTodoId
+      }
+      console.log("todo params:", params);
+      this.common.loading++;
+      this.api.post('AdminTask/addTodoTask', params).subscribe(res => {
+        console.log(res);
+        this.common.loading--;
+        if (res['code'] > 0) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['msg']);
+            this.getTodoTaskList();
+            this.taskTodoForm = {
+              taskTodoId: null,
+              desc: "",
+              date: this.common.getDate(),
+              isUrgent: false
+            };
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+
+  }
   //  end: todo list
+
 
 }
