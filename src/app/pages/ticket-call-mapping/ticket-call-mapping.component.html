@@ -9,18 +9,25 @@
 <br>
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-3">
       <label>Start Date</label>
       <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
       </uj-date-time-picker>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <label>End Date</label>
       <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false"
         [isStart]="false">
       </uj-date-time-picker>
     </div>
-    <div class="col-4">
+    <div *ngIf="filterDataList.length!=0" class="col-3 mt-4">
+      <select class="form-control" name="filteredValue" [(ngModel)]="filteredValue" (change)="filterData(filteredValue)">
+        <option value="1">All</option>
+        <option value="2">Rated</option>
+        <option value="3">Unrated</option>
+    </select>
+    </div>
+    <div class="col-3">
       <button type="submit" id="submit" (click)="getTicketData()" class="btn btn-primary" style="margin-top: 20px;"> Submit
       </button>
       <button type="submit" id="submit" (click)="callLogs()" class="btn btn-primary" style="margin-top: 20px; float: right;"> Last Call Logs

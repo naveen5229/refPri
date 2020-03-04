@@ -15,7 +15,8 @@ export class TicketCallMappingComponent implements OnInit {
   startTime = new Date();
   currentRate = '';
   ticketList = [];
-
+  filteredValue = 1;
+  filterDataList = [];
   table = {
     data: {
       headings: {},
@@ -117,6 +118,8 @@ export class TicketCallMappingComponent implements OnInit {
     };
     const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(response => {
+      console.log(response);
+      request._rating = response;
       if (!response) {
         return;
       }
@@ -154,6 +157,7 @@ export class TicketCallMappingComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         this.ticketList = res['data'] || [];
+        this.filterDataList = res['data'] || [];
         this.ticketList.length ? this.setTable() : this.resetTable();
 
 
@@ -187,5 +191,27 @@ export class TicketCallMappingComponent implements OnInit {
     this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  filterData(state) {
+    console.log(state);
+    if (state == 1) {
+      this.ticketList = this.filterDataList;
+    } else if (state == 2) {
+      this.ticketList = this.filterDataList.filter(inv => {
+        if (inv._rating != 0) {
+          return true;
+        }
+        return false;
+      });
+    } else if (state == 3) {
+      this.ticketList = this.filterDataList.filter(inv => {
+        if (inv._rating == 0) {
+          return true;
+        }
+        return false;
+      });
+    }
+    this.setTable();
   }
 }

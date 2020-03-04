@@ -50,7 +50,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
         home: true,
       },
       {
-        title: 'Future-Ref',
+        title: 'Customer-Feedback',
         icon: 'file-text-outline',
         link: '/pages/future-ref',
         home: true,
