@@ -8,6 +8,7 @@ import { ApiService } from '../../Service/Api/api.service';
   styleUrls: ['./future-ref.component.scss']
 })
 export class FutureRefComponent implements OnInit {
+  select_type = 1;
   futureRefList = [];
   tableFutureRefList = {
     data: {
@@ -18,14 +19,23 @@ export class FutureRefComponent implements OnInit {
       hideHeader: true
     }
   };
+  endTime = new Date();
+  startTime = new Date();
   constructor(public common: CommonService, public api: ApiService) {
-    this.getFutureRefList();
+    this.startTime.setDate(this.startTime.getDate() - 1)
+    this.endTime.setDate(this.endTime.getDate() - 1)
   }
 
   ngOnInit() {
   }
+
+  
+
   getFutureRefList() {
-    this.api.get("Users/getFutureRef.json").subscribe(res => {
+    let startDate = this.common.dateFormatter(this.startTime);
+    let endDate = this.common.dateFormatter(this.endTime);
+    const params = '?type=' + this.select_type + '&startDate=' + startDate + '&endDate=' + endDate;
+    this.api.get("Users/getCustomerFeedback.json" + params).subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
         this.futureRefList = res['data'] || [];
