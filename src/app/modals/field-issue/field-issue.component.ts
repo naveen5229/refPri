@@ -29,20 +29,31 @@ export class FieldIssueComponent implements OnInit {
       id: 0,
       name: ''
     },
-    regno: '',
-    device_model: {
-      id: 0,
-      name: ''
-    },
-    driver_name: '',
-    driver_mobileno: '',
+    // regno: '',
+    // device_model: {
+    //   id: 0,
+    //   name: ''
+    // },
+    // driver_name: '',
+    // driver_mobileno: '',
     supervisor_name: '',
     supervisor_mobileno: '',
     sim_provider_id: 0,
     location: '',
     lat: '',
     long: '',
-    remark: ''
+    remark: '',
+    vehicalInfo: [
+      {
+        regno: '',
+        device_model: {
+          id: 0,
+          name: ''
+        },
+        driver_name: '',
+        driver_mobileno: ''
+      }
+    ]
   }
 
   constructor(public activeModal: NgbActiveModal,
@@ -65,20 +76,29 @@ export class FieldIssueComponent implements OnInit {
           id: this.common.params.request._request_type_id,
           name: this.common.params.request.request_type
         },
-        regno: this.common.params.request.regno,
-        device_model: {
-          id: this.common.params.request._device_model_id,
-          name: this.common.params.request.device_model
-        },
-        driver_name: this.common.params.request.driver_name,
-        driver_mobileno: this.common.params.request.driver_mobileno,
+        // regno: this.common.params.request.regno,
+        // device_model: {
+        //   id: this.common.params.request._device_model_id,
+        //   name: this.common.params.request.device_model
+        // },
+        // driver_name: this.common.params.request.driver_name,
+        // driver_mobileno: this.common.params.request.driver_mobileno,
         supervisor_name: this.common.params.request.supervisor_name,
         supervisor_mobileno: this.common.params.request.supervisor_mobileno,
         sim_provider_id: (this.common.params.request._sim_provider_id > 0) ? this.common.params.request._sim_provider_id : 0,
         location: this.common.params.request.location_name,
         lat: this.common.params.request._lat,
         long: this.common.params.request._long,
-        remark: this.common.params.request.remark
+        remark: this.common.params.request.remark,
+        vehicalInfo: [{
+          regno: this.common.params.request.regno,
+          device_model: {
+            id: this.common.params.request._device_model_id,
+            name: this.common.params.request.device_model
+          },
+          driver_name: this.common.params.request.driver_name,
+          driver_mobileno: this.common.params.request.driver_mobileno
+        }]
       }
       console.log("edit data:", this.requestData);
     }
@@ -129,9 +149,11 @@ export class FieldIssueComponent implements OnInit {
     console.log(this.requestData.request_type);
   }
 
-  selectDeviceModal(selectedDevieModel) {
-    this.requestData.device_model.id = selectedDevieModel.id;
-    this.requestData.device_model.name = selectedDevieModel.name;
+  selectDeviceModal(selectedDevieModel, vehical) {
+    // this.requestData.device_model.id = selectedDevieModel.id;
+    // this.requestData.device_model.name = selectedDevieModel.name;
+    vehical.device_model.id = selectedDevieModel.id;
+    vehical.device_model.name = selectedDevieModel.name;
   }
   companyList = [];
   selectPartner(event) {
@@ -151,26 +173,39 @@ export class FieldIssueComponent implements OnInit {
   }
 
   addRequest() {
+    if (this.requestData.vehicalInfo.length > 1) {
+      if (this.requestData.vehicalInfo[0].device_model.id == 0 && this.requestData.vehicalInfo[0].driver_mobileno == "" && this.requestData.vehicalInfo[0].driver_name == "" && this.requestData.vehicalInfo[0].regno == "") {
+        this.requestData.vehicalInfo.splice(0, 1);
+      }
+    }
     let params = {
       requestId: this.requestData.requestId,
-      driverName: this.requestData.driver_name,
-      driverMobileno: this.requestData.driver_mobileno,
+      // driverName: this.requestData.driver_name,
+      // driverMobileno: this.requestData.driver_mobileno,
       supervisorName: this.requestData.supervisor_name,
       supervisorMobileno: this.requestData.supervisor_mobileno,
       requestTypeId: this.requestData.request_type.id,
       companyId: this.requestData.company.id,
-      regno: this.requestData.regno,
-      deviceModelId: this.requestData.device_model.id,
+      // regno: this.requestData.regno,
+      // deviceModelId: this.requestData.device_model.id,
       simProviderId: this.requestData.sim_provider_id,
       location: this.requestData.location,
       lat: this.requestData.lat,
       long: this.requestData.long,
-      remark: this.requestData.remark
+      remark: this.requestData.remark,
+      vehicalInfo: JSON.stringify(this.requestData.vehicalInfo.map(item => {
+        return {
+          regno: item.regno,
+          device_model_id: item.device_model.id,
+          driver_name: item.driver_name,
+          driver_mobileno: item.driver_mobileno
+        }
+      }))
     }
-    console.log(params);
+    console.log("params:", params);
 
     if (this.requestData.supervisor_name != '' && this.requestData.supervisor_mobileno != '' &&
-      this.requestData.device_model.id != null && this.requestData.company.id && this.requestData.request_type.id != null
+      this.requestData.company.id && this.requestData.request_type.id != null
       && this.requestData.location != null) {
       this.common.loading++;
       this.api.post('Grid/addFieldSupportRequest', params)
@@ -244,6 +279,28 @@ export class FieldIssueComponent implements OnInit {
 
   closeModal(response) {
     this.activeModal.close({ response: response });
+  }
+
+  addMoreVehical(v) {
+    if (v.regno && v.regno != '' && v.device_model.id > 0) {
+      this.requestData.vehicalInfo.unshift(
+        {
+          regno: '',
+          device_model: {
+            id: 0,
+            name: ''
+          },
+          driver_name: '',
+          driver_mobileno: ''
+        }
+      );
+    } else {
+      this.common.showError("RegNo and Device-Model is required");
+    }
+  }
+
+  removeVehical(index) {
+    this.requestData.vehicalInfo.splice(index, 1);
   }
 
 }
