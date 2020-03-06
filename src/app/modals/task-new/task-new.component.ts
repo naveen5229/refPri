@@ -11,7 +11,7 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-new.component.scss']
 })
 export class TaskNewComponent implements OnInit {
-  normalTask = new NormalTask('', new Date(), '', false, null, [], null);
+  normalTask = new NormalTask('', new Date(), '', false, null, [], null, null);
   btn = 'Save';
   userId = null;
   isProject = "";
@@ -28,6 +28,7 @@ export class TaskNewComponent implements OnInit {
       hideHeader: true
     }
   };
+  editType = 0;
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -37,11 +38,19 @@ export class TaskNewComponent implements OnInit {
     console.log("task list", this.common.params);
     if (this.common.params != null) {
       this.userList = this.common.params.userList;
-      if (this.common.params.parentTaskId) {
+      if (this.common.params.parentTaskId && !this.common.params.editType) {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
         this.parentTaskDesc = this.common.params.parentTaskDesc;
         console.log("normalTask:", this.normalTask);
         this.getTaskMapping(this.normalTask.parentTaskId);
+
+      } else if (this.common.params.parentTaskId && this.common.params.editType == 1) {
+        this.editType = this.common.params.editType;
+        this.normalTask.taskId = this.common.params.parentTaskId;
+        this.normalTask.task = this.common.params.editData.task_desc;
+        this.normalTask.date = new Date(this.common.params.editData.expdate);
+        // this.normalTask.projectId = this.common.params.editData.project;
+        this.normalTask.isUrgent = this.common.params.editData.high_priority;
       }
     }
     this.getProjectList()
@@ -136,7 +145,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   resetTask() {
-    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null);
+    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, null);
   }
 
   // start task mapping list

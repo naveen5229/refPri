@@ -370,8 +370,16 @@ export class TaskComponent implements OnInit {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
           column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
-          column[key] = { value: ticket[key], class: (key == 'high_periority' && ticket[key]) ? 'black font-weight-bold' : 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -401,8 +409,16 @@ export class TaskComponent implements OnInit {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
           column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
-          column[key] = { value: ticket[key], class: (key == 'high_periority' && ticket[key]) ? 'black font-weight-bold' : 'black', action: '' };
+          column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -478,6 +494,14 @@ export class TaskComponent implements OnInit {
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
         }
@@ -527,6 +551,14 @@ export class TaskComponent implements OnInit {
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center",
+          };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
         }
@@ -543,56 +575,73 @@ export class TaskComponent implements OnInit {
 
   actionIcons(ticket, type) {
     let icons = [
-      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: '' },
+      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: '', title: null },
     ];
 
     if (ticket._unreadcount > 0) {
       icons = [
-        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount },
+        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null },
       ];
     } else if (ticket._unreadcount == -1) {
       icons = [
-        { class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: '' },
+        { class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: '', title: null },
       ];
     }
 
     if (type == -101) {
-      icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '' });
+      icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
+      icons.push({ class: "fas fa-calendar-alt", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
-        icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '' });
-      } else {
-        icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
+        icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
+      } else if (ticket._status == 2) {
+        icons.push({ class: "fa fa-check text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: '', title: "Mark completed" });
+      } else if (ticket._status == 0) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
+        icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
+        // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       }
     }
     if (type == 101 || type == -101) {
-      icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '' });
+      icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '', title: "add child task" });
     }
     if ((ticket._status == 5 || ticket._status == -1)) {
     } else {
       if (ticket._isremind == 1) {
-        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '' });
+        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '', title: null });
       } else if (ticket._isremind == 2) {
-        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '', title: null });
       } else {
-        icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '' });
+        icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '', title: null });
       }
     }
 
     return icons;
   }
 
-  editTicket(ticket, type) {
+  // editTicket(ticket, type) {
+  //   console.log("type:", type);
+  //   let ticketEditData = {
+  //     ticketId: ticket._tktid,
+  //     statusId: ticket._status
+  //   }
+  //   this.common.params = { ticketEditData, title: "Change Ticket Status", button: "Edit" };
+  //   const activeModal = this.modalService.open(TaskStatusChangeComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+  //   activeModal.result.then(data => {
+  //     if (data.response) {
+  //       this.getTaskByType(type);
+  //     }
+  //   });
+  // }
+
+  editTask(ticket, type) {
     console.log("type:", type);
-    let ticketEditData = {
-      ticketId: ticket._tktid,
-      statusId: ticket._status
-    }
-    this.common.params = { ticketEditData, title: "Change Ticket Status", button: "Edit" };
-    const activeModal = this.modalService.open(TaskStatusChangeComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = { userList: this.adminList, parentTaskId: ticket._refid, parentTaskDesc: ticket.task_desc, editType: 1, editData: ticket };
+    const activeModal = this.modalService.open(TaskNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getTaskByType(type);
+        this.activeTab = 'TasksByMe';
       }
     });
   }
@@ -604,7 +653,7 @@ export class TaskComponent implements OnInit {
       }
       this.common.params = {
         title: 'Delete Ticket ',
-        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+        description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
       }
 
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
@@ -640,23 +689,56 @@ export class TaskComponent implements OnInit {
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
-          this.common.loading++;
-          this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
-            this.common.loading--;
-            if (res['code'] > 0) {
-              this.common.showToast(res['msg']);
-              this.getTaskByType(type);
-            }
-            else {
-              this.common.showError(res['data']);
-            }
-          },
-            err => {
-              this.common.loading--;
-              this.common.showError();
-              console.log('Error: ', err);
-            });
+          this.updateTicketStatus(ticket, type, 0);
+          // this.common.loading++;
+          // this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
+          //   this.common.loading--;
+          //   if (res['code'] > 0) {
+          //     this.common.showToast(res['msg']);
+          //     this.getTaskByType(type);
+          //   }
+          //   else {
+          //     this.common.showError(res['data']);
+          //   }
+          // },
+          //   err => {
+          //     this.common.loading--;
+          //     this.common.showError();
+          //     console.log('Error: ', err);
+          //   });
         }
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  updateTicketStatus(ticket, type, status) {
+    if (ticket._tktid) {
+      let params = {
+        ticketId: ticket._tktid,
+        statusId: status
+      }
+      this.common.loading++;
+      this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          if (type == -102 && this.searchTask.startDate && this.searchTask.endDate) {
+            let startDate = this.common.dateFormatter(this.searchTask.startDate);
+            let endDate = this.common.dateFormatter(this.searchTask.endDate);
+            this.getTaskByType(type, startDate, endDate);
+
+          } else {
+            this.getTaskByType(type);
+          }
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
       });
     } else {
       this.common.showError("Ticket ID Not Available");

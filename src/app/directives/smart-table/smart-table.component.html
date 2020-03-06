@@ -95,7 +95,7 @@
                     <!-- Show Action Icons -->
                     <div *ngIf="column[heading] && column[heading].icons" [class]="column[heading].class || ''">
                         <div *ngFor="let icon of column[heading].icons" [class]="icon.parentClass" style="display:inline; position: relative;">
-                            <i [class]="icon.class" (click)="icon.action && icon.action()"><span>{{icon.txt}}</span></i>
+                            <i [class]="icon.class" (click)="icon.action && icon.action()" [title]="icon.title || ''"><span>{{icon.txt}}</span></i>
                         </div>
                     </div>
                     <!-- Show Action Icons END -->

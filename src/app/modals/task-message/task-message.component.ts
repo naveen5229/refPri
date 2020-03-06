@@ -25,6 +25,7 @@ export class TaskMessageComponent implements OnInit {
   newCCUserId = null;
   taskId = null;
   ticketType = null;
+  showAssignUserAuto = null;
   constructor(public activeModal: NgbActiveModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     if (this.common.params != null) {
@@ -78,7 +79,7 @@ export class TaskMessageComponent implements OnInit {
           console.log("msgListOfOther:", msgListOfOther);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
-            if (this.lastMsgId != lastMsgIdTemp) {
+            if (this.lastMsgId != lastMsgIdTemp && lastMsgIdTemp > this.lastSeenId) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageRead();
             }
@@ -101,23 +102,26 @@ export class TaskMessageComponent implements OnInit {
       ticketId: this.ticketId,
       comment_id: this.lastMsgId
     }
-    this.api.post('AdminTask/readLastMessage', params).subscribe(res => {
-      console.log("messageList:", res['data']);
-      if (res['code'] > 0) {
-        if (this.lastSeenId < this.lastMsgId) {
+    console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
+    if (this.lastSeenId < this.lastMsgId) {
+      this.api.post('AdminTask/readLastMessage', params).subscribe(res => {
+        console.log("messageList:", res['data']);
+        if (res['code'] > 0) {
+
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
           }, 5000);
+
+        } else {
+          this.common.showError(res['msg'])
         }
-      } else {
-        this.common.showError(res['msg'])
-      }
-    },
-      err => {
-        this.showLoading = false;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+      },
+        err => {
+          this.showLoading = false;
+          this.common.showError();
+          console.log('Error: ', err);
+        });
+    }
   }
 
   saveTicketMessage() {
@@ -210,6 +214,39 @@ export class TaskMessageComponent implements OnInit {
         this.common.showError();
         console.log('Error: ', err);
       });
+  }
+
+  newAssigneeUserId = null;
+  updateTaskAssigneeUser() {
+    if (this.ticketId > 0 && this.newAssigneeUserId > 0) {
+      if (this.userListByTask['taskUsers'][0].assignto == this.newAssigneeUserId || this.loginUserId == this.newAssigneeUserId) {
+        this.common.showError("Please assign a new user");
+        return false;
+      }
+      let params = {
+        ticketId: this.ticketId,
+        taskId: this.taskId,
+        assigneeUserId: this.newAssigneeUserId
+      }
+      console.log("updateTaskAssigneeUser params:", params);
+      // this.common.loading++;
+      // this.api.post('AdminTask/updateTaskAssigneeUser', params).subscribe(res => {
+      //   this.common.loading--;
+      //   if (res['success']) {
+      //     this.getAllUserByTask();
+      //     this.getMessageList();
+      //     this.showAssignUserAuto = null;
+      //   } else {
+      //     this.common.showError(res['data']);
+      //   }
+      // },err => {
+      //   this.common.loading--;
+      //   this.common.showError();
+      //   console.log('Error: ', err);
+      // });
+    } else {
+      this.common.showError("Select CC user")
+    }
   }
 
 }

@@ -7,6 +7,7 @@ export class NormalTask {
         public isUrgent: boolean,
         public projectId: any,
         public ccUsers: any,
-        public parentTaskId: any
+        public parentTaskId: any,
+        public taskId: any
     ) { }
 }

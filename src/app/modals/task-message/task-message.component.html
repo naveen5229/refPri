@@ -41,7 +41,16 @@
                 </tr>
                 <tr valign="top" class="bg-lavender">
                     <td>To:</td>
-                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}</td>
+                    <td *ngIf="!showAssignUserAuto">{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
+                        <button class="btn btn-primary btn-sm" title="assign to new user" (click)="showAssignUserAuto=1"><i
+                            class="fa fa-plus"></i></button>
+                    </td>
+                    <td *ngIf="showAssignUserAuto==1">
+                        <auto-suggestion (onSelected)="newAssigneeUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser" inputId="assigneeUser">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm" (click)="updateTaskAssigneeUser()"><i
+                            class="fa fa-check"></i></button>
+                    </td>
                 </tr>
                 <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
                     <td>PO:</td>
