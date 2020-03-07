@@ -13,8 +13,16 @@
                     <div class="row ">
                         <div class="col-sm-4">
                             <div class="form-group">
+                                <label>Department<span class="text-danger">*</span></label>
+                                <auto-suggestion (onSelected)="scheduledTask.department = $event" [data]="departmentList" display="name" seperator="-" placeholder="Select Department" autocomplete="off" name="departmentId" inputId="departmentId" [preSelected]="scheduledTask.department.id ? {name: scheduledTask.department.name}:{name:''}">
+                                </auto-suggestion>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
                                 <label>Description<span class="text-danger">*</span></label>
-                                <input style="width: 100%;" type="description" placeholder="Description" class="form-control" [(ngModel)]="scheduledTask.description">
+                                <!-- <input style="width: 100%;" type="description" placeholder="Description" class="form-control" [(ngModel)]="scheduledTask.description"> -->
+                                <textarea row="2" cols="15" placeholder="Enter Description" name="description" class="form-control" [(ngModel)]="scheduledTask.description"></textarea>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -103,8 +111,11 @@
                     <li [ngClass]="activeTab=='scheduledTask'?'active':''" (click)="activeTab='scheduledTask';activeTabScheduled=''; resetSearchTask()">
                         Scheduled Task
                     </li>
-                    <li [ngClass]="activeTab=='userReport'?'active':''" (click)="activeTab='userReport';getUserReport()">
-                        User Report
+                    <li [ngClass]="activeTab=='userReport'?'active':''" (click)="activeTab='userReport';getUserReport(null)">
+                        Task Report
+                    </li>
+                    <li [ngClass]="activeTab=='scheduledUserReport'?'active':''" (click)="activeTab='scheduledUserReport';getUserReport(1)">
+                        Scheduled Task Report
                     </li>
                 </ul>
             </div>
@@ -197,6 +208,10 @@
             </div>
             <div *ngIf="activeTab=='userReport'">
                 <smart-table *ngIf="userReportList.length!=0" [data]="tableUserReportList.data" [settings]="tableUserReportList.settings" id="userReportList">
+                </smart-table>
+            </div>
+            <div *ngIf="activeTab=='scheduledUserReport'">
+                <smart-table *ngIf="scheduledUserReportList.length!=0" [data]="tableScheduledUserReportList.data" [settings]="tableScheduledUserReportList.settings" id="tableScheduledUserReportList">
                 </smart-table>
             </div>
         </nb-card-body>

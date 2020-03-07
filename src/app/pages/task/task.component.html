@@ -38,6 +38,12 @@
                 <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList'; getTodoTaskList()">
                     ToDo List
                 </li>
+                <li [ngClass]="activeTab=='futureTaskByMe'?'active':''" (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
+                    Future Task By Me
+                </li>
+                <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
+                    Unread Task
+                </li> -->
             </ul>
         </div>
 
@@ -97,6 +103,14 @@
                 </div>
             </div>
             <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='futureTaskByMe'">
+            <smart-table *ngIf="futureTaskByMeList.length!=0" [data]="tableFutureTaskByMeList.data" [settings]="tableFutureTaskByMeList.settings" id="tableFutureTaskForMeList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='unreadTaskByMe'">
+            <smart-table *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
     </nb-card-body>

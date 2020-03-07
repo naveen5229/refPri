@@ -11,7 +11,9 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-new.component.scss']
 })
 export class TaskNewComponent implements OnInit {
-  normalTask = new NormalTask('', new Date(), '', false, null, [], null, null);
+  currentDate = this.common.getDate();
+  normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date());
+  title = "New Task";
   btn = 'Save';
   userId = null;
   isProject = "";
@@ -28,6 +30,10 @@ export class TaskNewComponent implements OnInit {
       hideHeader: true
     }
   };
+  updateLastDateForm = {
+    taskId: null,
+    date: null
+  }
   editType = 0;
 
   constructor(public activeModal: NgbActiveModal,
@@ -45,12 +51,10 @@ export class TaskNewComponent implements OnInit {
         this.getTaskMapping(this.normalTask.parentTaskId);
 
       } else if (this.common.params.parentTaskId && this.common.params.editType == 1) {
+        this.title = "Update Task Assign Date";
         this.editType = this.common.params.editType;
-        this.normalTask.taskId = this.common.params.parentTaskId;
-        this.normalTask.task = this.common.params.editData.task_desc;
-        this.normalTask.date = new Date(this.common.params.editData.expdate);
-        // this.normalTask.projectId = this.common.params.editData.project;
-        this.normalTask.isUrgent = this.common.params.editData.high_priority;
+        this.updateLastDateForm.taskId = this.common.params.parentTaskId;
+        this.updateLastDateForm.date = new Date(this.common.params.editData.expdate);
       }
     }
     this.getProjectList()
@@ -108,6 +112,9 @@ export class TaskNewComponent implements OnInit {
     else if (!this.userId) {
       return this.common.showError("Please assign a user")
     }
+    else if (this.normalTask.isFuture && !this.normalTask.futureDate) {
+      return this.common.showError("Please select future assign date");
+    }
     else {
       const params = {
         userId: this.userId,
@@ -116,7 +123,9 @@ export class TaskNewComponent implements OnInit {
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
         ccUsers: JSON.stringify(this.normalTask.ccUsers),
-        parentTaskId: this.normalTask.parentTaskId
+        parentTaskId: this.normalTask.parentTaskId,
+        isFuture: this.normalTask.isFuture,
+        futureDate: this.common.dateFormatter(this.normalTask.futureDate)
       }
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
@@ -145,7 +154,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   resetTask() {
-    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, null);
+    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date());
   }
 
   // start task mapping list
@@ -216,5 +225,41 @@ export class TaskNewComponent implements OnInit {
     return columns;
   }
   // end task mapping list
+
+  // start: update assign date
+  updateAssignDate() {
+    if (this.updateLastDateForm.date == '' || !this.updateLastDateForm.date) {
+      return this.common.showError("Date is missing");
+
+    } else {
+      const params = {
+        date: this.common.dateFormatter(this.updateLastDateForm.date),
+        taskId: this.updateLastDateForm.taskId,
+      }
+      this.common.loading++;
+      this.api.post('AdminTask/updateAssignDate', params).subscribe(res => {
+        console.log(res);
+        this.common.loading--;
+        if (res['code'] > 0) {
+          // this.normalTask = new NormalTask('', new Date(), '', false, null, null, null);
+          this.resetTask();
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0].y_msg)
+            this.closeModal(true);
+          } else {
+            this.common.showError(res['data'][0].y_msg)
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+
+  }
+  // end: update assign date
 
 }

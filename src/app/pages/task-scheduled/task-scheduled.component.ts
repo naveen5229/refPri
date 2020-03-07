@@ -39,7 +39,11 @@ export class TaskScheduledComponent implements OnInit {
     // scheduleParam: 1,
     days: "",
     hours: "",
-    isActive: true
+    isActive: true,
+    department: {
+      id: '',
+      name: ''
+    }
   };
   scheduledTaskList = [];
   tableSchedule = {
@@ -102,6 +106,16 @@ export class TaskScheduledComponent implements OnInit {
       hideHeader: true
     }
   };
+  scheduledUserReportList = [];
+  tableScheduledUserReportList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
 
   unacknowledgedNormalTaskList = [];
   unacknowledgedScheduledTaskList = [];
@@ -128,9 +142,11 @@ export class TaskScheduledComponent implements OnInit {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
   }
+  departmentList = [];
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAllAdmin();
+    this.getDepartmentList();
   }
 
   ngOnInit() { }
@@ -145,6 +161,21 @@ export class TaskScheduledComponent implements OnInit {
       console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    },
+      err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+  }
+
+  getDepartmentList() {
+    this.api.get("Admin/getDepartmentList.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.departmentList = res['data'] || [];
       } else {
         this.common.showError(res['msg']);
       }
@@ -208,7 +239,8 @@ export class TaskScheduledComponent implements OnInit {
         // scheduleParam: this.scheduledTask.scheduleParam,
         days: this.scheduledTask.days,
         hours: this.scheduledTask.hours,
-        isActive: this.scheduledTask.isActive
+        isActive: this.scheduledTask.isActive,
+        departmentId: this.scheduledTask.department.id
       }
       this.common.loading++;
       this.api.post('AdminTask/createScheduleTask', params).subscribe(res => {
@@ -256,7 +288,11 @@ export class TaskScheduledComponent implements OnInit {
       // scheduleParam: 1,
       days: "",
       hours: "",
-      isActive: true
+      isActive: true,
+      department: {
+        id: '',
+        name: ''
+      }
     };
   }
 
@@ -276,14 +312,23 @@ export class TaskScheduledComponent implements OnInit {
       });
   }
 
-  getUserReport() {
+  getUserReport(type = null) {
     this.common.loading++;
-    this.api.get("AdminTask/userReport").subscribe(res => {
+    let params = "";
+    if (type == 1) {
+      params = "?type=" + type;
+    }
+    this.api.get("AdminTask/userReport" + params).subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
       this.resetSmartTableData();
-      this.userReportList = res['data'] || [];
-      this.setTableUserReportList();
+      if (type == 1) {
+        this.scheduledUserReportList = res['data'] || [];
+        this.setTableScheduledUserReportList();
+      } else {
+        this.userReportList = res['data'] || [];
+        this.setTableUserReportList();
+      }
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -361,6 +406,10 @@ export class TaskScheduledComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableScheduledUserReportList.data = {
+      headings: {},
+      columns: []
+    };
   }
 
   setTableSchedule() {
@@ -397,6 +446,14 @@ export class TaskScheduledComponent implements OnInit {
             isHTML: true,
             action: null,
             icons: this.actionIconsMaster(ticket)
+          };
+        } else if (key == 'isactive') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "isactive" }] : '',
+            action: null,
+            class: "text-center",
           };
         } else {
           column[key] = { value: (key == 'due_time') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
@@ -441,6 +498,14 @@ export class TaskScheduledComponent implements OnInit {
             isHTML: true,
             action: null,
             icons: this.actionIcons(ticket, type)
+          };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
           };
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
@@ -532,8 +597,16 @@ export class TaskScheduledComponent implements OnInit {
           };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
           column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'high_periority' && ticket[key]) ? 'black font-weight-bold' : 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -622,8 +695,16 @@ export class TaskScheduledComponent implements OnInit {
           };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
           column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'high_periority' && ticket[key]) ? 'black font-weight-bold' : 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -721,17 +802,61 @@ export class TaskScheduledComponent implements OnInit {
   }
   // end user report list
 
+  // start: scheduled user report list
+  setTableScheduledUserReportList() {
+    this.tableScheduledUserReportList.data = {
+      headings: this.generateHeadingsTableScheduledUserReportList(),
+      columns: this.getTableColumnsTableScheduledUserReportList()
+    };
+    return true;
+  }
+  generateHeadingsTableScheduledUserReportList() {
+    let headings = {};
+    for (var key in this.scheduledUserReportList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsTableScheduledUserReportList() {
+    let columns = [];
+    this.scheduledUserReportList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsTableScheduledUserReportList()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(ticket, type)
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end: scheduled user report list
+
   ticketMessage(ticket, type) {
     console.log("type:", type);
     let ticketEditData = {
       ticketId: ticket._tktid,
       statusId: ticket._status,
+      lastSeenId: ticket._lastreadid,
       taskId: (ticket._tktype == 101 || ticket._tktype == 102) ? ticket._refid : null,
       taskType: ticket._tktype
     }
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => { });
+    activeModal.result.then(data => {
+      this.getAllTask(type);
+    });
   }
 
   actionIcons(ticket, type) {
@@ -797,7 +922,12 @@ export class TaskScheduledComponent implements OnInit {
       // scheduleParam: task._schedule_param,
       days: JSON.stringify(days),
       hours: JSON.stringify(hrs),
-      isActive: task._is_active
+      isActive: task._is_active,
+      department: {
+        id: (task._department_id) ? task._department_id : null,
+        name: (task._department_id) ? task.department : null
+      }
+
     };
 
     console.log("edit scheduledTask:", this.scheduledTask);

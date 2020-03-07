@@ -8,6 +8,7 @@ export class NormalTask {
         public projectId: any,
         public ccUsers: any,
         public parentTaskId: any,
-        public taskId: any
+        public isFuture: boolean,
+        public futureDate: any,
     ) { }
 }

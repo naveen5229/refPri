@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <h5>New Task</h5>
+    <h5>{{title || 'New Task'}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
       <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div class="modal-body">
+<div class="modal-body" *ngIf="!editType">
     <div class="row" *ngIf="normalTask.parentTaskId>0">
         <div class="col-12 text-center">
             {{parentTaskDesc}}
@@ -66,7 +66,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="normalTask.date" [isStart]="true" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="true" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
             </uj-date-time-picker>
         </div>
     </div>
@@ -77,6 +77,23 @@
         </div>
         <div class="col-6">
             <input type="checkbox" [checked]="normalTask.isUrgent" (change)="normalTask.isUrgent = !normalTask.isUrgent" />
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Is Future Task:</label>
+        </div>
+        <div class="col-1">
+            <input type="checkbox" [checked]="normalTask.isFuture" (change)="normalTask.isFuture = !normalTask.isFuture" />
+        </div>
+    </div>
+    <div class="row mt-2" *ngIf="normalTask.isFuture">
+        <div class="col-4">
+            <label>Future Assign Date:</label>
+        </div>
+        <div class="col-5">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="true" [isTime]="false" (onChanged)="normalTask.futureDate=$event" [dateTimeValue]="normalTask.futureDate">
+            </uj-date-time-picker>
         </div>
     </div>
 
@@ -93,3 +110,20 @@
     </div>
     <!-- end: task mapping -->
 </div>
+
+<!-- start: update date form -->
+<div class="modal-body" *ngIf="editType==1">
+    <div class="row mt-2">
+        <div class="col-3">
+            <label>Last Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="true" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-2 text-right">
+            <button class="btn btn-primary btn-sm" (click)="updateAssignDate()">Update</button>
+        </div>
+    </div>
+</div>
+<!-- end: update date form -->

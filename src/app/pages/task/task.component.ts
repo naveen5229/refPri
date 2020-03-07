@@ -105,6 +105,26 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
+  futureTaskByMeList = [];
+  tableFutureTaskByMeList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  unreadTaskForMeList = [];
+  tableUnreadTaskForMeList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
     this.getTaskByType(101);
     this.getAllAdmin();
@@ -177,6 +197,12 @@ export class TaskComponent implements OnInit {
       } else if (type == -6) {
         this.projectTaskList = res['data'] || [];
         this.setTableProjectTask(type);
+      } else if (type == -7) {
+        this.futureTaskByMeList = res['data'] || [];
+        this.setTableFutureTaskByMe(type);
+      } else if (type == -8) {
+        this.unreadTaskForMeList = res['data'] || [];
+        this.setTableUnreadTaskForMe(type);
       }
     },
       err => {
@@ -186,42 +212,42 @@ export class TaskComponent implements OnInit {
       });
   }
 
-  resetTableMasterSchedule() {
-    this.tableMasterSchedule.data = {
-      headings: {},
-      columns: []
-    };
-  }
-  resetTableSchedule() {
-    this.tableSchedule.data = {
-      headings: {},
-      columns: []
-    };
-  }
-  resetTableNormal() {
-    this.tableNormal.data = {
-      headings: {},
-      columns: []
-    };
-  }
-  resetTableAllCompleted() {
-    this.tableAllCompleted.data = {
-      headings: {},
-      columns: []
-    };
-  }
-  resetTableCCTask() {
-    this.tableCCTask.data = {
-      headings: {},
-      columns: []
-    };
-  }
-  resetTableProjectTask() {
-    this.tableProjectTask.data = {
-      headings: {},
-      columns: []
-    };
-  }
+  // resetTableMasterSchedule() {
+  //   this.tableMasterSchedule.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
+  // resetTableSchedule() {
+  //   this.tableSchedule.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
+  // resetTableNormal() {
+  //   this.tableNormal.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
+  // resetTableAllCompleted() {
+  //   this.tableAllCompleted.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
+  // resetTableCCTask() {
+  //   this.tableCCTask.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
+  // resetTableProjectTask() {
+  //   this.tableProjectTask.data = {
+  //     headings: {},
+  //     columns: []
+  //   };
+  // }
   reserSmartTableData() {
     this.tableMasterSchedule.data = {
       headings: {},
@@ -244,6 +270,14 @@ export class TaskComponent implements OnInit {
       columns: []
     };
     this.tableProjectTask.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableFutureTaskByMeList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableUnreadTaskForMeList.data = {
       headings: {},
       columns: []
     };
@@ -572,6 +606,113 @@ export class TaskComponent implements OnInit {
 
   }
   // end project task list
+  // start future task by me list
+  setTableFutureTaskByMe(type) {
+    this.tableFutureTaskByMeList.data = {
+      headings: this.generateHeadingsFutureTaskByMeList(),
+      columns: this.getTableColumnsFutureTaskByMeList(type)
+    };
+    return true;
+  }
+
+  generateHeadingsFutureTaskByMeList() {
+    let headings = {};
+    for (var key in this.futureTaskByMeList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+  getTableColumnsFutureTaskByMeList(type) {
+    let columns = [];
+    this.futureTaskByMeList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsFutureTaskByMeList()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(ticket, type)
+          };
+        } else if (key == 'time_left') {
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center",
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+      }
+      columns.push(column);
+    });
+    // console.log(columns);
+    return columns;
+
+  }
+  // end future task by me list
+
+  // start unread task for me list
+  setTableUnreadTaskForMe(type) {
+    this.tableUnreadTaskForMeList.data = {
+      headings: this.generateHeadingsUnreadTaskForMeList(),
+      columns: this.getTableColumnsUnreadTaskForMeList(type)
+    };
+    return true;
+  }
+
+  generateHeadingsUnreadTaskForMeList() {
+    let headings = {};
+    for (var key in this.unreadTaskForMeList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+  getTableColumnsUnreadTaskForMeList(type) {
+    let columns = [];
+    this.unreadTaskForMeList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsUnreadTaskForMeList()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(ticket, type)
+          };
+        } else if (key == 'time_left') {
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center",
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+      }
+      columns.push(column);
+    });
+    // console.log(columns);
+    return columns;
+
+  }
+  // end unread task for me list
 
   actionIcons(ticket, type) {
     let icons = [
@@ -590,12 +731,12 @@ export class TaskComponent implements OnInit {
 
     if (type == -101) {
       icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
-      icons.push({ class: "fas fa-calendar-alt", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
+      icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
         icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
       } else if (ticket._status == 2) {
-        icons.push({ class: "fa fa-check text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: '', title: "Mark completed" });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: '', title: "Mark completed" });
       } else if (ticket._status == 0) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
         icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
@@ -637,7 +778,7 @@ export class TaskComponent implements OnInit {
   editTask(ticket, type) {
     console.log("type:", type);
     this.common.params = { userList: this.adminList, parentTaskId: ticket._refid, parentTaskDesc: ticket.task_desc, editType: 1, editData: ticket };
-    const activeModal = this.modalService.open(TaskNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getTaskByType(type);
@@ -756,7 +897,9 @@ export class TaskComponent implements OnInit {
     }
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => { });
+    activeModal.result.then(data => {
+      this.getTaskByType(type);
+    });
   }
 
   createChildTicket(ticket, type) {

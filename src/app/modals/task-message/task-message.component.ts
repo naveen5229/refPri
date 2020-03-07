@@ -28,6 +28,7 @@ export class TaskMessageComponent implements OnInit {
   showAssignUserAuto = null;
   constructor(public activeModal: NgbActiveModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
+    console.log("common params:", this.common.params);
     if (this.common.params != null) {
       this.title = this.common.params.title;
       this.ticketId = this.common.params.ticketEditData.ticketId;
@@ -79,7 +80,7 @@ export class TaskMessageComponent implements OnInit {
           console.log("msgListOfOther:", msgListOfOther);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
-            if (this.lastMsgId != lastMsgIdTemp && lastMsgIdTemp > this.lastSeenId) {
+            if (this.lastMsgId != lastMsgIdTemp) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageRead();
             }
@@ -216,36 +217,47 @@ export class TaskMessageComponent implements OnInit {
       });
   }
 
-  newAssigneeUserId = null;
+  newAssigneeUser = {
+    id: null,
+    name: ""
+  };
   updateTaskAssigneeUser() {
-    if (this.ticketId > 0 && this.newAssigneeUserId > 0) {
-      if (this.userListByTask['taskUsers'][0].assignto == this.newAssigneeUserId || this.loginUserId == this.newAssigneeUserId) {
+    if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
+      let isCCUpdate = 0;
+      if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
+        isCCUpdate = 1;
+      }
+      if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
         this.common.showError("Please assign a new user");
         return false;
       }
       let params = {
         ticketId: this.ticketId,
         taskId: this.taskId,
-        assigneeUserId: this.newAssigneeUserId
+        assigneeUserId: this.newAssigneeUser.id,
+        status: this.statusId,
+        isCCUpdate: isCCUpdate,
+        assigneeUserNameOld: this.userListByTask['taskUsers'][0].assignto,
+        assigneeUserNameNew: this.newAssigneeUser.name
       }
       console.log("updateTaskAssigneeUser params:", params);
-      // this.common.loading++;
-      // this.api.post('AdminTask/updateTaskAssigneeUser', params).subscribe(res => {
-      //   this.common.loading--;
-      //   if (res['success']) {
-      //     this.getAllUserByTask();
-      //     this.getMessageList();
-      //     this.showAssignUserAuto = null;
-      //   } else {
-      //     this.common.showError(res['data']);
-      //   }
-      // },err => {
-      //   this.common.loading--;
-      //   this.common.showError();
-      //   console.log('Error: ', err);
-      // });
+      this.common.loading++;
+      this.api.post('AdminTask/updateTaskAssigneeUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['success']) {
+          this.getAllUserByTask();
+          this.getMessageList();
+          this.showAssignUserAuto = null;
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     } else {
-      this.common.showError("Select CC user")
+      this.common.showError("Select Assignee user")
     }
   }
 
