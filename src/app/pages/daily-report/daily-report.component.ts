@@ -106,6 +106,7 @@ export class DailyReportComponent implements OnInit {
   }
 
   showdata(doc) {
+    console.log(doc);
     let dataparams = {
       view: {
         api: 'Users/getAdminCallLogReport',
@@ -124,7 +125,7 @@ export class DailyReportComponent implements OnInit {
       //     levelId: '_id'
       //   }
       // }
-      title: "Admin Call Log Details"
+      title: "Admin Call Log Details" + '(' + ' ' + doc['Admin Name'] + ')'
     }
     this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
@@ -155,7 +156,7 @@ export class DailyReportComponent implements OnInit {
       //     levelId: '_id'
       //   }
       // }
-      title: "Admin Call Log Details"
+      title: "Admin Call Log Details" + '(' + ' ' + doc['Admin Name'] + ')'
     }
     this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
