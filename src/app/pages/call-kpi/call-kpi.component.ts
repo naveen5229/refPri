@@ -237,7 +237,7 @@ export class CallKpiComponent implements OnInit {
       //     levelId: '_id'
       //   }
       // }
-      title: "Call Log Details"
+      title: "Call Log Details" + ' ' + '(' + callData['Admin Name'] + ')'
     }
     this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
