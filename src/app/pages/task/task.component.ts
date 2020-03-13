@@ -688,7 +688,7 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(ticket, type)
+            icons: ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._cc_user_id) ? this.actionIconsForUnreadTask(ticket, type) : null
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -1079,6 +1079,39 @@ export class TaskComponent implements OnInit {
 
   }
   //  end: todo list
+
+  actionIconsForUnreadTask(ticket, type) {
+    let icons = [
+      { class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" },
+    ];
+    return icons;
+  }
+
+  ackTaskByCcUser(ticket, type, status) {
+    if (ticket._tktid) {
+      let params = {
+        ticketId: ticket._tktid,
+        taskId: ticket._refid
+      }
+      console.log("ackTaskByCcUser:", params);
+      this.common.loading++;
+      this.api.post('AdminTask/ackTaskByCcUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.getTaskByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
+  }
 
 
 }
