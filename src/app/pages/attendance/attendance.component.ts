@@ -20,9 +20,14 @@ export class AttendanceComponent implements OnInit {
   };
   constructor(public common: CommonService, public api: ApiService) {
     this.getAttendanceList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.getAttendanceList();
   }
 
   getAttendanceList() {
