@@ -45,13 +45,13 @@ export class FieldIssueComponent implements OnInit {
     remark: '',
     vehicalInfo: [
       {
-        regno: '',
+        regno: null,
         device_model: {
           id: 0,
-          name: ''
+          name: null
         },
-        driver_name: '',
-        driver_mobileno: ''
+        driver_name: null,
+        driver_mobileno: null
       }
     ]
   }

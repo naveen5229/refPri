@@ -163,11 +163,13 @@ export class CampaignTargetComponent implements OnInit {
   }
 
   printPDF(tblEltId) {
+    let startdate = (this.filterParam.startDate) ? this.common.dateFormatter(this.filterParam.startDate) : null;
+      let enddate = (this.filterParam.endDate) ? this.common.dateFormatter(this.filterParam.endDate) : null;
     this.common.loading++;
     // let userid = this.user._customer.id;
     // if (this.user._loggedInBy == "customer")
     // console.log(userid);
-    this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid)
+    this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid + '&startDate=' + startdate + '&endDate=' + enddate)
       .subscribe(res => {
         console.log(res);
         this.common.loading--;
@@ -182,9 +184,11 @@ export class CampaignTargetComponent implements OnInit {
   }
 
   printCSV(tblEltId) {
+    let startdate = (this.filterParam.startDate) ? this.common.dateFormatter(this.filterParam.startDate) : null;
+    let enddate = (this.filterParam.endDate) ? this.common.dateFormatter(this.filterParam.endDate) : null;
     if (this.campaignid > 0) {
       this.common.loading++;
-      this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid)
+      this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid + '&startDate=' + startdate + '&endDate=' + enddate)
         .subscribe(res => {
           this.common.loading--;
           let fodata = res['data'];
