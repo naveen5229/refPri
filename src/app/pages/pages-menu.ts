@@ -62,7 +62,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
         home: true,
       },
       {
-        title: 'Attandance',
+        title: 'Attendance',
         icon: 'file-text-outline',
         link: '/pages/attendance',
         home: true,

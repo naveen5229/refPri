@@ -1,8 +1,13 @@
 <nb-card>
     <nb-card-header>
         <div class="row">
-            <div class="col-12">
+            <div class="col-9">
                 <h5>Attendance</h5>
+            </div>
+            <div class="col-3 text-right">
+                <button class="btn btn-primary btn-sm mr-2" (click)="getAttendanceList()">
+                    Refresh
+                </button>
             </div>
         </div>
     </nb-card-header>

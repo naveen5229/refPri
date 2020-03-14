@@ -81,8 +81,16 @@ export class AttendanceComponent implements OnInit {
             action: null,
             // icons: this.actionIcons(pending)
           };
+        } else if (key == 'present') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "present" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
-          column[key] = { value: typeof (ticket[key]) == 'object' ? ticket[key]['value'] : ticket[key], class: ticket[key]['class'], action: '' };
+          column[key] = { value: ticket[key], class: '', action: '' };
         }
       }
       columns.push(column);
