@@ -1,6 +1,7 @@
 import { Component, OnInit, Directive } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
@@ -125,7 +126,7 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
-  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal) {
+  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTaskByType(101);
     this.getAllAdmin();
   }
@@ -441,8 +442,8 @@ export class TaskComponent implements OnInit {
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
-        } else if (key == 'expdate' && ticket['time_left'] <= 0) {
-          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
+        } else if (key == 'expdate') {
+          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: this.editTask.bind(this, ticket, type) };
         } else if (key == 'high_priority') {
           column[key] = {
             value: "",
@@ -688,7 +689,8 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._cc_user_id) ? this.actionIconsForUnreadTask(ticket, type) : null
+            // icons: ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._cc_user_id && !ticket._cc_status) ? this.actionIconsForUnreadTask(ticket, type) : null
+            icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
@@ -731,7 +733,7 @@ export class TaskComponent implements OnInit {
 
     if (type == -101) {
       icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
-      icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
+      // icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
         icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
@@ -742,6 +744,18 @@ export class TaskComponent implements OnInit {
         icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
         // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       }
+    } else if (type == -8) {
+      if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
+        icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
+        // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
+      }
+      else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._cc_user_id && !ticket._cc_status) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
+      }
+      // else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id>0 && ticket._pu_user_id && !ticket._pu_status) {
+      //   icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
+      // }
     }
     if (type == 101 || type == -101) {
       icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '', title: "add child task" });
