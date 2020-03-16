@@ -171,6 +171,10 @@ export class TaskComponent implements OnInit {
 
   getTaskByType(type, startDate = null, endDate = null) {
     this.common.loading++;
+    if (type == -102 && this.searchTask.startDate && this.searchTask.endDate) {
+      startDate = this.common.dateFormatter(this.searchTask.startDate);
+      endDate = this.common.dateFormatter(this.searchTask.endDate);
+    }
     let params = {
       type: type,
       startDate: startDate,
@@ -213,42 +217,6 @@ export class TaskComponent implements OnInit {
       });
   }
 
-  // resetTableMasterSchedule() {
-  //   this.tableMasterSchedule.data = {
-  //     headings: {},
-  //     columns: []
-  //   };
-  // }
-  // resetTableSchedule() {
-  //   this.tableSchedule.data = {
-  //     headings: {},
-  //     columns: []
-  //   };
-  // }
-  // resetTableNormal() {
-  //   this.tableNormal.data = {
-  //     headings: {},
-  //     columns: []
-  //   };
-  // }
-  // resetTableAllCompleted() {
-  //   this.tableAllCompleted.data = {
-  //     headings: {},
-  //     columns: []
-  //   };
-  // }
-  // resetTableCCTask() {
-  //   this.tableCCTask.data = {
-  //     headings: {},
-  //     columns: []
-  //   };
-  // }
-  // resetTableProjectTask() {
-  //   this.tableProjectTask.data = {
-  //     headings: {},
-  //     columns: []
-  //   };
-  // }
   reserSmartTableData() {
     this.tableMasterSchedule.data = {
       headings: {},
@@ -689,7 +657,6 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._cc_user_id && !ticket._cc_status) ? this.actionIconsForUnreadTask(ticket, type) : null
             icons: this.actionIcons(ticket, type)
           };
         } else if (key == 'time_left') {
@@ -712,7 +679,6 @@ export class TaskComponent implements OnInit {
     });
     // console.log(columns);
     return columns;
-
   }
   // end unread task for me list
 
@@ -751,11 +717,11 @@ export class TaskComponent implements OnInit {
         // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       }
       else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._cc_user_id && !ticket._cc_status) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type), txt: '', title: "Mark Ack as CC Task" });
       }
-      // else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id>0 && ticket._pu_user_id && !ticket._pu_status) {
-      //   icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
-      // }
+      else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByProjectUser.bind(this, ticket, type), txt: '', title: "Mark Ack as Project Task" });
+      }
     }
     if (type == 101 || type == -101) {
       icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '', title: "add child task" });
@@ -763,11 +729,13 @@ export class TaskComponent implements OnInit {
     if ((ticket._status == 5 || ticket._status == -1)) {
     } else {
       if (ticket._isremind == 1) {
-        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '', title: null });
-      } else if (ticket._isremind == 2) {
+        icons.push({ class: "fa fa-bell isRemind", action: (type == -8) ? '' : this.checkReminderSeen.bind(this, ticket, type), txt: '', title: null });
+      } else if (ticket._isremind == 2 && type != -8) {
         icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '', title: null });
       } else {
-        icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '', title: null });
+        if (type != -8) {
+          icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, ticket, type), txt: '', title: null });
+        }
       }
     }
 
@@ -1101,7 +1069,7 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  ackTaskByCcUser(ticket, type, status) {
+  ackTaskByCcUser(ticket, type) {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -1110,6 +1078,33 @@ export class TaskComponent implements OnInit {
       console.log("ackTaskByCcUser:", params);
       this.common.loading++;
       this.api.post('AdminTask/ackTaskByCcUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.getTaskByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  ackTaskByProjectUser(ticket, type) {
+    if (ticket._tktid) {
+      let params = {
+        ticketId: ticket._tktid,
+        taskId: ticket._refid,
+        projectId: ticket._project_id
+      }
+      console.log("ackTaskByProjectUser:", params);
+      this.common.loading++;
+      this.api.post('AdminTask/ackTaskByProjectUser', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.common.showToast(res['msg']);

@@ -115,6 +115,9 @@ export class TaskNewComponent implements OnInit {
     else if (this.normalTask.isFuture && !this.normalTask.futureDate) {
       return this.common.showError("Please select future assign date");
     }
+    else if (this.normalTask.isFuture && this.normalTask.futureDate > this.normalTask.date) {
+      return this.common.showError("Last Date must be greater than future assign date");
+    }
     else {
       const params = {
         userId: this.userId,
