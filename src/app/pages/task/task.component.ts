@@ -673,7 +673,14 @@ export class TaskComponent implements OnInit {
           column[key] = { value: ticket[key], class: 'black', action: '' };
         }
 
-        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+        if (ticket._tktype == 103 && ticket._status == 0) {
+          column['style'] = { 'background': 'pink' };
+        } else if (ticket._assignee_user_id != this.userService._details.id) {
+          column['style'] = { 'background': 'aliceblue' };
+        } else {
+          column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+        }
+
       }
       columns.push(column);
     });
