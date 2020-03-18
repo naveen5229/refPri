@@ -675,10 +675,10 @@ export class TaskComponent implements OnInit {
 
         if (ticket._tktype == 103 && ticket._status == 0) {
           column['style'] = { 'background': 'pink' };
-        } else if (ticket._assignee_user_id != this.userService._details.id) {
-          column['style'] = { 'background': 'aliceblue' };
-        } else {
+        } else if (ticket._assignee_user_id == this.userService._details.id || ticket._aduserid == this.userService._details.id) {
           column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+        } else {
+          column['style'] = { 'background': 'aliceblue' };
         }
 
       }

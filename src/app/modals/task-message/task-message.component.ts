@@ -26,6 +26,7 @@ export class TaskMessageComponent implements OnInit {
   taskId = null;
   ticketType = null;
   showAssignUserAuto = null;
+  msgListOfMine = null;
   constructor(public activeModal: NgbActiveModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -77,7 +78,9 @@ export class TaskMessageComponent implements OnInit {
         this.messageList = res['data'] || [];
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
+          this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
           console.log("msgListOfOther:", msgListOfOther);
+          console.log("msgListOfMine:", this.msgListOfMine.length);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
             if (this.lastMsgId != lastMsgIdTemp) {
@@ -142,6 +145,10 @@ export class TaskMessageComponent implements OnInit {
           // this.common.showToast("Comment save Successfully..!")
           // this.closeModal(true);
           this.getMessageList();
+          if ((this.ticketType == 101 || this.ticketType == 102) && this.statusId == 0 && this.msgListOfMine.length == 0) {
+            console.log("msgListOfMine:", this.msgListOfMine.length);
+            // this.updateTicketStatus(2);
+          }
         }
         else {
           this.common.showError(res['msg'])
@@ -258,6 +265,30 @@ export class TaskMessageComponent implements OnInit {
       });
     } else {
       this.common.showError("Select Assignee user")
+    }
+  }
+
+  updateTicketStatus(status) {
+    if (this.ticketId && this.statusId == 0) {
+      let params = {
+        ticketId: this.ticketId,
+        statusId: status
+      }
+      this.common.loading++;
+      this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.statusId = status;
+
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
 
