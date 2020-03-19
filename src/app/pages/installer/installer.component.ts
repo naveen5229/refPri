@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddInstallerComponent } from '../../modals/add-installer/add-installer.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 
 @Component({
   selector: 'installer',
@@ -150,6 +151,16 @@ export class InstallerComponent implements OnInit {
     } else {
       this.common.showError("Installer ID Not Available");
     }
+  }
+
+  uploadDataByCsv() {
+    this.common.params = { title: "Add Installer CSV", button: "Upload", typeFrom: 'installer' };
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getInstallerList();
+      }
+    });
   }
 
 }

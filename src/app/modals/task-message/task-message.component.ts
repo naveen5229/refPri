@@ -26,7 +26,8 @@ export class TaskMessageComponent implements OnInit {
   taskId = null;
   ticketType = null;
   showAssignUserAuto = null;
-  msgListOfMine = null;
+  msgListOfMine = [];
+  tabType = null;
   constructor(public activeModal: NgbActiveModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -37,6 +38,8 @@ export class TaskMessageComponent implements OnInit {
       this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
       this.taskId = this.common.params.ticketEditData.taskId;
       this.ticketType = this.common.params.ticketEditData.taskType;
+      this.ticketType = this.common.params.ticketEditData.taskType;
+      this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
       this.getMessageList();
       this.getAllUserByTask();
       this.getAllAdmin();
@@ -142,13 +145,11 @@ export class TaskMessageComponent implements OnInit {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
-          // this.common.showToast("Comment save Successfully..!")
-          // this.closeModal(true);
-          this.getMessageList();
-          if ((this.ticketType == 101 || this.ticketType == 102) && this.statusId == 0 && this.msgListOfMine.length == 0) {
-            console.log("msgListOfMine:", this.msgListOfMine.length);
-            // this.updateTicketStatus(2);
+          if (this.tabType == 101 && this.statusId == 0 && this.msgListOfMine.length == 0) {
+            console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
+            this.updateTicketStatus(2);
           }
+          this.getMessageList();
         }
         else {
           this.common.showError(res['msg'])
@@ -274,18 +275,18 @@ export class TaskMessageComponent implements OnInit {
         ticketId: this.ticketId,
         statusId: status
       }
-      this.common.loading++;
+      // this.common.loading++;
       this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
-        this.common.loading--;
+        // this.common.loading--;
         if (res['code'] > 0) {
-          this.common.showToast(res['msg']);
+          // this.common.showToast(res['msg']);
           this.statusId = status;
-
         } else {
           this.common.showError(res['data']);
+          console.log('Error to auto ack: ', res['data']);
         }
       }, err => {
-        this.common.loading--;
+        // this.common.loading--;
         this.common.showError();
         console.log('Error: ', err);
       });

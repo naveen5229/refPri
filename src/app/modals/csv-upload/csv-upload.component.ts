@@ -21,12 +21,18 @@ export class CsvUploadComponent implements OnInit {
   }
   csv: any;
   campaignDataList = [];
+  typeFrom = null;
+  selectedPartner = {
+    id: null,
+    name: ""
+  }
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
     this.title = this.common.params.title;
     this.button = this.common.params.button;
+    this.typeFrom = (this.common.params.typeFrom) ? this.common.params.typeFrom : null;
     this.common.handleModalSize('class', 'modal-lg', '450', 'px');
     this.getcampaignList();
 
@@ -75,21 +81,50 @@ export class CsvUploadComponent implements OnInit {
   }
 
   sampleCsv() {
-    window.open(this.api.URL + "sample/sampleCampaignCsv.csv");
+    if (this.typeFrom == 'installer') {
+      window.open(this.api.URL + "sample/addInstallerSample.csv");
+    } else {
+      window.open(this.api.URL + "sample/sampleCampaignCsv.csv");
+    }
   }
 
   uploadCsv() {
-    const params = {
-      CmpTarCsv: this.upload.csv,
-      campaignId: this.upload.campaignId,
-      campaignType: this.upload.campaignType
-    };
+    let params = null;
+    let apiPath = null;
+    // const params = {
+    //   CmpTarCsv: this.upload.csv,
+    //   campaignId: this.upload.campaignId,
+    //   campaignType: this.upload.campaignType
+    // };
+    if (this.typeFrom == 'installer') {
+      params = {
+        partnerId: this.selectedPartner.id,
+        addInstallerCsv: this.upload.csv
+      };
+      apiPath = 'Installer/importAddInstallerCsv';
+      if (!params.addInstallerCsv || !params.partnerId) {
+        return this.common.showError("Partner or CSV is missing");
+      }
+    } else {
+      params = {
+        CmpTarCsv: this.upload.csv,
+        campaignId: this.upload.campaignId,
+        campaignType: this.upload.campaignType
+      };
+      apiPath = 'Campaigns/ImportCampTargetCsv';
+      if (!params.CmpTarCsv || !params.campaignId) {
+        return this.common.showError("Select Option First");
+      }
+    }
     console.log(params);
-    if (!params.CmpTarCsv && !params.campaignId) {
-      return this.common.showError("Select Option First");
+    // if (!params.CmpTarCsv && !params.campaignId) {
+    //   return this.common.showError("Select Option First");
+    // }
+    if (!apiPath) {
+      return this.common.showError("Something went wrong, please try again");
     }
     this.common.loading++;
-    this.api.post('Campaigns/ImportCampTargetCsv', params)
+    this.api.post(apiPath, params)
       .subscribe(res => {
         this.common.loading--;
         this.common.showToast(res["msg"]);
