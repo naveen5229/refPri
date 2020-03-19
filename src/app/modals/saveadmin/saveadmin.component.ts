@@ -14,6 +14,10 @@ export class SaveadminComponent implements OnInit {
 
   isUpdate = false;
   submitted = false;
+  preSelectedDept = {
+    id: null,
+    name: ''
+  };
   Fouser = {
     id: null,
     name: null,
@@ -98,13 +102,14 @@ export class SaveadminComponent implements OnInit {
       });
   }
   selectFoUser(value) {
+    console.log(value);
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
+    this.Fouser.department.id = value.dept_id;
+    this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
     this.Fouser.isActive = value.isActive.toString();
-    // return this.Fouser.Foid;
-    console.log("", value);
-    console.log(typeof( this.Fouser.isActive));
+  
   }
 
   saveAdmin() {
