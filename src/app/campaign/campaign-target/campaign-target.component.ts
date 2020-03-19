@@ -164,7 +164,7 @@ export class CampaignTargetComponent implements OnInit {
 
   printPDF(tblEltId) {
     let startdate = (this.filterParam.startDate) ? this.common.dateFormatter(this.filterParam.startDate) : null;
-      let enddate = (this.filterParam.endDate) ? this.common.dateFormatter(this.filterParam.endDate) : null;
+    let enddate = (this.filterParam.endDate) ? this.common.dateFormatter(this.filterParam.endDate) : null;
     this.common.loading++;
     // let userid = this.user._customer.id;
     // if (this.user._loggedInBy == "customer")
@@ -395,7 +395,7 @@ export class CampaignTargetComponent implements OnInit {
     const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        this.getCampaignTargetData();
+        // this.getCampaignTargetData();
       }
     });
   }
