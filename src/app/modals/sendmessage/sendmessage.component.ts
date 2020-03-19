@@ -88,6 +88,7 @@ export class SendmessageComponent implements OnInit {
         console.error('Base Err: ', err);
       })
   }
+  
   closeModal() {
     this.activeModal.close({ response: false });
   }

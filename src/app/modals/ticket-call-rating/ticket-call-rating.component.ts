@@ -14,6 +14,7 @@ export class TicketCallRatingComponent implements OnInit {
   isFutureRef =  false;
   ticketId = '';
   rating = '';
+  remark = '';
   constructor(public common:CommonService,
     public api:ApiService,
     public activeModal:NgbActiveModal,
@@ -28,6 +29,8 @@ export class TicketCallRatingComponent implements OnInit {
         this.currentRate = this.common.params.rating;
       }
       this.ticketId = this.common.params.ticketId;
+      this.remark = this.common.params.remark;
+
 
      
       console.log(this.isNegetive);
@@ -48,23 +51,28 @@ export class TicketCallRatingComponent implements OnInit {
     const params = {
       ticketId: this.ticketId,
       currentRate: this.currentRate,
-      isFutureRef: this.isFutureRef
+      isFutureRef: this.isFutureRef,
+      remark: this.remark
     };
     console.log(params);
-    this.closeModal(this.currentRate);
+if (this.currentRate != 0) {
+  this.common.loading++
+  this.api.post('Users/setUserTicketRating', params).subscribe( res => {
+      this.common.loading--
+      this.closeModal({rating: this.currentRate, remark: this.remark});
 
-      this.common.loading++
-    this.api.post('Users/setUserTicketRating', params).subscribe( res => {
-        this.common.loading--
+      this.common.showToast[res['msg']];
+      console.log(this.currentRate);
 
-        this.common.showToast[res['msg']];
-        console.log(this.currentRate);
-
-        console.log(res);
-    }, err => {
-      this.common.loading--;
-      console.log(err);
-    });
+      console.log(res);
+  }, err => {
+    this.common.loading--;
+    console.log(err);
+  });
+} else {
+  this.common.showError('Rate First');
+}
+     
 
   }
 

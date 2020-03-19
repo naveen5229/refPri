@@ -10,14 +10,20 @@
 
     <div class="row form-group">
       
-      <div class="col-6 mt-2">
+      <div class="col-3 mt-2">
         <label>Is Negative: <span class="require"></span></label>
         <input class="larger" type="checkbox" [checked]="isNegetive" (change)="isNegetive = !isNegetive" style="height: 40px; margin-left: 15px;"/>
       </div>
+
+      <div class="col-3 mt-2">
+        <label>Future Ref: <span class="require"></span></label>
+        <input class="larger" type="checkbox" [checked]="isFutureRef" (change)="isFutureRef = !isFutureRef" style="height: 40px; margin-left: 15px;"/>
+      </div>
+
     </div>
 
     <div class="row form-group">
-      <div class="col-6 ">
+      <div class="col-6 mt-2">
         <label>Rating: <span class="require"></span></label>
         <ngb-rating [(rate)]="currentRate" style="font-size: 25px; margin-left: 15px;" 
         [ngClass]="{
@@ -25,9 +31,9 @@
    'class2': !isNegetive
 }" ></ngb-rating>
       </div>
+
       <div class="col-6 mt-2">
-        <label>Future Ref: <span class="require"></span></label>
-        <input class="larger" type="checkbox" [checked]="isFutureRef" (change)="isFutureRef = !isFutureRef" style="height: 40px; margin-left: 15px;"/>
+        <textarea class="larger" cols="40" type="text" placeholder="Remark" [(ngModel)]='remark' style=" margin-left: 15px;" ></textarea>
       </div>
     </div>
 

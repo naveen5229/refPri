@@ -34,8 +34,19 @@
     </div>
     <div class="col-lg-8">
       <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-      class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">    </div>
+      class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No."> 
     </div>
+  </div>
+<br>
+<div class="row">
+  <div class="col-lg-4">
+    <label>Department :-</label>
+  </div>
+  <div class="col-lg-8">
+          <auto-suggestion  (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(Fouser.department.id>0)?{name:Fouser.department.name}:{name:''}">
+          </auto-suggestion>
+  </div>
+</div>
 <br>
 <div class="row" *ngIf='Fouser.id'>
   <div class="col-lg-4">

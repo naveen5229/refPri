@@ -112,9 +112,11 @@ export class TicketCallMappingComponent implements OnInit {
 
   editData(request, index) {
 
+    console.log(request);
     this.common.params = {
       rating: request._rating,
-      ticketId: request._id
+      ticketId: request._id,
+      remark: request._remark
     };
     const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(response => {
@@ -123,9 +125,12 @@ export class TicketCallMappingComponent implements OnInit {
       if (!response) {
         return;
       }
-      this.table.data.columns[index].Action.value = response;
+      this.table.data.columns[index].Action.value = response.rating;
+      this.ticketList.map(e => e._remark = response.remark).find(tickt => tickt._id == request._id);
+      console.log(this.ticketList);
+      // this.table.data.columns[index].Action.value = response.remark;
       console.log(this.table.data);
-      this.currentRate = response;
+      this.currentRate = response.rating;
       // if (response.response) {
       //   console.log(response);
       //   // this.getTicketData();
@@ -158,6 +163,7 @@ export class TicketCallMappingComponent implements OnInit {
         this.common.loading--;
         this.ticketList = res['data'] || [];
         this.filterDataList = res['data'] || [];
+        console.log(this.ticketList);
         this.ticketList.length ? this.setTable() : this.resetTable();
 
 
