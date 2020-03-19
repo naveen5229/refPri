@@ -34,6 +34,7 @@ import { FutureRefComponent } from './future-ref/future-ref.component';
 import { CallKpiComponent } from './call-kpi/call-kpi.component';
 import { FieldIssueRequestComponent } from './field-issue-request/field-issue-request.component';
 import { InstallerComponent } from './installer/installer.component';
+import { AttendanceComponent } from './attendance/attendance.component';
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { InstallerComponent } from './installer/installer.component';
     FutureRefComponent,
     CallKpiComponent,
     FieldIssueRequestComponent,
-    InstallerComponent
+    InstallerComponent,
+    AttendanceComponent
   ],
 })
 export class PagesModule {

@@ -60,6 +60,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'file-text-outline',
         link: '/pages/call-kpi',
         home: true,
+      },
+      {
+        title: 'Attendance',
+        icon: 'file-text-outline',
+        link: '/pages/attendance',
+        home: true,
       }
     ]
   },

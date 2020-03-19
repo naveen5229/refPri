@@ -39,11 +39,11 @@
                     ToDo List
                 </li>
                 <li [ngClass]="activeTab=='futureTaskByMe'?'active':''" (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
-                    Future Task By Me
+                    Future Task
                 </li>
-                <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
+                <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
                     Unread Task
-                </li> -->
+                </li>
             </ul>
         </div>
 

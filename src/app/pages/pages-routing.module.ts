@@ -32,6 +32,8 @@ import { FutureRefComponent } from './future-ref/future-ref.component';
 import { CallKpiComponent } from './call-kpi/call-kpi.component';
 import { FieldIssueRequestComponent } from './field-issue-request/field-issue-request.component';
 import { InstallerComponent } from './installer/installer.component';
+import { AttendanceComponent } from './attendance/attendance.component';
+
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -172,6 +174,10 @@ const routes: Routes = [{
     {
       path: 'installer',
       component: InstallerComponent
+    },
+    {
+      path: 'attendance',
+      component: AttendanceComponent
     }
 
   ],
