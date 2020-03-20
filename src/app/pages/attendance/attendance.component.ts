@@ -9,6 +9,9 @@ import { CommonService } from '../../Service/common/common.service';
 })
 export class AttendanceComponent implements OnInit {
   attandanceList = [];
+  date = new Date();
+  today = new Date();
+
   tableAttandanceList = {
     data: {
       headings: {},
@@ -33,7 +36,8 @@ export class AttendanceComponent implements OnInit {
   getAttendanceList() {
     this.attandanceList = [];
     this.resetTable();
-    let params = "?date=" + this.common.dateFormatter(this.common.getDate());
+    // let params = "?date=" + this.common.dateFormatter(this.common.getDate());
+    let params = "?date=" + this.common.dateFormatter(this.date);
     this.common.loading++;
     this.api.get('Admin/getAttendanceList.json' + params)
       .subscribe(res => {

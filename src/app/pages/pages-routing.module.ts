@@ -33,6 +33,7 @@ import { CallKpiComponent } from './call-kpi/call-kpi.component';
 import { FieldIssueRequestComponent } from './field-issue-request/field-issue-request.component';
 import { InstallerComponent } from './installer/installer.component';
 import { AttendanceComponent } from './attendance/attendance.component';
+import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
 
 const routes: Routes = [{
   path: '',
@@ -178,6 +179,10 @@ const routes: Routes = [{
     {
       path: 'attendance',
       component: AttendanceComponent
+    },
+    {
+      path: 'shift-logs',
+      component: ShiftLogsComponent
     }
 
   ],

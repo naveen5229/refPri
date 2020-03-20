@@ -35,6 +35,7 @@ import { CallKpiComponent } from './call-kpi/call-kpi.component';
 import { FieldIssueRequestComponent } from './field-issue-request/field-issue-request.component';
 import { InstallerComponent } from './installer/installer.component';
 import { AttendanceComponent } from './attendance/attendance.component';
+import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
 
 @NgModule({
   imports: [
@@ -75,7 +76,8 @@ import { AttendanceComponent } from './attendance/attendance.component';
     CallKpiComponent,
     FieldIssueRequestComponent,
     InstallerComponent,
-    AttendanceComponent
+    AttendanceComponent,
+    ShiftLogsComponent
   ],
 })
 export class PagesModule {

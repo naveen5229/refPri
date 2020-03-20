@@ -5,6 +5,18 @@
                 <h5>Attendance</h5>
             </div>
         </div>
+<br>
+        <div class="row">
+            <div class="col-3">
+                <label>Select Date</label>
+                <uj-date-time-picker (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
+                </uj-date-time-picker>
+            </div>
+            
+            <div class="col-9 text-right mt-4">
+                <button type="submit" id="submit" (click)="getAttendanceList()" class="btn btn-primary mr-2">Submit</button>
+            </div>
+        </div>
     </nb-card-header>
     <nb-card-body>
         <div class="row">
