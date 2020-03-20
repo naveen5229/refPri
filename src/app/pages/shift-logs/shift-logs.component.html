@@ -1,5 +1,5 @@
 <nb-card>
-    <nb-card-header style="max-height: 400px; z-index: 9999;">
+    <nb-card-header >
         <div class="row">
             <div class="col-4">
                 <h5>Shift Logs</h5>
@@ -11,7 +11,7 @@
                 <label>Select Date</label>
             </div>
             <div class="col-3">
-                <uj-date-time-picker (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
+                <uj-date-time-picker  style="z-index: 999;"  (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
                 </uj-date-time-picker>
             </div>
             <div class="col-7">
