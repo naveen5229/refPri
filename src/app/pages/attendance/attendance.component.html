@@ -1,5 +1,5 @@
 <nb-card>
-    <nb-card-header>
+    <nb-card-header style="max-height: 400px; z-index: 9999;"> 
         <div class="row">
             <div class="col-12">
                 <h5>Attendance</h5>
@@ -18,7 +18,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body>
+    <nb-card-body >
         <div class="row">
             <div class="col-12">
                 <smart-table *ngIf="attandanceList.length!=0" [data]="tableAttandanceList.data" [settings]="tableAttandanceList.settings" id="attandanceList">
