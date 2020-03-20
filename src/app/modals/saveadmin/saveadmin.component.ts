@@ -30,7 +30,7 @@ export class SaveadminComponent implements OnInit {
 
   };
 
-  
+
 
   departments = [];
   name = null;
@@ -49,7 +49,7 @@ export class SaveadminComponent implements OnInit {
     private modalService: NgbModal,
     public renderer: Renderer,
     private sanitizer: DomSanitizer
-  ) { 
+  ) {
     this.getDepartments();
   }
 
@@ -106,10 +106,12 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
-    this.Fouser.department.id = value.dept_id;
-    this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
+    if (value.dept_id > 0) {
+      this.Fouser.department.id = value.dept_id;
+      this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
+    }
     this.Fouser.isActive = value.isActive.toString();
-  
+
   }
 
   saveAdmin() {
@@ -153,7 +155,7 @@ export class SaveadminComponent implements OnInit {
       name: this.Fouser.name,
       mobile: this.Fouser.mobileNo,
       departmentId: this.Fouser.department.id,
-      isActive:  Boolean(JSON.parse(this.Fouser.isActive))
+      isActive: Boolean(JSON.parse(this.Fouser.isActive))
 
     }
     console.log(param);
