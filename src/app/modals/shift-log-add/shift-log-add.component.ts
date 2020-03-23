@@ -10,6 +10,7 @@ import { ConfirmComponent } from '../confirm/confirm.component';
   styleUrls: ['./shift-log-add.component.scss']
 })
 export class ShiftLogAddComponent implements OnInit {
+  today = new Date();
   shiftForm = {
     startTime: null,
     endTime: null,
@@ -168,8 +169,8 @@ export class ShiftLogAddComponent implements OnInit {
       this.common.loading++;
       let params = {
         userId: this.shiftForm.user.id,
-        startTime: this.common.dateFormatter(this.shiftForm.startTime),
-        endTime: this.common.dateFormatter(this.shiftForm.endTime)
+        startTime: (this.shiftForm.startTime) ? this.common.dateFormatter(this.shiftForm.startTime) : null,
+        endTime: (this.shiftForm.endTime) ? this.common.dateFormatter(this.shiftForm.endTime) : null
       };
       this.api.post("Admin/saveUserShift", params).subscribe(res => {
         console.log("data", res['data'])
@@ -201,9 +202,7 @@ export class ShiftLogAddComponent implements OnInit {
 
   deleteUserShift(shift) {
     if (shift._id) {
-      let params = {
-        shiftId: shift._id,
-      }
+      let params = "?shiftId=" + shift._id;
       this.common.params = {
         title: 'Delete Ticket ',
         description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
@@ -213,7 +212,7 @@ export class ShiftLogAddComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Admin/deleteUserShiftById', params)
+          this.api.get('Admin/deleteUserShiftById' + params)
             .subscribe(res => {
               this.common.loading--;
               this.common.showToast(res['msg']);

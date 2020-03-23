@@ -16,3 +16,7 @@
 .pointer-events-none {
     pointer-events: none;
 }
+
+:host ::ng-deep .tableFixHead {
+    height: auto !important;
+}

@@ -117,6 +117,10 @@ export class ShiftLogsComponent implements OnInit {
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
+        if (shift['_employee_id'] == shift['_aduserid']) {
+        } else {
+          column['style'] = { 'background': 'antiquewhite' };
+        }
       }
       columns.push(column);
     });
