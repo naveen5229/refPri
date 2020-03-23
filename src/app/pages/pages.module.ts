@@ -36,6 +36,7 @@ import { FieldIssueRequestComponent } from './field-issue-request/field-issue-re
 import { InstallerComponent } from './installer/installer.component';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
+import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
 
 @NgModule({
   imports: [
@@ -77,7 +78,8 @@ import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
     FieldIssueRequestComponent,
     InstallerComponent,
     AttendanceComponent,
-    ShiftLogsComponent
+    ShiftLogsComponent,
+    ActivityLogsComponent
   ],
 })
 export class PagesModule {

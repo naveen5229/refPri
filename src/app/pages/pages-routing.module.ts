@@ -34,6 +34,7 @@ import { FieldIssueRequestComponent } from './field-issue-request/field-issue-re
 import { InstallerComponent } from './installer/installer.component';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
+import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
 
 const routes: Routes = [{
   path: '',
@@ -183,6 +184,10 @@ const routes: Routes = [{
     {
       path: 'shift-logs',
       component: ShiftLogsComponent
+    },
+    {
+      path: 'activity-logs',
+      component: ActivityLogsComponent
     }
 
   ],

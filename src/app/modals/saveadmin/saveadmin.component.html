@@ -48,6 +48,18 @@
   </div>
 </div>
 <br>
+<div class="row">
+  <div class="col-lg-4">
+    <label>Reporting Manager :-</label>
+  </div>
+  <div class="col-lg-8">
+    <auto-suggestion  (onSelected)="selectReportingManager($event)" url="Admin/searchAdmin?getAll=true"
+    [display]="['name','mobileno']" seperator="-"
+    placeholder="Search By Mobile No. / Name" [preSelected]="preSelected">
+  </auto-suggestion>
+  </div>
+</div>
+<br>
 <div class="row" *ngIf='Fouser.id'>
   <div class="col-lg-4">
     <label>Status :-</label>

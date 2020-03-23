@@ -1,0 +1,23 @@
+<nb-card>
+  <nb-card-header>
+      <div class="row">
+          <div class="col-9">
+              <h5>Activity Logs</h5>
+          </div>
+          <div class="col-3 text-right">
+              <button class="btn btn-primary text-capitalize" id="button" (click)="addActivityLog()"><i
+                  class="fa fa-plus"></i></button>
+          </div>
+      </div>
+  </nb-card-header>
+
+  <nb-card-body>
+
+<div class="row"> 
+  <smart-table *ngIf="activityLogsist.length!=0" [data]="table.data" [settings]="table.settings" id="activityLogsist">
+  </smart-table>
+</div>
+
+  </nb-card-body>
+  
+  </nb-card>

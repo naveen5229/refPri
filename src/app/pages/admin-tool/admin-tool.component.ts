@@ -11,10 +11,24 @@ import { SendmessageComponent } from '../../modals/sendmessage/sendmessage.compo
 })
 export class AdminToolComponent implements OnInit {
 
+  activeAdminUserList = [];
+
+  table = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   constructor(public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal,
-    ) { }
+    ) { 
+      this.getActiveAdminList();
+    }
 
   ngOnInit() {
   }
@@ -22,6 +36,101 @@ export class AdminToolComponent implements OnInit {
   adminTools(){
     const activeModal = this.modalService.open(SaveadminComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
      }
+
+    getActiveAdminList() {
+      this.common.loading++;
+      this.api.get('Admin/getAllAdmin')
+        .subscribe(res => {
+          this.common.loading--;
+          // console.log('res:', res);
+          this.activeAdminUserList = res['data'] || [];
+          console.log(this.activeAdminUserList);
+  
+          this.activeAdminUserList.length ? this.setTable() : this.resetTable();
+  
+  
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
+    } 
     
+    resetTable() {
+      this.table.data = {
+        headings: {},
+        columns: []
+      };
+    }
+    generateHeadings() {
+      // console.log(this.dailyReportList);
+      let headings = {};
+      for (var key in this.activeAdminUserList[0]) {
+        // console.log(key.charAt(0));
+  
+        if (key.charAt(0) != "_") {
+          headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        }
+      }
+      return headings;
+    }
+  
+    formatTitle(strval) {
+      let pos = strval.indexOf('_');
+      if (pos > 0) {
+        return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+      } else {
+        return strval.charAt(0).toUpperCase() + strval.substr(1);
+      }
+    }
+  
+    setTable() {
+      this.table.data = {
+        headings: this.generateHeadings(),
+        columns: this.getTableColumns()
+      };
+      return true;
+    }
+  
+    getTableColumns() {
+      console.log(this.generateHeadings());
+      let columns = [];
+      this.activeAdminUserList.map(activeAdmin => {
+        let column = {};
+        for (let key in this.generateHeadings()) {
+          if (key == 'Action' || key == 'action') {
+            column[key] = {
+              value: "",
+              isHTML: true,
+              action: null,
+              icons: this.actionIcons(activeAdmin)
+            };
+          } else {
+            column[key] = { value: activeAdmin[key], class: 'black', action: '' };
+          }
+        }
+        columns.push(column);
+      });
+      return columns;
+  
+    }
+
+    actionIcons(activeAdmin) {
+      let icons = [
+        { class: "fa fa-edit", action: this.editActiveAdmin.bind(this, activeAdmin) },
+        // { class: "fa fa-trash", action: this.deleteInstaller.bind(this, installer) },
+      ];
+      return icons;
+    }
+
+    editActiveAdmin(activeAdmin) {
+      this.common.params = { activeAdminDetail: activeAdmin, title: "Edit Admin", button: "Update" };
+      const activeModal = this.modalService.open(SaveadminComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        console.log(data);
+        if (data) {
+          this.getActiveAdminList();
+        }
+      })
+    }
   
 }

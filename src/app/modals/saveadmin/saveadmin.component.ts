@@ -26,6 +26,10 @@ export class SaveadminComponent implements OnInit {
     department: {
       id: null,
       name: ''
+    },
+    reportingManager: {
+      id: null,
+      name: ''
     }
 
   };
@@ -40,6 +44,11 @@ export class SaveadminComponent implements OnInit {
     name: '',
     mobileno: ''
   };
+  preSelectedRepManager = {
+    name: '',
+    mobileno: ''
+  };
+  activeAdminDetails = {};
 
   constructor(
     public api: ApiService,
@@ -51,14 +60,28 @@ export class SaveadminComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {
     this.getDepartments();
+    if (this.common.params && this.common.params.title == 'Edit Admin') {
+        console.log(this.common.params.activeAdminDetail);
+        this.activeAdminDetails = this.common.params.activeAdminDetail;
+        this.Fouser.id = this.activeAdminDetails['id'];
+        this.Fouser.name = this.activeAdminDetails['name'];
+        this.Fouser.mobileNo = this.activeAdminDetails['mobileno'];
+        this.Fouser.department.id = this.activeAdminDetails['_dept_id'];
+        this.Fouser.department.name = this.activeAdminDetails['department_name'];
+        this.Fouser.reportingManager.id = this.activeAdminDetails['_reporting_user_id'];
+        this.Fouser.reportingManager.name = this.activeAdminDetails['reporting_manager'];
+        this.preSelected.name = this.activeAdminDetails['reporting_manager'];
+        this.preSelected.mobileno = this.activeAdminDetails['reporting_manager'];
+    }
+    this.common.params = {};
   }
 
   ngOnInit() {
   }
 
 
-  closeModal() {
-    this.activeModal.close();
+  closeModal(response) {
+    this.activeModal.close(false);
   }
 
   getDepartments() {
@@ -78,6 +101,14 @@ export class SaveadminComponent implements OnInit {
     console.log(selectedDepartment);
     this.Fouser.department.id = selectedDepartment.id;
     this.Fouser.department.name = selectedDepartment.name;
+  }
+
+  selectReportingManager(selectedReportingManager) {
+    console.log(selectedReportingManager);
+    this.Fouser.reportingManager.id = selectedReportingManager.id;
+    this.Fouser.reportingManager.name = selectedReportingManager.name;
+    this.preSelected.name = selectedReportingManager.report_user_name;
+    this.preSelected.mobileno = selectedReportingManager.report_user_mobile;
   }
 
 
@@ -106,11 +137,16 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
+    this.Fouser.reportingManager.id = value.reporting_user_id;
+    this.Fouser.reportingManager.name = value.report_user_name;
+    this.preSelected.name = value.report_user_name;
+    this.preSelected.mobileno = value.report_user_mobile;
+    console.log(this.preSelected);
     if (value.dept_id > 0) {
       this.Fouser.department.id = value.dept_id;
       this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
     }
-    this.Fouser.isActive = value.isActive.toString();
+    this.Fouser.isActive = value.is_active.toString();
 
   }
 
@@ -118,7 +154,8 @@ export class SaveadminComponent implements OnInit {
     let params = {
       name: this.Fouser.name,
       mobile: this.Fouser.mobileNo,
-      department: this.Fouser.department.id
+      departmentId: this.Fouser.department.id,
+      reportingManagerId: this.Fouser.reportingManager.id
     }
     console.log(params);
     if (this.Fouser.name == null) {
@@ -137,7 +174,7 @@ export class SaveadminComponent implements OnInit {
             this.common.showError(this.data[0]['y_msg']);
           } else {
             this.common.showToast(this.data[0]['y_msg']);
-            this.closeModal();
+            this.closeModal(true);
           }
           console.log("pa", this.data)
         }, err => {
@@ -155,6 +192,7 @@ export class SaveadminComponent implements OnInit {
       name: this.Fouser.name,
       mobile: this.Fouser.mobileNo,
       departmentId: this.Fouser.department.id,
+      reportingManagerId: this.Fouser.reportingManager.id,
       isActive: Boolean(JSON.parse(this.Fouser.isActive))
 
     }
@@ -180,6 +218,7 @@ export class SaveadminComponent implements OnInit {
             this.onCancel();
             // this.closeModal();
           }
+
           console.log("pa", this.data)
         }, err => {
           this.common.loading--;

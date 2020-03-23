@@ -72,6 +72,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'file-text-outline',
         link: '/pages/shift-logs',
         home: true,
+      },
+      {
+        title: 'Activity-Logs',
+        icon: 'file-text-outline',
+        link: '/pages/activity-logs',
+        home: true,
       }
     ]
   },
