@@ -1,8 +1,13 @@
 <nb-card>
-    <nb-card-header >
+    <nb-card-header>
         <div class="row">
-            <div class="col-4">
+            <div class="col-8">
                 <h5>Shift Logs</h5>
+            </div>
+            <div class="col-4 text-right">
+                <button class="btn btn-primary text-capitalize" title="Add Shift Log" (click)="showShiftLogPopup()">
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
         <br>
@@ -11,25 +16,17 @@
                 <label>Select Date</label>
             </div>
             <div class="col-3">
-                <uj-date-time-picker  style="z-index: 999;"  (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
+                <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
                 </uj-date-time-picker>
             </div>
             <div class="col-7">
                 <button type="submit" id="submit" (click)="getShiftLogs()" class="btn btn-primary mr-2 btn-sm">Submit</button>
             </div>
         </div>
-
-
     </nb-card-header>
     <nb-card-body style="min-height: 300px;">
-
         <div>
             <smart-table *ngIf="shiftLogList && shiftLogList.length>0" [data]="table.data" [settings]="table.settings" id="entries"></smart-table>
         </div>
-
-
-
-
-
     </nb-card-body>
 </nb-card>

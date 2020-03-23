@@ -64,6 +64,7 @@ import { FieldIssueComponent } from './modals/field-issue/field-issue.component'
 import { LocationSelectionComponent } from './modals/location-selection/location-selection.component';
 import { AssignInstallerToFieldrequestComponent } from './modals/assign-installer-to-fieldrequest/assign-installer-to-fieldrequest.component';
 import { ApproveFieldSupportRequestComponent } from './modals/approve-field-support-request/approve-field-support-request.component';
+import { ShiftLogAddComponent } from './modals/shift-log-add/shift-log-add.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -97,7 +98,8 @@ const PAGE_COMPONENTS = [
   FieldIssueComponent,
   LocationSelectionComponent,
   AssignInstallerToFieldrequestComponent,
-  ApproveFieldSupportRequestComponent
+  ApproveFieldSupportRequestComponent,
+  ShiftLogAddComponent
 ];
 
 @NgModule({
