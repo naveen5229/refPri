@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h5>Add Shift Log</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>User:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select Users" (onSelected)="changeUsers($event)" inputId="shiftUser" name="shiftUser" autocomplete="off"></auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Start Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6" [ngClass]="(disableStartTime)?'pointer-events-none':''">
+            <uj-date-time-picker [disabled]="true" (onChanged)="shiftForm.startTime=($event)" [dateTimeValue]="shiftForm.startTime" [isDate]="false" [isTime]="true" [maxd]='today'>
+            </uj-date-time-picker>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>End Date:</label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="shiftForm.endTime=($event)" [dateTimeValue]="shiftForm.endTime" [isDate]="false" [isTime]="true" [maxd]='today'>
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" (click)="saveUserShift()">Save</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">Today Shift Details</div>
+        <smart-table [data]="tableShiftLogList.data" [settings]="tableShiftLogList.settings" id="tableShiftLogList">
+        </smart-table>
+    </div>
+
+</div>

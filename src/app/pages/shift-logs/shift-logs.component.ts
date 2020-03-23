@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/User/user.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ShiftLogAddComponent } from '../../modals/shift-log-add/shift-log-add.component';
 @Component({
   selector: 'ngx-shift-logs',
   templateUrl: './shift-logs.component.html',
   styleUrls: ['./shift-logs.component.scss']
 })
 export class ShiftLogsComponent implements OnInit {
-  partnerId = null;
   shiftLogList: any;
   date = new Date();
   today = new Date();
@@ -23,24 +24,14 @@ export class ShiftLogsComponent implements OnInit {
     }
   };
 
-
-
-  constructor(
-    public common: CommonService,
-    public user: UserService,
-    public api: ApiService) {
-      this.partnerId = this.user._details.partnerid;
-      this.getShiftLogs();
-    }
+  constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
+    this.getShiftLogs();
+  }
   ngOnInit() {
   }
 
-
- 
-
   getShiftLogs() {
-   
-  this.table = {
+    this.table = {
       data: {
         headings: {},
         columns: []
@@ -54,7 +45,7 @@ export class ShiftLogsComponent implements OnInit {
     const params = '?date=' + date;
     console.log(params);
     this.common.loading++;
-    this.api.get('Admin/getUserShiftByDate' + params,  'I')
+    this.api.get('Admin/getUserShiftByDate' + params, 'I')
       .subscribe(res => {
         this.common.loading--;
         console.log('res:', res);
@@ -63,14 +54,14 @@ export class ShiftLogsComponent implements OnInit {
           this.shiftLogList.length ? this.setTable() : this.resetTable();
           console.log(this.shiftLogList);
         }
-        
+
 
       }, err => {
         this.common.loading--;
         console.log(err);
       });
 
-    
+
   }
 
 
@@ -107,7 +98,7 @@ export class ShiftLogsComponent implements OnInit {
       return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
     } else {
       return strval.charAt(0).toUpperCase() + strval.substr(1);
-     }
+    }
   }
 
 
@@ -123,16 +114,26 @@ export class ShiftLogsComponent implements OnInit {
             action: null,
             // icons: this.actionIcons(inventory)
           };
-        }   else {
+        } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
       }
       columns.push(column);
     });
-      console.log(columns);
+    console.log(columns);
     return columns;
 
   }
 
- 
+  showShiftLogPopup() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getShiftLogs();
+      }
+    });
+  }
+
+
 }
