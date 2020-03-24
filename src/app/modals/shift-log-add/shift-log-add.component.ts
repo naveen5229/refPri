@@ -113,9 +113,14 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   editShit(shift) {
-    this.disableStartTime = true;
     this.shiftForm.startTime = new Date(shift._start_time);
     this.shiftForm.addtime = new Date(shift._addtime);
+    this.shiftForm.type = shift._type;
+    this.disableStartTime = true;
+    console.log("disableStartTime:", this.disableStartTime);
+    console.log("shiftForm:", this.shiftForm);
+
+    console.log("valueee:", (!this.disableStartTime && this.shiftForm.type == 1))
   }
 
   changeUsers(event) {
@@ -237,6 +242,13 @@ export class ShiftLogAddComponent implements OnInit {
     } else {
       this.common.showError("Task ID Not Available");
     }
+  }
+
+  onTypeSelect() {
+    console.log("onTypeSelect");
+    this.disableStartTime = false;
+    this.shiftForm.startTime = this.common.getDate();
+    this.shiftForm.addtime = null;
   }
 
 }
