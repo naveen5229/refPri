@@ -13,6 +13,16 @@
 
     <div class="row">
         <div class="col-lg-4">
+            <label>Select Date :-</label>
+        </div>
+        <div class="col-lg-8">
+            <uj-date-time-picker (onChanged)="activity.date=($event)" [dateTimeValue]="activity.date" [isTime]="false" [maxd]='maxdate' [mind]='mindate'>
+            </uj-date-time-picker>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-4">
             <label>Activity Description :-</label>
         </div>
         <div class="col-lg-8">
@@ -39,19 +49,10 @@
         </div>
     </div>
     <br>
+   
     <div class="row">
         <div class="col-lg-4">
-            <label>Select Date :-</label>
-        </div>
-        <div class="col-lg-8">
-            <uj-date-time-picker (onChanged)="activity.date=($event)" [dateTimeValue]="activity.date" [isTime]="false" [maxd]='maxdate' [mind]='mindate'>
-            </uj-date-time-picker>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-lg-4">
-            <label>Select Hours :-</label>
+            <label>Spend Hours :-</label>
         </div>
         <div class="col-lg-8">
             <uj-date-time-picker (onChanged)="activity.hour=($event)" [dateTimeValue]="activity.hour" [isTime]="true" [isDate]="false">

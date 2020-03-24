@@ -19,6 +19,8 @@ export class AddActivityLogsComponent implements OnInit {
     hour: new Date()
   }
 
+  isSubmit = false;
+
   maxdate = new Date();
   mindate = new Date();
 
@@ -58,7 +60,8 @@ export class AddActivityLogsComponent implements OnInit {
           this.common.loading--;
           console.log(res)         
             this.common.showToast('Success');
-            this.closeModal(true);
+            this.isSubmit = true;
+            this.refreshForm();
           
         }, err => {
           this.common.loading--;
@@ -68,8 +71,21 @@ export class AddActivityLogsComponent implements OnInit {
     }
   }
 
+  refreshForm() {
+    this.activity = {
+      desc: null,
+      contact: null,
+      outcome: null,
+      date: this.activity.date,
+      hour: new Date()
+    }  }
+
   closeModal(response) {
-    this.activeModal.close(response);
+    if (this.isSubmit) {
+      this.activeModal.close(true);
+    }else{
+      this.activeModal.close(false);
+    }
   }
 
 }

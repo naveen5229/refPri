@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { AddActivityLogsComponent } from '../../modals/add-activity-logs/add-activity-logs.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-activity-logs',
@@ -13,7 +14,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 export class ActivityLogsComponent implements OnInit {
 
   activityLogsist = [];
-
+  departments = [];
   table = {
     data: {
       headings: {},
@@ -24,14 +25,40 @@ export class ActivityLogsComponent implements OnInit {
     }
   };
 
+  date = new Date();
+  department = {
+    id: null,
+    name: ''
+  };
+
   constructor(public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal,
     ) { 
       this.getActivityLogsist();
+      this.getDepartments();
     }
 
   ngOnInit() {
+  }
+
+  getDepartments() {
+    this.common.loading++;
+    this.api.get("Admin/getDepartmentList", "I")
+      .subscribe(res => {
+        this.common.loading--;
+        this.departments = res['data'] || [];
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  selectedDepartment(selectedDept) {
+    console.log(selectedDept);
+    this.department.id = selectedDept.id;
+    this.department.name = selectedDept.name;
   }
 
   addActivityLog(){
@@ -158,4 +185,20 @@ export class ActivityLogsComponent implements OnInit {
       }
     }
   
+    viewSummary() {
+      let dataparams = {
+        view: {
+          api: 'Admin/getActivityLogSummary',
+          param: {
+            date: this.common.dateFormatter1(this.date),
+            departmentId: this.department.id
+          }
+        },
+        title: "View Activity Log Summary"
+      }
+      // this.common.handleModalSize('class', 'modal-lg', '1100');
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
-import { UserService } from '../../Service/User/user.service';
+import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ShiftLogAddComponent } from '../../modals/shift-log-add/shift-log-add.component';
 @Component({

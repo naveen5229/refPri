@@ -1,10 +1,33 @@
 <nb-card>
   <nb-card-header>
       <div class="row">
-          <div class="col-9">
+          <div class="col-2">
               <h5>Activity Logs</h5>
           </div>
-          <div class="col-3 text-right">
+          <div class="col-4">
+            <div class="row">
+              <div class="col-lg-6">
+                  <label>Select Date :-</label>
+              </div>
+              <div class="col-lg-6">
+                  <uj-date-time-picker (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" >
+                  </uj-date-time-picker>
+              </div>
+          </div>        </div>
+        <div class="col-4">
+          <div class="row">
+            <div class="col-lg-6">
+                <label>Department :-</label>
+            </div>
+            <div class="col-lg-6">
+              <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(department.id>0)?{name:department.name}:{name:''}">
+              </auto-suggestion>
+            </div>
+        </div>      </div>
+          <div class="col-2 text-right">
+            <button (click)="viewSummary()" class="btn btn-primary btn-sm mr-2">
+              View Summary
+          </button>
               <button class="btn btn-primary text-capitalize" id="button" (click)="addActivityLog()"><i
                   class="fa fa-plus"></i></button>
           </div>
