@@ -15,7 +15,7 @@
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>Start Date:<span class="text-danger">*</span></label>
+            <label>Start Time:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6" [ngClass]="(disableStartTime)?'pointer-events-none':''">
             <uj-date-time-picker [disabled]="true" (onChanged)="shiftForm.startTime=($event)" [dateTimeValue]="shiftForm.startTime" [isDate]="false" [isTime]="true" [maxd]='today'>
@@ -24,11 +24,21 @@
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>End Date:</label>
+            <label>End Time:</label>
         </div>
         <div class="col-6">
             <uj-date-time-picker style="z-index: 999;" (onChanged)="shiftForm.endTime=($event)" [dateTimeValue]="shiftForm.endTime" [isDate]="false" [isTime]="true" [maxd]='today'>
             </uj-date-time-picker>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Type:</label>
+        </div>
+        <div class="col-6">
+            <select class="form-control" [(ngModel)]="shiftForm.type" [disabled]="!disableStartTime">
+                <option *ngFor="let t of shiftType" [value]="t.id">{{t.name}}</option>
+            </select>
         </div>
     </div>
 
