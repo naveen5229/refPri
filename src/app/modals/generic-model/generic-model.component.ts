@@ -84,7 +84,33 @@ export class GenericModelComponent implements OnInit {
     this.valobj = {};
 
     this.common.loading++;
-    this.api.get(this.viewObj.api)
+    if (this.common.params && this.common.params.data.type == 'transtruck') {
+      this.api.getTranstruck(this.viewObj.api)
+      .subscribe(res => {
+        this.common.loading--;
+        this.data = res['data'];
+        this.common.showToast(res['msg'])
+        console.log(this.data);
+        if (this.data == null) {
+          this.data = [];
+          this.table = null;
+          return;
+        }
+        let first_rec = this.data[0];
+        for (var key in first_rec) {
+          if (key.charAt(0) != "_") {
+            this.headings.push(key);
+            let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
+            this.table.data.headings[key] = headerObj;
+          }
+        }
+        this.table.data.columns = this.getTableColumns();
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+      });
+    } else {
+      this.api.get(this.viewObj.api)
       .subscribe(res => {
         this.common.loading--;
         this.data = res['data'];
@@ -107,6 +133,8 @@ export class GenericModelComponent implements OnInit {
         this.common.loading--;
         this.common.showError();
       });
+    }
+    
   }
 
   formatTitle(title) {

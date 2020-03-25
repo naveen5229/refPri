@@ -12,6 +12,7 @@ export class ApiService {
   // URL: string = 'https://dev.elogist.in/itrm_webservices/'
 
   URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
+  URLTranstruck: string = 'http://elogist.in/transtrucknew/';
 
 
   constructor(private http: HttpClient,
@@ -47,6 +48,14 @@ export class ApiService {
     return this.http.get(this.URLBooster + subURL, { headers: this.setHeadersBooster() })
   }
 
+  postTranstruck(subURL: string, body: any, options?) {
+    return this.http.post(this.URLTranstruck + subURL, body, { headers: this.setHeadersTranstruck() })
+  }
+
+  getTranstruck(subURL: string, params?: any) {
+    return this.http.get(this.URLTranstruck + subURL, { headers: this.setHeadersTranstruck() })
+  }
+
   setHeadersBooster() {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -54,6 +63,17 @@ export class ApiService {
       'entrymode': '2',
       'apptype': 'dashboard',
       'authkey': this.user._details.authkey_booster
+    });
+    return headers;
+  }
+
+  setHeadersTranstruck() {
+    console.log(this.user._details.authkey_gisdb);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'version': '2.9',
+      'entrymode': '1',
+      'authkey': this.user._details.authkey_gisdb
     });
     return headers;
   }
