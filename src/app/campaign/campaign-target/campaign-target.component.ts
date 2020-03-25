@@ -9,6 +9,7 @@ import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component
 import { AddContactComponent } from '../../modals/campaign-modals/add-contact/add-contact.component';
 import { UserService } from '../../Service/user/user.service';
 import { PrintPreviewComponent } from '../../modals/print-preview/print-preview.component';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-campaign-target',
@@ -258,6 +259,8 @@ export class CampaignTargetComponent implements OnInit {
         // } 
         else if (key == 'Company') {
           column[key] = { value: campaign[key], class: 'blue', action: this.addContactAction.bind(this, campaign) };
+        } else if (key == 'FleetSize') {
+          column[key] = { value: campaign[key], class: 'blue', action: this.getLogs.bind(this, campaign) };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
@@ -277,7 +280,25 @@ export class CampaignTargetComponent implements OnInit {
     ];
     return icons;
   }
-
+  getLogs(campaign) {
+    console.log(campaign);
+    let dataparams = {
+      view: {
+        api: 'Communication/getFoWiseLogs.json',
+        param: {
+          mobileno: campaign['_mobileno'],
+          addTime: this.common.dateFormatter2(campaign['AddTime'])
+        }
+      },
+      title: "Communication Logs",
+      type: "transtruck"
+    }
+    // this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+ 
+  }
+  
 
   editCampaign(campaign) {
     console.log(campaign);
