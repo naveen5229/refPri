@@ -17,7 +17,9 @@ export class ShiftLogAddComponent implements OnInit {
     user: {
       id: null,
       name: ""
-    }
+    },
+    addtime: null,
+    type: 1
   };
   adminList = [];
   shiftLogList = [];
@@ -31,6 +33,10 @@ export class ShiftLogAddComponent implements OnInit {
     }
   };
   disableStartTime = false;
+  shiftType = [
+    { id: 1, name: 'Work' },
+    { id: 2, name: 'Break' }
+  ]
   constructor(public activeModal: NgbActiveModal, public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
   }
@@ -107,8 +113,11 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   editShit(shift) {
-    this.disableStartTime = true;
     this.shiftForm.startTime = new Date(shift._start_time);
+    this.shiftForm.addtime = new Date(shift._addtime);
+    this.shiftForm.endTime = new Date();
+    this.shiftForm.type = shift._type;
+    this.disableStartTime = true;
   }
 
   changeUsers(event) {
@@ -170,7 +179,9 @@ export class ShiftLogAddComponent implements OnInit {
       let params = {
         userId: this.shiftForm.user.id,
         startTime: (this.shiftForm.startTime) ? this.common.dateFormatter(this.shiftForm.startTime) : null,
-        endTime: (this.shiftForm.endTime) ? this.common.dateFormatter(this.shiftForm.endTime) : null
+        endTime: (this.shiftForm.endTime) ? this.common.dateFormatter(this.shiftForm.endTime) : null,
+        addtime: (this.shiftForm.addtime) ? this.common.dateFormatter(this.shiftForm.addtime) : null,
+        type: this.shiftForm.type
       };
       this.api.post("Admin/saveUserShift", params).subscribe(res => {
         console.log("data", res['data'])
@@ -197,6 +208,8 @@ export class ShiftLogAddComponent implements OnInit {
   resetDate() {
     this.shiftForm.startTime = null;
     this.shiftForm.endTime = null;
+    this.shiftForm.type = 1;
+    this.shiftForm.addtime = null;
     this.disableStartTime = false;
   }
 
@@ -204,7 +217,7 @@ export class ShiftLogAddComponent implements OnInit {
     if (shift._id) {
       let params = "?shiftId=" + shift._id;
       this.common.params = {
-        title: 'Delete Ticket ',
+        title: 'Delete Shift Log ',
         description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
       }
 
@@ -224,7 +237,7 @@ export class ShiftLogAddComponent implements OnInit {
         }
       });
     } else {
-      this.common.showError("Task ID Not Available");
+      this.common.showError("Invalid shift");
     }
   }
 
