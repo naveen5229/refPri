@@ -115,12 +115,9 @@ export class ShiftLogAddComponent implements OnInit {
   editShit(shift) {
     this.shiftForm.startTime = new Date(shift._start_time);
     this.shiftForm.addtime = new Date(shift._addtime);
+    this.shiftForm.endTime = new Date();
     this.shiftForm.type = shift._type;
     this.disableStartTime = true;
-    console.log("disableStartTime:", this.disableStartTime);
-    console.log("shiftForm:", this.shiftForm);
-
-    console.log("valueee:", (!this.disableStartTime && this.shiftForm.type == 1))
   }
 
   changeUsers(event) {
@@ -220,7 +217,7 @@ export class ShiftLogAddComponent implements OnInit {
     if (shift._id) {
       let params = "?shiftId=" + shift._id;
       this.common.params = {
-        title: 'Delete Ticket ',
+        title: 'Delete Shift Log ',
         description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
       }
 
@@ -240,15 +237,8 @@ export class ShiftLogAddComponent implements OnInit {
         }
       });
     } else {
-      this.common.showError("Task ID Not Available");
+      this.common.showError("Invalid shift");
     }
-  }
-
-  onTypeSelect() {
-    console.log("onTypeSelect");
-    this.disableStartTime = false;
-    this.shiftForm.startTime = this.common.getDate();
-    this.shiftForm.addtime = null;
   }
 
 }

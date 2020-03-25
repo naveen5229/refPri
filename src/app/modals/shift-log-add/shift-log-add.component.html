@@ -36,7 +36,7 @@
             <label>Type:</label>
         </div>
         <div class="col-6">
-            <select class="form-control" [(ngModel)]="shiftForm.type" [disabled]="(disableStartTime && shiftForm.type==1) ? 'false' : 'true'" (change)="onTypeSelect()">
+            <select class="form-control" [(ngModel)]="shiftForm.type">
                 <option *ngFor="let t of shiftType" [value]="t.id">{{t.name}}</option>
             </select>
         </div>
