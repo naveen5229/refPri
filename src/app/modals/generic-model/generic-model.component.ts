@@ -123,6 +123,9 @@ export class GenericModelComponent implements OnInit {
         let first_rec = this.data[0];
         for (var key in first_rec) {
           if (key.charAt(0) != "_") {
+            if (this.common.params.data['actionRequired'] && key == 'action') {
+                continue;
+            }
             this.headings.push(key);
             let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
             this.table.data.headings[key] = headerObj;
@@ -141,11 +144,13 @@ export class GenericModelComponent implements OnInit {
     return title.charAt(0).toUpperCase() + title.slice(1)
   }
   getTableColumns() {
+    console.log('________________', this.common.params.data['actionRequired']);
     let columns = [];
     this.data.map(doc => {
       this.valobj = {};
       for (let i = 0; i < this.headings.length; i++) {
-        if (this.headings[i] == "Action") {
+        console.log(this.headings);
+        if ( this.headings[i] == "action") {
           let icons = [];
           if (this.deleteObj.api)
             // icons.push({ class: 'fa fa-trash', action: this.delete.bind(this, doc) });

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ngx-attendance',
@@ -21,11 +23,11 @@ export class AttendanceComponent implements OnInit {
       hideHeader: true
     }
   };
-  constructor(public common: CommonService, public api: ApiService) {
+  constructor(public common: CommonService, public api: ApiService,   public modalService: NgbModal
+    ) {
     this.getAttendanceList();
     this.common.refresh = this.refresh.bind(this);
   }
-
   ngOnInit() {
   }
 
@@ -83,6 +85,7 @@ export class AttendanceComponent implements OnInit {
     this.attandanceList.map(ticket => {
       let column = {};
       for (let key in this.generateHeadings()) {
+
         if (key == 'Action') {
           column[key] = {
             value: "",
@@ -98,6 +101,8 @@ export class AttendanceComponent implements OnInit {
             action: null,
             class: "text-center"
           };
+        } else if (key == 'activity_log_count' && ticket['activity_log_count'] > 0) {
+          column[key] = { value: ticket[key], class: 'blue', action: this.getLogs.bind(this, ticket) };
         } else {
           column[key] = { value: ticket[key], class: '', action: '' };
         }
@@ -107,5 +112,18 @@ export class AttendanceComponent implements OnInit {
     return columns;
 
   }
-
+  getLogs(ticket) {
+    console.log(ticket);
+    let dataparams = {
+      view: {
+        api: 'Admin/getActivityLogs',
+        param: {userId: ticket['_userid'], date:this.common.dateFormatter1(this.date)}
+      },
+      title: "Activity Logs",
+      actionRequired: true
+    }
+    // this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
 }

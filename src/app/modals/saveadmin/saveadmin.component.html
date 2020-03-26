@@ -48,7 +48,7 @@
             <label>Reporting Manager :-</label>
         </div>
         <div class="col-lg-8">
-            <auto-suggestion (onSelected)="selectReportingManager($event)" url="Admin/searchAdmin?getAll=true" [display]="['name','mobileno']" seperator="-" placeholder="Search By Mobile No. / Name" [preSelected]="preSelected">
+            <auto-suggestion (onSelected)="selectReportingManager($event)" url="Admin/searchAdmin?getAll=true" [display]="['name','mobileno']" seperator="-" placeholder="Search By Mobile No. / Name" [preSelected]="(Fouser.reportingManager.id>0)?{name:Fouser.reportingManager.name, mobileno:Fouser.reportingManager.mobileno }:{name:'', mobileno: ''}">
             </auto-suggestion>
         </div>
     </div>

@@ -29,7 +29,8 @@ export class SaveadminComponent implements OnInit {
     },
     reportingManager: {
       id: null,
-      name: ''
+      name: '',
+      mobileno: ''
     }
 
   };
@@ -44,7 +45,7 @@ export class SaveadminComponent implements OnInit {
     name: '',
     mobileno: ''
   };
-  preSelectedRepManager = {
+  preSelectedManager = {
     name: '',
     mobileno: ''
   };
@@ -65,6 +66,7 @@ export class SaveadminComponent implements OnInit {
         this.activeAdminDetails = this.common.params.activeAdminDetail;
         this.Fouser.id = this.activeAdminDetails['id'];
         this.Fouser.name = this.activeAdminDetails['name'];
+        this.Fouser.isActive = 'true';
         this.Fouser.mobileNo = this.activeAdminDetails['mobileno'];
         this.Fouser.department.id = this.activeAdminDetails['_dept_id'];
         this.Fouser.department.name = this.activeAdminDetails['department_name'];
@@ -108,7 +110,9 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.reportingManager.id = selectedReportingManager.id;
     this.Fouser.reportingManager.name = selectedReportingManager.name;
     this.preSelected.name = selectedReportingManager.report_user_name;
+    this.preSelectedManager.name = selectedReportingManager.report_user_name;
     this.preSelected.mobileno = selectedReportingManager.report_user_mobile;
+    this.preSelectedManager.mobileno = selectedReportingManager.report_user_mobile;
   }
 
 
@@ -139,9 +143,12 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.mobileNo = value.mobileno;
     this.Fouser.reportingManager.id = value.reporting_user_id;
     this.Fouser.reportingManager.name = value.report_user_name;
+    this.Fouser.reportingManager.mobileno = value.report_user_mobile;
     this.preSelected.name = value.report_user_name;
     this.preSelected.mobileno = value.report_user_mobile;
-    console.log(this.preSelected);
+    this.preSelectedManager.name = value.report_user_name;
+    this.preSelectedManager.mobileno = value.report_user_mobile;
+    console.log(this.preSelectedManager);
     if (value.dept_id > 0) {
       this.Fouser.department.id = value.dept_id;
       this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
