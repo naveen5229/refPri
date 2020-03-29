@@ -1,0 +1,12 @@
+:host::ng-deep{
+    .tableFixHead{
+        height: auto !important;
+    }
+}
+#devices{
+    :host::ng-deep{
+        .suggestion{
+            text-transform: uppercase !important;
+        }
+    }
+}

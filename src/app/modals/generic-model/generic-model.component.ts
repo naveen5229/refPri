@@ -112,6 +112,12 @@ export class GenericModelComponent implements OnInit {
     } else {
       this.api.get(this.viewObj.api)
       .subscribe(res => {
+        if (res['code'] == 3) {
+          this.common.showError(res['data']);
+          this.common.loading--;
+          this.activeModal.close();
+
+        } else {
         this.common.loading--;
         this.data = res['data'];
         console.log(this.data);
@@ -132,10 +138,12 @@ export class GenericModelComponent implements OnInit {
           }
         }
         this.table.data.columns = this.getTableColumns();
+      }
       }, err => {
         this.common.loading--;
         this.common.showError();
       });
+    
     }
     
   }

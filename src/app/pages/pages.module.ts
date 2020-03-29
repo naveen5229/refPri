@@ -37,6 +37,7 @@ import { InstallerComponent } from './installer/installer.component';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
 import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
+import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log-summary.component';
 
 @NgModule({
   imports: [
@@ -79,7 +80,8 @@ import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
     InstallerComponent,
     AttendanceComponent,
     ShiftLogsComponent,
-    ActivityLogsComponent
+    ActivityLogsComponent,
+    ActivityLogSummaryComponent
   ],
 })
 export class PagesModule {

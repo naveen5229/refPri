@@ -30,6 +30,9 @@ export class AddActivityLogsComponent implements OnInit {
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) { 
       this.mindate.setDate(this.mindate.getDate() - 2)
+      this.activity.hour.setHours(0);
+      this.activity.hour.setMinutes(0);
+      this.activity.hour.setSeconds(0);
 
     }
 

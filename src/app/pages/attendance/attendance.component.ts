@@ -101,7 +101,7 @@ export class AttendanceComponent implements OnInit {
             action: null,
             class: "text-center"
           };
-        } else if (key == 'activity_log_count' && ticket['activity_log_count'] > 0) {
+        } else if (key == 'activity_spend_time') {
           column[key] = { value: ticket[key], class: 'blue', action: this.getLogs.bind(this, ticket) };
         } else {
           column[key] = { value: ticket[key], class: '', action: '' };
