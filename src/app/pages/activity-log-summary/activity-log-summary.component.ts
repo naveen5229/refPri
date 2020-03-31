@@ -50,7 +50,7 @@ export class ActivityLogSummaryComponent implements OnInit {
         this.filterData = _.groupBy(this.activityLogSummaryList, 'datetime');
           console.log(this.filterData);
           Object.keys(this.filterData).map(key => {
-            this.filteredActivityLogSummaryList.push({date: key, data: this.filterData[key]});
+            this.filteredActivityLogSummaryList.push({date: key, data: _.sortBy(this.filterData[key], 'name')});
           })
           console.log(this.filteredActivityLogSummaryList[0]['data']);
 
