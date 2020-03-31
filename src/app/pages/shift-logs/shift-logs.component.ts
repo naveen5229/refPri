@@ -157,7 +157,7 @@ export class ShiftLogsComponent implements OnInit {
         if (res['data'] && res['data'][0]['lat'] && res['data'][0]['long']) {
           this.showMap(res['data'][0]['lat'], res['data'][0]['long']);
         } else {
-          this.common.showError("localtion mot found");
+          this.common.showError("location not found");
         }
       }, err => {
         this.common.loading--;
