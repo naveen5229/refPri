@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h5>Installer View</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="map-container">
+        <div class="input-container">
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom:25px;">
+                    <input type="text" style="background:#F8F8F8;" name="location" id="locationSearch" placeholder="{{placeholder}}">
+                </div>
+            </div>
+        </div>
+        <div #map id="map"> </div>
+    </div>
+</div>

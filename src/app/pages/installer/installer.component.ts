@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddInstallerComponent } from '../../modals/add-installer/add-installer.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
+import { ShowInstallerComponent } from '../../modals/show-installer/show-installer.component';
 
 @Component({
   selector: 'installer',
@@ -161,6 +162,11 @@ export class InstallerComponent implements OnInit {
         this.getInstallerList();
       }
     });
+  }
+
+  showInstallerMap() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(ShowInstallerComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
 }
