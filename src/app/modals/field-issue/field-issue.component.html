@@ -109,6 +109,9 @@
                     <label class="btn-primary" style="padding:7px" (click)="searchString='----'; takeAction(null);"><i
             class="fa fa-plus"></i></label>
                 </div>
+                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                    <label class="btn-primary p-2 ml-1"><i class="fas fa-globe-africa" title="show installer" (click)="showInstallerMap()"></i></label>
+                </div>
             </div>
             <div class="col-1 text-center"></div>
         </div>
@@ -120,9 +123,6 @@
             </div>
             <div class="col-3">
                 <textarea type="text" class="form-control" maxlength="150" placeholder="Remark" [(ngModel)]="requestData.remark"></textarea>
-            </div>
-            <div class="col-6 text-right">
-                <button (click)="showInstallerMap()" class="btn btn-primary btn-sm">Installer View</button>
             </div>
         </div>
     </fieldset>
