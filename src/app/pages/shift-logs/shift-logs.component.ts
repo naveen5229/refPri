@@ -117,9 +117,9 @@ export class ShiftLogsComponent implements OnInit {
             // icons: this.actionIcons(inventory)
           };
         } else if (key == "shift_start_time(Delay)") {
-          column[key] = { value: shift[key], class: 'black', action: this.getUserShiftLogLocationByDate.bind(this, shift['_employee_id'], shift['_start_time']) };
+          column[key] = { value: shift[key], class: 'blue', action: this.getUserShiftLogLocationByDate.bind(this, shift['_employee_id'], shift['_start_time']) };
         } else if (key == "shift_end_time(Delay)") {
-          column[key] = { value: shift[key], class: 'black', action: this.getUserShiftLogLocationByDate.bind(this, shift['_employee_id'], shift['_end_time']) };
+          column[key] = { value: shift[key], class: 'blue', action: this.getUserShiftLogLocationByDate.bind(this, shift['_employee_id'], shift['_end_time']) };
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }

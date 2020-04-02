@@ -151,3 +151,7 @@ input::placeholder {
 .pac-container {
     z-index: 2147483647 !important;
 }
+
+.blue {
+    color: #0606e3;
+}

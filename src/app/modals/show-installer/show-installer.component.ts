@@ -14,33 +14,48 @@ export class ShowInstallerComponent implements OnInit {
   @ViewChild('map', { static: true }) mapElement: ElementRef;
 
   installerList = [];
+  requestData = {
+    type: null,
+    lat: 22.719568,
+    long: 75.857727,
+    zoom: 4.5
+  }
 
   constructor(public activeModal: NgbActiveModal,
     public modalService: NgbModal,
     public common: CommonService,
     public api: ApiService,
     public mapService: MapService) {
-    // if (this.common.params && this.common.params.installerList) {
-    //   this.installerList = this.common.params.installerList;
-    //   console.log("installerList:", this.installerList);
-    // }
+    if (this.common.params && this.common.params.type) {
+      this.requestData.type = this.common.params.type;
+      this.requestData.lat = this.common.params.lat;
+      this.requestData.long = this.common.params.long;
+      console.log("requestData:", this.requestData);
+    }
+
+    if (this.requestData && this.requestData.type == 'nearestInstaller') {
+      this.getNearestInstallerList();
+      this.requestData.zoom = 12;
+    } else {
+      this.getAllInstallerLocationList();
+    }
   }
 
   ngOnInit() { }
 
-  requestData = {
-    lat: 22.719568,
-    long: 75.857727
-  }
-
   ngAfterViewInit() {
+
     setTimeout(() => {
-      this.mapService.mapIntialize('map', 4.5, this.requestData.lat, this.requestData.long);
+      this.mapService.mapIntialize('map', this.requestData.zoom, this.requestData.lat, this.requestData.long);
       setTimeout(() => {
         this.autoSuggestion();
       }, 2000);
-      this.getAllInstallerLocationList();
+
+      if (this.requestData && this.requestData.type == 'nearestInstaller') {
+        this.mapService.createSingleMarker(this.mapService.createLatLng(this.requestData.lat, this.requestData.long), true);
+      }
     }, 200);
+
   }
 
   closeModal(response) {
@@ -55,6 +70,25 @@ export class ShowInstallerComponent implements OnInit {
         this.common.loading--;
         this.installerList = res['data'] || [];
         console.log('after get data call api', this.installerList);
+        this.createInstallerMarkers();
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+  }
+
+  getNearestInstallerList() {
+    let params = {
+      lat: this.requestData.lat,
+      long: this.requestData.long
+    };
+    this.installerList = [];
+    this.common.loading++;
+    this.api.post('Installer/getNearestInstallerList.json?', params)
+      .subscribe(res => {
+        this.common.loading--;
+        this.installerList = res['data'] || [];
+        console.log('getNearestInstallerList:', this.installerList);
         this.createInstallerMarkers();
       }, err => {
         this.common.loading--;

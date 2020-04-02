@@ -411,7 +411,7 @@ export class TaskComponent implements OnInit {
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate') {
-          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: this.editTask.bind(this, ticket, type) };
+          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: this.editTask.bind(this, ticket, type) };
         } else if (key == 'high_priority') {
           column[key] = {
             value: "",
@@ -450,7 +450,7 @@ export class TaskComponent implements OnInit {
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else {
-          column[key] = { value: ticket[key], class: (key == 'time_left' && ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: '' };
+          column[key] = { value: ticket[key], class: (key == 'time_left' && ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };

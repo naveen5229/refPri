@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { LocationSelectionComponent } from '../location-selection/location-selection.component';
+import { ShowInstallerComponent } from '../show-installer/show-installer.component';
 
 @Component({
   selector: 'field-issue',
@@ -301,6 +302,20 @@ export class FieldIssueComponent implements OnInit {
 
   removeVehical(index) {
     this.requestData.vehicalInfo.splice(index, 1);
+  }
+
+  showInstallerMap() {
+    if (this.requestData && this.requestData.lat && this.requestData.long) {
+      this.common.params = {
+        type: 'nearestInstaller',
+        lat: this.requestData.lat,
+        long: this.requestData.long
+      };
+      const activeModal = this.modalService.open(ShowInstallerComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+
+    } else {
+      this.common.showError("location is missing");
+    }
   }
 
 }
