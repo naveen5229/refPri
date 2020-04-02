@@ -164,8 +164,10 @@ export class ShiftLogsComponent implements OnInit {
         console.log(err);
       });
   }
+
   geocoder: any;
   formatted_address = "";
+  
   showMap(lat, long) {
     this.geocoder = new google.maps.Geocoder;
     this.mapService.mapIntialize('map', 14, lat, long);

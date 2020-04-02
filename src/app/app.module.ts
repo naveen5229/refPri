@@ -67,6 +67,7 @@ import { ApproveFieldSupportRequestComponent } from './modals/approve-field-supp
 import { AddActivityLogsComponent } from './modals/add-activity-logs/add-activity-logs.component';
 import { ShiftLogAddComponent } from './modals/shift-log-add/shift-log-add.component';
 import { ShiftLogsComponent } from './pages/shift-logs/shift-logs.component';
+import { AttendanceMonthlySummaryComponent } from './modals/attendance-monthly-summary/attendance-monthly-summary.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -112,9 +113,11 @@ const PAGE_COMPONENTS = [
     SendmessageComponent,
     GenericModelComponent,
     TicketCallRatingComponent,
-    AddActivityLogsComponent
+    AddActivityLogsComponent,
+    AttendanceMonthlySummaryComponent
   ],
-  entryComponents: [...PAGE_COMPONENTS],
+  entryComponents: [...PAGE_COMPONENTS,
+    AttendanceMonthlySummaryComponent],
   imports: [
     NgxQRCodeModule,
     BrowserModule,

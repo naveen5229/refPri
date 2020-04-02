@@ -7,7 +7,7 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-2">
+            <div class="col-3">
                 <label>Select Date</label>
             </div>
             <div class="col-3">
@@ -15,9 +15,14 @@
                 </uj-date-time-picker>
             </div>
 
-            <div class="col-7">
+            <div class="col-3">
                 <button type="submit" id="submit" (click)="getAttendanceList()" class="btn btn-primary mr-2 btn-sm">Submit</button>
             </div>
+
+            <div class="col-3 text-right">
+                <button id="summary" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2 btn-sm">Attendance Monthly Summary</button>
+            </div>
+
         </div>
     </nb-card-header>
     <nb-card-body>
