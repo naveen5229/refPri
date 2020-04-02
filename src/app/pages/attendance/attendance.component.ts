@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AttendanceMonthlySummaryComponent } from '../../modals/attendance-monthly-summary/attendance-monthly-summary.component';
 
 @Component({
   selector: 'ngx-attendance',
@@ -112,6 +113,7 @@ export class AttendanceComponent implements OnInit {
     return columns;
 
   }
+
   getLogs(ticket) {
     console.log(ticket);
     let dataparams = {
@@ -125,5 +127,10 @@ export class AttendanceComponent implements OnInit {
     // this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  getAttendanceMonthySummary() {
+    const activeModal = this.modalService.open(AttendanceMonthlySummaryComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+
   }
 }
