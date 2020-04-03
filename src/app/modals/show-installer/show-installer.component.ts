@@ -20,6 +20,7 @@ export class ShowInstallerComponent implements OnInit {
     long: 75.857727,
     zoom: 4.5
   }
+  placeholder = 'search location';
 
   constructor(public activeModal: NgbActiveModal,
     public modalService: NgbModal,

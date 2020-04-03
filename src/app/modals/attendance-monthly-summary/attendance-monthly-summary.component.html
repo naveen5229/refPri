@@ -1,8 +1,8 @@
 <div class="modal-header">
-  
-  <h5  class="modal-title" id="modal-basic-title">Attendance Monthly Summary</h5>
 
-      <button style="float: right;" type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
+    <h5 class="modal-title" id="modal-basic-title">Attendance Monthly Summary</h5>
+
+    <button style="float: right;" type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
   <span aria-hidden="true">&times;</span>
 </button>
 
@@ -10,47 +10,49 @@
 
 <div class="modal-body">
 
-  <div class="row">
+    <div class="row">
 
-    <div class="col-3">
-        <label>Start Date</label>
-        <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
-        </uj-date-time-picker>
-    </div>
-    <div class="col-3">
-        <label>End Date</label>
-        <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
-        </uj-date-time-picker>
-    </div>
-    <div class="col-3 text-left mt-4">
-        <button type="submit" id="submit" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2">Submit</button>
-    </div>
-    <div class="col-3 text-right mt-4">
-      <span class="exel-icon" title="CSV Export" (click)="common.getCSVFromTableId('attendanceSummary')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
-       </div> 
-   
-  </div>
+        <div class="col-3">
+            <label>Start Date</label>
+            <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-3">
+            <label>End Date</label>
+            <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-3 text-left mt-4">
+            <button type="submit" id="submit" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2">Submit</button>
+        </div>
+        <div class="col-3 text-right mt-4">
+            <span class="exel-icon" title="CSV Export" (click)="common.getCSVFromTableId('attendanceSummary')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
+        </div>
 
-  <br>
-
-  <div  class="row form-group" style="overflow: auto;"> 
-    <div class="col-12">
-        <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover"  id='attendanceSummary'>
-            <thead class="thead" style="background-color: #c0b2b2">
-                <tr style="text-align:center">
-                    <th>Name</th>
-                    <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];">{{department.date}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr  *ngFor="let activity of filteredAttendanceSummaryList; let i = index;">
-                    <td  >{{activity.name}}</td>
-                    <td *ngFor="let dt of activity.data; let i = index;"><i *ngIf='dt.present' class="fa fa-check text-success"></i></td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-</div> 
+
+    <br>
+
+    <div class="row form-group" style="overflow: auto;">
+        <div class="col-12">
+            <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover" id='attendanceSummary'>
+                <thead class="thead" style="background-color: #c0b2b2">
+                    <tr style="text-align:center">
+                        <th title="Name">Name</th>
+                        <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];">{{department.date}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let activity of filteredAttendanceSummaryList; let i = index;">
+                        <td>{{activity.name}}</td>
+                        <td *ngFor="let dt of activity.data; let i = index;">
+                            <i *ngIf='dt.present' title="p" class="fa fa-check text-success"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
 </div>

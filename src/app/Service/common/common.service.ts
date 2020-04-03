@@ -235,7 +235,7 @@ export class CommonService {
     let minutes = d.setMinutes(30);
     // let seconds = d.getSeconds() <= 9 ? "0" + d.getSeconds() : d.getSeconds();
 
-    return hours + ":" + minutes + ":" ;
+    return hours + ":" + minutes + ":";
   }
   changeDateformate(date) {
     let d = new Date(date);
@@ -458,11 +458,11 @@ export class CommonService {
       );
     };
 
-    if(hdgCols.length < 7) {
-       this.tempLineBreak = { fontSize: 10, cellPadding: 6, minCellHeight: 11, minCellWidth: 10, cellWidth: 70, valign: 'middle', halign: 'center' };
+    if (hdgCols.length < 7) {
+      this.tempLineBreak = { fontSize: 10, cellPadding: 6, minCellHeight: 11, minCellWidth: 10, cellWidth: 70, valign: 'middle', halign: 'center' };
     }
     else {
-       this.tempLineBreak = { fontSize: 10, cellPadding: 3, minCellHeight: 11, minCellWidth: 10, cellWidth: 40, valign: 'middle', halign: 'center' };
+      this.tempLineBreak = { fontSize: 10, cellPadding: 3, minCellHeight: 11, minCellWidth: 10, cellWidth: 40, valign: 'middle', halign: 'center' };
 
     }
 
@@ -512,7 +512,7 @@ export class CommonService {
     // info.push(lowerLeft);
     let hdgCols = tblelt.querySelectorAll('th');
     if (hdgCols.length >= 1) {
-      for (let i = 0; i < (hdgCols.length - 1); i++) {
+      for (let i = 0; i < hdgCols.length; i++) {
         let isBreak = false;
         for (const donotInclude in doNotIncludes) {
           if (doNotIncludes.hasOwnProperty(donotInclude)) {
@@ -548,8 +548,9 @@ export class CommonService {
           arr_hdgs.push(strval);
         } else {
           let plainText = elthtml.replace(/<[^>]*>/g, '');
-          hdgs[plainText] = plainText;
-          arr_hdgs.push(plainText);
+          let plainIndex = (tblEltId == "attendanceSummary") ? '"' + plainText + '"' : plainText;
+          hdgs[plainIndex] = plainText;
+          arr_hdgs.push(plainIndex);
         }
       }
     }
@@ -584,7 +585,8 @@ export class CommonService {
               rowdata[arr_hdgs[j]] = match[1];
           } else {
             let plainText = colhtml.replace(/<[^>]*>/g, '');
-            rowdata[arr_hdgs[j]] = plainText;
+            let tdIndexTemp = (tblEltId == "attendanceSummary") ? '"' + arr_hdgs[j] + '"' : arr_hdgs[j];
+            rowdata[tdIndexTemp] = plainText;
           }
         }
         info.push(rowdata);

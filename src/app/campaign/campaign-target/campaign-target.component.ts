@@ -195,7 +195,7 @@ export class CampaignTargetComponent implements OnInit {
           let fodata = res['data'];
           let left_heading = fodata['name'];
           let center_heading = "Toll Usage";
-          this.common.getCSVFromTableId(tblEltId, left_heading, center_heading);
+          this.common.getCSVFromTableId(tblEltId, left_heading, center_heading, ['Action']);
         }, err => {
           this.common.loading--;
           console.log(err);
@@ -296,9 +296,9 @@ export class CampaignTargetComponent implements OnInit {
     // this.common.handleModalSize('class', 'modal-lg', '1100');
     this.common.params = { data: dataparams };
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
- 
+
   }
-  
+
 
   editCampaign(campaign) {
     console.log(campaign);

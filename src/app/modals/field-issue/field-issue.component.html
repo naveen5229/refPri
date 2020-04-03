@@ -100,7 +100,7 @@
                 <label>Location:-</label>
             </div>
             <div class="col-3">
-                <div class="col-10" style="display: inline-block;padding:0;">
+                <div class="col-8" style="display: inline-block;padding:0;">
                     <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="locationName" name="locationName" placeholder="Location"
                         [value]="requestData.location" [preSelected]='{location:requestData.location}' autocomplete="off" [apiMethod]="'getBooster'">
                     </auto-suggestion>
