@@ -20,7 +20,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
       id: null,
       name: ''
     },
-    status: null
+    status: null,
+    remark: ""
   };
   // partnerName = "";
   installerList = [];
@@ -32,7 +33,7 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
     console.log("task list", this.common.params);
     console.log("request list", this.common.params.request);
     if (this.common.params != null) {
-
+      this.btn = this.common.params.button;
       this.approveForm = {
         requestId: this.common.params.request._id,
         installer: {
@@ -43,7 +44,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
           id: this.common.params.request._partner_id,
           name: this.common.params.request.partner_name
         },
-        status: this.common.params.status
+        status: this.common.params.status,
+        remark: ""
       }
       console.log("edit data", this.approveForm);
     }
@@ -88,10 +90,10 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
     if (this.approveForm.requestId == '') {
       return this.common.showError("Request Id is missing")
     }
-    else if (this.approveForm.installer.id! > 0) {
+    else if (!(this.approveForm.installer.id > 0)) {
       return this.common.showError("Installer is missing")
     }
-    else if (this.approveForm.partner.id! > 0) {
+    else if (!(this.approveForm.partner.id > 0)) {
       return this.common.showError("Partner is missing")
     }
     else {
@@ -99,8 +101,10 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
         requestId: this.approveForm.requestId,
         installerId: this.approveForm.installer.id,
         partnerId: this.approveForm.partner.id,
-        status: this.approveForm.status
+        status: this.approveForm.status,
+        remark: this.approveForm.remark
       }
+      console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('Grid/approvedFieldSupportRequestByPartner', params).subscribe(res => {
         console.log(res);

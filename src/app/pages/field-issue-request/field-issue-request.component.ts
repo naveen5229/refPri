@@ -50,6 +50,17 @@ export class FieldIssueRequestComponent implements OnInit {
     }
   };
 
+  adminApprovedReqList = [];
+  tableAdminApprovedReqList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   completedReqList = [];
   tableCompletedReqList = {
     data: {
@@ -143,6 +154,10 @@ export class FieldIssueRequestComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableAdminApprovedReqList.data = {
+      headings: {},
+      columns: []
+    };
     this.tableCompletedReqList.data = {
       headings: {},
       columns: []
@@ -190,6 +205,9 @@ export class FieldIssueRequestComponent implements OnInit {
         } else if (type == 4) {
           this.completedReqList = res['data'] || [];
           this.completedReqList.length ? this.setTableCompletedReqList() : this.resetSmartTableData();
+        } else if (type == 5) {
+          this.adminApprovedReqList = res['data'] || [];
+          this.adminApprovedReqList.length ? this.setTableAdminApprovedReqList() : this.resetSmartTableData();
         }
         console.log(this.issueReqList);
       }, err => {
@@ -323,6 +341,49 @@ export class FieldIssueRequestComponent implements OnInit {
     return columns;
   }
   // end : approved field request list
+
+  // start: admin approved field request list
+  setTableAdminApprovedReqList() {
+    this.tableAdminApprovedReqList.data = {
+      headings: this.generateHeadingsAdminApprovedReqList(),
+      columns: this.getTableColumnsAdminApprovedReqList()
+    };
+    return true;
+  }
+
+  generateHeadingsAdminApprovedReqList() {
+    let headings = {};
+    for (var key in this.adminApprovedReqList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsAdminApprovedReqList() {
+    let columns = [];
+    this.adminApprovedReqList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsAdminApprovedReqList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : approved field request list
+
   // start: completed field request list
   setTableCompletedReqList() {
     this.tableCompletedReqList.data = {

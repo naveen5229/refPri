@@ -22,7 +22,10 @@
                     Assigned Requests
                 </li>
                 <li [ngClass]="activeTab=='approvedRequest'?'active':''" (click)="activeTab='approvedRequest'; getFieldSupportRequestByType(3)">
-                    Approved Requests
+                    Partner Approved Requests
+                </li>
+                <li [ngClass]="activeTab=='adminApprovedRequest'?'active':''" (click)="activeTab='adminApprovedRequest'; getFieldSupportRequestByType(5)">
+                    Admin Approved Requests
                 </li>
                 <li [ngClass]="activeTab=='completedRequest'?'active':''" (click)="activeTab='completedRequest'; getFieldSupportRequestByType(4)">
                     Completed Requests
@@ -53,6 +56,10 @@
         </div>
         <div *ngIf="activeTab=='approvedRequest'">
             <smart-table [data]="tableApprovedReqList.data" [settings]="tableApprovedReqList.settings" id="tableApprovedReqList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='adminApprovedRequest'">
+            <smart-table [data]="tableAdminApprovedReqList.data" [settings]="tableAdminApprovedReqList.settings" id="tableAdminApprovedReqList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='completedRequest'">

@@ -18,9 +18,15 @@
             <label>Installer:</label>
         </div>
         <div class="col-6">
-            <div class="col-6">
-                <label>{{approveForm.installer.name}}</label>
-            </div>
+            <label>{{approveForm.installer.name}}</label>
+        </div>
+    </div>
+    <div *ngIf="approveForm.status==-2" class="row">
+        <div class="col-4">
+            <label>Rmark:</label>
+        </div>
+        <div class="col-6">
+            <textarea type="text" class="form-control" maxlength="150" placeholder="Remark" [(ngModel)]="approveForm.remark"></textarea>
         </div>
     </div>
 
