@@ -311,7 +311,7 @@ export class FieldIssueRequestComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIconsForApprove(request)
+            icons: this.actionIconsForApprove(request)
           };
         } else {
           column[key] = { value: request[key], class: 'black', action: '' };
@@ -375,13 +375,16 @@ export class FieldIssueRequestComponent implements OnInit {
 
     return icons;
   }
+
   actionIconsForApprove(request) {
     let icons = [
-      { class: "fa fa-edit", action: this.openApproveFieldrequestModal.bind(this, request), txt: '' },
+      { class: "fa fa-thumbs-up", action: this.openApproveFieldrequestModal.bind(this, request, 2), txt: '' },
+      { class: "fa fa-times", action: this.openApproveFieldrequestModal.bind(this, request, -2), txt: '' },
     ];
 
     return icons;
   }
+
   editFieldSupportRequest(request) {
     console.log("edit request:", request);
     // let editData = {
@@ -436,16 +439,43 @@ export class FieldIssueRequestComponent implements OnInit {
     }
   }
 
-  openApproveFieldrequestModal(request) {
+  openApproveFieldrequestModal(request, status) {
     console.log("request:", request);
     if (request._id) {
-      this.common.params = { request, title: "Approve Field Support Request", button: "Approve" };
+      let prefix_title = (status == 2) ? 'Approve' : 'Reject';
+      this.common.params = { request, status: status, title: prefix_title + " Field Support Request", button: prefix_title };
       const activeModal = this.modalService.open(ApproveFieldSupportRequestComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
           this.getFieldSupportRequestByType(2);
         }
       })
+
+      // let params = {
+      //   requestId: request._id
+      // }
+      // let prefix_title = (status == 2) ? 'Approve' : 'Reject';
+      // this.common.params = {
+      //   title: prefix_title + ' Field Support Request ',
+      //   description: `<b>&nbsp;` + 'Are You Sure To ' + prefix_title + ' This Record' + `<b>`,
+      // }
+
+      // const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      // activeModal.result.then(data => {
+      //   if (data.response) {
+      //     console.log("status:", status);
+      //     // this.common.loading++;
+      //     // this.api.post('Grid/deleteFieldSupportRequest', params)
+      //     //   .subscribe(res => {
+      //     //     this.common.loading--;
+      //     //     this.common.showToast(res['msg']);
+      //     //     this.getFieldSupportRequestByType(1);
+      //     //   }, err => {
+      //     //     this.common.loading--;
+      //     //     console.log('Error: ', err);
+      //     //   });
+      //   }
+      // });
     } else {
       this.common.showError("Request-Id is missing");
     }

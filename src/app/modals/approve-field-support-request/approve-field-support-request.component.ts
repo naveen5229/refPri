@@ -19,7 +19,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
     partner: {
       id: null,
       name: ''
-    }
+    },
+    status: null
   };
   // partnerName = "";
   installerList = [];
@@ -31,6 +32,7 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
     console.log("task list", this.common.params);
     console.log("request list", this.common.params.request);
     if (this.common.params != null) {
+
       this.approveForm = {
         requestId: this.common.params.request._id,
         installer: {
@@ -40,55 +42,56 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
         partner: {
           id: this.common.params.request._partner_id,
           name: this.common.params.request.partner_name
-        }
+        },
+        status: this.common.params.status
       }
       console.log("edit data", this.approveForm);
     }
-    this.installerListByPartner();
+    // this.installerListByPartner();
   }
 
   ngOnInit() {
   }
-  installerListByPartner() {
-    let params = {
-      partnerId: this.approveForm.partner.id
-    }
-    this.api.post("Installer/getInstallerListByPartner.json", params).subscribe(res => {
-      console.log("data", res['data'])
-      if (res['code'] > 0) {
-        this.installerList = res['data'];
-      } else {
-        this.common.showError(res['msg']);
-      }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-  }
+  // installerListByPartner() {
+  //   let params = {
+  //     partnerId: this.approveForm.partner.id
+  //   }
+  //   this.api.post("Installer/getInstallerListByPartner.json", params).subscribe(res => {
+  //     console.log("data", res['data'])
+  //     if (res['code'] > 0) {
+  //       this.installerList = res['data'];
+  //     } else {
+  //       this.common.showError(res['msg']);
+  //     }
+  //   },
+  //     err => {
+  //       this.common.showError();
+  //       console.log('Error: ', err);
+  //     });
+  // }
 
   closeModal(response) {
     this.activeModal.close({ response: response });
   }
 
-  selectedInstaller(event) {
-    if (event.id) {
-      this.approveForm.installer.id = event.id;
-      this.approveForm.installer.name = event.name;
-    } else {
-      this.approveForm.installer.id = null;
-      this.approveForm.installer.name = '';
-    }
-  }
+  // selectedInstaller(event) {
+  //   if (event.id) {
+  //     this.approveForm.installer.id = event.id;
+  //     this.approveForm.installer.name = event.name;
+  //   } else {
+  //     this.approveForm.installer.id = null;
+  //     this.approveForm.installer.name = '';
+  //   }
+  // }
 
-  approveFieldSupportRequest(status) {
+  approveFieldSupportRequest() {
     if (this.approveForm.requestId == '') {
       return this.common.showError("Request Id is missing")
     }
-    else if (status == 1 && (this.approveForm.installer.id == '' || !this.approveForm.installer.id)) {
+    else if (this.approveForm.installer.id! > 0) {
       return this.common.showError("Installer is missing")
     }
-    else if (this.approveForm.partner.id == '') {
+    else if (this.approveForm.partner.id! > 0) {
       return this.common.showError("Partner is missing")
     }
     else {
@@ -96,7 +99,7 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
         requestId: this.approveForm.requestId,
         installerId: this.approveForm.installer.id,
         partnerId: this.approveForm.partner.id,
-        status: status
+        status: this.approveForm.status
       }
       this.common.loading++;
       this.api.post('Grid/approvedFieldSupportRequestByPartner', params).subscribe(res => {
@@ -108,12 +111,11 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
         } else {
           this.common.showError(res['msg']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
 
   }
