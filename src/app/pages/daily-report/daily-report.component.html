@@ -18,7 +18,14 @@
                 <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
                 </uj-date-time-picker>
             </div>
-            <div class="col-6 text-right mt-4">
+
+            <div class="col-3">
+                <label>Select Department</label>
+            <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(departmentId>0)?{name:departmentName}:{name:''}">
+            </auto-suggestion>
+             </div>
+
+            <div class="col-3 text-right mt-4">
                 <button type="submit" id="submit" (click)="getDailyReport()" class="btn btn-primary mr-2">Submit</button>
             </div>
         </div>

@@ -13,6 +13,9 @@ import { GenericModelComponent } from '../../modals/generic-model/generic-model.
 export class DailyReportComponent implements OnInit {
   endTime = new Date();
   startTime = new Date();
+  departmentId = null;
+  departments = [];
+  departmentName = '';
 
   dailyReportList = [];
 
@@ -30,11 +33,29 @@ export class DailyReportComponent implements OnInit {
     public modalService: NgbModal,
     private http: HttpClient,
     public api: ApiService) { 
-      
-
+      this.getDepartments();
   }
 
   ngOnInit() {
+  }
+
+  getDepartments() {
+    this.common.loading++;
+    this.api.get("Admin/getDepartmentList", "I")
+      .subscribe(res => {
+        this.common.loading--;
+        this.departments = res['data'] || [];
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  selectedDepartment(selectedDepartment) {
+    console.log(selectedDepartment);
+    this.departmentId = selectedDepartment.id;
+    this.departmentName = selectedDepartment.name;
   }
 
   resetTable() {
@@ -205,7 +226,8 @@ export class DailyReportComponent implements OnInit {
 
     const params =
       "startDate=" + startdate +
-      "&endDate=" + enddate;
+      "&endDate=" + enddate +
+      "&departmentId=" + this.departmentId;
     // console.log(params);
     this.common.loading++;
     this.api.get('Users/getDailyReport.json?' + params)
