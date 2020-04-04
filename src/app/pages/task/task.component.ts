@@ -16,7 +16,7 @@ import { ReminderComponent } from '../../modals/reminder/reminder.component';
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
-  activeTab = 'TasksForMe';
+  activeTab = 'unreadTaskByMe';
   task_type = 1;
   userId = null;
   primaryId = null;
@@ -127,7 +127,7 @@ export class TaskComponent implements OnInit {
     }
   };
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
-    this.getTaskByType(101);
+    this.getTaskByType(-8);
     this.getAllAdmin();
   }
 

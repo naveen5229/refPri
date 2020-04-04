@@ -21,7 +21,7 @@
                 <label>Mobile Number:<span class="require">*</span></label>
             </div>
             <div class="col-6">
-                <input class="form-control" type="text" maxlength="10" [(ngModel)]="installerData.mobileno">
+                <input class="form-control" type="text" maxlength="10" [(ngModel)]="installerData.mobileno" [disabled]="installerData.installerId>0">
             </div>
         </div>
         <div class="row form-group">
