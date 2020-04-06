@@ -32,8 +32,7 @@
 
     <div class="row mt-2">
         <div class="col-12 text-right">
-            <!-- <button class="btn btn-primary text-capitalize mr-2 rejectBtn" (click)="approveFieldSupportRequest(-2)">Reject</button> -->
-            <button class="btn btn-primary text-capitalize" (click)="approveFieldSupportRequest()">{{btn}}</button>
+            <button class="btn text-capitalize" [ngClass]="(approveForm.status==-2)?'btn-danger':'btn-primary'" (click)="approveFieldSupportRequest()">{{btn}}</button>
         </div>
     </div>
 </div>

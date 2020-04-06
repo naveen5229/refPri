@@ -104,7 +104,7 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
         status: this.approveForm.status,
         remark: this.approveForm.remark
       }
-      console.log("params:", params); return false;
+      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('Grid/approvedFieldSupportRequestByPartner', params).subscribe(res => {
         console.log(res);
