@@ -508,7 +508,7 @@ export class FieldIssueRequestComponent implements OnInit {
       const activeModal = this.modalService.open(ApproveFieldSupportRequestComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
-          this.getFieldSupportRequestByType(4);
+          this.getFieldSupportRequestByType(3);
         }
       })
     } else {

@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapService } from '../../Service/map/map.service';
 declare var google: any;
+declare let MarkerClusterer: any;
 
 @Component({
   selector: 'show-installer',
@@ -129,5 +130,37 @@ export class ShowInstallerComponent implements OnInit {
 
     }
   }
+
+  markerCluster = null;
+  // handleMarkerCluster(isShow: boolean) {
+  //   if (this.markerCluster) this.markerCluster.clearMarkers();
+  //   if (!isShow) {
+  //     this.markers.map(marker => marker.marker.setMap(this.mapService.map));
+  //     return;
+  //   }
+  //   let options = {
+  //     gridSize: 60,
+  //     maxZoom: 18,
+  //     zoomOnClick: false,
+  //     imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
+  //   };
+
+  //   this.markerCluster = new MarkerClusterer(this.map, this.markers.map(marker => marker.marker), options);
+  //   google.maps.event.addListener(this.markerCluster, 'clusterclick', (cluster) => {
+  //     let content = '<div style="color:#000">' + cluster.getMarkers()
+  //       .map((maker, index) => `${index + 1}. ${maker.title}`)
+  //       .join('&nbsp;&nbsp;') + '</div>';
+  //     console.log('content:', content);
+  //     if (this.map.getZoom() <= this.markerCluster.getMaxZoom()) {
+  //       if (!this.infoWindow)
+  //         this.infoWindow = new google.maps.InfoWindow({ content });
+
+  //       this.infoWindow.setContent(content);
+  //       this.infoWindow.setPosition(cluster.getCenter());
+  //       this.infoWindow.open(this.map, '');
+  //     }
+  //   });
+
+  // }
 
 }
