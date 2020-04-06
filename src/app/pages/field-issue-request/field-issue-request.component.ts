@@ -50,6 +50,17 @@ export class FieldIssueRequestComponent implements OnInit {
     }
   };
 
+  adminApprovedReqList = [];
+  tableAdminApprovedReqList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   completedReqList = [];
   tableCompletedReqList = {
     data: {
@@ -143,6 +154,10 @@ export class FieldIssueRequestComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableAdminApprovedReqList.data = {
+      headings: {},
+      columns: []
+    };
     this.tableCompletedReqList.data = {
       headings: {},
       columns: []
@@ -190,6 +205,9 @@ export class FieldIssueRequestComponent implements OnInit {
         } else if (type == 4) {
           this.completedReqList = res['data'] || [];
           this.completedReqList.length ? this.setTableCompletedReqList() : this.resetSmartTableData();
+        } else if (type == 5) {
+          this.adminApprovedReqList = res['data'] || [];
+          this.adminApprovedReqList.length ? this.setTableAdminApprovedReqList() : this.resetSmartTableData();
         }
         console.log(this.issueReqList);
       }, err => {
@@ -311,7 +329,7 @@ export class FieldIssueRequestComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIconsForApprove(request)
+            icons: (request['amount'] > 0) ? this.actionIconsForApprove(request) : ''
           };
         } else {
           column[key] = { value: request[key], class: 'black', action: '' };
@@ -323,6 +341,49 @@ export class FieldIssueRequestComponent implements OnInit {
     return columns;
   }
   // end : approved field request list
+
+  // start: admin approved field request list
+  setTableAdminApprovedReqList() {
+    this.tableAdminApprovedReqList.data = {
+      headings: this.generateHeadingsAdminApprovedReqList(),
+      columns: this.getTableColumnsAdminApprovedReqList()
+    };
+    return true;
+  }
+
+  generateHeadingsAdminApprovedReqList() {
+    let headings = {};
+    for (var key in this.adminApprovedReqList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsAdminApprovedReqList() {
+    let columns = [];
+    this.adminApprovedReqList.map(request => {
+      let column = {};
+      for (let key in this.generateHeadingsAdminApprovedReqList()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIconsForApprove(request)
+          };
+        } else {
+          column[key] = { value: request[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+  // end : admin approved field request list
+
   // start: completed field request list
   setTableCompletedReqList() {
     this.tableCompletedReqList.data = {
@@ -375,13 +436,16 @@ export class FieldIssueRequestComponent implements OnInit {
 
     return icons;
   }
+
   actionIconsForApprove(request) {
     let icons = [
-      { class: "fa fa-edit", action: this.openApproveFieldrequestModal.bind(this, request), txt: '' },
+      { class: "fa fa-thumbs-up", action: this.openApproveFieldrequestModal.bind(this, request, 2), txt: '' },
+      { class: "fa fa-times", action: this.openApproveFieldrequestModal.bind(this, request, -2), txt: '' },
     ];
 
     return icons;
   }
+
   editFieldSupportRequest(request) {
     console.log("edit request:", request);
     // let editData = {
@@ -436,14 +500,15 @@ export class FieldIssueRequestComponent implements OnInit {
     }
   }
 
-  openApproveFieldrequestModal(request) {
+  openApproveFieldrequestModal(request, status) {
     console.log("request:", request);
     if (request._id) {
-      this.common.params = { request, title: "Approve Field Support Request", button: "Approve" };
+      let prefix_title = (status == 2) ? 'Approve' : 'Reject';
+      this.common.params = { request, status: status, title: prefix_title + " Field Support Request", button: prefix_title };
       const activeModal = this.modalService.open(ApproveFieldSupportRequestComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
-          this.getFieldSupportRequestByType(2);
+          this.getFieldSupportRequestByType(4);
         }
       })
     } else {

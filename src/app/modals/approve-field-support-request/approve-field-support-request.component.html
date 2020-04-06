@@ -18,15 +18,21 @@
             <label>Installer:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedInstaller($event)" [data]="installerList" display="name" seperator="-" placeholder="Search Installer" autocomplete="off" name="installer" inputId="installer" [preSelected]="(approveForm.installer.id>0)?{name:approveForm.installer.name}:{name:''}">
-            </auto-suggestion>
+            <label>{{approveForm.installer.name}}</label>
+        </div>
+    </div>
+    <div *ngIf="approveForm.status==-2" class="row">
+        <div class="col-4">
+            <label>Rmark:</label>
+        </div>
+        <div class="col-6">
+            <textarea type="text" class="form-control" maxlength="150" placeholder="Remark" [(ngModel)]="approveForm.remark"></textarea>
         </div>
     </div>
 
     <div class="row mt-2">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize mr-2 rejectBtn" (click)="approveFieldSupportRequest(-1)">Reject</button>
-            <button class="btn btn-primary text-capitalize" (click)="approveFieldSupportRequest(1)">{{btn}}</button>
+            <button class="btn text-capitalize" [ngClass]="(approveForm.status==-2)?'btn-danger':'btn-primary'" (click)="approveFieldSupportRequest()">{{btn}}</button>
         </div>
     </div>
 </div>

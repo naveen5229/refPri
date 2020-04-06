@@ -22,7 +22,10 @@
                     Assigned Requests
                 </li>
                 <li [ngClass]="activeTab=='approvedRequest'?'active':''" (click)="activeTab='approvedRequest'; getFieldSupportRequestByType(3)">
-                    Approved Requests
+                    Partner Approved Requests
+                </li>
+                <li [ngClass]="activeTab=='adminApprovedRequest'?'active':''" (click)="activeTab='adminApprovedRequest'; getFieldSupportRequestByType(5)">
+                    Admin Approved Requests
                 </li>
                 <li [ngClass]="activeTab=='completedRequest'?'active':''" (click)="activeTab='completedRequest'; getFieldSupportRequestByType(4)">
                     Completed Requests
@@ -30,15 +33,6 @@
                 <li [ngClass]="activeTab=='installerTkt'?'active':''" (click)="activeTab='installerTkt';activeTabTicket=''">
                     Installer Tickets
                 </li>
-                <!-- <li [ngClass]="activeTab=='ackTkt'?'active':''" (click)="activeTab='ackTkt'; getFieldSupportTicketByType(2)">
-                    Ack Tickets
-                </li>
-                <li [ngClass]="activeTab=='completedTkt'?'active':''" (click)="activeTab='completedTkt'; getFieldSupportTicketByType(3)">
-                    Completed Tickets
-                </li>
-                <li [ngClass]="activeTab=='rejectedTkt'?'active':''" (click)="activeTab='rejectedTkt'; getFieldSupportTicketByType(4)">
-                    Rejected Tickets
-                </li> -->
             </ul>
         </div>
 
@@ -53,6 +47,10 @@
         </div>
         <div *ngIf="activeTab=='approvedRequest'">
             <smart-table [data]="tableApprovedReqList.data" [settings]="tableApprovedReqList.settings" id="tableApprovedReqList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='adminApprovedRequest'">
+            <smart-table [data]="tableAdminApprovedReqList.data" [settings]="tableAdminApprovedReqList.settings" id="tableAdminApprovedReqList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='completedRequest'">

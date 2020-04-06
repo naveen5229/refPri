@@ -155,3 +155,42 @@ input::placeholder {
 .blue {
     color: #0606e3;
 }
+
+table .fa,
+table .fas {
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+table .fa-edit {
+    color: green;
+}
+
+table .fa-trash {
+    color: red;
+}
+
+table .fa-trash-alt {
+    color: red;
+}
+
+table .fa-times {
+    color: red;
+}
+
+table .fa-user-plus {
+    color: blue;
+}
+
+table .fa-check {
+    color: darkblue;
+}
+
+table .fa-eye {
+    color: #7b0579;
+}
+
+table .fa-thumbs-up {
+    color: green;
+}
