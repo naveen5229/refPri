@@ -136,6 +136,7 @@ export class FieldIssueRequestComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         // this.showIssueRequest();
+        this.activeTab = 'pendingRequest';
         this.getFieldSupportRequestByType(1);
       }
     })
