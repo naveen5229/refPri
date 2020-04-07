@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CommonService } from '../common/common.service';
 declare let google: any;
+declare let MarkerClusterer: any;
 
 @Injectable({
   providedIn: 'root'
@@ -605,6 +606,71 @@ export class MapService {
         }
       });
     });
+  }
+
+  createMarkerCluster(markers, isShow: boolean, infoKeys) {
+    let marker = [];
+    for (let index = 0; index < markers.length; index++) {
+      let displayText = '';
+      let latLng = this.getLatLngValue(markers[index]);
+      // let markerT = new google.maps.marker(latLng);
+      if (typeof (infoKeys) == 'object') {
+        infoKeys.map((display, indexx) => {
+          if (indexx != infoKeys.length - 1) {
+            displayText += this.common.ucWords(display) + " : " + markers[index][display] + ' <br> ';
+          } else {
+            displayText += this.common.ucWords(display) + " : " + markers[index][display];
+          }
+        });
+      } else {
+        displayText = this.common.ucWords(infoKeys) + " : " + markers[index][infoKeys];
+      }
+
+      var icon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 6,
+        fillColor: "#FFFF00",
+        fillOpacity: 0.8,
+        strokeWeight: 1
+      };
+
+      let markert = new google.maps.Marker({
+        position: latLng,
+        title: displayText,
+        // flat: true,
+        icon: icon,
+      });
+      marker.push(markert);
+    }
+    if (this.cluster) this.cluster.clearMarkers();
+    // if (!isShow) {
+    //   this.markers.map(marker => marker.marker.setMap(this.mapService.map));
+    //   return;
+    // }
+    let options = {
+      gridSize: 40,
+      maxZoom: 18,
+      zoomOnClick: false,
+      imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
+    };
+
+    this.cluster = new MarkerClusterer(this.map, marker, options);
+    google.maps.event.addListener(this.cluster, 'clusterclick', (cluster) => {
+      console.log("cluster:", cluster.getMarkers());
+      let content = '<div style="color:#000">' + cluster.getMarkers()
+        .map((maker, index) => `${index + 1}. ${maker.title}`)
+        .join('&nbsp;&nbsp;') + '</div>';
+      console.log('content:', content);
+      if (this.map.getZoom() <= this.cluster.getMaxZoom()) {
+        if (!this.infoWindow)
+          this.infoWindow = new google.maps.InfoWindow({ content });
+
+        this.infoWindow.setContent(content);
+        this.infoWindow.setPosition(cluster.getCenter());
+        this.infoWindow.open(this.map, '');
+      }
+    });
+
   }
 
 }

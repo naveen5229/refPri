@@ -21,7 +21,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
       name: ''
     },
     status: null,
-    remark: ""
+    remark: "",
+    amount: ""
   };
   // partnerName = "";
   installerList = [];
@@ -45,7 +46,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
           name: this.common.params.request.partner_name
         },
         status: this.common.params.status,
-        remark: ""
+        remark: "",
+        amount: this.common.params.request.amount
       }
       console.log("edit data", this.approveForm);
     }

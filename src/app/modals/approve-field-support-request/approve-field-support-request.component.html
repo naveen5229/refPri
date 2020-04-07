@@ -7,7 +7,7 @@
 <div class="modal-body">
     <div class="row mt-2">
         <div class="col-4">
-            <label>Partner:<span class="text-danger">*</span></label>
+            <label>Partner:</label>
         </div>
         <div class="col-6">
             <label>{{approveForm.partner.name}}</label>
@@ -19,6 +19,14 @@
         </div>
         <div class="col-6">
             <label>{{approveForm.installer.name}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>Amount:</label>
+        </div>
+        <div class="col-6">
+            <label>{{approveForm.amount}}</label>
         </div>
     </div>
     <div *ngIf="approveForm.status==-2" class="row">
