@@ -98,11 +98,8 @@ export class ShowInstallerComponent implements OnInit {
   }
 
   createInstallerMarkers() {
-    if (this.requestData && this.requestData.type == 'nearestInstaller') {
-      let markers = this.mapService.createMarkers(this.installerList, false, false, ['location'], false, true);
-    } else {
-      this.mapService.createMarkerCluster(this.installerList, true, ['location']);
-    }
+    // let markers = this.mapService.createMarkers(this.installerList, false, false, ['location'], false, true);
+    this.mapService.createMarkerCluster(this.installerList, true, ['location']);
   }
 
   autoSuggestion() {

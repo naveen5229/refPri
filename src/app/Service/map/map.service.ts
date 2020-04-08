@@ -651,6 +651,7 @@ export class MapService {
       gridSize: 40,
       maxZoom: 18,
       zoomOnClick: false,
+      minimumClusterSize: 2,
       imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
     };
 
