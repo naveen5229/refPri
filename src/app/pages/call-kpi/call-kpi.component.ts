@@ -40,6 +40,12 @@ export class CallKpiComponent implements OnInit {
     }
   };
 
+  departments = [];
+  selectedDept = {
+    id: null,
+    name: ""
+  };
+
 
   constructor(public common: CommonService,
     public modalService: NgbModal,
@@ -65,9 +71,23 @@ export class CallKpiComponent implements OnInit {
     // this.shiftStart.setDate(this.endTime.getDate()-1)
     // this.endTime.setDate(this.endTime.getDate()-1)
     // console.log(this.shiftStart.getTime());
+    this.getDepartments();
   }
 
   ngOnInit() {
+  }
+
+  getDepartments() {
+    this.common.loading++;
+    this.api.get("Admin/getDepartmentList")
+      .subscribe(res => {
+        this.common.loading--;
+        this.departments = res['data'] || [];
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
   getCallKpi() {
@@ -91,7 +111,8 @@ export class CallKpiComponent implements OnInit {
       "startDate=" + startdate +
       "&endDate=" + enddate +
       "&shiftStart=" + shiftStart +
-      "&shiftEnd=" + shiftEnd;
+      "&shiftEnd=" + shiftEnd +
+      "&departmentId=" + this.selectedDept.id;
     console.log(params);
     console.log(shiftStart);
     console.log(typeof (shiftStart));
@@ -172,7 +193,7 @@ export class CallKpiComponent implements OnInit {
             // icons: this.actionIcons(pending)
           };
         } else {
-          column[key] = { value: typeof (ticket[key]) == 'object' ? ticket[key]['value'] + ticket[key]['suffix']: ticket[key], class: ticket[key]['class'], action: '' };
+          column[key] = { value: typeof (ticket[key]) == 'object' ? ticket[key]['value'] + ticket[key]['suffix'] : ticket[key], class: ticket[key]['class'], action: '' };
         }
       }
       columns.push(column);

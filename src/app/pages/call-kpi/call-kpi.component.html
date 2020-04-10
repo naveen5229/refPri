@@ -1,75 +1,73 @@
-
-    <div class="row" style="margin-left: 10px; margin-top: 10px;">
-      <div class="col-6">
-        <h5 >Call KPI</h5>
-      </div>
+<div class="row" style="margin-left: 10px; margin-top: 10px;">
+    <div class="col-6">
+        <h5>Call KPI</h5>
     </div>
+</div>
 <br>
 <br>
 
 <div class="row" style="margin-left: 10px;">
-    <div class="col-3">
-      <label style="margin-left: 10px;">Start Date</label>
-      <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
-      </uj-date-time-picker>
-    </div>
-    <div class="col-3">
-      <label>End Date</label>
-      <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false"
-        [isStart]="false">
-      </uj-date-time-picker>
+    <div class="col-2">
+        <label style="margin-left: 10px;">Start Date</label>
+        <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+        </uj-date-time-picker>
     </div>
     <div class="col-2">
-      <label>Shift Start</label>
-      <uj-date-time-picker (onChanged)="shiftStart=($event)" [dateTimeValue]="shiftStart" [isTime]="true" [isDate]="false"
-        [isStart]="false">
-      </uj-date-time-picker>
+        <label>End Date</label>
+        <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
+        </uj-date-time-picker>
     </div>
     <div class="col-2">
-      <label>Shift End</label>
-      <uj-date-time-picker (onChanged)="shiftEnd=($event)" [dateTimeValue]="shiftEnd" [isTime]="true" [isDate]="false"
-        [isStart]="false">
-      </uj-date-time-picker>
+        <label>Shift Start</label>
+        <uj-date-time-picker (onChanged)="shiftStart=($event)" [dateTimeValue]="shiftStart" [isTime]="true" [isDate]="false" [isStart]="false">
+        </uj-date-time-picker>
     </div>
     <div class="col-2">
-      <button type="submit" id="submit" (click)="getCallKpi()" class="btn btn-primary" style="margin-top: 20px;"> Submit
+        <label>Shift End</label>
+        <uj-date-time-picker (onChanged)="shiftEnd=($event)" [dateTimeValue]="shiftEnd" [isTime]="true" [isDate]="false" [isStart]="false">
+        </uj-date-time-picker>
+    </div>
+    <div class="col-2">
+        <label>Select Department</label>
+        <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
+        </auto-suggestion>
+    </div>
+    <div class="col-2">
+        <button type="submit" id="submit" (click)="getCallKpi()" class="btn btn-primary" style="margin-top: 20px;"> Submit
       </button>
 
     </div>
-  </div>
+</div>
 
 
-  <br>
-  <br>
-  
-      <div class="row">
-        <div class="col-3">
-          <div class="chartbox">
+<br>
+<br>
+
+<div class="row">
+    <div class="col-3">
+        <div class="chartbox">
             <!-- <chart class="dashboard_chart" type="pie" 
                  id="chart"></chart> -->
-                 <canvas id="myChart1" width="350" height="200" ></canvas>
-                 <br>
-                    <h6 *ngIf="showLabel" style="text-align: center;">Type Count</h6>
-                 <br>
-                 <canvas id="myChart2" width="250" height="100" chart-labels="labels" chart-legend="false"></canvas>
-                 <br>
-                 <h6 *ngIf="showLabel" style="text-align: center;">Call Count</h6>
-                 <br>
-                 <canvas id="myChart3" width="250" height="100"></canvas>
-                 <br>
-                 <h6 *ngIf="showLabel" style="text-align: center;">Call Duration</h6>
+            <canvas id="myChart1" width="350" height="200"></canvas>
+            <br>
+            <h6 *ngIf="showLabel" style="text-align: center;">Type Count</h6>
+            <br>
+            <canvas id="myChart2" width="250" height="100" chart-labels="labels" chart-legend="false"></canvas>
+            <br>
+            <h6 *ngIf="showLabel" style="text-align: center;">Call Count</h6>
+            <br>
+            <canvas id="myChart3" width="250" height="100"></canvas>
+            <br>
+            <h6 *ngIf="showLabel" style="text-align: center;">Call Duration</h6>
 
 
         </div>
-        </div>
-        <div class="col-9">
-          <smart-table *ngIf="callKpiList.length!=0" [data]="table.data" [settings]="table.settings"
-            id="callKpiList">
-          </smart-table>
-        </div>
-      </div>
-        
-          
-          <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
-      
- 
+    </div>
+    <div class="col-9">
+        <smart-table *ngIf="callKpiList.length!=0" [data]="table.data" [settings]="table.settings" id="callKpiList">
+        </smart-table>
+    </div>
+</div>
+
+
+<!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
