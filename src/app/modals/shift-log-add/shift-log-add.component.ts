@@ -19,7 +19,9 @@ export class ShiftLogAddComponent implements OnInit {
       name: ""
     },
     addtime: null,
-    type: 1
+    type: 1,
+    attendanceType: null,
+    remark: null
   };
   adminList = [];
   shiftLogList = [];
@@ -35,10 +37,23 @@ export class ShiftLogAddComponent implements OnInit {
   disableStartTime = false;
   shiftType = [
     { id: 1, name: 'Work' },
-    { id: 2, name: 'Break' }
-  ]
+    { id: 2, name: 'Break' },
+    { id: 3, name: 'Client Visit' }
+  ];
+  attendanceType = [
+    { id: 1, name: 'Present' },
+    { id: 2, name: 'Present 1st half day' },
+    { id: 3, name: 'Present 2st half day' },
+    { id: 4, name: 'Leave' },
+    { id: 5, name: 'Absent' }
+  ];
+  isAttendanceType = false;
+
   constructor(public activeModal: NgbActiveModal, public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
+    if (this.common.params && this.common.params.isAttendanceType) {
+      this.isAttendanceType = this.common.params.isAttendanceType;
+    }
   }
 
   ngOnInit() {
@@ -181,7 +196,9 @@ export class ShiftLogAddComponent implements OnInit {
         startTime: (this.shiftForm.startTime) ? this.common.dateFormatter(this.shiftForm.startTime) : null,
         endTime: (this.shiftForm.endTime) ? this.common.dateFormatter(this.shiftForm.endTime) : null,
         addtime: (this.shiftForm.addtime) ? this.common.dateFormatter(this.shiftForm.addtime) : null,
-        type: this.shiftForm.type
+        type: this.shiftForm.type,
+        attendanceType: this.shiftForm.attendanceType,
+        remark: this.shiftForm.remark
       };
       this.api.post("Admin/saveUserShift", params).subscribe(res => {
         console.log("data", res['data'])

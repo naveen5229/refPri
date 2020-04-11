@@ -84,6 +84,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'file-text-outline',
         link: '/pages/activity-logs-summary',
         home: true,
+      },
+      {
+        title: 'Holiday-Calendar',
+        icon: 'file-text-outline',
+        link: '/pages/holiday-calendar',
+        home: true,
       }
     ]
   },

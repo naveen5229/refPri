@@ -47,6 +47,7 @@
                         <td>{{activity.name}}</td>
                         <td *ngFor="let dt of activity.data; let i = index;">
                             <i *ngIf='dt.present' title="p" class="fa fa-check text-success"></i>
+                            <i *ngIf='!dt.present' (click)="showShiftLogPopup()"></i>
                         </td>
                     </tr>
                 </tbody>

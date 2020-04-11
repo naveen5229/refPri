@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-3">
+                <h5>Holiday Calendar</h5>
+            </div>
+            <div class="col-3">
+                <label>Holiday Csv <span class="require">*</span></label>
+            </div>
+            <div class="col-3">
+                <div class="upload-btn-wrapper">
+                    <input type="file" name="csv" (change)="handleFileSelection($event)">
+                </div>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary btn-sm" type="button" (click)="uploadCsv()">Import Csv</button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-height: 300px;">
+        <div>
+            <smart-table [data]="table.data" [settings]="table.settings" id="tableHoliday"></smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>

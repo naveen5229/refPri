@@ -38,6 +38,7 @@ import { AttendanceComponent } from './attendance/attendance.component';
 import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
 import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
 import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log-summary.component';
+import { HolidaysComponent } from './holidays/holidays.component';
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log
     AttendanceComponent,
     ShiftLogsComponent,
     ActivityLogsComponent,
-    ActivityLogSummaryComponent
+    ActivityLogSummaryComponent,
+    HolidaysComponent
   ],
 })
 export class PagesModule {
