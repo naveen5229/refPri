@@ -87,7 +87,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Holiday-Calendar',
-        icon: 'file-text-outline',
+        icon: 'calendar',
         link: '/pages/holiday-calendar',
         home: true,
       }

@@ -171,4 +171,8 @@ export class HolidaysComponent implements OnInit {
     console.log("selectedList:", selectedList);
   }
 
+  sampleCsv() {
+    window.open(this.api.URL + "sample/holidaySample.csv");
+  }
+
 }

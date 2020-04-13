@@ -57,6 +57,7 @@ export class ShiftLogAddComponent implements OnInit {
       this.shiftForm.user.name = this.common.params.userName;
       this.shiftForm.startTime = this.common.params.date;
       this.shiftForm.endTime = this.common.params.date;
+      this.shiftForm.addtime = this.common.params.date;
     }
   }
 
@@ -191,7 +192,7 @@ export class ShiftLogAddComponent implements OnInit {
       return this.common.showError("Start Time must not be greater than current time");
     } else if (this.shiftForm.endTime > this.common.getDate()) {
       return this.common.showError("End Time must not be greater than current time");
-    } else if (this.disableStartTime && !this.shiftForm.endTime) {
+    } else if ((this.disableStartTime || this.isAttendanceType) && !this.shiftForm.endTime) {
       return this.common.showError("End Time is missing");
     } else {
       this.common.loading++;

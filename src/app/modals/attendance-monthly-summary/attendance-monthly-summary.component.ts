@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { UserService } from '../../Service/user/user.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from "lodash";
 import { ShiftLogAddComponent } from '../shift-log-add/shift-log-add.component';
@@ -23,6 +24,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     public modalService: NgbModal,
     public activeModal: NgbActiveModal,
     public api: ApiService,
+    public userService: UserService
   ) {
     this.common.handleModalSize('class', 'modal-lg', '1300', 'px', 0);
     this.startTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth(), 1);
@@ -80,12 +82,12 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   showShiftLogPopup(column) {
-    if (!column.present || column.present == "") {
+    if ((!column.present || column.present == "") && (this.userService._details.id == 34 || this.userService._details.id == 125 || this.userService._details.id == 120)) {
       let date = this.startTime;
       console.log("date:", date);
       date.setDate(column.date);
       console.log("date:", date);
-      this.common.params = { isAttendanceType: true, date: date, userId: 120, userName: 'Sunil Kumar' };
+      this.common.params = { isAttendanceType: true, date: date, userId: 120, userName: column.name };
       const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
