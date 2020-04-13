@@ -711,7 +711,7 @@ export class TaskComponent implements OnInit {
       if ((ticket._status == 5 || ticket._status == -1)) {
         icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
       } else if (ticket._status == 2) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: '', title: "Mark completed" });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: '', title: "Mark completed" });
       } else if (ticket._status == 0) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
         icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
@@ -872,6 +872,23 @@ export class TaskComponent implements OnInit {
       });
     } else {
       this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  changeTicketStatusWithConfirm(ticket, type, status) {
+    if (ticket._refid) {
+      this.common.params = {
+        title: 'Complete Task ',
+        description: `<b>&nbsp;` + 'Are You Sure To Complete This Task' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.updateTicketStatus(ticket, type, status);
+        }
+      });
+    } else {
+      this.common.showError("Task ID Not Available");
     }
   }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorReportComponent } from '../../modals/error-report/error-report.component';
 
 @Component({
@@ -22,8 +22,9 @@ export class HolidaysComponent implements OnInit {
     }
   };
   holidayCsv = null;
+  allHolidayList = [];
 
-  constructor(public common: CommonService, public user: UserService, public api: ApiService, public activeModal: NgbActiveModal, public modalService: NgbModal) {
+  constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
     this.getHolidayCalendar();
   }
   ngOnInit() { }
@@ -36,6 +37,7 @@ export class HolidaysComponent implements OnInit {
         this.common.loading--;
         console.log('res:', res);
         if (res['data'] && res['data']) {
+          this.allHolidayList = res['data'] || [];
           this.holidayList = res['data'] || [];
           this.holidayList.length ? this.setTable() : this.resetTable();
         }
@@ -93,6 +95,27 @@ export class HolidaysComponent implements OnInit {
 
   }
 
+  handleFileSelection(event) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0])
+      .then(res => {
+        this.common.loading--;
+        let file = event.target.files[0];
+        console.log("file-type:", file.type);
+        if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {
+        }
+        else {
+          alert("valid Format Are : csv");
+          return false;
+        }
+
+        res = res.toString().replace('vnd.ms-excel', 'csv');
+        this.holidayCsv = res;
+      }, err => {
+        this.common.loading--;
+        console.error('Base Err: ', err);
+      })
+  }
 
   uploadCsv() {
     let params = {
@@ -115,13 +138,37 @@ export class HolidaysComponent implements OnInit {
         const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
         activeModal.result.then(data => {
           if (data.response) {
-            this.activeModal.close({ response: true });
+            // this.activeModal.close({ response: true });
+            this.holidayCsv = null;
+            this.getHolidayCalendar();
           }
         });
       }, err => {
         this.common.loading--;
         console.log(err);
       });
+  }
+
+  onSelectFilter(e) {
+    this.resetTable();
+    let selectedList = null;
+    if (e) {
+      console.log("e:", e);
+      if (this.allHolidayList && this.allHolidayList.length > 0) {
+        if (e == 1) {
+          selectedList = this.allHolidayList.filter(x => x._type == 1);
+        } else if (e == 2) {
+          selectedList = this.allHolidayList.filter(x => x._type == 0);
+        } else if (e == 3) {
+          selectedList = this.allHolidayList.filter(x => !(x.name == 'Sunday' || x.name == 'sunday'));
+        }
+      }
+    } else {
+      selectedList = this.allHolidayList;
+    }
+    this.holidayList = selectedList;
+    this.setTable();
+    console.log("selectedList:", selectedList);
   }
 
 }

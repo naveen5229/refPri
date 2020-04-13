@@ -79,14 +79,20 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.activeModal.close();
   }
 
-  showShiftLogPopup() {
-    this.common.params = { isAttendanceType: true };
-    const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        this.getAttendanceMonthySummary();
-      }
-    });
+  showShiftLogPopup(column) {
+    if (!column.present || column.present == "") {
+      let date = this.startTime;
+      console.log("date:", date);
+      date.setDate(column.date);
+      console.log("date:", date);
+      this.common.params = { isAttendanceType: true, date: date, userId: 120, userName: 'Sunil Kumar' };
+      const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.getAttendanceMonthySummary();
+        }
+      });
+    }
   }
 
 }

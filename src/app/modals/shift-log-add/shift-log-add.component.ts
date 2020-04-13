@@ -38,21 +38,25 @@ export class ShiftLogAddComponent implements OnInit {
   shiftType = [
     { id: 1, name: 'Work' },
     { id: 2, name: 'Break' },
-    { id: 3, name: 'Client Visit' }
+    // { id: 3, name: 'Client Visit' }
   ];
   attendanceType = [
-    { id: 1, name: 'Present' },
-    { id: 2, name: 'Present 1st half day' },
-    { id: 3, name: 'Present 2st half day' },
-    { id: 4, name: 'Leave' },
-    { id: 5, name: 'Absent' }
+    { id: 2, name: 'Present' },
+    { id: 1, name: 'Present half day' },
+    { id: -2, name: 'Leave' },
+    { id: -1, name: 'Optional-Leave' }
   ];
   isAttendanceType = false;
 
   constructor(public activeModal: NgbActiveModal, public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
     if (this.common.params && this.common.params.isAttendanceType) {
+      console.log("param:", this.common.params);
       this.isAttendanceType = this.common.params.isAttendanceType;
+      this.shiftForm.user.id = this.common.params.userId;
+      this.shiftForm.user.name = this.common.params.userName;
+      this.shiftForm.startTime = this.common.params.date;
+      this.shiftForm.endTime = this.common.params.date;
     }
   }
 

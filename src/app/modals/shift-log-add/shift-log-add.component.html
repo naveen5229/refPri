@@ -10,7 +10,7 @@
             <label>User:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select Users" (onSelected)="changeUsers($event)" inputId="shiftUser" name="shiftUser" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select Users" (onSelected)="changeUsers($event)" inputId="shiftUser" name="shiftUser" autocomplete="off" [preSelected]="(shiftForm.user.id>0) ? {name: shiftForm.user.name} : {name:''}"></auto-suggestion>
         </div>
     </div>
     <div *ngIf="isAttendanceType" class="row mt-2">
