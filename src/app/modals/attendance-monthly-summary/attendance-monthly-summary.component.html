@@ -1,17 +1,12 @@
 <div class="modal-header">
-
     <h5 class="modal-title" id="modal-basic-title">Attendance Monthly Summary</h5>
-
     <button style="float: right;" type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
-  <span aria-hidden="true">&times;</span>
-</button>
-
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 
 <div class="modal-body">
-
     <div class="row">
-
         <div class="col-3">
             <label>Start Date</label>
             <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
@@ -25,12 +20,10 @@
         <div class="col-3 text-left mt-4">
             <button type="submit" id="submit" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2">Submit</button>
         </div>
-        <div class="col-3 text-right mt-4">
+        <div class="col-3 text-right mt-2">
             <span class="exel-icon" title="CSV Export" (click)="common.getCSVFromTableId('attendanceSummary')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
         </div>
-
     </div>
-
     <br>
 
     <div class="row form-group" style="overflow: auto;">
@@ -53,6 +46,5 @@
             </table>
         </div>
     </div>
-
 
 </div>

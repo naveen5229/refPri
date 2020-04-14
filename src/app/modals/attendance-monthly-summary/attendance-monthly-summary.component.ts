@@ -82,12 +82,16 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   showShiftLogPopup(column) {
-    if ((!column.present || column.present == "") && (this.userService._details.id == 34 || this.userService._details.id == 125 || this.userService._details.id == 120)) {
-      let date = this.startTime;
-      console.log("date:", date);
-      date.setDate(column.date);
-      console.log("date:", date);
-      this.common.params = { isAttendanceType: true, date: date, userId: 120, userName: column.name };
+    console.log("column:", column);
+    let date = new Date(this.startTime);
+    date.setDate(column.date);
+    let currentTime = new Date();
+    date.setHours(currentTime.getHours());
+    date.setMinutes(currentTime.getMinutes());
+    // console.log("date:", date);
+    if (date <= this.common.getDate() && (!column.present || column.present == "") && (this.userService._details.id == 34 || this.userService._details.id == 125 || this.userService._details.id == 120)) {
+
+      this.common.params = { isAttendanceType: true, date: date, userId: column._userid, userName: column.name };
       const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {

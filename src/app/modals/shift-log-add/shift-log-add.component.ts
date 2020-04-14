@@ -57,7 +57,7 @@ export class ShiftLogAddComponent implements OnInit {
       this.shiftForm.user.name = this.common.params.userName;
       this.shiftForm.startTime = this.common.params.date;
       this.shiftForm.endTime = this.common.params.date;
-      this.shiftForm.addtime = this.common.params.date;
+      // this.shiftForm.addtime = this.common.params.date;
     }
   }
 
@@ -185,7 +185,7 @@ export class ShiftLogAddComponent implements OnInit {
     if (!this.shiftForm.user.id) {
       return this.common.showError("User is missing");
     } else if (!this.shiftForm.startTime) {
-      return this.common.showError("Start Time Or End Time is missing");
+      return this.common.showError("Start Time is missing");
     } else if (this.shiftForm.endTime && this.shiftForm.endTime < this.shiftForm.startTime) {
       return this.common.showError("End Time must be greater than Start Time");
     } else if (this.shiftForm.startTime > this.common.getDate()) {
@@ -194,6 +194,8 @@ export class ShiftLogAddComponent implements OnInit {
       return this.common.showError("End Time must not be greater than current time");
     } else if ((this.disableStartTime || this.isAttendanceType) && !this.shiftForm.endTime) {
       return this.common.showError("End Time is missing");
+    } else if (this.isAttendanceType && !this.shiftForm.attendanceType) {
+      return this.common.showError("Attendance Type is missing");
     } else {
       this.common.loading++;
       let params = {
@@ -211,8 +213,12 @@ export class ShiftLogAddComponent implements OnInit {
         if (res['code'] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            this.getUserShiftDetailByDate();
             this.resetDate();
+            if (this.isAttendanceType) {
+              this.closeModal(true);
+            } else {
+              this.getUserShiftDetailByDate();
+            }
           } else {
             this.common.showError(res['data'][0].y_msg)
           }

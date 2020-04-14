@@ -5,6 +5,14 @@
 </button>
 </div>
 <div class="modal-body">
+    <div *ngIf="isAttendanceType" class="row mt-2 ">
+        <div class="col-6">
+            <label>Date:</label>
+        </div>
+        <div class="col-6">
+            {{common.dateFormatter(common.params.date,'YYYYMMDD',false)}}
+        </div>
+    </div>
     <div class="row mt-2 ">
         <div class="col-6">
             <label>User:<span class="text-danger">*</span></label>
