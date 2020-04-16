@@ -128,21 +128,25 @@ export class HolidaysComponent implements OnInit {
     this.api.post("Admin/importHolidayCsv", params)
       .subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res["msg"]);
+        if (res["code"] > 0) {
+          this.common.showToast(res["msg"]);
 
-        let successData = res['data']['success'];
-        let errorData = res['data']['fail'];
-        console.log("error: ", errorData);
-        alert(res["msg"]);
-        this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
-        const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-        activeModal.result.then(data => {
-          if (data.response) {
-            // this.activeModal.close({ response: true });
-            this.holidayCsv = null;
-            this.getHolidayCalendar();
-          }
-        });
+          let successData = res['data']['success'];
+          let errorData = res['data']['fail'];
+          console.log("error: ", errorData);
+          alert(res["msg"]);
+          this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+          const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+          activeModal.result.then(data => {
+            if (data.response) {
+              // this.activeModal.close({ response: true });
+              this.holidayCsv = null;
+              this.getHolidayCalendar();
+            }
+          });
+        } else {
+          this.common.showError(res["msg"]);
+        }
       }, err => {
         this.common.loading--;
         console.log(err);
