@@ -6,7 +6,6 @@
             </div>
         </div>
 
-     
         <div class="row">
             <div class="col-3">
                 <label>Start Date</label>
@@ -21,31 +20,48 @@
 
             <div class="col-3">
                 <label>Select Department</label>
-            <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(departmentId>0)?{name:departmentName}:{name:''}">
-            </auto-suggestion>
-             </div>
+                <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(departmentId>0)?{name:departmentName}:{name:''}">
+                </auto-suggestion>
+            </div>
 
             <div class="col-3 text-right mt-4">
                 <button type="submit" id="submit" (click)="getDailyReport()" class="btn btn-primary mr-2">Submit</button>
             </div>
         </div>
-<br>
+        <br>
         <div class="row">
-            
+
             <div class="col-12 text-right mt-8">
                 <button type="submit" id="submit" (click)="showCallData1()" class="btn btn-primary mr-2">W8 Campaign Admin Wise</button>
                 <button id="walle8Campaign" (click)="getWalle8CampaignPurposeWise()" class="btn btn-primary mr-2">W8 Campaign Purpose Wise</button>
-                <button type="submit" id="submit" (click)="callLogs()" class="btn btn-primary">Last Call Logs</button>
+                <button type="submit" id="submit" (click)="callLogs()" class="btn btn-primary mr-2">Last Call Logs</button>
+                <!-- <button type="submit" (click)="getWrongCaptcha()" class="btn btn-primary">Wronge Captcha Latest</button> -->
             </div>
         </div>
 
     </nb-card-header>
     <nb-card-body style="min-height: 485px;">
-
-
-        <smart-table *ngIf="dailyReportList.length!=0" [data]="table.data" [settings]="table.settings" id="dailyReportList">
+        <smart-table *ngIf="dailyReportList.length>0" [data]="table.data" [settings]="table.settings" id="dailyReportList">
         </smart-table>
         <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
-
     </nb-card-body>
+
+    <!-- start: Wrong Captcha modal -->
+    <div class="modal" id="wrongCaptchaModal" #wrongCaptchaModal>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" style="color:#fff;">Wrong Captcha Latest</h4>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeMapModal()">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <!-- <smart-table [data]="tableWrongCaptcha" [settings]="tableWrongCaptcha.settings" id="tableWrongCaptcha">
+                    </smart-table> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end: Wrong Captcha modal -->
 </nb-card>

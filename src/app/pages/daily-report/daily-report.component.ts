@@ -32,8 +32,8 @@ export class DailyReportComponent implements OnInit {
   constructor(public common: CommonService,
     public modalService: NgbModal,
     private http: HttpClient,
-    public api: ApiService) { 
-      this.getDepartments();
+    public api: ApiService) {
+    this.getDepartments();
   }
 
   ngOnInit() {
@@ -293,5 +293,86 @@ export class DailyReportComponent implements OnInit {
     }
 
   }
+
+  // start: wrong captcha
+  captchList = [];
+  tableWrongCaptcha = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  getWrongCaptcha() {
+    document.getElementById("wrongCaptchaModal").style.display = "block";
+    this.captchList = [];
+    this.resetTable();
+    this.common.loading++;
+    this.api.get('Users/getWrongCaptcha.json?')
+      .subscribe(res => {
+        this.common.loading--;
+        this.captchList = res['data'] || [];
+        console.log("captchList:", this.captchList);
+        this.captchList.length ? this.setWrongCaptchaTable() : this.resetWrongCaptchaTable();
+
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+  }
+
+  resetWrongCaptchaTable() {
+    this.tableWrongCaptcha.data = {
+      headings: {},
+      columns: []
+    };
+  }
+
+  setWrongCaptchaTable() {
+    this.tableWrongCaptcha.data = {
+      headings: this.generateHeadingsWrongCaptcha(),
+      columns: this.getTableColumnsWrongCaptcha()
+    };
+    return true;
+  }
+
+  generateHeadingsWrongCaptcha() {
+    let headings = {};
+    for (var key in this.captchList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsWrongCaptcha() {
+    let columns = [];
+    this.captchList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsWrongCaptcha()) {
+        if (key == 'Action') {
+          // column[key] = {
+          //   value: "",
+          //   isHTML: true,
+          //   action: null,
+          //   // icons: this.actionIcons(pending)
+          // };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+
+  closeMapModal() {
+    document.getElementById("wrongCaptchaModal").style.display = "none";
+  }
+  // end:wrong captcha
 
 }

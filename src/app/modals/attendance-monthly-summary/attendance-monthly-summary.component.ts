@@ -86,8 +86,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let date = new Date(this.startTime);
     date.setDate(column.date);
     let currentTime = new Date();
-    date.setHours(currentTime.getHours());
-    date.setMinutes(currentTime.getMinutes());
+    date.setHours(9);
+    date.setMinutes(30);
     // console.log("date:", date);
     if (date <= this.common.getDate() && (!column.present || column.present == "") && (this.userService._details.id == 34 || this.userService._details.id == 125 || this.userService._details.id == 120)) {
 

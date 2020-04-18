@@ -55,8 +55,10 @@ export class ShiftLogAddComponent implements OnInit {
       this.isAttendanceType = this.common.params.isAttendanceType;
       this.shiftForm.user.id = this.common.params.userId;
       this.shiftForm.user.name = this.common.params.userName;
-      this.shiftForm.startTime = this.common.params.date;
-      this.shiftForm.endTime = this.common.params.date;
+      this.shiftForm.startTime = new Date(this.common.params.date);
+      this.shiftForm.endTime = new Date(this.common.params.date);
+      this.shiftForm.endTime.setHours(18);
+      this.shiftForm.endTime.setMinutes(30);
       // this.shiftForm.addtime = this.common.params.date;
     }
   }
