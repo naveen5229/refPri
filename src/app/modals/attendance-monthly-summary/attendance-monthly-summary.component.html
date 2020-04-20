@@ -32,14 +32,15 @@
                 <thead class="thead" style="background-color: #c0b2b2">
                     <tr style="text-align:center">
                         <th title="Name">Name</th>
-                        <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];">{{department.date}}</th>
+                        <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];" [title]="checkHolidayTypeTitle(department.htype)" [style.background]="checkHolidayTypeColor(department.htype)">{{department.date}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let activity of filteredAttendanceSummaryList; let i = index;">
                         <td>{{activity.name}}</td>
-                        <td *ngFor="let dt of activity.data; let i = index;" (click)="showShiftLogPopup(dt)">
-                            <i *ngIf='dt.present' title="p" class="fa fa-check text-success"></i>
+                        <td *ngFor="let dt of activity.data; let i = index;" [style.background]="checkHolidayTypeColor(dt.htype)" (click)="showShiftLogPopup(dt)">
+                            <!-- <i *ngIf='dt.present' title="p" class="fa fa-check text-success"></i> -->
+                            <span *ngIf='dt.present' [title]="dt.present" [style.color]="checkPresentTypeColor(dt.present)" (dblclick)="deleteShiftLog(dt)">{{dt.present}}</span>
                         </td>
                     </tr>
                 </tbody>

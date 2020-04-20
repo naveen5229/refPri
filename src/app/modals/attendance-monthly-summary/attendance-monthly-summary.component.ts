@@ -5,6 +5,7 @@ import { UserService } from '../../Service/user/user.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from "lodash";
 import { ShiftLogAddComponent } from '../shift-log-add/shift-log-add.component';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'ngx-attendance-monthly-summary',
@@ -98,6 +99,86 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
           this.getAttendanceMonthySummary();
         }
       });
+    }
+  }
+
+  checkPresentTypeColor(presetType) {
+    let typeColor = "black";
+    if (presetType == "P") {
+      typeColor = "springgreen";
+    } else if (presetType == "PH") {
+      typeColor = "greenyellow";
+    } else if (presetType == "L") {
+      typeColor = "red";
+    } else if (presetType == "OL") {
+      typeColor = "darkred";
+    }
+    return typeColor;
+  }
+
+  checkHolidayTypeColor(hType) {
+    let typeColor = "initial";
+    if (hType == "1") {
+      typeColor = "yellow";
+    } else if (hType == "0") {
+      typeColor = "lightyellow";
+    }
+    return typeColor;
+  }
+
+  checkHolidayTypeTitle(hType) {
+    let title = "";
+    if (hType == "1") {
+      title = "Fixed Holiday";
+    } else if (hType == "0") {
+      title = "Optional Holiday";
+    }
+    return title;
+  }
+
+  deleteShiftLog(shift) {
+    console.log("dbl click event");
+    if (shift.date && shift._userid > 0) {
+      let dateTemp = new Date(this.startTime);
+      dateTemp.setDate(shift.date);
+      // dateTemp.setHours(9);
+      // dateTemp.setMinutes(30);
+      let dateTemp2 = this.common.dateFormatter(dateTemp, 'YYYYMMDD', false);
+      let params = {
+        date: dateTemp2,
+        empId: shift._userid
+      }
+      this.common.params = {
+        title: 'Delete Shift',
+        description: `<b>` + `User: ` + shift.name + `<br>Date: ` + dateTemp2 + `<br><br>` + 'Are you sure you want to delete this record ??' + `</b>`,
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Admin/deleteUserShiftByHr', params)
+            .subscribe(res => {
+              this.common.loading--;
+              if (res['code'] > 0) {
+                if (res['data'][0].y_id > 0) {
+                  this.common.showToast(res['data'][0].y_msg);
+                  this.getAttendanceMonthySummary();
+                } else {
+                  this.common.showError(res['data'][0].y_msg);
+                }
+              } else {
+                this.common.showError(res['msg']);
+              }
+
+            }, err => {
+              this.common.loading--;
+              console.log('Error: ', err);
+            });
+        }
+      });
+    } else {
+      this.common.showError("Date or User is missing");
     }
   }
 

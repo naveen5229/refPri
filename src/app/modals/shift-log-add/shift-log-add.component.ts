@@ -38,7 +38,7 @@ export class ShiftLogAddComponent implements OnInit {
   shiftType = [
     { id: 1, name: 'Work' },
     { id: 2, name: 'Break' },
-    // { id: 3, name: 'Client Visit' }
+    // { id: 3, name: 'OT' }
   ];
   attendanceType = [
     { id: 2, name: 'Present' },
