@@ -19,6 +19,11 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   attendanceSummaryList = [];
   filterData: any;
   filteredAttendanceSummaryList = [];
+  selectedDates = {
+    start: '',
+    end: ''
+  };
+  reportType = null;
 
 
   constructor(public common: CommonService,
@@ -35,51 +40,65 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   ngOnInit() {
   }
 
+  closeModal(response) {
+    this.activeModal.close();
+  }
 
-  getAttendanceMonthySummary() {
+  onSelectMonth() {
+    console.log("selectedDates:", this.selectedDates);
+    this.startTime = new Date(this.selectedDates.start);
+    this.endTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth() + 1, 0);
+    console.log("startTime:", this.startTime);
+    console.log("endTime:", this.endTime);
+    // this.endTime.setHours(23);
+    // this.endTime.setMinutes(59);
+    // this.endTime.setSeconds(59);
+  }
+
+
+  getAttendanceMonthySummary(type = null) {
+    console.log("selectedDates:", this.selectedDates);
+    this.reportType = type;
     this.filteredAttendanceSummaryList = [];
+    this.resetTableFinalAttendanceList();
     let startdate = this.common.dateFormatter(this.startTime);
     let enddate = this.common.dateFormatter(this.endTime);
     const params =
       "?startDate=" + startdate +
       "&endDate=" + enddate;
     // console.log(params);
+    let apiName = (type && type == "final") ? 'Admin/getAttendanceMonthlySummaryFinal' : 'Admin/getAttendanceMonthlySummary';
     this.common.loading++;
-    this.api.get('Admin/getAttendanceMonthlySummary' + params)
+    this.api.get(apiName + params)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 3) {
           this.common.showError(res['data']);
 
         } else {
-          this.attendanceSummaryList = res['data'] || [];
-          console.log('res:', res);
-          console.log('res:', this.attendanceSummaryList);
-          this.filterData = _.groupBy(this.attendanceSummaryList, 'name');
-          console.log(this.filterData);
-          Object.keys(this.filterData).map(key => {
-            this.filteredAttendanceSummaryList.push({ name: key, data: _.sortBy(this.filterData[key], 'date') });
-          })
-          console.log(this.filteredAttendanceSummaryList[0]['data']);
-          console.log(this.filteredAttendanceSummaryList);
+          if (type && type == "final") {
+            this.finalAttendanceList = res['data'] || [];
+            console.log("finalAttendanceList:", this.finalAttendanceList);
+            (this.finalAttendanceList.length > 0) ? this.setTableFinalAttendanceList() : this.resetTableFinalAttendanceList()
+          } else {
 
-          // // this.filterData = _.groupBy(this.activityLogSummaryList, 'datetime');
-          //   console.log(this.filterData);
-          //   Object.keys(this.filterData).map(key => {
-          //     this.filteredActivityLogSummaryList.push({date: key, data: _.sortBy(this.filterData[key], 'name')});
-          //   })
-          //   console.log(this.filteredActivityLogSummaryList[0]['data']);
+            this.attendanceSummaryList = res['data'] || [];
+            console.log('res:', res);
+            console.log('res:', this.attendanceSummaryList);
+            this.filterData = _.groupBy(this.attendanceSummaryList, 'name');
+            console.log(this.filterData);
+            Object.keys(this.filterData).map(key => {
+              this.filteredAttendanceSummaryList.push({ name: key, data: _.sortBy(this.filterData[key], 'date') });
+            })
+            console.log(this.filteredAttendanceSummaryList[0]['data']);
+            console.log(this.filteredAttendanceSummaryList);
+          }
 
         }
-      }
-        , err => {
-          this.common.loading--;
-          console.log(err);
-        });
-  }
-
-  closeModal(response) {
-    this.activeModal.close();
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
   showShiftLogPopup(column) {
@@ -96,7 +115,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
       const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
-          this.getAttendanceMonthySummary();
+          this.getAttendanceMonthySummary(null);
         }
       });
     }
@@ -163,7 +182,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
               if (res['code'] > 0) {
                 if (res['data'][0].y_id > 0) {
                   this.common.showToast(res['data'][0].y_msg);
-                  this.getAttendanceMonthySummary();
+                  this.getAttendanceMonthySummary(null);
                 } else {
                   this.common.showError(res['data'][0].y_msg);
                 }
@@ -179,6 +198,74 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
       });
     } else {
       this.common.showError("Date or User is missing");
+    }
+  }
+
+  // start: report final
+  finalAttendanceList = [];
+  tableFinalAttendanceList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  resetTableFinalAttendanceList() {
+    this.tableFinalAttendanceList.data = {
+      headings: {},
+      columns: []
+    };
+  }
+
+  setTableFinalAttendanceList() {
+    this.tableFinalAttendanceList.data = {
+      headings: this.generateHeadingsFinalAttendanceList(),
+      columns: this.getTableColumnsFinalAttendanceList()
+    };
+    return true;
+  }
+
+  generateHeadingsFinalAttendanceList() {
+    let headings = {};
+    for (var key in this.finalAttendanceList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    console.log("headings:", headings);
+    return headings;
+  }
+
+  getTableColumnsFinalAttendanceList() {
+    let columns = [];
+    this.finalAttendanceList.map(shift => {
+      let column = {};
+      for (let key in this.generateHeadingsFinalAttendanceList()) {
+        if (key == 'Action' || key == 'action') {
+          // column[key] = {
+          //   value: "",
+          //   isHTML: true,
+          //   action: null,
+          //   icons: null
+          // };
+        } else {
+          column[key] = { value: shift[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: report final
+
+  exportCSV() {
+    if (this.reportType == 'final') {
+      this.common.getCSVFromTableId('tableFinalAttendanceList')
+    } else {
+      this.common.getCSVFromTableId('attendanceSummary')
     }
   }
 

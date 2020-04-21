@@ -7,7 +7,7 @@
 
 <div class="modal-body">
     <div class="row">
-        <div class="col-3">
+        <!-- <div class="col-3">
             <label>Start Date</label>
             <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
             </uj-date-time-picker>
@@ -16,17 +16,24 @@
             <label>End Date</label>
             <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
             </uj-date-time-picker>
+        </div> -->
+        <div class="col-1">
+            Month:
         </div>
-        <div class="col-3 text-left mt-4">
-            <button type="submit" id="submit" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2">Submit</button>
+        <div class="col-2">
+            <month-picker (select)="selectedDates = $event; onSelectMonth();"></month-picker>
         </div>
-        <div class="col-3 text-right mt-2">
-            <span class="exel-icon" title="CSV Export" (click)="common.getCSVFromTableId('attendanceSummary')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
+        <div class="col-6 text-left">
+            <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)" class="btn btn-primary btn-sm mr-2">Submit</button>
+            <button type="submit" id="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get final report</button>
+        </div>
+        <div class="col-3 text-right" style="margin-top: -15px;">
+            <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
         </div>
     </div>
     <br>
 
-    <div class="row form-group" style="overflow: auto;">
+    <div class="row form-group" style="overflow: auto;" *ngIf="!reportType">
         <div class="col-12">
             <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover" id='attendanceSummary'>
                 <thead class="thead" style="background-color: #c0b2b2">
@@ -46,6 +53,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="row" *ngIf="reportType=='final'">
+        <div class="col-12">Final Report</div>
+        <smart-table [data]="tableFinalAttendanceList.data" [settings]="tableFinalAttendanceList.settings" id="tableFinalAttendanceList">
+        </smart-table>
     </div>
 
 </div>
