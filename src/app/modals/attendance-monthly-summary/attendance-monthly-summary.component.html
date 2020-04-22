@@ -24,8 +24,8 @@
             <month-picker (select)="selectedDates = $event; onSelectMonth();"></month-picker>
         </div>
         <div class="col-6 text-left">
-            <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)" class="btn btn-primary btn-sm mr-2">Submit</button>
-            <button type="submit" id="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get final report</button>
+            <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)" class="btn btn-primary btn-sm mr-2">Get Monthly Report</button>
+            <button type="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get Final Report</button>
         </div>
         <div class="col-3 text-right" style="margin-top: -15px;">
             <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>

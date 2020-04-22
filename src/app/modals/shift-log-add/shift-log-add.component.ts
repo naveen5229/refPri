@@ -192,8 +192,6 @@ export class ShiftLogAddComponent implements OnInit {
       return this.common.showError("End Time must be greater than Start Time");
     } else if (this.shiftForm.startTime > this.common.getDate()) {
       return this.common.showError("Start Time must not be greater than current time");
-    } else if (this.shiftForm.endTime > this.common.getDate()) {
-      return this.common.showError("End Time must not be greater than current time");
     } else if ((this.disableStartTime || this.isAttendanceType) && !this.shiftForm.endTime) {
       return this.common.showError("End Time is missing");
     } else if (this.isAttendanceType && !this.shiftForm.attendanceType) {
