@@ -74,6 +74,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         home: true,
       },
       {
+        title: 'OT-Management',
+        icon: 'file-text-outline',
+        link: '/pages/ot-management',
+        home: true,
+      },
+      {
         title: 'Activity-Logs',
         icon: 'file-text-outline',
         link: '/pages/activity-logs',

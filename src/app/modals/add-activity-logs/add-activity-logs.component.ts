@@ -28,13 +28,13 @@ export class AddActivityLogsComponent implements OnInit {
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
-    public modalService: NgbModal) { 
-      this.mindate.setDate(this.mindate.getDate() - 2)
-      this.activity.hour.setHours(0);
-      this.activity.hour.setMinutes(0);
-      this.activity.hour.setSeconds(0);
+    public modalService: NgbModal) {
+    this.mindate.setDate(this.mindate.getDate() - 2)
+    this.activity.hour.setHours(0);
+    this.activity.hour.setMinutes(0);
+    this.activity.hour.setSeconds(0);
 
-    }
+  }
 
   ngOnInit() {
   }
@@ -61,11 +61,11 @@ export class AddActivityLogsComponent implements OnInit {
       this.api.post('Admin/saveActivityLog', params)
         .subscribe(res => {
           this.common.loading--;
-          console.log(res)         
-            this.common.showToast('Success');
-            this.isSubmit = true;
-            this.refreshForm();
-          
+          console.log(res)
+          this.common.showToast('Success');
+          this.isSubmit = true;
+          this.refreshForm();
+
         }, err => {
           this.common.loading--;
           console.error(err);
@@ -81,12 +81,16 @@ export class AddActivityLogsComponent implements OnInit {
       outcome: null,
       date: this.activity.date,
       hour: new Date()
-    }  }
+    };
+    this.activity.hour.setHours(0);
+    this.activity.hour.setMinutes(0);
+    this.activity.hour.setSeconds(0);
+  }
 
   closeModal(response) {
     if (this.isSubmit) {
       this.activeModal.close(true);
-    }else{
+    } else {
       this.activeModal.close(false);
     }
   }

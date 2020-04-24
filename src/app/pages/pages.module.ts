@@ -39,6 +39,7 @@ import { ShiftLogsComponent } from './shift-logs/shift-logs.component';
 import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
 import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log-summary.component';
 import { HolidaysComponent } from './holidays/holidays.component';
+import { OtManagementComponent } from './ot-management/ot-management.component';
 
 @NgModule({
   imports: [
@@ -83,7 +84,8 @@ import { HolidaysComponent } from './holidays/holidays.component';
     ShiftLogsComponent,
     ActivityLogsComponent,
     ActivityLogSummaryComponent,
-    HolidaysComponent
+    HolidaysComponent,
+    OtManagementComponent
   ],
 })
 export class PagesModule {
