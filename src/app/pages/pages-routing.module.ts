@@ -38,6 +38,7 @@ import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
 import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log-summary.component';
 import { HolidaysComponent } from './holidays/holidays.component';
 import { OtManagementComponent } from './ot-management/ot-management.component';
+import { TravelDistanceComponent } from './travel-distance/travel-distance.component';
 
 const routes: Routes = [{
   path: '',
@@ -203,6 +204,11 @@ const routes: Routes = [{
     {
       path: 'ot-management',
       component: OtManagementComponent
+    },
+    {
+      path: 'travel-distance',
+      component: TravelDistanceComponent,
+      canActivate: [AuthGuard]
     }
 
   ],

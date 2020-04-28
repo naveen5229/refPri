@@ -96,6 +96,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'calendar',
         link: '/pages/holiday-calendar',
         home: true,
+      },
+      {
+        title: 'Travel Distance',
+        icon: 'fa nb-home',
+        link: '/pages/travel-distance',
+        home: true,
       }
     ]
   },

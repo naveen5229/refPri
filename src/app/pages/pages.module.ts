@@ -40,6 +40,7 @@ import { ActivityLogsComponent } from './activity-logs/activity-logs.component';
 import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log-summary.component';
 import { HolidaysComponent } from './holidays/holidays.component';
 import { OtManagementComponent } from './ot-management/ot-management.component';
+import { TravelDistanceComponent } from './travel-distance/travel-distance.component';
 
 @NgModule({
   imports: [
@@ -85,7 +86,8 @@ import { OtManagementComponent } from './ot-management/ot-management.component';
     ActivityLogsComponent,
     ActivityLogSummaryComponent,
     HolidaysComponent,
-    OtManagementComponent
+    OtManagementComponent,
+    TravelDistanceComponent
   ],
 })
 export class PagesModule {
