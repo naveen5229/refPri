@@ -99,7 +99,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Travel Distance',
-        icon: 'fa nb-home',
+        icon: 'map-outline',
         link: '/pages/travel-distance',
         home: true,
       }

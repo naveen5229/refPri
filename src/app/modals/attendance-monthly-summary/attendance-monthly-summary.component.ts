@@ -121,12 +121,15 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     }
   }
 
-  checkPresentTypeColor(presetType) {
+  checkPresentTypeColor(e) {
+    let presetType = e.present;
     let typeColor = "black";
-    if (presetType == "P") {
+    if (presetType == "P" && e._aduserid < 0) {
       typeColor = "springgreen";
-    } else if (presetType == "PH") {
+    } else if (presetType == "PH" && e._aduserid < 0) {
       typeColor = "greenyellow";
+    } else if ((presetType == "P" || presetType == "PH") && !(e._aduserid == e._userid)) {
+      typeColor = "blue";
     } else if (presetType == "L") {
       typeColor = "red";
     } else if (presetType == "OL") {
