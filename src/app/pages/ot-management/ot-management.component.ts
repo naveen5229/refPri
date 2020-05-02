@@ -107,8 +107,8 @@ export class OtManagementComponent implements OnInit {
 
   actionIcons(ticket) {
     let icons = [
-      { class: "fa fa-thumbs-up text-success", action: this.updateUserShiftStatus.bind(this, ticket, 1), txt: '', title: "Reject OT" },
-      { class: "fa fa-times text-danger", action: this.updateUserShiftStatus.bind(this, ticket, -1), txt: '', title: "Approve OT" },
+      { class: "fa fa-thumbs-up text-success", action: this.updateUserShiftStatus.bind(this, ticket, 1), txt: '', title: "Approve OT" },
+      { class: "fa fa-times text-danger", action: this.updateUserShiftStatus.bind(this, ticket, -1), txt: '', title: "Reject OT" },
     ];
     return icons;
   }

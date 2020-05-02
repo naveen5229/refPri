@@ -729,6 +729,9 @@ export class TaskComponent implements OnInit {
       else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByProjectUser.bind(this, ticket, type), txt: '', title: "Mark Ack as Project Task" });
       }
+      else if (ticket._status == 5 && (ticket._tktype == 101 || ticket._tktype == 102)) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByAssigner.bind(this, ticket, type), txt: '', title: "Mark Ack as Completed Task" });
+      }
     }
     if (type == 101 || type == -101) {
       icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '', title: "add child task" });
@@ -1144,6 +1147,32 @@ export class TaskComponent implements OnInit {
       });
     } else {
       this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  ackTaskByAssigner(ticket, type) {
+    if (ticket._tktid && ticket._refid) {
+      let params = {
+        ticketId: ticket._tktid,
+        taskId: ticket._refid
+      }
+      console.log("ackTaskByAssigner:", params);
+      this.common.loading++;
+      this.api.post('AdminTask/ackTaskByAssigner', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.getTaskByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Task ID Not Available");
     }
   }
 
