@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { UserService } from '../../Service/user/user.service';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttendanceMonthlySummaryComponent } from '../../modals/attendance-monthly-summary/attendance-monthly-summary.component';
@@ -24,8 +25,7 @@ export class AttendanceComponent implements OnInit {
       hideHeader: true
     }
   };
-  constructor(public common: CommonService, public api: ApiService,   public modalService: NgbModal
-    ) {
+  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAttendanceList();
     this.common.refresh = this.refresh.bind(this);
   }
@@ -66,7 +66,12 @@ export class AttendanceComponent implements OnInit {
     let headings = {};
     for (var key in this.attandanceList[0]) {
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        let accessUserIds = [2, 14, 19, 95, 126, 34, 125, 20];
+        if (key == "activity_spend_time" && !accessUserIds.includes(this.userService._details.id)) {
+          // not shoe to other user
+        } else {
+          headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        }
       }
     }
     return headings;
@@ -119,7 +124,7 @@ export class AttendanceComponent implements OnInit {
     let dataparams = {
       view: {
         api: 'Admin/getActivityLogs',
-        param: {userId: ticket['_userid'], date:this.common.dateFormatter1(this.date)}
+        param: { userId: ticket['_userid'], date: this.common.dateFormatter1(this.date) }
       },
       title: "Activity Logs",
       actionRequired: true
