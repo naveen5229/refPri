@@ -66,12 +66,7 @@ export class AttendanceComponent implements OnInit {
     let headings = {};
     for (var key in this.attandanceList[0]) {
       if (key.charAt(0) != "_") {
-        let accessUserIds = [2, 14, 19, 95, 126];
-        if (key == "activity_spend_time" && !accessUserIds.includes(this.userService._details.id)) {
-          // not shoe to other user
-        } else {
-          headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-        }
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     return headings;

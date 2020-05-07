@@ -109,7 +109,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     date.setHours(9);
     date.setMinutes(30);
     // console.log("date:", date);
-    if (date <= this.common.getDate() && (!column.present || column.present == "") && (this.userService._details.id == 34 || this.userService._details.id == 125 || this.userService._details.id == 120)) {
+    let accessUserIds = [34, 125, 120];
+    if (date <= this.common.getDate() && (!column.present || column.present == "") && accessUserIds.includes(this.userService._details.id)) {
 
       this.common.params = { isAttendanceType: true, date: date, userId: column._userid, userName: column.name };
       const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
