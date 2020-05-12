@@ -120,12 +120,11 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
         } else {
           this.common.showError(res['msg']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
 
   }

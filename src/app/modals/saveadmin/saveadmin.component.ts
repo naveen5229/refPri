@@ -31,11 +31,9 @@ export class SaveadminComponent implements OnInit {
       id: null,
       name: '',
       mobileno: ''
-    }
-
+    },
+    doj: null
   };
-
-
 
   departments = [];
   name = null;
@@ -60,20 +58,22 @@ export class SaveadminComponent implements OnInit {
     public renderer: Renderer,
     private sanitizer: DomSanitizer
   ) {
+    this.Fouser.doj = this.common.getDate(); // for new
     this.getDepartments();
     if (this.common.params && this.common.params.title == 'Edit Admin') {
-        console.log(this.common.params.activeAdminDetail);
-        this.activeAdminDetails = this.common.params.activeAdminDetail;
-        this.Fouser.id = this.activeAdminDetails['id'];
-        this.Fouser.name = this.activeAdminDetails['name'];
-        this.Fouser.isActive = 'true';
-        this.Fouser.mobileNo = this.activeAdminDetails['mobileno'];
-        this.Fouser.department.id = this.activeAdminDetails['_dept_id'];
-        this.Fouser.department.name = this.activeAdminDetails['department_name'];
-        this.Fouser.reportingManager.id = this.activeAdminDetails['_reporting_user_id'];
-        this.Fouser.reportingManager.name = this.activeAdminDetails['reporting_manager'];
-        this.preSelected.name = this.activeAdminDetails['reporting_manager'];
-        this.preSelected.mobileno = this.activeAdminDetails['reporting_manager'];
+      console.log(this.common.params.activeAdminDetail);
+      this.activeAdminDetails = this.common.params.activeAdminDetail;
+      this.Fouser.id = this.activeAdminDetails['id'];
+      this.Fouser.name = this.activeAdminDetails['name'];
+      this.Fouser.isActive = 'true';
+      this.Fouser.mobileNo = this.activeAdminDetails['mobileno'];
+      this.Fouser.department.id = this.activeAdminDetails['_dept_id'];
+      this.Fouser.department.name = this.activeAdminDetails['department_name'];
+      this.Fouser.reportingManager.id = this.activeAdminDetails['_reporting_user_id'];
+      this.Fouser.reportingManager.name = this.activeAdminDetails['reporting_manager'];
+      this.preSelected.name = this.activeAdminDetails['reporting_manager'];
+      this.preSelected.mobileno = this.activeAdminDetails['reporting_manager'];
+      this.Fouser.doj = (this.activeAdminDetails['doj']) ? this.common.dateFormatter(this.activeAdminDetails['doj']) : null;
     }
     this.common.params = {};
   }
@@ -115,7 +115,6 @@ export class SaveadminComponent implements OnInit {
     this.preSelectedManager.mobileno = selectedReportingManager.report_user_mobile;
   }
 
-
   addFoAdmin() {
     let params = {
       name: this.Fouser.name,
@@ -154,6 +153,7 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
     }
     this.Fouser.isActive = value.is_active.toString();
+    this.Fouser.doj = (value.doj) ? this.common.dateFormatter(value.doj) : null;
 
   }
 
@@ -162,14 +162,18 @@ export class SaveadminComponent implements OnInit {
       name: this.Fouser.name,
       mobile: this.Fouser.mobileNo,
       departmentId: this.Fouser.department.id,
-      reportingManagerId: this.Fouser.reportingManager.id
+      reportingManagerId: this.Fouser.reportingManager.id,
+      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null
     }
     console.log(params);
     if (this.Fouser.name == null) {
       this.common.showError('Enter Name');
-    }
-    else if (this.Fouser.mobileNo == null) {
+    } else if (this.Fouser.mobileNo == null) {
       this.common.showError('Enter Mobile Number');
+    } else if (!this.Fouser.doj) {
+      return this.common.showError("Date of joining is missing");
+    } else if (this.Fouser.doj > this.common.getDate()) {
+      return this.common.showError("Date of joining must not be future date");
     } else {
       this.common.loading++;
       this.api.post('Admin/save', params)
@@ -200,17 +204,20 @@ export class SaveadminComponent implements OnInit {
       mobile: this.Fouser.mobileNo,
       departmentId: this.Fouser.department.id,
       reportingManagerId: this.Fouser.reportingManager.id,
-      isActive: Boolean(JSON.parse(this.Fouser.isActive))
-
+      isActive: Boolean(JSON.parse(this.Fouser.isActive)),
+      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null
     }
     console.log(param);
     if (this.Fouser.name == null) {
       this.common.showError('Enter Name');
-    }
-    else if (this.Fouser.mobileNo == null) {
+    } else if (this.Fouser.mobileNo == null) {
       this.common.showError('Enter Mobile Number');
     } else if (this.Fouser.department.id == null) {
       this.common.showError('Select Department');
+    } else if (!this.Fouser.doj) {
+      return this.common.showError("Date of joining is missing");
+    } else if (this.Fouser.doj > this.common.getDate()) {
+      return this.common.showError("Date of joining must not be future date");
     } else {
       this.common.loading++;
       this.api.post('Admin/save', param)
