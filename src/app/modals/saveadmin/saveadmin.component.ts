@@ -71,9 +71,9 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.department.name = this.activeAdminDetails['department_name'];
       this.Fouser.reportingManager.id = this.activeAdminDetails['_reporting_user_id'];
       this.Fouser.reportingManager.name = this.activeAdminDetails['reporting_manager'];
-      this.preSelected.name = this.activeAdminDetails['reporting_manager'];
-      this.preSelected.mobileno = this.activeAdminDetails['reporting_manager'];
-      this.Fouser.doj = (this.activeAdminDetails['doj']) ? this.common.dateFormatter(this.activeAdminDetails['doj']) : null;
+      this.preSelected.name = this.activeAdminDetails['name'];
+      this.preSelected.mobileno = this.activeAdminDetails['mobileno'];
+      this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
     }
     this.common.params = {};
   }
@@ -83,7 +83,7 @@ export class SaveadminComponent implements OnInit {
 
 
   closeModal(response) {
-    this.activeModal.close(false);
+    this.activeModal.close(response);
   }
 
   getDepartments() {
@@ -153,7 +153,7 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
     }
     this.Fouser.isActive = value.is_active.toString();
-    this.Fouser.doj = (value.doj) ? this.common.dateFormatter(value.doj) : null;
+    this.Fouser.doj = (value.doj) ? new Date(value.doj) : null;
 
   }
 
@@ -181,7 +181,7 @@ export class SaveadminComponent implements OnInit {
           this.common.loading--;
           console.log(res)
           this.data = res['data']
-          if (this.data['y_id'] <= 0) {
+          if (this.data[0]['y_id'] <= 0) {
             this.common.showError(this.data[0]['y_msg']);
           } else {
             this.common.showToast(this.data[0]['y_msg']);
@@ -225,12 +225,12 @@ export class SaveadminComponent implements OnInit {
           this.common.loading--;
           console.log(res)
           this.data = res['data']
-          if (this.data['y_id'] <= 0) {
+          if (this.data[0]['y_id'] <= 0) {
             this.common.showError(this.data[0]['y_msg']);
           } else {
             this.common.showToast(this.data[0]['y_msg']);
             this.onCancel();
-            // this.closeModal();
+            this.closeModal(true);
           }
 
           console.log("pa", this.data)
@@ -250,6 +250,7 @@ export class SaveadminComponent implements OnInit {
       name: '',
       mobileno: ''
     };
+    this.Fouser.doj = null;
   }
 
 }

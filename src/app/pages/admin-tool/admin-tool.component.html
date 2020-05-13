@@ -1,18 +1,25 @@
 <nb-card>
-  <nb-card-header class="employee-report">
-      <h5>Admin Tool</h5>
-  </nb-card-header>
-  <nb-card-body >
-    <div  class="row">
+    <nb-card-header class="employee-report">
+        <div class="row">
+            <div class="col-8">
+                <h5>Admin Tool</h5>
+            </div>
+            <div class="col-4 text-right">
+                <button value="Admin Tools" class="btn btn-primary btn-sm" (click)="adminTools()">Save Admin</button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <!-- <div  class="row">
       <div class="col-12 text-right">
         <button value="Admin Tools" class="btn btn-primary " style="float: right;" id="button" (click)="adminTools()">Save Admin</button>   
       </div>
     </div>
-    <br>
-    <div class="row">
-      <smart-table *ngIf="activeAdminUserList.length!=0" [data]="table.data" [settings]="table.settings" id="activeAdminUserList">
-      </smart-table>
-    </div>
-  
-  </nb-card-body>
-</nb-card>  
+    <br> -->
+        <div class="row">
+            <smart-table *ngIf="activeAdminUserList.length!=0" [data]="table.data" [settings]="table.settings" id="activeAdminUserList">
+            </smart-table>
+        </div>
+
+    </nb-card-body>
+</nb-card>
