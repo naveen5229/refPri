@@ -59,8 +59,16 @@
             </uj-date-time-picker>
         </div>
     </div>
-    <br>
-    <div class="row" *ngIf='Fouser.id'>
+    <div class="row mt-2" *ngIf='Fouser.id'>
+        <div class="col-lg-4">
+            <label>Date of Leaving:</label>
+        </div>
+        <div class="col-lg-8">
+            <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="Fouser.dol=$event" [dateTimeValue]="Fouser.dol">
+            </uj-date-time-picker>
+        </div>
+    </div>
+    <div class="row mt-2" *ngIf='Fouser.id'>
         <div class="col-lg-4">
             <label>Status :-</label>
         </div>
@@ -77,16 +85,18 @@
             </div>
         </div>
     </div>
-    <br>
-    <br>
-    <div>
-        <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="onCancel()">Cancel</button>
-    </div>
-    <div>
-        <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="updateAdmin()">Update</button>
-    </div>
-    <div style="float: right;">
-        <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" id="button" style="float: right; margin-right:14px; margin-bottom: 20px;" (click)="saveAdmin()">Save</button>
+    <!-- <br>
+    <br> -->
+    <div class="row text-right mt-2">
+        <div class="col-12">
+            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="onCancel()">Cancel</button>
+            <!-- </div>
+        <div> -->
+            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary ml-3" (click)="updateAdmin()">Update</button>
+            <!-- </div>
+        <div style="float: right;"> -->
+            <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="saveAdmin()">Save</button>
+        </div>
     </div>
 
 

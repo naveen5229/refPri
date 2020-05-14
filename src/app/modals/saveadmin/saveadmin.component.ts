@@ -32,7 +32,8 @@ export class SaveadminComponent implements OnInit {
       name: '',
       mobileno: ''
     },
-    doj: null
+    doj: null,
+    dol: null
   };
 
   departments = [];
@@ -74,6 +75,7 @@ export class SaveadminComponent implements OnInit {
       this.preSelected.name = this.activeAdminDetails['name'];
       this.preSelected.mobileno = this.activeAdminDetails['mobileno'];
       this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
+      this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
     }
     this.common.params = {};
   }
@@ -154,6 +156,7 @@ export class SaveadminComponent implements OnInit {
     }
     this.Fouser.isActive = value.is_active.toString();
     this.Fouser.doj = (value.doj) ? new Date(value.doj) : null;
+    this.Fouser.dol = (value.dol) ? new Date(value.dol) : null;
 
   }
 
@@ -163,7 +166,9 @@ export class SaveadminComponent implements OnInit {
       mobile: this.Fouser.mobileNo,
       departmentId: this.Fouser.department.id,
       reportingManagerId: this.Fouser.reportingManager.id,
-      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null
+      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
+      dol: null,
+
     }
     console.log(params);
     if (this.Fouser.name == null) {
@@ -205,7 +210,8 @@ export class SaveadminComponent implements OnInit {
       departmentId: this.Fouser.department.id,
       reportingManagerId: this.Fouser.reportingManager.id,
       isActive: Boolean(JSON.parse(this.Fouser.isActive)),
-      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null
+      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
+      dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null
     }
     console.log(param);
     if (this.Fouser.name == null) {
@@ -218,6 +224,8 @@ export class SaveadminComponent implements OnInit {
       return this.common.showError("Date of joining is missing");
     } else if (this.Fouser.doj > this.common.getDate()) {
       return this.common.showError("Date of joining must not be future date");
+    } else if (this.Fouser.dol && this.Fouser.dol < this.Fouser.doj) {
+      return this.common.showError("Date of leaving must be greater than date of joining");
     } else {
       this.common.loading++;
       this.api.post('Admin/save', param)
@@ -251,6 +259,7 @@ export class SaveadminComponent implements OnInit {
       mobileno: ''
     };
     this.Fouser.doj = null;
+    this.Fouser.dol = null;
   }
 
 }
