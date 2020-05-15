@@ -22,4 +22,38 @@
         </div>
 
     </nb-card-body>
+
+    <!-- start: admin detail modal -->
+    <div class="modal" id="adminDetailModal" #adminDetailModal>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#fff;">Employee Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeAdminDetailModal()">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>Name :-</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{adminDetail.name}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>Father's Name :-</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control " [(ngModel)]='adminDetail.fatherName' placeholder="Father's Name" required>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end: admin detail modal -->
 </nb-card>
