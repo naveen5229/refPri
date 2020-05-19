@@ -286,13 +286,13 @@ export class FieldIssueComponent implements OnInit {
     if (v.regno && v.regno != '' && v.device_model.id > 0) {
       this.requestData.vehicalInfo.unshift(
         {
-          regno: '',
+          regno: null,
           device_model: {
             id: 0,
-            name: ''
+            name: null
           },
-          driver_name: '',
-          driver_mobileno: ''
+          driver_name: null,
+          driver_mobileno: null
         }
       );
     } else {

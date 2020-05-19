@@ -1,0 +1,61 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8">
+                <h5>Employee's Salary</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label>Select Month:</label>
+            </div>
+            <div class="col-3">
+                <month-picker (select)="selectedDates = $event;"></month-picker>
+            </div>
+            <div class="col-7">
+                <button type="submit" id="submit" (click)="getEmployeeSalary()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body style="min-height: 300px;">
+        <div class="row form-group" style="overflow: auto;">
+            <div class="col-12">
+                <!-- <smart-table [data]="tableSalaryList.data" [settings]="tableSalaryList.settings" id="tableSalaryList"></smart-table> -->
+                <table *ngIf='tableSalaryList.data.columns.length' class="table table-bordered table-hover">
+                    <thead class="thead" style="background-color: #c0b2b2">
+                        <tr style="text-align:center">
+                            <th *ngFor="let h of objectKeys(tableSalaryList.data.headings);">{{tableSalaryList.data.headings[h].title}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rows of salaryList;">
+                            <td *ngFor="let h of objectKeys(tableSalaryList.data.headings); let i = index;">
+                                <span>{{rows[h]}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </nb-card-body>
+
+    <!-- start: map modal -->
+    <!-- <div class="modal" id="shiftMapModal" #shiftMapModal>
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4 class="modal-title" style="color:#fff;">Shift Location</h4>
+                  <button type="button" class="close" data-dismiss="modal" (click)="closeMapModal()">&times;</button>
+              </div>
+              <div class="modal-body">
+                  <div class="map-container mt-2">
+                      <div #map id="map"> </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </div> -->
+    <!-- end: map modal -->
+</nb-card>

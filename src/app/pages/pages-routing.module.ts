@@ -39,6 +39,7 @@ import { ActivityLogSummaryComponent } from './activity-log-summary/activity-log
 import { HolidaysComponent } from './holidays/holidays.component';
 import { OtManagementComponent } from './ot-management/ot-management.component';
 import { TravelDistanceComponent } from './travel-distance/travel-distance.component';
+import { SalaryComponent } from './salary/salary.component';
 
 const routes: Routes = [{
   path: '',
@@ -175,39 +176,52 @@ const routes: Routes = [{
     },
     {
       path: 'field-support-request',
-      component: FieldIssueRequestComponent
+      component: FieldIssueRequestComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'installer',
-      component: InstallerComponent
+      component: InstallerComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'attendance',
-      component: AttendanceComponent
+      component: AttendanceComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'shift-logs',
-      component: ShiftLogsComponent
+      component: ShiftLogsComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'activity-logs',
-      component: ActivityLogsComponent
+      component: ActivityLogsComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'activity-logs-summary',
-      component: ActivityLogSummaryComponent
+      component: ActivityLogSummaryComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'holiday-calendar',
-      component: HolidaysComponent
+      component: HolidaysComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'ot-management',
-      component: OtManagementComponent
+      component: OtManagementComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'travel-distance',
       component: TravelDistanceComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'salary',
+      component: SalaryComponent,
       canActivate: [AuthGuard]
     }
 

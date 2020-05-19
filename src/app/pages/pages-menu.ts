@@ -102,6 +102,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'map-outline',
         link: '/pages/travel-distance',
         home: true,
+      },
+      {
+        title: 'salary',
+        icon: 'file-text-outline',
+        link: '/pages/salary',
+        home: true,
       }
     ]
   },
