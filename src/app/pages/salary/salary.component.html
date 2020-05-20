@@ -25,14 +25,50 @@
                 <table *ngIf='tableSalaryList.data.columns.length' class="table table-bordered table-hover">
                     <thead class="thead" style="background-color: #c0b2b2">
                         <tr style="text-align:center">
-                            <th *ngFor="let h of objectKeys(tableSalaryList.data.headings);">{{tableSalaryList.data.headings[h].title}}</th>
+                            <th>Name</th>
+                            <th>Paid Days</th>
+                            <th>CTC</th>
+                            <th>PF Applicable</th>
+                            <th>ESIC Applicable</th>
+                            <th>Employer PF</th>
+                            <th>Employee PF</th>
+                            <th>Employer ESIC</th>
+                            <th>Employee ESIC</th>
+                            <th>Basic</th>
+                            <th>HRA</th>
+                            <th>performence_allo</th>
+                            <th>medical_allow</th>
+                            <th>washing_allow</th>
+                            <th>conveyance_allow</th>
+                            <th>overtime</th>
+                            <th>tds</th>
+                            <th>other_deduction</th>
+                            <th>total_deduction</th>
+                            <th>net_salary</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let rows of salaryList;">
-                            <td *ngFor="let h of objectKeys(tableSalaryList.data.headings); let i = index;">
-                                <span>{{rows[h]}</span>
-                            </td>
+                        <tr *ngFor="let v of salaryList;">
+                            <td>{{v.empname}}</td>
+                            <td><input type="text" [(ngModel)]="v.paid_day" /></td>
+                            <td><input type="text" [(ngModel)]="v.ctc" /></td>
+                            <td><input type="checkbox" [checked]="v.pf_applicable" (change)="v.pf_applicable = !v.pf_applicable" /></td>
+                            <td><input type="checkbox" [checked]="v.esi_applicable" (change)="v.esi_applicable = !v.esi_applicable" /></td>
+                            <td><input type="text" [(ngModel)]="v.employer_pf" /></td>
+                            <td><input type="text" [(ngModel)]="v.employee_pf" /></td>
+                            <td><input type="text" [(ngModel)]="v.employer_esic" /></td>
+                            <td><input type="text" [(ngModel)]="v.employee_esic" /></td>
+                            <td><input type="text" [(ngModel)]="v.basic" /></td>
+                            <td><input type="text" [(ngModel)]="v.hra" /></td>
+                            <td><input type="text" [(ngModel)]="v.performence_allo" /></td>
+                            <td><input type="text" [(ngModel)]="v.medical_allow" /></td>
+                            <td><input type="text" [(ngModel)]="v.washing_allow" /></td>
+                            <td><input type="text" [(ngModel)]="v.conveyance_allow" /></td>
+                            <td><input type="text" [(ngModel)]="v.overtime" /></td>
+                            <td><input type="text" [(ngModel)]="v.tds" /></td>
+                            <td><input type="text" [(ngModel)]="v.other_deduction" /></td>
+                            <td><input type="text" [(ngModel)]="v.total_deduction" /></td>
+                            <td><input type="text" [(ngModel)]="v.net_salary" /></td>
                         </tr>
                     </tbody>
                 </table>

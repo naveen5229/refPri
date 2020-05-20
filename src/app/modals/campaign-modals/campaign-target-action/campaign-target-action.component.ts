@@ -15,15 +15,15 @@ export class CampaignTargetActionComponent implements OnInit {
   standards = [];
   targetAction = {
     rowId: null,
-    campaignId: null,
-    campaignName: "",
+    campaign: { id: null, name: "" },
+    // campaignName: "",
     name: "",
     mobile: null,
     locationId: null,
     locationName: "",
-    stateId: null,
-    actionId: null,
-    nextActionId: null,
+    state: { id: null, name: "" },
+    action: { id: null, name: "" },
+    nextAction: { id: null, name: "" },
     standardRemarkId: [],
     remark: null,
     targetTime: new Date(),
@@ -54,8 +54,8 @@ export class CampaignTargetActionComponent implements OnInit {
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     if (this.common.params && this.common.params.targetActionData) {
       this.targetAction.rowId = this.common.params.targetActionData.rowId ? this.common.params.targetActionData.rowId : null;
-      this.targetAction.campaignId = this.common.params.targetActionData.campaignId ? this.common.params.targetActionData.campaignId : null;
-      this.targetAction.campaignName = this.common.params.targetActionData.campaignName;
+      this.targetAction.campaign.id = this.common.params.targetActionData.campaignId ? this.common.params.targetActionData.campaignId : null;
+      this.targetAction.campaign.name = this.common.params.targetActionData.campaignName;
       this.targetAction.name = this.common.params.targetActionData.name;
       this.targetAction.mobile = this.common.params.targetActionData.mobile;
       this.targetAction.locationId = this.common.params.targetActionData.locationId;
@@ -91,7 +91,7 @@ export class CampaignTargetActionComponent implements OnInit {
 
   getStateList() {
     this.common.loading++;
-    this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
+    this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.targetAction.campaign.id).subscribe(res => {
       this.common.loading--;
       this.stateDataList = res['data'];
     },
@@ -104,7 +104,7 @@ export class CampaignTargetActionComponent implements OnInit {
 
   getActionList() {
     this.common.loading++;
-    this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaignId).subscribe(res => {
+    this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaign.id).subscribe(res => {
       this.common.loading--;
       this.actionDataList = res['data'];
     },
@@ -142,12 +142,19 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   unselected(variable) {
-    if (this.targetAction[variable]) {
+    if (this.targetAction[variable].id) {
       document.getElementById(variable)['value'] = '';
-      this.targetAction[variable] = null;
+      this.targetAction[variable].id = null;
     }
   }
 
+  onselectNextAction(nextActionId) {
+    if (nextActionId == 16) {
+      this.targetAction.targetTime = null;
+    } else {
+      this.targetAction.targetTime = new Date();
+    }
+  }
 
   selectStandardRemarks(event) {
     console.log("event", event);
@@ -159,23 +166,22 @@ export class CampaignTargetActionComponent implements OnInit {
   }
 
   saveCampaignTargetAction() {
-
-    if (this.targetAction.stateId == null || this.targetAction.actionId == null || this.targetAction.nextActionId == null) {
+    if (this.targetAction.state.id == null || this.targetAction.action.id == null || this.targetAction.nextAction.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
     }
     else {
-      let targetTime = this.common.dateFormatter(this.targetAction.targetTime);
+      let targetTime = (this.targetAction.targetTime) ? this.common.dateFormatter(this.targetAction.targetTime) : null;
       const params = {
         campTargetId: this.targetAction.rowId,
-        stateId: this.targetAction.stateId,
-        actionId: this.targetAction.actionId,
-        nextActId: this.targetAction.nextActionId,
+        stateId: this.targetAction.state.id,
+        actionId: this.targetAction.action.id,
+        nextActId: this.targetAction.nextAction.id,
         nextActTarTime: targetTime,
         remark: this.targetAction.remark,
         remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
         userCallLogId: null
       };
-      console.log(params);
+      console.log("saveCampaignTargetAction:", params);
       this.common.loading++;
       this.api.post("Campaigns/addCampTargetAction ", params)
         .subscribe(res => {
@@ -217,8 +223,6 @@ export class CampaignTargetActionComponent implements OnInit {
       });
   }
 
-
-
   resetTable() {
     this.table.data = {
       headings: {},
@@ -253,7 +257,6 @@ export class CampaignTargetActionComponent implements OnInit {
     }
   }
 
-
   getTableColumns() {
     let columns = [];
     this.campaignTargetActionData.map(campaign => {
@@ -282,9 +285,6 @@ export class CampaignTargetActionComponent implements OnInit {
     ];
     return icons;
   }
-
-
-
 
   deleteCampaign(row) {
     let params = {
@@ -316,10 +316,10 @@ export class CampaignTargetActionComponent implements OnInit {
 
 
   resetData() {
-    this.targetAction.campaignId = null;
-    this.targetAction.stateId = null;
-    this.targetAction.actionId = null;
-    this.targetAction.nextActionId = null;
+    this.targetAction.campaign = { id: null, name: "" };
+    this.targetAction.state = { id: null, name: "" };
+    this.targetAction.action = { id: null, name: "" };
+    this.targetAction.nextAction = { id: null, name: "" };
     this.targetAction.standardRemarkId = [];
     this.targetAction.remark = "";
     this.targetAction.targetTime = new Date();
