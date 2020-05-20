@@ -117,7 +117,7 @@ export class AdminToolComponent implements OnInit {
   actionIcons(activeAdmin) {
     let icons = [
       { class: "fa fa-edit", action: this.editActiveAdmin.bind(this, activeAdmin) },
-      { class: "fa fa-info-circle", action: this.editAdminInfo.bind(this, activeAdmin) },
+      // { class: "fa fa-info-circle", action: this.editAdminInfo.bind(this, activeAdmin) },
       // { class: "fa fa-trash", action: this.deleteInstaller.bind(this, installer) },
     ];
     return icons;
