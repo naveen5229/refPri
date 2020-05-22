@@ -33,15 +33,23 @@ export class TaskMessageComponent implements OnInit {
     console.log("common params:", this.common.params);
     if (this.common.params != null) {
       this.title = this.common.params.title;
-      this.ticketId = this.common.params.ticketEditData.ticketId;
-      this.statusId = this.common.params.ticketEditData.statusId;
-      this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
-      this.taskId = this.common.params.ticketEditData.taskId;
-      this.ticketType = this.common.params.ticketEditData.taskType;
-      this.ticketType = this.common.params.ticketEditData.taskType;
-      this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
-      this.getMessageList();
-      this.getAllUserByTask();
+      if (this.common.params.fromPage == 'campaign') {
+        this.ticketId = this.common.params.campaignEditData.camptargetid;
+        this.statusId = this.common.params.campaignEditData.statusId;
+        this.tabType = (this.common.params.campaignEditData.tabType) ? this.common.params.campaignEditData.tabType : null;
+        this.getLeadMessage();
+        this.getAllUserByLead();
+      } else {
+        this.ticketId = this.common.params.ticketEditData.ticketId;
+        this.statusId = this.common.params.ticketEditData.statusId;
+        this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
+        this.taskId = this.common.params.ticketEditData.taskId;
+        this.ticketType = this.common.params.ticketEditData.taskType;
+        this.ticketType = this.common.params.ticketEditData.taskType;
+        this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
+        this.getMessageList();
+        this.getAllUserByTask();
+      }
       this.getAllAdmin();
     }
 
@@ -97,13 +105,13 @@ export class TaskMessageComponent implements OnInit {
       } else {
         this.common.showError(res['data'])
       }
-    },
-      err => {
-        this.showLoading = false;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
+
   lastMessageRead() {
     let params = {
       ticketId: this.ticketId,
@@ -122,12 +130,11 @@ export class TaskMessageComponent implements OnInit {
         } else {
           this.common.showError(res['msg'])
         }
-      },
-        err => {
-          this.showLoading = false;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.showLoading = false;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
 
@@ -154,12 +161,11 @@ export class TaskMessageComponent implements OnInit {
         else {
           this.common.showError(res['msg'])
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
 
@@ -177,13 +183,13 @@ export class TaskMessageComponent implements OnInit {
       } else {
         this.common.showError(res['data'])
       }
-    },
-      err => {
-        this.showLoading = false;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
+
   addNewCCUserToTask() {
     if (this.ticketId > 0 && this.newCCUserId > 0) {
       let params = {
@@ -195,16 +201,16 @@ export class TaskMessageComponent implements OnInit {
       this.api.post('AdminTask/addNewCCUserToTask', params).subscribe(res => {
         this.common.loading--;
         if (res['success']) {
+          this.newCCUserId = null;
           this.getAllUserByTask();
         } else {
           this.common.showError(res['data']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     } else {
       this.common.showError("Select CC user")
     }
@@ -218,11 +224,10 @@ export class TaskMessageComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   newAssigneeUser = {
@@ -292,5 +297,117 @@ export class TaskMessageComponent implements OnInit {
       });
     }
   }
+
+
+  // start: campaign msg ----------------------------------------------------
+  getLeadMessage() {
+    this.showLoading = true;
+    let params = {
+      ticketId: this.ticketId
+    }
+    this.api.post('Campaigns/getLeadMessage', params).subscribe(res => {
+      this.showLoading = false;
+      console.log("messageList:", res['data']);
+      if (res['success']) {
+        this.messageList = res['data'] || [];
+        // if (this.messageList.length > 0) {
+        //   let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
+        //   this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
+        //   console.log("msgListOfOther:", msgListOfOther);
+        //   console.log("msgListOfMine:", this.msgListOfMine.length);
+        //   if (msgListOfOther.length > 0) {
+        //     let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
+        //     if (this.lastMsgId != lastMsgIdTemp) {
+        //       this.lastMsgId = lastMsgIdTemp;
+        //       this.lastMessageRead();
+        //     }
+        //     console.log("lastMsgIdTemp:", lastMsgIdTemp);
+        //   }
+        //   console.log("lastMsgId:", this.lastMsgId);
+        // }
+      } else {
+        this.common.showError(res['data'])
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  saveLeadMessage() {
+    if (this.taskMessage == "") {
+      return this.common.showError("Message is missing");
+    } else {
+      this.common.loading++;
+      let params = {
+        ticketId: this.ticketId,
+        status: this.statusId,
+        message: this.taskMessage
+      }
+      this.api.post('Campaigns/saveLeadMessage', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.taskMessage = "";
+          // if (this.tabType == 101 && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          //   console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
+          //   this.updateTicketStatus(2);
+          // }
+          this.getLeadMessage();
+
+        } else {
+          this.common.showError(res['msg'])
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+  }
+
+  getAllUserByLead() {
+    let params = {
+      ticketId: this.ticketId
+    }
+    this.api.post('Campaigns/getAllUserByLead', params).subscribe(res => {
+      console.log("getAllUserByLead:", res['data']);
+      if (res['success']) {
+        this.userListByTask = res['data'] || [];
+      } else {
+        this.common.showError(res['data'])
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  addNewCCUserToLead() {
+    if (this.ticketId > 0 && this.newCCUserId > 0) {
+      let params = {
+        leadId: this.ticketId,
+        ccUserId: this.newCCUserId
+      }
+      this.common.loading++;
+      this.api.post('Campaigns/addNewCCUserToLead', params).subscribe(res => {
+        this.common.loading--;
+        if (res['success']) {
+          this.newCCUserId = null;
+          this.getAllUserByLead();
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Select CC user")
+    }
+  }
+  // end: campaign msg
 
 }

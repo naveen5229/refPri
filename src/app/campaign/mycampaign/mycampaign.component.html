@@ -1,0 +1,69 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-9">
+                <h5>My Campaign Dashboard</h5>
+            </div>
+            <div class="col-3 text-right">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="showTaskPopup()"><i
+                  class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <!-- Tabs      -->
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe'; getCampaignByType(1)">
+                    Leads For Me
+                </li>
+                <li [ngClass]="activeTab=='leadsByMe'?'active':''" (click)="activeTab='leadsByMe'; getCampaignByType(2)">
+                    Leads By Me
+                </li>
+                <li [ngClass]="activeTab=='ccLeads'?'active':''" (click)="activeTab='ccLeads'; getCampaignByType(3)">
+                    CC Leads
+                </li>
+                <li [ngClass]="activeTab=='allCompletedLeads'?'active':''" (click)="activeTab='allCompletedLeads';resetSearchDate(); getCampaignByType(4)">
+                    Completed Lead
+                </li>
+                <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getCampaignByType(5)">
+                    Unread Leads
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="activeTab=='leadsForMe'">
+            <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='leadsByMe'">
+            <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ccLeads'">
+            <smart-table [data]="tableCcLeads.data" [settings]="tableCcLeads.settings" id="tableCcLeads">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='allCompletedLeads'">
+            <div class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedLead()">Search</button>
+                </div>
+            </div>
+            <smart-table [data]="tableAllCompletedLeads.data" [settings]="tableAllCompletedLeads.settings" id="tableAllCompletedLeads">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='unreadLeads'">
+            <smart-table [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            </smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>

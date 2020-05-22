@@ -40,6 +40,7 @@ import { HolidaysComponent } from './holidays/holidays.component';
 import { OtManagementComponent } from './ot-management/ot-management.component';
 import { TravelDistanceComponent } from './travel-distance/travel-distance.component';
 import { SalaryComponent } from './salary/salary.component';
+import { MycampaignComponent } from '../campaign/mycampaign/mycampaign.component';
 
 const routes: Routes = [{
   path: '',
@@ -137,6 +138,10 @@ const routes: Routes = [{
     {
       path: 'campaign-target',
       component: CampaignTargetComponent
+    },
+    {
+      path: 'my-campaign',
+      component: MycampaignComponent
     },
     {
       path: 'admin-tool',

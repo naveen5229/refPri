@@ -9,13 +9,15 @@ import { FormsModule } from '@angular/forms';
 import { DirectiveModule } from '../directives/directives.module';
 import { CampaignMasterPageComponent } from './campaign-master-page/campaign-master-page.component';
 import { CampaignTargetComponent } from './campaign-target/campaign-target.component';
+import { MycampaignComponent } from './mycampaign/mycampaign.component';
 
 
 const PAGES_COMPONENTS = [
   AddCampaignComponent,
   CampaignComponent,
   CampaignMasterPageComponent,
-  CampaignTargetComponent
+  CampaignTargetComponent,
+  MycampaignComponent
 ];
 @NgModule({
   declarations: [...PAGES_COMPONENTS],

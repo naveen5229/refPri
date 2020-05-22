@@ -28,13 +28,13 @@
                     <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
                 </div>
                 <div class="col-3 text-right button-box">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="saveTicketMessage()">Send
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="(common.params.fromPage == 'campaign')? saveLeadMessage() :saveTicketMessage()">Send
                   </button>
                 </div>
             </div>
         </div>
         <div class="col-3 p-0" style="border-left:1px solid black;">
-            <table width="100%">
+            <table *ngIf="common.params.fromPage != 'campaign'" width="100%">
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}</td>
@@ -81,6 +81,40 @@
                     </td>
                 </tr>
             </table>
+
+            <!-- start: lead users -->
+            <table *ngIf="common.params.fromPage == 'campaign'" width="100%">
+                <tr valign="top" class="bg-lightblue">
+                    <td>By:</td>
+                    <td>{{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].assignby:''}}</td>
+                </tr>
+                <tr valign="top" class="bg-lavender">
+                    <td>To:</td>
+                    <td *ngIf="!showAssignUserAuto">{{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
+                        <!-- <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn btn-primary btn-sm" title="assign to new user"
+                            (click)="showAssignUserAuto=1"><i
+                            class="fa fa-plus"></i></button> -->
+                    </td>
+                    <!-- <td *ngIf="showAssignUserAuto==1">
+                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser" inputId="assigneeUser">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm" (click)="updateTaskAssigneeUser()"><i
+                            class="fa fa-check"></i></button>
+                    </td> -->
+                </tr>
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td>CC:</td>
+                    <td><span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{ccu.cc_user}}<br></span></td>
+                </tr>
+                <tr valign="top">
+                    <td colspan="2" class="pt-2">
+                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToLead()">Add CC User</button>
+                    </td>
+                </tr>
+            </table>
+            <!-- end : lead users -->
         </div>
     </div>
 
