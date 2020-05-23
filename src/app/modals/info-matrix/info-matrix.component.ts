@@ -16,35 +16,35 @@ export class InfoMatrixComponent implements OnInit {
   campTargetId = null;
   requestId = null;
   isEdit = false;
-  formData = [ 
+  formData = [
     {
-    param: '',
-    order: null,
-    type: 'text',
-    id: null
-  }
-]
-unSortedformList = [];
-formList = [];
-enableForm = false;
+      param: '',
+      order: null,
+      type: 'text',
+      id: null
+    }
+  ]
+  unSortedformList = [];
+  formList = [];
+  enableForm = false;
 
 
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService) {
-    if( this.common.params && this.common.params.campaignId && this.common.params.title == 'Info Matrix') {
+    if (this.common.params && this.common.params.campaignId && this.common.params.title == 'Info Matrix') {
       this.title = this.common.params.title;
       this.campaignId = this.common.params.campaignId;
       this.getFormData(this.campaignId);
     }
     if (this.common.params && this.common.params.enableForm) {
-        this.title = this.common.params.title;
-        this.campaignId = this.common.params.campaignId;
-        this.enableForm = this.common.params.enableForm;
-        this.campTargetId = this.common.params.campaignTargetId;
-        this.getFilledData(this.campTargetId);
-        // this.getFormData(this.campaignId);
+      this.title = this.common.params.title;
+      this.campaignId = this.common.params.campaignId;
+      this.enableForm = this.common.params.enableForm;
+      this.campTargetId = this.common.params.campaignTargetId;
+      this.getFilledData(this.campTargetId);
+      // this.getFormData(this.campaignId);
 
     }
-   }
+  }
 
   ngOnInit() {
   }
@@ -56,7 +56,7 @@ enableForm = false;
 
 
   addMoreVehical(form) {
-    if (form.param  != '' &&  form.order != null) {
+    if (form.param != '' && form.order != null) {
       this.formData.unshift(
         {
           param: '',
@@ -78,7 +78,7 @@ enableForm = false;
   submitFormData() {
     console.log(this.formData);
     if (!this.isEdit) {
-    this.formData.shift();
+      this.formData.shift();
 
     }
     let params = {
@@ -97,105 +97,112 @@ enableForm = false;
     console.log(params);
 
     this.common.loading++;
-          this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
-            .subscribe(res => {
+    this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
+      .subscribe(res => {
 
-              this.common.loading--;
+        this.common.loading--;
 
-              if (res['code'] == 1) {
-                if (res['data'][0]['y_id'] > 0) {
-                  this.common.showToast(res['data'][0].y_msg);
+        if (res['code'] == 1) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0].y_msg);
 
-                  setTimeout( (() => this.getFormData(this.campaignId)), 2000);
+            setTimeout((() => this.getFormData(this.campaignId)), 2000);
 
-                  this.formData = [{
-                    param: '',
-                    order: null,
-                    type: null,
-                    id:null
-                  }]
-                  
-                } else {
-                  this.common.showError(res['data'][0].y_msg)
-                }
-              } else {
-                this.common.showError(res['msg']);
-              }
+            this.formData = [{
+              param: '',
+              order: null,
+              type: null,
+              id: null
+            }]
 
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+          } else {
+            this.common.showError(res['data'][0].y_msg)
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
   }
 
   getFormData(campaignId) {
-                let params = 'campaignId=' + campaignId
-                this.common.loading++;
-                this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?'+ params)
-                  .subscribe(res => {
-                      console.log(res);
-                      this.unSortedformList = res['data'];
-                      this.formList = this.unSortedformList.sort(this.orderSorting);
-                      console.log(this.formList);
-                    this.common.loading--;
-                    this.common.showToast(res['msg']);
-                  }, err => {
-                    this.common.loading--;
-                    console.log('Error: ', err);
-                  });
+    let params = 'campaignId=' + campaignId
+    this.common.loading++;
+    this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?' + params)
+      .subscribe(res => {
+        console.log(res);
+        this.unSortedformList = res['data'];
+        this.formList = this.unSortedformList.sort(this.orderSorting);
+        console.log(this.formList);
+        this.common.loading--;
+        this.common.showToast(res['msg']);
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
   }
 
-  orderSorting(a, b){
-    if(a.order < b.order){
-            return -1;
-    }else if(a.order > b.order){
-            return 1;
-    }else{
-            return 0;
+  orderSorting(a, b) {
+    if (a.order < b.order) {
+      return -1;
+    } else if (a.order > b.order) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 
-  checkValue (obj) {
-      return obj.value != '';
+  checkValue(obj) {
+    return obj.value != '';
   }
 
   submitFormDataWithValue() {
     console.log(this.formList)
-      let obj = {}
-      this.formList.map( form => {
-            obj[form.param] = form.value;
-      });
-      console.log(obj);
+    let obj = {}
+    this.formList.map(form => {
+      obj[form.param] = form.value;
+    });
+    console.log(obj);
 
-    let params = {campTargetId: this.campTargetId,
-                  primaryInfo: JSON.stringify(obj),
-                     requestId: this.requestId
-                    }
-                     console.log(params);
-                this.common.loading++;
-                this.api.post('Campaigns/saveCampaignTargetPrimaryInfo', params)
-                  .subscribe(res => {
-                      console.log(res);
-                      this.activeModal.close();
-                    this.common.loading--;
-                    this.common.showToast(res['msg']);
-                  }, err => {
-                    this.common.loading--;
-                    console.log('Error: ', err);
-                  });
+    let params = {
+      campTargetId: this.campTargetId,
+      primaryInfo: JSON.stringify(obj),
+      requestId: this.requestId
+    }
+    console.log(params);
+    this.common.loading++;
+    this.api.post('Campaigns/saveCampaignTargetPrimaryInfo', params)
+      .subscribe(res => {
+        console.log(res);
+        this.activeModal.close();
+        this.common.loading--;
+        this.common.showToast(res['msg']);
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
 
   }
 
   getFilledData(campTargetId) {
     let params = 'campTargetId=' + campTargetId
     this.common.loading++;
-    this.api.get('Campaigns/getCampaignTargetPrimaryInfo?'+ params)
+    this.api.get('Campaigns/getCampaignTargetPrimaryInfo?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
-        if (res['data'] &&  res['data'].length > 0) {
-          this.requestId = 1;
-          this.formList = res['data'][0]['info']
+        if (res['data'] && res['data'].length > 0 && res['data'][0]._id > 0) {
+          this.requestId = res['data'][0]._id;
+          if (res['data'][0]['info'].length > 0) {
+            this.formList = res['data'][0]['info'];
+            console.log("first if");
+          } else {
+            this.getFormData(this.campaignId);
+            console.log("first else");
+          }
         } else {
           this.requestId = null;
           this.getFormData(this.campaignId);
@@ -211,7 +218,7 @@ enableForm = false;
     this.formData = this.formList
     this.isEdit = true;
     this.requestId = 1;
-    
+
   }
 
 
