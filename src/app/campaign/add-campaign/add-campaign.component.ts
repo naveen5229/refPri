@@ -7,6 +7,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
 import { LocationTargetComponent } from '../../modals/campaign-modals/location-target/location-target.component';
 import { marker } from 'leaflet';
+import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 
 @Component({
   selector: 'ngx-add-campaign',
@@ -127,11 +128,22 @@ export class AddCampaignComponent implements OnInit {
       { class: 'fas fa-grip-horizontal ml-3', action: this.stateMapping.bind(this, campaign) },
       { class: 'fas fa-handshake ml-3', action: this.actionMapping.bind(this, campaign) },
       { class: "fas fa-globe-africa ml-2", action: this.viewlocation.bind(this, campaign) },
+      { class: "fas fa-plus ml-2", action: this.infoMatrix.bind(this, campaign) },
 
     ];
     return icons;
   }
 
+  infoMatrix(campaign) {
+    console.log(campaign);
+    this.common.params = { 'campaignId': campaign._campaignid, 'title': 'Info Matrix' };
+    const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        // this.getCampaignData();
+      }
+    });
+  }
 
   editCampaign(campaign) {
     let campaignEditData = {
