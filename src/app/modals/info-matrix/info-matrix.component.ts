@@ -169,7 +169,7 @@ enableForm = false;
 
     let params = {campTargetId: this.campTargetId,
                   primaryInfo: JSON.stringify(obj),
-                     requestId: "null"
+                     requestId: this.requestId
                     }
                      console.log(params);
                 this.common.loading++;
@@ -193,7 +193,13 @@ enableForm = false;
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
-        this.formList = res['data'][0]['info']
+        if (res['data'] &&  res['data'].length > 0) {
+          this.requestId = 1;
+          this.formList = res['data'][0]['info']
+        } else {
+          this.requestId = null;
+          this.getFormData(this.campaignId);
+        }
         // this.common.showToast(res['msg']);
       }, err => {
         this.common.loading--;
