@@ -69,6 +69,7 @@ import { ShiftLogAddComponent } from './modals/shift-log-add/shift-log-add.compo
 import { ShiftLogsComponent } from './pages/shift-logs/shift-logs.component';
 import { ShowInstallerComponent } from './modals/show-installer/show-installer.component';
 import { AttendanceMonthlySummaryComponent } from './modals/attendance-monthly-summary/attendance-monthly-summary.component';
+import { InfoMatrixComponent } from './modals/info-matrix/info-matrix.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -106,13 +107,15 @@ const PAGE_COMPONENTS = [
   AddActivityLogsComponent,
   ShiftLogAddComponent,
   ShowInstallerComponent,
-  AttendanceMonthlySummaryComponent
+  AttendanceMonthlySummaryComponent,
+  InfoMatrixComponent
 ];
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
     ...PAGE_COMPONENTS,
+    InfoMatrixComponent,
     // SendmessageComponent,
     // GenericModelComponent,
     // TicketCallRatingComponent,

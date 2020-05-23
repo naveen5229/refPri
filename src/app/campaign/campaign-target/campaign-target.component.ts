@@ -10,6 +10,7 @@ import { AddContactComponent } from '../../modals/campaign-modals/add-contact/ad
 import { UserService } from '../../Service/user/user.service';
 import { PrintPreviewComponent } from '../../modals/print-preview/print-preview.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 
 @Component({
   selector: 'ngx-campaign-target',
@@ -276,10 +277,23 @@ export class CampaignTargetComponent implements OnInit {
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
       { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
       { class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign) },
+      { class: 'fas fa-info-circle ml-2 s-4', action: this.infoMatrix.bind(this, campaign) },
 
     ];
     return icons;
   }
+
+  infoMatrix(campaign) {
+    console.log(campaign);
+    this.common.params = { 'campaignId': campaign._campid, campaignTargetId: campaign._camptargetid, 'enableForm': true, 'title': 'Primary Info'  };
+    const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        // this.getCampaignData();
+      }
+    });
+  }
+
   getLogs(campaign) {
     console.log(campaign);
     let dataparams = {

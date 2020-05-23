@@ -1,0 +1,100 @@
+<div class="modal-header">
+  <h5>{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+
+<div class="modal-body">
+
+  <div *ngIf='!enableForm'> 
+
+  <div class="container">
+    <fieldset>
+      <legend class="border-bottom">Create Form<span class="require"></span></legend>
+      <div class="row mb-1" *ngFor="let form of formData;let i = index;">
+          <div class="col-3">
+              <input type="text" class="form-control"  placeholder="Feild name" [(ngModel)]="form.param">
+          </div>
+      
+
+          <div class="col-3">
+              <input class="form-control" maxlength="20" type="number" [(ngModel)]='form.order' placeholder="Order">
+          </div>
+
+          <div class="col-3">
+            <select name='fieldType' [(ngModel)]=form.type>
+                <option value="text">Text</option>
+                <option value="number">Number</option>
+            </select>
+            <!-- <input class="form-control" maxlength="20" type="number" [(ngModel)]='form.orderNumber' placeholder="Order Number"> -->
+        </div>
+
+          <div  class="col-1">
+              <button *ngIf="i==0" class="btn btn-primary btn-sm" (click)="addMoreVehical(form)">
+                  <i class="fa fa-plus"></i>
+              </button>
+              <button *ngIf="i>0" class="btn btn-danger btn-sm" (click)="removeVehical(i)">
+                  <i class="fas fa-trash-alt"></i>
+              </button>
+          </div>
+      </div>
+  </fieldset>
+  </div>
+
+
+  <div class="row footer" style="border-top: 1px solid gray; padding: 10px;">
+    <div class="col ">
+        <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(false)">Cancel</button>
+    </div>
+    <div class="col text-right">
+        <button class="btn btn-primary " type='submit' id="save" (click)="submitFormData()">Save</button>
+    </div>
+</div>
+
+</div>
+
+<!-- Form -->
+
+<div *ngIf='enableForm && !this.formList.length' >
+  <h4 style="border-top: 1px solid gray; padding: 10px; margin: 10px; text-align: center; font-weight: lighter;"> There Is No Form Yet</h4>
+</div>
+
+<div class="form" *ngIf='formList.length' style="border: 1px solid gray; padding: 20px;">
+  <h4 *ngIf='!enableForm' style="text-align: center; font-weight: lighter; text-decoration: underline; margin-bottom: 20px;">Form Preview</h4>
+  <button *ngIf='!enableForm' style="float: right;"  class="btn btn-sm" (click)="editField()">
+    <i class="fa fa-edit"></i>
+</button>
+  <table style="width: 100%;">
+    <tbody >
+      <tr *ngFor='let form of formList'>
+        <td>
+          <label>{{form.param}} :-</label>
+          
+        </td>
+        <td *ngIf='form.type == "text" || form.type == null'>
+          <input type="text" [(ngModel)]='form.value'>
+        </td>
+        <td *ngIf='form.type == "number"'>
+          <input type="number" [(ngModel)]='form.value'>
+        </td>
+        <!-- <td  *ngIf='!enableForm'>
+          <button  class="btn btn-sm" (click)="editField(form)">
+            <i class="fa fa-edit"></i>
+        </button>
+        <button  class="btn  btn-sm" (click)="deleteField(form)">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <div class="col text-right" >
+    <button class="btn btn-primary " type='submit' id="save" (click)="submitFormDataWithValue()" [disabled]='!enableForm'>Submit</button>
+</div>
+</div>
+
+
+</div>
+
