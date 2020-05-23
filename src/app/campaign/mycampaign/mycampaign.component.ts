@@ -86,6 +86,17 @@ export class MycampaignComponent implements OnInit {
 
   ngOnInit() { }
 
+  addCampaignTarget() {
+    this.common.params = { title: "Add Lead ", button: "Add" }
+    const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.activeTab = 'leadsByMe';
+        this.getCampaignByType(2);
+      }
+    });
+  }
+
   resetSearchData() {
     this.searchData = {
       startDate: <any>this.common.getDate(-2),
@@ -189,8 +200,12 @@ export class MycampaignComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(campaign, type)
+            icons: this.actionIcons(campaign, type)
           };
+        } else if (key == 'Company') {
+          column[key] = { value: campaign[key], class: 'blue', action: this.addContactAction.bind(this, campaign, type) };
+        } else if (key == 'FleetSize') {
+          column[key] = { value: campaign[key], class: 'blue', action: this.getLogs.bind(this, campaign, type) };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
@@ -276,7 +291,7 @@ export class MycampaignComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(campaign, type)
+            icons: this.actionIcons(campaign, type)
           };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -317,7 +332,7 @@ export class MycampaignComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(campaign, type)
+            icons: this.actionIcons(campaign, type)
           };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -364,7 +379,7 @@ export class MycampaignComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(campaign, type)
+            icons: this.actionIcons(campaign, type)
           };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -385,11 +400,13 @@ export class MycampaignComponent implements OnInit {
 
   actionIcons(campaign, type) {
     let icons = [
-      { class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: null },
-      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: null },
-      { class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: null },
       { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null }
     ];
+    if (type == 2) {
+      icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: null });
+      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: null });
+      icons.push({ class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: null });
+    }
     return icons;
   }
 

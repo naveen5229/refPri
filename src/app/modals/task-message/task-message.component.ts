@@ -408,6 +408,43 @@ export class TaskMessageComponent implements OnInit {
       this.common.showError("Select CC user")
     }
   }
+
+
+  updateLeadPrimaryOwner() {
+    if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
+      let isCCUpdate = 0;
+      if (this.userListByTask['leadUsers'][0]._pri_own_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
+        this.common.showError("Please assign a new user");
+        return false;
+      }
+      let params = {
+        leadId: this.ticketId,
+        assigneeUserId: this.newAssigneeUser.id,
+        // status: this.statusId,
+        isCCUpdate: isCCUpdate,
+        assigneeUserNameOld: this.userListByTask['leadUsers'][0].primary_owner,
+        assigneeUserNameNew: this.newAssigneeUser.name
+      }
+      console.log("updateLeadPrimaryOwner params:", params);
+      this.common.loading++;
+      this.api.post('Campaigns/updateLeadPrimaryOwner', params).subscribe(res => {
+        this.common.loading--;
+        if (res['success']) {
+          this.getAllUserByLead();
+          this.getLeadMessage();
+          this.showAssignUserAuto = null;
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Select Primary Owner")
+    }
+  }
   // end: campaign msg
 
 }
