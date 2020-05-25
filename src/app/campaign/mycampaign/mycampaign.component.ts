@@ -209,6 +209,8 @@ export class MycampaignComponent implements OnInit {
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(campaign._status) };
       }
       columns.push(column);
     });
@@ -255,6 +257,8 @@ export class MycampaignComponent implements OnInit {
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(campaign._status) };
       }
       columns.push(column);
     });
@@ -296,6 +300,8 @@ export class MycampaignComponent implements OnInit {
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
+
+        column['style'] = { 'background': this.common.taskStatusBg(campaign._status) };
       }
       columns.push(column);
     });
@@ -338,12 +344,7 @@ export class MycampaignComponent implements OnInit {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
 
-        if (campaign._status == 0) {
-          column['style'] = { 'background': 'pink' };
-        } else {
-          column['style'] = { 'background': 'aliceblue' };
-        }
-
+        column['style'] = { 'background': this.common.taskStatusBg(campaign._status) };
       }
       columns.push(column);
     });
@@ -385,12 +386,7 @@ export class MycampaignComponent implements OnInit {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
 
-        if (campaign._status == 0) {
-          column['style'] = { 'background': 'pink' };
-        } else {
-          column['style'] = { 'background': 'aliceblue' };
-        }
-
+        column['style'] = { 'background': this.common.taskStatusBg(campaign._status) };
       }
       columns.push(column);
     });
@@ -402,7 +398,14 @@ export class MycampaignComponent implements OnInit {
     let icons = [
       { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null }
     ];
-    if (type == 2) {
+    if (type == 1) {
+      if (campaign._status == 2) {
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, 5), txt: '', title: "Mark Completed" });
+      } else if (campaign._status == 0) {
+        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateCampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
+        // icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
+      }
+    } else if (type == 2) {
       icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: null });
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: null });
       icons.push({ class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: null });
@@ -582,54 +585,48 @@ export class MycampaignComponent implements OnInit {
   //   return icons;
   // }
 
-  // updatecampaignStatus(campaign, type, status) {
-  //   if (campaign._tktid) {
-  //     let params = {
-  //       campaignId: campaign._tktid,
-  //       statusId: status
-  //     }
-  //     this.common.loading++;
-  //     this.api.post('AdminTask/updatecampaignStatus', params).subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] > 0) {
-  //         this.common.showToast(res['msg']);
-  //         if (type == -102 && this.searchData.startDate && this.searchData.endDate) {
-  //           let startDate = this.common.dateFormatter(this.searchData.startDate);
-  //           let endDate = this.common.dateFormatter(this.searchData.endDate);
-  //           this.getCampaignByType(type, startDate, endDate);
+  updateCampaignStatus(campaign, type, status) {
+    if (campaign._camptargetid) {
+      let params = {
+        leadId: campaign._camptargetid,
+        status: status
+      }
+      this.common.loading++;
+      this.api.post('Campaigns/updateCampaignTargetTkt', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.getCampaignByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("campaign ID Not Available");
+    }
+  }
 
-  //         } else {
-  //           this.getCampaignByType(type);
-  //         }
-  //       } else {
-  //         this.common.showError(res['data']);
-  //       }
-  //     }, err => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log('Error: ', err);
-  //     });
-  //   } else {
-  //     this.common.showError("campaign ID Not Available");
-  //   }
-  // }
-
-  // changecampaignStatusWithConfirm(campaign, type, status) {
-  //   if (campaign._refid) {
-  //     this.common.params = {
-  //       title: 'Complete Task ',
-  //       description: `<b>&nbsp;` + 'Are You Sure To Complete This Task' + `<b>`,
-  //     }
-  //     const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-  //     activeModal.result.then(data => {
-  //       if (data.response) {
-  //         this.updatecampaignStatus(campaign, type, status);
-  //       }
-  //     });
-  //   } else {
-  //     this.common.showError("Task ID Not Available");
-  //   }
-  // }
+  changeCampaignStatusWithConfirm(campaign, type, status) {
+    if (campaign._camptargetid) {
+      let preText = (status == 5) ? "Complete" : "Reject";
+      this.common.params = {
+        title: preText + ' Lead',
+        description: `<b>` + 'Are You Sure You ' + preText + ` this Lead <b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.updateCampaignStatus(campaign, type, status);
+        }
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
 
   campaignMessage(campaign, type) {
     console.log("campaign:", campaign);

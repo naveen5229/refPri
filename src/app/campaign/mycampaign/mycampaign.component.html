@@ -23,7 +23,7 @@
                 <li [ngClass]="activeTab=='ccLeads'?'active':''" (click)="activeTab='ccLeads'; getCampaignByType(3)">
                     CC Leads
                 </li>
-                <li [ngClass]="activeTab=='allCompletedLeads'?'active':''" (click)="activeTab='allCompletedLeads';resetSearchDate(); getCampaignByType(4)">
+                <li [ngClass]="activeTab=='allCompletedLeads'?'active':''" (click)="activeTab='allCompletedLeads';resetSearchData(); getCampaignByType(4)">
                     Completed Lead
                 </li>
                 <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getCampaignByType(5)">
