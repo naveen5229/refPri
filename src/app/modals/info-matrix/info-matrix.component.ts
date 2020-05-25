@@ -41,8 +41,6 @@ enableForm = false;
         this.enableForm = this.common.params.enableForm;
         this.campTargetId = this.common.params.campaignTargetId;
         this.getFilledData(this.campTargetId);
-        // this.getFormData(this.campaignId);
-
     }
    }
 
@@ -61,11 +59,10 @@ enableForm = false;
         {
           param: '',
           order: null,
-          type: null,
+          type: 'text',
           id: null
         }
       );
-      console.log(this.formData);
     } else {
       this.common.showError("Field Name and Order Number is required");
     }
@@ -76,11 +73,12 @@ enableForm = false;
   }
 
   submitFormData() {
-    console.log(this.formData);
-    if (!this.isEdit) {
-    this.formData.shift();
-
-    }
+    if(this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
+        this.common.showError('Please Fill All The Field');
+    }  else {
+      if (this.formData.length > 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
+              this.formData.shift();
+      }
     let params = {
       campaignId: this.campaignId,
       matrixInfo: JSON.stringify(this.formData.map(item => {
@@ -94,8 +92,6 @@ enableForm = false;
       requestId: this.requestId
 
     }
-    console.log(params);
-
     this.common.loading++;
           this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
             .subscribe(res => {
@@ -111,7 +107,7 @@ enableForm = false;
                   this.formData = [{
                     param: '',
                     order: null,
-                    type: null,
+                    type: 'text',
                     id:null
                   }]
                   
@@ -126,23 +122,7 @@ enableForm = false;
               this.common.loading--;
               console.log('Error: ', err);
             });
-  }
-
-  getFormData(campaignId) {
-                let params = 'campaignId=' + campaignId
-                this.common.loading++;
-                this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?'+ params)
-                  .subscribe(res => {
-                      console.log(res);
-                      this.unSortedformList = res['data'];
-                      this.formList = this.unSortedformList.sort(this.orderSorting);
-                      console.log(this.formList);
-                    this.common.loading--;
-                    this.common.showToast(res['msg']);
-                  }, err => {
-                    this.common.loading--;
-                    console.log('Error: ', err);
-                  });
+    }
   }
 
   orderSorting(a, b){
@@ -155,6 +135,27 @@ enableForm = false;
     }
   }
 
+  getFormData(campaignId) {
+                let params = 'campaignId=' + campaignId
+                this.common.loading++;
+                this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?'+ params)
+                  .subscribe(res => {
+                      console.log(res);
+                      if (res['data'][0]['param'] == '' || res['data'][0]['order'] == null){
+                          this.formList = [];
+                      } else {
+                      this.unSortedformList = res['data'];
+                      this.formList = this.unSortedformList.sort(this.orderSorting);
+                      }
+                    this.common.loading--;
+                    this.common.showToast(res['msg']);
+                  }, err => {
+                    this.common.loading--;
+                    console.log('Error: ', err);
+                  });
+  }
+
+
   checkValue (obj) {
       return obj.value != '';
   }
@@ -165,13 +166,14 @@ enableForm = false;
       this.formList.map( form => {
             obj[form.param] = form.value;
       });
-      console.log(obj);
-
-    let params = {campTargetId: this.campTargetId,
+      if (obj['Name'] == undefined || obj['Job'] == undefined || obj['Contact'] == undefined) {
+            this.common.showError('Please Fill All The Field');
+      }
+      else {
+          let params = {campTargetId: this.campTargetId,
                   primaryInfo: JSON.stringify(obj),
                      requestId: this.requestId
                     }
-                     console.log(params);
                 this.common.loading++;
                 this.api.post('Campaigns/saveCampaignTargetPrimaryInfo', params)
                   .subscribe(res => {
@@ -183,7 +185,7 @@ enableForm = false;
                     this.common.loading--;
                     console.log('Error: ', err);
                   });
-
+          }
   }
 
   getFilledData(campTargetId) {
@@ -200,7 +202,6 @@ enableForm = false;
           this.requestId = null;
           this.getFormData(this.campaignId);
         }
-        // this.common.showToast(res['msg']);
       }, err => {
         this.common.loading--;
         console.log('Error: ', err);
@@ -208,11 +209,19 @@ enableForm = false;
   }
 
   editField() {
-    this.formData = this.formList
+    this.formData = this.formData.concat(this.formList);
     this.isEdit = true;
     this.requestId = 1;
     
   }
 
+  resetForm() {
+    this.formData = [{
+                    param: '',
+                    order: null,
+                    type: 'text',
+                    id:null
+                  }]
+  }
 
 }
