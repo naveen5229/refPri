@@ -48,6 +48,7 @@
         <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(false)">Cancel</button>
     </div>
     <div class="col text-right">
+        <!-- <button class="btn btn-primary" type='submit' id="save" (click)="resetForm()" style="margin-right: 10px;">Reset</button> -->
         <button class="btn btn-primary " type='submit' id="save" (click)="submitFormData()">Save</button>
     </div>
 </div>
@@ -62,9 +63,7 @@
 
 <div class="form" *ngIf='formList.length' style="border: 1px solid gray; padding: 20px;">
   <h4 *ngIf='!enableForm' style="text-align: center; font-weight: lighter; text-decoration: underline; margin-bottom: 20px;">Form Preview</h4>
-  <button *ngIf='!enableForm' style="float: right;"  class="btn btn-sm" (click)="editField()">
-    <i class="fa fa-edit"></i>
-</button>
+  
   <table style="width: 100%;">
     <tbody >
       <tr *ngFor='let form of formList'>
@@ -90,9 +89,17 @@
     </tbody>
   </table>
   <br>
-  <div class="col text-right" >
-    <button class="btn btn-primary " type='submit' id="save" (click)="submitFormDataWithValue()" [disabled]='!enableForm'>Submit</button>
+  <div class="col text-right" *ngIf='enableForm'>
+    <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(false)" style="float: left;">Cancel</button>
+
+    <button class="btn btn-primary" type='submit' id="save" (click)="submitFormDataWithValue()" >Submit</button>
 </div>
+<div class="col text-right" *ngIf='!enableForm'>
+  <button   class="btn btn-primary"  (click)="editField()">
+    Edit
+  </button>
+</div>
+
 </div>
 
 
