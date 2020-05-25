@@ -196,6 +196,31 @@ table .fa-thumbs-up {
     color: green;
 }
 
+table .fa-comments {
+    color: limegreen;
+}
+
+table .fa-comments.no-comment {
+    color: gray;
+}
+
+table .fa-comments.new-comment span {
+    min-width: 13px;
+    min-height: 13px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: 1px;
+    padding: 1px;
+    font-size: 8px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 11px;
+    background: transparent;
+}
+
 .tabs_style {
     width: 100%;
     margin: 0px;

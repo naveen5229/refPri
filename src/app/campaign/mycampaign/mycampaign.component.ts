@@ -396,8 +396,23 @@ export class MycampaignComponent implements OnInit {
 
   actionIcons(campaign, type) {
     let icons = [
-      { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null }
+      { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null }
     ];
+    if (campaign._unreadcount > 0) {
+      icons = [
+        { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
+      ];
+    } else if (campaign._unreadcount == 0) {
+      icons = [
+        { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
+      ];
+    }
+    // else if (campaign._unreadcount == -1) {
+    //   icons = [
+    //     { class: "fas fa-comments new-comment", action: this.campaignMessage.bind(this, campaign, type), txt: campaign._unreadcount, title: null },
+    //   ];
+    // }
+
     if (type == 1) {
       if (campaign._status == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, 5), txt: '', title: "Mark Completed" });
