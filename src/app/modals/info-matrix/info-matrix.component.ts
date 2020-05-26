@@ -36,6 +36,7 @@ export class InfoMatrixComponent implements OnInit {
       this.getFormData(this.campaignId);
     }
     if (this.common.params && this.common.params.enableForm) {
+      console.log('-----------------------');
         this.title = this.common.params.title;
         this.campaignId = this.common.params.campaignId;
         this.enableForm = this.common.params.enableForm;
@@ -141,16 +142,16 @@ export class InfoMatrixComponent implements OnInit {
                 this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?'+ params)
                   .subscribe(res => {
                       console.log(res);
-                      if (res['data'][0]['param'] == '' || res['data'][0]['order'] == null){
+                      if (res['data'].length && (res['data'][0]['param'] == '' || res['data'][0]['order'] == null)){
                           this.formList = [];
                       } else {
                       this.unSortedformList = res['data'];
                       this.formList = this.unSortedformList.sort(this.orderSorting);
                       }
                     this.common.loading--;
-                    this.common.showToast(res['msg']);
                   }, err => {
                     this.common.loading--;
+                    this.common.showError(err);
                     console.log('Error: ', err);
                   });
   }
@@ -185,26 +186,7 @@ export class InfoMatrixComponent implements OnInit {
         this.common.loading--;
         console.log('Error: ', err);
       });
-      if (obj['Name'] == undefined || obj['Job'] == undefined || obj['Contact'] == undefined) {
-            this.common.showError('Please Fill All The Field');
-      }
-      else {
-          let params = {campTargetId: this.campTargetId,
-                  primaryInfo: JSON.stringify(obj),
-                     requestId: this.requestId
-                    }
-                this.common.loading++;
-                this.api.post('Campaigns/saveCampaignTargetPrimaryInfo', params)
-                  .subscribe(res => {
-                      console.log(res);
-                      this.activeModal.close();
-                    this.common.loading--;
-                    this.common.showToast(res['msg']);
-                  }, err => {
-                    this.common.loading--;
-                    console.log('Error: ', err);
-                  });
-          }
+    
   }
 
   getFilledData(campTargetId) {

@@ -233,11 +233,7 @@ export class AddCampaignComponent implements OnInit {
     }
     this.common.params = { data, title: "Action Mapping", button: "Add" };
     const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        this.getCampaignData();
-      }
-    });
+  
   }
 
 

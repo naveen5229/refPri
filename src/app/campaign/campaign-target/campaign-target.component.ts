@@ -287,11 +287,7 @@ export class CampaignTargetComponent implements OnInit {
     console.log(campaign);
     this.common.params = { 'campaignId': campaign._campid, campaignTargetId: campaign._camptargetid, 'enableForm': true, 'title': 'Primary Info' };
     const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      // if (data.response) {
-      // this.getCampaignData();
-      // }
-    });
+   
   }
 
   getLogs(campaign) {
