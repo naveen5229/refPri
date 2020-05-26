@@ -13,6 +13,7 @@ export class TaskMessageComponent implements OnInit {
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
+  subTitle = null;
   ticketId = 0;
   statusId = 0;
   messageList = [];
@@ -33,6 +34,7 @@ export class TaskMessageComponent implements OnInit {
     console.log("common params:", this.common.params);
     if (this.common.params != null) {
       this.title = this.common.params.title;
+      this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       if (this.common.params.fromPage == 'campaign') {
         this.ticketId = this.common.params.campaignEditData.camptargetid;
         this.statusId = this.common.params.campaignEditData.statusId;

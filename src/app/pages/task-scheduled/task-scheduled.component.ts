@@ -853,7 +853,7 @@ export class TaskScheduledComponent implements OnInit {
       taskType: ticket._tktype,
       tabType: type
     }
-    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
+    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: (ticket._tktype == 103) ? ticket.sc_task_desc : ticket.task_desc };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getAllTask(type);
