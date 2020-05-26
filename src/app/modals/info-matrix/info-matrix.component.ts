@@ -37,11 +37,11 @@ export class InfoMatrixComponent implements OnInit {
     }
     if (this.common.params && this.common.params.enableForm) {
       console.log('-----------------------');
-        this.title = this.common.params.title;
-        this.campaignId = this.common.params.campaignId;
-        this.enableForm = this.common.params.enableForm;
-        this.campTargetId = this.common.params.campaignTargetId;
-        this.getFilledData(this.campTargetId);
+      this.title = this.common.params.title;
+      this.campaignId = this.common.params.campaignId;
+      this.enableForm = this.common.params.enableForm;
+      this.campTargetId = this.common.params.campaignTargetId;
+      this.getFilledData(this.campTargetId, this.campaignId);
     }
   }
 
@@ -74,86 +74,86 @@ export class InfoMatrixComponent implements OnInit {
   }
 
   submitFormData() {
-    if(this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
-        this.common.showError('Please Fill All The Field');
-    }  else {
+    if (this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
+      this.common.showError('Please Fill All The Field');
+    } else {
       if (this.formData.length > 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
-              this.formData.shift();
+        this.formData.shift();
       }
-    let params = {
-      campaignId: this.campaignId,
-      matrixInfo: JSON.stringify(this.formData.map(item => {
-        return {
-          param: item.param,
-          order: item.order,
-          type: item.type,
-          id: item['_id']
-        }
-      })),
-      requestId: this.requestId
+      let params = {
+        campaignId: this.campaignId,
+        matrixInfo: JSON.stringify(this.formData.map(item => {
+          return {
+            param: item.param,
+            order: item.order,
+            type: item.type,
+            id: item['_id']
+          }
+        })),
+        requestId: this.requestId
 
-    }
-    this.common.loading++;
-          this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
-            .subscribe(res => {
+      }
+      this.common.loading++;
+      this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
+        .subscribe(res => {
 
-              this.common.loading--;
+          this.common.loading--;
 
-              if (res['code'] == 1) {
-                if (res['data'][0]['y_id'] > 0) {
-                  this.common.showToast(res['data'][0].y_msg);
+          if (res['code'] == 1) {
+            if (res['data'][0]['y_id'] > 0) {
+              this.common.showToast(res['data'][0].y_msg);
 
-                  setTimeout( (() => this.getFormData(this.campaignId)), 2000);
+              setTimeout((() => this.getFormData(this.campaignId)), 2000);
 
-                  this.formData = [{
-                    param: '',
-                    order: null,
-                    type: 'text',
-                    id:null
-                  }]
-                  
-                } else {
-                  this.common.showError(res['data'][0].y_msg)
-                }
-              } else {
-                this.common.showError(res['msg']);
-              }
+              this.formData = [{
+                param: '',
+                order: null,
+                type: 'text',
+                id: null
+              }]
 
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+            } else {
+              this.common.showError(res['data'][0].y_msg)
+            }
+          } else {
+            this.common.showError(res['msg']);
+          }
+
+        }, err => {
+          this.common.loading--;
+          console.log('Error: ', err);
+        });
     }
   }
 
-  orderSorting(a, b){
-    if(a.order < b.order){
-            return -1;
-    }else if(a.order > b.order){
-            return 1;
-    }else{
-            return 0;
+  orderSorting(a, b) {
+    if (a.order < b.order) {
+      return -1;
+    } else if (a.order > b.order) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 
   getFormData(campaignId) {
-                let params = 'campaignId=' + campaignId
-                this.common.loading++;
-                this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?'+ params)
-                  .subscribe(res => {
-                      console.log(res);
-                      if (res['data'].length && (res['data'][0]['param'] == '' || res['data'][0]['order'] == null)){
-                          this.formList = [];
-                      } else {
-                      this.unSortedformList = res['data'];
-                      this.formList = this.unSortedformList.sort(this.orderSorting);
-                      }
-                    this.common.loading--;
-                  }, err => {
-                    this.common.loading--;
-                    this.common.showError(err);
-                    console.log('Error: ', err);
-                  });
+    let params = 'campaignId=' + campaignId
+    this.common.loading++;
+    this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?' + params)
+      .subscribe(res => {
+        console.log(res);
+        if (res['data'].length && (res['data'][0]['param'] == '' || res['data'][0]['order'] == null)) {
+          this.formList = [];
+        } else {
+          this.unSortedformList = res['data'];
+          this.formList = this.unSortedformList.sort(this.orderSorting);
+        }
+        this.common.loading--;
+      }, err => {
+        this.common.loading--;
+        this.common.showError(err);
+        console.log('Error: ', err);
+      });
   }
 
 
@@ -186,29 +186,31 @@ export class InfoMatrixComponent implements OnInit {
         this.common.loading--;
         console.log('Error: ', err);
       });
-    
+
   }
 
-  getFilledData(campTargetId) {
-    let params = 'campTargetId=' + campTargetId
+  getFilledData(campTargetId, campaignId) {
+    let params = 'campTargetId=' + campTargetId + "&campaignId=" + campaignId;
     this.common.loading++;
     this.api.get('Campaigns/getCampaignTargetPrimaryInfo?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
-        if (res['data'] && res['data'].length > 0 && res['data'][0]._id > 0) {
+        if (res['data'] && res['data'].length > 0) {
           this.requestId = res['data'][0]._id;
           if (res['data'][0]['info'].length > 0) {
             this.formList = res['data'][0]['info'];
             console.log("first if");
-          } else {
-            this.getFormData(this.campaignId);
-            console.log("first else");
           }
-        } else {
-          this.requestId = null;
-          this.getFormData(this.campaignId);
+          // else {
+          //   this.getFormData(this.campaignId);
+          //   console.log("first else");
+          // }
         }
+        // else {
+        //   this.requestId = null;
+        //   this.getFormData(this.campaignId);
+        // }
       }, err => {
         this.common.loading--;
         console.log('Error: ', err);
@@ -224,11 +226,11 @@ export class InfoMatrixComponent implements OnInit {
 
   resetForm() {
     this.formData = [{
-                    param: '',
-                    order: null,
-                    type: 'text',
-                    id:null
-                  }]
+      param: '',
+      order: null,
+      type: 'text',
+      id: null
+    }]
   }
 
 }

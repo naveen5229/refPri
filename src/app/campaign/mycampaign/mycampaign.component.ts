@@ -400,18 +400,18 @@ export class MycampaignComponent implements OnInit {
     ];
     if (campaign._unreadcount > 0) {
       icons = [
-        { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
+        { class: "fas fa-comments new-comment", action: this.campaignMessage.bind(this, campaign, type), txt: campaign._unreadcount, title: null },
       ];
     } else if (campaign._unreadcount == 0) {
+      icons = [
+        { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
+      ];
+    }
+    else if (campaign._unreadcount == -1) {
       icons = [
         { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
       ];
     }
-    // else if (campaign._unreadcount == -1) {
-    //   icons = [
-    //     { class: "fas fa-comments new-comment", action: this.campaignMessage.bind(this, campaign, type), txt: campaign._unreadcount, title: null },
-    //   ];
-    // }
 
     if (type == 1) {
       if (campaign._status == 2) {
@@ -646,6 +646,7 @@ export class MycampaignComponent implements OnInit {
   campaignMessage(campaign, type) {
     console.log("campaign:", campaign);
     let campaignEditData = {
+      ticketId: campaign._tktid,
       camptargetid: campaign._camptargetid,
       statusId: campaign._status,
       lastSeenId: campaign._lastreadid,

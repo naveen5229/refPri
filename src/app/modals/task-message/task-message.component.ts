@@ -10,6 +10,7 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-message.component.scss']
 })
 export class TaskMessageComponent implements OnInit {
+  // this page in from 3 pages change carefully
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
@@ -36,7 +37,8 @@ export class TaskMessageComponent implements OnInit {
       this.title = this.common.params.title;
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       if (this.common.params.fromPage == 'campaign') {
-        this.ticketId = this.common.params.campaignEditData.camptargetid;
+        this.ticketId = this.common.params.campaignEditData.ticketId;
+        this.taskId = this.common.params.campaignEditData.camptargetid;
         this.statusId = this.common.params.campaignEditData.statusId;
         this.tabType = (this.common.params.campaignEditData.tabType) ? this.common.params.campaignEditData.tabType : null;
         this.getLeadMessage();
@@ -312,21 +314,21 @@ export class TaskMessageComponent implements OnInit {
       console.log("messageList:", res['data']);
       if (res['success']) {
         this.messageList = res['data'] || [];
-        // if (this.messageList.length > 0) {
-        //   let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
-        //   this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
-        //   console.log("msgListOfOther:", msgListOfOther);
-        //   console.log("msgListOfMine:", this.msgListOfMine.length);
-        //   if (msgListOfOther.length > 0) {
-        //     let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
-        //     if (this.lastMsgId != lastMsgIdTemp) {
-        //       this.lastMsgId = lastMsgIdTemp;
-        //       this.lastMessageRead();
-        //     }
-        //     console.log("lastMsgIdTemp:", lastMsgIdTemp);
-        //   }
-        //   console.log("lastMsgId:", this.lastMsgId);
-        // }
+        if (this.messageList.length > 0) {
+          let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
+          this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
+          console.log("msgListOfOther:", msgListOfOther);
+          console.log("msgListOfMine:", this.msgListOfMine.length);
+          if (msgListOfOther.length > 0) {
+            let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
+            if (this.lastMsgId != lastMsgIdTemp) {
+              this.lastMsgId = lastMsgIdTemp;
+              this.lastMessageReadoflead();
+            }
+            console.log("lastMsgIdTemp:", lastMsgIdTemp);
+          }
+          console.log("lastMsgId:", this.lastMsgId);
+        }
       } else {
         this.common.showError(res['data'])
       }
@@ -370,7 +372,7 @@ export class TaskMessageComponent implements OnInit {
 
   getAllUserByLead() {
     let params = {
-      ticketId: this.ticketId
+      leadId: this.taskId
     }
     this.api.post('Campaigns/getAllUserByLead', params).subscribe(res => {
       console.log("getAllUserByLead:", res['data']);
@@ -387,9 +389,9 @@ export class TaskMessageComponent implements OnInit {
   }
 
   addNewCCUserToLead() {
-    if (this.ticketId > 0 && this.newCCUserId > 0) {
+    if (this.taskId > 0 && this.newCCUserId > 0) {
       let params = {
-        leadId: this.ticketId,
+        leadId: this.taskId,
         ccUserId: this.newCCUserId
       }
       this.common.loading++;
@@ -413,14 +415,15 @@ export class TaskMessageComponent implements OnInit {
 
 
   updateLeadPrimaryOwner() {
-    if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
+    if (this.taskId > 0 && this.newAssigneeUser.id > 0) {
       let isCCUpdate = 0;
       if (this.userListByTask['leadUsers'][0]._pri_own_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
         this.common.showError("Please assign a new user");
         return false;
       }
       let params = {
-        leadId: this.ticketId,
+        ticketId: this.ticketId,
+        leadId: this.taskId,
         assigneeUserId: this.newAssigneeUser.id,
         // status: this.statusId,
         isCCUpdate: isCCUpdate,
@@ -445,6 +448,32 @@ export class TaskMessageComponent implements OnInit {
       });
     } else {
       this.common.showError("Select Primary Owner")
+    }
+  }
+
+  lastMessageReadoflead() {
+    let params = {
+      ticketId: this.ticketId,
+      comment_id: this.lastMsgId
+    }
+    console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
+    if (this.lastSeenId < this.lastMsgId) {
+      this.api.post('Campaigns/readLastMessage', params).subscribe(res => {
+        console.log("messageList:", res['data']);
+        if (res['code'] > 0) {
+
+          setTimeout(() => {
+            this.lastSeenId = this.lastMsgId;
+          }, 5000);
+
+        } else {
+          this.common.showError(res['msg'])
+        }
+      }, err => {
+        this.showLoading = false;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
   // end: campaign msg
