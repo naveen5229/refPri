@@ -171,3 +171,9 @@
         animation-iteration-count: 1 !important;
     }
 }
+
+.modal-header.sub-title {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    color: #fff;
+}

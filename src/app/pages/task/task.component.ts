@@ -905,7 +905,8 @@ export class TaskComponent implements OnInit {
       taskType: ticket._tktype,
       tabType: type
     }
-    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save" };
+    let subTitle = (ticket._tktype == 103 && !([-8, -102].includes(type))) ? ticket.sc_task_desc : ticket.task_desc;
+    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: subTitle };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getTaskByType(type);
