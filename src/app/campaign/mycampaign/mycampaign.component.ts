@@ -9,6 +9,7 @@ import { AddContactComponent } from '../../modals/campaign-modals/add-contact/ad
 import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+import { ReminderComponent } from '../../modals/reminder/reminder.component';
 
 @Component({
   selector: 'ngx-campaign',
@@ -424,6 +425,32 @@ export class MycampaignComponent implements OnInit {
       icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: null });
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: null });
       icons.push({ class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: null });
+
+    } else if (type == 3 && !campaign._cc_status) {
+      icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, campaign, type), txt: '', title: "Mark Ack as CC Lead" });
+
+    } else if (type == 5) {
+      // if (campaign._status == 2) {
+      //   icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, 5), txt: '', title: "Mark Completed" });
+      // } else 
+      if (campaign._status == 0) {
+        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateCampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
+      } else if (campaign._cc_user_id && !campaign._cc_status) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, campaign, type), txt: '', title: "Mark Ack as CC Lead" });
+      }
+    }
+
+    if ((campaign._status == 5 || campaign._status == -1)) {
+    } else {
+      if (campaign._isremind == 1) {
+        icons.push({ class: "fa fa-bell isRemind", action: (type == -8) ? '' : this.checkReminderSeen.bind(this, campaign, type), txt: '', title: null });
+      } else if (campaign._isremind == 2 && type != 5) {
+        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
+      } else {
+        if (type != 5) {
+          icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
+        }
+      }
     }
     return icons;
   }
@@ -446,7 +473,8 @@ export class MycampaignComponent implements OnInit {
       potCat: campaign._potcat,
       priOwnId: campaign._priownid,
       potCatname: campaign['Fleet Category'],
-      priOwnname: campaign['Primary Owner'],
+      // priOwnname: campaign['Primary Owner'],
+      priOwnname: campaign._priown,
     }
 
     this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };
@@ -645,19 +673,23 @@ export class MycampaignComponent implements OnInit {
 
   campaignMessage(campaign, type) {
     console.log("campaign:", campaign);
-    let campaignEditData = {
-      ticketId: campaign._tktid,
-      camptargetid: campaign._camptargetid,
-      statusId: campaign._status,
-      lastSeenId: campaign._lastreadid,
-      // taskId: (campaign._tktype == 101 || campaign._tktype == 102) ? campaign._refid : null,
-      tabType: type
+    if (campaign._tktid > 0 && campaign._camptargetid > 0) {
+      let campaignEditData = {
+        ticketId: campaign._tktid,
+        camptargetid: campaign._camptargetid,
+        statusId: campaign._status,
+        lastSeenId: campaign._lastreadid,
+        // taskId: (campaign._tktype == 101 || campaign._tktype == 102) ? campaign._refid : null,
+        tabType: type
+      }
+      this.common.params = { campaignEditData, title: "campaign Comment", button: "Save", subTitle: campaign.Company, fromPage: 'campaign' };
+      const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        this.getCampaignByType(type);
+      });
+    } else {
+      this.common.showError("Invalid Lead");
     }
-    this.common.params = { campaignEditData, title: "campaign Comment", button: "Save", fromPage: 'campaign' };
-    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      this.getCampaignByType(type);
-    });
   }
 
   searchAllCompletedLead() {
@@ -671,57 +703,57 @@ export class MycampaignComponent implements OnInit {
     }
   }
 
-  // showReminderPopup(campaign, type) {
-  //   this.common.params = { campaignId: campaign._tktid, title: "Add Reminder", btn: "Set Reminder" };
-  //   const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       this.getCampaignByType(type);
-  //     }
-  //   });
-  // }
+  showReminderPopup(campaign, type) {
+    this.common.params = { ticketId: campaign._tktid, title: "Add Reminder", btn: "Set Reminder", fromPage: "canpaign" };
+    const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getCampaignByType(type);
+      }
+    });
+  }
 
-  // checkReminderSeen(campaign, type) {
-  //   let params = {
-  //     campaign_id: campaign._tktid
-  //   };
-  //   this.common.loading++;
-  //   this.api.post('AdminTask/checkReminderSeen', params)
-  //     .subscribe(res => {
-  //       this.common.loading--;
-  //       this.common.showToast(res['msg']);
-  //       this.getCampaignByType(type);
-  //     }, err => {
-  //       this.common.loading--;
-  //       console.log('Error: ', err);
-  //     });
-  // }
+  checkReminderSeen(campaign, type) {
+    let params = {
+      ticketId: campaign._tktid
+    };
+    this.common.loading++;
+    this.api.post('Campaigns/checkLeadReminderSeen', params)
+      .subscribe(res => {
+        this.common.loading--;
+        this.common.showToast(res['msg']);
+        this.getCampaignByType(type);
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
+  }
 
-  // ackTaskByCcUser(campaign, type) {
-  //   if (campaign._tktid) {
-  //     let params = {
-  //       campaignId: campaign._tktid,
-  //       taskId: campaign._refid
-  //     }
-  //     console.log("ackTaskByCcUser:", params);
-  //     this.common.loading++;
-  //     this.api.post('AdminTask/ackTaskByCcUser', params).subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] > 0) {
-  //         this.common.showToast(res['msg']);
-  //         this.getCampaignByType(type);
-  //       } else {
-  //         this.common.showError(res['data']);
-  //       }
-  //     }, err => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log('Error: ', err);
-  //     });
-  //   } else {
-  //     this.common.showError("campaign ID Not Available");
-  //   }
-  // }
+  ackLeadByCcUser(campaign, type) {
+    if (campaign._tktid) {
+      let params = {
+        ticketId: campaign._tktid,
+        leadId: campaign._camptargetid
+      }
+      console.log("ackLeadByCcUser:", params);
+      this.common.loading++;
+      this.api.post('Campaigns/ackLeadByCcUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.common.showToast(res['msg']);
+          this.getCampaignByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
 
   // ackTaskByAssigner(campaign, type) {
   //   if (campaign._tktid && campaign._refid) {

@@ -34,6 +34,8 @@ export class ReminderComponent implements OnInit {
   ];
   showHours = false;
   dateTime: any = "";//new Date(); //for datetime popup
+  fromPage;
+
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
@@ -43,6 +45,7 @@ export class ReminderComponent implements OnInit {
       this.title = this.common.params.title;
       this.btn = this.common.params.btn;
       this.ticketId = this.common.params.ticketId;
+      this.fromPage = this.common.params.fromPage;
     }
   }
 
@@ -74,8 +77,14 @@ export class ReminderComponent implements OnInit {
       remindtime: this.common.dateFormatter(this.reminder.date).split(' ')[0] + ' ' + (this.reminder.time < '10' ? '0' + this.reminder.time : this.reminder.time) + ':00'
     };
     console.log('Params: ', params);
+    let apiName;
+    if (this.fromPage && this.fromPage == "canpaign") {
+      apiName = 'Campaigns/setLeadReminderTime.json';
+    } else {
+      apiName = 'AdminTask/setReminderTime.json';
+    }
     this.common.loading++;
-    this.api.post('AdminTask/setReminderTime.json', params)
+    this.api.post(apiName, params)
       .subscribe(res => {
         console.log(res);
         this.common.loading--;

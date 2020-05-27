@@ -41,6 +41,7 @@ export class TaskMessageComponent implements OnInit {
         this.taskId = this.common.params.campaignEditData.camptargetid;
         this.statusId = this.common.params.campaignEditData.statusId;
         this.tabType = (this.common.params.campaignEditData.tabType) ? this.common.params.campaignEditData.tabType : null;
+        this.lastSeenId = this.common.params.campaignEditData.lastSeenId;
         this.getLeadMessage();
         this.getAllUserByLead();
       } else {
@@ -428,6 +429,7 @@ export class TaskMessageComponent implements OnInit {
         // status: this.statusId,
         isCCUpdate: isCCUpdate,
         assigneeUserNameOld: this.userListByTask['leadUsers'][0].primary_owner,
+        // assigneeUserIdOld: this.userListByTask['leadUsers'][0]._pri_own_id,
         assigneeUserNameNew: this.newAssigneeUser.name
       }
       console.log("updateLeadPrimaryOwner params:", params);
@@ -475,6 +477,15 @@ export class TaskMessageComponent implements OnInit {
         console.log('Error: ', err);
       });
     }
+  }
+
+  closeLeadUserLogsModal() {
+    document.getElementById("userLogsModal").style.display = "none";
+  }
+
+  showLeadUserLogsModal() {
+    console.log('userLogs:', this.userListByTask['userLogs']);
+    document.getElementById("userLogsModal").style.display = "block";
   }
   // end: campaign msg
 

@@ -96,6 +96,7 @@
                     <td *ngIf="!showAssignUserAuto">{{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                         <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign to new user" (click)="showAssignUserAuto=1"><i
                             class="fa fa-plus"></i></button>
+                        <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()"></i>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">
                         <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Primary Owner" autocomplete="off" name="primaryOwner" inputId="primaryOwner">
@@ -119,5 +120,35 @@
             <!-- end : lead users -->
         </div>
     </div>
+
+
+    <!-- start: lead userlogs modal -->
+    <div class="modal" id="userLogsModal" #userLogsModal>
+        <div class="modal-dialog mt-3">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#fff;">User Logs</h5>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeLeadUserLogsModal()">&times;</button>
+                </div>
+                <div class="modal-body p-0">
+                    <table *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length" class="table table-bordered table-hover">
+                        <thead class="thead" style="background-color: #c0b2b2">
+                            <tr style="text-align:center">
+                                <th>Name</th>
+                                <th>Add Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let l of userListByTask['userLogs']; let i = index;" style="text-align:center">
+                                <td>{{l.user_name}}</td>
+                                <td>{{l.addtime}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end: lead userlogs modal -->
 
 </div>

@@ -196,6 +196,18 @@ table .fa-thumbs-up {
     color: green;
 }
 
+.fa-bell {
+    color: gray;
+}
+
+.fa-bell.isRemind {
+    color: red;
+}
+
+.fa-bell.reminderAdded {
+    color: #ffba12;
+}
+
 table .fa-comments {
     color: limegreen;
 }
