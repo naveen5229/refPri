@@ -27,6 +27,11 @@ export class SalaryComponent implements OnInit {
       hideHeader: true
     }
   };
+  employerPfPercent;
+  employeePfPercent;
+  employerEsicPercent;
+  employeeEsicPercent;
+  basicPercent;
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     // this.getEmployeeSalary();
     this.common.refresh = this.refresh.bind(this);
@@ -101,6 +106,28 @@ export class SalaryComponent implements OnInit {
       columns.push(column);
     });
     return columns;
+  }
+
+
+  salaryCalculation() {
+    // this.salaryList = [];
+    // this.resetTable();
+    let params = {
+      employerPfPercent: this.employerPfPercent,
+      employeePfPercent: this.employeePfPercent,
+      employerEsicPercent: this.employerEsicPercent,
+      employeeEsicPercent: this.employeeEsicPercent,
+      basicPercent: this.basicPercent,
+      salaryList: JSON.stringify(this.salaryList)
+    };
+    this.common.loading++;
+    this.api.post('Admin/saleryCalculation.json', params).subscribe(res => {
+      this.common.loading--;
+      console.log('res:', res);
+    }, err => {
+      this.common.loading--;
+      console.log("error:", err);
+    });
   }
 
 }

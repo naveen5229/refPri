@@ -30,11 +30,26 @@
                             <th>CTC</th>
                             <th>PF Applicable</th>
                             <th>ESIC Applicable</th>
-                            <th>Employer PF</th>
-                            <th>Employee PF</th>
-                            <th>Employer ESIC</th>
-                            <th>Employee ESIC</th>
-                            <th>Basic</th>
+                            <th>Employer PF
+                                <br>
+                                <input type="text" [(ngModel)]="employerPfPercent" />
+                            </th>
+                            <th>Employee PF
+                                <br>
+                                <input type="text" [(ngModel)]="employeePfPercent" />
+                            </th>
+                            <th>Employer ESIC
+                                <br>
+                                <input type="text" [(ngModel)]="employerEsicPercent" />
+                            </th>
+                            <th>Employee ESIC
+                                <br>
+                                <input type="text" [(ngModel)]="employeeEsicPercent" />
+                            </th>
+                            <th>Basic
+                                <br>
+                                <input type="text" [(ngModel)]="basicPercent" />
+                            </th>
                             <th>HRA</th>
                             <th>performence_allo</th>
                             <th>medical_allow</th>
@@ -72,6 +87,11 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right mt-8">
+                <button type="button" (click)="salaryCalculation()" class="btn btn-primary mr-2">Calculate Salary</button>
             </div>
         </div>
     </nb-card-body>
