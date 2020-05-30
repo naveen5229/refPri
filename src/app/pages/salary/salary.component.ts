@@ -27,11 +27,13 @@ export class SalaryComponent implements OnInit {
       hideHeader: true
     }
   };
-  employerPfPercent;
-  employeePfPercent;
-  employerEsicPercent;
-  employeeEsicPercent;
-  basicPercent;
+  totalDays = 0;
+  employerPfPercent = 13;
+  employeePfPercent = 12;
+  employerEsicPercent = 3.25;
+  employeeEsicPercent = 0.75;
+  basicPercent = 65;
+
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     // this.getEmployeeSalary();
     this.common.refresh = this.refresh.bind(this);
@@ -50,8 +52,16 @@ export class SalaryComponent implements OnInit {
     this.common.loading++;
     this.api.get('Admin/getEmpolyeeSalery.json' + params).subscribe(res => {
       this.common.loading--;
-      // console.log('res:', res);
-      this.salaryList = res['data'] || [];
+      console.log('res:', res);
+      let r = res['data'];
+      this.totalDays = r['totalDays'];
+      this.basicPercent = r['basicPercent'];
+      this.employerPfPercent = r['employerPfPercent'];
+      this.employeePfPercent = r['employeePfPercent']
+      this.employerEsicPercent = r['employerEsicPercent'];
+      this.employeeEsicPercent = r['employeeEsicPercent'];
+      this.salaryList = r['salaryList'];
+      // this.salaryList = res['data'] || [];
       console.log("salaryList:", this.salaryList);
       this.salaryList.length ? this.setTable() : this.resetTable();
     }, err => {
@@ -109,10 +119,11 @@ export class SalaryComponent implements OnInit {
   }
 
 
-  salaryCalculation() {
+  getSalaryCalculation() {
     // this.salaryList = [];
     // this.resetTable();
     let params = {
+      totalDays: this.totalDays,
       employerPfPercent: this.employerPfPercent,
       employeePfPercent: this.employeePfPercent,
       employerEsicPercent: this.employerEsicPercent,
@@ -121,9 +132,17 @@ export class SalaryComponent implements OnInit {
       salaryList: JSON.stringify(this.salaryList)
     };
     this.common.loading++;
-    this.api.post('Admin/saleryCalculation.json', params).subscribe(res => {
+    this.api.post('Admin/getSalaryCalculation.json', params).subscribe(res => {
       this.common.loading--;
       console.log('res:', res);
+      let r = res['data'];
+      this.totalDays = r['totalDays'];
+      this.basicPercent = r['basicPercent'];
+      this.employerPfPercent = r['employerPfPercent'];
+      this.employeePfPercent = r['employeePfPercent']
+      this.employerEsicPercent = r['employerEsicPercent'];
+      this.employeeEsicPercent = r['employeeEsicPercent'];
+      this.salaryList = r['salaryList'];
     }, err => {
       this.common.loading--;
       console.log("error:", err);
