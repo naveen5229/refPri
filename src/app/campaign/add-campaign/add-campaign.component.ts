@@ -129,6 +129,7 @@ export class AddCampaignComponent implements OnInit {
       { class: 'fas fa-handshake ml-3', action: this.actionMapping.bind(this, campaign) },
       { class: "fas fa-globe-africa ml-2", action: this.viewlocation.bind(this, campaign) },
       { class: "fas fa-plus ml-2", action: this.infoMatrix.bind(this, campaign) },
+      { class: "fas fa-list-alt ml-2", action: this.priCatMapping.bind(this, campaign) },
 
     ];
     return icons;
@@ -233,7 +234,25 @@ export class AddCampaignComponent implements OnInit {
     }
     this.common.params = { data, title: "Action Mapping", button: "Add" };
     const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-  
+
+  }
+
+  priCatMapping(campaign) {
+    const data = {
+      apiUrl: "Campaigns/getCampPriCatMapping",
+      param: {
+        campaignId: campaign._campaignid
+      },
+      updateUrl: "Campaigns/addCampPriCatMapping",
+      updateParam: {
+        campaignId: campaign._campaignid,
+        priCatIdList: null
+      },
+      idType: "priCatId",
+    }
+    this.common.params = { data, title: "Primary Category Mapping", button: "Add" };
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+
   }
 
 

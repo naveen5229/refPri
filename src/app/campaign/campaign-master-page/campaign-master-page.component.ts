@@ -123,6 +123,16 @@ export class CampaignMasterPageComponent implements OnInit {
         this.getActionList();
         break;
 
+      case 'priCategoryMaster':
+        this.url = "CampaignModules/getPrimaryCategory";
+        this.deleteUrl = "CampaignModules/removePrimaryCategory";
+        break;
+
+      case 'secCategoryMaster':
+        this.url = "CampaignModules/getSecondaryCategory";
+        this.deleteUrl = "CampaignModules/removeSecondaryCategory";
+        break;
+
     }
     this.getMasterDyanmicData();
 
@@ -240,6 +250,16 @@ export class CampaignMasterPageComponent implements OnInit {
       case 'remarkMaster':
         this.deleteParams = {
           remarkId: row._stateid
+        };
+        break;
+      case 'priCategoryMaster':
+        this.deleteParams = {
+          priCatId: row._pri_cat_id
+        };
+        break;
+      case 'secCategoryMaster':
+        this.deleteParams = {
+          secCatId: row._sec_cat_id
         };
         break;
     }

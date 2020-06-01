@@ -1,96 +1,121 @@
 <nb-card style="border:0px;">
-  <nb-card-header>
-    <div class="row">
-      <div class="col-8">
-        <h5>Campaign Master Page</h5>
-      </div>
-    </div>
-  </nb-card-header>
-  <nb-card-body style="min-height: 440px;">
-    <div class="row">
-      <div class="tabs_style_main">
-        <ul class="tabs_style text-left">
-          <li [ngClass]="activeTab=='productMaster'?'active':''"
-            (click)="activeTab='productMaster'; getReportdata('productMaster')">Product
-            Master </li>
-          <li [ngClass]="activeTab=='actionMaster'?'active':''" (click)="activeTab='actionMaster'; getReportdata(
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8">
+                <h5>Campaign Master Page</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-height: 440px;">
+        <div class="row">
+            <div class="tabs_style_main">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTab=='productMaster'?'active':''" (click)="activeTab='productMaster'; getReportdata('productMaster')">Product Master </li>
+                    <li [ngClass]="activeTab=='actionMaster'?'active':''" (click)="activeTab='actionMaster'; getReportdata(
             'actionMaster')">
-            Action Master</li>
-          <li [ngClass]="activeTab=='stateMaster'?'active':''" (click)="activeTab='stateMaster'; getReportdata(
+                        Action Master</li>
+                    <li [ngClass]="activeTab=='stateMaster'?'active':''" (click)="activeTab='stateMaster'; getReportdata(
             'stateMaster')">State Master
-          </li>
+                    </li>
 
-          <li [ngClass]="activeTab=='remarkMaster'?'active':''" (click)="activeTab='remarkMaster'; getReportdata(
+                    <li [ngClass]="activeTab=='remarkMaster'?'active':''" (click)="activeTab='remarkMaster'; getReportdata(
             'remarkMaster')">
-            Remark Master</li>
-          <!-- <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getReportdata(
+                        Remark Master</li>
+                    <!-- <li [ngClass]="activeTab=='campaignState'?'active':''" (click)="activeTab='campaignState'; getReportdata(
             'campaignState')">
             Campaign State Mapping</li>
           <li [ngClass]="activeTab=='campaignAction'?'active':''" (click)="activeTab='campaignAction'; getReportdata(
             'campaignAction')">
             Campaign Action Mapping</li> -->
-        </ul>
 
-      </div>
+                    <li [ngClass]="activeTab=='priCategoryMaster'?'active':''" (click)="activeTab='priCategoryMaster'; getReportdata(
+            'priCategoryMaster')">
+                        Primary Category</li>
+                    <li [ngClass]="activeTab=='secCategoryMaster'?'active':''" (click)="activeTab='secCategoryMaster'; getReportdata(
+            'secCategoryMaster')">
+                        Secondary Category</li>
+                </ul>
 
-    </div>
-    <div class="mt-2">
-      <div class="row" *ngIf="activeTab=='productMaster'">
-        <div class="col-3">
-          <label>Product Name</label>
-        </div>
-        <div class="col-3">
-          <input type="text" name="addNewProduct" class="form-control" id="addNewProduct" [(ngModel)]="newDataName">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-primary text-capitalize" id="addnew"
-            (click)="addNewRecord('CampaignModules/addProduct')">Add</button>
-        </div>
-      </div>
+            </div>
 
-
-      <div class="row" *ngIf="activeTab=='actionMaster'">
-        <div class="col-3">
-          <label>Action Name</label>
         </div>
-        <div class="col-3">
-          <input type="text" name="newAction" class="form-control" id="newAction" [(ngModel)]="newDataName">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-primary text-capitalize" id="addAction"
-            (click)="addNewRecord('CampaignModules/addAction')">Add</button>
-        </div>
-      </div>
+        <div class="mt-2">
+            <div class="row" *ngIf="activeTab=='productMaster'">
+                <div class="col-3">
+                    <label>Product Name</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="addNewProduct" class="form-control" id="addNewProduct" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="addnew" (click)="addNewRecord('CampaignModules/addProduct')">Add</button>
+                </div>
+            </div>
 
 
-      <div class="row" *ngIf="activeTab=='stateMaster'">
-        <div class="col-3">
-          <label>State Name</label>
-        </div>
-        <div class="col-3">
-          <input type="text" name="state" class="form-control" id="state" [(ngModel)]="newDataName">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-primary text-capitalize" id="addState"
-            (click)="addNewRecord('CampaignModules/addState')">Add</button>
-        </div>
-      </div>
+            <div class="row" *ngIf="activeTab=='actionMaster'">
+                <div class="col-3">
+                    <label>Action Name</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="newAction" class="form-control" id="newAction" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="addAction" (click)="addNewRecord('CampaignModules/addAction')">Add</button>
+                </div>
+            </div>
 
 
-      <div class="row" *ngIf="activeTab=='remarkMaster'">
-        <div class="col-3">
-          <label>Remark</label>
-        </div>
-        <div class="col-3">
-          <input type="text" name="remark" class="form-control" id="remark" [(ngModel)]="newDataName">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-primary text-capitalize" id="addState"
-            (click)="addNewRecord('CampaignModules/addRemark')">Add</button>
-        </div>
-      </div>
+            <div class="row" *ngIf="activeTab=='stateMaster'">
+                <div class="col-3">
+                    <label>State Name</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="state" class="form-control" id="state" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="addState" (click)="addNewRecord('CampaignModules/addState')">Add</button>
+                </div>
+            </div>
 
-      <!-- 
+
+            <div class="row" *ngIf="activeTab=='remarkMaster'">
+                <div class="col-3">
+                    <label>Remark</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="remark" class="form-control" id="remark" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="addState" (click)="addNewRecord('CampaignModules/addRemark')">Add</button>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="activeTab=='priCategoryMaster'">
+                <div class="col-3">
+                    <label>Primary Category</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="priCat" class="form-control" id="priCat" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="addPriCat" (click)="addNewRecord('CampaignModules/addPrimaryCategory')">Add</button>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="activeTab=='secCategoryMaster'">
+                <div class="col-3">
+                    <label>Secondary Category</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="secCat" class="form-control" id="secCat" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize" id="addSecCat" (click)="addNewRecord('CampaignModules/addSecondaryCategory')">Add</button>
+                </div>
+            </div>
+
+            <!-- 
       <div class="row" *ngIf="activeTab=='campaignState'">
         <div class="col-2">
           <label>Campaign Name</label>
@@ -141,10 +166,10 @@
       </div>
  -->
 
-      <div class="mt-2">
-        <smart-table *ngIf="productData.length" [data]="table.data" [settings]="table.settings" id="product">
-        </smart-table>
-      </div>
-    </div>
-  </nb-card-body>
+            <div class="mt-2">
+                <smart-table *ngIf="productData.length" [data]="table.data" [settings]="table.settings" id="product">
+                </smart-table>
+            </div>
+        </div>
+    </nb-card-body>
 </nb-card>

@@ -60,7 +60,11 @@ export class DataMappingComponent implements OnInit {
         this.common.loading--;
         this.listOfData = res['data'];
         this.listOfData.filter(ele => {
-          if (this.typeId == "stateId") {
+          if (this.typeId == "priCatId") {
+            if (ele.ismapped) {
+              this.checkedList.push({ priCatId: ele.id });
+            }
+          } else if (this.typeId == "stateId") {
             if (ele.ismapped) {
               this.checkedList.push({ stateId: ele.id });
             }
@@ -95,21 +99,40 @@ export class DataMappingComponent implements OnInit {
   }
 
   selected(option, event) {
-    if (event.target.checked) {
-      this.checkedList.push({ actionId: option.id });
-    } else {
-      for (var i = 0; i < this.listOfData.length; i++) {
-        if (this.checkedList[i]['actionId'] == option.id) {
-          console.log("remove");
-          return this.checkedList.splice(i, 1);
+    if (this.typeId == "priCatId") {
+      if (event.target.checked) {
+        this.checkedList.push({ priCatId: option.id });
+      } else {
+        for (var i = 0; i < this.listOfData.length; i++) {
+          if (this.checkedList[i]['priCatId'] == option.id) {
+            console.log("remove");
+            return this.checkedList.splice(i, 1);
+          }
         }
       }
-
+    } else {
+      if (event.target.checked) {
+        this.checkedList.push({ actionId: option.id });
+      } else {
+        for (var i = 0; i < this.listOfData.length; i++) {
+          if (this.checkedList[i]['actionId'] == option.id) {
+            console.log("remove");
+            return this.checkedList.splice(i, 1);
+          }
+        }
+      }
     }
   }
 
   addMapping() {
-    this.typeId == "stateId" ? this.updateParams.stateIdList = this.checkedList : this.updateParams.actionIdList = this.checkedList;
+    // this.typeId == "stateId" ? this.updateParams.stateIdList = this.checkedList : this.updateParams.actionIdList = this.checkedList;
+    if (this.typeId == "priCatId") {
+      this.updateParams.priCatIdList = this.checkedList
+    } else if (this.typeId == "stateId") {
+      this.updateParams.stateIdList = this.checkedList
+    } else {
+      this.updateParams.actionIdList = this.checkedList;
+    }
     console.log("selected Data", this.checkedList);
     this.common.loading++;
     this.api.post(this.updateUrl, this.updateParams)
