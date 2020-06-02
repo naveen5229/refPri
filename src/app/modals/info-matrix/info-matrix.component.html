@@ -7,27 +7,60 @@
 
 <div class="modal-body">
 
+  <div *ngIf='!enableForm'  class="row" style="margin-left: 23%;">
+    <div class="col-6">
+      <input id="imageFirst" type="radio" class="custom-control-input" [(ngModel)]="infoType" [value]="1" name="infoType" (change)='getFormData(campaignId, infoType)'>
+      <label class="custom-control-label" for="imageFirst">Opening Form</label>
+    </div>
+    <div class="col-6">
+      <input id="textFirst" type="radio" class="custom-control-input" [(ngModel)]="infoType" [value]="2" name="infoType"  (change)='getFormData(campaignId, infoType)'>
+      <label class="custom-control-label" for="textFirst">Closing Form</label>
+    </div>
+</div>
+
+<div *ngIf='enableForm'  class="row" style="margin-left: 23%;">
+  <div class="col-6">
+    <input id="imageFirst" type="radio" class="custom-control-input" [(ngModel)]="infoType" [value]="1" name="infoType" (change)='getFilledData(campTargetId, campaignId, infoType)'>
+    <label class="custom-control-label" for="imageFirst">Opening Form</label>
+  </div>
+  <div class="col-6">
+    <input id="textFirst" type="radio" class="custom-control-input" [(ngModel)]="infoType" [value]="2" name="infoType"  (change)='getFilledData(campTargetId,campaignId, infoType)'>
+    <label class="custom-control-label" for="textFirst">Closing Form</label>
+  </div>
+</div>
+<br>
+
   <div *ngIf='!enableForm'> 
 
   <div class="container">
     <fieldset>
       <legend class="border-bottom">Create Form<span class="require"></span></legend>
+   
+    <br>
+
       <div class="row mb-1" *ngFor="let form of formData;let i = index;">
           <div class="col-3">
               <input type="text" class="form-control"  placeholder="Feild name" [(ngModel)]="form.param">
           </div>
       
 
-          <div class="col-3">
+          <div class="col-2">
               <input class="form-control" maxlength="20" type="number" [(ngModel)]='form.order' placeholder="Order">
           </div>
 
-          <div class="col-3">
-            <select name='fieldType' [(ngModel)]=form.type>
+          <div class="col-2">
+            <select name='fieldType' [(ngModel)]=form.type style="width: 100%;">
                 <option value="text">Text</option>
                 <option value="number">Number</option>
             </select>
             <!-- <input class="form-control" maxlength="20" type="number" [(ngModel)]='form.orderNumber' placeholder="Order Number"> -->
+        </div>
+
+        <div class="col-3">
+          <label>
+              <input type="checkbox" [(ngModel)]="form.isDropdown" (change)='showAddOptions(form.isDropdown, i)'>
+              Dropdown 
+            </label><span (click)='showOptions = !showOptions'><i class="fas fa-info-circle ml-2 s-4" title="Show Options" ></i></span>
         </div>
 
           <div  class="col-1">
@@ -38,7 +71,51 @@
                   <i class="fas fa-trash-alt"></i>
               </button>
           </div>
+
+          <div *ngIf='showOptions && form.param_info[0].option != null' class="col-12" style=" margin-top: 10px; display: flex;">
+            <span style="-webkit-tap-highlight-color: transparent; outline-style: none;
+            ">Options :- </span>
+            <ul >
+              <li style="display: inline;
+              padding: 10px;
+             " *ngFor='let options of form.param_info'>
+              <span  style="
+               padding: 20px;">{{options.option}}</span></li>
+            </ul>
+          </div>
+         
+
+          <div *ngIf='form.showAddOption' class="col-12">
+            <br>
+            <div class="row mb-1" *ngFor="let options of form.param_info;let j = index;">
+              <div class="col-3">
+                  <label>Add Option :-</label>
+              </div>
+          
+      
+              <div class="col-3">
+                  <input class="form-control"  type="text" [(ngModel)]='options.option' placeholder="Option">
+              </div>
+      
+             
+      
+              <div  class="col-1">
+                  <button *ngIf="j==0" class="btn btn-primary btn-sm" (click)="addOptions(dropdowOptions, i)">
+                      <i class="fa fa-plus"></i>
+                  </button>
+                  <button *ngIf="j>0" class="btn btn-danger btn-sm" (click)="removeOptions(i,j)">
+                      <i class="fas fa-trash-alt"></i>
+                  </button>
+              </div>
+          </div>
+        </div>
       </div>
+
+
+<br>
+<br>
+   
+
   </fieldset>
   </div>
 
@@ -49,7 +126,7 @@
     </div>
     <div class="col text-right">
         <!-- <button class="btn btn-primary" type='submit' id="save" (click)="resetForm()" style="margin-right: 10px;">Reset</button> -->
-        <button class="btn btn-primary " type='submit' id="save" (click)="submitFormData()">Save</button>
+        <button class="btn btn-primary " type='submit' id="save" (click)="submitFormData(infoType)">Save</button>
     </div>
 </div>
 
@@ -65,26 +142,43 @@
   <h4 *ngIf='!enableForm' style="text-align: center; font-weight: lighter; text-decoration: underline; margin-bottom: 20px;">Form Preview</h4>
   
   <table style="width: 100%;">
-    <tbody >
+    <tbody *ngIf='formType == "create"'>
       <tr *ngFor='let form of formList'>
         <td>
-          <label>{{form.param}} :-</label>
-          
+          <label>{{form.param}} :-</label>   
         </td>
-        <td *ngIf='form.type == "text" || form.type == null'>
-          <input type="text" [(ngModel)]='form.value'>
+        <td *ngIf='(form.type == "text" || form.type == null) && (form.param_info[0].option == null)'>
+          <input type="text" [(ngModel)]='form.value'><span *ngIf='form.param_info[0].option != null' style="padding: 10px;">Options :-</span><span style="padding: 10px;" *ngFor='let options of form.param_info'>{{options['option']}}</span>
         </td>
         <td *ngIf='form.type == "number"'>
+          <input type="number" [(ngModel)]='form.value'><span *ngIf='form.param_info[0].option != null' style="padding: 10px;">Options :-</span><span style="padding: 10px;" *ngFor='let options of form.param_info'>{{options['option']}}</span>
+        </td>
+        <td *ngIf='form.param_info[0].option != null'>
+          <select class="form-control" name="department" [(ngModel)]="form.value" style="width: 30%; margin-bottom: 10px;"> 
+            <option [value]=form.value>Select</option>
+            <option *ngFor='let options of form.param_info' value="{{options.option}}">{{options.option}}</option>
+        </select>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf='formType == "dashboard"'>
+      <tr *ngFor='let form of formList'>
+        <td>
+          <label>{{form.param}} :-</label>   
+        </td>
+        <td *ngIf='(form.type == "text" || form.type == null) && (form.option[0].option == null)'>
+          <input type="text" [(ngModel)]='form.value'>
+        </td>
+        <td *ngIf='form.type == "number" && form.option[0].option == null'>
           <input type="number" [(ngModel)]='form.value'>
         </td>
-        <!-- <td  *ngIf='!enableForm'>
-          <button  class="btn btn-sm" (click)="editField(form)">
-            <i class="fa fa-edit"></i>
-        </button>
-        <button  class="btn  btn-sm" (click)="deleteField(form)">
-            <i class="fas fa-trash-alt"></i>
-        </button>
-        </td> -->
+        <td *ngIf='form.option[0].option != null'>
+          <select class="form-control" name="department" [(ngModel)]="form.value" style="width: 30%; margin-bottom: 10px;"> 
+            <option value=''>Select</option>
+            <option *ngFor='let options of form.option' value="{{options.option}}">{{options.option}}</option>
+        </select>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -104,4 +198,3 @@
 
 
 </div>
-
