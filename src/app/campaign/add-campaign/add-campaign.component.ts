@@ -129,7 +129,8 @@ export class AddCampaignComponent implements OnInit {
       { class: 'fas fa-handshake ml-3', action: this.actionMapping.bind(this, campaign) },
       { class: "fas fa-globe-africa ml-2", action: this.viewlocation.bind(this, campaign) },
       { class: "fas fa-plus ml-2", action: this.infoMatrix.bind(this, campaign) },
-      { class: "fas fa-list-alt ml-2", action: this.priCatMapping.bind(this, campaign) },
+      { class: "fas fa-list-alt pri_cat ml-2", action: this.priCatMapping.bind(this, campaign), title: "Primary Category Mapping" },
+      { class: "fas fa-list-alt ml-2", action: this.secCatMapping.bind(this, campaign), title: "Secondary Category Mapping" },
 
     ];
     return icons;
@@ -251,6 +252,24 @@ export class AddCampaignComponent implements OnInit {
       idType: "priCatId",
     }
     this.common.params = { data, title: "Primary Category Mapping", button: "Add" };
+    const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+
+  }
+
+  secCatMapping(campaign) {
+    const data = {
+      apiUrl: "Campaigns/getCampSecCatMapping",
+      param: {
+        campaignId: campaign._campaignid
+      },
+      updateUrl: "Campaigns/addCampSecCatMapping",
+      updateParam: {
+        campaignId: campaign._campaignid,
+        secCatIdList: null
+      },
+      idType: "secCatId",
+    }
+    this.common.params = { data, title: "Secondary Category Mapping", button: "Add" };
     const activeModal = this.modalService.open(DataMappingComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
 
   }

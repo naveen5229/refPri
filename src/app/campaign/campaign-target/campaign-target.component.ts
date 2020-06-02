@@ -92,7 +92,7 @@ export class CampaignTargetComponent implements OnInit {
     const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        this.getCampaignTargetData();
+        // this.getCampaignTargetData();
       }
     });
   }
@@ -287,7 +287,7 @@ export class CampaignTargetComponent implements OnInit {
     console.log(campaign);
     this.common.params = { 'campaignId': campaign._campid, campaignTargetId: campaign._camptargetid, 'enableForm': true, 'title': 'Primary Info' };
     const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-   
+
   }
 
   getLogs(campaign) {
@@ -330,6 +330,10 @@ export class CampaignTargetComponent implements OnInit {
       priOwnId: campaign._priownid,
       potCatname: campaign['Fleet Category'],
       priOwnname: campaign['Primary Owner'],
+      priCatId: (campaign._pri_cat_id) ? campaign._pri_cat_id : null,
+      priCatName: (campaign.pri_category) ? campaign.pri_category : "",
+      secCatId: (campaign._sec_cat_id) ? campaign._sec_cat_id : null,
+      secCatName: (campaign.sec_category) ? campaign.sec_category : "",
 
     }
 

@@ -25,10 +25,18 @@ export class TargetCampaignComponent implements OnInit {
     address: "",
     lat: null,
     long: null,
-    fleetcategoryid:0,
-    fleetcategoryname:"",
-    primaryOwnerid:0,
-    primaryownername:''
+    fleetcategoryid: 0,
+    fleetcategoryname: "",
+    primaryOwnerid: 0,
+    primaryownername: '',
+    priCat: {
+      id: null,
+      name: ""
+    },
+    secCat: {
+      id: null,
+      name: ""
+    }
   }
   campaignDataList = [];
   locationDataList = [];
@@ -37,24 +45,27 @@ export class TargetCampaignComponent implements OnInit {
     {
       "id": 1,
       "name": "Very Small (0 - 15)"
-  },
-  {
+    },
+    {
       "id": 2,
       "name": "Small (16 - 50)"
-  },
-  {
+    },
+    {
       "id": 3,
       "name": "Medium (51 - 200)"
-  },
-  {
-    "id": 4,
-    "name": "Large (201 - 400)"
-  },
-  {
-    "id": 5,
-    "name": "Huge (401 > )"
- },
+    },
+    {
+      "id": 4,
+      "name": "Large (201 - 400)"
+    },
+    {
+      "id": 5,
+      "name": "Huge (401 > )"
+    },
   ];
+
+  priCatList = [];
+  secCatList = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -83,6 +94,13 @@ export class TargetCampaignComponent implements OnInit {
       this.target.primaryownername = this.common.params.targetEditData.priOwnname;
       this.target.fleetcategoryname = this.common.params.targetEditData.potCatname;
       this.target.campaignType = this.common.params.targetEditData.campainType;
+      this.target.priCat.id = (this.common.params.targetEditData.priCatId) ? this.common.params.targetEditData.priCatId : null;
+      this.target.priCat.name = (this.common.params.targetEditData.priCatName) ? this.common.params.targetEditData.priCatName : "";
+      this.target.secCat.id = (this.common.params.targetEditData.secCatId) ? this.common.params.targetEditData.secCatId : null;
+      this.target.secCat.name = (this.common.params.targetEditData.secCatName) ? this.common.params.targetEditData.secCatName : "";
+
+      this.getPrimaryCatList();
+      this.getSecondaryCatList();
 
     }
     console.log(this.target.fleetcategoryid);
@@ -131,6 +149,48 @@ export class TargetCampaignComponent implements OnInit {
         console.log('Error: ', err);
       });
   }
+
+  onSelectCampaign(campaignId) {
+    if (this.target.campaignId > 0) {
+      this.getPrimaryCatList();
+      this.getSecondaryCatList();
+    }
+  }
+
+  getPrimaryCatList() {
+    this.priCatList = [];
+    if (!(this.target.campaignId > 0)) {
+      this.common.showError("Campaign is missing");
+      return false;
+    }
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getPrimaryCatList?campaignId=" + this.target.campaignId).subscribe(res => {
+      this.common.loading--;
+      this.priCatList = res['data'];
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  getSecondaryCatList() {
+    this.secCatList = [];
+    if (!(this.target.campaignId > 0)) {
+      this.common.showError("Campaign is missing");
+      return false;
+    }
+    this.common.loading++;
+    this.api.get("CampaignSuggestion/getSecondaryCatList?campaignId=" + this.target.campaignId).subscribe(res => {
+      this.common.loading--;
+      this.secCatList = res['data'];
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
   checkValidation() {
     console.log("Validation", this.target.potential);
     if (`${this.target.potential}`.length > 4) {
@@ -153,8 +213,10 @@ export class TargetCampaignComponent implements OnInit {
       lat: this.target.lat,
       long: this.target.long,
       address: this.target.address,
-      potentialCat:this.target.fleetcategoryid,
-      primaryOwner:this.target.primaryOwnerid
+      potentialCat: this.target.fleetcategoryid,
+      primaryOwner: this.target.primaryOwnerid,
+      priCatId: this.target.priCat.id,
+      secCatId: this.target.secCat.id
     }
     console.log(params);
 

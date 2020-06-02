@@ -476,6 +476,10 @@ export class MycampaignComponent implements OnInit {
       potCatname: campaign['Fleet Category'],
       // priOwnname: campaign['Primary Owner'],
       priOwnname: campaign._priown,
+      priCatId: (campaign._pri_cat_id) ? campaign._pri_cat_id : null,
+      priCatName: (campaign.pri_category) ? campaign.pri_category : "",
+      secCatId: (campaign._sec_cat_id) ? campaign._sec_cat_id : null,
+      secCatName: (campaign.sec_category) ? campaign.sec_category : "",
     }
 
     this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };

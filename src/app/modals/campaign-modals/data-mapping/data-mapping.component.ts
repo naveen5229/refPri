@@ -64,6 +64,10 @@ export class DataMappingComponent implements OnInit {
             if (ele.ismapped) {
               this.checkedList.push({ priCatId: ele.id });
             }
+          } else if (this.typeId == "secCatId") {
+            if (ele.ismapped) {
+              this.checkedList.push({ secCatId: ele.id });
+            }
           } else if (this.typeId == "stateId") {
             if (ele.ismapped) {
               this.checkedList.push({ stateId: ele.id });
@@ -110,6 +114,17 @@ export class DataMappingComponent implements OnInit {
           }
         }
       }
+    } else if (this.typeId == "secCatId") {
+      if (event.target.checked) {
+        this.checkedList.push({ secCatId: option.id });
+      } else {
+        for (var i = 0; i < this.listOfData.length; i++) {
+          if (this.checkedList[i]['secCatId'] == option.id) {
+            console.log("remove");
+            return this.checkedList.splice(i, 1);
+          }
+        }
+      }
     } else {
       if (event.target.checked) {
         this.checkedList.push({ actionId: option.id });
@@ -128,6 +143,8 @@ export class DataMappingComponent implements OnInit {
     // this.typeId == "stateId" ? this.updateParams.stateIdList = this.checkedList : this.updateParams.actionIdList = this.checkedList;
     if (this.typeId == "priCatId") {
       this.updateParams.priCatIdList = this.checkedList
+    } else if (this.typeId == "secCatId") {
+      this.updateParams.secCatIdList = this.checkedList
     } else if (this.typeId == "stateId") {
       this.updateParams.stateIdList = this.checkedList
     } else {
