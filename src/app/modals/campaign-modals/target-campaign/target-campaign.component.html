@@ -1,123 +1,132 @@
 <div class="modal-header">
-  <h5>{{title}}</h5>
-  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <h5>{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <div class="container">
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Campaign Name <span class="require">*</span></label>
-      </div>
-      <div class="col-6">
-        <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName"
-          id="campaignName" (onSelected)="target.campaignId=($event.id)" [preSelected]="{name:target.campaignName}"
-          autocomplete="off">
-        </auto-suggestion>
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Campaign Type <span class="require">*</span></label>
-      </div>
-      <div class="col-6">
-        <div class="row">
-          <div class="col-6">
-            <input type="radio" name="transporter" [(ngModel)]="target.campaignType" [value]="1" >
-            <label>FO / Transporter</label>
-          </div>
-          <div class="col-6">
-            <input type="radio" name="corporate" [(ngModel)]="target.campaignType" [value]="2" >
-            <label>Corporate</label>
-          </div>
+    <div class="container">
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Campaign Name <span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName" id="campaignName" (onSelected)="target.campaignId=($event.id);onSelectCampaign($event.id)" [preSelected]="{name:target.campaignName}" autocomplete="off">
+                </auto-suggestion>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Company Name <span class="require">*</span></label>
-      </div>
-      <div class="col-6">
-        <input type="text" name="name" id="name" [(ngModel)]="target.name" class="form-control" required>
-      </div>
-    </div>
+        <!-- <div class="row form-group">
+            <div class="col-6">
+                <label>Campaign Type <span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="radio" name="transporter" [(ngModel)]="target.campaignType" [value]="1">
+                        <label>FO / Transporter</label>
+                    </div>
+                    <div class="col-6">
+                        <input type="radio" name="corporate" [(ngModel)]="target.campaignType" [value]="2">
+                        <label>Corporate</label>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Primary Category</label>
+            </div>
+            <div class="col-6">
+                <auto-suggestion [data]="priCatList" display="name" placeholder="Primary Category" name="primaryCat" id="priCatId" (onSelected)="target.priCat.id=($event.id);" [preSelected]="(target.priCat.id>0) ? {name:target.priCat.name} : {name:''}" autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Secondary Category</label>
+            </div>
+            <div class="col-6">
+                <auto-suggestion [data]="secCatList" display="name" placeholder="Secondary Category" name="secondaryCat" id="secCatId" (onSelected)="target.secCat.id=($event.id);" [preSelected]="(target.secCat.id>0) ? {name:target.secCat.name} : {name:''}" autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
 
-    <div class="row form-group">
-      <div class="col-6">
-        <label> Primary Mobile No. <span class="require">*</span></label>
-      </div>
-      <div class="col-6">
-        <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-        type = "number"
-        maxlength = "10" placeholder="Mobile No" name="mobile" id="mobile" [(ngModel)]="target.mobile" class="form-control" autocomplete="off" required>
-      </div>
-    </div>
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Fleet Category </label>
-      </div>
-      <div class="col-6">
-        <auto-suggestion [data]="fleetcategoryList" display="name" placeholder="Fleet Category" name="fleetcategory"
-          id="fleetcategory" (onSelected)="target.fleetcategoryid=($event.id)" [preSelected]="{name:target.fleetcategoryname}"
-          autocomplete="off">
-        </auto-suggestion>
-      </div>
-    </div>
-    <div class="row form-group" *ngIf="target.fleetcategoryid !=0">
-      <div class="col-6">
-        <label>Fleet Size</label>
-      </div>
-      <div class="col-6">
-        <input type="number" name="potential" id="potential"
-          [(ngModel)]="target.potential" class="form-control">
-      </div>
-    </div>
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Primary Owner </label>
-      </div>
-      <div class="col-6">
-        <auto-suggestion  url="CampaignSuggestion/getPrimaryOwner" display="name" placeholder="Primary Owner" name="campaignName" 
-          id="campaignName" (onSelected)="target.primaryOwnerid=($event.id)" [preSelected]="{name:target.primaryownername}"
-          autocomplete="off">
-        </auto-suggestion>
-      </div>
-    </div>
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Location</label>
-      </div>
-      <div class="col-6">
-        
-        <auto-suggestion  url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location"
-          id="location" (onSelected)="target.locationId=($event.id);target.lat=($event.lat);target.long=($event.long)"
-          [preSelected]="{location:target.locationName}" autocomplete="off">
-        </auto-suggestion>
-      </div>
-    </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Company Name <span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <input type="text" name="name" id="name" [(ngModel)]="target.name" class="form-control" required>
+            </div>
+        </div>
 
-    <div class="row form-group">
-      <div class="col-6">
-        <label>Address</label>
-      </div>
-      <div class="col-6">
-        <textarea name="address" cols="5" rows="5" class="form-control" [(ngModel)]="target.address"></textarea>
-      </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label> Primary Mobile No. <span class="require">*</span></label>
+            </div>
+            <div class="col-6">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" placeholder="Mobile No" name="mobile" id="mobile" [(ngModel)]="target.mobile" class="form-control" autocomplete="off"
+                    required>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Fleet Category </label>
+            </div>
+            <div class="col-6">
+                <auto-suggestion [data]="fleetcategoryList" display="name" placeholder="Fleet Category" name="fleetcategory" id="fleetcategory" (onSelected)="target.fleetcategoryid=($event.id)" [preSelected]="{name:target.fleetcategoryname}" autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row form-group" *ngIf="target.fleetcategoryid !=0">
+            <div class="col-6">
+                <label>Fleet Size</label>
+            </div>
+            <div class="col-6">
+                <input type="number" name="potential" id="potential" [(ngModel)]="target.potential" class="form-control">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Primary Owner </label>
+            </div>
+            <div class="col-6">
+                <auto-suggestion url="CampaignSuggestion/getPrimaryOwner" display="name" placeholder="Primary Owner" name="campaignName" id="campaignName" (onSelected)="target.primaryOwnerid=($event.id)" [preSelected]="{name:target.primaryownername}" autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Location</label>
+            </div>
+            <div class="col-6">
+
+                <auto-suggestion url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="target.locationId=($event.id);target.lat=($event.lat);target.long=($event.long)" [preSelected]="{location:target.locationName}"
+                    autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-6">
+                <label>Address</label>
+            </div>
+            <div class="col-6">
+                <textarea name="address" cols="5" rows="5" class="form-control" [(ngModel)]="target.address"></textarea>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
 <div class="modal-footer">
-  <div class="row footer">
-    <div class="col ">
-      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+    <div class="row footer">
+        <div class="col ">
+            <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary" type='submit' id="save" (click)="saveCampaignTarget()">{{button}}</button>
+        </div>
     </div>
-    <div class="col text-right">
-      <button class="btn btn-primary" type='submit' id="save" (click)="saveCampaignTarget()">{{button}}</button>
-    </div>
-  </div>
 </div>

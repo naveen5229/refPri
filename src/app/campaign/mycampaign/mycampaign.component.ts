@@ -419,7 +419,7 @@ export class MycampaignComponent implements OnInit {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, 5), txt: '', title: "Mark Completed" });
       } else if (campaign._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateCampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
-        // icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
+        icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
       }
     } else if (type == 2) {
       icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: null });
@@ -435,6 +435,7 @@ export class MycampaignComponent implements OnInit {
       // } else 
       if (campaign._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateCampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
+        icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
       } else if (campaign._cc_user_id && !campaign._cc_status) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, campaign, type), txt: '', title: "Mark Ack as CC Lead" });
       }
@@ -475,6 +476,10 @@ export class MycampaignComponent implements OnInit {
       potCatname: campaign['Fleet Category'],
       // priOwnname: campaign['Primary Owner'],
       priOwnname: campaign._priown,
+      priCatId: (campaign._pri_cat_id) ? campaign._pri_cat_id : null,
+      priCatName: (campaign.pri_category) ? campaign.pri_category : "",
+      secCatId: (campaign._sec_cat_id) ? campaign._sec_cat_id : null,
+      secCatName: (campaign.sec_category) ? campaign.sec_category : "",
     }
 
     this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };

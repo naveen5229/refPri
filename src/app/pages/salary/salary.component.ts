@@ -18,17 +18,14 @@ export class SalaryComponent implements OnInit {
     end: ''
   };
 
-  tableSalaryList = {
-    data: {
-      headings: {},
-      columns: []
-    },
-    settings: {
-      hideHeader: true
-    }
-  };
+  totalDays = 0;
+  employerPfPercent = 13;
+  employeePfPercent = 12;
+  employerEsicPercent = 3.25;
+  employeeEsicPercent = 0.75;
+  basicPercent = 65;
+
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
-    // this.getEmployeeSalary();
     this.common.refresh = this.refresh.bind(this);
   }
   ngOnInit() {
@@ -40,67 +37,80 @@ export class SalaryComponent implements OnInit {
 
   getEmployeeSalary() {
     this.salaryList = [];
-    this.resetTable();
     let params = "?date=" + this.selectedDates.start;//this.common.dateFormatter(this.date);
     this.common.loading++;
     this.api.get('Admin/getEmpolyeeSalery.json' + params).subscribe(res => {
       this.common.loading--;
-      // console.log('res:', res);
+      console.log('res:', res);
+      let r = res['data'];
+      this.totalDays = r['totalDays'];
+      this.basicPercent = r['basicPercent'];
+      this.employerPfPercent = r['employerPfPercent'];
+      this.employeePfPercent = r['employeePfPercent']
+      this.employerEsicPercent = r['employerEsicPercent'];
+      this.employeeEsicPercent = r['employeeEsicPercent'];
+      this.salaryList = r['salaryList'] || [];
       this.salaryList = res['data'] || [];
       console.log("salaryList:", this.salaryList);
-      this.salaryList.length ? this.setTable() : this.resetTable();
     }, err => {
       this.common.loading--;
       console.log("error:", err);
     });
   }
 
-  resetTable() {
-    this.tableSalaryList.data = {
-      headings: {},
-      columns: []
+  getSalaryCalculation() {
+    let params = {
+      totalDays: this.totalDays,
+      employerPfPercent: this.employerPfPercent,
+      employeePfPercent: this.employeePfPercent,
+      employerEsicPercent: this.employerEsicPercent,
+      employeeEsicPercent: this.employeeEsicPercent,
+      basicPercent: this.basicPercent,
+      salaryList: JSON.stringify(this.salaryList)
     };
-  }
-
-  setTable() {
-    this.tableSalaryList.data = {
-      headings: this.generateHeadings(),
-      columns: this.getTableColumns()
-    };
-    console.log("tableSalaryList:", this.tableSalaryList);
-    return true;
-  }
-
-  generateHeadings() {
-    let headings = {};
-    for (var key in this.salaryList[0]) {
-      if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-      }
-    }
-    return headings;
-  }
-
-  getTableColumns() {
-    // console.log(this.generateHeadings());
-    let columns = [];
-    this.salaryList.map(ticket => {
-      let column = {};
-      for (let key in this.generateHeadings()) {
-        if (key == 'Action') {
-          column[key] = {
-            value: "",
-            isHTML: true,
-            action: null,
-            // icons: this.actionIcons(pending)
-          };
-        } else {
-          column[key] = { value: ticket[key], class: '', action: '' };
-        }
-      }
-      columns.push(column);
+    this.common.loading++;
+    this.api.post('Admin/getSalaryCalculation.json', params).subscribe(res => {
+      this.common.loading--;
+      console.log('res:', res);
+      let r = res['data'];
+      this.totalDays = r['totalDays'];
+      this.basicPercent = r['basicPercent'];
+      this.employerPfPercent = r['employerPfPercent'];
+      this.employeePfPercent = r['employeePfPercent']
+      this.employerEsicPercent = r['employerEsicPercent'];
+      this.employeeEsicPercent = r['employeeEsicPercent'];
+      this.salaryList = r['salaryList'];
+    }, err => {
+      this.common.loading--;
+      console.log("error:", err);
     });
-    return columns;
+  }
+
+  saveEmployeeSalary() {
+    let params = {
+      totalDays: this.totalDays,
+      employerPfPercent: this.employerPfPercent,
+      employeePfPercent: this.employeePfPercent,
+      employerEsicPercent: this.employerEsicPercent,
+      employeeEsicPercent: this.employeeEsicPercent,
+      basicPercent: this.basicPercent,
+      salaryList: JSON.stringify(this.salaryList)
+    };
+    this.common.loading++;
+    this.api.post('Admin/saveEmployeeSalary.json', params).subscribe(res => {
+      // this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?campaignId=49&infotype=1').subscribe(res => {
+      this.common.loading--;
+      console.log('res:', res);
+      if (res['code'] == 1) {
+        this.common.showToast(res['msg']);
+        this.getEmployeeSalary();
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log("error:", err);
+    });
   }
 
 }

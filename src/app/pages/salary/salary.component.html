@@ -12,8 +12,11 @@
             <div class="col-3">
                 <month-picker (select)="selectedDates = $event;"></month-picker>
             </div>
-            <div class="col-7">
-                <button type="submit" id="submit" (click)="getEmployeeSalary()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+            <div class="col-3">
+                <button type="button" class="btn btn-primary mr-2 btn-sm" (click)="getEmployeeSalary()">Submit</button>
+            </div>
+            <div *ngIf='salaryList && salaryList.length' class="col-4 text-right">
+                <button type="button" class="btn btn-primary btn-sm mr-2" (click)="getSalaryCalculation()">Calculate Salary</button>
             </div>
         </div>
     </nb-card-header>
@@ -21,8 +24,7 @@
     <nb-card-body style="min-height: 300px;">
         <div class="row form-group" style="overflow: auto;">
             <div class="col-12">
-                <!-- <smart-table [data]="tableSalaryList.data" [settings]="tableSalaryList.settings" id="tableSalaryList"></smart-table> -->
-                <table *ngIf='tableSalaryList.data.columns.length' class="table table-bordered table-hover">
+                <table *ngIf='salaryList && salaryList.length' class="table table-bordered table-hover salaryTable">
                     <thead class="thead" style="background-color: #c0b2b2">
                         <tr style="text-align:center">
                             <th>Name</th>
@@ -30,31 +32,47 @@
                             <th>CTC</th>
                             <th>PF Applicable</th>
                             <th>ESIC Applicable</th>
-                            <th>Employer PF</th>
-                            <th>Employee PF</th>
-                            <th>Employer ESIC</th>
-                            <th>Employee ESIC</th>
-                            <th>Basic</th>
+                            <th>Employer PF
+                                <br>
+                                <input type="number" [(ngModel)]="employerPfPercent" class="col-6" />%
+                            </th>
+                            <th>Employee PF
+                                <br>
+                                <input type="number" [(ngModel)]="employeePfPercent" class="col-6" />%
+                            </th>
+                            <th>Employer ESIC
+                                <br>
+                                <input type="number" [(ngModel)]="employerEsicPercent" class="col-6" />%
+                            </th>
+                            <th>Employee ESIC
+                                <br>
+                                <input type="number" [(ngModel)]="employeeEsicPercent" class="col-6" />%
+                            </th>
+                            <th>Basic
+                                <br>
+                                <input type="number" [(ngModel)]="basicPercent" class="col-6" />%
+                            </th>
                             <th>HRA</th>
-                            <th>performence_allo</th>
-                            <th>medical_allow</th>
-                            <th>washing_allow</th>
-                            <th>conveyance_allow</th>
-                            <th>overtime</th>
-                            <th>tds</th>
-                            <th>other_deduction</th>
-                            <th>total_deduction</th>
-                            <th>net_salary</th>
+                            <th>Performence Allowance</th>
+                            <th>Medical Allowance</th>
+                            <th>Washing Allowance</th>
+                            <th>Conveyance Allowance</th>
+                            <th>Overtime</th>
+                            <th>TDS</th>
+                            <th>Other Deduction</th>
+                            <th>Total Deduction</th>
+                            <th>Gross Salary</th>
+                            <th>Net Salary</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let v of salaryList;">
-                            <td>{{v.empname}}</td>
-                            <td><input type="text" [(ngModel)]="v.paid_day" /></td>
+                            <td>{{v.name}}</td>
+                            <!-- <td><input type="text" [(ngModel)]="v.paid_day" class="col-12" /></td>
                             <td><input type="text" [(ngModel)]="v.ctc" /></td>
-                            <td><input type="checkbox" [checked]="v.pf_applicable" (change)="v.pf_applicable = !v.pf_applicable" /></td>
-                            <td><input type="checkbox" [checked]="v.esi_applicable" (change)="v.esi_applicable = !v.esi_applicable" /></td>
-                            <td><input type="text" [(ngModel)]="v.employer_pf" /></td>
+                            <td><input type="checkbox" [checked]="v.is_pf_appli" (change)="v.is_pf_appli = !v.is_pf_appli" /></td>
+                            <td><input type="checkbox" [checked]="v.is_esi_appli" (change)="v.is_esi_appli = !v.is_esi_appli" /></td> -->
+                            <!-- <td><input type="text" [(ngModel)]="v.employer_pf" /></td>
                             <td><input type="text" [(ngModel)]="v.employee_pf" /></td>
                             <td><input type="text" [(ngModel)]="v.employer_esic" /></td>
                             <td><input type="text" [(ngModel)]="v.employee_esic" /></td>
@@ -63,15 +81,37 @@
                             <td><input type="text" [(ngModel)]="v.performence_allo" /></td>
                             <td><input type="text" [(ngModel)]="v.medical_allow" /></td>
                             <td><input type="text" [(ngModel)]="v.washing_allow" /></td>
-                            <td><input type="text" [(ngModel)]="v.conveyance_allow" /></td>
-                            <td><input type="text" [(ngModel)]="v.overtime" /></td>
-                            <td><input type="text" [(ngModel)]="v.tds" /></td>
-                            <td><input type="text" [(ngModel)]="v.other_deduction" /></td>
-                            <td><input type="text" [(ngModel)]="v.total_deduction" /></td>
-                            <td><input type="text" [(ngModel)]="v.net_salary" /></td>
+                            <td><input type="text" [(ngModel)]="v.conveyance_allow" /></td> -->
+                            <td>{{v.paid_day}}</td>
+                            <td>{{v.ctc}}</td>
+                            <td>{{v.is_pf_appli}}</td>
+                            <td>{{v.is_esi_appli}}</td>
+                            <td>{{v.employer_pf}}</td>
+                            <td>{{v.employee_pf}}</td>
+                            <td>{{v.employer_esic}}</td>
+                            <td>{{v.employee_esic}}</td>
+                            <td>{{v.basic}}</td>
+                            <td>{{v.hra}}</td>
+                            <td>{{v.performence_allo}}</td>
+                            <td>{{v.medical_allow}}</td>
+                            <td>{{v.washing_allow}}</td>
+                            <td>{{v.conveyance_allow}}</td>
+                            <td><input type="number" [(ngModel)]="v.overtime" /></td>
+                            <td><input type="number" [(ngModel)]="v.tds" /></td>
+                            <td><input type="number" [(ngModel)]="v.other_deduction" /></td>
+                            <!-- <td><input type="text" [(ngModel)]="v.total_deduction" /></td>
+                            <td><input type="text" [(ngModel)]="v.net_salary" /></td> -->
+                            <td>{{v.total_deduction}}</td>
+                            <td>{{v.gross}}</td>
+                            <td>{{v.net_salary}}</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right mt-8">
+                <button type="button" (click)="saveEmployeeSalary()" class="btn btn-primary btn-sm mr-2">Save</button>
             </div>
         </div>
     </nb-card-body>
