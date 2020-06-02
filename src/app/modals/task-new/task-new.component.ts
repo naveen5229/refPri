@@ -32,7 +32,9 @@ export class TaskNewComponent implements OnInit {
   };
   updateLastDateForm = {
     taskId: null,
-    date: null
+    date: null,
+    ticketId: null,
+    dateOld: null
   }
   editType = 0;
 
@@ -55,6 +57,8 @@ export class TaskNewComponent implements OnInit {
         this.editType = this.common.params.editType;
         this.updateLastDateForm.taskId = this.common.params.parentTaskId;
         this.updateLastDateForm.date = new Date(this.common.params.editData.expdate);
+        this.updateLastDateForm.dateOld = this.common.params.editData.expdate;
+        this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
       }
     }
     this.getProjectList()
@@ -134,10 +138,10 @@ export class TaskNewComponent implements OnInit {
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         console.log(res);
         this.common.loading--;
-        if (res['code'] > 0) {
-          // this.normalTask = new NormalTask('', new Date(), '', false, null, null, null);
-          this.resetTask();
+        if (res['code'] == 1) {
+          // this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
+            this.resetTask();
             this.common.showToast(res['data'][0].y_msg)
             this.closeModal(true);
           } else {
@@ -238,19 +242,21 @@ export class TaskNewComponent implements OnInit {
       const params = {
         date: this.common.dateFormatter(this.updateLastDateForm.date),
         taskId: this.updateLastDateForm.taskId,
+        ticketId: this.updateLastDateForm.ticketId,
+        dateOld: this.common.dateFormatter(this.updateLastDateForm.dateOld)
       }
+      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('AdminTask/updateAssignDate', params).subscribe(res => {
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
-          // this.normalTask = new NormalTask('', new Date(), '', false, null, null, null);
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
-            this.common.showToast(res['data'][0].y_msg)
+            this.common.showToast(res['msg']);
             this.closeModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg)
+            this.common.showError(res['msg']);
           }
         } else {
           this.common.showError(res['msg']);
