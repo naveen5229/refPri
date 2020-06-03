@@ -22,7 +22,8 @@ export class CommonService {
     pending: "#fff",
     ack: "yellow",
     complete: "#32cd32b3",
-    reject: "red"
+    reject: "red",
+    hold: "antiquewhite"
   }
   constructor(private toastrService: NbToastrService,
     // private http: Http,
@@ -637,6 +638,8 @@ export class CommonService {
       bg_color = this.taskBgColor.ack;
     } else if (status == 5) {
       bg_color = this.taskBgColor.complete;
+    } else if (status == 3) {
+      bg_color = this.taskBgColor.hold;
     }
     return bg_color;
   }

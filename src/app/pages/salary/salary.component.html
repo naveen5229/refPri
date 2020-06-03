@@ -110,28 +110,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 text-right mt-8">
+            <div *ngIf='salaryList && salaryList.length' class="col-12 text-right mt-8">
                 <button type="button" (click)="saveEmployeeSalary()" class="btn btn-primary btn-sm mr-2">Save</button>
             </div>
         </div>
     </nb-card-body>
-
-    <!-- start: map modal -->
-    <!-- <div class="modal" id="shiftMapModal" #shiftMapModal>
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h4 class="modal-title" style="color:#fff;">Shift Location</h4>
-                  <button type="button" class="close" data-dismiss="modal" (click)="closeMapModal()">&times;</button>
-              </div>
-              <div class="modal-body">
-                  <div class="map-container mt-2">
-                      <div #map id="map"> </div>
-                  </div>
-              </div>
-
-          </div>
-      </div>
-  </div> -->
-    <!-- end: map modal -->
 </nb-card>

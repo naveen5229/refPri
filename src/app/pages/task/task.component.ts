@@ -29,6 +29,7 @@ export class TaskComponent implements OnInit {
   allCompletedTaskList = [];
   ccTaskList = [];
   projectTaskList = [];
+  holdTaskList = [];
 
   tableNormal = {
     data: {
@@ -84,6 +85,16 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
+  tableHoldTask = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   searchTask = {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
@@ -208,13 +219,15 @@ export class TaskComponent implements OnInit {
       } else if (type == -8) {
         this.unreadTaskForMeList = res['data'] || [];
         this.setTableUnreadTaskForMe(type);
+      } else if (type == -9) {
+        this.holdTaskList = res['data'] || [];
+        this.setTableHoldTask(type);
       }
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   reserSmartTableData() {
@@ -250,7 +263,12 @@ export class TaskComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableHoldTask.data = {
+      headings: {},
+      columns: []
+    };
   }
+
   generateHeadingsNormal() {
     // console.log(this.dailyReportList);
     let headings = {};
@@ -632,6 +650,60 @@ export class TaskComponent implements OnInit {
 
   }
   // end future task by me list
+  // start hold task list
+  setTableHoldTask(type) {
+    this.tableHoldTask.data = {
+      headings: this.generateHeadingsHoldTaskList(),
+      columns: this.getTableColumnsHoldTaskList(type)
+    };
+    return true;
+  }
+
+  generateHeadingsHoldTaskList() {
+    let headings = {};
+    for (var key in this.holdTaskList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsHoldTaskList(type) {
+    let columns = [];
+    this.holdTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsHoldTaskList()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(ticket, type)
+          };
+        } else if (key == 'time_left') {
+          column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center",
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+      }
+      columns.push(column);
+    });
+    // console.log(columns);
+    return columns;
+
+  }
+  // end hold task list
 
   // start unread task for me list
   setTableUnreadTaskForMe(type) {
@@ -711,11 +783,17 @@ export class TaskComponent implements OnInit {
     if (type == -101) {
       icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
       // icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
+      if (ticket._status == 2) { //for hold
+        icons.push({ class: "fa fa-pause-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 3), txt: '', title: "Mark Task as Hold" });
+      }
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
         icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
       } else if (ticket._status == 2) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: '', title: "Mark completed" });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: '', title: "Mark Completed" });
+        if (type == 101) { //for hold
+          icons.push({ class: "fa fa-pause-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 3), txt: '', title: "Mark Task as Hold" });
+        }
       } else if (ticket._status == 0) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
         icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
@@ -736,10 +814,16 @@ export class TaskComponent implements OnInit {
       else if (ticket._status == 5 && (ticket._tktype == 101 || ticket._tktype == 102)) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByAssigner.bind(this, ticket, type), txt: '', title: "Mark Ack as Completed Task" });
       }
+    } else if (type == -9) {
+      if (ticket._status == 3) {
+        icons.push({ class: "fa fa-play-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: '', title: "Make Task as Unhold" });
+      }
     }
+
     if (type == 101 || type == -101) {
       icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '', title: "add child task" });
     }
+
     if ((ticket._status == 5 || ticket._status == -1)) {
     } else {
       if (ticket._isremind == 1) {
@@ -854,7 +938,8 @@ export class TaskComponent implements OnInit {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
-        statusId: status
+        statusId: status,
+        statusOld: ticket._status
       }
       this.common.loading++;
       this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
@@ -870,7 +955,7 @@ export class TaskComponent implements OnInit {
             this.getTaskByType(type);
           }
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -884,9 +969,10 @@ export class TaskComponent implements OnInit {
 
   changeTicketStatusWithConfirm(ticket, type, status) {
     if (ticket._refid) {
+      let preTitle = (status == 3) ? "Hold" : "Complete";
       this.common.params = {
-        title: 'Complete Task ',
-        description: `<b>&nbsp;` + 'Are You Sure To Complete This Task' + `<b>`,
+        title: preTitle + ' Task ',
+        description: `<b>&nbsp;` + 'Are You Sure To ' + preTitle + ' This Task' + `<b>`,
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {

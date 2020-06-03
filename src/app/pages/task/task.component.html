@@ -41,6 +41,9 @@
                 <li [ngClass]="activeTab=='futureTaskByMe'?'active':''" (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
                     Future Task
                 </li>
+                <li [ngClass]="activeTab=='holdTask'?'active':''" (click)="activeTab='holdTask'; getTaskByType(-9)">
+                    Hold Task
+                </li>
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
                     Unread Task
                 </li>
@@ -107,6 +110,10 @@
         </div>
         <div *ngIf="activeTab=='futureTaskByMe'">
             <smart-table *ngIf="futureTaskByMeList.length!=0" [data]="tableFutureTaskByMeList.data" [settings]="tableFutureTaskByMeList.settings" id="tableFutureTaskForMeList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='holdTask'">
+            <smart-table [data]="tableHoldTask.data" [settings]="tableHoldTask.settings" id="tableHoldTaskList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTaskByMe'">

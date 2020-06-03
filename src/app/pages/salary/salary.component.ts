@@ -50,8 +50,10 @@ export class SalaryComponent implements OnInit {
       this.employerEsicPercent = r['employerEsicPercent'];
       this.employeeEsicPercent = r['employeeEsicPercent'];
       this.salaryList = r['salaryList'] || [];
-      this.salaryList = res['data'] || [];
       console.log("salaryList:", this.salaryList);
+      if (!this.salaryList.length) {
+        this.common.showError("No Record Found");
+      }
     }, err => {
       this.common.loading--;
       console.log("error:", err);
