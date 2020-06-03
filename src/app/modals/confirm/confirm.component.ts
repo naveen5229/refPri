@@ -15,6 +15,9 @@ export class ConfirmComponent implements OnInit {
   description = '';
   btn1 = '';
   btn2 = '';
+  isRemark = false;
+  remark = "";
+
 
 
   constructor(public api: ApiService,
@@ -26,13 +29,14 @@ export class ConfirmComponent implements OnInit {
     this.description = this.common.params.description || 'Are you sure?';
     this.btn1 = this.common.params.btn1 || 'Confirm';
     this.btn2 = this.common.params.btn2 || 'Cancel';
+    this.isRemark = (this.common.params.isRemark) ? true : false;
   }
 
   ngOnInit() {
   }
-  
-  closeModal(response,apiHit) {
-    this.activeModal.close({ response: response,apiHit:apiHit });
+
+  closeModal(response, apiHit) {
+    this.activeModal.close({ response: response, apiHit: apiHit, remark: this.remark });
   }
 
 }

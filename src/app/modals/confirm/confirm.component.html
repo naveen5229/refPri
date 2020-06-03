@@ -8,18 +8,19 @@
     <div class="container">
         <div class="row" [innerHTML]="description">
         </div>
+        <div class="row mt-3" *ngIf="isRemark">
+            <textarea row="2" cols="15" placeholder="Enter Remark" name="remark" class="form-control" [(ngModel)]="remark"></textarea>
+        </div>
     </div>
 </div>
 <div class="modal-footer">
     <div class="row p-0">
         <div class="col-6">
 
-            <button class="btn btn-danger" type="button" outline (click)="closeModal(false,0)" id="cancel"
-                style="cursor: pointer;">{{btn2}}</button>
+            <button class="btn btn-danger" type="button" outline (click)="closeModal(false,0)" id="cancel" style="cursor: pointer;">{{btn2}}</button>
         </div>
         <div class="col-6 text-right">
-            <button class="btn btn-primary" type="button" outline (click)="closeModal(true,1)" id="submit"
-                style="cursor: pointer;">{{btn1}}</button>
+            <button class="btn btn-primary" type="button" outline (click)="closeModal(true,1)" id="submit" style="cursor: pointer;">{{btn1}}</button>
         </div>
     </div>
 </div>

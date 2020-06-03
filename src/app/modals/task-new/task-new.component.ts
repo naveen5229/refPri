@@ -34,7 +34,8 @@ export class TaskNewComponent implements OnInit {
     taskId: null,
     date: null,
     ticketId: null,
-    dateOld: null
+    dateOld: null,
+    reason: null
   }
   editType = 0;
 
@@ -243,7 +244,8 @@ export class TaskNewComponent implements OnInit {
         date: this.common.dateFormatter(this.updateLastDateForm.date),
         taskId: this.updateLastDateForm.taskId,
         ticketId: this.updateLastDateForm.ticketId,
-        dateOld: this.common.dateFormatter(this.updateLastDateForm.dateOld)
+        dateOld: this.common.dateFormatter(this.updateLastDateForm.dateOld),
+        reason: this.updateLastDateForm.reason
       }
       // console.log("params:", params); return false;
       this.common.loading++;

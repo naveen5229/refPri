@@ -934,12 +934,13 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  updateTicketStatus(ticket, type, status) {
+  updateTicketStatus(ticket, type, status, remark = null) {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
         statusId: status,
-        statusOld: ticket._status
+        statusOld: ticket._status,
+        remark: remark
       }
       this.common.loading++;
       this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
@@ -969,15 +970,22 @@ export class TaskComponent implements OnInit {
 
   changeTicketStatusWithConfirm(ticket, type, status) {
     if (ticket._refid) {
-      let preTitle = (status == 3) ? "Hold" : "Complete";
+      let preTitle = "Complete";
+      if (status == 3) {
+        preTitle = "Hold";
+      } else if (ticket._status == 3) {
+        preTitle = "Unhold";
+      }
       this.common.params = {
         title: preTitle + ' Task ',
         description: `<b>&nbsp;` + 'Are You Sure To ' + preTitle + ' This Task' + `<b>`,
+        isRemark: (status == 3) ? true : false
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
+        console.log("Confirm response:", data);
         if (data.response) {
-          this.updateTicketStatus(ticket, type, status);
+          this.updateTicketStatus(ticket, type, status, data.remark);
         }
       });
     } else {
