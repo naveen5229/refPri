@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
@@ -27,9 +27,41 @@ export class SalaryDetailComponent implements OnInit {
     end: ''
   };
 
-  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) { }
+  salaryDetailForm = {
+    name: null,
+    tableId: null,
+    empId: null,
+    empType: 1,
+    ctc: null,
+    isPf: false,
+    isEsic: false,
+    leaveAllow: null,
+    vpf: null,
+    wef: null,
+    otHourRate: null
+  }
+
+  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, private activeModal: NgbActiveModal, public userService: UserService) { }
 
   ngOnInit() {
+  }
+
+  closeModal(response) {
+    this.salaryDetailForm = {
+      name: null,
+      tableId: null,
+      empId: null,
+      empType: 1,
+      ctc: null,
+      isPf: false,
+      isEsic: false,
+      leaveAllow: null,
+      vpf: null,
+      wef: null,
+      otHourRate: null
+    };
+
+    this.activeModal.close({ response: response });
   }
 
   getSalaryDetails() {
@@ -105,19 +137,6 @@ export class SalaryDetailComponent implements OnInit {
     return icons;
   }
 
-  salaryDetailForm = {
-    name: null,
-    tableId: null,
-    empId: null,
-    empType: 1,
-    ctc: null,
-    isPf: false,
-    isEsic: false,
-    leaveAllow: null,
-    vpf: null,
-    wef: null,
-  }
-
   closeDetailFormModal() {
     document.getElementById("detailFormModal").style.display = "none";
   }
@@ -132,12 +151,16 @@ export class SalaryDetailComponent implements OnInit {
     this.salaryDetailForm.isEsic = sDetail.esic_applicable;
     this.salaryDetailForm.leaveAllow = sDetail.leave_allow;
     this.salaryDetailForm.vpf = sDetail.vpf;
-    this.salaryDetailForm.wef = sDetail.wef;
+    this.salaryDetailForm.wef = new Date(sDetail.wef);
+    this.salaryDetailForm.otHourRate = sDetail.ot_hour_rate;
 
     document.getElementById("detailFormModal").style.display = "block";
   }
 
   addSalaryDetail() {
+    if (this.salaryDetailForm.vpf > 0 && this.salaryDetailForm.vpf <= 12) {
+      this.common.showError("VPF must be greater than 12 %");
+    }
     let params = {
       tableId: this.salaryDetailForm.tableId,
       empId: this.salaryDetailForm.empId,
@@ -147,7 +170,8 @@ export class SalaryDetailComponent implements OnInit {
       isEsic: this.salaryDetailForm.isEsic,
       leaveAllow: this.salaryDetailForm.leaveAllow,
       vpf: this.salaryDetailForm.vpf,
-      wef: this.salaryDetailForm.wef
+      wef: (this.salaryDetailForm.wef) ? this.common.dateFormatter(this.salaryDetailForm.wef) : null,
+      otHourRate: this.salaryDetailForm.otHourRate
     }
     this.common.loading++;
     this.api.post("Admin/saveSalaryDetail", params).subscribe(res => {

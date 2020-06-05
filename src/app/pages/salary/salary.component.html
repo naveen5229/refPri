@@ -35,6 +35,7 @@
                             <th>CTC</th>
                             <th>PF Applicable</th>
                             <th>ESIC Applicable</th>
+                            <th>VPF (%)</th>
                             <th>Employer PF
                                 <br>
                                 <input type="number" [(ngModel)]="employerPfPercent" class="col-6" />%
@@ -89,6 +90,7 @@
                             <td>{{v.ctc}}</td>
                             <td>{{(v.is_pf_appli) ? 'Yes' : 'No'}}</td>
                             <td>{{(v.is_esi_appli) ? 'Yes' : 'No'}}</td>
+                            <td>{{(v.vpf) ? v.vpf : 'No'}}</td>
                             <td>{{v.employer_pf}}</td>
                             <td>{{v.employee_pf}}</td>
                             <td>{{v.employer_esic}}</td>
@@ -99,7 +101,7 @@
                             <td>{{v.medical_allow}}</td>
                             <td>{{v.washing_allow}}</td>
                             <td>{{v.conveyance_allow}}</td>
-                            <td><input type="number" [(ngModel)]="v.overtime" /></td>
+                            <td>{{v.overtime}}</td>
                             <td><input type="number" [(ngModel)]="v.tds" /></td>
                             <td><input type="number" [(ngModel)]="v.other_deduction" /></td>
                             <!-- <td><input type="text" [(ngModel)]="v.total_deduction" /></td>
