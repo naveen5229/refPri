@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
       this.qrCode = Math.floor(Math.random() * 1000000);
     }
     this.qrCode = this.qrCode.toString();
-    console.log("OTP", this,this.qrCode);
+    console.log("OTP", this, this.qrCode);
     let params = {
       mobileno: this.userDetails.mobile,
       qrcode: this.qrCode
@@ -75,10 +75,10 @@ export class LoginComponent implements OnInit {
         } else {
           this.common.showError(res['msg']);
         }
-      },err => {
-          this.common.loading--;
-          this.common.showError();
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+      });
   }
 
   qrCodeRegenrate() {
@@ -119,7 +119,8 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
-          this.router.navigate(['/pages/dashboard']);
+          // this.router.navigate(['/pages/dashboard']);
+          this.router.navigate(['/pages/task']);
         }
       },
         err => {

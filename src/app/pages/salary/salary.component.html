@@ -12,11 +12,14 @@
             <div class="col-3">
                 <month-picker (select)="selectedDates = $event;"></month-picker>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <button type="button" class="btn btn-primary mr-2 btn-sm" (click)="getEmployeeSalary()">Submit</button>
             </div>
-            <div *ngIf='salaryList && salaryList.length' class="col-4 text-right">
+            <div *ngIf='salaryList && salaryList.length' class="col-3 text-right">
                 <button type="button" class="btn btn-primary btn-sm mr-2" (click)="getSalaryCalculation()">Calculate Salary</button>
+            </div>
+            <div class="col-2 text-right">
+                <button type="button" class="btn btn-primary mr-2 btn-sm" (click)="showSalaryDetailModal()">Salary Details</button>
             </div>
         </div>
     </nb-card-header>
@@ -84,8 +87,8 @@
                             <td><input type="text" [(ngModel)]="v.conveyance_allow" /></td> -->
                             <td>{{v.paid_day}}</td>
                             <td>{{v.ctc}}</td>
-                            <td>{{v.is_pf_appli}}</td>
-                            <td>{{v.is_esi_appli}}</td>
+                            <td>{{(v.is_pf_appli) ? 'Yes' : 'No'}}</td>
+                            <td>{{(v.is_esi_appli) ? 'Yes' : 'No'}}</td>
                             <td>{{v.employer_pf}}</td>
                             <td>{{v.employee_pf}}</td>
                             <td>{{v.employer_esic}}</td>

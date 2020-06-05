@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SalaryDetailComponent } from '../../modals/salary-detail/salary-detail.component';
 
 @Component({
   selector: 'ngx-salary',
@@ -62,6 +63,7 @@ export class SalaryComponent implements OnInit {
 
   getSalaryCalculation() {
     let params = {
+      date: this.selectedDates.start,
       totalDays: this.totalDays,
       employerPfPercent: this.employerPfPercent,
       employeePfPercent: this.employeePfPercent,
@@ -90,6 +92,7 @@ export class SalaryComponent implements OnInit {
 
   saveEmployeeSalary() {
     let params = {
+      date: this.selectedDates.start,
       totalDays: this.totalDays,
       employerPfPercent: this.employerPfPercent,
       employeePfPercent: this.employeePfPercent,
@@ -113,6 +116,11 @@ export class SalaryComponent implements OnInit {
       this.common.loading--;
       console.log("error:", err);
     });
+  }
+
+  showSalaryDetailModal() {
+    this.common.params = null;
+    const activeModal = this.modalService.open(SalaryDetailComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

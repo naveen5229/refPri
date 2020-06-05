@@ -275,7 +275,7 @@ export class CampaignTargetComponent implements OnInit {
   actionIcons(campaign) {
     let icons = [
       { class: "far fa-edit", action: this.editCampaign.bind(this, campaign) },
-      { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
+      // { class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign) },
       { class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign) },
       { class: 'fas fa-info-circle ml-2 s-4', action: this.infoMatrix.bind(this, campaign) },
 

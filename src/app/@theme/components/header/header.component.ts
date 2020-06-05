@@ -134,7 +134,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   refresh() {
     if (!this.common.refresh) {
-      this.router.navigateByUrl('/pages/dashboard');
+      // this.router.navigateByUrl('/pages/dashboard');
+      this.router.navigateByUrl('/pages/task');
       return;
     }
     this.common.refresh();

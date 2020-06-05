@@ -383,6 +383,8 @@ export class MycampaignComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign, type)
           };
+        } else if (key == 'Company') {
+          column[key] = { value: campaign[key], class: 'blue', action: this.addContactAction.bind(this, campaign, type) };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
@@ -417,6 +419,7 @@ export class MycampaignComponent implements OnInit {
     if (type == 1) {
       if (campaign._status == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, 5), txt: '', title: "Mark Completed" });
+        icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
       } else if (campaign._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateCampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
         icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });

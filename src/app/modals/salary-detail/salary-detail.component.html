@@ -1,0 +1,99 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col">
+            <h5>Salary Details</h5>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-3">
+            <label>Select Month:</label>
+        </div>
+        <div class="col-3">
+            <month-picker (select)="selectedDates = $event;"></month-picker>
+        </div>
+        <div class="col-3">
+            <button type="button" class="btn btn-primary mr-2 btn-sm" (click)="getSalaryDetails()">Submit</button>
+        </div>
+    </div>
+    <div>
+        <smart-table [data]="tableSalaryDetail.data" [settings]="tableSalaryDetail.settings" id="tableSalaryDetail"></smart-table>
+    </div>
+</div>
+
+
+<!-- start: form modal -->
+<div class="modal" id="detailFormModal" #detailFormModal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" style="color:#fff;">Employee Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeDetailFormModal()">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Name :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        {{salaryDetailForm.name}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>CTC :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control " [(ngModel)]='salaryDetailForm.ctc' placeholder="CTC" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>isPf :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="checkbox" class="form-control" [checked]="salaryDetailForm.isPf" (change)="salaryDetailForm.isPf = !salaryDetailForm.isPf">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>isEsic :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="checkbox" class="form-control" [checked]="salaryDetailForm.isEsic" (change)="salaryDetailForm.isEsic = !salaryDetailForm.isEsic">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>leaveAllow :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control " [(ngModel)]='salaryDetailForm.leaveAllow' placeholder="leaveAllow">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>VPF :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control " [(ngModel)]='salaryDetailForm.vpf' placeholder="VPF">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>WEF :</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="salaryDetailForm.wef=$event" [dateTimeValue]="salaryDetailForm.wef">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end: form modal -->
