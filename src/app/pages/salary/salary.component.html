@@ -26,8 +26,8 @@
 
     <nb-card-body style="min-height: 300px;">
         <div class="row form-group" style="overflow: auto;">
-            <div class="col-12">
-                <table *ngIf='salaryList && salaryList.length' class="table table-bordered table-hover salaryTable">
+            <div *ngIf='salaryList && salaryList.length' class="col-12 tableWrap">
+                <table class="table table-bordered table-hover salaryTable">
                     <thead class="thead" style="background-color: #c0b2b2">
                         <tr style="text-align:center">
                             <th>Name</th>
@@ -64,6 +64,9 @@
                             <th>Overtime</th>
                             <th>TDS</th>
                             <th>Other Deduction</th>
+                            <th>Other Addition</th>
+                            <th>Other Deduction Remark</th>
+                            <th>Other Addition Remark</th>
                             <th>Total Deduction</th>
                             <th>Gross Salary</th>
                             <th>Net Salary</th>
@@ -104,8 +107,9 @@
                             <td>{{v.overtime}}</td>
                             <td><input type="number" [(ngModel)]="v.tds" /></td>
                             <td><input type="number" [(ngModel)]="v.other_deduction" /></td>
-                            <!-- <td><input type="text" [(ngModel)]="v.total_deduction" /></td>
-                            <td><input type="text" [(ngModel)]="v.net_salary" /></td> -->
+                            <td><input type="number" [(ngModel)]="v.other_addition" /></td>
+                            <td><input type="text" [(ngModel)]="v.other_deduction_remark" /></td>
+                            <td><input type="text" [(ngModel)]="v.other_addition_remark" /></td>
                             <td>{{v.total_deduction}}</td>
                             <td>{{v.gross}}</td>
                             <td>{{v.net_salary}}</td>

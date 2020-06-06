@@ -158,9 +158,6 @@ export class SalaryDetailComponent implements OnInit {
   }
 
   addSalaryDetail() {
-    if (this.salaryDetailForm.vpf > 0 && this.salaryDetailForm.vpf <= 12) {
-      this.common.showError("VPF must be greater than 12 %");
-    }
     let params = {
       tableId: this.salaryDetailForm.tableId,
       empId: this.salaryDetailForm.empId,
