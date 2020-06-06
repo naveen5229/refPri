@@ -811,8 +811,11 @@ export class TaskComponent implements OnInit {
       else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByProjectUser.bind(this, ticket, type), txt: '', title: "Mark Ack as Project Task" });
       }
-      else if (ticket._status == 5 && (ticket._tktype == 101 || ticket._tktype == 102)) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByAssigner.bind(this, ticket, type), txt: '', title: "Mark Ack as Completed Task" });
+      else if (ticket._status == 5) {
+        icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
+        if ((ticket._tktype == 101 || ticket._tktype == 102)) {
+          icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByAssigner.bind(this, ticket, type), txt: '', title: "Mark Ack as Completed Task" });
+        }
       }
     } else if (type == -9) {
       if (ticket._status == 3) {
