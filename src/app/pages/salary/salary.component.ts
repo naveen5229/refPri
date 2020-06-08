@@ -43,17 +43,22 @@ export class SalaryComponent implements OnInit {
     this.api.get('Admin/getEmpolyeeSalery.json' + params).subscribe(res => {
       this.common.loading--;
       console.log('res:', res);
-      let r = res['data'];
-      this.totalDays = r['totalDays'];
-      this.basicPercent = r['basicPercent'];
-      this.employerPfPercent = r['employerPfPercent'];
-      this.employeePfPercent = r['employeePfPercent']
-      this.employerEsicPercent = r['employerEsicPercent'];
-      this.employeeEsicPercent = r['employeeEsicPercent'];
-      this.salaryList = r['salaryList'] || [];
-      console.log("salaryList:", this.salaryList);
-      if (!this.salaryList.length) {
-        this.common.showError("No Record Found");
+      if (res['code'] == 1) {
+        let r = res['data'];
+        this.totalDays = r['totalDays'];
+        this.basicPercent = r['basicPercent'];
+        this.employerPfPercent = r['employerPfPercent'];
+        this.employeePfPercent = r['employeePfPercent']
+        this.employerEsicPercent = r['employerEsicPercent'];
+        this.employeeEsicPercent = r['employeeEsicPercent'];
+        this.salaryList = r['salaryList'] || [];
+        console.log("salaryList:", this.salaryList);
+        if (!this.salaryList.length) {
+          this.common.showError("No Record Found");
+        }
+
+      } else {
+        this.common.showError(res["msg"]);
       }
     }, err => {
       this.common.loading--;
@@ -76,14 +81,19 @@ export class SalaryComponent implements OnInit {
     this.api.post('Admin/getSalaryCalculation.json', params).subscribe(res => {
       this.common.loading--;
       console.log('res:', res);
-      let r = res['data'];
-      this.totalDays = r['totalDays'];
-      this.basicPercent = r['basicPercent'];
-      this.employerPfPercent = r['employerPfPercent'];
-      this.employeePfPercent = r['employeePfPercent']
-      this.employerEsicPercent = r['employerEsicPercent'];
-      this.employeeEsicPercent = r['employeeEsicPercent'];
-      this.salaryList = r['salaryList'];
+      if (res["code"] == 1) {
+        let r = res['data'];
+        this.totalDays = r['totalDays'];
+        this.basicPercent = r['basicPercent'];
+        this.employerPfPercent = r['employerPfPercent'];
+        this.employeePfPercent = r['employeePfPercent']
+        this.employerEsicPercent = r['employerEsicPercent'];
+        this.employeeEsicPercent = r['employeeEsicPercent'];
+        this.salaryList = r['salaryList'];
+
+      } else {
+        this.common.showError(res['msg']);
+      }
     }, err => {
       this.common.loading--;
       console.log("error:", err);

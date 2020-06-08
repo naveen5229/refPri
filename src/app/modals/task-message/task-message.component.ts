@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
+import { ReminderComponent } from '../reminder/reminder.component';
 
 @Component({
   selector: 'ngx-task-message',
@@ -30,7 +32,8 @@ export class TaskMessageComponent implements OnInit {
   showAssignUserAuto = null;
   msgListOfMine = [];
   tabType = null;
-  constructor(public activeModal: NgbActiveModal, public api: ApiService,
+  ticketData;
+  constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
     if (this.common.params != null) {
@@ -52,6 +55,7 @@ export class TaskMessageComponent implements OnInit {
         this.ticketType = this.common.params.ticketEditData.taskType;
         this.ticketType = this.common.params.ticketEditData.taskType;
         this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
+        this.ticketData = this.common.params.ticketEditData.ticketData;
         this.getMessageList();
         this.getAllUserByTask();
       }
@@ -159,7 +163,7 @@ export class TaskMessageComponent implements OnInit {
           this.taskMessage = "";
           if (this.tabType == 101 && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
-            this.updateTicketStatus(2);
+            this.updateTicketStatus(2, null);
           }
           this.getMessageList();
         }
@@ -279,11 +283,13 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
-  updateTicketStatus(status) {
+  updateTicketStatus(status, remark = null) {
     if (this.ticketId && this.statusId == 0) {
       let params = {
         ticketId: this.ticketId,
-        statusId: status
+        statusId: status,
+        statusOld: this.statusId,
+        remark: remark
       }
       // this.common.loading++;
       this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
@@ -303,6 +309,66 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
+  changeTicketStatusWithConfirm(status) {
+    console.log("ticketData:", this.ticketData);
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+      let preTitle = "Complete";
+      if (status == 3) {
+        preTitle = "Hold";
+      } else if (this.statusId == 3) {
+        preTitle = "Unhold";
+      }
+      this.common.params = {
+        title: preTitle + ' Task ',
+        description: `<b>&nbsp;` + 'Are You Sure To ' + preTitle + ' This Task' + `<b>`,
+        isRemark: (status == 3) ? true : false
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          // this.updateTicketStatus(status, data.remark);
+        }
+      });
+
+    } else {
+      this.common.showError("Invalid User");
+    }
+  }
+
+  showReminderPopup() {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+      this.common.params = { ticketId: this.ticketData._tktid, title: "Add Reminder", btn: "Set Reminder" };
+      const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.ticketData._isremind = 2;
+        }
+      });
+    } else {
+      this.common.showError("Invalid User");
+    }
+  }
+
+  checkReminderSeen() {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+      let params = {
+        ticket_id: this.ticketData._tktid
+      };
+      this.common.loading++;
+      this.api.post('AdminTask/checkReminderSeen', params)
+        .subscribe(res => {
+          this.common.loading--;
+          this.common.showToast(res['msg']);
+          this.ticketData._isremind = 0;
+        }, err => {
+          this.common.loading--;
+          console.log('Error: ', err);
+        });
+    } else {
+      this.common.showError("Invalid User");
+    }
+  }
 
   // start: campaign msg ----------------------------------------------------
   getLeadMessage() {

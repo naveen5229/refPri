@@ -6,6 +6,14 @@
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
     {{subTitle}}
+    <div *ngIf="common.params.fromPage != 'campaign'">
+        <span *ngIf="statusId==2"><i class="fa fa-pause-circle" (click)="changeTicketStatusWithConfirm(3)"></i></span>
+        <span *ngIf="statusId==3"><i class="fa fa-play-circle" (click)="changeTicketStatusWithConfirm(2)"></i></span>
+
+        <span *ngIf="(ticketData && ticketData._isremind == 1 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell isRemind" (click)="checkReminderSeen()"></i></span>
+        <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell reminderAdded" (click)="showReminderPopup()"></i></span>
+        <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" (click)="showReminderPopup()"></i></span>
+    </div>
 </div>
 <div class="modal-body">
     <div class="row">

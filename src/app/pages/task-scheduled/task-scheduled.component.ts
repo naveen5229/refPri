@@ -846,6 +846,7 @@ export class TaskScheduledComponent implements OnInit {
   ticketMessage(ticket, type) {
     console.log("type:", type);
     let ticketEditData = {
+      ticketData: ticket,
       ticketId: ticket._tktid,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,
