@@ -41,6 +41,8 @@ import { OtManagementComponent } from './ot-management/ot-management.component';
 import { TravelDistanceComponent } from './travel-distance/travel-distance.component';
 import { SalaryComponent } from './salary/salary.component';
 import { MycampaignComponent } from '../campaign/mycampaign/mycampaign.component';
+import { UserRoleComponent } from './user-role/user-role.component';
+import { AddPagesComponent } from './add-pages/add-pages.component';
 
 const routes: Routes = [{
   path: '',
@@ -227,6 +229,16 @@ const routes: Routes = [{
     {
       path: 'salary',
       component: SalaryComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'user-role',
+      component: UserRoleComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'add-pages',
+      component: AddPagesComponent,
       canActivate: [AuthGuard]
     }
 

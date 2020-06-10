@@ -132,13 +132,78 @@ export class InfoMatrixComponent implements OnInit {
 
   }
 
+  removeForm(infoType) {
+
+    this.formData = [{
+      param: '',
+      order: null,
+      type: 'text',
+      id: null,
+      isDropdown: false,
+      showAddOption: false,
+      param_info: [{
+        option: null
+      }]
+    }]
+    let params = {
+      campaignId: this.campaignId,
+      infoType: this.infoType,
+      matrixInfo: JSON.stringify(this.formData.map(item => {
+        return {
+          param: item.param,
+          order: item.order,
+          type: item.type,
+          id: item['_id'],
+          drpOption: item.param_info
+        }
+      })),
+      requestId: this.requestId
+
+    }
+    console.log(params);
+    this.common.loading++;
+    this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
+      .subscribe(res => {
+console.log(res);
+this.activeModal.close(false);
+        this.common.loading--;
+
+      });
+    
+  }
+
   submitFormData(infoType) {
-    if (this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
+    console.log(this.formData);
+    console.log(this.formList);
+   
+    if (this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null) ) {
       this.common.showError('Please Fill All The Field');
     } else {
-      if (this.formData.length > 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
+
+      if (this.formData.length > 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null) ) {
+        console.log(this.formData);
+        console.log(this.formList);
+
+
         this.formData.shift();
+      } 
+      
+        console.log(this.formData); 
+        console.log(this.formList);
+
+        const sentFormData = this.formData.concat(this.formList);
+      console.log(sentFormData);
+
+      if (this.isEdit) {
+        console.log(this.formData);
+        this.formData.forEach(item => {
+          if (item.param_info.length && item.param_info.length > 1 && item.param_info[0].option == null) {
+               item.param_info.shift();
+          }
+          return item;
+        });
       }
+
       let params = {
         campaignId: this.campaignId,
         infoType: this.infoType,
@@ -166,7 +231,8 @@ export class InfoMatrixComponent implements OnInit {
               this.common.showToast(res['data'][0].y_msg);
 
               setTimeout((() => this.getFormData(this.campaignId, infoType)), 2000);
-
+              this.isEdit = false;
+              this.requestId = null;
               this.formData = [{
                 param: '',
                 order: null,
@@ -191,6 +257,7 @@ export class InfoMatrixComponent implements OnInit {
           console.log('Error: ', err);
         });
     }
+
   }
 
   orderSorting(a, b) {
@@ -219,6 +286,7 @@ export class InfoMatrixComponent implements OnInit {
           });
           console.log(this.unSortedformList);
           this.formList = this.unSortedformList.sort(this.orderSorting);
+          // this.formData = this.formList;
           // this.formList.map(e => JSON.parse(e.param_info))
           console.log(this.formList);
         }
@@ -304,9 +372,11 @@ export class InfoMatrixComponent implements OnInit {
   }
 
   editField() {
+    this.isEdit = true;
+
     console.log(this.formList);
     this.formList.forEach(e => {
-      if (e['param_info'].length > 1) {
+      if (e['param_info'] && e['param_info'].length > 1) {
         console.log(e['param_info']);
         e['param_info'].unshift({ option: null });
       }
@@ -317,10 +387,11 @@ export class InfoMatrixComponent implements OnInit {
     });
     this.formData = this.formData.concat(this.formList);
     console.log(this.formList);
-    this.isEdit = true;
+    console.log(this.formData);
     this.requestId = 1;
 
   }
+
 
   resetForm() {
     this.formData = [{

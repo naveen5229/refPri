@@ -126,6 +126,7 @@
     </div>
     <div class="col text-right">
         <!-- <button class="btn btn-primary" type='submit' id="save" (click)="resetForm()" style="margin-right: 10px;">Reset</button> -->
+        <!-- <button *ngIf='isEdit' class="btn btn-primary " type='submit' id="save" (click)="removeForm(infoType)" style="margin-right: 10px;">Remove Form</button> -->
         <button class="btn btn-primary " type='submit' id="save" (click)="submitFormData(infoType)">Save</button>
     </div>
 </div>
@@ -147,13 +148,13 @@
         <td>
           <label>{{form.param}} :-</label>   
         </td>
-        <td *ngIf='(form.type == "text" || form.type == null) && (form.param_info[0].option == null)'>
-          <input type="text" [(ngModel)]='form.value'><span *ngIf='form.param_info[0].option != null' style="padding: 10px;">Options :-</span><span style="padding: 10px;" *ngFor='let options of form.param_info'>{{options['option']}}</span>
+        <td *ngIf='(form.type == "text" || form.type == null) && (form.param_info == null || form.param_info[0].option == null)'>
+          <input type="text" [(ngModel)]='form.value'>
         </td>
         <td *ngIf='form.type == "number"'>
-          <input type="number" [(ngModel)]='form.value'><span *ngIf='form.param_info[0].option != null' style="padding: 10px;">Options :-</span><span style="padding: 10px;" *ngFor='let options of form.param_info'>{{options['option']}}</span>
+          <input type="number" [(ngModel)]='form.value'>
         </td>
-        <td *ngIf='form.param_info[0].option != null'>
+        <td *ngIf='form.param_info != null && form.param_info[0].option != null'>
           <select class="form-control" name="department" [(ngModel)]="form.value" style="width: 30%; margin-bottom: 10px;"> 
             <option [value]=form.value>Select</option>
             <option *ngFor='let options of form.param_info' value="{{options.option}}">{{options.option}}</option>
@@ -167,13 +168,13 @@
         <td>
           <label>{{form.param}} :-</label>   
         </td>
-        <td *ngIf='(form.type == "text" || form.type == null) && (form.option[0].option == null)'>
+        <td *ngIf='(form.type == "text" || form.type == null) && (form.option == null || form.option[0].option == null)'>
           <input type="text" [(ngModel)]='form.value'>
         </td>
-        <td *ngIf='form.type == "number" && form.option[0].option == null'>
+        <td *ngIf='form.type == "number" && (form.option == null || form.option[0].option == null)'>
           <input type="number" [(ngModel)]='form.value'>
         </td>
-        <td *ngIf='form.option[0].option != null'>
+        <td *ngIf='form.option != null && form.option[0].option != null'>
           <select class="form-control" name="department" [(ngModel)]="form.value" style="width: 30%; margin-bottom: 10px;"> 
             <option value=''>Select</option>
             <option *ngFor='let options of form.option' value="{{options.option}}">{{options.option}}</option>

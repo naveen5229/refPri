@@ -8,6 +8,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
     children: [
       {
+        title: 'User Role',
+        icon: 'people-outline',
+        link: '/pages/user-role',
+        home: true,
+      },
+      {
+        title: 'Add Pages',
+        icon: 'people-outline',
+        link: '/pages/add-pages',
+        home: true,
+      },
+      {
         title: 'Admin-Tool',
         icon: 'people-outline',
         link: '/pages/admin-tool',

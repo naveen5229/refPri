@@ -42,6 +42,8 @@ import { HolidaysComponent } from './holidays/holidays.component';
 import { OtManagementComponent } from './ot-management/ot-management.component';
 import { TravelDistanceComponent } from './travel-distance/travel-distance.component';
 import { SalaryComponent } from './salary/salary.component';
+import { UserRoleComponent } from './user-role/user-role.component';
+import { AddPagesComponent } from './add-pages/add-pages.component';
 
 @NgModule({
   imports: [
@@ -89,7 +91,9 @@ import { SalaryComponent } from './salary/salary.component';
     HolidaysComponent,
     OtManagementComponent,
     TravelDistanceComponent,
-    SalaryComponent
+    SalaryComponent,
+    UserRoleComponent,
+    AddPagesComponent
   ],
 })
 export class PagesModule {

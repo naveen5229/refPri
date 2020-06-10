@@ -1,0 +1,78 @@
+<nb-card style="border:0px;">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-9">
+        <h5>User Role</h5>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body style="min-height: 580px;">
+    <div class="row">
+      <div class="col-4" >
+        <label> Select  Name</label>
+        <auto-suggestion (onSelected)="getAdminPagesDetails($event.id)" [data]="adminList" seperator="-"
+          display="name" placeholder="Admin" [preSelected]="null" inputId="adminName"></auto-suggestion>
+      </div>
+      <div class="col-3 mt-4" *ngIf="isShow" >
+        <button class="btn btn-secondary" (click)="saveUserRole()">Save</button>
+      </div>
+    </div>
+
+      <!-- <div class="module-container" *ngIf="isShow" >
+         <span
+          class="module-name">Pages</span>
+      </div> -->
+
+
+      <div class="container" >
+
+      <div *ngFor="let module of formattedData; let i = index;">
+        <div class="module-container">
+          <input type="checkbox" [ngClass]="module.isSelected? 'module-box' : 'module-box'" [name]="'section-' + i"
+            [(ngModel)]="module.isSelected" (change)="checkOrUnCheckAll(module, 'module')"> <span
+            class="module-name">{{module.name | uppercase }}</span>
+        </div>
+        <div class="group-container" *ngFor="let group of module.groups; let j = index">
+          <div class="group-head"><input type="checkbox" [ngClass]="group.isSelected? 'group-box' : 'group-box'"
+              [name]="'group-' + j" [(ngModel)]="group.isSelected" (change)="checkOrUnCheckAll(group, 'group')">
+            {{group.name}}
+          </div>
+          <div class="col-2 page-container" *ngFor="let page of group.pages; let k = index">
+            <input type="checkbox" class=" page-box" [name]="'page-' + k" [(ngModel)]="page.isSelected"
+              (change)="checkOrUnCheckAll(page, 'page')">
+            {{page.title}}
+
+
+
+
+            <!-- <div class="row permission-type" [hidden]="page.isSelected">
+              <div class="col-4" style="padding:0px!important;" [hidden]="page.has_add">
+                <input type="checkbox" class="page-box-type" name="add" [(ngModel)]="page.isadd"
+                  (click)="changePagePermission(page,'isadd',$event)">
+                <label>A</label>
+              </div>
+              <div class="col-4" style="padding:0px!important;" [hidden]="page.has_edit">
+                <input type="checkbox" class="page-box-type" name="edit" [(ngModel)]="page.isedit"
+                  (click)="changePagePermission(page,'isedit',$event)">
+                <label>E</label>
+              </div>
+              <div class="col-4" style="padding:0px!important;" [hidden]="page.has_delete">
+                <input type="checkbox" class="page-box-type" name="delete" [(ngModel)]="page.isdeleted"
+                  (click)="changePagePermission(page,'isdeleted',$event)">
+                <label>D</label>
+              </div>
+            </div> -->
+
+
+
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </nb-card-body>
+</nb-card>
+
