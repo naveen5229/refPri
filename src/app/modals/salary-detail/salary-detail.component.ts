@@ -71,8 +71,12 @@ export class SalaryDetailComponent implements OnInit {
       this.common.loading--;
       console.log("data", res['data'])
       this.reserSmartTableData();
-      this.salaryDetailList = res['data'] || [];
-      this.setTableSalaryDetail();
+      if (res["code"] == 1) {
+        this.salaryDetailList = res['data'] || [];
+        this.setTableSalaryDetail();
+      } else {
+        this.common.showError(res['msg']);
+      }
 
     }, err => {
       this.common.loading--;
@@ -207,8 +211,12 @@ export class SalaryDetailComponent implements OnInit {
           this.api.post('Admin/deleteSalaryDetailById', params)
             .subscribe(res => {
               this.common.loading--;
-              this.common.showToast(res['msg']);
-              this.getSalaryDetails();
+              if (res["code"] == 1) {
+                this.common.showToast(res['msg']);
+                this.getSalaryDetails();
+              } else {
+                this.common.showError(res['msg']);
+              }
             }, err => {
               this.common.loading--;
               console.log('Error: ', err);

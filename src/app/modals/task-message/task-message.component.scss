@@ -177,3 +177,11 @@
     border-top-right-radius: 0;
     color: #fff;
 }
+
+.action-icon {
+    width: 150px;
+    .fa {
+        cursor: pointer;
+        margin-right: 5px;
+    }
+}
