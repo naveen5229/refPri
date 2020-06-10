@@ -24,7 +24,7 @@ export class AddPagesComponent implements OnInit {
       hideHeader: true
     }
   };
-
+  type = 'Dashboard';
   pageName = '';
   url = '';
   constructor( public api: ApiService,
@@ -32,7 +32,7 @@ export class AddPagesComponent implements OnInit {
     public user: UserService) { 
       this.common.refresh = this.refresh.bind(this);
       this.getPageData();
-      // this.getGroupList();
+      this.getGroupList();
     }
 
   ngOnInit() {
@@ -40,7 +40,7 @@ export class AddPagesComponent implements OnInit {
 
   refresh(){
       this.getPageData();
-      // this.getGroupList();
+      this.getGroupList();
   }
   getPageData() {
     console.log(this.user);
@@ -62,7 +62,7 @@ export class AddPagesComponent implements OnInit {
 
   getGroupList() {
     this.common.loading++;
-    this.api.get('UserRoles/getGroups.json')
+    this.api.get('UserRole/getPageGroup')
       .subscribe(res => {
         this.common.loading--;
         this.groupdata = res['data'];
@@ -153,9 +153,10 @@ if(request.status!='Active'){
   editData(request) {
     console.log(request);
     this.rowId = request._id;
-    this.pageName = request.name;
-    this.url = request.url;
+    this.pageName = request.title;
+    this.url = request.route;
     this.groupName = request.group_name;
+    this.selectedGroup = request._parent_id;
   }
 
   formatTitle(strval) {
@@ -171,31 +172,39 @@ if(request.status!='Active'){
 
   saveUserRole() {
     const params = {
-      name: this.pageName,
-      url: this.url,
-      groupId: this.selectedGroup,
-      id: this.rowId
+      title: this.pageName,
+      route: this.url,
+      groupName: this.groupName,
+      tableId: this.rowId,
+      hasAdd: false,
+      hasDelete: false,
+      hasEdit: false,
+      module: 'Pages',
+      parentId: this.selectedGroup,
+      type: this.type
+
     };
     console.log("Param:", params);
-    // this.common.loading++;
-    // this.api.post('UserRoles/savePages.json', params)
-    //   .subscribe(res => {
-    //     this.common.loading--;
-    //     console.log('Res: ', res);
-    //     if (res['success']) {
-    //       this.resetUserRole();
-    //       this.common.showToast(res['msg']);
-    //       this.getPageData();
-    //     }
-    //     else {
-    //       this.common.showError(res['msg']);
-    //     }
+
+    this.common.loading++;
+    this.api.post('UserRole/savePage.json', params)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log('Res: ', res);
+        if (res['success']) {
+          this.resetUserRole();
+          this.common.showToast(res['msg']);
+          this.getPageData();
+        }
+        else {
+          this.common.showError(res['msg']);
+        }
         
 
-    //   }, err => {
-    //     this.common.loading--;
-    //     console.log('Error: ', err);
-    //   })
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      })
   }
 
   resetUserRole() {

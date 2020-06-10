@@ -26,7 +26,7 @@ export class UserRoleComponent implements OnInit {
 
   refresh() {
     this.isShow =false;
-    this.getAllAdmin();
+    // this.getAllAdmin();
     document.getElementById('adminName')['value'] = '';
     this.formattedData = [];
   }
@@ -54,7 +54,7 @@ export class UserRoleComponent implements OnInit {
     // this.selectedUser.details = user;
     const params = 'adminId=' + adminId;
     this.common.loading++;
-    this.api.get('UserRole/getUserPages.json?' + params)
+    this.api.get('UserRole/getUserPages?' + params)
       .subscribe(res => {
         this.isShow = true;
         this.common.loading--;
@@ -114,6 +114,7 @@ export class UserRoleComponent implements OnInit {
         groups.pages = _.sortBy(groups.pages, ['title'], ['asc']);
         return groups;
       });
+      this.formattedData[0].name = 'Pages'
       console.log(this.formattedData);
       return module;
     });
@@ -145,16 +146,17 @@ export class UserRoleComponent implements OnInit {
 
 
   findSelectedPages() {
+    console.log(this.formattedData);
     let data = [];
     console.log('formattedData: ', this.formattedData);
     this.formattedData.map(module => {
       module.groups.map(group => {
         group.pages.map(page => {
           if (page.isSelected) {
-            data.push({ id: page.id, status: true });
+            data.push({ id: page._page_id, status: true });
           }
           else {
-            data.push({ id: page.id, status: false});
+            data.push({ id: page._page_id, status: false});
           }
         })
       })
@@ -164,8 +166,9 @@ export class UserRoleComponent implements OnInit {
   }
 
   saveUserRole() {
+    let jsonData = this.findSelectedPages();
     const params = {
-      pages: this.findSelectedPages(),
+      pages: JSON.stringify(jsonData),
       adminId: this.adminId
     };
     console.log("Param:", params);

@@ -1,6 +1,6 @@
 import { NbMenuItem } from '@nebular/theme';
 
-export const MENU_ITEMS: NbMenuItem[] = [
+export const MENU_ITEMS = JSON.stringify([
   {
     title: "Admin",
     icon: 'people-outline',
@@ -277,4 +277,4 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ]
   }
 
-];
+]);
