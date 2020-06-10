@@ -5,6 +5,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { ReminderComponent } from '../reminder/reminder.component';
+import { TaskNewComponent } from '../task-new/task-new.component';
 
 @Component({
   selector: 'ngx-task-message',
@@ -284,7 +285,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   updateTicketStatus(status, remark = null) {
-    if (this.ticketId && this.statusId == 0) {
+    if (this.ticketId) {
       let params = {
         ticketId: this.ticketId,
         statusId: status,
@@ -296,6 +297,9 @@ export class TaskMessageComponent implements OnInit {
         // this.common.loading--;
         if (res['code'] > 0) {
           // this.common.showToast(res['msg']);
+          if (!(this.statusId == 0)) {
+            this.getMessageList();
+          }
           this.statusId = status;
         } else {
           this.common.showError(res['data']);
@@ -327,7 +331,7 @@ export class TaskMessageComponent implements OnInit {
       activeModal.result.then(data => {
         console.log("Confirm response:", data);
         if (data.response) {
-          // this.updateTicketStatus(status, data.remark);
+          this.updateTicketStatus(status, data.remark);
         }
       });
 
@@ -365,6 +369,22 @@ export class TaskMessageComponent implements OnInit {
           this.common.loading--;
           console.log('Error: ', err);
         });
+    } else {
+      this.common.showError("Invalid User");
+    }
+  }
+
+  editTaskAssignDate() {
+    console.log("editTaskAssignDate:", this.ticketData);
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+
+      this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
+      const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.getMessageList();
+        }
+      });
     } else {
       this.common.showError("Invalid User");
     }

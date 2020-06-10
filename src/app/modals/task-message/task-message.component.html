@@ -6,13 +6,15 @@
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
     {{subTitle}}
-    <div *ngIf="common.params.fromPage != 'campaign'">
-        <span *ngIf="statusId==2"><i class="fa fa-pause-circle" (click)="changeTicketStatusWithConfirm(3)"></i></span>
-        <span *ngIf="statusId==3"><i class="fa fa-play-circle" (click)="changeTicketStatusWithConfirm(2)"></i></span>
+    <div *ngIf="common.params.fromPage != 'campaign'" class="action-icon">
+        <span *ngIf="statusId==2"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
+        <span *ngIf="statusId==3"><i class="fa fa-play-circle" title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
 
-        <span *ngIf="(ticketData && ticketData._isremind == 1 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell isRemind" (click)="checkReminderSeen()"></i></span>
-        <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell reminderAdded" (click)="showReminderPopup()"></i></span>
-        <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" (click)="showReminderPopup()"></i></span>
+        <span *ngIf="(ticketData && ticketData._isremind == 1 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell isRemind" title="Check Reminder" (click)="checkReminderSeen()"></i></span>
+        <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell reminderAdded" title="View/Edit Reminder" (click)="showReminderPopup()"></i></span>
+        <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" title="Add Reminder" (click)="showReminderPopup()"></i></span>
+
+        <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5))"><i class="fa fa-calendar-alt text-dark" title="Change Expected Date" (click)="editTaskAssignDate()"></i></span>
     </div>
 </div>
 <div class="modal-body">
