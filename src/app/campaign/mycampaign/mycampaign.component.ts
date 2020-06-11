@@ -447,7 +447,7 @@ export class MycampaignComponent implements OnInit {
     if ((campaign._status == 5 || campaign._status == -1)) {
     } else {
       if (campaign._isremind == 1) {
-        icons.push({ class: "fa fa-bell isRemind", action: (type == -8) ? '' : this.checkReminderSeen.bind(this, campaign, type), txt: '', title: null });
+        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, campaign, type), txt: '', title: null });
       } else if (campaign._isremind == 2 && type != 5) {
         icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
       } else {

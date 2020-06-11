@@ -846,6 +846,7 @@ export class TaskScheduledComponent implements OnInit {
   ticketMessage(ticket, type) {
     console.log("type:", type);
     let ticketEditData = {
+      ticketData: ticket,
       ticketId: ticket._tktid,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,
@@ -987,7 +988,11 @@ export class TaskScheduledComponent implements OnInit {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
-        statusId: 0
+        statusId: 0,
+        statusOld: ticket._status,
+        remark: null,
+        taskId: ticket._refid,
+        ticketType: ticket._tktype
       }
       this.common.params = {
         title: 'Reactive Ticket',

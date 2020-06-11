@@ -161,6 +161,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   deleteShiftLog(shift) {
     console.log("dbl click event");
+    this.isMarkUnpaidLeave = false;
     if (shift.date && shift._userid > 0) {
       let dateTemp = new Date(this.startTime);
       dateTemp.setDate(shift.date);
@@ -203,6 +204,58 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     } else {
       this.common.showError("Date or User is missing");
     }
+  }
+
+  isMarkUnpaidLeave = false;
+  markUnpaidLeave(shift) {
+    console.log("single click event");
+    this.isMarkUnpaidLeave = true;
+    setTimeout(() => {
+      if (this.isMarkUnpaidLeave) {
+        console.log("isMarkUnpaidLeave:", this.isMarkUnpaidLeave);
+        this.isMarkUnpaidLeave = false;
+        if (shift.date && shift._userid > 0) {
+          let dateTemp = new Date(this.startTime);
+          dateTemp.setDate(shift.date);
+          let dateTemp2 = this.common.dateFormatter(dateTemp, 'YYYYMMDD', false);
+          let params = {
+            date: dateTemp2,
+            empId: shift._userid
+          }
+          this.common.params = {
+            title: 'Mark Unpaid Leave',
+            description: `<b>` + `User: ` + shift.name + `<br>Date: ` + dateTemp2 + `<br><br>` + 'Are you sure you want to mark unpaid leave ??' + `</b>`,
+          }
+
+          const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+          activeModal.result.then(data => {
+            if (data.response) {
+              this.common.loading++;
+              this.api.post('Admin/markUnpaidLeaveByHr', params)
+                .subscribe(res => {
+                  this.common.loading--;
+                  if (res['code'] > 0) {
+                    if (res['data'][0].y_id > 0) {
+                      this.common.showToast(res['data'][0].y_msg);
+                      this.getAttendanceMonthySummary(null);
+                    } else {
+                      this.common.showError(res['msg']);
+                    }
+                  } else {
+                    this.common.showError(res['msg']);
+                  }
+
+                }, err => {
+                  this.common.loading--;
+                  console.log('Error: ', err);
+                });
+            }
+          });
+        } else {
+          this.common.showError("Date or User is missing");
+        }
+      }
+    }, 500);
   }
 
   // start: report final
