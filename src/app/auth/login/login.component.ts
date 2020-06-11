@@ -119,14 +119,39 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
+          this.getUserPagesList();
           // this.router.navigate(['/pages/dashboard']);
-          this.router.navigate(['/pages/task']);
+          // this.router.navigate(['/pages/task']);
         }
       },
         err => {
           this.common.loading--;
           this.common.showError();
         });
+  }
+
+
+  getUserPagesList() {
+    this.user._pages = null;
+    let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;
+    const params = {
+      userId: this.user._details.id,
+      userType: userTypeId
+    };
+    this.common.loading++;
+    this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
+      .subscribe(res => {
+        console.log(res);
+        this.common.loading--;
+        this.user._pages = res['data'].filter(page => { return page._userid; });
+        console.log(this.user._pages);
+        localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
+        this.user.filterMenu("pages", "pages");
+        this.router.navigate(['/pages/task']);
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      })
   }
 
   backToLogin() {

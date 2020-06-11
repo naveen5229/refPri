@@ -43,6 +43,7 @@ import { SalaryComponent } from './salary/salary.component';
 import { MycampaignComponent } from '../campaign/mycampaign/mycampaign.component';
 import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
+import { RouteGuard } from '../guards/route.guard';
 
 const routes: Routes = [{
   path: '',
@@ -55,67 +56,67 @@ const routes: Routes = [{
     {
       path: 'user',
       component: UserComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'project',
       component: ProjectComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'add-stacks',
       component: AddStacksComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'modules',
       component: ModulesComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'segment',
       component: SegmentComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'task-assign',
       component: TaskAssignComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'work-logs',
       component: WorkLogsComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'distance-calculate',
       component: DistanceCalculateComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'employee-period-report',
       component: EmployeePeriodReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'employee-monthly-report',
       component: EmployeeMonthlyReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'segment-report',
       component: SegmentReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'component-report',
       component: ComponentReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'segment-stack-report',
       component: SegmentStackReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'module-report',
@@ -125,111 +126,137 @@ const routes: Routes = [{
     {
       path: 'employee-daywise-report',
       component: EmployeeDaywiseReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
 
     {
       path: 'add-campaign',
       component: AddCampaignComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
 
     {
       path: 'campaign-master-page',
-      component: CampaignMasterPageComponent
+      component: CampaignMasterPageComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'campaign-target',
-      component: CampaignTargetComponent
+      component: CampaignTargetComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'my-campaign',
-      component: MycampaignComponent
+      component: MycampaignComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'admin-tool',
-      component: AdminToolComponent
+      component: AdminToolComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'ticket-call-mapping',
-      component: TicketCallMappingComponent
+      component: TicketCallMappingComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'daily-report',
-      component: DailyReportComponent
+      component: DailyReportComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'daily-partner-report',
-      component: DailyPartnerReportComponent
+      component: DailyPartnerReportComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'ww-tools',
-      component: WwToolsComponent
+      component: WwToolsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'task',
-      component: TaskComponent
+      component: TaskComponent,
+      canActivate: [AuthGuard]
+
     },
     {
       path: 'task-scheduled',
-      component: TaskScheduledComponent
+      component: TaskScheduledComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'future-ref',
-      component: FutureRefComponent
+      component: FutureRefComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'call-kpi',
-      component: CallKpiComponent
+      component: CallKpiComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
     },
     {
       path: 'field-support-request',
       component: FieldIssueRequestComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'installer',
       component: InstallerComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'attendance',
       component: AttendanceComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'shift-logs',
       component: ShiftLogsComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'activity-logs',
       component: ActivityLogsComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'activity-logs-summary',
       component: ActivityLogSummaryComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'holiday-calendar',
       component: HolidaysComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'ot-management',
       component: OtManagementComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'travel-distance',
       component: TravelDistanceComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'salary',
       component: SalaryComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'user-role',
