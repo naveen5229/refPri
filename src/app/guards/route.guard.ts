@@ -28,8 +28,7 @@ export class RouteGuard implements CanActivate {
     // console.log(this.user._pages);
     let status = false;
     this.user._pages.map(page => {
-      // console.log(page);
-      // console.log(status);
+
       if (page.route == route && page.isSelected) {
         status = true;
         this.user.permission = {

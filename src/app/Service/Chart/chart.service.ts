@@ -33,10 +33,16 @@ export class ChartService {
           responsive: true,
           display: true,
           legend: {
-            display: chartData.showLegend
+            display: chartData.showLegend,
+            labels: [1,2,3,4,5]
           },
-
+          plugins: {
+            labels: {
+              // render 'label', 'value', 'percentage', 'image' or custom function, default is 'percentage'
+              render: 'label',
         }
+      }
+    }
       }));
     })
     return charts;
