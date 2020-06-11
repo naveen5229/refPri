@@ -290,7 +290,9 @@ export class TaskMessageComponent implements OnInit {
         ticketId: this.ticketId,
         statusId: status,
         statusOld: this.statusId,
-        remark: remark
+        remark: remark,
+        taskId: this.ticketData._refid,
+        ticketType: this.ticketData._tktype
       }
       // this.common.loading++;
       this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {

@@ -812,8 +812,8 @@ export class TaskComponent implements OnInit {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByProjectUser.bind(this, ticket, type), txt: '', title: "Mark Ack as Project Task" });
       }
       else if (ticket._status == 5) {
-        icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
-        if ((ticket._tktype == 101 || ticket._tktype == 102)) {
+        if (ticket._aduserid == this.userService._details.id) {
+          icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
           icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByAssigner.bind(this, ticket, type), txt: '', title: "Mark Ack as Completed Task" });
         }
       }
@@ -830,7 +830,7 @@ export class TaskComponent implements OnInit {
     if ((ticket._status == 5 || ticket._status == -1)) {
     } else {
       if (ticket._isremind == 1) {
-        icons.push({ class: "fa fa-bell isRemind", action: (type == -8) ? '' : this.checkReminderSeen.bind(this, ticket, type), txt: '', title: null });
+        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: '', title: null });
       } else if (ticket._isremind == 2 && type != -8) {
         icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: '', title: null });
       } else {
@@ -943,8 +943,11 @@ export class TaskComponent implements OnInit {
         ticketId: ticket._tktid,
         statusId: status,
         statusOld: ticket._status,
-        remark: remark
+        remark: remark,
+        taskId: ticket._refid,
+        ticketType: ticket._tktype
       }
+      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
         this.common.loading--;
@@ -1257,7 +1260,8 @@ export class TaskComponent implements OnInit {
     if (ticket._tktid && ticket._refid) {
       let params = {
         ticketId: ticket._tktid,
-        taskId: ticket._refid
+        taskId: ticket._refid,
+        ticketType: ticket._tktype
       }
       console.log("ackTaskByAssigner:", params);
       this.common.loading++;
