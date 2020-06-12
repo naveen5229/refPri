@@ -88,6 +88,12 @@
                                 <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
                             </div>
                         </div>
+                        <!-- <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>CC users:</label>
+                                <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select CC Users" [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+                            </div>
+                        </div> -->
                     </div>
                     <div class="row">
                         <div class="col-12 text-right">

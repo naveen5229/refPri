@@ -43,7 +43,8 @@ export class TaskScheduledComponent implements OnInit {
     department: {
       id: '',
       name: ''
-    }
+    },
+    ccUsers: []
   };
   scheduledTaskList = [];
   tableSchedule = {
@@ -204,6 +205,7 @@ export class TaskScheduledComponent implements OnInit {
     //   this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
     //   this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
 
+    console.log("scheduledTask:", this.scheduledTask); return false;
     if (this.scheduledTask.description == '') {
       return this.common.showError("Description is missing")
     }
@@ -240,8 +242,10 @@ export class TaskScheduledComponent implements OnInit {
         days: this.scheduledTask.days,
         hours: this.scheduledTask.hours,
         isActive: this.scheduledTask.isActive,
-        departmentId: this.scheduledTask.department.id
+        departmentId: this.scheduledTask.department.id,
+        ccUsers: this.scheduledTask.ccUsers
       }
+      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('AdminTask/createScheduleTask', params).subscribe(res => {
         console.log(res);
@@ -292,7 +296,8 @@ export class TaskScheduledComponent implements OnInit {
       department: {
         id: '',
         name: ''
-      }
+      },
+      ccUsers: []
     };
   }
 
@@ -928,7 +933,8 @@ export class TaskScheduledComponent implements OnInit {
       department: {
         id: (task._department_id) ? task._department_id : null,
         name: (task._department_id) ? task.department : null
-      }
+      },
+      ccUsers: []
 
     };
 
@@ -1021,6 +1027,16 @@ export class TaskScheduledComponent implements OnInit {
       });
     } else {
       this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  changeCCUsers(event) {
+    console.log("changeCCUsers:", event);
+    if (event && event.length) {
+      this.scheduledTask.ccUsers = event.map(user => { return { user_id: user.id } });
+      console.log("ccUsers", this.scheduledTask.ccUsers);
+    } else {
+      this.scheduledTask.ccUsers = [];
     }
   }
 
