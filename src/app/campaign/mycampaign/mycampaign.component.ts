@@ -10,6 +10,8 @@ import { TargetCampaignComponent } from '../../modals/campaign-modals/target-cam
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
+import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
+import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 
 @Component({
   selector: 'ngx-campaign',
@@ -425,9 +427,10 @@ export class MycampaignComponent implements OnInit {
         icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
       }
     } else if (type == 2) {
-      icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: null });
-      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: null });
+      icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: "Edit Lead" });
+      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: null });
+      icons.push({ class: 'fas fa-info-circle ml-2 s-4', action: this.infoMatrix.bind(this, campaign, type), txt: '', title: "Add Primary Info" });
 
     } else if (type == 3 && !campaign._cc_status) {
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, campaign, type), txt: '', title: "Mark Ack as CC Lead" });
@@ -560,7 +563,7 @@ export class MycampaignComponent implements OnInit {
     };
     console.log(campaign);
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: null, actionDataList: null, nextactionDataList: null };
-    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignByType(type);
     });
@@ -584,57 +587,6 @@ export class MycampaignComponent implements OnInit {
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
   }
-
-  // actionIcons(campaign, type) {
-  //   let icons = [
-  //     { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
-  //   ];
-
-  //   if (campaign._unreadcount > 0) {
-  //     icons = [
-  //       { class: "fas fa-comments new-comment", action: this.campaignMessage.bind(this, campaign, type), txt: campaign._unreadcount, title: null },
-  //     ];
-  //   } else if (campaign._unreadcount == -1) {
-  //     icons = [
-  //       { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
-  //     ];
-  //   }
-
-  //   if (type == 2) {
-  //     icons.push({ class: "fas fa-trash-alt", action: this.deletecampaign.bind(this, campaign, type), txt: '', title: "Delete Task" });
-  //   } else if (type == 1) {
-  //     if ((campaign._status == 5 || campaign._status == -1)) {
-  //       icons.push({ class: "fa fa-retweet", action: this.reactivecampaign.bind(this, campaign, type), txt: '', title: "Re-Active" });
-  //     } else if (campaign._status == 2) {
-  //       icons.push({ class: "fa fa-thumbs-up text-success", action: this.changecampaignStatusWithConfirm.bind(this, campaign, type, 5), txt: '', title: "Mark completed" });
-  //     } else if (campaign._status == 0) {
-  //       icons.push({ class: "fa fa-check-square text-warning", action: this.updatecampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
-  //       icons.push({ class: "fa fa-times text-danger", action: this.updatecampaignStatus.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
-  //     }
-  //   } else if (type == 4) {
-  //     if (campaign._status == 0 && campaign._assignee_user_id == this.userService._details.id) {
-  //       icons.push({ class: "fa fa-check-square text-warning", action: this.updatecampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
-  //       icons.push({ class: "fa fa-times text-danger", action: this.updatecampaignStatus.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
-  //     }
-  //     else if (campaign._status == 5 && (campaign._tktype == 101 || campaign._tktype == 102)) {
-  //       icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByAssigner.bind(this, campaign, type), txt: '', title: "Mark Ack as Completed Task" });
-  //     }
-  //   }
-  //   if ((campaign._status == 5 || campaign._status == -1)) {
-  //   } else {
-  //     if (campaign._isremind == 1) {
-  //       icons.push({ class: "fa fa-bell isRemind", action: (type == -8) ? '' : this.checkReminderSeen.bind(this, campaign, type), txt: '', title: null });
-  //     } else if (campaign._isremind == 2 && type != -8) {
-  //       icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
-  //     } else {
-  //       if (type != -8) {
-  //         icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
-  //       }
-  //     }
-  //   }
-
-  //   return icons;
-  // }
 
   updateCampaignStatus(campaign, type, status) {
     if (campaign._camptargetid) {
@@ -688,7 +640,8 @@ export class MycampaignComponent implements OnInit {
         statusId: campaign._status,
         lastSeenId: campaign._lastreadid,
         // taskId: (campaign._tktype == 101 || campaign._tktype == 102) ? campaign._refid : null,
-        tabType: type
+        tabType: type,
+        campaignData: campaign
       }
       this.common.params = { campaignEditData, title: "campaign Comment", button: "Save", subTitle: campaign.Company, fromPage: 'campaign' };
       const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
@@ -788,5 +741,23 @@ export class MycampaignComponent implements OnInit {
   //     this.common.showError("Task ID Not Available");
   //   }
   // }
+
+  uploadDataByCsv() {
+    this.common.params = { title: "CSV", button: "Upload" };
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.activeTab = 'leadsByMe';
+        this.getCampaignByType(2);
+      }
+    });
+  }
+
+  infoMatrix(campaign, type) {
+    console.log(campaign);
+    this.common.params = { 'campaignId': campaign._campid, campaignTargetId: campaign._camptargetid, 'enableForm': true, 'title': 'Primary Info' };
+    const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+
+  }
 
 }

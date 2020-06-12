@@ -6,6 +6,7 @@ import { UserService } from '../../Service/user/user.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { ReminderComponent } from '../reminder/reminder.component';
 import { TaskNewComponent } from '../task-new/task-new.component';
+import { CampaignTargetActionComponent } from '../campaign-modals/campaign-target-action/campaign-target-action.component';
 
 @Component({
   selector: 'ngx-task-message',
@@ -34,18 +35,21 @@ export class TaskMessageComponent implements OnInit {
   msgListOfMine = [];
   tabType = null;
   ticketData;
+  fromPage;
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
     if (this.common.params != null) {
       this.title = this.common.params.title;
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
-      if (this.common.params.fromPage == 'campaign') {
+      this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
+      if (this.fromPage == 'campaign') {
         this.ticketId = this.common.params.campaignEditData.ticketId;
         this.taskId = this.common.params.campaignEditData.camptargetid;
         this.statusId = this.common.params.campaignEditData.statusId;
         this.tabType = (this.common.params.campaignEditData.tabType) ? this.common.params.campaignEditData.tabType : null;
         this.lastSeenId = this.common.params.campaignEditData.lastSeenId;
+        this.ticketData = this.common.params.campaignEditData.campaignData;
         this.getLeadMessage();
         this.getAllUserByLead();
       } else {
@@ -574,6 +578,29 @@ export class TaskMessageComponent implements OnInit {
   showLeadUserLogsModal() {
     console.log('userLogs:', this.userListByTask['userLogs']);
     document.getElementById("userLogsModal").style.display = "block";
+  }
+
+  addContactAction() {
+    let campaign = this.ticketData;
+    let targetActionData = {
+      rowId: campaign._camptargetid,
+      campaignId: campaign._campid,
+      campaignName: campaign._campaignname,
+      potential: campaign.Potential,
+      name: campaign.Company,
+      mobile: campaign._mobileno,
+      locationId: campaign._locationid,
+      locationName: campaign.Location,
+      address: campaign.Address,
+      camptargetid: campaign._camptargetid
+
+    };
+    console.log(campaign);
+    this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: null, actionDataList: null, nextactionDataList: null };
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      // this.getCampaignTargetData();
+    });
   }
   // end: campaign msg
 
