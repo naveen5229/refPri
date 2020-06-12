@@ -4,7 +4,6 @@ export const MENU_ITEMS = JSON.stringify([
   {
     title: "Admin",
     icon: 'people-outline',
-    link: '/pages/admin-tool',
     home: true,
     children: [
       {
@@ -126,7 +125,6 @@ export const MENU_ITEMS = JSON.stringify([
   {
     title: "IT",
     icon: 'monitor-outline',
-    link: '/pages/dashboard',
     home: true,
     children: [
       {
@@ -255,6 +253,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/my-campaign',
         home: true,
       },
+      {
+        title: 'Campaign Summary',
+        icon: 'award-outline',
+        link: '/pages/campaign-summary',
+        home: true,
+      }
 
     ]
   },

@@ -22,7 +22,6 @@ export class UserService {
 
   constructor() {
     this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
-    console.log(this._token);
     this._details = JSON.parse(localStorage.getItem('ITRM_USER_DETAILS'));  
     
     if (localStorage.getItem("ITRM_USER_PAGES")) {
@@ -38,7 +37,6 @@ export class UserService {
   };
 
   filterMenu(type?, collection?) {
-    console.log(type, collection);
     this._menu[type] = JSON.parse(COLLECTION[collection])
       .map((menuItem) => {
         if (menuItem.children) {

@@ -44,6 +44,7 @@ import { MycampaignComponent } from '../campaign/mycampaign/mycampaign.component
 import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
 import { RouteGuard } from '../guards/route.guard';
+import { CampaignSummaryComponent } from '../campaign/campaign-summary/campaign-summary.component';
 
 const routes: Routes = [{
   path: '',
@@ -261,12 +262,17 @@ const routes: Routes = [{
     {
       path: 'user-role',
       component: UserRoleComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'add-pages',
       component: AddPagesComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'campaign-summary',
+      component: CampaignSummaryComponent,
+      canActivate: [AuthGuard, RouteGuard]
     }
 
   ],

@@ -10,6 +10,7 @@ import { DirectiveModule } from '../directives/directives.module';
 import { CampaignMasterPageComponent } from './campaign-master-page/campaign-master-page.component';
 import { CampaignTargetComponent } from './campaign-target/campaign-target.component';
 import { MycampaignComponent } from './mycampaign/mycampaign.component';
+import { CampaignSummaryComponent } from './campaign-summary/campaign-summary.component';
 
 
 const PAGES_COMPONENTS = [
@@ -20,7 +21,7 @@ const PAGES_COMPONENTS = [
   MycampaignComponent
 ];
 @NgModule({
-  declarations: [...PAGES_COMPONENTS],
+  declarations: [...PAGES_COMPONENTS, CampaignSummaryComponent],
   imports: [
     CommonModule,
     CampaignRoutingModule,
