@@ -1,110 +1,18 @@
 <nb-card>
     <nb-card-header>
         <div class="row">
-            <div class="col-10">
+            <div class="col-8">
                 <h5>Scheduled Task</h5>
+            </div>
+            <div class="col-4 text-right">
+                <button class="btn btn-primary btn-sm" title="Add Shift Log" (click)="openSchedukedTaskMasterModal()">
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
     </nb-card-header>
     <nb-card>
         <nb-card-body>
-            <div>
-                <div class="container">
-                    <div class="row ">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Department<span class="text-danger">*</span></label>
-                                <auto-suggestion (onSelected)="scheduledTask.department = $event" [data]="departmentList" display="name" seperator="-" placeholder="Select Department" autocomplete="off" name="departmentId" inputId="departmentId" [preSelected]="scheduledTask.department.id ? {name: scheduledTask.department.name}:{name:''}">
-                                </auto-suggestion>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Description<span class="text-danger">*</span></label>
-                                <!-- <input style="width: 100%;" type="description" placeholder="Description" class="form-control" [(ngModel)]="scheduledTask.description"> -->
-                                <textarea row="2" cols="15" placeholder="Enter Description" name="description" class="form-control" [(ngModel)]="scheduledTask.description"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Primary User<span class="text-danger">*</span></label>
-                                <auto-suggestion (onSelected)="scheduledTask.primaryUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Primary User" autocomplete="off" name="primaryUser" inputId="primaryUserId" [preSelected]="scheduledTask.primaryUser.id ? {name: scheduledTask.primaryUser.name}:{name:''}">
-                                </auto-suggestion>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Escalation User<span class="text-danger">*</span></label>
-                                <auto-suggestion (onSelected)="scheduledTask.escalationUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Escalation User" autocomplete="off" name="escalationUser" inputId="scalationUserId" [preSelected]="scheduledTask.escalationUser.id ? {name: scheduledTask.escalationUser.name}:{name:''}">
-                                </auto-suggestion>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Reporting User<span class="text-danger">*</span></label>
-                                <auto-suggestion (onSelected)="scheduledTask.reportingUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Reporting User" autocomplete="off" name="reportingUser" inputId="reportingUserId" [preSelected]="scheduledTask.reportingUser.id ? {name: scheduledTask.reportingUser.name}:{name:''}">
-                                </auto-suggestion>
-                            </div>
-                        </div>
-                        <!-- <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Logic Type<span class="text-danger">*</span></label>
-                                <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (change)="onChangeLogicType()">
-                                    <option value=1>Daily</option>
-                                    <option value=2>Weekly</option>
-                                    <option value=3>Monthly</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Schedule Param<span class="text-danger">*</span></label>
-                                <select *ngIf="scheduledTask.logicType==1 || scheduledTask.logicType=='' " class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
-                                  <option *ngFor= "let dd of dailyParam" [value]="dd.id">{{dd.name}}</option>
-                                </select>
-                                <select *ngIf="scheduledTask.logicType==2" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
-                                  <option *ngFor= "let dd of weeklyParam" [value]="dd.id">{{dd.name}}</option>
-                                </select>
-                                <select *ngIf="scheduledTask.logicType==3" class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.scheduleParam">
-                                  <option *ngFor= "let dd of monthlyParam" [value]="dd.id">{{dd.name}}</option>
-                                </select>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Days<span class="text-danger">*</span></label>
-                                <input style="width: 100%;" type="number" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Hours<span class="text-danger">*</span></label>
-                                <input style="width: 100%;" type="number" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>CC users:</label>
-                                <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select CC Users" [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="mr-1">Is Active</label>
-                                <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-right">
-                            <button class="btn btn-primary btn-sm mr-2" id="button" (click)="resetScheduleTask()">Reset</button>
-                            <button class="btn btn-primary btn-sm" id="button" (click)="saveScheduleTask()">Save</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
             <!-- Tabs      -->
             <div class="tabs_style_main">
                 <ul class="tabs_style text-left">
@@ -221,4 +129,107 @@
                 </smart-table>
             </div>
         </nb-card-body>
+
+        <!-- start: scheduled task  modal -->
+        <div class="modal" id="schedukedTaskMasterModal" #schedukedTaskMasterModal>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="color:#fff;">Scheduled Task Master</h4>
+                        <button type="button" class="close" data-dismiss="modal" (click)="closeSchedukedTaskMasterModal(null)">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Department<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <auto-suggestion (onSelected)="scheduledTask.department = $event" [data]="departmentList" display="name" seperator="-" placeholder="Select Department" autocomplete="off" name="departmentId" inputId="departmentId" [preSelected]="scheduledTask.department.id ? {name: scheduledTask.department.name}:{name:''}">
+                                    </auto-suggestion>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Description<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <textarea row="2" cols="15" placeholder="Enter Description" name="description" class="form-control" [(ngModel)]="scheduledTask.description"></textarea>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Primary User<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <auto-suggestion (onSelected)="scheduledTask.primaryUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Primary User" autocomplete="off" name="primaryUser" inputId="primaryUserId" [preSelected]="scheduledTask.primaryUser.id ? {name: scheduledTask.primaryUser.name}:{name:''}">
+                                    </auto-suggestion>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Escalation User<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <auto-suggestion (onSelected)="scheduledTask.escalationUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Escalation User" autocomplete="off" name="escalationUser" inputId="scalationUserId" [preSelected]="scheduledTask.escalationUser.id ? {name: scheduledTask.escalationUser.name}:{name:''}">
+                                    </auto-suggestion>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Reporting User<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <auto-suggestion (onSelected)="scheduledTask.reportingUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Reporting User" autocomplete="off" name="reportingUser" inputId="reportingUserId" [preSelected]="scheduledTask.reportingUser.id ? {name: scheduledTask.reportingUser.name}:{name:''}">
+                                    </auto-suggestion>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Days<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <input style="width: 100%;" type="number" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>Hours<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-7">
+                                    <input style="width: 100%;" type="number" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label>CC users:</label>
+                                </div>
+                                <div class="col-7">
+                                    <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select CC Users" [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label class="mr-1">Is Active</label>
+                                </div>
+                                <div class="col-7">
+                                    <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <button class="btn btn-primary btn-sm mr-2" id="button" (click)="closeSchedukedTaskMasterModal(null)">Close</button>
+                                    <button class="btn btn-primary btn-sm" id="button" (click)="saveScheduleTask()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: scheduled task modal -->
     </nb-card>

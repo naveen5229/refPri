@@ -202,48 +202,17 @@ export class TaskScheduledComponent implements OnInit {
 
   ccUsertemp = [];
   saveScheduleTask() {
-    // console.log(this.scheduledTask.description, this.scheduledTask.primaryUser,
-    //   this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
-    //   this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
-
     console.log("scheduledTask:", this.scheduledTask);
     if (this.scheduledTask.description == '') {
       return this.common.showError("Description is missing")
-    }
-    else if (this.scheduledTask.primaryUser.id == '') {
+    } else if (this.scheduledTask.primaryUser.id == '') {
       return this.common.showError("Primary User is missing")
-    }
-    else if (this.scheduledTask.escalationUser.id == '') {
+    } else if (this.scheduledTask.escalationUser.id == '') {
       return this.common.showError("Escalation User is missing")
-    }
-    else if (this.scheduledTask.reportingUser.id == '') {
+    } else if (this.scheduledTask.reportingUser.id == '') {
       return this.common.showError("Reporting User is missing")
-    }
-    // else if (this.scheduledTask.logicType < 0) {
-    //   return this.common.showError("Logic Type is missing")
-    // }
-    // else if (this.scheduledTask.scheduleParam < 0) {
-    //   return this.common.showError("Schedule Param is missing")
-    // }
-    // else if (this.scheduledTask.days == '') {
-    //   return this.common.showError("Day is missing")
-    // }
-    // else if (this.scheduledTask.hours == '') {
-    //   return this.common.showError("Hour is missing")
-    // }
-    else {
+    } else {
       let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
-      // let 
-      // if (this.scheduledTask.escalationUser.id) {
-      //   this.ccUsertemp.push({ id: this.scheduledTask.escalationUser.id });
-      // }
-      // this.scheduledTask.ccUsers.forEach(element => {
-      //   this.ccUsertemp.push({ id: element.id });
-      // });
-      // console.log("temp:", this.ccUsertemp);
-      // let ccUsers = {};
-      // (this.ccUsertemp) ? this.ccUsertemp.map(user => { ccUsers['id'] = user.id }) : null;
-      // (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { ccUsers['id'] = user.id }) : null;
 
       const params = {
         taskId: this.scheduledTask.taskId,
@@ -267,8 +236,8 @@ export class TaskScheduledComponent implements OnInit {
         if (res['code'] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0].y_msg)
-
-            this.resetScheduleTask();
+            // this.resetScheduleTask();
+            this.closeSchedukedTaskMasterModal({ id: res['data'][0]['y_id'] });
             this.getScheduledTask();
             this.activeTab = 'ScheduledTaskMaster';
           } else {
@@ -277,12 +246,11 @@ export class TaskScheduledComponent implements OnInit {
         } else {
           this.common.showError(res['msg']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
 
@@ -313,6 +281,19 @@ export class TaskScheduledComponent implements OnInit {
       },
       ccUsers: []
     };
+  }
+
+  closeSchedukedTaskMasterModal(response) {
+    this.resetScheduleTask();
+    document.getElementById("schedukedTaskMasterModal").style.display = "none";
+    if (response && response.id) {
+      let task = { _id: response.id };
+      this.addScheduleTaskparam(task, -1);
+    }
+  }
+
+  openSchedukedTaskMasterModal() {
+    document.getElementById("schedukedTaskMasterModal").style.display = "block";
   }
 
   getScheduledTask() {
@@ -383,12 +364,11 @@ export class TaskScheduledComponent implements OnInit {
         this.ackScheduleTaskList = res['data'] || [];
         this.setTableAckScheduledTask(type);
       }
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   resetSmartTableData() {
@@ -965,6 +945,7 @@ export class TaskScheduledComponent implements OnInit {
     };
 
     console.log("edit scheduledTask:", this.scheduledTask);
+    this.openSchedukedTaskMasterModal();
   }
 
   searchAllCompletedTask(type) {
@@ -1043,26 +1024,15 @@ export class TaskScheduledComponent implements OnInit {
             else {
               this.common.showError(res['data']);
             }
-          },
-            err => {
-              this.common.loading--;
-              this.common.showError();
-              console.log('Error: ', err);
-            });
+          }, err => {
+            this.common.loading--;
+            this.common.showError();
+            console.log('Error: ', err);
+          });
         }
       });
     } else {
       this.common.showError("Ticket ID Not Available");
-    }
-  }
-
-  changeCCUsers(event) {
-    console.log("changeCCUsers:", event);
-    if (event && event.length) {
-      this.scheduledTask.ccUsers = event.map(user => { return { user_id: user.id } });
-      console.log("ccUsers", this.scheduledTask.ccUsers);
-    } else {
-      this.scheduledTask.ccUsers = [];
     }
   }
 
