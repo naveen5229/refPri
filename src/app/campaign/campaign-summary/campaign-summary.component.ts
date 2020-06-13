@@ -119,10 +119,15 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       this.totalLeadCount = JSON.parse(this.campaignSummaryData['totalleadcount']);
       this.stateWiseCount = JSON.parse(this.campaignSummaryData['statewisecount']);
 
-      this.totalLeadsetTable();
-      this.stateWisesetTable();
+      if (this.totalLeadCount) {
+        this.totalLeadsetTable();
 
-      this.showdata(this.totalLeadCount, this.stateWiseCount);
+      }
+      if (this.stateWiseCount) {
+        this.stateWisesetTable();
+
+      }
+
 
       this.showTable = true;
       this.activeTab = 'stateSummary';
@@ -338,6 +343,13 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       labels: ["Total", "Valid", "Called"],
       showLegend: true
     }
+
+    let entr = filteredData.map(e => Object.entries(e))
+    console.log(entr);
+    entr.forEach(e => {
+      console.log(e);
+     e.join('-') });
+        console.log(entr);
 
 
     const labels = filteredData.map(e => Object.keys(e));

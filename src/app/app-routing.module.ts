@@ -37,6 +37,10 @@ const routes: Routes = [
         component: LoginComponent,
       },
       {
+        path: 'login/:type',
+        component: LoginComponent,
+      },
+      {
         path: 'register',
         component: NbRegisterComponent,
       },

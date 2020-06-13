@@ -23,7 +23,8 @@ export class UserService {
   constructor() {
     this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
     this._details = JSON.parse(localStorage.getItem('ITRM_USER_DETAILS'));  
-    
+    this._loggedInBy = localStorage.getItem('LOGGED_IN_BY') || '';
+
     if (localStorage.getItem("ITRM_USER_PAGES")) {
       this._pages = JSON.parse(localStorage.getItem("ITRM_USER_PAGES"));
       this.filterMenu("pages", "pages");

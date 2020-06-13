@@ -38,7 +38,7 @@
               <canvas id="myChart1" width="350" height="200"></canvas>
           </div>
           <div style="margin-top: 18px;">
-            <smart-table *ngIf='totalLeadCount && totalLeadCount.length'  [data]="totalLeadtable.data" [settings]="totalLeadtable.settings" id="leadCount">
+            <smart-table *ngIf='totalLeadCount != null && totalLeadCount.length'  [data]="totalLeadtable.data" [settings]="totalLeadtable.settings" id="leadCount">
             </smart-table>
           </div>
           
@@ -48,7 +48,7 @@
         <canvas id="myChart2"></canvas>
         </div>
         <br>
-        <smart-table *ngIf='stateWiseCount.length' [data]="stateWisetable.data" [settings]="stateWisetable.settings" id="leadCount">
+        <smart-table *ngIf='stateWiseCount != null && stateWiseCount.length' [data]="stateWisetable.data" [settings]="stateWisetable.settings" id="leadCount">
         </smart-table>
       </div>
       </div>

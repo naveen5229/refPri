@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as Chart from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import * as Chart from 'chart.js';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ChartService {
     charDatas.forEach(chartData => {
       charts.push(new Chart(chartData.canvas.getContext('2d'), {
         type: 'pie',
+        // plugins: [ChartDataLabels],
         data: {
           labels: chartData.labels[0],
           datasets: [{
@@ -34,10 +36,16 @@ export class ChartService {
           }]
         },
         options: {
+          // plugins: {
+          //   // Change options for ALL labels of THIS CHART
+          //   datalabels: {
+          //       color: 'white'
+          //   }
+          // },
+         
           maintainAspectRatio: false,
           aspectRatio: 1.5,
           responsive: true,
-          display: true,
           legend: {
             display: true,
             labels: {
@@ -71,7 +79,6 @@ export class ChartService {
         },
         options: {
           responsive: true,
-          display: true,
           legend: {
             display: chartData.showLegend,
           },

@@ -7,9 +7,9 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  // URL: string = 'http://localhost/itrm_webservices/';//komal local
+  URL: string = 'http://localhost/itrm_webservices/';//komal local
   // URL: string = 'http://192.168.1.109/itrm_webservices/';//komal local
-  URL: string = 'https://dev.elogist.in/itrm_webservices/'
+  // URL: string = 'https://dev.elogist.in/itrm_webservices/'
 
   URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
   URLTranstruck: string = 'http://elogist.in/transtrucknew/';
@@ -18,6 +18,7 @@ export class ApiService {
   constructor(private http: HttpClient,
     public router: Router,
     public user: UserService) {
+      console.log(this.user);
   }
 
   post(subURL: string, body: any, options?) {
@@ -29,11 +30,12 @@ export class ApiService {
   }
 
   setHeaders() {
-    const entryMode = '1';
+    const entryMode = this.user._loggedInBy == 'admin' ? '3' : '1';
+
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': '1',
+      'entrymode': entryMode,
       'apptype': 'dashboard',
       'authkey': this.user._token
     });
