@@ -44,11 +44,8 @@ import { MycampaignComponent } from '../campaign/mycampaign/mycampaign.component
 import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
 import { RouteGuard } from '../guards/route.guard';
-<<<<<<< HEAD
 import { CampaignSummaryComponent } from '../campaign/campaign-summary/campaign-summary.component';
-=======
 import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
->>>>>>> sunil
 
 const routes: Routes = [{
   path: '',
