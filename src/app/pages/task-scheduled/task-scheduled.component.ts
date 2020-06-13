@@ -43,7 +43,8 @@ export class TaskScheduledComponent implements OnInit {
     department: {
       id: '',
       name: ''
-    }
+    },
+    ccUsers: []
   };
   scheduledTaskList = [];
   tableSchedule = {
@@ -199,11 +200,13 @@ export class TaskScheduledComponent implements OnInit {
     this.reportingId = event.id;
   }
 
+  ccUsertemp = [];
   saveScheduleTask() {
     // console.log(this.scheduledTask.description, this.scheduledTask.primaryUser,
     //   this.scheduledTask.escalationUser, this.scheduledTask.reportingUser, this.scheduledTask.logicType,
     //   this.scheduledTask.scheduleParam, this.scheduledTask.days, this.scheduledTask.hours);
 
+    console.log("scheduledTask:", this.scheduledTask);
     if (this.scheduledTask.description == '') {
       return this.common.showError("Description is missing")
     }
@@ -229,6 +232,19 @@ export class TaskScheduledComponent implements OnInit {
     //   return this.common.showError("Hour is missing")
     // }
     else {
+      let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
+      // let 
+      // if (this.scheduledTask.escalationUser.id) {
+      //   this.ccUsertemp.push({ id: this.scheduledTask.escalationUser.id });
+      // }
+      // this.scheduledTask.ccUsers.forEach(element => {
+      //   this.ccUsertemp.push({ id: element.id });
+      // });
+      // console.log("temp:", this.ccUsertemp);
+      // let ccUsers = {};
+      // (this.ccUsertemp) ? this.ccUsertemp.map(user => { ccUsers['id'] = user.id }) : null;
+      // (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { ccUsers['id'] = user.id }) : null;
+
       const params = {
         taskId: this.scheduledTask.taskId,
         description: this.scheduledTask.description,
@@ -240,8 +256,10 @@ export class TaskScheduledComponent implements OnInit {
         days: this.scheduledTask.days,
         hours: this.scheduledTask.hours,
         isActive: this.scheduledTask.isActive,
-        departmentId: this.scheduledTask.department.id
+        departmentId: this.scheduledTask.department.id,
+        ccUsers: ccUsers
       }
+      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('AdminTask/createScheduleTask', params).subscribe(res => {
         console.log(res);
@@ -292,7 +310,8 @@ export class TaskScheduledComponent implements OnInit {
       department: {
         id: '',
         name: ''
-      }
+      },
+      ccUsers: []
     };
   }
 
@@ -304,12 +323,11 @@ export class TaskScheduledComponent implements OnInit {
       this.resetSmartTableData();
       this.scheduledTaskList = res['data'] || [];
       this.setTableSchedule();
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getUserReport(type = null) {
@@ -905,6 +923,19 @@ export class TaskScheduledComponent implements OnInit {
     seconds -= days * 3600 * 24;
     let hrs = Math.floor(seconds / 3600);
 
+    // let ccUserTemp = task._cc_user;
+    // console.log("ccUserTemp:", ccUserTemp);
+    let getAdminSelected = [];
+    if (task._cc_user && task._cc_user.length) {
+      task._cc_user.forEach(ev => {
+        let findAdmin = this.adminList.find(x => { return x.id == ev.id });
+        if (findAdmin) {
+          getAdminSelected.push({ id: findAdmin.id, name: findAdmin.name });
+        }
+      });
+    }
+    console.log("getAdminSelected:", getAdminSelected);
+
     this.scheduledTask = {
       taskId: task._id,
       description: task.description,
@@ -928,7 +959,8 @@ export class TaskScheduledComponent implements OnInit {
       department: {
         id: (task._department_id) ? task._department_id : null,
         name: (task._department_id) ? task.department : null
-      }
+      },
+      ccUsers: (getAdminSelected.length) ? getAdminSelected : []
 
     };
 
@@ -1021,6 +1053,16 @@ export class TaskScheduledComponent implements OnInit {
       });
     } else {
       this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  changeCCUsers(event) {
+    console.log("changeCCUsers:", event);
+    if (event && event.length) {
+      this.scheduledTask.ccUsers = event.map(user => { return { user_id: user.id } });
+      console.log("ccUsers", this.scheduledTask.ccUsers);
+    } else {
+      this.scheduledTask.ccUsers = [];
     }
   }
 

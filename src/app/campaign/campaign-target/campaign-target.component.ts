@@ -388,7 +388,7 @@ export class CampaignTargetComponent implements OnInit {
     };
     console.log(campaign);
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: this.stateDataList, actionDataList: this.actionDataList, nextactionDataList: this.nextactionDataList };
-    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignTargetData();
     });

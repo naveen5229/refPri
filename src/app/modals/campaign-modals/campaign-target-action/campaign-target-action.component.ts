@@ -48,7 +48,7 @@ export class CampaignTargetActionComponent implements OnInit {
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
-    this.common.handleModalSize('class', 'modal-lg', '1300', 'px');
+    // this.common.handleModalSize('class', 'modal-lg', '1300', 'px');
 
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
