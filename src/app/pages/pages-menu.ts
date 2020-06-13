@@ -86,6 +86,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'WIFI-Logs',
+        icon: 'file-text-outline',
+        link: '/pages/wifi-logs',
+        home: true,
+      },
+      {
         title: 'OT-Management',
         icon: 'file-text-outline',
         link: '/pages/ot-management',

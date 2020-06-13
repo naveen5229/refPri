@@ -44,6 +44,7 @@ import { TravelDistanceComponent } from './travel-distance/travel-distance.compo
 import { SalaryComponent } from './salary/salary.component';
 import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
+import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
 
 @NgModule({
   imports: [
@@ -93,7 +94,8 @@ import { AddPagesComponent } from './add-pages/add-pages.component';
     TravelDistanceComponent,
     SalaryComponent,
     UserRoleComponent,
-    AddPagesComponent
+    AddPagesComponent,
+    WifiLogsComponent
   ],
 })
 export class PagesModule {

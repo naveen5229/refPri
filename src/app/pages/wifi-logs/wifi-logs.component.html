@@ -1,0 +1,27 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8">
+                <h5>WIFI Logs</h5>
+            </div>
+        </div>
+        <!-- <br>
+      <div class="row">
+          <div class="col-2">
+              <label>Select Date</label>
+          </div>
+          <div class="col-3">
+              <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
+              </uj-date-time-picker>
+          </div>
+          <div class="col-7">
+              <button type="submit" id="submit" (click)="getShiftLogs()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+          </div>
+      </div> -->
+    </nb-card-header>
+    <nb-card-body style="min-height: 300px;">
+        <div>
+            <smart-table [data]="table.data" [settings]="table.settings" id="wifiLogs"></smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>

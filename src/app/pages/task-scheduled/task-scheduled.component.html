@@ -84,21 +84,21 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label class="mr-1">Is Active</label>
-                                <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
+                                <label>CC users:</label>
+                                <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select CC Users" [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label>CC users:</label>
-                                <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select CC Users" [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+                                <label class="mr-1">Is Active</label>
+                                <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 text-right">
-                            <button class="btn btn-primary text-capitalize mr-2" id="button" (click)="resetScheduleTask()">Reset</button>
-                            <button class="btn btn-primary text-capitalize" id="button" (click)="saveScheduleTask()">Save</button>
+                            <button class="btn btn-primary btn-sm mr-2" id="button" (click)="resetScheduleTask()">Reset</button>
+                            <button class="btn btn-primary btn-sm" id="button" (click)="saveScheduleTask()">Save</button>
                         </div>
                     </div>
 

@@ -232,17 +232,18 @@ export class TaskScheduledComponent implements OnInit {
     //   return this.common.showError("Hour is missing")
     // }
     else {
-      // let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
+      let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
       // let 
-      if (this.scheduledTask.escalationUser.id) {
-        this.ccUsertemp.push({ id: this.scheduledTask.escalationUser.id });
-      }
-      this.scheduledTask.ccUsers.forEach(element => {
-        this.ccUsertemp.push({ id: element.id });
-      });
-      console.log("temp:", this.ccUsertemp);
-      let ccUsers = {};
-      (this.ccUsertemp) ? this.ccUsertemp.map(user => { ccUsers['id'] = user.id }) : null;
+      // if (this.scheduledTask.escalationUser.id) {
+      //   this.ccUsertemp.push({ id: this.scheduledTask.escalationUser.id });
+      // }
+      // this.scheduledTask.ccUsers.forEach(element => {
+      //   this.ccUsertemp.push({ id: element.id });
+      // });
+      // console.log("temp:", this.ccUsertemp);
+      // let ccUsers = {};
+      // (this.ccUsertemp) ? this.ccUsertemp.map(user => { ccUsers['id'] = user.id }) : null;
+      // (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { ccUsers['id'] = user.id }) : null;
 
       const params = {
         taskId: this.scheduledTask.taskId,
@@ -322,12 +323,11 @@ export class TaskScheduledComponent implements OnInit {
       this.resetSmartTableData();
       this.scheduledTaskList = res['data'] || [];
       this.setTableSchedule();
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getUserReport(type = null) {
@@ -923,6 +923,19 @@ export class TaskScheduledComponent implements OnInit {
     seconds -= days * 3600 * 24;
     let hrs = Math.floor(seconds / 3600);
 
+    // let ccUserTemp = task._cc_user;
+    // console.log("ccUserTemp:", ccUserTemp);
+    let getAdminSelected = [];
+    if (task._cc_user && task._cc_user.length) {
+      task._cc_user.forEach(ev => {
+        let findAdmin = this.adminList.find(x => { return x.id == ev.id });
+        if (findAdmin) {
+          getAdminSelected.push({ id: findAdmin.id, name: findAdmin.name });
+        }
+      });
+    }
+    console.log("getAdminSelected:", getAdminSelected);
+
     this.scheduledTask = {
       taskId: task._id,
       description: task.description,
@@ -947,7 +960,7 @@ export class TaskScheduledComponent implements OnInit {
         id: (task._department_id) ? task._department_id : null,
         name: (task._department_id) ? task.department : null
       },
-      ccUsers: []
+      ccUsers: (getAdminSelected.length) ? getAdminSelected : []
 
     };
 

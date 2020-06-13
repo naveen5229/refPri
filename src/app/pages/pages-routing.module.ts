@@ -44,6 +44,7 @@ import { MycampaignComponent } from '../campaign/mycampaign/mycampaign.component
 import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
 import { RouteGuard } from '../guards/route.guard';
+import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
 
 const routes: Routes = [{
   path: '',
@@ -226,6 +227,11 @@ const routes: Routes = [{
     {
       path: 'shift-logs',
       component: ShiftLogsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'wifi-logs',
+      component: WifiLogsComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {

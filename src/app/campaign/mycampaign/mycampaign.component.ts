@@ -401,20 +401,19 @@ export class MycampaignComponent implements OnInit {
 
   actionIcons(campaign, type) {
     let icons = [
-      { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null }
+      { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: "Lead Comment" }
     ];
     if (campaign._unreadcount > 0) {
       icons = [
-        { class: "fas fa-comments new-comment", action: this.campaignMessage.bind(this, campaign, type), txt: campaign._unreadcount, title: null },
+        { class: "fas fa-comments new-comment", action: this.campaignMessage.bind(this, campaign, type), txt: campaign._unreadcount, title: "Lead Comment" },
       ];
     } else if (campaign._unreadcount == 0) {
       icons = [
-        { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
+        { class: "fas fa-comments", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: "Lead Comment" },
       ];
-    }
-    else if (campaign._unreadcount == -1) {
+    } else if (campaign._unreadcount == -1) {
       icons = [
-        { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: null },
+        { class: "fas fa-comments no-comment", action: this.campaignMessage.bind(this, campaign, type), txt: '', title: "Lead Comment" },
       ];
     }
 
@@ -426,11 +425,12 @@ export class MycampaignComponent implements OnInit {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateCampaignStatus.bind(this, campaign, type, 2), txt: '', title: "Mark Ack" });
         icons.push({ class: "fa fa-times text-danger", action: this.changeCampaignStatusWithConfirm.bind(this, campaign, type, -1), txt: '', title: "Mark Rejected" });
       }
+      icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, campaign, type), txt: '', title: "Add Primary Info" });
     } else if (type == 2) {
       icons.push({ class: "far fa-edit", action: this.editCampaign.bind(this, campaign, type), txt: '', title: "Edit Lead" });
-      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: "Delete Lead" });
-      icons.push({ class: 'fas fa-address-book ml-2 s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: null });
-      icons.push({ class: 'fas fa-info-circle ml-2 s-4', action: this.infoMatrix.bind(this, campaign, type), txt: '', title: "Add Primary Info" });
+      icons.push({ class: 'fas fa-trash-alt', action: this.deleteCampaign.bind(this, campaign, type), txt: '', title: "Delete Lead" });
+      icons.push({ class: 'fas fa-address-book s-4', action: this.targetAction.bind(this, campaign, type), txt: '', title: "Address Book" });
+      icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, campaign, type), txt: '', title: "Add Primary Info" });
 
     } else if (type == 3 && !campaign._cc_status) {
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, campaign, type), txt: '', title: "Mark Ack as CC Lead" });
@@ -450,12 +450,12 @@ export class MycampaignComponent implements OnInit {
     if ((campaign._status == 5 || campaign._status == -1)) {
     } else {
       if (campaign._isremind == 1) {
-        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, campaign, type), txt: '', title: null });
+        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, campaign, type), txt: '', title: "Check Reminder" });
       } else if (campaign._isremind == 2 && type != 5) {
-        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
+        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: "Edit Reminder" });
       } else {
         if (type != 5) {
-          icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: null });
+          icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, campaign, type), txt: '', title: "Add Reminder" });
         }
       }
     }
