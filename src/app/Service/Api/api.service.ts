@@ -14,11 +14,13 @@ export class ApiService {
   URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
   URLTranstruck: string = 'http://elogist.in/transtrucknew/';
 
+  entryMode = this.user._loggedInBy == 'admin' ? '1' : '3';
+
 
   constructor(private http: HttpClient,
     public router: Router,
     public user: UserService) {
-      console.log(this.user);
+    console.log(this.user);
   }
 
   post(subURL: string, body: any, options?) {
@@ -30,12 +32,11 @@ export class ApiService {
   }
 
   setHeaders() {
-    const entryMode = this.user._loggedInBy == 'admin' ? '3' : '1';
 
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': entryMode,
+      'entrymode': this.entryMode,
       'apptype': 'dashboard',
       'authkey': this.user._token
     });
@@ -74,7 +75,7 @@ export class ApiService {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '2.9',
-      'entrymode': '1',
+      'entrymode': this.entryMode,
       'authkey': this.user._details.authkey_gisdb
     });
     return headers;

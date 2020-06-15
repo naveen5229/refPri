@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   elementType: 'url' | 'canvas' | 'img' = 'url';
   listenOTP = false;
   otpCount = 0;
-  loginType = 1;
+  loginType = 2;
   interval = null;
   formSubmit = false;
   button = 'Send';
@@ -84,7 +84,31 @@ export class LoginComponent implements OnInit {
 
     console.log(this.user);
 
-    if(this.user._loggedInBy == 'customer') {
+    if (this.user._loggedInBy == 'customer') {
+      this.common.loading++;
+      this.api.post('FoAdmin/login', params).subscribe(res => {
+        console.log("login res:", res);
+        this.common.loading--;
+        if (res['success']) {
+          this.listenOTP = true;
+          this.otpCount = 30;
+          if (res['data']['login_type'] && res['data']['login_type'] > 0) {
+            this.loginType = res['data']['login_type'];
+          }
+          if (this.loginType === 2) {
+            this.qrCodeRegenrate();
+          }
+          // this.qrCodeRegenrate();
+          this.otpResendActive();
+          this.common.showToast(res['msg']);
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+      });
+    } else if (this.user._loggedInBy == 'admin') {
       this.common.loading++;
       this.api.post('Login/login', params)
         .subscribe(res => {
@@ -102,27 +126,9 @@ export class LoginComponent implements OnInit {
           this.common.loading--;
           this.common.showError();
         });
-    } else if (this.user._loggedInBy == 'admin') {
-      this.common.loading++;
-      this.api.post('FoAdmin/login', params)
-        .subscribe(res => {
-          this.common.loading--;
-          if (res['success']) {
-            this.listenOTP = true;
-            this.otpCount = 30;
-            this.qrCodeRegenrate();
-            this.otpResendActive();
-            this.common.showToast(res['msg']);
-          } else {
-            this.common.showError(res['msg']);
-          }
-        }, err => {
-          this.common.loading--;
-          this.common.showError();
-        });
     }
 
-   
+
   }
 
   qrCodeRegenrate() {
@@ -150,11 +156,34 @@ export class LoginComponent implements OnInit {
     }
     let params = {
       mobileno: this.userDetails.mobile,
-      qrcode: this.qrCode
+      qrcode: (this.loginType === 2) ? this.qrCode : null,
+      otp: (this.loginType != 2) ? this.userDetails.otp : null,
     }
     console.log(this.user);
 
     if (this.user._loggedInBy == 'customer') {
+      this.common.loading++;
+      this.api.post('FoAdmin/verifyOtp', params)
+        .subscribe(res => {
+          this.common.loading--;
+          if (res['success']) {
+            this.common.showToast(res['msg']);
+            clearInterval(this.interval);
+            localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
+            localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
+            localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+
+            this.user._details = res['data'][0];
+            this.user._token = res['data'][0]['authkey'];
+            this.getUserPagesList();
+            // this.router.navigate(['/pages/dashboard']);
+            // this.router.navigate(['/pages/task']);
+          }
+        }, err => {
+          this.common.loading--;
+          this.common.showError();
+        });
+    } else if (this.user._loggedInBy == 'admin') {
       this.common.loading++;
       this.api.post('Login/verifyOtp', params)
         .subscribe(res => {
@@ -177,31 +206,8 @@ export class LoginComponent implements OnInit {
             this.common.loading--;
             this.common.showError();
           });
-    } else if (this.user._loggedInBy == 'admin') {
-      this.common.loading++;
-      this.api.post('FoAdmin/verifyOtp', params)
-        .subscribe(res => {
-          this.common.loading--;
-          if (res['success']) {
-            this.common.showToast(res['msg']);
-            clearInterval(this.interval);
-            localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
-            localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
-            localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
-
-            this.user._details = res['data'][0];
-            this.user._token = res['data'][0]['authkey'];
-            this.getUserPagesList();
-            // this.router.navigate(['/pages/dashboard']);
-            // this.router.navigate(['/pages/task']);
-          }
-        },
-          err => {
-            this.common.loading--;
-            this.common.showError();
-          });
     }
-   
+
   }
 
 
@@ -235,5 +241,5 @@ export class LoginComponent implements OnInit {
     this.formSubmit = false;
     clearInterval(this.interval);
   }
-  
+
 }

@@ -70,7 +70,7 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       hideHeader: true
     }
   };
-
+  campaignname;
 
   constructor(public api: ApiService,
     public common: CommonService,
@@ -321,19 +321,19 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
 
 
   showdata(tableData, stateTableData) {
-  
+
     console.log(stateTableData);
 
 
     const filteredData = stateTableData.map(e => {
       let pickData = Object.keys(e).filter(f => !f.startsWith('_'));
-     let x = _.pick(e, pickData);
+      let x = _.pick(e, pickData);
       return x;
     });
 
     console.log(filteredData);
-   
-  
+
+
     this.temCharts.forEach(ele => ele.destroy());
     this.temBarCharts.forEach(ele => ele.destroy());
 
@@ -348,13 +348,14 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
     console.log(entr);
     entr.forEach(e => {
       console.log(e);
-     e.join('-') });
-        console.log(entr);
+      e.join('-')
+    });
+    console.log(entr);
 
 
     const labels = filteredData.map(e => Object.keys(e));
     const data = filteredData.map(e => Object.values(e));
- 
+
     let chartData2 = {
       canvas: document.getElementById('myChart2'),
       data: data,
