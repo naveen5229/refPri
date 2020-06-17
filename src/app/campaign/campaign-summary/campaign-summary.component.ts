@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import * as Chart from 'chart.js'
 import { ChartService } from '../../Service/Chart/chart.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'ngx-campaign-summary',
@@ -13,6 +14,7 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
 
   activeTab = "";
 
+  showTable = false;
 
   myChart: any;
   ctx: any;
@@ -68,20 +70,20 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       hideHeader: true
     }
   };
-
+  campaignname;
 
   constructor(public api: ApiService,
-              public common: CommonService,
-              public chart: ChartService) { 
-                this.startDate.setMonth(this.startDate.getMonth() -1);
-                console.log(this.startDate, this.endDate);
-                this.getcampaignList();
-              }
+    public common: CommonService,
+    public chart: ChartService) {
+    this.startDate.setMonth(this.startDate.getMonth() - 1);
+    console.log(this.startDate, this.endDate);
+    this.getcampaignList();
+  }
 
   ngOnInit() {
   }
 
-  ngAfterViewInit() { 
+  ngAfterViewInit() {
 
   }
 
@@ -98,7 +100,7 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       });
   }
 
- 
+
 
   getCampaignSummary() {
 
@@ -117,10 +119,19 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       this.totalLeadCount = JSON.parse(this.campaignSummaryData['totalleadcount']);
       this.stateWiseCount = JSON.parse(this.campaignSummaryData['statewisecount']);
 
-      this.totalLeadsetTable();
-      this.stateWisesetTable();
+      if (this.totalLeadCount) {
+        this.totalLeadsetTable();
 
-      this.showdata(this.totalLeadCount, this.stateWiseCount);
+      }
+      if (this.stateWiseCount) {
+        this.stateWisesetTable();
+
+      }
+
+
+      this.showTable = true;
+      this.activeTab = 'stateSummary';
+      this.getSummary(1);
 
 
       console.log(this.campaignSummaryData);
@@ -308,9 +319,21 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
     // return icons;
   }
 
- 
+
   showdata(tableData, stateTableData) {
+
     console.log(stateTableData);
+
+
+    const filteredData = stateTableData.map(e => {
+      let pickData = Object.keys(e).filter(f => !f.startsWith('_'));
+      let x = _.pick(e, pickData);
+      return x;
+    });
+
+    console.log(filteredData);
+
+
     this.temCharts.forEach(ele => ele.destroy());
     this.temBarCharts.forEach(ele => ele.destroy());
 
@@ -321,20 +344,28 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       showLegend: true
     }
 
-    const labels = stateTableData.map(e => e.name);
-    const data = stateTableData.map(e => e.leadcount);
+    let entr = filteredData.map(e => Object.entries(e))
+    console.log(entr);
+    entr.forEach(e => {
+      console.log(e);
+      e.join('-')
+    });
+    console.log(entr);
+
+
+    const labels = filteredData.map(e => Object.keys(e));
+    const data = filteredData.map(e => Object.values(e));
+
     let chartData2 = {
       canvas: document.getElementById('myChart2'),
       data: data,
       labels: labels,
-      showLegend: false
+      showLegend: true
     }
 
- 
-    console.log(chartData1);
+
     this.temBarCharts = this.chart.generateBarChart([chartData1]);
     this.temCharts = this.chart.generatePieChart([chartData2]);
-    console.log(this.temCharts);
 
     this.showLabel = true;
 

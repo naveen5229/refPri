@@ -27,30 +27,36 @@
               <button class="btn btn-primary btn-sm" type='submit' id="save" (click)="getCampaignSummary()">Submit</button>
           </div>
       </div>
+
   </nb-card-header>
-  <nb-card-body style="min-height: 485px;">
-      <div class="row">
+
+  <nb-card-body style="min-height: 80vh;">
+
+      <div class="row" style="min-height: 40vh;">
         <div class="col-4">
-          <div class="chartbox">
-            
+          <div  class="chartbox" >
               <canvas id="myChart1" width="350" height="200"></canvas>
-              <br>
-              <smart-table [data]="totalLeadtable.data" [settings]="totalLeadtable.settings" id="leadCount">
-              </smart-table>
           </div>
+          <div style="margin-top: 18px;">
+            <smart-table *ngIf='totalLeadCount != null && totalLeadCount.length'  [data]="totalLeadtable.data" [settings]="totalLeadtable.settings" id="leadCount">
+            </smart-table>
+          </div>
+          
       </div>
       <div class="col-8">
-        <div class="chartbox">
-
-        <canvas id="myChart2" width="200" height="100"></canvas>
+        <div  class="chartbox"  >
+        <canvas id="myChart2"></canvas>
+        </div>
         <br>
-        <smart-table [data]="stateWisetable.data" [settings]="stateWisetable.settings" id="leadCount">
+        <smart-table *ngIf='stateWiseCount != null && stateWiseCount.length' [data]="stateWisetable.data" [settings]="stateWisetable.settings" id="leadCount">
         </smart-table>
-</div>
       </div>
       </div>
+
       <br>
-      <div class="row" style="max-height: 100vh;">
+
+
+      <div *ngIf='showTable' class="row" style="max-height: 100vh;">
   
 
           <div class="tabs_style_main">
@@ -62,7 +68,7 @@
           </div>
 
           <div *ngIf="activeTab=='stateSummary'">
-            <smart-table [data]="table.data" [settings]="table.settings" id="userSummary">
+            <smart-table  [data]="table.data" [settings]="table.settings" id="userSummary">
             </smart-table>
             <!-- <div class="row no-record" *ngIf="installerlist.length==0">No Data Available</div> -->
         </div>
@@ -76,5 +82,6 @@
         </div>
 
       </div>
+
   </nb-card-body>
 </nb-card>

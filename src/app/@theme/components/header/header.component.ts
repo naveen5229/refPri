@@ -106,13 +106,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     if (confirm('Are you sure to logout?')) {
+      let loggedInBy = localStorage.getItem('LOGGED_IN_BY');
+      let apiCall = (loggedInBy == 'customer') ? 'FoAdmin/logout' : 'Login/logout';
       let params = {
         entrymode: "1",
         version: "1.1",
         authkey: this.userService._token
       }
       this.common.loading++;
-      this.api.post('Login/logout', params)
+      this.api.post(apiCall, params)
         .subscribe(res => {
           this.common.loading--;
           if (res['success']) {
@@ -121,9 +123,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
             localStorage.removeItem('ITRM_USER_TOKEN');
             localStorage.removeItem('ITRM_USER_DETAILS');
+            localStorage.removeItem('LOGGED_IN_BY');
 
             this.common.showToast(res['msg']);
-            this.router.navigate(['/auth/login']);
+            if (loggedInBy == 'customer') {
+              this.router.navigate(['/auth/login']);
+            } else {
+              this.router.navigate(['/auth/login/admin']);
+            }
           }
         },
           err => {
