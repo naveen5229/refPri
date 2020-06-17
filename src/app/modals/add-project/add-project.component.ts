@@ -156,6 +156,22 @@ export class AddProjectComponent implements OnInit {
             action: null,
             icons: this.actionIcons(project)
           };
+        } else if (key == 'is_active') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (project[key]) ? [{ class: "fa fa-check text-success", action: null, title: "is active" }] : '',
+            action: null,
+            class: "text-center"
+          };
+        } else if (key == 'is_complete') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (project[key]) ? [{ class: "fa fa-check text-success", action: null, title: "is complete" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
           column[key] = { value: project[key], class: 'black', action: '' };
         }

@@ -92,7 +92,7 @@ export class LoginComponent implements OnInit {
         if (res['success']) {
           this.listenOTP = true;
           this.otpCount = 30;
-          if (res['data']['login_type'] && res['data']['login_type'] > 0) {
+          if (res['data'] && res['data']['login_type'] && res['data']['login_type'] > 0) {
             this.loginType = res['data']['login_type'];
           }
           if (this.loginType === 2) {

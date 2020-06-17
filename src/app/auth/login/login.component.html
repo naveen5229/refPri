@@ -5,7 +5,7 @@
     <div class="logo">
         <img src="http://elogist.in/images/elogist-logo.png">
     </div>
-    <h1 id="title" class="title"> Login</h1>
+    <h1 id="title" class="title">{{(user._loggedInBy == 'admin')?'Admin':'Customer'}} Login</h1>
     <p class="sub-title">eLogist is building an integrated AI-driven utilisation based digital platform for the Transportation industry</p>
     <div *ngIf="!listenOTP">
         <form #mobileForm="ngForm" (submit)="mobileForm.valid && sendOTP()">
