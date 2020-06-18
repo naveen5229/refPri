@@ -36,7 +36,7 @@ export class ApiService {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': this.entryMode,
+      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
       'apptype': 'dashboard',
       'authkey': this.user._token
     });
@@ -75,7 +75,7 @@ export class ApiService {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '2.9',
-      'entrymode': this.entryMode,
+      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
       'authkey': this.user._details.authkey_gisdb
     });
     return headers;
