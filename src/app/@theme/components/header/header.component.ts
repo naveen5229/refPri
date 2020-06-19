@@ -124,6 +124,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             localStorage.removeItem('ITRM_USER_TOKEN');
             localStorage.removeItem('ITRM_USER_DETAILS');
             localStorage.removeItem('LOGGED_IN_BY');
+            localStorage.removeItem('ITRM_USER_PAGES');
 
             this.common.showToast(res['msg']);
             if (loggedInBy == 'customer') {

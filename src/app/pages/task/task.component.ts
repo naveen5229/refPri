@@ -9,6 +9,7 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { AddProjectComponent } from '../../modals/add-project/add-project.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
+import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
 
 @Component({
   selector: 'ngx-task',
@@ -25,7 +26,7 @@ export class TaskComponent implements OnInit {
   adminList = [];
   normalTaskList = [];
   scheduledTaskList = [];
-  scheduleMasterTaskList = [];
+  normalTaskByMeList = [];
   allCompletedTaskList = [];
   ccTaskList = [];
   projectTaskList = [];
@@ -40,7 +41,7 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
-  tableMasterSchedule = {
+  tableNormalTaskByMe = {
     data: {
       headings: {},
       columns: []
@@ -137,9 +138,50 @@ export class TaskComponent implements OnInit {
       hideHeader: true
     }
   };
+
+  scheduledTask = {
+    taskId: null,
+    description: "",
+    primaryUser: {
+      id: '',
+      name: ''
+    },
+    escalationUser: {
+      id: '',
+      name: ''
+    },
+    reportingUser: {
+      id: '',
+      name: ''
+    },
+    // logicType: 1,
+    // scheduleParam: 1,
+    days: "",
+    hours: "",
+    isActive: true,
+    department: {
+      id: '',
+      name: ''
+    },
+    ccUsers: []
+  };
+  departmentList = [];
+
+  scheduleMasterList = [];
+  tableScheduleMaster = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTaskByType(-8);
     this.getAllAdmin();
+    this.getDepartmentList();
   }
 
   ngOnInit() { }
@@ -158,11 +200,24 @@ export class TaskComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  getDepartmentList() {
+    this.api.get("Admin/getDepartmentList.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.departmentList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   showProjectPopup() {
@@ -194,13 +249,13 @@ export class TaskComponent implements OnInit {
     this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
-      this.reserSmartTableData();
+      this.resetSmartTableData();
       if (type == 101) {//normal task pending (task for me)
         this.normalTaskList = res['data'] || [];
         this.setTableNormal(type);
       } else if (type == -101) { //task by me
-        this.scheduleMasterTaskList = res['data'] || [];
-        this.setTableMasterSchedule(type);
+        this.normalTaskByMeList = res['data'] || [];
+        this.setTableNormalTaskByMe(type);
       } else if (type == 103) {
         this.scheduledTaskList = res['data'] || [];
         this.setTableSchedule(type);
@@ -230,8 +285,8 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  reserSmartTableData() {
-    this.tableMasterSchedule.data = {
+  resetSmartTableData() {
+    this.tableNormalTaskByMe.data = {
       headings: {},
       columns: []
     };
@@ -267,6 +322,10 @@ export class TaskComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableScheduleMaster.data = {
+      headings: {},
+      columns: []
+    };
   }
 
   generateHeadingsNormal() {
@@ -280,10 +339,10 @@ export class TaskComponent implements OnInit {
     }
     return headings;
   }
-  generateHeadingsMasterSchedule() {
+  generateHeadingsNormalTaskByMe() {
     // console.log(this.dailyReportList);
     let headings = {};
-    for (var key in this.scheduleMasterTaskList[0]) {
+    for (var key in this.normalTaskByMeList[0]) {
       // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
@@ -311,10 +370,10 @@ export class TaskComponent implements OnInit {
     };
     return true;
   }
-  setTableMasterSchedule(type) {
-    this.tableMasterSchedule.data = {
-      headings: this.generateHeadingsMasterSchedule(),
-      columns: this.getTableColumnsMasterSchedule(type)
+  setTableNormalTaskByMe(type) {
+    this.tableNormalTaskByMe.data = {
+      headings: this.generateHeadingsNormalTaskByMe(),
+      columns: this.getTableColumnsNormalTaskByMe(type)
     };
     return true;
   }
@@ -415,11 +474,11 @@ export class TaskComponent implements OnInit {
 
   }
 
-  getTableColumnsMasterSchedule(type) {
+  getTableColumnsNormalTaskByMe(type) {
     let columns = [];
-    this.scheduleMasterTaskList.map(ticket => {
+    this.normalTaskByMeList.map(ticket => {
       let column = {};
-      for (let key in this.generateHeadingsMasterSchedule()) {
+      for (let key in this.generateHeadingsNormalTaskByMe()) {
         if (key == "admin_name") {
           column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
         }
@@ -1283,5 +1342,225 @@ export class TaskComponent implements OnInit {
     }
   }
 
+  closeSchedukedTaskMasterModal(response) {
+    this.resetScheduleTask();
+    document.getElementById("schedukedTaskMasterModal").style.display = "none";
+    if (response && response.id) {
+      let task = { _id: response.id };
+      this.addScheduleTaskparam(task, -1);
+    }
+  }
+
+  openSchedukedTaskMasterModal() {
+    document.getElementById("schedukedTaskMasterModal").style.display = "block";
+  }
+
+  saveScheduleTask() {
+    console.log("scheduledTask:", this.scheduledTask);
+    if (this.scheduledTask.description == '') {
+      return this.common.showError("Description is missing")
+    } else if (this.scheduledTask.primaryUser.id == '') {
+      return this.common.showError("Primary User is missing")
+    } else if (this.scheduledTask.escalationUser.id == '') {
+      return this.common.showError("Escalation User is missing")
+    } else if (this.scheduledTask.reportingUser.id == '') {
+      return this.common.showError("Reporting User is missing")
+    } else {
+      let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
+      const params = {
+        taskId: this.scheduledTask.taskId,
+        description: this.scheduledTask.description,
+        primaryUser: this.scheduledTask.primaryUser.id,
+        escalationUser: this.scheduledTask.escalationUser.id,
+        reportingUser: this.scheduledTask.reportingUser.id,
+        days: this.scheduledTask.days,
+        hours: this.scheduledTask.hours,
+        isActive: this.scheduledTask.isActive,
+        departmentId: this.scheduledTask.department.id,
+        ccUsers: ccUsers
+      }
+      // console.log("params:", params); return false;
+      this.common.loading++;
+      this.api.post('AdminTask/createScheduleTask', params).subscribe(res => {
+        console.log(res);
+        this.common.loading--;
+        if (res['code'] > 0) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0].y_msg)
+            // this.resetScheduleTask();
+            this.closeSchedukedTaskMasterModal({ id: res['data'][0]['y_id'] });
+            this.getScheduledTask();
+            this.activeTab = 'scheduleMaster';
+          } else {
+            this.common.showError(res['data'][0].y_msg)
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+  }
+
+  resetScheduleTask() {
+    this.scheduledTask = {
+      taskId: null,
+      description: "",
+      primaryUser: {
+        id: '',
+        name: ''
+      },
+      escalationUser: {
+        id: '',
+        name: ''
+      },
+      reportingUser: {
+        id: '',
+        name: ''
+      },
+      // logicType: 1,
+      // scheduleParam: 1,
+      days: "",
+      hours: "",
+      isActive: true,
+      department: {
+        id: '',
+        name: ''
+      },
+      ccUsers: []
+    };
+  }
+
+  addScheduleTaskparam(task, type) {
+    console.log("type:", type);
+    this.common.params = { taskId: task._id, title: "Schedule task action", button: "Save" };
+    const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => { });
+  }
+
+  getScheduledTask() {
+    this.common.loading++;
+    this.api.get("AdminTask/getScheduledTask?type=1").subscribe(res => {
+      this.common.loading--;
+      console.log("data", res['data'])
+      this.resetSmartTableData();
+      this.scheduleMasterList = res['data'] || [];
+      this.setTableScheduleMaster();
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  setTableScheduleMaster() {
+    this.tableScheduleMaster.data = {
+      headings: this.generateHeadingsScheduleMaster(),
+      columns: this.getTableColumnsScheduleMaster()
+    };
+    return true;
+  }
+
+  generateHeadingsScheduleMaster() {
+    let headings = {};
+    for (var key in this.scheduleMasterList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    // console.log(headings);
+    return headings;
+  }
+
+  getTableColumnsScheduleMaster() {
+    // console.log(this.generateHeadingsSchedule());
+    let columns = [];
+    this.scheduleMasterList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsScheduleMaster()) {
+        if (key == "admin_name") {
+          column[key] = { value: ticket[key], class: 'admin', isHTML: true, action: '' }
+        }
+        else if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsMaster(ticket)
+          };
+        } else if (key == 'isactive') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "isactive" }] : '',
+            action: null,
+            class: "text-center",
+          };
+        } else {
+          column[key] = { value: (key == 'due_time') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+
+  actionIconsMaster(task) {
+    let icons = [
+      { class: "fa fa-edit", action: this.editScheduleTask.bind(this, task) },
+      { class: "fa fa-calendar-alt", action: this.addScheduleTaskparam.bind(this, task) },
+    ];
+    return icons;
+  }
+
+  editScheduleTask(task) {
+    console.log("edit editScheduleTask:", task);
+    let seconds = task.due_time;
+    let days = Math.floor(seconds / (3600 * 24));
+    seconds -= days * 3600 * 24;
+    let hrs = Math.floor(seconds / 3600);
+
+    let getAdminSelected = [];
+    if (task._cc_user && task._cc_user.length) {
+      task._cc_user.forEach(ev => {
+        let findAdmin = this.adminList.find(x => { return x.id == ev.id });
+        if (findAdmin) {
+          getAdminSelected.push({ id: findAdmin.id, name: findAdmin.name });
+        }
+      });
+    }
+    console.log("getAdminSelected:", getAdminSelected);
+    this.scheduledTask = {
+      taskId: task._id,
+      description: task.description,
+      primaryUser: {
+        id: task._pri_user_id,
+        name: task.pri_user
+      },
+      escalationUser: {
+        id: task._esc_user_id,
+        name: task.esc_user
+      },
+      reportingUser: {
+        id: task._reporting_user_id,
+        name: task.rep_user
+      },
+      days: JSON.stringify(days),
+      hours: JSON.stringify(hrs),
+      isActive: task._is_active,
+      department: {
+        id: (task._department_id) ? task._department_id : null,
+        name: (task._department_id) ? task.department : null
+      },
+      ccUsers: (getAdminSelected.length) ? getAdminSelected : []
+    };
+
+    console.log("edit scheduledTask:", this.scheduledTask);
+    this.openSchedukedTaskMasterModal();
+  }
 
 }

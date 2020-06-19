@@ -160,71 +160,106 @@ export class LoginComponent implements OnInit {
       otp: (this.loginType != 2) ? this.userDetails.otp : null,
     }
     console.log(this.user);
-
+    let apiCall = null;
     if (this.user._loggedInBy == 'customer') {
-      this.common.loading++;
-      this.api.post('FoAdmin/verifyOtp', params)
-        .subscribe(res => {
-          this.common.loading--;
-          if (res['success']) {
-            this.common.showToast(res['msg']);
-            clearInterval(this.interval);
-            localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
-            localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
-            localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
-
-            this.user._details = res['data'][0];
-            this.user._token = res['data'][0]['authkey'];
-            this.getUserPagesList();
-            // this.router.navigate(['/pages/dashboard']);
-            // this.router.navigate(['/pages/task']);
-          }
-        }, err => {
-          this.common.loading--;
-          this.common.showError();
-        });
+      apiCall = 'FoAdmin/verifyOtp';
     } else if (this.user._loggedInBy == 'admin') {
-      this.common.loading++;
-      this.api.post('Login/verifyOtp', params)
-        .subscribe(res => {
-          this.common.loading--;
-          if (res['success']) {
-            this.common.showToast(res['msg']);
-            clearInterval(this.interval);
-            localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
-            localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
-            localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
-
-            this.user._details = res['data'][0];
-            this.user._token = res['data'][0]['authkey'];
-            this.getUserPagesList();
-            // this.router.navigate(['/pages/dashboard']);
-            // this.router.navigate(['/pages/task']);
-          }
-        },
-          err => {
-            this.common.loading--;
-            this.common.showError();
-          });
+      apiCall = 'Login/verifyOtp';
     }
+    if (apiCall) {
+      (this.loginType === 2) ? null : this.common.loading++;
+      this.api.post(apiCall, params).subscribe(res => {
+        (this.loginType === 2) ? null : this.common.loading--;
+        if (res['code'] == 1) {
+          this.common.showToast(res['msg']);
+          clearInterval(this.interval);
+          localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
+          localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
+          localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+
+          this.user._details = res['data'][0];
+          this.user._token = res['data'][0]['authkey'];
+          this.getUserPagesList();
+        } else {
+          if (this.loginType != 2) {
+            this.common.showError(res['msg']);
+          }
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+      });
+    }
+
+    // if (this.user._loggedInBy == 'customer') {
+    //   this.common.loading++;
+    //   this.api.post('FoAdmin/verifyOtp', params)
+    //     .subscribe(res => {
+    //       this.common.loading--;
+    //       if (res['code'] == 1) {
+    //         this.common.showToast(res['msg']);
+    //         clearInterval(this.interval);
+    //         localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
+    //         localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
+    //         localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+
+    //         this.user._details = res['data'][0];
+    //         this.user._token = res['data'][0]['authkey'];
+    //         this.getUserPagesList();
+    //         // this.router.navigate(['/pages/dashboard']);
+    //         // this.router.navigate(['/pages/task']);
+    //       } else {
+    //         this.common.showError(res['msg']);
+    //       }
+    //     }, err => {
+    //       this.common.loading--;
+    //       this.common.showError();
+    //     });
+    // }
+    //  else if (this.user._loggedInBy == 'admin') {
+    //   this.common.loading++;
+    //   this.api.post('Login/verifyOtp', params)
+    //     .subscribe(res => {
+    //       this.common.loading--;
+    //       if (res['code'] == 1) {
+    //         this.common.showToast(res['msg']);
+    //         clearInterval(this.interval);
+    //         localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
+    //         localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
+    //         localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+
+    //         this.user._details = res['data'][0];
+    //         this.user._token = res['data'][0]['authkey'];
+    //         this.getUserPagesList();
+    //         // this.router.navigate(['/pages/dashboard']);
+    //         // this.router.navigate(['/pages/task']);
+    //       } else {
+    //         this.common.showError(res['msg']);
+    //       }
+    //     },
+    //       err => {
+    //         this.common.loading--;
+    //         this.common.showError();
+    //       });
+    // }
 
   }
 
 
   getUserPagesList() {
     this.user._pages = null;
-    let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;
-    const params = {
-      userId: this.user._details.id,
-      userType: userTypeId
-    };
+    // let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;
+    // const params = {
+    //   userId: this.user._details.id,
+    //   userType: userTypeId
+    // };
     this.common.loading++;
     this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
       .subscribe(res => {
         console.log(res);
         this.common.loading--;
         this.user._pages = res['data'].filter(page => { return page._userid; });
-        console.log(this.user._pages);
+        console.log("_pages:", this.user._pages);
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");
         this.router.navigate(['/pages/task']);
