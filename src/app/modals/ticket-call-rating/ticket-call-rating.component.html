@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h5>Ticket Call Rating </h5>
-  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(currentRate)">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -43,7 +43,7 @@
 <div class="modal-footer">
   <div class="row footer">
     <div class="col ">
-      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(false)">Cancel</button>
+      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(currentRate)">Cancel</button>
     </div>
     <div class="col text-right">
       <button class="btn btn-primary " type='submit' id="save" (click)="SendRating()">Send</button>

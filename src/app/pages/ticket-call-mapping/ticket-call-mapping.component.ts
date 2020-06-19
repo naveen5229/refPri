@@ -112,21 +112,48 @@ export class TicketCallMappingComponent implements OnInit {
 
   editData(request, index) {
 
-    console.log(request);
-    this.common.params = {
-      rating: request._rating,
-      ticketId: request._id,
-      remark: request._remark
-    };
+    console.log(typeof(request._rating));
+    console.log(typeof(request._rating) ==  'number');
+    if (typeof(request._rating) ==  'number') {
+      console.log(request);
+
+      this.common.params = {
+        rating: request._rating,
+        ticketId: request._id,
+        remark: request._remark
+      };
+    }
+    else {
+      console.log(request);
+      console.log(typeof(request._rating) ==  'number');
+
+
+      this.common.params = {
+        rating: request._rating.rating,
+        ticketId: request._id,
+        remark: request._rating.remark
+      };
+    }
+ 
     const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(response => {
       console.log(response);
-      request._rating = response;
+      if (typeof(response) == 'object') {
+        request._rating = response.rating;
+      } else {
+        request._rating = response;
+      }
       if (!response) {
         return;
       }
+      console.log(this.ticketList);
       this.table.data.columns[index].Action.value = response.rating;
-      this.ticketList.map(e => e._remark = response.remark).find(tickt => tickt._id == request._id);
+      this.ticketList.map(e => {
+        console.log(e);
+        if (e._id == request._id) {
+          e._remark = response.remark;
+        }
+      });
       console.log(this.ticketList);
       // this.table.data.columns[index].Action.value = response.remark;
       console.log(this.table.data);

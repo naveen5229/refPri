@@ -41,7 +41,19 @@ export class TicketCallRatingComponent implements OnInit {
   }
   closeModal(currentRate) {
     // console.log(response);
-    this.activeModal.close(currentRate);
+    if (currentRate > 0) {
+      if (this.isNegetive) {
+        this.activeModal.close({rating: this.currentRate * -1, remark: this.remark});
+
+      }
+      else {
+        this.activeModal.close({rating: this.currentRate, remark: this.remark});
+
+      }
+
+    } else {
+      this.activeModal.close(currentRate);
+    }
   }
 
   SendRating() {
@@ -56,10 +68,11 @@ export class TicketCallRatingComponent implements OnInit {
     };
     console.log(params);
 if (this.currentRate != 0) {
+  this.closeModal({rating: this.currentRate, remark: this.remark});
+
   this.common.loading++
   this.api.post('Users/setUserTicketRating', params).subscribe( res => {
       this.common.loading--
-      this.closeModal({rating: this.currentRate, remark: this.remark});
 
       this.common.showToast[res['msg']];
       console.log(this.currentRate);
