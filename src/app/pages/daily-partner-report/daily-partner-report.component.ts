@@ -24,9 +24,9 @@ export class DailyPartnerReportComponent implements OnInit {
   reportList = [];
   reportId = null;
   constructor(public common: CommonService,
-    public api: ApiService) { 
-      // this.getReportData();
-    }
+    public api: ApiService) {
+    // this.getReportData();
+  }
 
   ngOnInit() {
   }
@@ -38,7 +38,7 @@ export class DailyPartnerReportComponent implements OnInit {
 
   getMiscData() {
     const params =
-      "id=" + this.reportId ;
+      "id=" + this.reportId;
     this.common.loading++;
     this.api.get('Users/getMiscReport.json?' + params)
       .subscribe(res => {
@@ -64,7 +64,7 @@ export class DailyPartnerReportComponent implements OnInit {
   //       hideHeader: true
   //     }
   //   };
-   
+
   //   this.common.loading++;
   //   this.api.get('Users/getDailyPartnerReport.json?')
   //     .subscribe(res => {
@@ -94,7 +94,7 @@ export class DailyPartnerReportComponent implements OnInit {
     return true;
   }
 
- 
+
 
   generateHeadings() {
     let headings = {};
@@ -131,13 +131,17 @@ export class DailyPartnerReportComponent implements OnInit {
         //   //  icons: this.actionIcons(report)
         //   };
         // } else {
-          column[key] = { value: report[key], class: 'black', action: '' };
+        column[key] = { value: report[key], class: 'black', action: '' };
         // }
       }
       columns.push(column);
     });
 
     return columns;
+  }
+
+  exportCSV() {
+    this.common.getCSVFromTableId('dailyPartnerReport')
   }
 
 }
