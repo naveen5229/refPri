@@ -665,6 +665,50 @@ export class CommonService {
     return tempDate;
   }
 
+  // start: csv export from data
+  getCSVFromDataArray(dataArray, dataHeader, fileName, titles?, doNotIncludes?) {
+    let organization = { "elogist Solutions": "elogist Solutions" };
+    let name = (fileName && fileName != "") ? fileName : 'report';
+
+    let info = [];
+    let blankline = { "": "" };
+    if (titles && titles.length > 0) {
+      info.push(titles);
+      info.push(blankline);
+    }
+    console.log("given data array:", dataArray);
+    console.log("dataHeader:", dataHeader);
+    if (dataArray.length > 0) {
+      let objectKeys = Object.keys;
+      let thArray = [];
+      let thArg = [];
+      for (let heading of objectKeys(dataHeader)) {
+        console.log("heading in array:", heading);
+        let dataHeaderTemp = dataHeader[heading].title;
+        if (dataHeaderTemp == '' || dataHeaderTemp == 'Action' || dataHeaderTemp == 'action')
+          continue;
+
+        thArg.push(dataHeaderTemp);
+        thArray.push(this.formatTitle(dataHeaderTemp));
+      }
+
+      // console.log("thArray:", thArray);
+      info.push(thArray);
+
+      dataArray.map(column => {
+        let tdArray = [];
+        for (let heading of thArg) {
+          let columnTemp = (column[heading]) ? column[heading] : '';
+          tdArray.push(columnTemp);
+        }
+        info.push(tdArray);
+      })
+    }
+    // console.log("csv data array:", info);
+    new Angular5Csv(info, name);
+  }
+  // end: csv export from data
+
 }
 
 

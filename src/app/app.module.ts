@@ -71,6 +71,8 @@ import { ShowInstallerComponent } from './modals/show-installer/show-installer.c
 import { AttendanceMonthlySummaryComponent } from './modals/attendance-monthly-summary/attendance-monthly-summary.component';
 import { InfoMatrixComponent } from './modals/info-matrix/info-matrix.component';
 import { SalaryDetailComponent } from './modals/salary-detail/salary-detail.component';
+import { CampaignMessageComponent } from './modals/campaign-modals/campaign-message/campaign-message.component';
+import { TaskScheduleMasterComponent } from './modals/task-schedule-master/task-schedule-master.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -110,7 +112,9 @@ const PAGE_COMPONENTS = [
   ShowInstallerComponent,
   AttendanceMonthlySummaryComponent,
   InfoMatrixComponent,
-  SalaryDetailComponent
+  SalaryDetailComponent,
+  CampaignMessageComponent,
+  TaskScheduleMasterComponent
 ];
 
 @NgModule({

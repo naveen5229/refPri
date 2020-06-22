@@ -8,10 +8,11 @@ import { CampaignTargetActionComponent } from '../../modals/campaign-modals/camp
 import { AddContactComponent } from '../../modals/campaign-modals/add-contact/add-contact.component';
 import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
-import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+// import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
+import { CampaignMessageComponent } from '../../modals/campaign-modals/campaign-message/campaign-message.component';
 
 @Component({
   selector: 'ngx-campaign',
@@ -644,7 +645,8 @@ export class MycampaignComponent implements OnInit {
         campaignData: campaign
       }
       this.common.params = { campaignEditData, title: "campaign Comment", button: "Save", subTitle: campaign.Company, fromPage: 'campaign' };
-      const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      // const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      const activeModal = this.modalService.open(CampaignMessageComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         this.getCampaignByType(type);
       });

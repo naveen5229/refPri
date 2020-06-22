@@ -141,7 +141,8 @@ export class DailyPartnerReportComponent implements OnInit {
   }
 
   exportCSV() {
-    this.common.getCSVFromTableId('dailyPartnerReport')
+    // this.common.getCSVFromTableId('dailyPartnerReport');
+    this.common.getCSVFromDataArray(this.reportList, this.table.data.headings, 'miscellaneousReports')
   }
 
 }
