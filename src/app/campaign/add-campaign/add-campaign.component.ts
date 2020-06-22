@@ -8,6 +8,7 @@ import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/
 import { LocationTargetComponent } from '../../modals/campaign-modals/location-target/location-target.component';
 import { marker } from 'leaflet';
 import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
+import { CampaignUserMappingComponent } from '../../modals/campaign-user-mapping/campaign-user-mapping.component';
 
 @Component({
   selector: 'ngx-add-campaign',
@@ -131,11 +132,22 @@ export class AddCampaignComponent implements OnInit {
       { class: "fas fa-plus ml-2", action: this.infoMatrix.bind(this, campaign) },
       { class: "fas fa-list-alt pri_cat ml-2", action: this.priCatMapping.bind(this, campaign), title: "Primary Category Mapping" },
       { class: "fas fa-list-alt ml-2", action: this.secCatMapping.bind(this, campaign), title: "Secondary Category Mapping" },
+      { class: "fas fa-user-alt ml-2", action: this.campaignUserMapping.bind(this, campaign), title: "Campaign User Mapping" },
 
     ];
     return icons;
   }
 
+  campaignUserMapping(campaign) {
+    console.log(campaign);
+    this.common.params = { 'campaignId': campaign._campaignid };
+    const activeModal = this.modalService.open(CampaignUserMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     this.getCampaignData();
+    //   }
+    // });
+  }
   infoMatrix(campaign) {
     console.log(campaign);
     this.common.params = { 'campaignId': campaign._campaignid, 'title': 'Info Matrix' };

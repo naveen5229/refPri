@@ -4,6 +4,8 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import { LocationSelectionComponent } from '../location-selection/location-selection.component';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'saveadmin',
@@ -12,6 +14,8 @@ import { ApiService } from '../../Service/Api/api.service';
 })
 export class SaveadminComponent implements OnInit {
 
+  rowId = null;
+  isOtherShow = false;
   isUpdate = false;
   submitted = false;
   preSelectedDept = {
@@ -23,6 +27,11 @@ export class SaveadminComponent implements OnInit {
     name: null,
     mobileNo: null,
     isActive: '',
+    baseLat: null,
+    baseLong: null,
+    allowRadius: null,
+    attenMedium: null,
+    location: null,
     department: {
       id: null,
       name: ''
@@ -35,6 +44,8 @@ export class SaveadminComponent implements OnInit {
     doj: null,
     dol: null
   };
+  keepGoing = true;
+  searchString = ''
 
   departments = [];
   name = null;
@@ -50,6 +61,26 @@ export class SaveadminComponent implements OnInit {
   };
   activeAdminDetails = {};
 
+  dropdownList = [
+    { id: 1, item_text: 'Wifi' , value: '0'},
+    { id: 2, item_text: 'Base Location', value: '0'},
+    { id: 3, item_text: 'Shift', value: '0'},
+
+  ];
+  selectedItems = [
+    
+  ];
+
+  dropdownSettings:IDropdownSettings = {
+    singleSelection: false,
+    idField: 'id',
+    textField: 'item_text',
+    selectAllText: 'Select All',
+    unSelectAllText: 'UnSelect All',
+    itemsShowLimit: 3,
+    allowSearchFilter: false
+  };
+
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -59,6 +90,7 @@ export class SaveadminComponent implements OnInit {
     public renderer: Renderer,
     private sanitizer: DomSanitizer
   ) {
+    console.log(this.user);
     this.Fouser.doj = this.common.getDate(); // for new
     this.getDepartments();
     if (this.common.params && this.common.params.title == 'Edit Admin') {
@@ -68,14 +100,18 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.name = this.activeAdminDetails['name'];
       this.Fouser.isActive = 'true';
       this.Fouser.mobileNo = this.activeAdminDetails['mobileno'];
+      this.Fouser.allowRadius = this.activeAdminDetails['allowRadius'];
+      this.Fouser.attenMedium = this.activeAdminDetails['attenMedium'];
+      this.Fouser.baseLat = this.activeAdminDetails['baseLat'];
+      this.Fouser.baseLong = this.activeAdminDetails['baseLong'];
       this.Fouser.department.id = this.activeAdminDetails['_dept_id'];
       this.Fouser.department.name = this.activeAdminDetails['department_name'];
       this.Fouser.reportingManager.id = this.activeAdminDetails['_reporting_user_id'];
       this.Fouser.reportingManager.name = this.activeAdminDetails['reporting_manager'];
       this.preSelected.name = this.activeAdminDetails['name'];
       this.preSelected.mobileno = this.activeAdminDetails['mobileno'];
-      this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
-      this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
+      // this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
+      // this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
     }
     this.common.params = {};
   }
@@ -83,6 +119,76 @@ export class SaveadminComponent implements OnInit {
   ngOnInit() {
   }
 
+  onItemSelect(item: any) {
+    const selected = this.dropdownList.map(e => {
+        if (e.id == item.id) {
+          e.value = '1';
+        }
+    });
+  
+    let collective = [];
+    this.dropdownList.forEach( e => {
+      collective.push(e.value);
+    });
+    console.log(collective);
+    this.Fouser.attenMedium = collective.join('');
+    console.log(this.Fouser.attenMedium);
+  }
+
+  onItemDeSelect(item: any) {
+    const selected = this.dropdownList.map(e => {
+        if (e.id == item.id) {
+          e.value = '0';
+        }
+    });
+   
+    let collective = [];
+    this.dropdownList.forEach( e => {
+      collective.push(e.value);
+    });
+    console.log(collective);
+    this.Fouser.attenMedium = collective.join('');
+    console.log(this.Fouser.attenMedium);
+  }
+
+  onSelectAll(items: any) {
+    console.log(items);
+    items.forEach(e => {
+      this.dropdownList.map(i => {
+        if(i.id == e.id) {
+            i.value = '1';
+        }   
+      })
+    });
+ 
+    let collective = [];
+    this.dropdownList.forEach( e => {
+      collective.push(e.value);
+    });
+    console.log(collective);
+    this.Fouser.attenMedium = collective.join('');
+    console.log(this.Fouser.attenMedium);
+  }
+  onDeSelectAll(items: any){
+    console.log(items);
+   
+      this.dropdownList.map(i => {
+        
+            i.value = '0';
+          
+      });
+ 
+ 
+      let collective = [];
+      this.dropdownList.forEach( e => {
+        collective.push(e.value);
+      });
+      console.log(collective);
+      this.Fouser.attenMedium = collective.join('');
+      console.log(this.Fouser.attenMedium);
+
+  }
+  
 
   closeModal(response) {
     this.activeModal.close(response);
@@ -161,13 +267,21 @@ export class SaveadminComponent implements OnInit {
   }
 
   saveAdmin() {
-    let params = {
+    console.log(this.user._loggedInBy);
+    console.log(this.dropdownList);
+
+    if (this.user._loggedInBy == 'admin') {
+  let params = {
       name: this.Fouser.name,
       mobile: this.Fouser.mobileNo,
       departmentId: this.Fouser.department.id,
       reportingManagerId: this.Fouser.reportingManager.id,
-      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
+      doj: null,
       dol: null,
+      baseLat: this.Fouser.baseLat,
+      baseLong: this.Fouser.baseLong,
+      allowRadius: this.Fouser.allowRadius,
+      attenMedium: this.Fouser.attenMedium
 
     }
     console.log(params);
@@ -175,11 +289,8 @@ export class SaveadminComponent implements OnInit {
       this.common.showError('Enter Name');
     } else if (this.Fouser.mobileNo == null) {
       this.common.showError('Enter Mobile Number');
-    } else if (!this.Fouser.doj) {
-      return this.common.showError("Date of joining is missing");
-    } else if (this.Fouser.doj > this.common.getDate()) {
-      return this.common.showError("Date of joining must not be future date");
-    } else {
+    } 
+     else {
       this.common.loading++;
       this.api.post('Admin/save', params)
         .subscribe(res => {
@@ -190,7 +301,49 @@ export class SaveadminComponent implements OnInit {
             this.common.showError(this.data[0]['y_msg']);
           } else {
             this.common.showToast(this.data[0]['y_msg']);
+               this.isOtherShow = this.isOtherShow ? this.isOtherShow: !this.isOtherShow;
+               if (!this.isOtherShow) {
             this.closeModal(true);
+               }
+          }
+          console.log("pa", this.data)
+        }, err => {
+          this.common.loading--;
+          console.error(err);
+          this.common.showError();
+        });
+    }
+    } else if (this.user._loggedInBy == 'customer') {
+        let params = {
+      name: this.Fouser.name,
+      mobile: this.Fouser.mobileNo,
+      foid: this.user._details.id,
+      foAdminId: this.Fouser.id,
+      multipleAccounts: -1,
+      rowId: this.rowId
+     
+    }
+    console.log(params);
+    if (this.Fouser.name == null) {
+      this.common.showError('Enter Name');
+    } else if (this.Fouser.mobileNo == null) {
+      this.common.showError('Enter Mobile Number');
+    } 
+     else {
+      this.common.loading++;
+      this.api.post('Admin/save', params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log(res)
+          this.data = res['data']
+          if (this.data[0]['y_id'] <= 0) {
+            this.common.showError(this.data[0]['y_msg']);
+          } else {
+            this.common.showToast(this.data[0]['y_msg']);
+             this.isOtherShow = this.isOtherShow ? this.isOtherShow: !this.isOtherShow;
+               if (!this.isOtherShow) {
+            this.closeModal(true);
+               }
           }
           console.log("pa", this.data)
         }, err => {
@@ -200,9 +353,18 @@ export class SaveadminComponent implements OnInit {
         });
     }
 
+    }
+  
+
+  }
+
+  onNext() {
+    this.isOtherShow = true;
   }
 
   updateAdmin() {
+    if (this.user._loggedInBy == 'admin') {
+
     let param = {
       id: this.Fouser.id,
       name: this.Fouser.name,
@@ -211,22 +373,28 @@ export class SaveadminComponent implements OnInit {
       reportingManagerId: this.Fouser.reportingManager.id,
       isActive: Boolean(JSON.parse(this.Fouser.isActive)),
       doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
-      dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null
+      dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null,
+      baseLat: this.Fouser.baseLat,
+      baseLong: this.Fouser.baseLong,
+      allowRadius: this.Fouser.allowRadius,
+      attenMedium: this.Fouser.attenMedium
     }
     console.log(param);
     if (this.Fouser.name == null) {
       this.common.showError('Enter Name');
     } else if (this.Fouser.mobileNo == null) {
       this.common.showError('Enter Mobile Number');
-    } else if (this.Fouser.department.id == null) {
-      this.common.showError('Select Department');
-    } else if (!this.Fouser.doj) {
-      return this.common.showError("Date of joining is missing");
-    } else if (this.Fouser.doj > this.common.getDate()) {
-      return this.common.showError("Date of joining must not be future date");
-    } else if (this.Fouser.dol && this.Fouser.dol < this.Fouser.doj) {
-      return this.common.showError("Date of leaving must be greater than date of joining");
-    } else {
+    }
+    //  else if (this.Fouser.department.id == null) {
+    //   this.common.showError('Select Department');
+    // } else if (!this.Fouser.doj) {
+    //   return this.common.showError("Date of joining is missing");
+    // } else if (this.Fouser.doj > this.common.getDate()) {
+    //   return this.common.showError("Date of joining must not be future date");
+    // } else if (this.Fouser.dol && this.Fouser.dol < this.Fouser.doj) {
+    //   return this.common.showError("Date of leaving must be greater than date of joining");
+    // }
+     else {
       this.common.loading++;
       this.api.post('Admin/save', param)
         .subscribe(res => {
@@ -248,6 +416,49 @@ export class SaveadminComponent implements OnInit {
           this.common.showError();
         });
     }
+  } else if (this.user._loggedInBy == 'customer') {
+
+    let params = {
+      name: this.Fouser.name,
+      mobile: this.Fouser.mobileNo,
+      foid: this.user._details.id,
+      foAdminId: this.Fouser.id,
+      multipleAccounts: -1,
+      rowId: this.rowId
+     
+    }
+    console.log(params);
+    if (this.Fouser.name == null) {
+      this.common.showError('Enter Name');
+    } else if (this.Fouser.mobileNo == null) {
+      this.common.showError('Enter Mobile Number');
+    } 
+     else {
+      this.common.loading++;
+      this.api.post('Admin/save', params)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log(res)
+          this.data = res['data']
+          if (this.data[0]['y_id'] <= 0) {
+            this.common.showError(this.data[0]['y_msg']);
+          } else {
+            this.common.showToast(this.data[0]['y_msg']);
+            this.onCancel();
+             this.isOtherShow = this.isOtherShow ? this.isOtherShow: !this.isOtherShow;
+               if (!this.isOtherShow) {
+            this.closeModal(true);
+               }
+          }
+          console.log("pa", this.data)
+        }, err => {
+          this.common.loading--;
+          console.error(err);
+          this.common.showError();
+        });
+    }
+  }
+
   }
 
   onCancel() {
@@ -262,4 +473,47 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.dol = null;
   }
 
+
+  onChangeAuto(search) {
+    this.Fouser.baseLat = null;
+    this.Fouser.baseLong = null;
+    this.Fouser.location = null;
+    this.searchString = search;
+    console.log('..........', search);
+  }
+
+  selectLocation(place) {
+    console.log("palce", place);
+    this.Fouser.baseLat = place.lat;
+    this.Fouser.baseLong = place.long;
+    this.Fouser.location = place.location || place.name;
+  }
+
+  takeAction(res) {
+    setTimeout(() => {
+      console.log("Here", this.keepGoing, this.searchString.length, this.searchString);
+
+      if (this.keepGoing && this.searchString.length) {
+        this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation' };
+
+        const activeModal = this.modalService.open(LocationSelectionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+        this.keepGoing = false;
+        activeModal.result.then(res => {
+          if (res != null) {
+            console.log('new-response----', res, res.location);
+            this.keepGoing = true;
+            if (res.location.lat) {
+              this.Fouser.location = res.location.address;
+              (<HTMLInputElement>document.getElementById('location')).value = this.Fouser.location;
+              this.Fouser.baseLat = res.location.lat;
+              this.Fouser.baseLong = res.location.lng;
+              this.keepGoing = true;
+            }
+          }
+        })
+
+      }
+    }, 1000);
+
+  }
 }

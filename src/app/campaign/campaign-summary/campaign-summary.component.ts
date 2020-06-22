@@ -119,29 +119,16 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       this.totalLeadCount = JSON.parse(this.campaignSummaryData['totalleadcount']);
       this.stateWiseCount = JSON.parse(this.campaignSummaryData['statewisecount']);
 
+      this.showdata(this.totalLeadCount, this.stateWiseCount);
       if (this.totalLeadCount) {
         this.totalLeadsetTable();
-
       }
       if (this.stateWiseCount) {
         this.stateWisesetTable();
-
       }
-
-
       this.showTable = true;
       this.activeTab = 'stateSummary';
       this.getSummary(1);
-
-
-      console.log(this.campaignSummaryData);
-
-      console.log(JSON.parse(this.campaignSummaryData['callcount']));
-      console.log(JSON.parse(this.campaignSummaryData['pocccount']));
-      console.log(JSON.parse(this.campaignSummaryData['statewisecount']));
-      console.log(JSON.parse(this.campaignSummaryData['totalleadcount']));
-      console.log(JSON.parse(this.campaignSummaryData['userwisecount']));
-
     },
       err => {
         this.common.loading--;
@@ -163,10 +150,6 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       this.setTable(this.callCount);
     }
   }
-
-
-
-
 
   resetTable() {
     this.table.data = {
@@ -290,7 +273,6 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
 
   stateWisegetTableColumns() {
     let columns = [];
-    console.log('aya kya');
 
     this.stateWiseCount.map(rowData => {
       let column = {};
@@ -322,17 +304,11 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
 
   showdata(tableData, stateTableData) {
 
-    console.log(stateTableData);
-
-
     const filteredData = stateTableData.map(e => {
       let pickData = Object.keys(e).filter(f => !f.startsWith('_'));
       let x = _.pick(e, pickData);
       return x;
     });
-
-    console.log(filteredData);
-
 
     this.temCharts.forEach(ele => ele.destroy());
     this.temBarCharts.forEach(ele => ele.destroy());
@@ -345,13 +321,10 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
     }
 
     let entr = filteredData.map(e => Object.entries(e))
-    console.log(entr);
     entr.forEach(e => {
       console.log(e);
       e.join('-')
     });
-    console.log(entr);
-
 
     const labels = filteredData.map(e => Object.keys(e));
     const data = filteredData.map(e => Object.values(e));
@@ -362,11 +335,8 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       labels: labels,
       showLegend: true
     }
-
-
     this.temBarCharts = this.chart.generateBarChart([chartData1]);
     this.temCharts = this.chart.generatePieChart([chartData2]);
-
     this.showLabel = true;
 
   }

@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 import {
   NbChatModule,
@@ -71,6 +72,7 @@ import { ShowInstallerComponent } from './modals/show-installer/show-installer.c
 import { AttendanceMonthlySummaryComponent } from './modals/attendance-monthly-summary/attendance-monthly-summary.component';
 import { InfoMatrixComponent } from './modals/info-matrix/info-matrix.component';
 import { SalaryDetailComponent } from './modals/salary-detail/salary-detail.component';
+import { CampaignUserMappingComponent } from './modals/campaign-user-mapping/campaign-user-mapping.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -110,7 +112,8 @@ const PAGE_COMPONENTS = [
   ShowInstallerComponent,
   AttendanceMonthlySummaryComponent,
   InfoMatrixComponent,
-  SalaryDetailComponent
+  SalaryDetailComponent,
+  CampaignUserMappingComponent
 ];
 
 @NgModule({
@@ -118,6 +121,7 @@ const PAGE_COMPONENTS = [
     LoginComponent,
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
+    CampaignUserMappingComponent,
     // SendmessageComponent,
     // GenericModelComponent,
     // TicketCallRatingComponent,
@@ -125,6 +129,7 @@ const PAGE_COMPONENTS = [
   ],
   entryComponents: [...PAGE_COMPONENTS],
   imports: [
+    NgMultiSelectDropDownModule.forRoot(),
     NgxQRCodeModule,
     BrowserModule,
     BrowserAnimationsModule,
