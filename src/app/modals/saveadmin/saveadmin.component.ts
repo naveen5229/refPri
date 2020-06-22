@@ -62,16 +62,16 @@ export class SaveadminComponent implements OnInit {
   activeAdminDetails = {};
 
   dropdownList = [
-    { id: 1, item_text: 'Wifi' , value: '0'},
-    { id: 2, item_text: 'Base Location', value: '0'},
-    { id: 3, item_text: 'Shift', value: '0'},
+    { id: 1, item_text: 'Wifi', value: '0' },
+    { id: 2, item_text: 'Base Location', value: '0' },
+    { id: 3, item_text: 'Shift', value: '0' },
 
   ];
   selectedItems = [
-    
+
   ];
 
-  dropdownSettings:IDropdownSettings = {
+  dropdownSettings: IDropdownSettings = {
     singleSelection: false,
     idField: 'id',
     textField: 'item_text',
@@ -100,18 +100,18 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.name = this.activeAdminDetails['name'];
       this.Fouser.isActive = 'true';
       this.Fouser.mobileNo = this.activeAdminDetails['mobileno'];
-      this.Fouser.allowRadius = this.activeAdminDetails['allowRadius'];
-      this.Fouser.attenMedium = this.activeAdminDetails['attenMedium'];
-      this.Fouser.baseLat = this.activeAdminDetails['baseLat'];
-      this.Fouser.baseLong = this.activeAdminDetails['baseLong'];
+      this.Fouser.allowRadius = this.activeAdminDetails['_allow_radius'];
+      this.Fouser.attenMedium = this.activeAdminDetails['_atten_medium'];
+      this.Fouser.baseLat = this.activeAdminDetails['_base_lat'];
+      this.Fouser.baseLong = this.activeAdminDetails['_base_long'];
       this.Fouser.department.id = this.activeAdminDetails['_dept_id'];
       this.Fouser.department.name = this.activeAdminDetails['department_name'];
       this.Fouser.reportingManager.id = this.activeAdminDetails['_reporting_user_id'];
       this.Fouser.reportingManager.name = this.activeAdminDetails['reporting_manager'];
       this.preSelected.name = this.activeAdminDetails['name'];
       this.preSelected.mobileno = this.activeAdminDetails['mobileno'];
-      // this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
-      // this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
+      this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
+      this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
     }
     this.common.params = {};
   }
@@ -121,13 +121,13 @@ export class SaveadminComponent implements OnInit {
 
   onItemSelect(item: any) {
     const selected = this.dropdownList.map(e => {
-        if (e.id == item.id) {
-          e.value = '1';
-        }
+      if (e.id == item.id) {
+        e.value = '1';
+      }
     });
-  
+
     let collective = [];
-    this.dropdownList.forEach( e => {
+    this.dropdownList.forEach(e => {
       collective.push(e.value);
     });
     console.log(collective);
@@ -137,13 +137,13 @@ export class SaveadminComponent implements OnInit {
 
   onItemDeSelect(item: any) {
     const selected = this.dropdownList.map(e => {
-        if (e.id == item.id) {
-          e.value = '0';
-        }
+      if (e.id == item.id) {
+        e.value = '0';
+      }
     });
-   
+
     let collective = [];
-    this.dropdownList.forEach( e => {
+    this.dropdownList.forEach(e => {
       collective.push(e.value);
     });
     console.log(collective);
@@ -155,40 +155,40 @@ export class SaveadminComponent implements OnInit {
     console.log(items);
     items.forEach(e => {
       this.dropdownList.map(i => {
-        if(i.id == e.id) {
-            i.value = '1';
-        }   
+        if (i.id == e.id) {
+          i.value = '1';
+        }
       })
     });
- 
+
     let collective = [];
-    this.dropdownList.forEach( e => {
+    this.dropdownList.forEach(e => {
       collective.push(e.value);
     });
     console.log(collective);
     this.Fouser.attenMedium = collective.join('');
     console.log(this.Fouser.attenMedium);
   }
-  onDeSelectAll(items: any){
+  onDeSelectAll(items: any) {
     console.log(items);
-   
-      this.dropdownList.map(i => {
-        
-            i.value = '0';
-          
-      });
- 
- 
-      let collective = [];
-      this.dropdownList.forEach( e => {
-        collective.push(e.value);
-      });
-      console.log(collective);
-      this.Fouser.attenMedium = collective.join('');
-      console.log(this.Fouser.attenMedium);
+
+    this.dropdownList.map(i => {
+
+      i.value = '0';
+
+    });
+
+
+    let collective = [];
+    this.dropdownList.forEach(e => {
+      collective.push(e.value);
+    });
+    console.log(collective);
+    this.Fouser.attenMedium = collective.join('');
+    console.log(this.Fouser.attenMedium);
 
   }
-  
+
 
   closeModal(response) {
     this.activeModal.close(response);
@@ -271,90 +271,141 @@ export class SaveadminComponent implements OnInit {
     console.log(this.dropdownList);
 
     if (this.user._loggedInBy == 'admin') {
-  let params = {
-      name: this.Fouser.name,
-      mobile: this.Fouser.mobileNo,
-      departmentId: this.Fouser.department.id,
-      reportingManagerId: this.Fouser.reportingManager.id,
-      doj: null,
-      dol: null,
-      baseLat: this.Fouser.baseLat,
-      baseLong: this.Fouser.baseLong,
-      allowRadius: this.Fouser.allowRadius,
-      attenMedium: this.Fouser.attenMedium
+      let params = {
+        id: (this.Fouser.id > 0) ? this.Fouser.id : null,
+        name: this.Fouser.name,
+        mobile: this.Fouser.mobileNo,
+        departmentId: this.Fouser.department.id,
+        reportingManagerId: this.Fouser.reportingManager.id,
+        doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
+        dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null,
+        baseLat: this.Fouser.baseLat,
+        baseLong: this.Fouser.baseLong,
+        allowRadius: this.Fouser.allowRadius,
+        attenMedium: this.Fouser.attenMedium,
+        isActive: Boolean(JSON.parse(this.Fouser.isActive))
 
-    }
-    console.log(params);
-    if (this.Fouser.name == null) {
-      this.common.showError('Enter Name');
-    } else if (this.Fouser.mobileNo == null) {
-      this.common.showError('Enter Mobile Number');
-    } 
-     else {
-      this.common.loading++;
-      this.api.post('Admin/save', params)
-        .subscribe(res => {
-          this.common.loading--;
-          console.log(res)
-          this.data = res['data']
-          if (this.data[0]['y_id'] <= 0) {
-            this.common.showError(this.data[0]['y_msg']);
-          } else {
-            this.common.showToast(this.data[0]['y_msg']);
-               this.isOtherShow = this.isOtherShow ? this.isOtherShow: !this.isOtherShow;
-               if (!this.isOtherShow) {
-            this.closeModal(true);
-               }
-          }
-          console.log("pa", this.data)
-        }, err => {
-          this.common.loading--;
-          console.error(err);
-          this.common.showError();
-        });
-    }
+      }
+      console.log(params);
+      if (this.Fouser.name == null) {
+        this.common.showError('Enter Name');
+      } else if (this.Fouser.mobileNo == null) {
+        this.common.showError('Enter Mobile Number');
+      } else if (this.isOtherShow && !this.Fouser.doj) {
+        return this.common.showError("Date of joining is missing");
+      } else if (this.isOtherShow && this.Fouser.doj > this.common.getDate()) {
+        return this.common.showError("Date of joining must not be future date");
+      }
+      else {
+        this.common.loading++;
+        this.api.post('Admin/save', params)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log(res)
+            this.data = res['data']
+            if (res['code'] == 1) {
+              if (this.data[0]['y_id'] <= 0) {
+                this.common.showError(this.data[0]['y_msg']);
+              } else {
+                this.common.showToast(this.data[0]['y_msg']);
+                this.isOtherShow = !this.isOtherShow;
+                if (!this.isOtherShow) {
+                  this.closeModal(true);
+                }
+              }
+            } else {
+              this.common.showError(this.data['msg']);
+            }
+            console.log("pa", this.data)
+          }, err => {
+            this.common.loading--;
+            console.error(err);
+            this.common.showError();
+          });
+      }
     } else if (this.user._loggedInBy == 'customer') {
-        let params = {
-      name: this.Fouser.name,
-      mobile: this.Fouser.mobileNo,
-      foid: this.user._details.id,
-      foAdminId: this.Fouser.id,
-      multipleAccounts: -1,
-      rowId: this.rowId
-     
-    }
-    console.log(params);
-    if (this.Fouser.name == null) {
-      this.common.showError('Enter Name');
-    } else if (this.Fouser.mobileNo == null) {
-      this.common.showError('Enter Mobile Number');
-    } 
-     else {
-      this.common.loading++;
-      this.api.post('Admin/save', params)
-        .subscribe(res => {
-          this.common.loading--;
-          console.log(res)
-          this.data = res['data']
-          if (this.data[0]['y_id'] <= 0) {
-            this.common.showError(this.data[0]['y_msg']);
-          } else {
-            this.common.showToast(this.data[0]['y_msg']);
-             this.isOtherShow = this.isOtherShow ? this.isOtherShow: !this.isOtherShow;
-               if (!this.isOtherShow) {
-            this.closeModal(true);
-               }
-          }
-          console.log("pa", this.data)
-        }, err => {
-          this.common.loading--;
-          console.error(err);
-          this.common.showError();
-        });
-    }
+      let params = {
+        foadminuserId: null,
+        departmentId: null,
+        reportingManagerId: null,
+        doj: null,
+        dol: null,
+        baseLat: null,
+        baseLong: null,
+        allowRadius: null,
+        attenMedium: null,
+        name: null,
+        mobileno: null,
+        foid: null,
+        foAdminId: null,
+        multipleAccounts: null,
+        rowId: null,
+      };
+      let apiName = "FoAdmin/addUsers";
+      let apiType = "postBooster";
+
+      if (this.isOtherShow) {
+        params['foadminuserId'] = this.Fouser.id;
+        params['departmentId'] = this.Fouser.department.id;
+        params['reportingManagerId'] = this.Fouser.reportingManager.id;
+        params['doj'] = (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null;
+        params['dol'] = (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null;
+        params['baseLat'] = (this.Fouser.baseLat) ? this.Fouser.baseLat : null;
+        params['baseLong'] = (this.Fouser.baseLong) ? this.Fouser.baseLong : null;
+        params['allowRadius'] = (this.Fouser.allowRadius) ? this.Fouser.allowRadius : null;
+        params['attenMedium'] = (this.Fouser.attenMedium) ? this.Fouser.attenMedium : null;
+
+        apiName = "FoAdmin/saveFoAdminInfo";
+        apiType = "post";
+
+      } else {
+        params['name'] = this.Fouser.name;
+        params['mobileno'] = this.Fouser.mobileNo;
+        params['foid'] = this.user._details.foid;
+        params['foAdminId'] = this.Fouser.id;
+        params['multipleAccounts'] = -1;
+        params['rowId'] = (this.Fouser.id > 0) ? this.Fouser.id : null;
+
+      }
+      console.log("apiName:", apiName);
+      console.log("apiType:", apiType);
+      console.log("params:", params);
+      // return false;
+      if (this.Fouser.name == null) {
+        this.common.showError('Enter Name');
+      } else if (this.Fouser.mobileNo == null) {
+        this.common.showError('Enter Mobile Number');
+      }
+      else {
+        this.common.loading++;
+        this.api[apiType](apiName, params)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log(res)
+            this.data = res['data'];
+            if (res['code'] == 1) {
+              if (this.data[0]['y_id'] <= 0) {
+                this.common.showError(this.data[0]['y_msg']);
+              } else {
+                this.common.showToast(this.data[0]['y_msg']);
+                this.isOtherShow = !this.isOtherShow;
+                if (!this.isOtherShow) {
+                  this.closeModal(true);
+                }
+              }
+            } else {
+              this.common.showError(this.data['msg']);
+            }
+            console.log("pa", this.data)
+          }, err => {
+            this.common.loading--;
+            console.error(err);
+            this.common.showError();
+          });
+      }
 
     }
-  
+
 
   }
 
@@ -365,99 +416,122 @@ export class SaveadminComponent implements OnInit {
   updateAdmin() {
     if (this.user._loggedInBy == 'admin') {
 
-    let param = {
-      id: this.Fouser.id,
-      name: this.Fouser.name,
-      mobile: this.Fouser.mobileNo,
-      departmentId: this.Fouser.department.id,
-      reportingManagerId: this.Fouser.reportingManager.id,
-      isActive: Boolean(JSON.parse(this.Fouser.isActive)),
-      doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
-      dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null,
-      baseLat: this.Fouser.baseLat,
-      baseLong: this.Fouser.baseLong,
-      allowRadius: this.Fouser.allowRadius,
-      attenMedium: this.Fouser.attenMedium
-    }
-    console.log(param);
-    if (this.Fouser.name == null) {
-      this.common.showError('Enter Name');
-    } else if (this.Fouser.mobileNo == null) {
-      this.common.showError('Enter Mobile Number');
-    }
-    //  else if (this.Fouser.department.id == null) {
-    //   this.common.showError('Select Department');
-    // } else if (!this.Fouser.doj) {
-    //   return this.common.showError("Date of joining is missing");
-    // } else if (this.Fouser.doj > this.common.getDate()) {
-    //   return this.common.showError("Date of joining must not be future date");
-    // } else if (this.Fouser.dol && this.Fouser.dol < this.Fouser.doj) {
-    //   return this.common.showError("Date of leaving must be greater than date of joining");
-    // }
-     else {
-      this.common.loading++;
-      this.api.post('Admin/save', param)
-        .subscribe(res => {
-          this.common.loading--;
-          console.log(res)
-          this.data = res['data']
-          if (this.data[0]['y_id'] <= 0) {
-            this.common.showError(this.data[0]['y_msg']);
-          } else {
-            this.common.showToast(this.data[0]['y_msg']);
-            this.onCancel();
-            this.closeModal(true);
-          }
+      let param = {
+        id: this.Fouser.id,
+        name: this.Fouser.name,
+        mobile: this.Fouser.mobileNo,
+        departmentId: this.Fouser.department.id,
+        reportingManagerId: this.Fouser.reportingManager.id,
+        isActive: Boolean(JSON.parse(this.Fouser.isActive)),
+        doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
+        dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null,
+        baseLat: this.Fouser.baseLat,
+        baseLong: this.Fouser.baseLong,
+        allowRadius: this.Fouser.allowRadius,
+        attenMedium: this.Fouser.attenMedium
+      }
+      console.log(param);
+      if (this.Fouser.name == null) {
+        this.common.showError('Enter Name');
+      } else if (this.Fouser.mobileNo == null) {
+        this.common.showError('Enter Mobile Number');
+      }
+      //  else if (this.Fouser.department.id == null) {
+      //   this.common.showError('Select Department');
+      // } else if (!this.Fouser.doj) {
+      //   return this.common.showError("Date of joining is missing");
+      // } else if (this.Fouser.doj > this.common.getDate()) {
+      //   return this.common.showError("Date of joining must not be future date");
+      // } else if (this.Fouser.dol && this.Fouser.dol < this.Fouser.doj) {
+      //   return this.common.showError("Date of leaving must be greater than date of joining");
+      // }
+      else {
+        this.common.loading++;
+        this.api.post('Admin/save', param)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log(res)
+            this.data = res['data']
+            if (this.data[0]['y_id'] <= 0) {
+              this.common.showError(this.data[0]['y_msg']);
+            } else {
+              this.common.showToast(this.data[0]['y_msg']);
+              this.onCancel();
+              this.isOtherShow = !this.isOtherShow;
+              if (!this.isOtherShow) {
+                this.closeModal(true);
+              }
+            }
 
-          console.log("pa", this.data)
-        }, err => {
-          this.common.loading--;
-          console.error(err);
-          this.common.showError();
-        });
-    }
-  } else if (this.user._loggedInBy == 'customer') {
+            console.log("pa", this.data)
+          }, err => {
+            this.common.loading--;
+            console.error(err);
+            this.common.showError();
+          });
+      }
+    } else if (this.user._loggedInBy == 'customer') {
 
-    let params = {
-      name: this.Fouser.name,
-      mobile: this.Fouser.mobileNo,
-      foid: this.user._details.id,
-      foAdminId: this.Fouser.id,
-      multipleAccounts: -1,
-      rowId: this.rowId
-     
+      let params;
+      let apiName = (this.isOtherShow) ? "FoAdmin/saveFoAdminInfo" : "FoAdmin/addUsers";
+      let apiType = (this.isOtherShow) ? "postBooster" : "post";
+      if (this.isOtherShow) {
+        params.foadminuserId = this.Fouser.name;
+        params.departmentId = this.Fouser.department.id;
+        params.reportingManagerId = this.Fouser.reportingManager.id;
+        params.doj = (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null;
+        params.dol = (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null;
+        params.baseLat = this.Fouser.baseLat;
+        params.baseLong = this.Fouser.baseLong;
+        params.allowRadius = this.Fouser.allowRadius;
+        params.attenMedium = this.Fouser.attenMedium;
+
+        apiName = "FoAdmin/saveFoAdminInfo";
+        apiType = "postBooster";
+
+      } else {
+        params.name = this.Fouser.name;
+        params.mobileno = this.Fouser.mobileNo;
+        params.foid = this.user._details.foid;
+        params.foAdminId = this.Fouser.id;
+        params.multipleAccounts = -1;
+        params.rowId = this.Fouser.id;
+
+      }
+      console.log("apiName:", apiName);
+      console.log("apiType:", apiType);
+      console.log("params:", params); return false;
+      if (!this.isOtherShow && this.Fouser.name == null) {
+        this.common.showError('Enter Name');
+      } else if (!this.isOtherShow && this.Fouser.mobileNo == null) {
+        this.common.showError('Enter Mobile Number');
+      }
+      else {
+        this.common.loading++;
+
+        this.api[apiType](apiName, params)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log(res)
+            this.data = res['data']
+            if (this.data[0]['y_id'] <= 0) {
+              this.common.showError(this.data[0]['y_msg']);
+            } else {
+              this.common.showToast(this.data[0]['y_msg']);
+              this.onCancel();
+              this.isOtherShow = !this.isOtherShow;
+              if (!this.isOtherShow) {
+                this.closeModal(true);
+              }
+            }
+            console.log("pa", this.data)
+          }, err => {
+            this.common.loading--;
+            console.error(err);
+            this.common.showError();
+          });
+      }
     }
-    console.log(params);
-    if (this.Fouser.name == null) {
-      this.common.showError('Enter Name');
-    } else if (this.Fouser.mobileNo == null) {
-      this.common.showError('Enter Mobile Number');
-    } 
-     else {
-      this.common.loading++;
-      this.api.post('Admin/save', params)
-        .subscribe(res => {
-          this.common.loading--;
-          console.log(res)
-          this.data = res['data']
-          if (this.data[0]['y_id'] <= 0) {
-            this.common.showError(this.data[0]['y_msg']);
-          } else {
-            this.common.showToast(this.data[0]['y_msg']);
-            this.onCancel();
-             this.isOtherShow = this.isOtherShow ? this.isOtherShow: !this.isOtherShow;
-               if (!this.isOtherShow) {
-            this.closeModal(true);
-               }
-          }
-          console.log("pa", this.data)
-        }, err => {
-          this.common.loading--;
-          console.error(err);
-          this.common.showError();
-        });
-    }
-  }
 
   }
 
