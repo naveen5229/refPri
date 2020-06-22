@@ -10,6 +10,7 @@ import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { AddProjectComponent } from '../../modals/add-project/add-project.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
+import { TaskScheduleMasterComponent } from '../../modals/task-schedule-master/task-schedule-master.component';
 
 @Component({
   selector: 'ngx-task',
@@ -154,8 +155,6 @@ export class TaskComponent implements OnInit {
       id: '',
       name: ''
     },
-    // logicType: 1,
-    // scheduleParam: 1,
     days: "",
     hours: "",
     isActive: true,
@@ -1353,6 +1352,10 @@ export class TaskComponent implements OnInit {
 
   openSchedukedTaskMasterModal() {
     document.getElementById("schedukedTaskMasterModal").style.display = "block";
+    // this.common.params = null;
+    // this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    // const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => { });
   }
 
   saveScheduleTask() {
@@ -1421,8 +1424,6 @@ export class TaskComponent implements OnInit {
         id: '',
         name: ''
       },
-      // logicType: 1,
-      // scheduleParam: 1,
       days: "",
       hours: "",
       isActive: true,
@@ -1561,6 +1562,11 @@ export class TaskComponent implements OnInit {
 
     console.log("edit scheduledTask:", this.scheduledTask);
     this.openSchedukedTaskMasterModal();
+
+    // this.common.params = null;
+    // this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    // const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => { });
   }
 
 }

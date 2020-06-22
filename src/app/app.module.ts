@@ -73,6 +73,8 @@ import { AttendanceMonthlySummaryComponent } from './modals/attendance-monthly-s
 import { InfoMatrixComponent } from './modals/info-matrix/info-matrix.component';
 import { SalaryDetailComponent } from './modals/salary-detail/salary-detail.component';
 import { CampaignUserMappingComponent } from './modals/campaign-user-mapping/campaign-user-mapping.component';
+import { CampaignMessageComponent } from './modals/campaign-modals/campaign-message/campaign-message.component';
+import { TaskScheduleMasterComponent } from './modals/task-schedule-master/task-schedule-master.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -113,7 +115,9 @@ const PAGE_COMPONENTS = [
   AttendanceMonthlySummaryComponent,
   InfoMatrixComponent,
   SalaryDetailComponent,
-  CampaignUserMappingComponent
+  CampaignUserMappingComponent,
+  CampaignMessageComponent,
+  TaskScheduleMasterComponent
 ];
 
 @NgModule({
@@ -121,7 +125,6 @@ const PAGE_COMPONENTS = [
     LoginComponent,
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
-    CampaignUserMappingComponent,
     // SendmessageComponent,
     // GenericModelComponent,
     // TicketCallRatingComponent,
