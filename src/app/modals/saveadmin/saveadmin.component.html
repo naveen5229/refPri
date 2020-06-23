@@ -32,6 +32,23 @@
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">
             </div>
         </div>
+        <div class="row mt-2" *ngIf="Fouser.id && this.user._loggedInBy == 'admin'">
+            <div class="col-lg-4">
+                <label>Status :-</label>
+            </div>
+            <div class="col-lg-8">
+                <div class="row" style="margin-left: 15px;">
+                    <div class="col-6">
+                        <input id="active" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="true" name="active">
+                        <label class="custom-control-label" for="active">Active</label>
+                    </div>
+                    <div class="col-6">
+                        <input id="deactive" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="false" name="deactive">
+                        <label class="custom-control-label" for="deactive">DeActive</label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div *ngIf='isOtherShow'>
@@ -63,7 +80,7 @@
                 </uj-date-time-picker>
             </div>
         </div>
-        <div class="row mt-2" >
+        <div class="row mt-2">
             <div class="col-lg-4">
                 <label>Date of Leaving:</label>
             </div>
@@ -72,7 +89,7 @@
                 </uj-date-time-picker>
             </div>
         </div>
-        <div class="row mt-2" >
+        <div class="row mt-2">
             <div class="col-lg-4">
                 <label>Base Location:</label>
             </div>
@@ -88,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-2" >
+        <div class="row mt-2">
             <div class="col-lg-4">
                 <label>Allow Radius:</label>
             </div>
@@ -96,49 +113,17 @@
                 <input type="number" placeholder="Radius" [(ngModel)]='Fouser.allowRadius'>
             </div>
         </div>
-               
-        
-        <div class="row mt-2" >
-        <div class="col-lg-4">
-            <label>Attendance Type:</label>
-        </div>
-        <div class="col-lg-8">
-            <ng-multiselect-dropdown
-            [placeholder]="'Attendance Type'"
-            [data]="dropdownList"
-            [(ngModel)]="selectedItems"
-            [settings]="dropdownSettings"
-            (onSelect)="onItemSelect($event)"
-            (onDeSelect)="onItemDeSelect($event)"
-            (onSelectAll)="onSelectAll($event)"
-            (onDeSelectAll)="onDeSelectAll($event)"
 
-            >
-          </ng-multiselect-dropdown>
-        </div>
-    </div>
-
-
-       
-
-
-        <!-- <div class="row mt-2" *ngIf='Fouser.id'>
+        <div class="row mt-2">
             <div class="col-lg-4">
-                <label>Status :-</label>
+                <label>Attendance Type:</label>
             </div>
             <div class="col-lg-8">
-                <div class="row" style="margin-left: 15px;">
-                    <div class="col-6">
-                        <input id="active" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="true" name="active">
-                        <label class="custom-control-label" for="active">Active</label>
-                    </div>
-                    <div class="col-6">
-                        <input id="deactive" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="false" name="deactive">
-                        <label class="custom-control-label" for="deactive">DeActive</label>
-                    </div>
-                </div>
+                <ng-multiselect-dropdown [placeholder]="'Attendance Type'" [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeSelect($event)" (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)">
+                </ng-multiselect-dropdown>
             </div>
-        </div> -->
+        </div>
+
     </div>
 
 
@@ -146,14 +131,9 @@
     <br> -->
     <div class="row text-right mt-2">
         <div class="col-12">
-            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()" >Next</button>
-
+            <!-- <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()">Next</button> -->
             <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="onCancel()">Cancel</button>
-            <!-- </div>
-        <div> -->
-            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary ml-3" (click)="updateAdmin()">Update</button>
-            <!-- </div>
-        <div style="float: right;"> -->
+            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary ml-3" (click)="saveAdmin()">{{(isOtherShow)?'Update':'Next'}}</button>
             <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="saveAdmin()">Save</button>
         </div>
     </div>
@@ -167,5 +147,3 @@
 
     <!-- <div class="row" style="margin-top:20px; margin-bottom:20px;  float: right;" >
   </div> -->
-
-
