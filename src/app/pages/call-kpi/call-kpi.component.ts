@@ -64,9 +64,7 @@ export class CallKpiComponent implements OnInit {
     this.shiftEnd.setHours(18)
     this.shiftEnd.setMinutes(30)
     this.getCallKpi();
-    setTimeout(() => {
-      this.showdata(this.callKpiList[0]);
-    }, 3000);
+   
     //  const doc = this.getCallKpi();
     // this.shiftStart.setDate(this.endTime.getDate()-1)
     // this.endTime.setDate(this.endTime.getDate()-1)
@@ -123,6 +121,8 @@ export class CallKpiComponent implements OnInit {
         // console.log('res:', res);
         this.callKpiList = res['data'] || [];
         console.log(this.callKpiList);
+        this.showdata(this.callKpiList[0]);
+
 
         this.callKpiList.length ? this.setTable() : this.resetTable();
         return this.callKpiList[0];
@@ -228,7 +228,7 @@ export class CallKpiComponent implements OnInit {
       bgColor: [doc['Tk. Dur.']['class'], doc['FO Dur.']['class'], doc['Pt. Dur.']['class'], doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
       showLegend: false
     }
-    this.temCharts = this.chart.generatePieChart([chartData1, chartData2, chartData3]);
+    this.temCharts = this.chart.generatePieChartforCall([chartData1, chartData2, chartData3]);
 
     this.showLabel = true;
 

@@ -152,12 +152,10 @@ export class GenericModelComponent implements OnInit {
     return title.charAt(0).toUpperCase() + title.slice(1)
   }
   getTableColumns() {
-    console.log('________________', this.common.params.data['actionRequired']);
     let columns = [];
     this.data.map(doc => {
       this.valobj = {};
       for (let i = 0; i < this.headings.length; i++) {
-        console.log(this.headings);
         if ( this.headings[i] == "action") {
           let icons = [];
           if (this.deleteObj.api)
