@@ -57,7 +57,7 @@ export class TaskMessageComponent implements OnInit {
         this.statusId = this.common.params.ticketEditData.statusId;
         this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
         this.taskId = this.common.params.ticketEditData.taskId;
-        this.ticketType = this.common.params.ticketEditData.taskType;
+        // this.ticketType = this.common.params.ticketEditData.taskType;
         this.ticketType = this.common.params.ticketEditData.taskType;
         this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
         this.ticketData = this.common.params.ticketEditData.ticketData;

@@ -62,14 +62,11 @@ export class SaveadminComponent implements OnInit {
   activeAdminDetails = {};
 
   dropdownList = [
-    { id: 1, item_text: 'Wifi', value: '0' },
-    { id: 2, item_text: 'Base Location', value: '0' },
-    { id: 3, item_text: 'Shift', value: '0' },
-
+    { id: 1, item_text: 'Wifi', value: '1' },
+    { id: 2, item_text: 'Base Location', value: '1' },
+    { id: 3, item_text: 'Shift', value: '1' },
   ];
-  selectedItems = [
-
-  ];
+  selectedItems;
 
   dropdownSettings: IDropdownSettings = {
     singleSelection: false,
@@ -112,6 +109,20 @@ export class SaveadminComponent implements OnInit {
       this.preSelected.mobileno = this.activeAdminDetails['mobileno'];
       this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
       this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
+      if (this.activeAdminDetails['_atten_medium'] == '100') {
+        this.selectedItems = 1;
+        // document.getElementById("attenMediumYes").checked;
+      } else if (this.activeAdminDetails['_atten_medium'] == '010' || this.activeAdminDetails['_atten_medium'] == '020') {
+        this.selectedItems = 2;
+        // if(this.activeAdminDetails['_atten_medium'] == '020'){
+        //   document.getElementById("myRadio").checked;
+        // }else{
+        //   document.getElementById("attenMediumYes").checked;
+        // }
+      } else if (this.activeAdminDetails['_atten_medium'] == '001') {
+        // document.getElementById("attenMediumYes").checked;
+        this.selectedItems = 3;
+      }
     }
     this.common.params = {};
   }
@@ -244,7 +255,7 @@ export class SaveadminComponent implements OnInit {
       });
   }
   selectFoUser(value) {
-    console.log(value);
+    console.log("selectFoUser:", value);
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
@@ -263,6 +274,20 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.isActive = value.is_active.toString();
     this.Fouser.doj = (value.doj) ? new Date(value.doj) : null;
     this.Fouser.dol = (value.dol) ? new Date(value.dol) : null;
+    this.Fouser.allowRadius = value._allow_radius;
+    this.Fouser.attenMedium = value._atten_medium;
+    this.Fouser.baseLat = value._base_lat;
+    this.Fouser.baseLong = value._base_long;
+
+    // this.selectedItems = (value._atten_medium) ? (value._atten_medium).split("") : null;
+    if (value._atten_medium == '100') {
+      this.selectedItems = 1;
+    } else if (value._atten_medium == '010' || value._atten_medium == '020') {
+      this.selectedItems = 2;
+    } else if (value._atten_medium == '001') {
+      this.selectedItems = 3;
+    }
+    console.log("selectedItems:", this.selectedItems);
 
   }
 
@@ -286,7 +311,8 @@ export class SaveadminComponent implements OnInit {
         isActive: Boolean(JSON.parse(this.Fouser.isActive))
 
       }
-      console.log(params);
+      console.log("params:", params);
+      // return false;
       if (this.Fouser.name == null) {
         this.common.showError('Enter Name');
       } else if (this.Fouser.mobileNo == null) {
