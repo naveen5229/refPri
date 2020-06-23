@@ -10,6 +10,7 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-schedule-master.component.scss']
 })
 export class TaskScheduleMasterComponent implements OnInit {
+  title = "Scheduled Task Master";
   scheduledTask = {
     taskId: null,
     subject: "",

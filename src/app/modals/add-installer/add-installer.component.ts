@@ -57,8 +57,13 @@ export class AddInstallerComponent implements OnInit {
     this.installerData.partner.id = event.id;
     this.installerData.partner.name = event.name;
   }
- 
-  
+
+  selectLocation(place) {
+    console.log("palce", place);
+    this.installerData.baseLat = place.lat;
+    this.installerData.baseLong = place.long;
+    this.installerData.location = place.location || place.name;
+  }
 
   onChangeAuto(search) {
     this.installerData.baseLat = null;
