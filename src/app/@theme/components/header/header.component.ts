@@ -106,7 +106,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     if (confirm('Are you sure to logout?')) {
-      let loggedInBy = localStorage.getItem('LOGGED_IN_BY');
+      let loggedInBy = localStorage.getItem('ITRM_LOGGED_IN_BY');
       let apiCall = (loggedInBy == 'customer') ? 'FoAdmin/logout' : 'Login/logout';
       let params = {
         entrymode: "1",
@@ -123,7 +123,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
             localStorage.removeItem('ITRM_USER_TOKEN');
             localStorage.removeItem('ITRM_USER_DETAILS');
-            localStorage.removeItem('LOGGED_IN_BY');
+            localStorage.removeItem('ITRM_LOGGED_IN_BY');
             localStorage.removeItem('ITRM_USER_PAGES');
 
             this.common.showToast(res['msg']);

@@ -177,6 +177,8 @@ export class TaskComponent implements OnInit {
     }
   };
 
+  normalTaskListAll = [];
+
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTaskByType(-8);
     this.getAllAdmin();
@@ -251,6 +253,7 @@ export class TaskComponent implements OnInit {
       this.resetSmartTableData();
       if (type == 101) {//normal task pending (task for me)
         this.normalTaskList = res['data'] || [];
+        this.normalTaskListAll = this.normalTaskList;
         this.setTableNormal(type);
       } else if (type == -101) { //task by me
         this.normalTaskByMeList = res['data'] || [];
@@ -841,8 +844,10 @@ export class TaskComponent implements OnInit {
     if (type == -101) {
       icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
       // icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
-      if (ticket._status == 2) { //for hold
+      if (ticket._status == 2 && [101, 102].includes(ticket._tktype)) { //for hold
         icons.push({ class: "fa fa-pause-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 3), txt: '', title: "Mark Task as Hold" });
+      } else if (ticket._status == 3 && [101, 102].includes(ticket._tktype)) {
+        icons.push({ class: "fa fa-play-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: '', title: "Make Task as Unhold" });
       }
     } else if (type == 101 || type == 103 || type == -102) {
       if ((ticket._status == 5 || ticket._status == -1)) {
@@ -881,7 +886,7 @@ export class TaskComponent implements OnInit {
       }
     }
 
-    if (type == 101 || type == -101) {
+    if ((type == 101 || type == -101) && [101, 102].includes(ticket._tktype)) {
       icons.push({ class: "fa fa-link", action: this.createChildTicket.bind(this, ticket, type), txt: '', title: "add child task" });
     }
 
@@ -1669,6 +1674,25 @@ export class TaskComponent implements OnInit {
       // { class: "fa fa-edit", action: this.editScheduleTask.bind(this, task) }, ,
     ];
     return icons;
+  }
+
+  activeNormalSabTab = 0;
+  filterTaskBySubTab(type, subTabType) {
+    if (type == 101) {
+      // ticket._status == 3 && [101, 102].includes(ticket._tktype)
+      let selectedList = [];
+      if (subTabType == 1) { //normal
+        selectedList = this.normalTaskListAll.filter(x => { return [101, 102].includes(x._tktype) });
+      } else if (subTabType == 2) { //scheduled
+        selectedList = this.normalTaskListAll.filter(x => { return x._tktype == 103 });
+      } else if (subTabType == 3) { //hold
+        selectedList = this.normalTaskListAll.filter(x => { return x._tktype == 103 });
+      } else { //all
+        selectedList = this.normalTaskListAll;
+      }
+      this.normalTaskList = (selectedList.length > 0) ? selectedList : [];
+      this.setTableNormal(type);
+    }
   }
 
 }

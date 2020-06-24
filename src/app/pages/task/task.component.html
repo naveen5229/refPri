@@ -30,37 +30,58 @@
                 <li [ngClass]="activeTab=='TasksByMe'?'active':''" (click)="activeTab='TasksByMe'; getTaskByType(-101)">
                     Tasks By Me
                 </li>
-                <li [ngClass]="activeTab=='scheduleMaster'?'active':''" (click)="activeTab='scheduleMaster'; getScheduledTask()">
-                    Scheduled Task Master
-                </li>
-                <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
-                    Scheduled Task
-                </li>
-                <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask';resetSearchTask(); getTaskByType(-102)">
-                    Completed Task
-                </li>
                 <li [ngClass]="activeTab=='ccTask'?'active':''" (click)="activeTab='ccTask'; getTaskByType(-5)">
                     CC Task
                 </li>
                 <li [ngClass]="activeTab=='projectTask'?'active':''" (click)="activeTab='projectTask'; getTaskByType(-6)">
                     Project Task
                 </li>
-                <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList'; getTodoTaskList()">
-                    ToDo List
+                <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask';resetSearchTask(); getTaskByType(-102)">
+                    Completed Task
                 </li>
                 <li [ngClass]="activeTab=='futureTaskByMe'?'active':''" (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
                     Future Task
                 </li>
-                <li [ngClass]="activeTab=='holdTask'?'active':''" (click)="activeTab='holdTask'; getTaskByType(-9)">
-                    Hold Task
+                <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList'; getTodoTaskList()">
+                    ToDo List
+                </li>
+                <li [ngClass]="activeTab=='scheduleMaster'?'active':''" (click)="activeTab='scheduleMaster'; getScheduledTask()">
+                    Scheduled Task Master
                 </li>
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
                     Unread Task
+                </li>
+                <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
+                    Scheduled Task
+                </li>
+                <li [ngClass]="activeTab=='holdTask'?'active':''" (click)="activeTab='holdTask'; getTaskByType(-9)">
+                    Hold Task
                 </li>
             </ul>
         </div>
 
         <div *ngIf="activeTab=='TasksForMe'">
+            <!-- <div class="row">
+                <div class="col-12 text-right">
+                    <button class="btn btn-primary btn-sm" (click)="filterTaskBySubTab(101,1)">Normal</button>
+                    <button class="btn btn-primary btn-sm ml-2" (click)="filterTaskBySubTab(101,2)">Scheduled</button>
+                    <button class="btn btn-primary btn-sm ml-2" (click)="filterTaskBySubTab(101,3)">Hold</button>
+                </div>
+            </div> -->
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeNormalSabTab?'active':''" (click)="activeNormalSabTab=0; filterTaskBySubTab(101,0)">
+                    All
+                </li>
+                <li [ngClass]="activeNormalSabTab==1?'active':''" (click)="activeNormalSabTab=1; filterTaskBySubTab(101,1)">
+                    Normal
+                </li>
+                <li [ngClass]="activeNormalSabTab==2?'active':''" (click)="activeNormalSabTab=2; filterTaskBySubTab(101,2)">
+                    Scheduled
+                </li>
+                <li [ngClass]="activeNormalSabTab==3?'active':''" (click)="activeNormalSabTab=3; filterTaskBySubTab(101,3)">
+                    Hold
+                </li>
+            </ul>
             <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList">
             </smart-table>
         </div>

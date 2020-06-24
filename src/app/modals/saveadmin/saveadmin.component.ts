@@ -292,8 +292,8 @@ export class SaveadminComponent implements OnInit {
   }
 
   saveAdmin() {
-    console.log(this.user._loggedInBy);
-    console.log(this.dropdownList);
+    console.log("_loggedInBy:", this.user._loggedInBy);
+    console.log("dropdownList:", this.dropdownList);
 
     if (this.user._loggedInBy == 'admin') {
       let params = {
@@ -308,7 +308,7 @@ export class SaveadminComponent implements OnInit {
         baseLong: this.Fouser.baseLong,
         allowRadius: this.Fouser.allowRadius,
         attenMedium: this.Fouser.attenMedium,
-        isActive: Boolean(JSON.parse(this.Fouser.isActive))
+        isActive: (this.Fouser.id > 0) ? Boolean(JSON.parse(this.Fouser.isActive)) : true
 
       }
       console.log("params:", params);
@@ -333,6 +333,9 @@ export class SaveadminComponent implements OnInit {
               if (this.data[0]['y_id'] <= 0) {
                 this.common.showError(this.data[0]['y_msg']);
               } else {
+                if (!this.isOtherShow && !this.Fouser.id) {
+                  this.Fouser.id = this.data[0]['y_id'];
+                }
                 this.common.showToast(this.data[0]['y_msg']);
                 this.isOtherShow = !this.isOtherShow;
                 if (!this.isOtherShow) {

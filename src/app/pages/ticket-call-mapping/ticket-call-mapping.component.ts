@@ -112,9 +112,9 @@ export class TicketCallMappingComponent implements OnInit {
 
   editData(request, index) {
 
-    console.log(typeof(request._rating));
-    console.log(typeof(request._rating) ==  'number');
-    if (typeof(request._rating) ==  'number') {
+    console.log(typeof (request._rating));
+    console.log(typeof (request._rating) == 'number');
+    if (typeof (request._rating) == 'number') {
       console.log(request);
 
       this.common.params = {
@@ -125,7 +125,7 @@ export class TicketCallMappingComponent implements OnInit {
     }
     else {
       console.log(request);
-      console.log(typeof(request._rating) ==  'number');
+      console.log(typeof (request._rating) == 'number');
 
 
       this.common.params = {
@@ -134,11 +134,11 @@ export class TicketCallMappingComponent implements OnInit {
         remark: request._rating.remark
       };
     }
- 
+
     const activeModal = this.modalService.open(TicketCallRatingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(response => {
       console.log(response);
-      if (typeof(response) == 'object') {
+      if (typeof (response) == 'object') {
         request._rating = response.rating;
       } else {
         request._rating = response;
@@ -246,5 +246,23 @@ export class TicketCallMappingComponent implements OnInit {
       });
     }
     this.setTable();
+  }
+
+  missedCallLogs() {
+    let dataparams = {
+      view: {
+        api: 'Admin/getCallMissReport.json',
+        param: {
+          // startDate: getStartTime,
+          // endDate: getEndTime,
+          // type: id
+        }
+      },
+      title: "Missed Call Log Details",
+      type: "transtruck"
+    }
+    // this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 }

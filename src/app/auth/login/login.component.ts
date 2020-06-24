@@ -175,7 +175,7 @@ export class LoginComponent implements OnInit {
           clearInterval(this.interval);
           localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
           localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
-          localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+          localStorage.setItem('ITRM_LOGGED_IN_BY', this.user._loggedInBy);
 
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
@@ -201,7 +201,7 @@ export class LoginComponent implements OnInit {
     //         clearInterval(this.interval);
     //         localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
     //         localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
-    //         localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+    //         localStorage.setItem('ITRM_LOGGED_IN_BY', this.user._loggedInBy);
 
     //         this.user._details = res['data'][0];
     //         this.user._token = res['data'][0]['authkey'];
@@ -226,7 +226,7 @@ export class LoginComponent implements OnInit {
     //         clearInterval(this.interval);
     //         localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
     //         localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
-    //         localStorage.setItem('LOGGED_IN_BY', this.user._loggedInBy);
+    //         localStorage.setItem('ITRM_LOGGED_IN_BY', this.user._loggedInBy);
 
     //         this.user._details = res['data'][0];
     //         this.user._token = res['data'][0]['authkey'];
