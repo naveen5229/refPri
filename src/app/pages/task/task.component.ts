@@ -1355,7 +1355,12 @@ export class TaskComponent implements OnInit {
     // this.common.params = null;
     // this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
     // const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => { });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     this.getScheduledTask();
+    //     this.activeTab = 'scheduleMaster';
+    //   }
+    // });
   }
 
   saveScheduleTask() {
@@ -1566,7 +1571,104 @@ export class TaskComponent implements OnInit {
     // this.common.params = null;
     // this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
     // const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => { });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     this.getScheduledTask();
+    //     this.activeTab = 'scheduleMaster';
+    //   }
+    // });
+  }
+
+  getSearchTask(search) {
+    console.log("search:", search);
+    if (search && search.trim != "") {
+      this.common.loading++;
+      this.api.get("AdminTask/searchTask?search=" + search).subscribe(res => {
+        this.common.loading--;
+        console.log("data", res);
+        this.searchTaskList = res['data'];
+        if (res['code'] == 1) {
+          if (this.searchTaskList.length > 0) {
+            this.openSearchTaskModal();
+            this.setTableSearchTaskList();
+          } else {
+            this.common.showToast("No data found");
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Search text missing");
+    }
+  }
+  openSearchTaskModal() {
+    document.getElementById("searchTaskModal").style.display = "block";
+  }
+
+  closeSearchTaskModal() {
+    document.getElementById("searchTaskModal").style.display = "none";
+  }
+
+  searchTaskList = [];
+  tableSearchTaskList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  setTableSearchTaskList() {
+    this.tableSearchTaskList.data = {
+      headings: this.generateHeadingsSearchTaskList(),
+      columns: this.getTableColumnsSearchTaskList()
+    };
+    return true;
+  }
+
+  generateHeadingsSearchTaskList() {
+    let headings = {};
+    for (var key in this.searchTaskList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsSearchTaskList() {
+    let columns = [];
+    this.searchTaskList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsSearchTaskList()) {
+        if (key == 'Action') {
+          // column[key] = {
+          //   value: "",
+          //   isHTML: true,
+          //   action: null,
+          //   icons: this.actionIconsMaster(ticket)
+          // };
+        } else {
+          column[key] = { value: (key == 'due_time') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+
+  actionIconsSearchTask(task) {
+    let icons = [
+      // { class: "fa fa-edit", action: this.editScheduleTask.bind(this, task) }, ,
+    ];
+    return icons;
   }
 
 }

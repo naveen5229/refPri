@@ -340,7 +340,7 @@ export class SaveadminComponent implements OnInit {
                 }
               }
             } else {
-              this.common.showError(this.data['msg']);
+              this.common.showError(res['msg']);
             }
             console.log("pa", this.data)
           }, err => {
@@ -412,15 +412,19 @@ export class SaveadminComponent implements OnInit {
             if (res['code'] == 1) {
               if (this.data[0]['y_id'] <= 0) {
                 this.common.showError(this.data[0]['y_msg']);
+
               } else {
                 this.common.showToast(this.data[0]['y_msg']);
+                if (!this.isOtherShow) {
+                  this.Fouser.id = this.data[0]['y_id'];
+                }
                 this.isOtherShow = !this.isOtherShow;
                 if (!this.isOtherShow) {
                   this.closeModal(true);
                 }
               }
             } else {
-              this.common.showError(this.data['msg']);
+              this.common.showError(res['msg']);
             }
             console.log("pa", this.data)
           }, err => {

@@ -1,10 +1,14 @@
 <nb-card>
     <nb-card-header>
         <div class="row">
-            <div class="col-4">
+            <div class="col-2">
                 <h5>Tasks</h5>
             </div>
-            <div class="col-8 text-right">
+            <div class="col-4">
+                <!-- <input type="text" class="form-controls col-9" placeholder="Search Task" #searchTask>
+                <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTask.value)">Search</button> -->
+            </div>
+            <div class="col-6 text-right">
                 <button class="btn btn-primary btn-sm mr-2" (click)="openSchedukedTaskMasterModal()">
                     add Schedule Task
                 </button>
@@ -235,4 +239,22 @@
         </div>
     </div>
     <!-- end: scheduled task modal -->
+    <!-- start: search task  modal -->
+    <div class="modal" id="searchTaskModal" #searchTaskModal>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" style="color:#fff;">Searched Task</h4>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeSearchTaskModal(null)">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <smart-table [data]="tableSearchTaskList.data" [settings]="tableSearchTaskList.settings" id="tableSearchTaskList">
+                    </smart-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end: search task modal -->
 </nb-card>
