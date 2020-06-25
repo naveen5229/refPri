@@ -178,6 +178,19 @@ export class TaskComponent implements OnInit {
   };
 
   normalTaskListAll = [];
+  normalTaskByMeListAll = [];
+
+  searchTaskList = [];
+  tableSearchTaskList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  activeSabTab = 0;
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTaskByType(-8);
@@ -237,6 +250,7 @@ export class TaskComponent implements OnInit {
   }
 
   getTaskByType(type, startDate = null, endDate = null) {
+    this.activeSabTab = 0;
     this.common.loading++;
     if (type == -102 && this.searchTask.startDate && this.searchTask.endDate) {
       startDate = this.common.dateFormatter(this.searchTask.startDate);
@@ -257,6 +271,7 @@ export class TaskComponent implements OnInit {
         this.setTableNormal(type);
       } else if (type == -101) { //task by me
         this.normalTaskByMeList = res['data'] || [];
+        this.normalTaskByMeListAll = this.normalTaskByMeList;
         this.setTableNormalTaskByMe(type);
       } else if (type == 103) {
         this.scheduledTaskList = res['data'] || [];
@@ -1619,16 +1634,6 @@ export class TaskComponent implements OnInit {
     document.getElementById("searchTaskModal").style.display = "none";
   }
 
-  searchTaskList = [];
-  tableSearchTaskList = {
-    data: {
-      headings: {},
-      columns: []
-    },
-    settings: {
-      hideHeader: true
-    }
-  };
   setTableSearchTaskList() {
     this.tableSearchTaskList.data = {
       headings: this.generateHeadingsSearchTaskList(),
@@ -1660,7 +1665,7 @@ export class TaskComponent implements OnInit {
           //   icons: this.actionIconsMaster(ticket)
           // };
         } else {
-          column[key] = { value: (key == 'due_time') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
       }
       columns.push(column);
@@ -1676,22 +1681,33 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  activeNormalSabTab = 0;
   filterTaskBySubTab(type, subTabType) {
     if (type == 101) {
-      // ticket._status == 3 && [101, 102].includes(ticket._tktype)
       let selectedList = [];
       if (subTabType == 1) { //normal
         selectedList = this.normalTaskListAll.filter(x => { return [101, 102].includes(x._tktype) });
       } else if (subTabType == 2) { //scheduled
         selectedList = this.normalTaskListAll.filter(x => { return x._tktype == 103 });
       } else if (subTabType == 3) { //hold
-        selectedList = this.normalTaskListAll.filter(x => { return x._tktype == 103 });
+        selectedList = this.normalTaskListAll.filter(x => { return x._status == 3 });
       } else { //all
         selectedList = this.normalTaskListAll;
       }
       this.normalTaskList = (selectedList.length > 0) ? selectedList : [];
       this.setTableNormal(type);
+    } else if (type == -101) {
+      let selectedList = [];
+      if (subTabType == 1) { //normal
+        selectedList = this.normalTaskByMeListAll.filter(x => { return [101, 102].includes(x._tktype) });
+      } else if (subTabType == 2) { //scheduled
+        selectedList = this.normalTaskByMeListAll.filter(x => { return x._tktype == 103 });
+      } else if (subTabType == 3) { //hold
+        selectedList = this.normalTaskByMeListAll.filter(x => { return x._status == 3 });
+      } else { //all
+        selectedList = this.normalTaskByMeListAll;
+      }
+      this.normalTaskByMeList = (selectedList.length > 0) ? selectedList : [];
+      this.setTableNormalTaskByMe(type);
     }
   }
 

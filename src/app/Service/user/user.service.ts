@@ -29,6 +29,11 @@ export class UserService {
       this._pages = JSON.parse(localStorage.getItem("ITRM_USER_PAGES"));
       this.filterMenu("pages", "pages");
     }
+
+    if (this._token && !this._loggedInBy) {
+      this.reset();
+      this.clearStorage();
+    }
   }
 
   permission = {
@@ -64,6 +69,23 @@ export class UserService {
         return true;
       });
 
+  }
+
+  reset() {
+    this._token = '';
+    this._details = null;
+    this._menu = {
+      pages: []
+    };
+    this._loggedInBy = '';
+    this._pages = [];
+  }
+
+  clearStorage() {
+    localStorage.removeItem('ITRM_USER_TOKEN');
+    localStorage.removeItem('ITRM_USER_DETAILS');
+    localStorage.removeItem('ITRM_LOGGED_IN_BY');
+    localStorage.removeItem('ITRM_USER_PAGES');
   }
 
 
