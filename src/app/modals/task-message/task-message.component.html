@@ -14,7 +14,7 @@
         <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell reminderAdded" title="View/Edit Reminder" (click)="showReminderPopup()"></i></span>
         <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" title="Add Reminder" (click)="showReminderPopup()"></i></span>
 
-        <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5))"><i class="fa fa-calendar-alt text-dark" title="Change Expected Date" (click)="editTaskAssignDate()"></i></span>
+        <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5) && [101,102].includes(ticketType))"><i class="fa fa-calendar-alt text-dark" title="Change Expected Date" (click)="editTaskAssignDate()"></i></span>
     </div>
 
     <div *ngIf="fromPage == 'campaign'" class="action-icon">

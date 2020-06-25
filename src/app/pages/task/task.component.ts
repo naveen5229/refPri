@@ -466,7 +466,7 @@ export class TaskComponent implements OnInit {
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate') {
-          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: this.editTask.bind(this, ticket, type) };
+          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: ([101, 102].includes(ticket._tktype)) ? this.editTask.bind(this, ticket, type) : null };
         }
         //  else if (key == 'expdate' && ticket['time_left'] <= 0) {
         //   column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
@@ -509,7 +509,7 @@ export class TaskComponent implements OnInit {
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate') {
-          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: this.editTask.bind(this, ticket, type) };
+          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: ([101, 102].includes(ticket._tktype)) ? this.editTask.bind(this, ticket, type) : null };
         } else if (key == 'high_priority') {
           column[key] = {
             value: "",
@@ -857,7 +857,9 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
+      if ([101, 102].includes(ticket._tktype)) {
+        icons.push({ class: "fas fa-trash-alt", action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Task" });
+      }
       // icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
       if (ticket._status == 2 && [101, 102].includes(ticket._tktype)) { //for hold
         icons.push({ class: "fa fa-pause-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 3), txt: '', title: "Mark Task as Hold" });
@@ -869,7 +871,7 @@ export class TaskComponent implements OnInit {
         icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '', title: "Re-Active" });
       } else if (ticket._status == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: '', title: "Mark Completed" });
-        if (type == 101) { //for hold
+        if (type == 101 && [101, 102].includes(ticket._tktype)) { //for hold
           icons.push({ class: "fa fa-pause-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 3), txt: '', title: "Mark Task as Hold" });
         }
       } else if (ticket._status == 0) {
@@ -1092,7 +1094,7 @@ export class TaskComponent implements OnInit {
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: subTitle };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      this.getTaskByType(type);
+      (type) ? this.getTaskByType(type) : null;
     });
   }
 
@@ -1193,6 +1195,14 @@ export class TaskComponent implements OnInit {
             value: task[key],
             action: this.updateTodoTask.bind(this, task),
             isCheckbox: true
+          };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (task[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
           };
         } else {
           column[key] = { value: task[key], class: 'black', action: '' };
@@ -1658,12 +1668,20 @@ export class TaskComponent implements OnInit {
       let column = {};
       for (let key in this.generateHeadingsSearchTaskList()) {
         if (key == 'Action') {
-          // column[key] = {
-          //   value: "",
-          //   isHTML: true,
-          //   action: null,
-          //   icons: this.actionIconsMaster(ticket)
-          // };
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsSearchTask(ticket)
+          };
+        } else if (key == 'high_priority') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            icons: (ticket[key]) ? [{ class: "fa fa-check text-success", action: null, title: "high-priority" }] : '',
+            action: null,
+            class: "text-center"
+          };
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -1674,10 +1692,20 @@ export class TaskComponent implements OnInit {
     return columns;
   }
 
-  actionIconsSearchTask(task) {
+  actionIconsSearchTask(ticket) {
+    let type = null;
     let icons = [
-      // { class: "fa fa-edit", action: this.editScheduleTask.bind(this, task) }, ,
+      { class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: '', title: null },
     ];
+    if (ticket._unreadcount > 0) {
+      icons = [
+        { class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null },
+      ];
+    } else if (ticket._unreadcount == -1) {
+      icons = [
+        { class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: '', title: null },
+      ];
+    }
     return icons;
   }
 
