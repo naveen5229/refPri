@@ -114,11 +114,13 @@ span {
         color: #ff5722;
     }
 }
+
 .qrClass {
     text-align: center;
-   
-  }
-  :host ::ng-deep .qr-class img{
-      height: 200px;
-      width: 200px;
-  }
+    cursor: none;
+}
+
+ :host ::ng-deep .qr-class img {
+    height: 200px;
+    width: 200px;
+}

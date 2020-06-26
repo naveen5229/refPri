@@ -279,3 +279,7 @@ table .fa-comments.new-comment span {
     position: absolute;
     left: 0px;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -24,7 +24,7 @@
     </div>
     <div class="row mb-2">
         <div class="col-5">
-            <label>Description<span class="text-danger">*</span></label>
+            <label>Description</label>
         </div>
         <div class="col-7">
             <textarea row="2" cols="15" placeholder="Enter Description" name="description" class="form-control" [(ngModel)]="scheduledTask.description"></textarea>
@@ -41,7 +41,7 @@
     </div>
     <div class="row mb-2">
         <div class="col-5">
-            <label>Escalation User<span class="text-danger">*</span></label>
+            <label>Escalation User</label>
         </div>
         <div class="col-7">
             <auto-suggestion (onSelected)="scheduledTask.escalationUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Escalation User" autocomplete="off" name="escalationUser" inputId="scalationUserId" [preSelected]="scheduledTask.escalationUser.id ? {name: scheduledTask.escalationUser.name}:{name:''}">

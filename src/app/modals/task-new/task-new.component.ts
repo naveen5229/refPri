@@ -12,7 +12,7 @@ import { UserService } from '../../Service/user/user.service';
 })
 export class TaskNewComponent implements OnInit {
   currentDate = this.common.getDate();
-  normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date());
+  normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date(), '');
   title = "New Task";
   btn = 'Save';
   userId = null;
@@ -108,14 +108,27 @@ export class TaskNewComponent implements OnInit {
   }
 
   saveTask() {
+    console.log("normalTask:", this.normalTask);
     if (this.normalTask.userName == '') {
-      return this.common.showError("User Name is missing")
+      return this.common.showError("User Name is missing");
+    }
+    else if (this.normalTask.subject == '') {
+      return this.common.showError("subject is missing");
     }
     else if (this.normalTask.task == '') {
-      return this.common.showError("Task is missing")
+      return this.common.showError("Description is missing");
     }
     else if (!this.userId) {
-      return this.common.showError("Please assign a user")
+      return this.common.showError("Please assign a user");
+    }
+    else if (!this.normalTask.isFuture && !this.normalTask.date) {
+      return this.common.showError("Expected date is missing");
+    }
+    else if (!this.normalTask.isFuture && this.normalTask.date < this.common.getDate()) {
+      return this.common.showError("Expected date must be future date");
+    }
+    else if (!this.normalTask.isFuture && this.normalTask.date > this.common.getDate(90)) {
+      return this.common.showError("Expected date must be within 90 days");
     }
     else if (this.normalTask.isFuture && !this.normalTask.futureDate) {
       return this.common.showError("Please select future assign date");
@@ -127,6 +140,7 @@ export class TaskNewComponent implements OnInit {
       const params = {
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
+        subject: this.normalTask.subject,
         task: this.normalTask.task,
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
@@ -151,18 +165,17 @@ export class TaskNewComponent implements OnInit {
         } else {
           this.common.showError(res['msg']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
 
   }
 
   resetTask() {
-    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date());
+    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date(), '');
   }
 
   // start task mapping list
@@ -249,7 +262,7 @@ export class TaskNewComponent implements OnInit {
       }
       // console.log("params:", params); return false;
       this.common.loading++;
-      this.api.post('AdminTask/updateAssignDate', params).subscribe(res => {
+      this.api.post('AdminTask/updateAssignDate', params).subscribe(res => {  //this api use in task-message page also
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {

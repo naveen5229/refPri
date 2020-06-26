@@ -105,14 +105,16 @@ export class TaskScheduleMasterComponent implements OnInit {
 
   saveScheduleTask() {
     console.log("scheduledTask:", this.scheduledTask);
-    if (this.scheduledTask.description == '') {
-      return this.common.showError("Description is missing")
+    if (this.scheduledTask.subject == '') {
+      return this.common.showError("Subject is missing");
     } else if (this.scheduledTask.primaryUser.id == '') {
-      return this.common.showError("Primary User is missing")
-    } else if (this.scheduledTask.escalationUser.id == '') {
-      return this.common.showError("Escalation User is missing")
-    } else if (this.scheduledTask.reportingUser.id == '') {
-      return this.common.showError("Reporting User is missing")
+      return this.common.showError("Primary User is missing");
+    }
+    // else if (this.scheduledTask.escalationUser.id == '') {
+    //   return this.common.showError("Escalation User is missing")
+    // } 
+    else if (this.scheduledTask.reportingUser.id == '') {
+      return this.common.showError("Reporting User is missing");
     } else {
       let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
       const params = {
