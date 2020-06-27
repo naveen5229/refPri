@@ -5,7 +5,7 @@
   </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-    <span [innerHtml]="subTitle"></span>
+    {{subTitle}}
     <div *ngIf="fromPage != 'campaign'" class="action-icon">
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
         <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle" title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
@@ -87,10 +87,10 @@
                     <td>EU:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr>
-                <!-- <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].rep_user">
+                <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].rep_user">
                     <td>RU:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
-                </tr> -->
+                </tr>
                 <tr valign="top" *ngIf="taskId && taskId>0">
                     <td colspan="2" class="pt-2">
                         <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">

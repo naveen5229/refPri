@@ -87,7 +87,7 @@
                     <!-- Show Text -->
                     <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && !column[heading].isHTML && !column[heading].icons && !column[heading].isCheckbox && !column[heading].isAutoSuggestion">
                         <!--  -->
-                        <span *ngIf="edit.row !== i || !headings[heading].editable" [title]="(column[heading].isTitle) ?column[heading].title : ''">{{column[heading].value}}</span>
+                        <span *ngIf="edit.row !== i || !headings[heading].editable">{{column[heading].value}}</span>
                         <input class="form-control" *ngIf="edit.row === i && headings[heading].editable" type="text" [name]="column[heading] + i" [(ngModel)]="column[heading].value">
                     </div>
                     <!-- Show Text END -->

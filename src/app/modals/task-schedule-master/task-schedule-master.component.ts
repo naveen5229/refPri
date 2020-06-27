@@ -68,15 +68,15 @@ export class TaskScheduleMasterComponent implements OnInit {
       console.log("getAdminSelected:", getAdminSelected);
       this.scheduledTask = {
         taskId: task._id,
-        subject: task.task_subject,
-        description: task._task_desc,
+        subject: "",
+        description: task.description,
         primaryUser: {
           id: task._pri_user_id,
           name: task.pri_user
         },
         escalationUser: {
-          id: (task._esc_user_id) ? task._esc_user_id : null,
-          name: (task._esc_user_id) ? task.esc_user : ""
+          id: task._esc_user_id,
+          name: task.esc_user
         },
         reportingUser: {
           id: task._reporting_user_id,
