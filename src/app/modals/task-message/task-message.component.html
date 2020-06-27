@@ -91,6 +91,7 @@
                     <td>RU:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr> -->
+
                 <tr valign="top" *ngIf="taskId && taskId>0">
                     <td colspan="2" class="pt-2">
                         <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
