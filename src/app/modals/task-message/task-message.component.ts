@@ -209,7 +209,8 @@ export class TaskMessageComponent implements OnInit {
       let params = {
         ticketId: this.ticketId,
         taskId: this.taskId,
-        ccUserId: this.newCCUserId
+        ccUserId: this.newCCUserId,
+        ticketType: this.ticketType
       }
       this.common.loading++;
       this.api.post('AdminTask/addNewCCUserToTask', params).subscribe(res => {
