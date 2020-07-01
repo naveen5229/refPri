@@ -12,7 +12,7 @@ import { UserService } from '../../Service/user/user.service';
 })
 export class TaskNewComponent implements OnInit {
   currentDate = this.common.getDate();
-  normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date(), '');
+  normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
   title = "New Task";
   btn = 'Save';
   userId = null;
@@ -175,7 +175,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   resetTask() {
-    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date(), '');
+    this.normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
   }
 
   // start task mapping list

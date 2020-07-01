@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h5>Missed Call Logs</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <smart-table *ngIf="taskMapping.length!=0" [data]="table.data" [settings]="table.settings" id="missedCallLogs"></smart-table>
+    </div>
+</div>

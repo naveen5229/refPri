@@ -307,7 +307,7 @@ export class SaveadminComponent implements OnInit {
         baseLat: this.Fouser.baseLat,
         baseLong: this.Fouser.baseLong,
         allowRadius: this.Fouser.allowRadius,
-        attenMedium: this.Fouser.attenMedium,
+        attenMedium: JSON.stringify(this.Fouser.attenMedium),
         isActive: (this.Fouser.id > 0) ? Boolean(JSON.parse(this.Fouser.isActive)) : true
 
       }
@@ -381,7 +381,7 @@ export class SaveadminComponent implements OnInit {
         params['dol'] = (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null;
         params['baseLat'] = (this.Fouser.baseLat) ? this.Fouser.baseLat : null;
         params['baseLong'] = (this.Fouser.baseLong) ? this.Fouser.baseLong : null;
-        params['allowRadius'] = (this.Fouser.allowRadius) ? this.Fouser.allowRadius : null;
+        params['allowRadius'] = (this.Fouser.allowRadius) ? JSON.stringify(this.Fouser.allowRadius) : null;
         params['attenMedium'] = (this.Fouser.attenMedium) ? this.Fouser.attenMedium : null;
 
         apiName = "FoAdmin/saveFoAdminInfo";
