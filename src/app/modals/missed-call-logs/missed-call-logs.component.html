@@ -6,6 +6,31 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <smart-table *ngIf="taskMapping.length!=0" [data]="table.data" [settings]="table.settings" id="missedCallLogs"></smart-table>
+        <div class="col-1.5">
+            <label>Start Date:</label>
+        </div>
+        <div class="col-2">
+            <uj-date-time-picker (onChanged)="missedCallForm.startDate=($event)" [dateTimeValue]="missedCallForm.startDate" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-1.5">
+            <label>End Date:</label>
+        </div>
+        <div class="col-2">
+            <uj-date-time-picker (onChanged)="missedCallForm.endDate=($event)" [dateTimeValue]="missedCallForm.endDate" [isTime]="false" [isStart]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-1.5">
+            <label>Delay (Minutes):</label>
+        </div>
+        <div class="col-2">
+            <input type="number" class="form-controls" min='0' [(ngModel)]="missedCallForm.delay">
+        </div>
+        <div class="col-1">
+            <button class="btn btn-primary btn-sm" (click)="getMissedCallList()">Submit</button>
+        </div>
+    </div>
+    <div class="row">
+        <smart-table [data]="table.data" [settings]="table.settings" id="missedCallLogs"></smart-table>
     </div>
 </div>
