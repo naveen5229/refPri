@@ -81,7 +81,12 @@
                 </tr>
                 <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
                     <td>CC:</td>
-                    <td><span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{ccu.cc_user}}<br></span></td>
+                    <td>
+                        <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
+                            {{ccu.cc_user}}
+                            <i class="fa fa-minus-circle text-danger cursor-pointer" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
+                        <br></span>
+                    </td>
                 </tr>
                 <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
                     <td>EU:</td>
@@ -92,7 +97,8 @@
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr> -->
 
-                <tr valign="top" *ngIf="taskId && taskId>0">
+                <!-- <tr valign="top" *ngIf="taskId && taskId>0"> -->
+                <tr valign="top">
                     <td colspan="2" class="pt-2">
                         <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
                         </auto-suggestion>

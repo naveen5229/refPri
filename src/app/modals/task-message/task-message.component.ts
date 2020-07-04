@@ -36,6 +36,10 @@ export class TaskMessageComponent implements OnInit {
   tabType = null;
   ticketData;
   fromPage;
+  newAssigneeUser = {
+    id: null,
+    name: ""
+  };
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -192,10 +196,10 @@ export class TaskMessageComponent implements OnInit {
     this.api.post('AdminTask/getAllUserByTask', params).subscribe(res => {
       // this.showLoading = false;
       console.log("userListByTask:", res['data']);
-      if (res['success']) {
+      if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['msg'])
       }
     }, err => {
       this.showLoading = false;
@@ -205,21 +209,25 @@ export class TaskMessageComponent implements OnInit {
   }
 
   addNewCCUserToTask() {
+    if (!this.userListByTask['taskUsers'] || ![this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+      this.common.showError("Not a valid user");
+      return false;
+    }
     if (this.ticketId > 0 && this.newCCUserId > 0) {
       let params = {
         ticketId: this.ticketId,
-        taskId: this.taskId,
+        taskId: this.ticketData._refid,
         ccUserId: this.newCCUserId,
         ticketType: this.ticketType
       }
       this.common.loading++;
       this.api.post('AdminTask/addNewCCUserToTask', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code'] == 1) {
           this.newCCUserId = null;
           this.getAllUserByTask();
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -227,13 +235,60 @@ export class TaskMessageComponent implements OnInit {
         console.log('Error: ', err);
       });
     } else {
-      this.common.showError("Select CC user")
+      this.common.showError("Select CC user");
+    }
+  }
+
+  removeCCUserWithConfirm(ccUserId, ccUserName) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._aduserid, ccUserId].includes(this.userService._details.id)) {
+      this.common.params = {
+        title: 'Remove CC User',
+        description: '<b>Are You Sure To remove CC-user from This Task' + `<b>`,
+        isRemark: true
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          this.removeCCUser(ccUserId, ccUserName, data.remark);
+        }
+      });
+    } else {
+      this.common.showError("Not a valid user");
+    }
+  }
+
+  removeCCUser(ccUserId, ccUserName, remark) {
+    if (ccUserId > 0) {
+      let params = {
+        ticketId: this.ticketId,
+        taskId: this.ticketData._refid,
+        ccUserId: ccUserId,
+        ticketType: this.ticketType,
+        ccUserName: ccUserName,
+        remark: remark
+      }
+      this.common.loading++;
+      this.api.post('AdminTask/removeCCUserToTask', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.getAllUserByTask();
+          this.getMessageList();
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("CC user is missing");
     }
   }
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -245,10 +300,6 @@ export class TaskMessageComponent implements OnInit {
     });
   }
 
-  newAssigneeUser = {
-    id: null,
-    name: ""
-  };
   updateTaskAssigneeUser() {
     if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
       let isCCUpdate = 0;
@@ -272,12 +323,12 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading++;
       this.api.post('AdminTask/updateTaskAssigneeUser', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code'] == 1) {
           this.getAllUserByTask();
           this.getMessageList();
           this.showAssignUserAuto = null;
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -285,7 +336,7 @@ export class TaskMessageComponent implements OnInit {
         console.log('Error: ', err);
       });
     } else {
-      this.common.showError("Select Assignee user")
+      this.common.showError("Select Assignee user");
     }
   }
 
@@ -309,8 +360,7 @@ export class TaskMessageComponent implements OnInit {
           }
           this.statusId = status;
         } else {
-          this.common.showError(res['data']);
-          console.log('Error to auto ack: ', res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         // this.common.loading--;

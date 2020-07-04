@@ -251,6 +251,7 @@ export class TaskComponent implements OnInit {
 
   getTaskByType(type, startDate = null, endDate = null) {
     this.activeSabTab = 0;
+    // console.log("searchTask in tast api:", this.searchTask); return false;
     this.common.loading++;
     if (type == -102 && this.searchTask.startDate && this.searchTask.endDate) {
       startDate = this.common.dateFormatter(this.searchTask.startDate);
@@ -1573,50 +1574,6 @@ export class TaskComponent implements OnInit {
   }
 
   editScheduleTask(task) {
-    console.log("edit editScheduleTask:", task);
-    // let seconds = task.due_time;
-    // let days = Math.floor(seconds / (3600 * 24));
-    // seconds -= days * 3600 * 24;
-    // let hrs = Math.floor(seconds / 3600);
-
-    // let getAdminSelected = [];
-    // if (task._cc_user && task._cc_user.length) {
-    //   task._cc_user.forEach(ev => {
-    //     let findAdmin = this.adminList.find(x => { return x.id == ev.id });
-    //     if (findAdmin) {
-    //       getAdminSelected.push({ id: findAdmin.id, name: findAdmin.name });
-    //     }
-    //   });
-    // }
-    // console.log("getAdminSelected:", getAdminSelected);
-    // this.scheduledTask = {
-    //   taskId: task._id,
-    //   description: task.description,
-    //   primaryUser: {
-    //     id: task._pri_user_id,
-    //     name: task.pri_user
-    //   },
-    //   escalationUser: {
-    //     id: task._esc_user_id,
-    //     name: task.esc_user
-    //   },
-    //   reportingUser: {
-    //     id: task._reporting_user_id,
-    //     name: task.rep_user
-    //   },
-    //   days: JSON.stringify(days),
-    //   hours: JSON.stringify(hrs),
-    //   isActive: task._is_active,
-    //   department: {
-    //     id: (task._department_id) ? task._department_id : null,
-    //     name: (task._department_id) ? task.department : null
-    //   },
-    //   ccUsers: (getAdminSelected.length) ? getAdminSelected : []
-    // };
-
-    // console.log("edit scheduledTask:", this.scheduledTask);
-    // this.openSchedukedTaskMasterModal();
-
     this.common.params = null;
     this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
