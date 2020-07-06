@@ -84,7 +84,7 @@
                     <td>
                         <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
                             {{ccu.cc_user}}
-                            <i class="fa fa-minus-circle text-danger cursor-pointer" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
+                            <i class="fa fa-minus-circle text-danger cursor-pointer" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                         <br></span>
                     </td>
                 </tr>

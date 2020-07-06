@@ -5,7 +5,7 @@
 </button>
 </div>
 <div class="modal-body">
-    <div class="row mt-2 ">
+    <div class="row mb-2 ">
         <div class="col-5">
             <select class="form-controlr" class="form-control" [(ngModel)]="scheduledTask.logicType" (change)="onChangeLogicType()">
               <option value=1>Daily</option>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-2 text-right">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTaskParam()">Add</button>
+            <button class="btn btn-primary btn-sm" (click)="saveTaskParam()">Add</button>
         </div>
     </div>
     <div>

@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
+import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
 
 @Component({
   selector: 'ngx-task-schedule-master',
@@ -140,6 +141,7 @@ export class TaskScheduleMasterComponent implements OnInit {
             this.common.showToast(res['data'][0].y_msg)
             this.resetScheduleTask();
             this.closeModal(true);
+            this.addScheduleTaskparam(res['data'][0]['y_id']);
           } else {
             this.common.showError(res['data'][0].y_msg)
           }
@@ -180,6 +182,12 @@ export class TaskScheduleMasterComponent implements OnInit {
       },
       ccUsers: []
     };
+  }
+
+  addScheduleTaskparam(taskId) {
+    this.common.params = { taskId: taskId, title: "Schedule task action", button: "Save" };
+    const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => { });
   }
 
 }

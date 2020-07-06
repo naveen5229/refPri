@@ -893,6 +893,8 @@ export class TaskComponent implements OnInit {
         if (type == 101 && [101, 102].includes(ticket._tktype)) { //for hold
           icons.push({ class: "fa fa-pause-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 3), txt: '', title: "Mark Task as Hold" });
         }
+      } else if (ticket._status == 3 && [101, 102].includes(ticket._tktype)) {
+        icons.push({ class: "fa fa-play-circle", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: '', title: "Make Task as Unhold" });
       } else if (ticket._status == 0) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: '', title: "Mark Ack" });
         icons.push({ class: "fa fa-times text-danger", action: this.updateTicketStatus.bind(this, ticket, type, -1), txt: '', title: "Mark Rejected" });
