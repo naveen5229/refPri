@@ -1100,6 +1100,7 @@ export class TaskComponent implements OnInit {
     }
   }
 
+
   ticketMessage(ticket, type) {
     // console.log("type:", type);
     let ticketEditData = {
