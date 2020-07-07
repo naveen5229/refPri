@@ -5,8 +5,8 @@
                 <h5>Tasks</h5>
             </div>
             <div class="col-4">
-                <input type="text" class="form-controls col-9" placeholder="Search Task" #searchTask>
-                <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTask.value)">Search</button>
+                <input type="text" class="form-controls col-9" placeholder="Search Task" #searchTaskText>
+                <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value)">Search</button>
             </div>
             <div class="col-6 text-right">
                 <button class="btn btn-primary btn-sm mr-2" (click)="openSchedukedTaskMasterModal()">

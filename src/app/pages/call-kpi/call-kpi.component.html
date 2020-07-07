@@ -28,7 +28,7 @@
     </div>
     <div class="col-2">
         <label>Select Department</label>
-        <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
+        <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:'All Departments'}">
         </auto-suggestion>
     </div>
     <div class="col-2">

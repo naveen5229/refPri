@@ -64,7 +64,7 @@ export class CallKpiComponent implements OnInit {
     this.shiftEnd.setHours(18)
     this.shiftEnd.setMinutes(30)
     this.getCallKpi();
-   
+
     //  const doc = this.getCallKpi();
     // this.shiftStart.setDate(this.endTime.getDate()-1)
     // this.endTime.setDate(this.endTime.getDate()-1)
@@ -80,7 +80,14 @@ export class CallKpiComponent implements OnInit {
     this.api.get("Admin/getDepartmentList")
       .subscribe(res => {
         this.common.loading--;
-        this.departments = res['data'] || [];
+        this.departments = [];
+        this.departments.push({ "id": null, "name": "All Departments" });
+        if (res['data'] && res['data'].length > 0) {
+          for (let i = 0; i < res['data'].length; i++) {
+            this.departments.push({ "id": res['data'][i]["id"], "name": res['data'][i]["name"] });
+          }
+        }
+        // this.departments = res['data'] || [];
       }, err => {
         this.common.loading--;
         this.common.showError();

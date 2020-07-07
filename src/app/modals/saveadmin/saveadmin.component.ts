@@ -42,7 +42,10 @@ export class SaveadminComponent implements OnInit {
       mobileno: ''
     },
     doj: null,
-    dol: null
+    dol: null,
+    isNotify: false,
+    isNotifyRing: false,
+    isCallSync: false
   };
   keepGoing = true;
   searchString = ''
