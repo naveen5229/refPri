@@ -48,7 +48,7 @@
             <label>Subject<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <input placeholder="Enter Subject" name="subject" class="form-control" [(ngModel)]="normalTask.subject">
+            <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
         </div>
     </div>
 
@@ -127,7 +127,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="true" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
             </uj-date-time-picker>
         </div>
     </div>

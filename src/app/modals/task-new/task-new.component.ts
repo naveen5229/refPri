@@ -12,7 +12,7 @@ import { UserService } from '../../Service/user/user.service';
 })
 export class TaskNewComponent implements OnInit {
   currentDate = this.common.getDate();
-  normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date(), '');
+  normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
   title = "New Task";
   btn = 'Save';
   userId = null;
@@ -57,7 +57,8 @@ export class TaskNewComponent implements OnInit {
         this.title = "Update Task Assign Date";
         this.editType = this.common.params.editType;
         this.updateLastDateForm.taskId = this.common.params.parentTaskId;
-        this.updateLastDateForm.date = new Date(this.common.params.editData.expdate);
+        // this.updateLastDateForm.date = new Date(this.common.params.editData.expdate);
+        this.updateLastDateForm.date = new Date(this.common.params.editData._expdate);
         this.updateLastDateForm.dateOld = this.common.params.editData.expdate;
         this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
       }
@@ -175,7 +176,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   resetTask() {
-    this.normalTask = new NormalTask('', new Date(), '', false, null, [], null, false, new Date(), '');
+    this.normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
   }
 
   // start task mapping list
@@ -252,6 +253,11 @@ export class TaskNewComponent implements OnInit {
     if (this.updateLastDateForm.date == '' || !this.updateLastDateForm.date) {
       return this.common.showError("Date is missing");
 
+    } else if (this.updateLastDateForm.date < this.common.getDate()) {
+      return this.common.showError("Expected date must be future date");
+    }
+    else if (this.updateLastDateForm.date > this.common.getDate(90)) {
+      return this.common.showError("Expected date must be within 90 days");
     } else {
       const params = {
         date: this.common.dateFormatter(this.updateLastDateForm.date),

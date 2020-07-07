@@ -292,8 +292,7 @@ export class SaveadminComponent implements OnInit {
   }
 
   saveAdmin() {
-    console.log("_loggedInBy:", this.user._loggedInBy);
-    console.log("dropdownList:", this.dropdownList);
+    console.log("Fouser:", this.Fouser);
 
     if (this.user._loggedInBy == 'admin') {
       let params = {
@@ -327,7 +326,6 @@ export class SaveadminComponent implements OnInit {
         this.api.post('Admin/save', params)
           .subscribe(res => {
             this.common.loading--;
-            console.log(res)
             this.data = res['data']
             if (res['code'] == 1) {
               if (this.data[0]['y_id'] <= 0) {
@@ -345,7 +343,6 @@ export class SaveadminComponent implements OnInit {
             } else {
               this.common.showError(res['msg']);
             }
-            console.log("pa", this.data)
           }, err => {
             this.common.loading--;
             console.error(err);
@@ -381,7 +378,7 @@ export class SaveadminComponent implements OnInit {
         params['dol'] = (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null;
         params['baseLat'] = (this.Fouser.baseLat) ? this.Fouser.baseLat : null;
         params['baseLong'] = (this.Fouser.baseLong) ? this.Fouser.baseLong : null;
-        params['allowRadius'] = (this.Fouser.allowRadius) ? this.Fouser.allowRadius : null;
+        params['allowRadius'] = (this.Fouser.allowRadius) ? JSON.stringify(this.Fouser.allowRadius) : null;
         params['attenMedium'] = (this.Fouser.attenMedium) ? this.Fouser.attenMedium : null;
 
         apiName = "FoAdmin/saveFoAdminInfo";
@@ -410,7 +407,6 @@ export class SaveadminComponent implements OnInit {
         this.api[apiType](apiName, params)
           .subscribe(res => {
             this.common.loading--;
-            console.log(res)
             this.data = res['data'];
             if (res['code'] == 1) {
               if (this.data[0]['y_id'] <= 0) {
@@ -429,7 +425,6 @@ export class SaveadminComponent implements OnInit {
             } else {
               this.common.showError(res['msg']);
             }
-            console.log("pa", this.data)
           }, err => {
             this.common.loading--;
             console.error(err);

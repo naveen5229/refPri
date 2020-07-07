@@ -225,12 +225,15 @@ export class TargetCampaignComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
-        if (res['success'] == true) {
-          this.common.showToast(res['msg']);
-          this.activeModal.close({ response: true });
+        if (res['code'] == 1) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0]['y_msg']);
+            this.activeModal.close({ response: true });
+          } else {
+            this.common.showError(res['data'][0]['y_msg']);
+          }
         } else {
           this.common.showError(res['msg']);
-
         }
       }, err => {
         this.common.loading--;

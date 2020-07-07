@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { TicketCallRatingComponent } from '../../modals/ticket-call-rating/ticket-call-rating.component';
+import { MissedCallLogsComponent } from '../../modals/missed-call-logs/missed-call-logs.component';
 
 @Component({
   selector: 'ngx-ticket-call-mapping',
@@ -249,20 +250,7 @@ export class TicketCallMappingComponent implements OnInit {
   }
 
   missedCallLogs() {
-    let dataparams = {
-      view: {
-        api: 'Admin/getCallMissReport.json',
-        param: {
-          // startDate: getStartTime,
-          // endDate: getEndTime,
-          // type: id
-        }
-      },
-      title: "Missed Call Log Details",
-      type: "transtruck"
-    }
-    // this.common.handleModalSize('class', 'modal-lg', '1100');
-    this.common.params = { data: dataparams };
-    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = null;
+    const activeModal = this.modalService.open(MissedCallLogsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 }

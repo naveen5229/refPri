@@ -75,6 +75,7 @@ import { SalaryDetailComponent } from './modals/salary-detail/salary-detail.comp
 import { CampaignUserMappingComponent } from './modals/campaign-user-mapping/campaign-user-mapping.component';
 import { CampaignMessageComponent } from './modals/campaign-modals/campaign-message/campaign-message.component';
 import { TaskScheduleMasterComponent } from './modals/task-schedule-master/task-schedule-master.component';
+import { MissedCallLogsComponent } from './modals/missed-call-logs/missed-call-logs.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -117,7 +118,8 @@ const PAGE_COMPONENTS = [
   SalaryDetailComponent,
   CampaignUserMappingComponent,
   CampaignMessageComponent,
-  TaskScheduleMasterComponent
+  TaskScheduleMasterComponent,
+  MissedCallLogsComponent
 ];
 
 @NgModule({
