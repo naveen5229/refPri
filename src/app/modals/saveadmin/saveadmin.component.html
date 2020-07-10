@@ -170,15 +170,25 @@
                 <label>Notification Alert :-</label>
             </div>
             <div class="col-lg-8">
-                <input type="checkbox" [checked]="Fouser.isNotify" (change)="Fouser.isNotify = !Fouser.isNotify" />
+                <!-- <input type="checkbox" [checked]="Fouser.isNotify" (change)="Fouser.isNotify = !Fouser.isNotify" /> -->
+                <select class="form-control" [(ngModel)]="Fouser.isNotify" placeholder="Select Notification">
+                    <option  [value]="0">Disable</option>
+                    <option  [value]="1">Notification</option>
+                    <option  [value]="2">Mute Notification</option>
+                </select>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-lg-4">
-                <label>Notification Ring :-</label>
+                <label>Comment Notification :-</label>
             </div>
             <div class="col-lg-8">
-                <input type="checkbox" [checked]="Fouser.isNotifyRing" (change)="Fouser.isNotifyRing = !Fouser.isNotifyRing" />
+                <!-- <input type="checkbox" [checked]="Fouser.isNotifyRing" (change)="Fouser.isNotifyRing = !Fouser.isNotifyRing" /> -->
+                <select class="form-control" [(ngModel)]="Fouser.isCommentNotify" placeholder="Select Comment Notification">
+                    <option [value]="0">Disable</option>
+                    <option [value]="1">Notification</option>
+                    <option [value]="2">Mute Notification</option>
+                </select>
             </div>
         </div>
         <div class="row mt-2">

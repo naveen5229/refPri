@@ -261,17 +261,17 @@ export class CallKpiComponent implements OnInit {
 
     let chartData2 = {
       canvas: document.getElementById('myChart2'),
-      data: [doc['Tk. Cnt.']['value'], doc['Ad. Cnt.']['value'], doc['Ot. Cnt.']['value']],
-      labels: ["Tickets", "Admin", "Others"],
-      bgColor: [doc['Tk. Cnt.']['class'], doc['Ad. Cnt.']['class'], doc['Ot. Cnt.']['class']],
+      data: [doc['Ad. Cnt.']['value'], doc['Ot. Cnt.']['value']],
+      labels: ["Admin", "Others"],
+      bgColor: [doc['Ad. Cnt.']['class'], doc['Ot. Cnt.']['class']],
       showLegend: false
     }
 
     let chartData3 = {
       canvas: document.getElementById('myChart3'),
-      data: [doc['Tk. Dur.']['value'], doc['Ad. Dur.']['value'], doc['Ot. Dur.']['value']],
-      labels: ["Tickets", "Admin", "Others"],
-      bgColor: [doc['Tk. Dur.']['class'], doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
+      data: [doc['Ad. Dur.']['value'], doc['Ot. Dur.']['value']],
+      labels: ["Admin", "Others"],
+      bgColor: [doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
       showLegend: false
     }
     this.temCharts = this.chart.generatePieChartforCall([chartData1, chartData2, chartData3]);

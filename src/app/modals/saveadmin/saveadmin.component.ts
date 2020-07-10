@@ -43,8 +43,8 @@ export class SaveadminComponent implements OnInit {
     },
     doj: null,
     dol: null,
-    isNotify: false,
-    isNotifyRing: false,
+    isNotify: 0,
+    isCommentNotify: 0,
     isCallSync: false
   };
   keepGoing = true;
@@ -112,8 +112,8 @@ export class SaveadminComponent implements OnInit {
       this.preSelected.mobileno = this.activeAdminDetails['mobileno'];
       this.Fouser.doj = (this.activeAdminDetails['_doj']) ? new Date(this.activeAdminDetails['_doj']) : null;
       this.Fouser.dol = (this.activeAdminDetails['_dol']) ? new Date(this.activeAdminDetails['_dol']) : null;
-      this.Fouser.isNotify = (this.activeAdminDetails['_is_notify']) ? true : false;
-      this.Fouser.isNotifyRing = (this.activeAdminDetails['_is_notify_ring']) ? true : false;
+      this.Fouser.isNotify = (this.activeAdminDetails['_is_notify']) ? this.activeAdminDetails['_is_notify'] : 0;
+      this.Fouser.isCommentNotify = (this.activeAdminDetails['_is_comment_notify']) ? this.activeAdminDetails['_is_comment_notify'] : 0;
       this.Fouser.isCallSync = (this.activeAdminDetails['_is_call_sync']) ? true : false;
       if (this.activeAdminDetails['_atten_medium'] == '100') {
         this.selectedItems = 1;
@@ -277,8 +277,8 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.attenMedium = value._atten_medium;
     this.Fouser.baseLat = value._base_lat;
     this.Fouser.baseLong = value._base_long;
-    this.Fouser.isNotify = (value._is_notify) ? true : false;
-    this.Fouser.isNotifyRing = (value._is_notify_ring) ? true : false;
+    this.Fouser.isNotify = (value._is_notify) ? value._is_notify : 0;
+    this.Fouser.isCommentNotify = (value._is_comment_notify) ? value._is_comment_notify : 0;
     this.Fouser.isCallSync = (value._is_call_sync) ? true : false;
 
     // this.selectedItems = (value._atten_medium) ? (value._atten_medium).split("") : null;
@@ -311,7 +311,7 @@ export class SaveadminComponent implements OnInit {
         attenMedium: this.Fouser.attenMedium,
         isActive: (this.Fouser.id > 0) ? Boolean(JSON.parse(this.Fouser.isActive)) : true,
         isNotify: this.Fouser.isNotify,
-        isNotifyRing: this.Fouser.isNotifyRing,
+        isCommentNotify: this.Fouser.isCommentNotify,
         isCallSync: this.Fouser.isCallSync,
 
       }
@@ -386,7 +386,7 @@ export class SaveadminComponent implements OnInit {
         params['allowRadius'] = (this.Fouser.allowRadius) ? JSON.stringify(this.Fouser.allowRadius) : null;
         params['attenMedium'] = (this.Fouser.attenMedium) ? this.Fouser.attenMedium : null;
         params['isNotify'] = this.Fouser.isNotify;
-        params['isNotifyRing'] = this.Fouser.isNotifyRing;
+        params['isCommentNotify'] = this.Fouser.isCommentNotify;
         params['isCallSync'] = this.Fouser.isCallSync;
 
         apiName = "FoAdmin/saveFoAdminInfo";
@@ -576,8 +576,8 @@ export class SaveadminComponent implements OnInit {
     };
     this.Fouser.doj = null;
     this.Fouser.dol = null;
-    this.Fouser.isNotify = false;
-    this.Fouser.isNotifyRing = false;
+    this.Fouser.isNotify = 0;
+    this.Fouser.isCommentNotify = 0;
     this.Fouser.isCallSync = false;
     this.Fouser.baseLat = null;
     this.Fouser.baseLong = null;
