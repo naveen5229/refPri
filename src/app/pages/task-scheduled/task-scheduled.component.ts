@@ -7,6 +7,7 @@ import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-sc
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { UserService } from '../../Service/user/user.service';
+import { TaskScheduleMasterComponent } from '../../modals/task-schedule-master/task-schedule-master.component';
 
 @Component({
   selector: 'ngx-task-scheduled',
@@ -293,7 +294,16 @@ export class TaskScheduledComponent implements OnInit {
   }
 
   openSchedukedTaskMasterModal() {
-    document.getElementById("schedukedTaskMasterModal").style.display = "block";
+    // document.getElementById("schedukedTaskMasterModal").style.display = "block";
+    this.common.params = null;
+    this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getScheduledTask();
+        this.activeTab = 'scheduleMaster';
+      }
+    });
   }
 
   getScheduledTask() {
@@ -445,6 +455,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIconsMaster(ticket)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else if (key == 'isactive') {
           column[key] = {
             value: "",
@@ -497,6 +509,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else if (key == 'high_priority') {
           column[key] = {
             value: "",
@@ -550,6 +564,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
@@ -593,6 +609,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
           column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
         } else if (key == 'high_priority') {
@@ -648,6 +666,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'time_left' && ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: '' };
         }
@@ -691,6 +711,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
           column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
         } else if (key == 'high_priority') {
@@ -744,6 +766,8 @@ export class TaskScheduledComponent implements OnInit {
             action: null,
             icons: this.actionIcons(ticket, type)
           };
+        } else if (key == 'subject' || key == 'task_subject') {
+          column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: (key == 'time_left' && ticket['time_left'] <= 0) ? 'black font-weight-bold' : 'black', action: '' };
         }
@@ -842,7 +866,7 @@ export class TaskScheduledComponent implements OnInit {
   // end: scheduled user report list
 
   ticketMessage(ticket, type) {
-    console.log("type:", type);
+    // console.log("type:", type);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -852,7 +876,9 @@ export class TaskScheduledComponent implements OnInit {
       taskType: ticket._tktype,
       tabType: type
     }
-    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: (ticket._tktype == 103) ? ticket.sc_task_desc : ticket.task_desc };
+    let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
+    // this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: (ticket._tktype == 103) ? ticket.sc_task_desc : ticket.task_desc };
+    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: subTitle };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getAllTask(type);
@@ -897,55 +923,64 @@ export class TaskScheduledComponent implements OnInit {
   }
 
   editScheduleTask(task) {
-    console.log("edit editScheduleTask:", task);
-    let seconds = task.due_time;
-    let days = Math.floor(seconds / (3600 * 24));
-    seconds -= days * 3600 * 24;
-    let hrs = Math.floor(seconds / 3600);
+    // console.log("edit editScheduleTask:", task);
+    // let seconds = task.due_time;
+    // let days = Math.floor(seconds / (3600 * 24));
+    // seconds -= days * 3600 * 24;
+    // let hrs = Math.floor(seconds / 3600);
 
-    // let ccUserTemp = task._cc_user;
-    // console.log("ccUserTemp:", ccUserTemp);
-    let getAdminSelected = [];
-    if (task._cc_user && task._cc_user.length) {
-      task._cc_user.forEach(ev => {
-        let findAdmin = this.adminList.find(x => { return x.id == ev.id });
-        if (findAdmin) {
-          getAdminSelected.push({ id: findAdmin.id, name: findAdmin.name });
-        }
-      });
-    }
-    console.log("getAdminSelected:", getAdminSelected);
+    // // let ccUserTemp = task._cc_user;
+    // // console.log("ccUserTemp:", ccUserTemp);
+    // let getAdminSelected = [];
+    // if (task._cc_user && task._cc_user.length) {
+    //   task._cc_user.forEach(ev => {
+    //     let findAdmin = this.adminList.find(x => { return x.id == ev.id });
+    //     if (findAdmin) {
+    //       getAdminSelected.push({ id: findAdmin.id, name: findAdmin.name });
+    //     }
+    //   });
+    // }
+    // console.log("getAdminSelected:", getAdminSelected);
 
-    this.scheduledTask = {
-      taskId: task._id,
-      description: task.description,
-      primaryUser: {
-        id: task._pri_user_id,
-        name: task.pri_user
-      },
-      escalationUser: {
-        id: task._esc_user_id,
-        name: task.esc_user
-      },
-      reportingUser: {
-        id: task._reporting_user_id,
-        name: task.rep_user
-      },
-      // logicType: task._logic_type,
-      // scheduleParam: task._schedule_param,
-      days: JSON.stringify(days),
-      hours: JSON.stringify(hrs),
-      isActive: task._is_active,
-      department: {
-        id: (task._department_id) ? task._department_id : null,
-        name: (task._department_id) ? task.department : null
-      },
-      ccUsers: (getAdminSelected.length) ? getAdminSelected : []
+    // this.scheduledTask = {
+    //   taskId: task._id,
+    //   description: task.description,
+    //   primaryUser: {
+    //     id: task._pri_user_id,
+    //     name: task.pri_user
+    //   },
+    //   escalationUser: {
+    //     id: task._esc_user_id,
+    //     name: task.esc_user
+    //   },
+    //   reportingUser: {
+    //     id: task._reporting_user_id,
+    //     name: task.rep_user
+    //   },
+    //   // logicType: task._logic_type,
+    //   // scheduleParam: task._schedule_param,
+    //   days: JSON.stringify(days),
+    //   hours: JSON.stringify(hrs),
+    //   isActive: task._is_active,
+    //   department: {
+    //     id: (task._department_id) ? task._department_id : null,
+    //     name: (task._department_id) ? task.department : null
+    //   },
+    //   ccUsers: (getAdminSelected.length) ? getAdminSelected : []
 
-    };
+    // };
 
-    console.log("edit scheduledTask:", this.scheduledTask);
-    this.openSchedukedTaskMasterModal();
+    // console.log("edit scheduledTask:", this.scheduledTask);
+    // this.openSchedukedTaskMasterModal();
+    this.common.params = null;
+    this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getScheduledTask();
+        this.activeTab = 'scheduleMaster';
+      }
+    });
   }
 
   searchAllCompletedTask(type) {

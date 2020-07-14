@@ -46,6 +46,7 @@ export class ReminderComponent implements OnInit {
       this.btn = this.common.params.btn;
       this.ticketId = this.common.params.ticketId;
       this.fromPage = this.common.params.fromPage;
+      this.dateTime = (this.common.params.remindertime) ? new Date(this.common.params.remindertime) : null;
     }
   }
 
@@ -61,10 +62,13 @@ export class ReminderComponent implements OnInit {
   // start:
   async saveReminder() {
     if (!this.reminder.date) {
-      this.common.showToast('Select A Date!');
+      this.common.showError('Select A Date!');
       return;
     } else if (!this.reminder.time) {
-      this.common.showToast('Select An hour!');
+      this.common.showError('Select An hour!');
+      return;
+    } else if (this.dateTime < this.common.getDate()) {
+      this.common.showError('Reminder time must be future time');
       return;
     }
     if (this.common.params.returnData) {
