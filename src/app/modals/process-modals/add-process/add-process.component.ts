@@ -9,6 +9,13 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./add-process.component.scss']
 })
 export class AddProcessComponent implements OnInit {
+  title = "Add Process";
+  button = "Submit";
+  processForm = {
+    name: '',
+    startTime: this.common.getDate(),
+    endTime: this.common.getDate(2)
+  };
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -18,8 +25,13 @@ export class AddProcessComponent implements OnInit {
   ngOnInit() {
   }
 
-  closeModal() {
-    this.activeModal.close({ response: false });
+  closeModal(res) {
+    this.activeModal.close({ response: res });
+  }
+
+
+  saveProcess() {
+    console.log("processForm:", this.processForm);
   }
 
 }

@@ -46,7 +46,7 @@ export class ProcessListComponent implements OnInit {
 
   addProcess() {
     this.common.params = { title: "Add Campaign", button: "Add" }
-    const activeModal = this.modalService.open(AddProcessComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(AddProcessComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getProcessList();
