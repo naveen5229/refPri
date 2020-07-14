@@ -58,6 +58,11 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'process',
+    loadChildren: () => import('../app/process/process.module')
+      .then(m => m.ProcessModule),
+  },
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
 ];

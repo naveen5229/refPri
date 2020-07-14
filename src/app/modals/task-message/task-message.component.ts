@@ -240,7 +240,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   removeCCUserWithConfirm(ccUserId, ccUserName) {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._aduserid, ccUserId].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid, ccUserId].includes(this.userService._details.id)) {
       this.common.params = {
         title: 'Remove CC User',
         description: '<b>Are You Sure To remove CC-user from This Task' + `<b>`,

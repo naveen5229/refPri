@@ -76,6 +76,7 @@ import { CampaignUserMappingComponent } from './modals/campaign-user-mapping/cam
 import { CampaignMessageComponent } from './modals/campaign-modals/campaign-message/campaign-message.component';
 import { TaskScheduleMasterComponent } from './modals/task-schedule-master/task-schedule-master.component';
 import { MissedCallLogsComponent } from './modals/missed-call-logs/missed-call-logs.component';
+import { AddProcessComponent } from './modals/process-modals/add-process/add-process.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -119,7 +120,8 @@ const PAGE_COMPONENTS = [
   CampaignUserMappingComponent,
   CampaignMessageComponent,
   TaskScheduleMasterComponent,
-  MissedCallLogsComponent
+  MissedCallLogsComponent,
+  AddProcessComponent
 ];
 
 @NgModule({

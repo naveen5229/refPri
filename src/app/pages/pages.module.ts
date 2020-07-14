@@ -45,6 +45,7 @@ import { SalaryComponent } from './salary/salary.component';
 import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
 import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
+import { ProcessModule } from '../process/process.module';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
     DirectiveModule,
     DashboardModule,
     CampaignModule,
+    ProcessModule
   ],
   declarations: [
     PagesComponent,

@@ -46,6 +46,7 @@ import { AddPagesComponent } from './add-pages/add-pages.component';
 import { RouteGuard } from '../guards/route.guard';
 import { CampaignSummaryComponent } from '../campaign/campaign-summary/campaign-summary.component';
 import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
+import { ProcessListComponent } from '../process/process-list/process-list.component';
 
 const routes: Routes = [{
   path: '',
@@ -278,6 +279,11 @@ const routes: Routes = [{
     {
       path: 'campaign-summary',
       component: CampaignSummaryComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'process-list',
+      component: ProcessListComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
