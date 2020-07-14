@@ -285,6 +285,19 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
     ]
+  },
+  {
+    title: "Process",
+    icon: 'layers-outline',
+    home: true,
+    children: [
+      {
+        title: 'Process List',
+        icon: 'plus-square-outline',
+        link: '/pages/process-list',
+        home: true,
+      }
+    ]
   }
 
 ]);

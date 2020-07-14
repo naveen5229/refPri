@@ -4,7 +4,8 @@ import { CommonService } from '../../Service/common/common.service';
 import { ChartService } from '../../Service/Chart/chart.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
-import * as Chart from 'chart.js'
+import * as Chart from 'chart.js';
+import { UserService } from '../../Service/user/user.service';
 
 @Component({
   selector: 'ngx-call-kpi',
@@ -50,7 +51,8 @@ export class CallKpiComponent implements OnInit {
   constructor(public common: CommonService,
     public modalService: NgbModal,
     public api: ApiService,
-    public chart: ChartService) {
+    public chart: ChartService,
+    public user: UserService) {
     this.startTime.setDate(this.startTime.getDate() - 1)
     this.startTime.setHours(0);
     this.startTime.setMinutes(0);
@@ -64,7 +66,7 @@ export class CallKpiComponent implements OnInit {
     this.shiftEnd.setHours(18)
     this.shiftEnd.setMinutes(30)
     this.getCallKpi();
-   
+
     //  const doc = this.getCallKpi();
     // this.shiftStart.setDate(this.endTime.getDate()-1)
     // this.endTime.setDate(this.endTime.getDate()-1)
@@ -80,7 +82,14 @@ export class CallKpiComponent implements OnInit {
     this.api.get("Admin/getDepartmentList")
       .subscribe(res => {
         this.common.loading--;
-        this.departments = res['data'] || [];
+        this.departments = [];
+        this.departments.push({ "id": null, "name": "All Departments" });
+        if (res['data'] && res['data'].length > 0) {
+          for (let i = 0; i < res['data'].length; i++) {
+            this.departments.push({ "id": res['data'][i]["id"], "name": res['data'][i]["name"] });
+          }
+        }
+        // this.departments = res['data'] || [];
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -120,9 +129,8 @@ export class CallKpiComponent implements OnInit {
         this.common.loading--;
         // console.log('res:', res);
         this.callKpiList = res['data'] || [];
-        console.log(this.callKpiList);
-        this.showdata(this.callKpiList[0]);
-
+        // console.log(this.callKpiList);
+        this.showChart(this.callKpiList[0]);
 
         this.callKpiList.length ? this.setTable() : this.resetTable();
         return this.callKpiList[0];
@@ -177,7 +185,7 @@ export class CallKpiComponent implements OnInit {
       let column = {};
       for (let key in this.generateHeadings()) {
         if (key == "Admin Name") {
-          column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.showdata.bind(this, ticket) }
+          column[key] = { value: ticket[key], class: 'blue', isHTML: true, action: this.showChart.bind(this, ticket) }
 
         }
         else if (ticket["_href"].includes(key)) {
@@ -202,7 +210,15 @@ export class CallKpiComponent implements OnInit {
 
   }
 
-  showdata(doc) {
+  showChart(doc) {
+    if (this.user._loggedInBy == 'admin') {
+      this.showChartForAdmin(doc);
+    } else {
+      this.showChartForFOadmin(doc);
+    }
+  }
+
+  showChartForAdmin(doc) {
     this.temCharts.forEach(ele => ele.destroy());
     console.log(doc);
 
@@ -232,6 +248,35 @@ export class CallKpiComponent implements OnInit {
 
     this.showLabel = true;
 
+  }
+
+  showChartForFOadmin(doc) {
+    this.temCharts.forEach(ele => ele.destroy());
+    let chartData1 = {
+      canvas: document.getElementById('myChart1'),
+      data: [doc['_type_cnt']['incoming'], doc['_type_cnt']['outgoing'], doc['_type_cnt']['missed'], doc['_type_cnt']['other']],
+      labels: ["Incoming", "Outgoing", "Missed", "Others"],
+      showLegend: true
+    }
+
+    let chartData2 = {
+      canvas: document.getElementById('myChart2'),
+      data: [doc['Ad. Cnt.']['value'], doc['Ot. Cnt.']['value']],
+      labels: ["Admin", "Others"],
+      bgColor: [doc['Ad. Cnt.']['class'], doc['Ot. Cnt.']['class']],
+      showLegend: false
+    }
+
+    let chartData3 = {
+      canvas: document.getElementById('myChart3'),
+      data: [doc['Ad. Dur.']['value'], doc['Ot. Dur.']['value']],
+      labels: ["Admin", "Others"],
+      bgColor: [doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
+      showLegend: false
+    }
+    this.temCharts = this.chart.generatePieChartforCall([chartData1, chartData2, chartData3]);
+
+    this.showLabel = true;
   }
 
   callDetails(callData) {
