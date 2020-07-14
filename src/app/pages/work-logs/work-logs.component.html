@@ -1,0 +1,128 @@
+<nb-card style="border: 0px; height: 100%;">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-2">
+                <h5>Work Logs</h5>
+            </div>
+            <div class="col-10">
+                <button type="button text-right" style="margin-left: 771px;" class="btn btn-primary"
+                    (click)="addWorkLogs()"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='Pending WorkLogs'?'active':''"
+                    (click)="activeTab='Pending WorkLogs';getWorkLogs1()">Pending
+                </li>
+                <li [ngClass]="activeTab=='Review WorkLogs'?'active':''"
+                    (click)="activeTab='Review WorkLogs';getWorkLogs1()">Review
+                </li>
+                <li [ngClass]="activeTab=='Complete WorkLogs'?'active':''"
+                    (click)="activeTab='Complete WorkLogs';getWorkLogs1()">Complete
+                </li>
+            </ul>
+        </div>
+        <table *ngIf="activeTab=='Pending WorkLogs'" class="table table-bordered mt-1">
+            <thead class="thead" style="background-color:lightgrey">
+                <tr>
+                    <th>#</th>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Stack</th>
+                    <th>Component</th>
+                    <th>Reviewed By</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let workLog of workLogs; let i=index;">
+                    <td>{{i +1 }}</td>
+                    <td>{{workLog.TaskName}}</td>
+                    <td>{{workLog.Description}}</td>
+                    <td>{{workLog.date | date : 'dd-MMM-yy'}}</td>
+                    <td>{{workLog.total_minutes}}</td>
+                    <td>{{workLog.stack_child_name}}</td>
+                    <td>{{workLog.component_name}}</td>
+                    <td>{{workLog.ReviewerName}}</td>
+                    <td><span><i class="fa fa-edit" (click)="addWorkLogs(workLog)"></i>
+                            <i class="fas fa-trash-alt" (click)="deleteWorkLog(workLog,i)"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="activeTab=='Review WorkLogs'">
+            <table class="table table-border mt-1">
+                <thead class="thead">
+                    <tr>
+                        <th>#</th>
+                        <th>Task</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Stack</th>
+                        <th>Component</th>
+                        <th>Reviewed By</th>
+                        <th>Status</th>
+                        <th>Remark</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reviewWorkLog of reviewWorkLogs ; let i=index;">
+                        <td>{{i +1 }}</td>
+                        <td>{{reviewWorkLog.TaskName}}</td>
+                        <td>{{reviewWorkLog.Description}}</td>
+                        <td>{{reviewWorkLog.date | date : 'dd-MMM-yy'}}</td>
+                        <td>{{reviewWorkLog.total_minutes}}</td>
+                        <td>{{reviewWorkLog.stack_child_name}}</td>
+                        <td>{{reviewWorkLog.component_name}}</td>
+                        <td>{{reviewWorkLog.ReviewerName}}</td>
+                        <td> <select class="form-control" name="taskStatus" class="form-control"
+                                [(ngModel)]="reviewWorkLog.taskStatus">
+                                <option value="1">Completed</option>
+                                <option value="-1">Reject</option>
+                            </select></td>
+                        <td><textarea row="2" cols="15" [(ngModel)]="reviewWorkLog.remark"
+                                class="form-control"></textarea>
+                        </td>
+                        <td><button class="btn btn-primary text-capitalize" id="button"
+                                (click)="changeWorkLogStatus(reviewWorkLog)">save</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <table *ngIf="activeTab=='Complete WorkLogs'" class="table table-border mt-1">
+            <thead class="thead">
+                <tr>
+                    <th>#</th>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Stack</th>
+                    <th>Component</th>
+                    <th>Reviewed By</th>
+                    <th>Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let completeWorkLog of completeWorkLogs; let i=index;">
+                    <td>{{i +1 }}</td>
+                    <td>{{completeWorkLog.TaskName}}</td>
+                    <td>{{completeWorkLog.Description}}</td>
+                    <td>{{completeWorkLog.date | date : 'dd-MMM-yy'}}</td>
+                    <td>{{completeWorkLog.total_minutes}}</td>
+                    <td>{{completeWorkLog.stack_child_name}}</td>
+                    <td>{{completeWorkLog.component_name}}</td>
+                    <td>{{completeWorkLog.ReviewerName}}</td>
+                    <td>{{completeWorkLog.review_remark}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </nb-card-body>
+</nb-card>

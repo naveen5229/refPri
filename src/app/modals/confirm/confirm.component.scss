@@ -1,0 +1,26 @@
+.modal-header {
+    padding: 8px 15px;
+    background-color: #263238 !important;
+    h5 {
+        color: #fff;
+    }
+    button {
+        font-size: 26px;
+        color: #fff !important;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 0px 15px;
+        opacity: 1;
+        outline: none;
+    }
+}
+
+.modal-footer {
+    padding: 8px 15px;
+    #cancel {
+        background-color: #D61414;
+    }
+    #submit {
+        background-color: #263238;
+    }
+}

@@ -1,0 +1,53 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8">
+                <h5>Shift Logs</h5>
+            </div>
+            <div class="col-4 text-right">
+                <button class="btn btn-primary text-capitalize" title="Add Shift Log" (click)="showShiftLogPopup()">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-2">
+                <label>Select Date</label>
+            </div>
+            <div class="col-3">
+                <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
+                </uj-date-time-picker>
+            </div>
+            <div class="col-7">
+                <button type="submit" id="submit" (click)="getShiftLogs()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-height: 300px;">
+        <div>
+            <smart-table *ngIf="shiftLogList && shiftLogList.length>0" [data]="table.data" [settings]="table.settings" id="entries"></smart-table>
+        </div>
+    </nb-card-body>
+
+    <!-- start: map modal -->
+    <div class="modal" id="shiftMapModal" #shiftMapModal>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" style="color:#fff;">Shift Location</h4>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeMapModal()">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="map-container mt-2">
+                        <div #map id="map"> </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end: map modal -->
+</nb-card>

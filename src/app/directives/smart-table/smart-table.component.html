@@ -1,0 +1,134 @@
+<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '73vh'}">
+    <table *ngIf="headings && !isTableHide" class="table table-bordered fixed">
+        <thead *ngIf="!settings.hideHeader">
+            <th style="width: 40px">#</th>
+            <th *ngFor="let heading of objectKeys(headings);">{{headings[heading].title}}</th>
+        </thead>
+        <thead>
+            <tr style="background:#f2f2f2;">
+                <!-- # -->
+                <th style="padding:5px" style="width: 40px">
+                    <div *ngIf="settings.count">
+                        <i [class]="settings.count.icon" (click)="settings.count.action && settings.count.action()"></i>
+                    </div>
+                    <span *ngIf="!settings.count">#</span>
+                </th>
+                <!-- # END -->
+                <!-- Headings -->
+                <th style="padding:5px;" *ngFor="let heading of objectKeys(headings);" [ngClass]="headings[heading].class">
+                    <div *ngIf="!headings[heading].isHTML">
+                        <!-- Searchable -->
+                        <div *ngIf="!headings[heading].hideSearch" class="filter-container">
+                            <!-- Search INPUT -->
+                            <div class="filter-input-container">
+                                <input type="text" class="filter-input" [(ngModel)]="headings[heading].value" (input)="filterData(heading)" [placeholder]="headings[heading].placeholder" [title]="headings[heading].placeholder">
+                            </div>
+                            <!-- Search INPUT END -->
+                            <!-- Column Sorting -->
+                            <div class="sort-container">
+                                <i class="fa fa-sort sort-icon" (click)="sortColumn(heading)"></i>
+                            </div>
+                            <!-- Column Sorting END-->
+                        </div>
+                        <!-- Searchable END-->
+                        <!-- Not Seachable -->
+                        <div *ngIf="headings[heading].hideSearch" class="no-search">
+                            <span>{{headings[heading].title || headings[heading].placeholder}}</span>
+                        </div>
+                        <!-- Not Seachable END -->
+                    </div>
+                    <!-- heading as HTML -->
+                    <div *ngIf="headings[heading].isHTML" [innerHTML]="headings[heading].html"></div>
+                    <!-- heading as HTML END -->
+                </th>
+                <!-- Headings END -->
+                <th class="action-box" *ngIf="edit.row !== -1">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick(column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column)}"
+                [ngStyle]="column.style">
+
+                <!-- Records Count -->
+                <td style="width: 40px">
+                    {{(i + 1) + ((pages.active - 1) * pages.limit)}}
+                </td>
+                <!-- Records Count End -->
+
+                <!-- Smart Table Value -->
+                <td *ngFor="let heading of objectKeys(headings);" [ngClass]="column[heading] ? column[heading].class : ''" (click)="handleColumnClick(column, heading, i)" (dblclick)="handleColDoubleClick(column, heading)" (mouseover)="handleMouseHover(column, heading)"
+                    (mouseout)="handleMouseOut(column, heading)" [ngStyle]="{cursor: (column[heading] && column[heading].action) ? 'pointer' : ''}">
+
+                    <!-- Auto Suggestion -->
+                    <div *ngIf="column[heading] && column[heading].isAutoSuggestion">
+                        <auto-suggestion (onSelected)="isEventBinding(column[heading], 'onSelected', $event)" (unSelected)="isEventBinding(column[heading], 'unSelected', $event)" (noDataFound)="isEventBinding(column[heading], 'noDataFound', $event)" (onChange)="isEventBinding(column[heading], 'onChange', $event)"
+                            [url]="isPropertyBinding(column[heading], 'url')" [display]="isPropertyBinding(column[heading], 'display')" [className]="isPropertyBinding(column[heading], 'suggestionClass')" [placeholder]="isPropertyBinding(column[heading], 'placeholder')"
+                            [preSelected]="isPropertyBinding(column[heading], 'preSelected')" [seperator]="isPropertyBinding(column[heading], 'seperator')" [data]="isPropertyBinding(column[heading], 'data')" [inputId]="isPropertyBinding(column[heading], 'inputId')"
+                            [name]="isPropertyBinding(column[heading], 'name')" [parentForm]="isPropertyBinding(column[heading], 'parentForm')" [controlName]="isPropertyBinding(column[heading], 'controlName')" [apiHitLimit]="isPropertyBinding(column[heading], 'apiHitLimit')"
+                            [isNoDataFoundEmit]="isPropertyBinding(column[heading], 'isNoDataFoundEmit')" [isMultiSelect]="isPropertyBinding(column[heading], 'isMultiSelect')" [bGConditions]="isPropertyBinding(column[heading], 'bGConditions', [])">
+                        </auto-suggestion>
+                    </div>
+                    <!-- Auto Suggestion END -->
+
+
+
+                    <!-- Show HTML -->
+                    <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && column[heading].isHTML" [innerHTML]="column[heading].value">
+                    </div>
+                    <!-- Show HTML END -->
+
+                    <!-- Checkbox -->
+                    <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && column[heading].isCheckbox">
+                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)" [checked]="column[heading].value">
+                    </div>
+                    <!-- CheckBox END -->
+
+                    <!-- Show Text -->
+                    <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && !column[heading].isHTML && !column[heading].icons && !column[heading].isCheckbox && !column[heading].isAutoSuggestion">
+                        <!--  -->
+                        <span *ngIf="edit.row !== i || !headings[heading].editable">{{column[heading].value}}</span>
+                        <input class="form-control" *ngIf="edit.row === i && headings[heading].editable" type="text" [name]="column[heading] + i" [(ngModel)]="column[heading].value">
+                    </div>
+                    <!-- Show Text END -->
+
+                    <!-- Show Action Icons -->
+                    <div *ngIf="column[heading] && column[heading].icons" [class]="column[heading].class || ''">
+                        <div *ngFor="let icon of column[heading].icons" [class]="icon.parentClass" style="display:inline; position: relative;">
+                            <i [class]="icon.class" (click)="icon.action && icon.action()" [title]="icon.title || ''"><span>{{icon.txt}}</span></i>
+                        </div>
+                    </div>
+                    <!-- Show Action Icons END -->
+                </td>
+                <!-- Smart Table Value End -->
+                <td class="action-box" *ngIf="edit.row !== -1 && edit.row ===  i">
+                    <i class="fa fa-check" (click)="saveEdit(column)"></i>
+                    <i class="fa fa-times" (click)="resetColumn()"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- No Record Found -->
+    <div *ngIf="headings && !columns.length">
+        <div class="no-record-found">No Record Found</div>
+    </div>
+    <!-- No Record Found END -->
+</div>
+
+<!-- Pagination -->
+<div class="pagination" *ngIf="settings.pagination || pages.count > 1">
+    <!-- Page Count -->
+    <div class="pagination_links">
+        <button (click)="handlePagination(pages.active - 1)" [disabled]="pages.active == 1">Pre</button>
+        <button *ngFor="let page of common.generateArray(pages.count)" (click)="handlePagination(page)" [ngClass]="page == pages.active ? 'active-page' : ''">{{page}}</button>
+        <button (click)="handlePagination(pages.active + 1)" [disabled]="pages.active == pages.count">Next</button>
+    </div>
+    <!-- Page Count END -->
+    <!-- Records Per Page -->
+    <div class="numer_list ml-3">
+        <input type="text" class="customPage form-control" name="customPageNo" (keyup.enter)="customPage()" [(ngModel)]="pages.limit">
+    </div>
+    <!-- Records Per Page END -->
+</div>
+<!-- Pagination END -->

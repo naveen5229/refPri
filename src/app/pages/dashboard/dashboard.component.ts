@@ -2,6 +2,10 @@ import {Component, OnDestroy} from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { takeWhile } from 'rxjs/operators' ;
 import { SolarData } from '../../@core/data/solar';
+import { CommonService } from '../../Service/common/common.service';
+import { ApiService } from '../../Service/Api/api.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ListOfEmployeeComponent } from '../../modals/list-of-employee/list-of-employee.component';
 
 interface CardSettings {
   title: string;
@@ -17,12 +21,39 @@ interface CardSettings {
 export class DashboardComponent implements OnDestroy {
 
   
-
-  constructor(private themeService: NbThemeService,
-              private solarService: SolarData) {
-    
+  dashboard=[];
+  constructor(public common: CommonService,
+    public api: ApiService,
+    public modalService:NgbModal) {
+      this.dashboardDetail();
   }
 
   ngOnDestroy() {
   }
+
+  dashboardDetail(){
+    this.common.loading++;
+
+      this.api.get("Projects/getProjectsWrtStatus").subscribe(res =>{
+        this.common.loading--;
+        this.dashboard=res['data'] || [];
+        console.log("data",this.dashboard);
+
+      },
+      err => {
+        this.common.loading--;
+
+        this.common.showError();
+      console.log('Error: ', err);
+      });
+    }
+
+    
+
+    countWorkingEmployee(){
+      this.modalService.open( ListOfEmployeeComponent,{size:'lg',container:'nb-layout' ,backdrop:'static'})
+    }
+  
+
+  
 }

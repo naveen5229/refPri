@@ -1,0 +1,126 @@
+.main {
+    width: 350px;
+    margin: auto;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+    padding-left: 30%;
+    margin-bottom: 4%;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+
+.title {
+    color: #ff5722;
+}
+
+.sub-title {
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    letter-spacing: 0.2px;
+    font-family: cursive;
+    line-height: 20px;
+}
+
+input {
+    background: transparent !important;
+    color: #fff !important;
+    padding: 4px 14px !important;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid #ff5722 !important;
+    border-radius: 4px;
+    font-family: sans-serif;
+    width: 85%;
+    margin: auto;
+    margin-top: -4%;
+    letter-spacing: 0.8px;
+}
+
+.btn {
+    border-radius: 3px;
+    background: #ff5722 !important;
+    padding: 7px;
+    width: 60%;
+    margin: auto;
+    margin-top: 25px;
+}
+
+.back-icon {
+    position: absolute;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.error {
+    font-size: 14px;
+    color: #fff;
+    // color: #FF5722;
+    margin-top: 3px;
+    margin-left: 25px;
+}
+
+.resendOtp {
+    color: #fff;
+    margin-left: 25px;
+    font-size: 14px;
+}
+
+.blink {
+    background-color: transparent;
+    text-align: center;
+}
+
+span {
+    font-size: 25px;
+    font-family: cursive;
+    color: white;
+    animation: blink 5s linear infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+        color: white;
+    }
+    0% {
+        opacity: 0.25;
+        color: white;
+    }
+    50% {
+        opacity: 0.5;
+        color: white;
+    }
+    0% {
+        opacity: 0.75;
+        color: #ff5722;
+    }
+    100% {
+        opacity: 1;
+        color: #ff5722;
+    }
+}
+
+.qrClass {
+    text-align: center;
+    cursor: none;
+}
+
+ :host ::ng-deep .qr-class img {
+    height: 200px;
+    width: 200px;
+}

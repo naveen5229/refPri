@@ -1,0 +1,79 @@
+<nb-card style="border: 0px; height: 100%;">
+    <nb-card-header class="employee-report">
+        <h5>Employee Period Wise Report</h5>
+
+    </nb-card-header>
+    <nb-card-body style="min-height: 440px;">
+        <div class="employee-report">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <div class="row align-items-center">
+                                <div class="col-4 pr-0">
+                                    <label>Name:</label>
+                                </div>
+                                <div class="col-8">
+                                    <auto-suggestion [data]="employeeList" display="name" placeholder="Employee Name"
+                                        name="user-name" (onSelected)="employeeId=($event.id)" autocomplete="off">
+                                    </auto-suggestion>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row row align-items-center">
+                                <div class="col-4 pl-0 pr-0">
+                                    <label>From Date :</label>
+                                </div>
+                                <div class="col-8 pl-0">
+                                    <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate"
+                                        [isTime]="false">
+                                    </uj-date-time-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row align-items-center">
+                                <div class="col-3 pr-0 pl-0">
+                                    <label>To Date :</label>
+                                </div>
+                                <div class="col-9">
+                                    <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate"
+                                        [isTime]="false" [isStart]="false">
+                                    </uj-date-time-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-primary"
+                                (click)="getEmployeeWiseReport()">submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div>
+                <table class="table table-bordered mt-1">
+                    <thead class="thead" style="background-color:lightgrey">
+                        <tr>
+                            <th>Date/Stack</th>
+                            <th *ngFor="let stack of stacks; let i = index;">{{stack}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let report of reports; let i = index;">
+                            <td>{{report.date}}</td>
+                            <td *ngFor="let stack of stacks; let j = index;" (click)="stackWiseReport(report,stack)"
+                                style="color:blue;cursor: pointer;">
+
+                                <span *ngIf="report.stacks[stack] != 0">{{report.stacks[stack]}}</span>
+                                <i class="fa fa-times" style="color:red" *ngIf="!report.stacks[stack]"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

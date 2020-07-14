@@ -1,0 +1,45 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row ">
+            <div class="col-3">
+                <h5>Employee Monthly Report</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-height: 440px;">
+        <div class="row">
+            <div class="col-3">
+                <month-picker (select)="dates = $event"></month-picker>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="showMonthlyWork()">Submit</button>
+            </div>
+
+        </div>
+        <div>
+            <div class="row" style="margin-top:15px">
+                <table class="table table-bordered mt-2">
+                    <thead class="thead" style="background-color:lightgrey">
+                        <tr>
+                            <th>Employee/Date</th>
+                            <th *ngFor="let date of formattedAttendancesDate">{{date}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let emp of formattedAttendances; let i=index;">
+                            <td>{{emp.name}}</td>
+                            <td (click)="workLogUser(info._empid,info._date)" style="color:blue"
+                                *ngFor="let info of emp.data">
+                                <span *ngIf="info.hr != '00:00:00'">{{info.hr}}</span>
+                                <i class="fa fa-times" style="color:red" *ngIf="info.hr == '00:00:00'"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <smart-table *ngIf="attendances.length>0" [data]="table.data" [settings]="table.settings"></smart-table>
+                <div class="no-data alert alert-danger" role="alert" *ngIf="foFsMapping.length==0">
+                    No Data available !
+                </div> -->
+
+            </div>
+        </div>

@@ -5,6 +5,11 @@ import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ApiService } from '../../../Service/Api/api.service';
+import { UserService } from '../../../Service/user/user.service';
+import { CommonService } from '../../../Service/common/common.service';
+
 
 @Component({
   selector: 'ngx-header',
@@ -37,23 +42,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   currentTheme = 'default';
-
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userLogin = '';
+  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private userService: UserData,
-              private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private layoutService: LayoutService,
+    public router: Router,
+    private api: ApiService,
+    public userService: UserService,
+    public common: CommonService,
+    private breakpointService: NbMediaBreakpointsService) {
+    if (this.userService._details == null) {
+      this.router.navigate(['/auth/login']);
+    }
+    else {
+
+      this.userLogin = this.userService._details.name || [];
+      console.log("----------------", this.userLogin);
+    }
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
-
-    this.userService.getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -90,5 +102,50 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  logout() {
+    if (confirm('Are you sure to logout?')) {
+      let loggedInBy = localStorage.getItem('ITRM_LOGGED_IN_BY');
+      let apiCall = (loggedInBy == 'customer') ? 'FoAdmin/logout' : 'Login/logout';
+      let params = {
+        entrymode: "1",
+        version: "1.1",
+        authkey: this.userService._token
+      }
+      this.common.loading++;
+      this.api.post(apiCall, params)
+        .subscribe(res => {
+          this.common.loading--;
+          if (res['success']) {
+            this.userService._token = '';
+            this.userService._details = null;
+
+            localStorage.removeItem('ITRM_USER_TOKEN');
+            localStorage.removeItem('ITRM_USER_DETAILS');
+            localStorage.removeItem('ITRM_LOGGED_IN_BY');
+            localStorage.removeItem('ITRM_USER_PAGES');
+
+            this.common.showToast(res['msg']);
+            if (loggedInBy == 'customer') {
+              this.router.navigate(['/auth/login']);
+            } else {
+              this.router.navigate(['/auth/login/admin']);
+            }
+          }
+        },
+          err => {
+            this.common.loading--;
+            this.common.showError();
+          });
+    }
+  }
+  refresh() {
+    if (!this.common.refresh) {
+      // this.router.navigateByUrl('/pages/dashboard');
+      this.router.navigateByUrl('/pages/task');
+      return;
+    }
+    this.common.refresh();
   }
 }

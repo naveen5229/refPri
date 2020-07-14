@@ -1,0 +1,62 @@
+<nb-card style="padding:none">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-3">
+                <h5>Distance Calculate</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-height: 650px;">
+        <div class="row">
+            <div class="col-3">
+                <div class="form-group">
+                    <label class="fill-elt">Name:</label>
+                    <auto-suggestion (onSelected)="driverId=($event.id)" url="Suggestion/getElogistDriverList?" display="empname" placeholder="Enter Name" style="width:100%;">
+                    </auto-suggestion>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="fill-elt">From Date:</label>
+                    <uj-date-time-picker (onChanged)="startDate = $event" [dateTimeValue]="startDate">
+                    </uj-date-time-picker>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="fill-elt">To Date</label>
+                    <uj-date-time-picker (onChanged)="endDate = $event" [dateTimeValue]="endDate" [isStart]="false">
+                    </uj-date-time-picker>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-group">
+                    <button type="button" style="margin-top: 31px;" class="btn btn-primary" (click)="getDriverLatLongs()">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div style="margin-left: 340px;">
+                <table frame="box" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><b>Start Date</b></th>
+                            <th><b>End Date</b></th>
+                            <th><b>Distance (Kms)</b></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="this.driverLatLong && this.driverLatLong.length">
+                        <tr>
+                            <td>{{travelStartDate | date : 'dd-MMM-yy'}}</td>
+                            <td>{{travelEndDate | date : 'dd-MMM-yy' }}</td>
+                            <td>{{totalDistance.toFixed(2)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div id="map" class="map"></div>
+        </div>
+    </nb-card-body>
+</nb-card>

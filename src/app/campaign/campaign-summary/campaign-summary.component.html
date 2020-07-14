@@ -1,0 +1,87 @@
+<nb-card>
+  <nb-card-header>
+      <div class="row">
+          <div class="col-12">
+              <h5>Campaign Summary</h5>
+          </div>      
+      </div>
+  <br>
+      <div class="row mt-3" style="z-index: 999; font-size: 12px;">
+          <div class="col-4">
+              <label>Campaign Name</label>
+              <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName" id="campaignName" (onSelected)="campaignid=($event.id);" [preSelected]="{name:campaignname}" autocomplete="off">
+              </auto-suggestion>
+          </div>
+          <div class="col-2">
+              <label>Start Date</label>
+              <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="false">
+              </uj-date-time-picker>
+          </div>
+          <div class="col-2">
+              <label>End Date</label>
+              <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
+              </uj-date-time-picker>
+          </div>
+      
+          <div class="col-3 mt-4">
+              <button class="btn btn-primary btn-sm" type='submit' id="save" (click)="getCampaignSummary()">Submit</button>
+          </div>
+      </div>
+
+  </nb-card-header>
+
+  <nb-card-body style="min-height: 80vh;">
+
+      <div class="row" style="min-height: 40vh;">
+        <div class="col-4">
+          <div  class="chartbox" >
+              <canvas id="myChart1" width="350" height="200"></canvas>
+          </div>
+          <div style="margin-top: 18px;">
+            <smart-table *ngIf='totalLeadCount != null && totalLeadCount.length'  [data]="totalLeadtable.data" [settings]="totalLeadtable.settings" id="leadCount">
+            </smart-table>
+          </div>
+          
+      </div>
+      <div class="col-8">
+        <div  class="chartbox"  >
+        <canvas id="myChart2"></canvas>
+        </div>
+        <br>
+        <smart-table *ngIf='stateWiseCount != null && stateWiseCount.length' [data]="stateWisetable.data" [settings]="stateWisetable.settings" id="leadCount">
+        </smart-table>
+      </div>
+      </div>
+
+      <br>
+
+
+      <div *ngIf='showTable' class="row" style="max-height: 100vh;">
+  
+
+          <div class="tabs_style_main">
+              <ul class="tabs_style text-left">
+                  <li [ngClass]="activeTab=='stateSummary'?'active':''" (click)="activeTab='stateSummary'; getSummary(1)">State Summary </li>
+                  <li [ngClass]="activeTab=='leadCount'?'active':''" (click)="activeTab='leadCount'; getSummary(2)"> Lead Count </li>
+                  <li [ngClass]="activeTab=='caseCount'?'active':''" (click)="activeTab='caseCount'; getSummary(3)">Case Count </li>
+              </ul>
+          </div>
+
+          <div *ngIf="activeTab=='stateSummary'">
+            <smart-table  [data]="table.data" [settings]="table.settings" id="userSummary">
+            </smart-table>
+            <!-- <div class="row no-record" *ngIf="installerlist.length==0">No Data Available</div> -->
+        </div>
+        <div *ngIf="activeTab=='leadCount'">
+            <smart-table [data]="table.data" [settings]="table.settings" id="leadCount">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='caseCount'">
+            <smart-table [data]="table.data" [settings]="table.settings" id="caseCount">
+            </smart-table>
+        </div>
+
+      </div>
+
+  </nb-card-body>
+</nb-card>

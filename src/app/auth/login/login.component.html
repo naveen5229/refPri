@@ -1,0 +1,73 @@
+<div class="main">
+    <!-- <i *ngIf="listenOTP"  (click)="backToLogin()" class="icon ion-md-arrow-round-back back-icon"></i> -->
+    <i *ngIf="listenOTP" (click)="backToLogin()" class="fas fa-arrow-alt-circle-left fa-2x"></i>
+
+    <div class="logo">
+        <img src="http://elogist.in/images/elogist-logo.png">
+    </div>
+    <h1 id="title" class="title">{{(user._loggedInBy == 'admin')?'Admin':'Customer'}} Login</h1>
+    <p class="sub-title">eLogist is building an integrated AI-driven utilisation based digital platform for the Transportation industry</p>
+    <div *ngIf="!listenOTP">
+        <form #mobileForm="ngForm" (submit)="mobileForm.valid && sendOTP()">
+            <div class="form-group">
+                <input type="tel" autocomplete="off" minlength="10" maxlength="10" [(ngModel)]="userDetails.mobile" #mobile="ngModel" name="mobile" id="input-mobile" placeholder="Mobile Number" class="form-control" pattern="[0-9]+" required>
+                <div *ngIf="mobile.errors && formSubmit">
+                    <div class="error" [hidden]="!mobile.errors.required">Mobile number is required</div>
+                    <div class="error" [hidden]="!mobile.errors.minlength">Mobile number must be 10 digit long</div>
+                    <div class="error" [hidden]="!mobile.errors.pattern">Invalid mobile number</div>
+                </div>
+            </div>
+            <button type="submit" (click)="formSubmit = true" class="btn btn-primary btn-block custom-btn" (click)="sendOTP">
+                {{button}}
+            </button>
+        </form>
+    </div>
+    <div *ngIf="listenOTP">
+        <form #otpForm="ngForm" (submit)="otpForm.valid && login()">
+            <!-- <div class="form-group"> -->
+            <!-- <input name="otp" id="input-otp" #otp="ngModel" placeholder="OTP number" class="form-control" [(ngModel)]="userDetails.otp" pattern="[0-9]+" minlength="4" maxlength="4" autocomplete="off" required>
+                <div *ngIf="otp.errors && formSubmit">
+                    <div class="error" [hidden]="!otp.errors.required">OTP is required</div>
+                    <div class="error" [hidden]="!otp.errors.minlength">OTP must be 04 digit long</div>
+                    <div class="error" [hidden]="!otp.errors.pattern">Invalid OTP number</div>
+                </div> -->
+            <!-- <div class="qrClass" >
+                    <ngx-qrcode [qrc-element-type]="elementType" [qrc-value]="qrCode + '-itrm'" qrc-class="qr-class"
+                        qrc-errorCorrectionLevel="L" >
+                    </ngx-qrcode>
+                </div> -->
+            <!-- </div> -->
+            <!-- <p class="resendOtp" *ngIf="otpCount && listenOTP">Resend OTP in {{otpCount}} seconds..</p>
+            <p class="resendOtp" style="cursor:pointer;" *ngIf="!otpCount && listenOTP" (click)="sendOTP()">Resend OTP</p>
+            <button type="submit" (click)="formSubmit = true" class="btn btn-primary btn-block custom-btn">
+              Login
+            </button> -->
+
+            <div *ngIf="listenOTP && loginType===1">
+                <form #otpForm="ngForm" (submit)="otpForm.valid && login()">
+                    <div class="form-group">
+                        <input [(ngModel)]="userDetails.otp" #otp="ngModel" name="otp" id="input-otp" placeholder="OTP number" class="form-control" pattern="[0-9]+" minlength="4" maxlength="4" autocomplete="off" required>
+                        <div *ngIf="otp.errors && formSubmit">
+                            <div class="error" [hidden]="!otp.errors.required">OTP is required</div>
+                            <div class="error" [hidden]="!otp.errors.minlength">OTP must be 04 digit long</div>
+                            <div class="error" [hidden]="!otp.errors.pattern">Invalid OTP number</div>
+                        </div>
+                    </div>
+                    <p class="resendOtp" *ngIf="otpCount && listenOTP">Remaining Time in {{otpCount}} seconds..</p>
+                    <p class="resendOtp" style="cursor:pointer;" *ngIf="!otpCount && listenOTP" (click)="sendOTP()">Resend OTP</p>
+                    <button type="submit" (click)="formSubmit = true" class="btn btn-primary btn-block custom-btn">
+                    Login
+                  </button>
+                </form>
+            </div>
+            <div *ngIf="listenOTP && loginType===2 && qrCode">
+                <div class="qrClass">
+                    <ngx-qrcode [qrc-element-type]="elementType" [qrc-value]="qrCode + '-itrm'" qrc-class="qr-class" qrc-errorCorrectionLevel="M">
+                    </ngx-qrcode>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
