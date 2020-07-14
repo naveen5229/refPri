@@ -116,9 +116,9 @@ export class TaskNewComponent implements OnInit {
     else if (this.normalTask.subject == '') {
       return this.common.showError("subject is missing");
     }
-    else if (this.normalTask.task == '') {
-      return this.common.showError("Description is missing");
-    }
+    // else if (this.normalTask.task == '') {
+    //   return this.common.showError("Description is missing");
+    // }
     else if (!this.userId) {
       return this.common.showError("Please assign a user");
     }
