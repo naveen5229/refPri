@@ -22,15 +22,27 @@
 
     <!-- start: cat modal -->
     <div class="modal" id="catModal" #catModal>
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title" style="color:#fff;">Category Mapping</h4>
+                    <h4 class="modal-title" style="color:#fff;">{{catFormTitle}}</h4>
                     <button type="button" class="close" data-dismiss="modal" (click)="closeCatModal()">&times;</button>
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
+                    <div class="row mb-1">
+                        <div class="col-3">
+                            <label>Name:</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="Enter Name" [(ngModel)]="catForm.name">
+                        </div>
+                        <div class="col-3 text-right">
+                            <button class="btn btn-primary btn-sm" (click)="addProcessCat()">Add</button>
+                        </div>
+                    </div>
+
                     <smart-table [data]="tableCatList.data" [settings]="tableCatList.settings" id="tableCatList">
                     </smart-table>
                 </div>

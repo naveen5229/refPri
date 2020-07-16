@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddProcessComponent } from '../../modals/process-modals/add-process/add-process.component';
 import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -13,6 +14,25 @@ import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/
 export class ProcessListComponent implements OnInit {
   processData = [];
   table = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  catFormTitle = "Add Primary Category";
+  catForm = {
+    id: null,
+    process_id: null,
+    name: ""
+  };
+
+  catType = 1;
+  catList = [];
+  tableCatList = {
     data: {
       headings: {},
       columns: [],
@@ -111,36 +131,39 @@ export class ProcessListComponent implements OnInit {
     return icons;
   }
 
-  catType = 1;
-  catList = [];
-  tableCatList = {
-    data: {
-      headings: {},
-      columns: [],
-    },
-    settings: {
-      hideHeader: true
-    }
-  };
-
   closeCatModal() {
+    this.resetCatForm();
     document.getElementById("catModal").style.display = "none";
+  }
+
+  resetCatForm() {
+    this.catForm.id = null;
+    this.catForm.name = "";
   }
 
   openCatModal(process, type) {
     this.catType = type;
-    let apiName = "Processes/getProcessPriCat?processId=" + process._id;
-    if (type == 1) {
-      apiName = "Processes/getProcessPriCat?processId=" + process._id;
+    this.catForm.process_id = process._id;
+    this.getProcessCat();
+    document.getElementById("catModal").style.display = "block";
+  }
+
+  getProcessCat() {
+    let apiName = "Processes/getProcessPriCat?processId=" + this.catForm.process_id;
+    if (this.catType == 1) {
+      this.catFormTitle = "Add Primary Category";
+      apiName = "Processes/getProcessPriCat?processId=" + this.catForm.process_id;
     } else {
-      apiName = "Processes/getProcessSecCat?processId=" + process._id;
+      this.catFormTitle = "Add Secondary Category";
+      apiName = "Processes/getProcessSecCat?processId=" + this.catForm.process_id;
     }
     this.common.loading++;
     this.api.get(apiName).subscribe(res => {
       this.common.loading--;
       console.log("api data", res);
       if (!res['data']) return;
-      this.processData = res['data'];
+      this.catList = res['data'];
+      console.log("catList:", this.catList);
       this.catList.length ? this.setTableCatList() : this.resetTableCatList();
 
     }, err => {
@@ -198,7 +221,91 @@ export class ProcessListComponent implements OnInit {
   }
 
   actionIconsCatList(cat) {
-    console.log("cat:", cat);
+    let icons = [
+      { class: "far fa-edit", title: "Edit", action: this.editProcessCat.bind(this, cat) },
+      { class: "far fa-trash-alt", title: "Delete", action: this.deleteProcessCat.bind(this, cat) }
+    ];
+    return icons;
+  }
+
+  editProcessCat(cat) {
+    this.catForm.id = cat._id;
+    this.catForm.name = cat.name;
+  }
+
+  addProcessCat() {
+    let apiName = "Processes/addProcessPriCat";
+    if (this.catType == 1) {
+      this.catFormTitle = "Add Primary Category";
+      apiName = "Processes/addProcessPriCat";
+    } else {
+      this.catFormTitle = "Add Secondary Category";
+      apiName = "Processes/addProcessSecCat";
+    }
+    let params = {
+      processId: this.catForm.process_id,
+      name: this.catForm.name,
+      requestId: this.catForm.id
+    }
+    this.common.loading++;
+    this.api.post(apiName, params).subscribe(res => {
+      this.common.loading--;
+      console.log("api data", res);
+      if (res['code'] == 1) {
+        if (res['data'][0]['y_id'] > 0) {
+          this.resetCatForm();
+          this.common.showToast(res['msg']);
+          this.getProcessCat();
+        } else {
+          this.common.showError(res['msg']);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log(err);
+    });
+  }
+
+  deleteProcessCat(cat) {
+    this.common.params = {
+      title: 'Delete Category',
+      description: 'Are you sure you want to delete this Category?'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log('res', data);
+      if (data.response) {
+        let apiName = "Processes/deleteProcessPriCat";
+        if (this.catType == 1) {
+          apiName = "Processes/deleteProcessPriCat";
+        } else {
+          apiName = "Processes/deleteProcessSecCat";
+        }
+        let params = {
+          id: cat._id
+        };
+        this.common.loading++;
+        this.api.post(apiName, params).subscribe(res => {
+          this.common.loading--;
+          console.log("api data", res);
+          if (res['code'] == 1) {
+            if (res['data'][0]['y_id'] > 0) {
+              this.common.showToast(res['msg']);
+              this.getProcessCat();
+            } else {
+              this.common.showError(res['msg']);
+            }
+          } else {
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
+      }
+    });
   }
 
 }
