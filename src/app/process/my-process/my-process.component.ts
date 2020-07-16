@@ -128,7 +128,7 @@ export class MyProcessComponent implements OnInit {
       endDate = this.common.dateFormatter(this.searchData.endDate);
     }
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
-    this.api.get("Campaigns/getMyCampaignByType" + params).subscribe(res => {
+    this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
       console.log("data", res['data'])
       this.reserSmartTableData();

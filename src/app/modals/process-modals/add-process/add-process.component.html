@@ -1,19 +1,47 @@
 <div class="modal-header">
     <h5>Add Process</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
   <span aria-hidden="true">&times;</span>
 </button>
 </div>
 <div class="modal-body">
+    <div class="row form-group">
+        <div class="col-4">
+            <label>Process Name<span class="require">*</span></label>
+        </div>
+        <div class="col-8">
+            <input type="text" class="form-control" name="processName" [(ngModel)]="processForm.name">
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <label>Start Date<span class="require">*</span></label>
+        </div>
+        <div class="col-8">
+            <uj-date-time-picker (onChanged)="processForm.startTime = $event" [dateTimeValue]="processForm.startTime" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <label>End Date</label>
+        </div>
+        <div class="col-8">
+            <uj-date-time-picker (onChanged)="processForm.endTime = $event" [isStart]="false" [dateTimeValue]="processForm.endTime" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+    </div>
 </div>
 
 <div class="modal-footer">
     <div class="row footer">
-        <!-- <div class="col ">
-          <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
-      </div>
-      <div class="col text-right">
-          <button class="btn btn-primary " form="worklog-form" type='submit' id="save" (click)="savecampaign()">{{button}}</button>
-      </div> -->
+        <div class="col ">
+            <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(false)">Cancel</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary " form="worklog-form" type='submit' id="save" (click)="saveProcess()">{{button}}</button>
+        </div>
     </div>
 </div>
