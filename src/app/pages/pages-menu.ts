@@ -296,6 +296,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'plus-square-outline',
         link: '/pages/process-list',
         home: true,
+      },
+      {
+        title: 'My Process',
+        icon: 'grid-outline',
+        link: '/pages/my-process',
+        home: true,
       }
     ]
   }
