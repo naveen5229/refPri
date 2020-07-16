@@ -133,6 +133,11 @@ export class CampaignMasterPageComponent implements OnInit {
         this.deleteUrl = "CampaignModules/removeSecondaryCategory";
         break;
 
+      case 'modeMaster':
+        this.url = "CampaignModules/getModes";
+        this.deleteUrl = "CampaignModules/removeMode";
+        break;
+
     }
     this.getMasterDyanmicData();
 
@@ -260,6 +265,11 @@ export class CampaignMasterPageComponent implements OnInit {
       case 'secCategoryMaster':
         this.deleteParams = {
           secCatId: row._sec_cat_id
+        };
+        break;
+      case 'modeMaster':
+        this.deleteParams = {
+          modeId: row._mode_id
         };
         break;
     }
