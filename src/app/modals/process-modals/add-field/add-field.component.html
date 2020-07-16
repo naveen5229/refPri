@@ -1,0 +1,77 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">Add Field</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-5">
+          <label> Field Name </label>
+        </div>
+        <div class="col-7">
+          <input type="text" name="name" id="name" [(ngModel)]="name" class="form-control" maxlength="25">
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4">
+          <label>Type </label>
+        </div>
+        <div class="col-8">
+          <select class="form-control" [(ngModel)]="typeId">
+            <option *ngFor="let type of types;" [value]="type.id" class="form-control">{{type.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mb-3">
+
+    <div class="col-6"  *ngIf="typeId!='date'">
+      <div class="row">
+        <div class="col-6">
+            <label>
+                <input type="checkbox" [(ngModel)]="isFixedValue">
+                Is Fixed Value ?
+              </label>
+        </div>
+        <div class="col-6" *ngIf="isFixedValue">
+            <div class="row" *ngFor="let fixValue of fixValues; let i = index">
+              <div class="col-8">
+                <input type="text" [(ngModel)]="fixValue.option" class="form-control">
+      
+              </div>
+      
+              <div class="col-4">
+                <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue()"></i>
+                <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="col-5">
+        <label>
+            <input type="checkbox" [(ngModel)]="isRequired">
+            Is Required?
+          </label>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-4"></div>
+    <div class="col-2">
+      <button class="btn btn-primary" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
+    </div>
+    <div class="col-2" *ngIf="fieldId">
+      <button class="btn btn-danger" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
+    </div>
+  </div>
+  <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField">
+  </smart-table>
+</div>

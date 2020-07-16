@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">Add States</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row mb-3">
+    <div class="col-5">
+      <div class="row">
+        <div class="col-5">
+          <label> state Name </label>
+        </div>
+        <div class="col-7">
+          <input type="text" name="name" id="name" [(ngModel)]="stateName" class="form-control" >
+        </div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="row">
+        <div class="col-4">
+          <label>Type </label>
+        </div>
+        <div class="col-8">
+          <select class="form-control" [(ngModel)]="typeId">
+            <option value="1" class="form-control">IN</option>
+            <option value="2" class="form-control">OUT</option>
+
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-5">
+      <div class="row" *ngIf="states.length>0">
+        <div class="col-5">
+          <label> Next State </label>
+        </div>
+        <div class="col-7">
+          <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select Next State" (onSelected)="addNextState($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off" [preSelected]="nextState"></auto-suggestion>
+        </div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="row">
+       
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-4"></div>
+    <div class="col-2">
+      <button class="btn btn-primary" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
+    </div>
+    <div class="col-2" *ngIf="requestId">
+      <button class="btn btn-danger" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
+    </div>
+  </div>
+  <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField">
+  </smart-table>
+</div>
