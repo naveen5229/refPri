@@ -77,6 +77,8 @@ import { CampaignMessageComponent } from './modals/campaign-modals/campaign-mess
 import { TaskScheduleMasterComponent } from './modals/task-schedule-master/task-schedule-master.component';
 import { MissedCallLogsComponent } from './modals/missed-call-logs/missed-call-logs.component';
 import { AddProcessComponent } from './modals/process-modals/add-process/add-process.component';
+import { AddStateComponent } from './modals/process-modals/add-state/add-state.component';
+import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -121,7 +123,9 @@ const PAGE_COMPONENTS = [
   CampaignMessageComponent,
   TaskScheduleMasterComponent,
   MissedCallLogsComponent,
-  AddProcessComponent
+  AddProcessComponent,
+  AddStateComponent,
+  AddFieldComponent,
 ];
 
 @NgModule({
@@ -129,6 +133,7 @@ const PAGE_COMPONENTS = [
     LoginComponent,
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
+  
     // SendmessageComponent,
     // GenericModelComponent,
     // TicketCallRatingComponent,
