@@ -209,6 +209,14 @@ export class TaskMessageComponent implements OnInit {
   }
 
   addNewCCUserToTask() {
+    let accessUsers = [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid];
+    if (this.userListByTask['ccUsers'].length > 0) {
+      this.userListByTask['ccUsers'].forEach(element => {
+        accessUsers.push(element._cc_user_id);
+      });
+    }
+    console.log("accessUsers:", accessUsers);
+
     if (!this.userListByTask['taskUsers'] || ![this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
       this.common.showError("Not a valid user");
       return false;

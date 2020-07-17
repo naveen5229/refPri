@@ -11,7 +11,7 @@ import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new
   styleUrls: ['./task-schedule-master.component.scss']
 })
 export class TaskScheduleMasterComponent implements OnInit {
-  title = "Scheduled Task Master";
+  title = "Add Scheduled Task";
   scheduledTask = {
     taskId: null,
     subject: "",

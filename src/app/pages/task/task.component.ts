@@ -1408,7 +1408,7 @@ export class TaskComponent implements OnInit {
   openSchedukedTaskMasterModal() {
     // document.getElementById("schedukedTaskMasterModal").style.display = "block";
     this.common.params = null;
-    this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -1580,7 +1580,7 @@ export class TaskComponent implements OnInit {
 
   editScheduleTask(task) {
     this.common.params = null;
-    this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -1723,11 +1723,11 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  openStateModal(){
-    let process={
-      id:1
+  openStateModal() {
+    let process = {
+      id: 1
     }
-    this.common.params={process:process};
+    this.common.params = { process: process };
     const activeModal = this.modalService.open(AddStateComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -1735,5 +1735,5 @@ export class TaskComponent implements OnInit {
       }
     });
   }
- 
+
 }
