@@ -79,6 +79,7 @@ import { MissedCallLogsComponent } from './modals/missed-call-logs/missed-call-l
 import { AddProcessComponent } from './modals/process-modals/add-process/add-process.component';
 import { AddStateComponent } from './modals/process-modals/add-state/add-state.component';
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
+import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -126,14 +127,14 @@ const PAGE_COMPONENTS = [
   AddProcessComponent,
   AddStateComponent,
   AddFieldComponent,
+  AddActionComponent,
 ];
 
 @NgModule({
   declarations: [AppComponent,
     LoginComponent,
     ...PAGE_COMPONENTS,
-    InfoMatrixComponent,
-  
+
     // SendmessageComponent,
     // GenericModelComponent,
     // TicketCallRatingComponent,

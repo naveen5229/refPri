@@ -6,6 +6,7 @@ import { AddProcessComponent } from '../../modals/process-modals/add-process/add
 import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
+import { AddActionComponent } from '../../modals/process-modals/add-action/add-action.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -129,6 +130,7 @@ export class ProcessListComponent implements OnInit {
       { class: "fas fa-grip-horizontal ml-2", action: this.addProcessState.bind(this, process), title: "Add State" },
       { class: "fas fa-list-alt pri_cat ml-2", action: this.openCatModal.bind(this, process, 1), title: "Primary Category Mapping" },
       { class: "fas fa-list-alt ml-2", action: this.openCatModal.bind(this, process, 2), title: "Secondary Category Mapping" },
+      { class: "fas fa-handshake ml-2", action: this.addProcessAction.bind(this, process), title: "Add Action" },
     ];
     return icons;
   }
@@ -142,6 +144,22 @@ export class ProcessListComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         console.log("AddStateComponent:", data.response);
+      }
+    });
+  }
+
+  addProcessAction(process) {
+    let param = {
+      process_id: process._id,
+      process_name: process.name,
+      state_id: null,
+      state_name: null
+    }
+    this.common.params = { actionData: param };
+    const activeModal = this.modalService.open(AddActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log("addProcessAction:", data.response);
       }
     });
   }
