@@ -14,7 +14,8 @@ export class AddFieldComponent implements OnInit {
   stateType = null;
   refId =null;
   refType = null;
-  formType = null
+  formType = null;
+  order = null;
   types = [{
     id: null,
     name: null,
@@ -78,7 +79,9 @@ export class AddFieldComponent implements OnInit {
       param:this.name ,
       type:this.typeId,
       drpOption:this.fixValues,
-      is_required :this.isRequired
+      is_required :this.isRequired,
+      order :this.order
+
        }
     console.log("type:", this.typeId);
     let params = {
@@ -93,12 +96,12 @@ export class AddFieldComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
-        if (res['data'][0].r_id > 0) {
+        if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
           this.getFieldName();
         }
         else {
-          this.common.showError(res['data'][0].r_msg);
+          this.common.showError(res['data'][0].y_msg);
         }
 
       }, err => {
