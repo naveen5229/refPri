@@ -168,7 +168,7 @@ export class ShiftLogAddComponent implements OnInit {
     };
     let param = "?date=" + this.common.dateFormatter(this.common.getDate()) + "&userId=" + this.shiftForm.user.id;
     this.api.get("Admin/getUserShiftDetailByDate" + param).subscribe(res => {
-      console.log("data", res['data'])
+      console.log("data", res['data']);
       if (res['code'] > 0) {
         this.shiftLogList = res['data'] || [];
         this.setTableShiftLog();
@@ -207,7 +207,8 @@ export class ShiftLogAddComponent implements OnInit {
         attendanceType: this.shiftForm.attendanceType,
         remark: this.shiftForm.remark
       };
-      this.api.post("Admin/saveUserShift", params).subscribe(res => {
+      // this.api.post("Admin/saveUserShift", params).subscribe(res => {
+      this.api.post("Admin/saveUserShiftV2", params).subscribe(res => {
         console.log("data", res['data'])
         this.common.loading--;
         if (res['code'] > 0) {

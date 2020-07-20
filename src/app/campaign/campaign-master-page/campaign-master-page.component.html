@@ -34,6 +34,9 @@
                     <li [ngClass]="activeTab=='secCategoryMaster'?'active':''" (click)="activeTab='secCategoryMaster'; getReportdata(
             'secCategoryMaster')">
                         Secondary Category</li>
+                    <li [ngClass]="activeTab=='modeMaster'?'active':''" (click)="activeTab='modeMaster'; getReportdata(
+            'modeMaster')">
+                        Modes</li>
                 </ul>
 
             </div>
@@ -112,6 +115,18 @@
                 </div>
                 <div class="col-2">
                     <button class="btn btn-primary text-capitalize" id="addSecCat" (click)="addNewRecord('CampaignModules/addSecondaryCategory')">Add</button>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="activeTab=='modeMaster'">
+                <div class="col-3">
+                    <label>Mode Name</label>
+                </div>
+                <div class="col-3">
+                    <input type="text" name="mode" class="form-control" id="mode" [(ngModel)]="newDataName">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-sm" id="addMode" (click)="addNewRecord('CampaignModules/addMode')">Add</button>
                 </div>
             </div>
 

@@ -296,7 +296,7 @@ export class TaskScheduledComponent implements OnInit {
   openSchedukedTaskMasterModal() {
     // document.getElementById("schedukedTaskMasterModal").style.display = "block";
     this.common.params = null;
-    this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -973,7 +973,7 @@ export class TaskScheduledComponent implements OnInit {
     // console.log("edit scheduledTask:", this.scheduledTask);
     // this.openSchedukedTaskMasterModal();
     this.common.params = null;
-    this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Schedule task Master", button: "Save" };
+    this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {

@@ -149,6 +149,7 @@ export class ProcessListComponent implements OnInit {
   }
 
   getProcessCat() {
+    this.resetTableCatList();
     let apiName = "Processes/getProcessPriCat?processId=" + this.catForm.process_id;
     if (this.catType == 1) {
       this.catFormTitle = "Add Primary Category";
