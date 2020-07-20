@@ -55,6 +55,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'User-Mapping',
+        icon: 'file-text-outline',
+        link: '/pages/user-mapping',
+        home: true,
+      },
+      {
         title: 'Task-Scheduled',
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',

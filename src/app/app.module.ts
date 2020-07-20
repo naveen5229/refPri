@@ -25,7 +25,8 @@ import {
   NbToastrModule,
   NbWindowModule,
   NbCardComponent,
-  NbSpinnerModule
+  NbSpinnerModule,
+  NbRouteTabsetModule
 } from '@nebular/theme';
 import { LoginComponent } from './auth/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -79,6 +80,8 @@ import { MissedCallLogsComponent } from './modals/missed-call-logs/missed-call-l
 import { AddProcessComponent } from './modals/process-modals/add-process/add-process.component';
 import { AddStateComponent } from './modals/process-modals/add-state/add-state.component';
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
+import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
+
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -126,6 +129,7 @@ const PAGE_COMPONENTS = [
   AddProcessComponent,
   AddStateComponent,
   AddFieldComponent,
+  AxestrackMappingComponent
 ];
 
 @NgModule({
@@ -133,7 +137,8 @@ const PAGE_COMPONENTS = [
     LoginComponent,
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
-  
+    AxestrackMappingComponent,
+
     // SendmessageComponent,
     // GenericModelComponent,
     // TicketCallRatingComponent,

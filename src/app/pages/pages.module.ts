@@ -46,6 +46,7 @@ import { UserRoleComponent } from './user-role/user-role.component';
 import { AddPagesComponent } from './add-pages/add-pages.component';
 import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
 import { ProcessModule } from '../process/process.module';
+import { UserMappingComponent } from './user-mapping/user-mapping.component';
 
 @NgModule({
   imports: [
@@ -97,7 +98,8 @@ import { ProcessModule } from '../process/process.module';
     SalaryComponent,
     UserRoleComponent,
     AddPagesComponent,
-    WifiLogsComponent
+    WifiLogsComponent,
+    UserMappingComponent
   ],
 })
 export class PagesModule {

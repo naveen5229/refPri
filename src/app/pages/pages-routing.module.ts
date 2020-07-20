@@ -48,6 +48,7 @@ import { CampaignSummaryComponent } from '../campaign/campaign-summary/campaign-
 import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
 import { ProcessListComponent } from '../process/process-list/process-list.component';
 import { MyProcessComponent } from '../process/my-process/my-process.component';
+import { UserMappingComponent } from './user-mapping/user-mapping.component';
 
 const routes: Routes = [{
   path: '',
@@ -191,6 +192,12 @@ const routes: Routes = [{
     {
       path: 'task',
       component: TaskComponent,
+      canActivate: [AuthGuard]
+
+    },
+    {
+      path: 'user-mapping',
+      component: UserMappingComponent,
       canActivate: [AuthGuard]
 
     },
