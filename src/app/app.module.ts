@@ -82,6 +82,7 @@ import { AddStateComponent } from './modals/process-modals/add-state/add-state.c
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
 import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
 
+import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -130,6 +131,7 @@ const PAGE_COMPONENTS = [
   AddStateComponent,
   AddFieldComponent,
   AxestrackMappingComponent
+  AddActionComponent,
 ];
 
 @NgModule({

@@ -14,10 +14,11 @@ export class AddStateComponent implements OnInit {
   states = [];
   nextStates = [];
   nextState = null;
-  typeId =null;
+  typeId = null;
   stateName = null;
   processId = null;
   requestId = null;
+  threshold = null;
 
   data = [];
   table = {
@@ -39,12 +40,11 @@ export class AddStateComponent implements OnInit {
     public common: CommonService,
     public activeModal: NgbActiveModal,
     private modalService: NgbModal) {
-      this.processId = this.common.params.process.id;
+    this.processId = this.common.params.process.id;
     this.getStates();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   closeModal() {
     this.activeModal.close();
@@ -52,28 +52,27 @@ export class AddStateComponent implements OnInit {
 
   Add() {
     console.log("type:", this.typeId);
-    let ns = [];
+    // let ns = [];
     let params = {
-      processId:this.processId,
+      processId: this.processId,
       name: this.stateName,
       type: this.typeId,
-      nextStates:  JSON.stringify(this.nextStates),
-      requestId:this.requestId
+      nextStates: JSON.stringify(this.nextStates),
+      requestId: this.requestId,
+      threshold: this.threshold
     }
-    console.log("params", params);
+    // console.log("params", params);
     this.common.loading++;
     this.api.post('Processes/addProcessState', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log(res);
+        // console.log(res);
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
           this.getStates();
-        }
-        else {
+        } else {
           this.common.showError(res['data'][0].y_msg);
         }
-
       }, err => {
         this.common.loading--;
         this.common.showError(err);
@@ -81,11 +80,10 @@ export class AddStateComponent implements OnInit {
       });
   }
 
-
   getStates() {
     this.common.loading++;
-    let params = "processId="+this.processId;
-    this.api.get('Processes/getProcessState?'+params)
+    let params = "processId=" + this.processId;
+    this.api.get('Processes/getProcessState?' + params)
       .subscribe(res => {
         this.common.loading--;
         this.data = [];
@@ -114,12 +112,7 @@ export class AddStateComponent implements OnInit {
         }
         let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
         this.table.data.headings['action'] = action;
-
-
         this.table.data.columns = this.getTableColumns();
-
-
-
       }, err => {
         this.common.loading--;
         console.log(err);
@@ -136,7 +129,6 @@ export class AddStateComponent implements OnInit {
       this.valobj['action'] = { class: '', icons: this.Delete(doc) };
       columns.push(this.valobj);
     });
-
     return columns;
   }
 
@@ -147,23 +139,21 @@ export class AddStateComponent implements OnInit {
   Delete(row) {
     let icons = [];
     icons.push(
-     
       {
         class: "fas fa-edit edit",
+        title: "Edit State",
         action: this.setData.bind(this, row),
       },
       {
         class: "fas fa-trash-alt",
+        title: "Delete State",
         action: this.deleteRow.bind(this, row),
       },
-
       {
-        class: "fas fa-edit",
+        class: "fas fa-plus-square",
+        title: "Add Form Field",
         action: this.openFieldModal.bind(this, row),
       },
-
-
-      
     )
     return icons;
   }
@@ -187,8 +177,7 @@ export class AddStateComponent implements OnInit {
               if (res['data'][0].y_id > 0) {
                 this.common.showToast("Delete SuccessFully");
                 this.getStates();
-              }
-              else {
+              } else {
                 this.common.showError(res['data'][0].y_msg);
               }
 
@@ -201,50 +190,45 @@ export class AddStateComponent implements OnInit {
     }
   }
 
-
- 
-
   setData(data) {
-    
     this.typeId = data._type_id;
     this.stateName = data.name;
-    this.nextState = data._nextstate && (data._nextstate.length)?data._nextstate:[];
+    this.nextState = data._nextstate && (data._nextstate.length) ? data._nextstate : [];
     this.processId = this.processId;
     this.requestId = data._state_id;
+    this.threshold = (data._threshold) ? data._threshold : null;
     this.btn1 = "Update";
-    this.nextStates=this.nextStates
-    console.log("this.nextStates",this.nextStates)
-
+    this.nextStates = this.nextStates
   }
   resetData(data) {
-  
     this.typeId = null;
     this.stateName = null;
     this.nextStates = null;
-    this.nextState = null; 
-    this.processId = null;
-    this.requestId = null; 
+    this.nextState = null;
+    this.requestId = null;
+    this.threshold = null;
     this.btn1 = "Add";
   }
-  
 
-   addNextState(event) {
+  addNextState(event) {
     if (event && event.length) {
-      this.nextStates = event.map(ns => { console.log("---",ns);
-        return {id: ns._state_id}  });
+      this.nextStates = event.map(ns => {
+        console.log("---", ns);
+        return { id: ns._state_id }
+      });
     } else {
       this.nextStates = [];
     }
-    console.log("nextStates",this.nextStates)
+    console.log("nextStates", this.nextStates)
   }
 
-  openFieldModal(data){
-    let refData={
-      id:data._state_id,
-      type:0
+  openFieldModal(data) {
+    let refData = {
+      id: data._state_id,
+      type: 0
     }
-    this.common.params = {ref:refData };
-    const activeModal = this.modalService.open(AddFieldComponent   , { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    this.common.params = { ref: refData };
+    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data.response);
@@ -252,5 +236,3 @@ export class AddStateComponent implements OnInit {
     });
   }
 }
-
-
