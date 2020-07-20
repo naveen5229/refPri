@@ -7,6 +7,7 @@ import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 import { AddActionComponent } from '../../modals/process-modals/add-action/add-action.component';
+import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -44,11 +45,27 @@ export class ProcessListComponent implements OnInit {
     }
   };
 
+  adminList = [];
+
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
+    this.getAllAdmin();
     this.getProcessList();
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  getAllAdmin() {
+    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.adminList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getProcessList() {
@@ -127,12 +144,23 @@ export class ProcessListComponent implements OnInit {
   actionIcons(process) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.addProcess.bind(this, process) },
+      { class: "fas fa-user ml-2", action: this.addProcessUsers.bind(this, process), title: "Add Users" },
       { class: "fas fa-grip-horizontal ml-2", action: this.addProcessState.bind(this, process), title: "Add State" },
       { class: "fas fa-list-alt pri_cat ml-2", action: this.openCatModal.bind(this, process, 1), title: "Primary Category Mapping" },
       { class: "fas fa-list-alt ml-2", action: this.openCatModal.bind(this, process, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-handshake ml-2", action: this.addProcessAction.bind(this, process), title: "Add Action" },
     ];
     return icons;
+  }
+
+  addProcessUsers(process) {
+    this.common.params = { process_id: process._id, adminList: this.adminList };
+    const activeModal = this.modalService.open(UserMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log("UserMappingComponent:", data.response);
+      }
+    });
   }
 
   addProcessState(process) {

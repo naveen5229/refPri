@@ -81,8 +81,9 @@ import { AddProcessComponent } from './modals/process-modals/add-process/add-pro
 import { AddStateComponent } from './modals/process-modals/add-state/add-state.component';
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
 import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
-
 import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
+import { UserMappingComponent } from './modals/process-modals/user-mapping/user-mapping.component';
+
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -130,8 +131,9 @@ const PAGE_COMPONENTS = [
   AddProcessComponent,
   AddStateComponent,
   AddFieldComponent,
-  AxestrackMappingComponent
+  AxestrackMappingComponent,
   AddActionComponent,
+  UserMappingComponent,
 ];
 
 @NgModule({
