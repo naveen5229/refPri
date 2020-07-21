@@ -47,8 +47,8 @@
     <label>Axestrack Company User</label>
   </div>
   <div class="col-6" style="display:inline-block;">
-    <auto-suggestion (onSelected)="getAxestrackCompanyUser($event)" [display]="['provider_name','contactmobile']" [data]="axestrackCompanyUserData"
-      placeholder="Axestrack Company User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="provider_id">
+    <auto-suggestion (onSelected)="getAxestrackCompanyUser($event)" [display]="['user_name']" [data]="axestrackCompanyUserData"
+      placeholder="Axestrack Company User"   [preSelected]="null" className="borderStyle" inputId="provider_id">
     </auto-suggestion>
   </div>
 </div>

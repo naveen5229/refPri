@@ -139,6 +139,7 @@ const PAGE_COMPONENTS = [
   AssignFieldsComponent,
   FormDataComponent,
   UserMappingComponent,
+  AddActionComponent
 ];
 
 @NgModule({
