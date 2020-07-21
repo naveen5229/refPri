@@ -130,8 +130,8 @@ const PAGE_COMPONENTS = [
   AddProcessComponent,
   AddStateComponent,
   AddFieldComponent,
-  AxestrackMappingComponent
-  AddActionComponent,
+  AxestrackMappingComponent,
+  AddActionComponent
 ];
 
 @NgModule({
