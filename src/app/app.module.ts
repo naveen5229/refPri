@@ -137,7 +137,7 @@ const PAGE_COMPONENTS = [
   AxestrackMappingComponent,
   AddActionComponent,
   AssignFieldsComponent,
-  FormDataComponent
+  FormDataComponent,
   UserMappingComponent,
 ];
 

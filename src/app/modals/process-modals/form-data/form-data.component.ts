@@ -9,7 +9,7 @@ import { ApiService } from '../../../Service/Api/api.service';
   styleUrls: ['./form-data.component.scss']
 })
 export class FormDataComponent implements OnInit {
-  podField = [];
+  formField = [];
 
   evenArray = [];
   oddArray = [];
@@ -31,7 +31,7 @@ export class FormDataComponent implements OnInit {
     console.log("id", this.common.params);
     this. refId= this.common.params.ref.id;
     this.refType = this.common.params.ref.type;
-    this.common.handleModalSize('class', 'modal-lg', '500');
+    this.common.handleModalSize('class', 'modal-lg', '650');
     this.getFormDetail();
   }
 
@@ -47,7 +47,7 @@ export class FormDataComponent implements OnInit {
     this.Details = this.evenArray.concat(this.oddArray);
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
-      if (detail['r_coltype'] == 3 && detail['r_value']) {
+      if (detail['r_coltype'] == 'date' && detail['r_value']) {
         copyDetails['r_value'] = this.common.dateFormatter1(detail['r_value']);
       }
 
@@ -55,7 +55,7 @@ export class FormDataComponent implements OnInit {
     });
 
     const params = {
-      lrPodDetails: JSON.stringify(details),
+      formDetails: JSON.stringify(details),
       refId: this.refId,
       refType: this.refType
     }
@@ -83,14 +83,14 @@ export class FormDataComponent implements OnInit {
   getFormDetail() {
     const params = "refId=" + this.refId +
       "&refType=" + this.refType;
-    console.log("pod", params);
+    console.log("params", params);
     this.common.loading++;
-    this.api.get('LorryReceiptsOperation/lrPodEditDetails?' + params)
+    this.api.get('Processes/getFormWrtRefId?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log("resss", res);
         if (res['data']) {
-          this.podField = res['data'].result;
+          this.formField = res['data'];
           this.formatArray();
         }
         
@@ -105,13 +105,13 @@ export class FormDataComponent implements OnInit {
   formatArray() {
     this.evenArray = [];
     this.oddArray = [];
-    this.podField.map(dd => {
-      if (dd.r_coltype == 3) {
+    this.formField.map(dd => {
+      if (dd.r_coltype == 'date') {
         dd.r_value = dd.r_value ? new Date(dd.r_value) : new Date();
         console.log("date==", dd.r_value);
       }
       if (dd.r_fixedvalues) {
-        dd.r_fixedvalues = JSON.parse(dd.r_fixedvalues);
+        dd.r_fixedvalues = dd.r_fixedvalues;
       }
       if (dd.r_colorder % 2 == 0) {
         this.evenArray.push(dd);
@@ -122,4 +122,6 @@ export class FormDataComponent implements OnInit {
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
   }
+  
+ 
 }

@@ -131,20 +131,21 @@ export class AssignFieldsComponent implements OnInit {
     let params = {
       refId : this.refId,
       refType: this.refType,
+      info :  JSON.stringify(this.assignOrder()),
     }
     console.log("Params", params)
     this.common.loading++;
 
-    this.api.post('LorryReceiptsOperation/saveLrInvoiceFields', params)
+    this.api.post('Processes/saveProcessMatrixCalAssign', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("saveColumns", res['data'][0].rtn_id);
-        if (res['data'][0].rtn_id > 0) {
+        console.log("saveColumns", res['data'][0].y_id);
+        if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully Added");
           this.activeModal.close();
         }
         else {
-          this.common.showError("res['data'][0].rtn_msg");
+          this.common.showError(res['data'][0].y_msg);
         }
       }, err => {
         this.common.loading--;
