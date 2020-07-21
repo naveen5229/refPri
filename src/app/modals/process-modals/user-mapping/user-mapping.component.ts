@@ -32,6 +32,10 @@ export class UserMappingComponent implements OnInit {
 
   ngOnInit() { }
 
+  closeModal(res) {
+    this.activeModal.close({ response: res });
+  }
+
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
@@ -46,33 +50,39 @@ export class UserMappingComponent implements OnInit {
     });
   }
 
-  closeModal() {
-    this.activeModal.close();
-  }
-
-  changeUsers(event) {
-    console.log(event);
-    if (event && event.length) {
-      this.userForm.users = event.map(user => { return { id: user.id, name: user.name, is_admin: false } });
-      console.log(this.userForm.users);
-    } else {
-      this.userForm.users = [];
-    }
-  }
-
   getUsers() {
     const params = 'processId=' + this.userForm.processId;
+    this.common.loading++;
     this.api.get("Processes/getUserMapping?" + params).subscribe(res => {
-      console.log("data", res['data'])
+      this.common.loading--;
       if (res['code'] > 0) {
         this.userForm.users = res['data'] || [];
       } else {
         this.common.showError(res['msg']);
       }
     }, err => {
+      this.common.loading--;
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  changeUsers(event) {
+    console.log(event);
+    let userExist = this.userForm.users.map(user => { return { id: user.id, name: user.name, is_admin: user.is_admin } });
+    console.log("userExist:", userExist);
+    if (event && event.length) {
+      this.userForm.users = event.map(user => { return { id: user.id, name: user.name, is_admin: false } });
+      console.log("selected users:", this.userForm.users);
+    } else {
+      this.userForm.users = [];
+    }
+
+    for (let i = 0; i < this.userForm.users.length; i++) {
+      let aa = userExist.find(x => { return (x.id == this.userForm.users[i].id && x.is_admin) });
+      console.log("aa:", aa);
+      this.userForm.users[i].is_admin = (aa) ? true : false;
+    };
   }
 
   saveUsers() {
@@ -89,7 +99,7 @@ export class UserMappingComponent implements OnInit {
         // this.resetTask();
         if (res['data'][0]['y_id'] > 0) {
           this.common.showToast(res['data'][0].y_msg)
-          this.closeModal();
+          this.closeModal(true);
         } else {
           this.common.showError(res['data'][0].y_msg)
         }

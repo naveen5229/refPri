@@ -155,7 +155,7 @@ export class ProcessListComponent implements OnInit {
 
   addProcessUsers(process) {
     this.common.params = { process_id: process._id, adminList: this.adminList };
-    const activeModal = this.modalService.open(UserMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(UserMappingComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         console.log("UserMappingComponent:", data.response);

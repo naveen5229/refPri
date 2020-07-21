@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>Process User mapping</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
   <span aria-hidden="true">&times;</span>
 </button>
 </div>
@@ -10,17 +10,17 @@
         <div class="col-4">
             <label>Add Users:</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Users" [preSelected]="userForm.users" (onSelected)="changeUsers($event)" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>
         </div>
     </div>
-    <div class="row mt-2">
+    <div *ngIf="userForm.users && userForm.users.length>0" class="row mt-2">
         <div class="col-4">
             <label>Mark as Admin:</label>
         </div>
         <div *ngFor="let u of userForm.users;" class="col-12">
             <label>
-                <input type="checkbox" [checked]="u.isAdmin" (change)="u.isAdmin = !u.isAdmin" /> {{u.name}}
+                <input type="checkbox" [checked]="u.is_admin" (change)="u.is_admin = !u.is_admin" /> {{u.name}}
             </label>
         </div>
     </div>

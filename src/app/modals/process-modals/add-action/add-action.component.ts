@@ -10,7 +10,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
   styleUrls: ['./add-action.component.scss']
 })
 export class AddActionComponent implements OnInit {
-  title = "Add Actions";
+  title = "Add Action";
   button = "Add";
   actionForm = {
     rowId: null,
@@ -68,19 +68,6 @@ export class AddActionComponent implements OnInit {
     });
   }
 
-  getActionList() {
-    this.common.loading++;
-    this.api.get("Processes/getProcessAction?processId=" + this.actionForm.process.id).subscribe(res => {
-      this.common.loading--;
-      this.actionList = res['data'];
-      this.actionList.length ? this.setTable() : this.resetTable();
-    }, err => {
-      this.common.loading--;
-      this.common.showError();
-      console.log('Error: ', err);
-    });
-  }
-
   saveProcessAction() {
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
@@ -111,6 +98,19 @@ export class AddActionComponent implements OnInit {
         console.log(err);
       });
     }
+  }
+
+  getActionList() {
+    this.common.loading++;
+    this.api.get("Processes/getProcessAction?processId=" + this.actionForm.process.id).subscribe(res => {
+      this.common.loading--;
+      this.actionList = res['data'];
+      this.actionList.length ? this.setTable() : this.resetTable();
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   resetTable() {
