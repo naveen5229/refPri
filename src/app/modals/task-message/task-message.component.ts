@@ -217,7 +217,7 @@ export class TaskMessageComponent implements OnInit {
     }
     console.log("accessUsers:", accessUsers);
 
-    if (!this.userListByTask['taskUsers'] || ![this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+    if (!this.userListByTask['taskUsers'] || !accessUsers.includes(this.userService._details.id)) {
       this.common.showError("Not a valid user");
       return false;
     }
