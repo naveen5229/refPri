@@ -1,0 +1,69 @@
+<div class="modal-header">
+  <h5>Form Data</h5>
+  <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+      <div class="col-12" style="padding-left:18px">
+          <div class="table-conan filter-coff">
+              <table>
+                  <tr *ngFor="let dd of oddArray ; let i = index; ">
+
+                      <td *ngIf="oddArray[i]"><span *ngIf="oddArray[i].r_coltitle">
+                              <label>{{oddArray[i].r_coltitle}}<span style="color: red"
+                                      *ngIf="oddArray[i].r_required">*</span></label>
+                              <input type="text" class="form-control" style="width: 95%;"
+                                  [(ngModel)]=oddArray[i].r_value
+                                  *ngIf="oddArray[i].r_coltype != 3 && !oddArray[i].r_fixedvalues ">
+                              <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
+                                  [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype ==3"
+                                  [isTime]="false">
+                              </uj-date-time-picker>
+
+
+                              <!-- dynamic data array -->
+                              <select [(ngModel)]="oddArray[i].r_value" class="form-conrol"
+                                  *ngIf="oddArray[i].r_fixedvalues">
+                                  <option [value]="fixValue.title" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                                      {{fixValue.title}}</option>
+                              </select>
+                          </span>
+                      </td>
+                      <td *ngIf="evenArray[i]"><span *ngIf="evenArray[i].r_coltitle">
+                              <label>{{evenArray[i].r_coltitle}} <span style="color: red"
+                                      *ngIf="evenArray[i].r_required">*</span></label>
+                              <input type="text" class="form-control" style="width: 95%;"
+                                  [(ngModel)]=evenArray[i].r_value
+                                  *ngIf="evenArray[i].r_coltype != 3  && !evenArray[i].r_fixedvalues">
+                              <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
+                                  [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype ==3"
+                                  [isTime]="false">
+                              </uj-date-time-picker>
+
+                              <!-- dynamic data array -->
+                              <select [(ngModel)]="evenArray[i].r_value" class="form-conrol"
+                                  *ngIf="evenArray[i].r_fixedvalues">
+                                  <option [value]="fixValue.title"
+                                      *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+                                      {{fixValue.title}}</option>
+                              </select>
+                          </span>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td style="text-align: center">
+                          <button type="button" class="btn btn-primary" (click)="saveFromDetail()">Submit</button>
+                      </td>
+                  </tr>
+              </table>
+
+          </div>
+
+
+      </div>
+     
+  </div>
+</div>

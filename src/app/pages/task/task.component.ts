@@ -11,6 +11,7 @@ import { AddProjectComponent } from '../../modals/add-project/add-project.compon
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
 import { TaskScheduleMasterComponent } from '../../modals/task-schedule-master/task-schedule-master.component';
+import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
 // import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 // import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
@@ -1723,17 +1724,18 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  // openStateModal() {
-  //   let process = {
-  //     id: 1
-  //   }
-  //   this.common.params = { process: process };
-  //   const activeModal = this.modalService.open(AddStateComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       console.log(data.response);
-  //     }
-  //   });
-  // }
+  assignModal() {
+    let ref = {
+      id: 2,
+      type: 2
+    }
+    this.common.params = { ref: ref };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
+  }
 
 }
