@@ -50,7 +50,7 @@ export class AddActionComponent implements OnInit {
     this.getActionList();
   }
 
-  closeModal() {
+  closeModal(res) {
     this.activeModal.close({ response: false });
   }
 

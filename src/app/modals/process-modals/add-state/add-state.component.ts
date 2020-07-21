@@ -46,8 +46,8 @@ export class AddStateComponent implements OnInit {
 
   ngOnInit() { }
 
-  closeModal() {
-    this.activeModal.close();
+  closeModal(res) {
+    this.activeModal.close({ response: res });
   }
 
   Add() {

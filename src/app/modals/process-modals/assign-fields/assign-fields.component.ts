@@ -12,13 +12,13 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class AssignFieldsComponent implements OnInit {
   fields = [];
   unassign = [];
-  refId= null;
-  refType= null;
+  refId = null;
+  refType = null;
   assign = {
     left: [],
     right: []
   }
- 
+
 
   constructor(
     public common: CommonService,
@@ -26,28 +26,28 @@ export class AssignFieldsComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
   ) {
-    this.common.handleModalSize('class', 'modal-lg','1100','px',1);
-    if(this.common.params && this.common.params.ref){
-    this.refId = this.common.params.ref.id;
-    this.refType = this.common.params.ref.type;
-    this.getFields();
+    this.common.handleModalSize('class', 'modal-lg', '1100', 'px', 1);
+    if (this.common.params && this.common.params.ref) {
+      this.refId = this.common.params.ref.id;
+      this.refType = this.common.params.ref.type;
+      this.getFields();
 
-  }
+    }
 
   }
 
   ngOnInit() {
   }
-  closeModal() {
-    this.activeModal.close();
+  closeModal(res) {
+    this.activeModal.close({ response: res });
   }
 
 
   getFields() {
     this.common.loading++;
-    let params = "refId=" +this.refId+
-      "&refType="+this.refType
-    this.api.get('Processes/getProcessFormField?'+params)
+    let params = "refId=" + this.refId +
+      "&refType=" + this.refType
+    this.api.get('Processes/getProcessFormField?' + params)
       .subscribe(res => {
         this.common.loading--;
         console.log("getFields", res['data']);
@@ -61,7 +61,7 @@ export class AssignFieldsComponent implements OnInit {
 
 
 
- 
+
   drop(event: CdkDragDrop<string[]>) {
     console.log("drop", event);
     if (event.previousContainer === event.container) {
@@ -129,9 +129,9 @@ export class AssignFieldsComponent implements OnInit {
 
   saveColumns() {
     let params = {
-      refId : this.refId,
+      refId: this.refId,
       refType: this.refType,
-      info :  JSON.stringify(this.assignOrder()),
+      info: JSON.stringify(this.assignOrder()),
     }
     console.log("Params", params)
     this.common.loading++;
@@ -142,7 +142,7 @@ export class AssignFieldsComponent implements OnInit {
         console.log("saveColumns", res['data'][0].y_id);
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully Added");
-          this.activeModal.close();
+          this.activeModal.close(true);
         }
         else {
           this.common.showError(res['data'][0].y_msg);
@@ -153,7 +153,7 @@ export class AssignFieldsComponent implements OnInit {
       });
   }
 
- 
+
   assignOrder() {
     let selected = [];
     let count = 1;
@@ -173,7 +173,7 @@ export class AssignFieldsComponent implements OnInit {
 
       count++;
     }
-    
+
     this.unassign.map(col => {
       col.r_selected = false;
       col.r_colorder = -1;

@@ -1,11 +1,11 @@
 <div class="modal-header">
     <h5 class="modal-title" id="modal-basic-title">Add Field</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-    <div class="row mb-3">
+    <div class="row mb-2">
         <div class="col-3">
             <label>Field Name</label>
             <input type="text" name="name" id="name" [(ngModel)]="name" class="form-control" maxlength="25">
@@ -21,31 +21,25 @@
             <input type="number" min="0" [(ngModel)]="order" class="form-control" placeholder="order">
         </div>
 
-        <div class="col-6">
-            <label>
-                <input type="checkbox" [(ngModel)]="isRequired">
-                Is Required?
-            </label>
+        <div class="col-3 text-center">
+            <label>Is Required?</label>
+            <input type="checkbox" class="form-control" [(ngModel)]="isRequired">
         </div>
-
     </div>
-
-    <div class="row mb-3">
-        <div class="col-6" *ngIf="typeId!='date'">
-            <div class="row">
-                <div class="col-6">
+    <div class="row mb-2">
+        <div class="col-9">
+            <div *ngIf="typeId!='date'" class="row">
+                <div class="col-4">
                     <label>
                 <input type="checkbox" [(ngModel)]="isFixedValue">
                 Is Fixed Value ?
               </label>
                 </div>
-                <div class="col-6" *ngIf="isFixedValue">
+                <div class="col-8" *ngIf="isFixedValue">
                     <div class="row" *ngFor="let fixValue of fixValues; let i = index">
                         <div class="col-8">
                             <input type="text" [(ngModel)]="fixValue.option" class="form-control">
-
                         </div>
-
                         <div class="col-4">
                             <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue()"></i>
                             <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
@@ -53,17 +47,22 @@
                     </div>
                 </div>
             </div>
+
         </div>
-    </div>
-    <div class="row">
-        <div class="col-4"></div>
-        <div class="col-2">
-            <button class="btn btn-primary" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
-        </div>
-        <div class="col-2" *ngIf="fieldId">
-            <button class="btn btn-danger" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
+        <div class="3">
+            <div class="col-3 text-right">
+                <button *ngIf="fieldId" class="btn btn-danger btn-sm" name="reset" (click)="resetData()">{{btn2}}</button>
+                <button class="btn btn-primary btn-sm" name="submit" (click)="Add()">{{btn1}}</button>
+            </div>
         </div>
     </div>
     <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField">
     </smart-table>
+
+    <div *ngIf="data && data.length && refId>0 && refType==2" class="row">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" name="openAssignField" (click)="openAssignForm()">Assign Form</button>
+        </div>
+    </div>
+
 </div>

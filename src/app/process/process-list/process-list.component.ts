@@ -8,6 +8,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 import { AddActionComponent } from '../../modals/process-modals/add-action/add-action.component';
 import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
+import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -149,8 +150,23 @@ export class ProcessListComponent implements OnInit {
       { class: "fas fa-list-alt pri_cat ml-2", action: this.openCatModal.bind(this, process, 1), title: "Primary Category Mapping" },
       { class: "fas fa-list-alt ml-2", action: this.openCatModal.bind(this, process, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-handshake ml-2", action: this.addProcessAction.bind(this, process), title: "Add Action" },
+      { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, process), }
     ];
     return icons;
+  }
+
+  openFieldModal(process) {
+    let refData = {
+      id: process._id,
+      type: 2
+    }
+    this.common.params = { ref: refData };
+    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
   }
 
   addProcessUsers(process) {
