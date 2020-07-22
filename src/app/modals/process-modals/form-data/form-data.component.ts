@@ -62,7 +62,7 @@ export class FormDataComponent implements OnInit {
     console.log("para......", params);
 
     this.common.loading++;
-    this.api.post('LorryReceiptsOperation/saveLrPodDetails', params)
+    this.api.post('Processes/saveProcessMatrixCalAssign', params)
       .subscribe(res => {
         this.common.loading--;
         console.log("--res", res['data'][0].r_id)

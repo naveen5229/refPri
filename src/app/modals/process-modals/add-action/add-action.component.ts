@@ -34,8 +34,8 @@ export class AddActionComponent implements OnInit {
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
-    this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
-    this.button = this.common.params.button ? this.common.params.button : 'Add';
+    this.title = this.common.params.title ? this.common.params.title : this.title;
+    this.button = this.common.params.button ? this.common.params.button : this.button;
     console.log("action common:", this.common.params);
     if (this.common.params && this.common.params.actionData) {
       this.actionForm.rowId = this.common.params.actionData.rowId ? this.common.params.actionData.rowId : null;

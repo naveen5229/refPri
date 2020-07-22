@@ -86,6 +86,7 @@ import { AssignFieldsComponent } from './modals/process-modals/assign-fields/ass
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormDataComponent } from './modals/process-modals/form-data/form-data.component';
 import { UserMappingComponent } from './modals/process-modals/user-mapping/user-mapping.component';
+import { AddTransactionComponent } from './modals/process-modals/add-transaction/add-transaction.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -139,7 +140,8 @@ const PAGE_COMPONENTS = [
   AssignFieldsComponent,
   FormDataComponent,
   UserMappingComponent,
-  AddActionComponent
+  AddActionComponent,
+  AddTransactionComponent
 ];
 
 @NgModule({

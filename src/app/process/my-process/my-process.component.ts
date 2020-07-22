@@ -9,6 +9,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 // import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
+import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
 // import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 // import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 // import { CampaignMessageComponent } from '../../modals/campaign-modals/campaign-message/campaign-message.component';
@@ -20,6 +21,7 @@ import { ReminderComponent } from '../../modals/reminder/reminder.component';
 export class MyProcessComponent implements OnInit {
   activeTab = 'leadsForMe';
   adminList = [];
+  processList = [];
   leadsForMe = [];
   leadsByMe = [];
   allCompletedLeads = [];
@@ -84,20 +86,21 @@ export class MyProcessComponent implements OnInit {
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getProcessLeadByType(1);
     this.getAllAdmin();
+    this.getProcessList();
   }
 
   ngOnInit() { }
 
-  addProcessLead() {
+  addTransaction() {
     console.log("addProcessLead");
-    // this.common.params = { title: "Add Lead ", button: "Add" }
-    // const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     this.activeTab = 'leadsByMe';
-    //     this.getCampaignByType(2);
-    //   }
-    // });
+    this.common.params = { processList: this.processList, title: "Add Transaction ", button: "Add" }
+    const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.activeTab = 'leadsByMe';
+        // this.getCampaignByType(2);
+      }
+    });
   }
 
   resetSearchData() {
@@ -118,6 +121,19 @@ export class MyProcessComponent implements OnInit {
     }, err => {
       this.common.showError();
       console.log('Error: ', err);
+    });
+  }
+
+  getProcessList() {
+    this.common.loading++;
+    this.api.get('Processes/getProcessList').subscribe(res => {
+      this.common.loading--;
+      if (!res['data']) return;
+      this.processList = res['data'];
+
+    }, err => {
+      this.common.loading--;
+      console.log(err);
     });
   }
 

@@ -10,12 +10,14 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AddProcessComponent implements OnInit {
   title = "Add Process";
-  button = "Next";
+  button = "Submit";
   processForm = {
     id: null,
     name: '',
     startTime: this.common.getDate(),
-    endTime: this.common.getDate(2)
+    endTime: this.common.getDate(2),
+    priCatAlias: "",
+    secCatAlias: ""
   };
 
   constructor(public common: CommonService,
@@ -27,7 +29,9 @@ export class AddProcessComponent implements OnInit {
         id: this.common.params.editData._id,
         name: this.common.params.editData.name,
         startTime: new Date(this.common.params.editData.start_date),
-        endTime: new Date(this.common.params.editData.end_date)
+        endTime: new Date(this.common.params.editData.end_date),
+        priCatAlias: "",
+        secCatAlias: ""
       };
     }
   }
@@ -42,7 +46,7 @@ export class AddProcessComponent implements OnInit {
   saveProcess() {
     console.log("processForm:", this.processForm);
     if (!this.processForm.name) {
-      this.common.showError("Please Select Campaign Name");
+      this.common.showError("Please Select Process Name");
       return false;
     }
     if (!this.processForm.endTime || !this.processForm.startTime) {
@@ -50,7 +54,7 @@ export class AddProcessComponent implements OnInit {
       return false;
     }
     if (this.processForm.endTime && this.processForm.endTime < this.processForm.startTime) {
-      this.common.showError("EndDate not less then Start Date");
+      this.common.showError("End Date not less then Start Date");
       return false;
     }
 
@@ -58,7 +62,9 @@ export class AddProcessComponent implements OnInit {
       requestId: (this.processForm.id > 0) ? this.processForm.id : null,
       name: this.processForm.name,
       startDate: this.processForm.startTime ? this.common.dateFormatter(this.processForm.startTime) : null,
-      endDate: this.processForm.endTime ? this.common.dateFormatter(this.processForm.endTime) : null
+      endDate: this.processForm.endTime ? this.common.dateFormatter(this.processForm.endTime) : null,
+      priCatAlias: this.processForm.priCatAlias,
+      secCatAlias: this.processForm.secCatAlias
     }
 
     this.common.loading++;

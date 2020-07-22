@@ -161,7 +161,7 @@ export class ProcessListComponent implements OnInit {
       type: 2
     }
     this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(AddFieldComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data.response);
