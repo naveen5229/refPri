@@ -60,7 +60,8 @@ export class AddActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignModules/getModes").subscribe(res => {
       this.common.loading--;
-      this.modeList = res['data'];
+      let modeList = res['data'];
+      this.modeList = (modeList && modeList.length) ? modeList.map(x => { return { id: x._mode_id, name: x.name } }) : [];
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -77,7 +78,7 @@ export class AddActionComponent implements OnInit {
         processId: this.actionForm.process.id,
         stateId: this.actionForm.state.id,
         name: this.actionForm.name,
-        modes: JSON.stringify(this.actionForm.modes.map(mode => { return { id: mode._mode_id } })),
+        modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         requestId: this.actionForm.rowId
       };
       console.log("actionForm:", params);
@@ -85,13 +86,12 @@ export class AddActionComponent implements OnInit {
       this.api.post("Processes/addProcessAction ", params).subscribe(res => {
         this.common.loading--;
         console.log(res);
-        if (res['success'] == true) {
+        if (res['code'] == 1) {
           this.common.showToast(res['msg']);
-          this.getActionList();
           this.resetData();
+          this.getActionList();
         } else {
           this.common.showError(res['msg']);
-
         }
       }, err => {
         this.common.loading--;
@@ -148,7 +148,7 @@ export class AddActionComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            // icons: this.actionIcons(campaign)
+            icons: this.actionIcons(campaign)
           };
         } else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
@@ -162,9 +162,16 @@ export class AddActionComponent implements OnInit {
 
   actionIcons(action) {
     let icons = [
-      { class: 'fas fa-trash-alt ml-2', action: this.deleteAction.bind(this, action) }
+      // { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
+      { class: "fas fa-edit", title: "Edit Action", action: this.editAction.bind(this, action) },
     ];
     return icons;
+  }
+
+  editAction(action) {
+    this.actionForm.rowId = action._action_id;
+    this.actionForm.name = action.name;
+    this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];;
   }
 
   deleteAction(row) {
@@ -197,7 +204,7 @@ export class AddActionComponent implements OnInit {
   resetData() {
     this.actionForm.rowId = null;
     this.actionForm.name = "";
-    this.actionForm.modes = [];[];
+    this.actionForm.modes = [];
   }
 
 }

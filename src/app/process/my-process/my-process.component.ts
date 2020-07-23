@@ -93,12 +93,12 @@ export class MyProcessComponent implements OnInit {
 
   addTransaction() {
     console.log("addProcessLead");
-    this.common.params = { processList: this.processList, title: "Add Transaction ", button: "Add" }
+    this.common.params = { processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Add" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.activeTab = 'leadsByMe';
-        // this.getCampaignByType(2);
+        this.getProcessLeadByType(2);
       }
     });
   }
@@ -148,10 +148,10 @@ export class MyProcessComponent implements OnInit {
       this.common.loading--;
       console.log("data", res['data'])
       this.reserSmartTableData();
-      if (type == 1) {//normal task pending (task for me)
+      if (type == 1) {//for me
         this.leadsForMe = res['data'] || [];
         this.setTableLeadsForMe(type);
-      } else if (type == 2) { //task by me
+      } else if (type == 2) { //by me
         this.leadsByMe = res['data'] || [];
         this.setTableLeadsByMe(type);
       } else if (type == 3) {

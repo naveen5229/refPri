@@ -66,7 +66,36 @@
             </auto-suggestion>
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
+        <div class="col-4">
+            <label>Type</label>
+        </div>
+        <div class="col-8">
+            <auto-suggestion [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);" [preSelected]="{name:transForm.type.name}" autocomplete="off">
+            </auto-suggestion>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-4">
+            <label>Location</label>
+        </div>
+        <div class="col-8">
+            <auto-suggestion url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)" [preSelected]="{location:transForm.location.name}"
+                autocomplete="off">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-4">
+            <label>Address</label>
+        </div>
+        <div class="col-8">
+            <textarea name="address" cols="5" rows="5" class="form-control" [(ngModel)]="transForm.address"></textarea>
+        </div>
+    </div>
+    <!-- start:dym field -->
+    <div class="row mb-2">
         <div class="col-12" style="padding-left:18px">
             <div class=" table-conan filter-coff">
                 <table style="width:100%">
@@ -79,7 +108,6 @@
                             <input type="number" class="form-control" style="width: 95%;" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
                             <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
                             </uj-date-time-picker>
-
 
                             <!-- dynamic data array -->
                             <select [(ngModel)]="oddArray[i].r_value" class="form-conrol" *ngIf="oddArray[i].r_fixedvalues">
@@ -105,18 +133,16 @@
                             </span>
                         </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td style="text-align: center">
-                            <button type="button" class="btn btn-primary" (click)="saveFromDetail()">Submit</button>
-                        </td>
-                    </tr>
                 </table>
 
             </div>
 
-
         </div>
-
+    </div>
+    <!-- end: dym field -->
+    <div class="row">
+        <div class="col-12 text-right">
+            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
+        </div>
     </div>
 </div>

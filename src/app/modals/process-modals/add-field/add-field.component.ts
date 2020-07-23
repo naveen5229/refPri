@@ -167,10 +167,11 @@ export class AddFieldComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
-    let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
-    this.table.data.headings['action'] = action;
+    // let action = { title: this.common.formatTitle('action'), placeholder: this.common.formatTitle('action'), hideHeader: true };
+    // this.table.data.headings['action'] = action;
     return headings;
   }
+
   getTableColumns() {
     let columns = [];
     this.data.map(doc => {
@@ -193,39 +194,20 @@ export class AddFieldComponent implements OnInit {
     return columns;
   }
 
-  // getTableColumns() {
-  //   let columns = [];
-  //   this.data.map(doc => {
-  //     this.valobj = {};
-  //     for (let i = 0; i < this.headings.length; i++) {
-  //       this.valobj[this.headings[i]] = { value: doc[this.headings[i]], class: 'black', action: '' };
-  //     }
-  //     this.valobj['action'] = { class: '', icons: this.actionIcons(doc) };
-  //     columns.push(this.valobj);
-  //   });
-
-  //   return columns;
+  // formatTitle(title) {
+  //   return title.charAt(0).toUpperCase() + title.slice(1);
   // }
-
-  formatTitle(title) {
-    return title.charAt(0).toUpperCase() + title.slice(1);
-  }
 
   actionIcons(row) {
     let icons = [];
     icons.push(
-      {
-        class: "fas fa-trash-alt",
-        action: this.deleteRow.bind(this, row),
-      },
-      {
-        class: "fas fa-edit edit",
-        action: this.setData.bind(this, row),
-      },
-
+      { class: "fas fa-trash-alt", action: this.deleteRow.bind(this, row) },
+      { class: "fas fa-edit edit", action: this.setData.bind(this, row) },
+      // { class: "fas fa-plus", action: this.openOptionModal.bind(this, row) },
     )
     return icons;
   }
+
   deleteRow(row) {
     let params = {
       id: row._id,
@@ -298,5 +280,14 @@ export class AddFieldComponent implements OnInit {
       }
     });
   }
+
+  closeOptionModal() {
+    document.getElementById("optionModal").style.display = "none";
+  }
+
+  openOptionModal(row) {
+    document.getElementById("optionModal").style.display = "block";
+  }
+
 }
 

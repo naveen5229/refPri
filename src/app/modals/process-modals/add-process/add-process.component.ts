@@ -17,21 +17,31 @@ export class AddProcessComponent implements OnInit {
     startTime: this.common.getDate(),
     endTime: this.common.getDate(2),
     priCatAlias: "",
-    secCatAlias: ""
+    secCatAlias: "",
+    defaultOwn: {
+      id: null,
+      name: ""
+    }
   };
+  adminList = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalSService: NgbModal) {
+    this.adminList = this.common.params.adminList;
     if (this.common.params && this.common.params.editData) {
       this.processForm = {
         id: this.common.params.editData._id,
         name: this.common.params.editData.name,
-        startTime: new Date(this.common.params.editData.start_date),
-        endTime: new Date(this.common.params.editData.end_date),
-        priCatAlias: "",
-        secCatAlias: ""
+        startTime: (this.common.params.editData.start_date) ? new Date(this.common.params.editData.start_date) : this.common.getDate(),
+        endTime: (this.common.params.editData.start_date) ? new Date(this.common.params.editData.end_date) : this.common.getDate(2),
+        priCatAlias: (this.common.params.editData.pri_category_alias) ? this.common.params.editData.pri_category_alias : "",
+        secCatAlias: (this.common.params.editData.sec_category_alias) ? this.common.params.editData.sec_category_alias : "",
+        defaultOwn: {
+          id: (this.common.params.editData._default_po) ? this.common.params.editData._default_po : null,
+          name: (this.common.params.editData._default_po) ? this.common.params.editData.default_po : "",
+        }
       };
     }
   }
@@ -64,7 +74,8 @@ export class AddProcessComponent implements OnInit {
       startDate: this.processForm.startTime ? this.common.dateFormatter(this.processForm.startTime) : null,
       endDate: this.processForm.endTime ? this.common.dateFormatter(this.processForm.endTime) : null,
       priCatAlias: this.processForm.priCatAlias,
-      secCatAlias: this.processForm.secCatAlias
+      secCatAlias: this.processForm.secCatAlias,
+      defaultOwnId: this.processForm.defaultOwn.id
     }
 
     this.common.loading++;

@@ -8,7 +8,7 @@
 <div class="modal-body">
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Add Users:</label>
+            <label>Add Users<span class="text-danger">*</span>:</label>
         </div>
         <div class="col-8">
             <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Users" [preSelected]="userForm.users" (onSelected)="changeUsers($event)" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>

@@ -26,6 +26,7 @@ export class AddTransactionComponent implements OnInit {
   secCatList = [];
 
   transForm = {
+    requestId: null,
     process: {
       id: null,
       name: ""
@@ -45,11 +46,21 @@ export class AddTransactionComponent implements OnInit {
       id: null,
       name: ""
     },
-    type: null,
-    locationId: null
+    type: {
+      id: null,
+      name: ""
+    },
+    location: {
+      id: null,
+      name: "",
+      lat: null,
+      long: null
+    },
+    address: ""
   };
   processList = [];
-
+  typeList = [];
+  adminList = [];
   constructor(public activeModal: NgbActiveModal,
     public common: CommonService,
     private modalService: NgbModal,
@@ -57,6 +68,7 @@ export class AddTransactionComponent implements OnInit {
     console.log("common params:", this.common.params);
     if (this.common.params) {
       this.processList = this.common.params.processList.map(x => { return { id: x._id, name: x.name } });
+      this.adminList = this.common.params.adminList;
     }
   }
 
@@ -67,11 +79,10 @@ export class AddTransactionComponent implements OnInit {
   }
 
   onSelectProcess(procesId) {
-    console.log("procesId:", procesId, this.transForm);
-
     if (procesId) {
       this.getPrimaryCatList();
       this.getSecondaryCatList();
+      this.getProcessTypeList();
       this.getFormDetail();
     }
   }
@@ -85,7 +96,8 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessPriCat?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
-      this.priCatList = res['data'];
+      let priCatList = res['data'];
+      this.priCatList = priCatList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -102,7 +114,26 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessSecCat?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
-      this.secCatList = res['data'];
+      let secCatList = res['data'];
+      this.secCatList = secCatList.map(x => { return { id: x._id, name: x.name } });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  getProcessTypeList() {
+    this.secCatList = [];
+    if (!(this.transForm.process.id > 0)) {
+      this.common.showError("Process is missing");
+      return false;
+    }
+    this.common.loading++;
+    this.api.get("Processes/getProcessType?processId=" + this.transForm.process.id).subscribe(res => {
+      this.common.loading--;
+      let typeList = res['data'];
+      this.typeList = typeList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -121,20 +152,33 @@ export class AddTransactionComponent implements OnInit {
     });
 
     const params = {
-      formDetails: JSON.stringify(details),
-      refId: this.transForm.process.id,
-      refType: this.refType
+      processId: this.transForm.process.id,
+      name: this.transForm.name,
+      identity: this.transForm.identity,
+      priOwnId: this.transForm.priOwn.id,
+      mobileno: this.transForm.mobileno,
+      priCatId: this.transForm.priCat.id,
+      secCatId: this.transForm.secCat.id,
+      typeId: this.transForm.type.id,
+      locationId: this.transForm.location.id,
+      address: this.transForm.address,
+      additionalInfo: JSON.stringify(details),
+      requestId: (this.transForm.requestId > 0) ? this.transForm.requestId : null,
     }
     console.log("para......", params);
 
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;
-      console.log("--res", res['data'][0].r_id)
-      if (res['data'][0].r_id > 0) {
-        this.common.showToast("Successfully Eenterd");
+      if (res['code'] == 1) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.close(true);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
       } else {
-        this.common.showError(res['data'][0].r_msg);
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.common.loading--;
