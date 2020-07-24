@@ -3,6 +3,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AddFieldComponent } from '../add-field/add-field.component';
 
 @Component({
   selector: 'ngx-add-action',
@@ -164,8 +165,23 @@ export class AddActionComponent implements OnInit {
     let icons = [
       // { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
       { class: "fas fa-edit", title: "Edit Action", action: this.editAction.bind(this, action) },
+      { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, action) },
     ];
     return icons;
+  }
+
+  openFieldModal(action) {
+    let refData = {
+      id: action._action_id,
+      type: 0
+    }
+    this.common.params = { ref: refData };
+    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
   }
 
   editAction(action) {

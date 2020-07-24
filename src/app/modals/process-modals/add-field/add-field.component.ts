@@ -12,7 +12,7 @@ import { AssignFieldsComponent } from '../assign-fields/assign-fields.component'
   styleUrls: ['./add-field.component.scss']
 })
 export class AddFieldComponent implements OnInit {
-  stateType = null;
+  // stateType = null;
   refId = null;
   refType = null;
   formType = null;
@@ -209,11 +209,10 @@ export class AddFieldComponent implements OnInit {
   }
 
   deleteRow(row) {
-    let params = {
-      id: row._id,
-      stateType: this.stateType,
-    }
-    if (row._id) {
+    if (row._matrixid) {
+      let params = {
+        id: row._matrixid,
+      }
       this.common.params = {
         title: 'Delete  ',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -224,12 +223,15 @@ export class AddFieldComponent implements OnInit {
           this.common.loading++;
           this.api.post('Processes/deleteProcessMatrix', params).subscribe(res => {
             this.common.loading--;
-            console.log("Result:", res['data'][0].y_msg);
-            if (res['data'][0].y_id > 0) {
-              this.common.showToast("Delete SuccessF");
-              this.getFieldName();
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['data'][0].y_msg);
+                this.getFieldName();
+              } else {
+                this.common.showError(res['data'][0].y_msg);
+              }
             } else {
-              this.common.showToast(res['data'][0].y_msg);
+              this.common.showError(res['msg']);
             }
           }, err => {
             this.common.loading--;
@@ -237,6 +239,8 @@ export class AddFieldComponent implements OnInit {
           });
         }
       });
+    } else {
+      this.common.showError("Invalid Request");
     }
   }
 

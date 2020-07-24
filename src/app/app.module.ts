@@ -87,6 +87,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormDataComponent } from './modals/process-modals/form-data/form-data.component';
 import { UserMappingComponent } from './modals/process-modals/user-mapping/user-mapping.component';
 import { AddTransactionComponent } from './modals/process-modals/add-transaction/add-transaction.component';
+import { AddTransactionActionComponent } from './modals/process-modals/add-transaction-action/add-transaction-action.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -141,7 +142,8 @@ const PAGE_COMPONENTS = [
   FormDataComponent,
   UserMappingComponent,
   AddActionComponent,
-  AddTransactionComponent
+  AddTransactionComponent,
+  AddTransactionActionComponent
 ];
 
 @NgModule({

@@ -27,6 +27,7 @@ export class AddTransactionComponent implements OnInit {
 
   transForm = {
     requestId: null,
+    showDynField: false,
     process: {
       id: null,
       name: ""
@@ -78,12 +79,15 @@ export class AddTransactionComponent implements OnInit {
     this.activeModal.close({ response: res });
   }
 
-  onSelectProcess(procesId) {
-    if (procesId) {
+  onSelectProcess() {
+    if (this.transForm.process.id > 0) {
       this.getPrimaryCatList();
       this.getSecondaryCatList();
       this.getProcessTypeList();
       this.getFormDetail();
+      this.transForm.showDynField = true;
+    } else {
+      this.common.showError("Process is missing");
     }
   }
 

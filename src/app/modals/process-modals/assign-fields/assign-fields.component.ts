@@ -140,12 +140,15 @@ export class AssignFieldsComponent implements OnInit {
       .subscribe(res => {
         this.common.loading--;
         console.log("saveColumns", res['data'][0].y_id);
-        if (res['data'][0].y_id > 0) {
-          this.common.showToast("Successfully Added");
-          this.activeModal.close(true);
-        }
-        else {
-          this.common.showError(res['data'][0].y_msg);
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.activeModal.close(true);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
