@@ -61,7 +61,7 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Task-Scheduled',
+        title: 'Task-Admin',
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',
         home: true,

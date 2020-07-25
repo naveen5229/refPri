@@ -81,10 +81,14 @@ import { AddProcessComponent } from './modals/process-modals/add-process/add-pro
 import { AddStateComponent } from './modals/process-modals/add-state/add-state.component';
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
 import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
-
 import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
 import { AddvehicleComponent } from './modals/addvehicle/addvehicle.component';
 import { ImportbulkvehicleComponent } from './modals/importbulkvehicle/importbulkvehicle.component';
+import { AssignFieldsComponent } from './modals/process-modals/assign-fields/assign-fields.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FormDataComponent } from './modals/process-modals/form-data/form-data.component';
+import { UserMappingComponent } from './modals/process-modals/user-mapping/user-mapping.component';
+
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -135,7 +139,11 @@ const PAGE_COMPONENTS = [
   AxestrackMappingComponent,
   AddActionComponent,
   AddvehicleComponent,
-  ImportbulkvehicleComponent
+  ImportbulkvehicleComponent,
+  AssignFieldsComponent,
+  FormDataComponent,
+  UserMappingComponent,
+  AddActionComponent
 ];
 
 @NgModule({
@@ -176,6 +184,7 @@ const PAGE_COMPONENTS = [
       messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
     CoreModule.forRoot(),
+    DragDropModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }
