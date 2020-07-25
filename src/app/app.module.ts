@@ -83,6 +83,8 @@ import { AddFieldComponent } from './modals/process-modals/add-field/add-field.c
 import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
 
 import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
+import { AddvehicleComponent } from './modals/addvehicle/addvehicle.component';
+import { ImportbulkvehicleComponent } from './modals/importbulkvehicle/importbulkvehicle.component';
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -131,7 +133,9 @@ const PAGE_COMPONENTS = [
   AddStateComponent,
   AddFieldComponent,
   AxestrackMappingComponent,
-  AddActionComponent
+  AddActionComponent,
+  AddvehicleComponent,
+  ImportbulkvehicleComponent
 ];
 
 @NgModule({
@@ -140,6 +144,8 @@ const PAGE_COMPONENTS = [
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
     AxestrackMappingComponent,
+    AddvehicleComponent,
+    ImportbulkvehicleComponent,
 
     // SendmessageComponent,
     // GenericModelComponent,

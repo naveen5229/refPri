@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h4 class="modal-title" style="color:white!important">Bulk Add Vehicle</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container">
+    <form enctype="multipart/form-data" #myForm="ngForm" name="uploadcsvForm" id="document-form" name="document-form">
+      <div class="row" style="margin-bottom:10px">
+        <div class="col-3">
+          <label>Company User</label>
+        </div>
+        <div class="col-3">
+          <auto-suggestion (onSelected)="selectFoUser($event)" url="Suggestion/getFoUsersList" apiMethod="postBooster" display="name"
+            placeholder="Company User"></auto-suggestion>
+        </div>
+
+      </div>
+      <div class="row" style="margin-bottom:10px">
+        <div class="col-3">
+          <label>Vehicle Reg CSV</label>
+        </div>
+        <div class="col-3">
+          <input type="file" name="vehicleRegCsv" (change)="handleFileSelection($event)"  style="margin:4%;">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 offset-md-08">
+          <label style="text-decoration: underline;color: blue; cursor: pointer;" (click)="sampleCsv()">Sample Csv
+            Download </label>
+          <i class="icon ion-md-cloud-download" style="cursor:pointer" (click)="sampleCsv()"></i>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-danger" type="button" outline (click)="cancelModal()" id="cancel"
+              style="cursor: pointer;">Cancel</button>
+          </div>
+          <div class="col text-right">
+            <button class="btn btn-primary" form="document-form" type="submit" outline (click)="uploadCsv()" id="submit"
+              style="cursor: pointer;">Submit</button>
+          </div>
+        </div>
+
+      </div>
+    </form>
