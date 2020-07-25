@@ -29,6 +29,12 @@
                 <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
                     Unread Leads
                 </li>
+                <li [ngClass]="activeTab=='missingOwnLeads'?'active':''" (click)="activeTab='missingOwnLeads'; getProcessLeadByType(0)">
+                    missing Owner Leads
+                </li>
+                <li [ngClass]="activeTab=='unassignedLeads'?'active':''" (click)="activeTab='unassignedLeads'; getProcessLeadByType(-1)">
+                    Unassigned Leads
+                </li>
             </ul>
         </div>
 
@@ -63,6 +69,14 @@
         </div>
         <div *ngIf="activeTab=='unreadLeads'">
             <smart-table [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='missingOwnLeads'">
+            <smart-table [data]="tableMissingOwnLeads.data" [settings]="tableMissingOwnLeads.settings" id="tableMissingOwnLeads">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='unassignedLeads'">
+            <smart-table [data]="tableUnassignedLeads.data" [settings]="tableUnassignedLeads.settings" id="tableUnassignedLeads">
             </smart-table>
         </div>
     </nb-card-body>

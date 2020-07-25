@@ -19,165 +19,205 @@ export class AddTransactionActionComponent implements OnInit {
     process: { id: null, name: "" },
     state: { id: null, name: "" },
     nextState: { id: null, name: "" },
+    mode: { id: null, name: "" },
     action: { id: null, name: "" },
     nextAction: { id: null, name: "" },
-    standardRemarkId: [],
+    actionOwner: { id: null, name: "" },
     remark: null,
     targetTime: new Date(),
-    transId: null
+    transId: null,
+    isNextAction: false
   }
   stateDataList = [];
   actionDataList = [];
-  nextactionDataList = [];
+  nextActionDataList = [];
   remarkDataList = [];
+  modeList = [];
+  adminList = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
-    // this.common.handleModalSize('class', 'modal-lg', '1300', 'px');
+    console.log("params:", this.common.params);
 
     this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     if (this.common.params && this.common.params.actionData) {
-      this.transAction.actionId = this.common.params.actionData.actionId ? this.common.params.actionData.actionId : null;
+      this.transAction.process.id = (this.common.params.actionData.processId > 0) ? this.common.params.actionData.processId : null;
+      this.transAction.process.name = (this.common.params.actionData.processId > 0) ? this.common.params.actionData.processName : null;
+      this.transAction.transId = (this.common.params.actionData.transId > 0) ? this.common.params.actionData.transId : null;
+      this.transAction.actionId = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionId : null;
+      this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
 
     };
+    this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
     this.getStateList();
-    this.getActionList();
-    this.getnextActionList();
-    this.getRemarkList();
   }
 
   closeModal() {
     this.activeModal.close({ response: false });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   getStateList() {
     this.common.loading++;
-    this.api.get("Processes/getProcessStateList?processId=" + this.transAction.process.id).subscribe(res => {
+    this.api.get("Processes/getProcessState?processId=" + this.transAction.process.id).subscribe(res => {
       this.common.loading--;
-      this.stateDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+      let stateDataList = res['data'];
+      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name } });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  onSelectState() {
+    this.transAction.action = { id: null, name: "" };
+    this.transAction.mode = { id: null, name: "" };
+    this.transAction.nextState = { id: null, name: "" };
+    this.getActionList();
+  }
+
+  onSelectAction() {
+    this.transAction.mode = { id: null, name: "" };
+    this.getActionModeList();
+  }
+
+  onSelectNextAction() {
+    this.transAction.targetTime = new Date();
   }
 
   getActionList() {
+    console.log("transAction:", this.transAction);
     this.common.loading++;
-    this.api.get("Processes/getProcessActionList??processId=" + this.transAction.process.id).subscribe(res => {
+    this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
-      this.actionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-  }
-  getnextActionList() {
-    this.common.loading++;
-    this.api.get("Processes/getProcessesActionList?processId=" + this.transAction.process.id).subscribe(res => {
+      let actionDataList = res['data'] || [];
+      this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+    }, err => {
       this.common.loading--;
-      this.nextactionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
-
-  getRemarkList() {
+  getNextActionList() {
     this.common.loading++;
-    this.api.get("CampaignSuggestion/getRemarkList").subscribe(res => {
+    this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
-      this.remarkDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+      let actionDataList = res['data'] || [];
+      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
-  unselected(variable) {
-    if (this.transAction[variable].id) {
-      document.getElementById(variable)['value'] = '';
-      this.transAction[variable].id = null;
+  getActionModeList() {
+    this.common.loading++;
+    this.api.get("Processes/getProcessActionModeList?processId=" + this.transAction.process.id + "&actionId=" + this.transAction.action.id).subscribe(res => {
+      this.common.loading--;
+      this.modeList = res['data'] || [];
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  saveTransAction() {
+    if (this.transAction.state.id! > 0 || this.transAction.action.id! > 0) {
+      this.common.showError('Please Fill All Mandatory Field');
+    }
+    else {
+      const params = {
+        requestId: this.transAction.requestId,
+        transId: this.transAction.transId,
+        stateId: this.transAction.state.id,
+        actionId: this.transAction.action.id,
+        nextStateId: null,
+        nexActId: null,
+        nextActTarTime: null,
+        remark: this.transAction.remark,
+        modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
+        actionOwnerId: null,
+        isNextAction: null
+      };
+      console.log("saveTransAction:", params);
+      this.common.loading++;
+      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.resetData();
+            this.transAction.isNextAction = true;
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
     }
   }
 
-  onselectNextAction(nextActionId) {
-    if (nextActionId == 16) {
-      this.transAction.targetTime = null;
-    } else {
-      this.transAction.targetTime = new Date();
-    }
-  }
-
-  selectStandardRemarks(event) {
-    console.log("event", event);
-    if (event && event.length) {
-      this.transAction.standardRemarkId = event.map(remark => { return { remarkId: remark.id } });
-      console.log("ID", this.transAction.standardRemarkId);
-    }
-
-  }
-
-  saveCampaignTargetAction() {
-    if (this.transAction.state.id == null || this.transAction.action.id == null || this.transAction.nextAction.id == null) {
+  saveTransNextAction() {
+    console.log("saveTransNextAction:", this.transAction);
+    if (this.transAction.state.id! > 0 || this.transAction.nextAction.id! > 0) {
       this.common.showError('Please Fill All Mandatory Field');
     }
     else {
       let targetTime = (this.transAction.targetTime) ? this.common.dateFormatter(this.transAction.targetTime) : null;
       const params = {
-        campTargetId: this.transAction.requestId,
+        requestId: null,
+        transId: this.transAction.transId,
         stateId: this.transAction.state.id,
         actionId: this.transAction.action.id,
-        nextActId: this.transAction.nextAction.id,
+        nextStateId: (this.transAction.nextState.id > 0) ? this.transAction.nextState.id : null,
+        nexActId: (this.transAction.nextAction.id > 0) ? this.transAction.nextAction.id : null,
         nextActTarTime: targetTime,
         remark: this.transAction.remark,
-        remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
-        userCallLogId: null
+        modeId: null,
+        actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
+        isNextAction: true
       };
-      console.log("saveCampaignTargetAction:", params);
+      console.log("saveTransAction:", params);
       this.common.loading++;
-      this.api.post("Processes/addTransactionAction ", params)
-        .subscribe(res => {
-          this.common.loading--;
-          console.log(res);
-          if (res['success'] == true) {
-            this.common.showToast(res['msg']);
+      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
             this.resetData();
+            this.transAction.isNextAction = false;
           } else {
-            this.common.showError(res['msg']);
-
+            this.common.showError(res['data'][0].y_msg);
           }
-        }, err => {
-          this.common.loading--;
-          console.log(err);
-        });
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
     }
   }
 
-
-
-
-
   resetData() {
+    this.transAction.mode = { id: null, name: "" };
     this.transAction.action = { id: null, name: "" };
-    this.transAction.state = { id: null, name: "" };
-    this.transAction.action = { id: null, name: "" };
+    this.transAction.nextState = { id: null, name: "" };
     this.transAction.nextAction = { id: null, name: "" };
-    this.transAction.standardRemarkId = [];
+    this.transAction.actionOwner = { id: null, name: "" };
     this.transAction.remark = "";
     this.transAction.targetTime = new Date();
     this.standards = [];
