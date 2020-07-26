@@ -49,6 +49,7 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.transId = (this.common.params.actionData.transId > 0) ? this.common.params.actionData.transId : null;
       this.transAction.actionId = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionId : null;
       this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
+      this.transAction.isNextAction = (this.common.params.actionData.isNextAction) ? true : false;
 
     };
     this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
@@ -131,7 +132,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   saveTransAction() {
-    if (this.transAction.state.id! > 0 || this.transAction.action.id! > 0) {
+    if (!this.transAction.state.id || !this.transAction.action.id) {
       this.common.showError('Please Fill All Mandatory Field');
     }
     else {
@@ -172,7 +173,7 @@ export class AddTransactionActionComponent implements OnInit {
 
   saveTransNextAction() {
     console.log("saveTransNextAction:", this.transAction);
-    if (this.transAction.state.id! > 0 || this.transAction.nextAction.id! > 0) {
+    if (!this.transAction.state.id || !this.transAction.nextAction.id) {
       this.common.showError('Please Fill All Mandatory Field');
     }
     else {

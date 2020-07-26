@@ -1,0 +1,198 @@
+// @import 'https://github.com/daneden/animate.css/blob/master/animate.css';
+.table {
+    font-size: 14px;
+    thead {
+        background-color: lightgrey;
+    }
+    th,
+    td {
+        padding: 2px;
+    }
+}
+
+.modal-body {
+    padding-top: 0;
+}
+
+.chat_block {
+    max-height: 70vh;
+    overflow: auto;
+    background: ghostwhite;
+    margin-top: 0!important;
+}
+
+.active_chat {
+    float: right;
+    text-align: right;
+    background: #1def1d2e;
+    border: 1px solid #1def1d2e;
+}
+
+.other_chat {
+    float: left;
+    background-color: #fff;
+    border: 1px solid lightgray;
+}
+
+.other_chat,
+.active_chat {
+    max-width: 90%;
+    margin-bottom: 1px;
+    border-radius: 10px;
+    padding: 0 10px;
+    span {
+        display: flow-root;
+        font-size: 10px;
+    }
+}
+
+.bottom-block {
+    .button-box {
+        display: inline-grid;
+    }
+}
+
+@-webkit-keyframes shake {
+    from,
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0);
+    }
+}
+
+@keyframes shake {
+    from,
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0);
+    }
+}
+
+.shake {
+    -webkit-animation-name: shake;
+    animation-name: shake;
+}
+
+.animated {
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.animated.infinite {
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+.animated.delay-1s {
+    -webkit-animation-delay: 1s;
+    animation-delay: 1s;
+}
+
+.animated.delay-2s {
+    -webkit-animation-delay: 2s;
+    animation-delay: 2s;
+}
+
+.animated.delay-3s {
+    -webkit-animation-delay: 3s;
+    animation-delay: 3s;
+}
+
+.animated.delay-4s {
+    -webkit-animation-delay: 4s;
+    animation-delay: 4s;
+}
+
+.animated.delay-5s {
+    -webkit-animation-delay: 5s;
+    animation-delay: 5s;
+}
+
+.animated.fast {
+    -webkit-animation-duration: 800ms;
+    animation-duration: 800ms;
+}
+
+.animated.faster {
+    -webkit-animation-duration: 500ms;
+    animation-duration: 500ms;
+}
+
+.animated.slow {
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+}
+
+.animated.slower {
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+}
+
+@media (print),
+(prefers-reduced-motion: reduce) {
+    .animated {
+        -webkit-animation-duration: 1ms !important;
+        animation-duration: 1ms !important;
+        -webkit-transition-duration: 1ms !important;
+        transition-duration: 1ms !important;
+        -webkit-animation-iteration-count: 1 !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+.modal-header.sub-title {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    color: #fff;
+}
+
+.action-icon {
+    width: 150px;
+    text-align: right;
+    .fa {
+        cursor: pointer;
+        margin-right: 5px;
+    }
+}
+
+:host ::ng-deep #tableCampaignTargetActionData {
+    .tableFixHead {
+        height: 50vh !important;
+    }
+    th:nth-child(1),
+    td:nth-child(1) {
+        display: none;
+    }
+}
