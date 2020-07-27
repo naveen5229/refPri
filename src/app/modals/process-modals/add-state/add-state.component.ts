@@ -13,7 +13,7 @@ import { AddFieldComponent } from '../add-field/add-field.component';
 export class AddStateComponent implements OnInit {
   states = [];
   nextStates = [];
-  nextState = null;
+  // nextState = null;
   typeId = null;
   stateName = null;
   processId = null;
@@ -46,8 +46,8 @@ export class AddStateComponent implements OnInit {
 
   ngOnInit() { }
 
-  closeModal() {
-    this.activeModal.close();
+  closeModal(res) {
+    this.activeModal.close({ response: res });
   }
 
   Add() {
@@ -57,7 +57,7 @@ export class AddStateComponent implements OnInit {
       processId: this.processId,
       name: this.stateName,
       type: this.typeId,
-      nextStates: JSON.stringify(this.nextStates),
+      nextStates: (this.nextStates && this.nextStates.length) ? JSON.stringify(this.nextStates) : null,
       requestId: this.requestId,
       threshold: this.threshold
     }
@@ -69,6 +69,7 @@ export class AddStateComponent implements OnInit {
         // console.log(res);
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
+          this.resetData();
           this.getStates();
         } else {
           this.common.showError(res['data'][0].y_msg);
@@ -101,62 +102,98 @@ export class AddStateComponent implements OnInit {
 
         if (!res['data']) return;
         this.data = res['data'];
-        this.states = res['data'];
-        let first_rec = this.data[0];
-        for (var key in first_rec) {
-          if (key.charAt(0) != "_") {
-            this.headings.push(key);
-            let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
-            this.table.data.headings[key] = headerObj;
-          }
-        }
-        let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
-        this.table.data.headings['action'] = action;
-        this.table.data.columns = this.getTableColumns();
+        this.states = (this.data && this.data.length) ? this.data.map(x => { return { id: x._state_id, name: x.name } }) : [];
+        this.data.length ? this.setTable() : this.resetTable();
+        // let first_rec = this.data[0];
+        // for (var key in first_rec) {
+        //   if (key.charAt(0) != "_") {
+        //     this.headings.push(key);
+        //     let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
+        //     this.table.data.headings[key] = headerObj;
+        //   }
+        // }
+        // let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
+        // this.table.data.headings['action'] = action;
+        // this.table.data.columns = this.getTableColumns();
       }, err => {
         this.common.loading--;
         console.log(err);
       });
   }
 
+  resetTable() {
+    this.table.data = {
+      headings: [],
+      columns: []
+    };
+  }
+
+  setTable() {
+    this.table.data = {
+      headings: this.generateHeadings(),
+      columns: this.getTableColumns()
+    };
+    return true;
+  }
+
+  generateHeadings() {
+    let headings = {};
+    for (var key in this.data[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
   getTableColumns() {
     let columns = [];
-    this.data.map(doc => {
-      this.valobj = {};
-      for (let i = 0; i < this.headings.length; i++) {
-        this.valobj[this.headings[i]] = { value: doc[this.headings[i]], class: 'black', action: '' };
+    this.data.map(cat => {
+      let column = {};
+      for (let key in this.generateHeadings()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: false,
+            action: null,
+            icons: this.actionIcons(cat)
+          };
+        } else {
+          column[key] = { value: cat[key], class: 'black', action: '' };
+        }
       }
-      this.valobj['action'] = { class: '', icons: this.Delete(doc) };
-      columns.push(this.valobj);
-    });
+      columns.push(column);
+    })
+
     return columns;
   }
 
-  formatTitle(title) {
-    return title.charAt(0).toUpperCase() + title.slice(1);
-  }
+  // getTableColumns() {
+  //   let columns = [];
+  //   this.data.map(doc => {
+  //     this.valobj = {};
+  //     for (let i = 0; i < this.headings.length; i++) {
+  //       this.valobj[this.headings[i]] = { value: doc[this.headings[i]], class: 'black', action: '' };
+  //     }
+  //     this.valobj['action'] = { class: '', icons: this.Delete(doc) };
+  //     columns.push(this.valobj);
+  //   });
+  //   return columns;
+  // }
 
-  Delete(row) {
+  // formatTitle(title) {
+  //   return title.charAt(0).toUpperCase() + title.slice(1);
+  // }
+
+  actionIcons(row) {
     let icons = [];
     icons.push(
-      {
-        class: "fas fa-edit edit",
-        title: "Edit State",
-        action: this.setData.bind(this, row),
-      },
-      {
-        class: "fas fa-trash-alt",
-        title: "Delete State",
-        action: this.deleteRow.bind(this, row),
-      },
-      {
-        class: "fas fa-plus-square",
-        title: "Add Form Field",
-        action: this.openFieldModal.bind(this, row),
-      },
+      { class: "fas fa-edit edit", title: "Edit State", action: this.setData.bind(this, row) },
+      { class: "fas fa-trash-alt", title: "Delete State", action: this.deleteRow.bind(this, row) },
+      { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, row) },
     )
     return icons;
-  }
+  };
+
   deleteRow(row) {
     let params = {
       stateId: row._state_id,
@@ -193,18 +230,19 @@ export class AddStateComponent implements OnInit {
   setData(data) {
     this.typeId = data._type_id;
     this.stateName = data.name;
-    this.nextState = data._nextstate && (data._nextstate.length) ? data._nextstate : [];
+    this.nextStates = data._nextstate && (data._nextstate.length) ? data._nextstate.map(x => { return { id: x._state_id, name: x.name } }) : [];
     this.processId = this.processId;
     this.requestId = data._state_id;
     this.threshold = (data._threshold) ? data._threshold : null;
     this.btn1 = "Update";
-    this.nextStates = this.nextStates
+    // this.nextStates = this.nextStates
   }
-  resetData(data) {
+
+  resetData() {
     this.typeId = null;
     this.stateName = null;
     this.nextStates = null;
-    this.nextState = null;
+    // this.nextState = null;
     this.requestId = null;
     this.threshold = null;
     this.btn1 = "Add";

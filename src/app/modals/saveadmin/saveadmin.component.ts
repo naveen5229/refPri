@@ -129,75 +129,60 @@ export class SaveadminComponent implements OnInit {
   ngOnInit() {
   }
 
-  onItemSelect(item: any) {
-    const selected = this.dropdownList.map(e => {
-      if (e.id == item.id) {
-        e.value = '1';
-      }
-    });
+  // onItemSelect(item: any) {
+  //   const selected = this.dropdownList.map(e => {
+  //     if (e.id == item.id) {
+  //       e.value = '1';
+  //     }
+  //   });
+  //   let collective = [];
+  //   this.dropdownList.forEach(e => {
+  //     collective.push(e.value);
+  //   });
+  //   this.Fouser.attenMedium = collective.join('');
+  //   console.log(this.Fouser.attenMedium);
+  // }
 
-    let collective = [];
-    this.dropdownList.forEach(e => {
-      collective.push(e.value);
-    });
-    console.log(collective);
-    this.Fouser.attenMedium = collective.join('');
-    console.log(this.Fouser.attenMedium);
-  }
+  // onItemDeSelect(item: any) {
+  //   const selected = this.dropdownList.map(e => {
+  //     if (e.id == item.id) {
+  //       e.value = '0';
+  //     }
+  //   });
+  //   let collective = [];
+  //   this.dropdownList.forEach(e => {
+  //     collective.push(e.value);
+  //   });
+  //   this.Fouser.attenMedium = collective.join('');
+  //   console.log(this.Fouser.attenMedium);
+  // }
 
-  onItemDeSelect(item: any) {
-    const selected = this.dropdownList.map(e => {
-      if (e.id == item.id) {
-        e.value = '0';
-      }
-    });
-
-    let collective = [];
-    this.dropdownList.forEach(e => {
-      collective.push(e.value);
-    });
-    console.log(collective);
-    this.Fouser.attenMedium = collective.join('');
-    console.log(this.Fouser.attenMedium);
-  }
-
-  onSelectAll(items: any) {
-    console.log(items);
-    items.forEach(e => {
-      this.dropdownList.map(i => {
-        if (i.id == e.id) {
-          i.value = '1';
-        }
-      })
-    });
-
-    let collective = [];
-    this.dropdownList.forEach(e => {
-      collective.push(e.value);
-    });
-    console.log(collective);
-    this.Fouser.attenMedium = collective.join('');
-    console.log(this.Fouser.attenMedium);
-  }
-  onDeSelectAll(items: any) {
-    console.log(items);
-
-    this.dropdownList.map(i => {
-
-      i.value = '0';
-
-    });
-
-
-    let collective = [];
-    this.dropdownList.forEach(e => {
-      collective.push(e.value);
-    });
-    console.log(collective);
-    this.Fouser.attenMedium = collective.join('');
-    console.log(this.Fouser.attenMedium);
-
-  }
+  // onSelectAll(items: any) {
+  //   items.forEach(e => {
+  //     this.dropdownList.map(i => {
+  //       if (i.id == e.id) {
+  //         i.value = '1';
+  //       }
+  //     })
+  //   });
+  //   let collective = [];
+  //   this.dropdownList.forEach(e => {
+  //     collective.push(e.value);
+  //   });
+  //   this.Fouser.attenMedium = collective.join('');
+  //   console.log(this.Fouser.attenMedium);
+  // }
+  // onDeSelectAll(items: any) {
+  //   this.dropdownList.map(i => {
+  //     i.value = '0';
+  //   });
+  //   let collective = [];
+  //   this.dropdownList.forEach(e => {
+  //     collective.push(e.value);
+  //   });
+  //   this.Fouser.attenMedium = collective.join('');
+  //   console.log(this.Fouser.attenMedium);
+  // }
 
 
   closeModal(response) {
@@ -206,7 +191,7 @@ export class SaveadminComponent implements OnInit {
 
   getDepartments() {
     this.common.loading++;
-    this.api.get("Admin/getDepartmentList", "I")
+    this.api.get("Admin/getDepartmentList")
       .subscribe(res => {
         this.common.loading--;
         this.departments = res['data'] || [];
@@ -294,7 +279,7 @@ export class SaveadminComponent implements OnInit {
   }
 
   saveAdmin() {
-    console.log("Fouser:", this.Fouser);
+    // console.log("Fouser:", this.Fouser);
 
     if (this.user._loggedInBy == 'admin') {
       let params = {
@@ -325,6 +310,8 @@ export class SaveadminComponent implements OnInit {
         return this.common.showError("Date of joining is missing");
       } else if (this.isOtherShow && this.Fouser.doj > this.common.getDate()) {
         return this.common.showError("Date of joining must not be future date");
+      } else if (this.isOtherShow && (!this.Fouser.attenMedium || this.Fouser.attenMedium == '000')) {
+        return this.common.showError("Attendance medium is missing");
       }
       else {
         this.common.loading++;
@@ -632,5 +619,15 @@ export class SaveadminComponent implements OnInit {
       }
     }, 1000);
 
+  }
+
+  onSelectAttenMedium() {
+    if (this.selectedItems == 1) {
+      this.Fouser.attenMedium = '100';
+    } else if (this.selectedItems == 2) {
+      this.Fouser.attenMedium = '010';
+    } else if (this.selectedItems == 3) {
+      this.Fouser.attenMedium = '001';
+    }
   }
 }

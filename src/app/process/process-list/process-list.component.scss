@@ -2,6 +2,10 @@
     color: deeppink;
 }
 
+:host ::ng-deep .process_type {
+    color: lawngreen;
+}
+
 :host ::ng-deep .fa-grip-horizontal {
     color: #07f8d4;
 }
