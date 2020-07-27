@@ -10,24 +10,38 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AddProcessComponent implements OnInit {
   title = "Add Process";
-  button = "Next";
+  button = "Submit";
   processForm = {
     id: null,
     name: '',
     startTime: this.common.getDate(),
-    endTime: this.common.getDate(2)
+    endTime: this.common.getDate(2),
+    priCatAlias: "",
+    secCatAlias: "",
+    defaultOwn: {
+      id: null,
+      name: ""
+    }
   };
+  adminList = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalSService: NgbModal) {
+    this.adminList = this.common.params.adminList;
     if (this.common.params && this.common.params.editData) {
       this.processForm = {
         id: this.common.params.editData._id,
         name: this.common.params.editData.name,
-        startTime: new Date(this.common.params.editData.start_date),
-        endTime: new Date(this.common.params.editData.end_date)
+        startTime: (this.common.params.editData.start_date) ? new Date(this.common.params.editData.start_date) : this.common.getDate(),
+        endTime: (this.common.params.editData.start_date) ? new Date(this.common.params.editData.end_date) : this.common.getDate(2),
+        priCatAlias: (this.common.params.editData.pri_category_alias) ? this.common.params.editData.pri_category_alias : "",
+        secCatAlias: (this.common.params.editData.sec_category_alias) ? this.common.params.editData.sec_category_alias : "",
+        defaultOwn: {
+          id: (this.common.params.editData._default_po) ? this.common.params.editData._default_po : null,
+          name: (this.common.params.editData._default_po) ? this.common.params.editData.default_po : "",
+        }
       };
     }
   }
@@ -42,7 +56,7 @@ export class AddProcessComponent implements OnInit {
   saveProcess() {
     console.log("processForm:", this.processForm);
     if (!this.processForm.name) {
-      this.common.showError("Please Select Campaign Name");
+      this.common.showError("Please Select Process Name");
       return false;
     }
     if (!this.processForm.endTime || !this.processForm.startTime) {
@@ -50,7 +64,7 @@ export class AddProcessComponent implements OnInit {
       return false;
     }
     if (this.processForm.endTime && this.processForm.endTime < this.processForm.startTime) {
-      this.common.showError("EndDate not less then Start Date");
+      this.common.showError("End Date not less then Start Date");
       return false;
     }
 
@@ -58,7 +72,10 @@ export class AddProcessComponent implements OnInit {
       requestId: (this.processForm.id > 0) ? this.processForm.id : null,
       name: this.processForm.name,
       startDate: this.processForm.startTime ? this.common.dateFormatter(this.processForm.startTime) : null,
-      endDate: this.processForm.endTime ? this.common.dateFormatter(this.processForm.endTime) : null
+      endDate: this.processForm.endTime ? this.common.dateFormatter(this.processForm.endTime) : null,
+      priCatAlias: this.processForm.priCatAlias,
+      secCatAlias: this.processForm.secCatAlias,
+      defaultOwnId: this.processForm.defaultOwn.id
     }
 
     this.common.loading++;

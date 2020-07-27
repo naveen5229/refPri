@@ -29,7 +29,7 @@ export class FormDataComponent implements OnInit {
     private modalService: NgbModal,
     public api: ApiService) {
     console.log("id", this.common.params);
-    this. refId= this.common.params.ref.id;
+    this.refId = this.common.params.ref.id;
     this.refType = this.common.params.ref.type;
     this.common.handleModalSize('class', 'modal-lg', '650');
     this.getFormDetail();
@@ -38,8 +38,8 @@ export class FormDataComponent implements OnInit {
   ngOnInit() {
   }
 
-  dismiss() {
-    this.activeModal.close();
+  dismiss(res) {
+    this.activeModal.close({ response: res });
   }
 
 
@@ -62,7 +62,7 @@ export class FormDataComponent implements OnInit {
     console.log("para......", params);
 
     this.common.loading++;
-    this.api.post('LorryReceiptsOperation/saveLrPodDetails', params)
+    this.api.post('Processes/saveProcessMatrixCalAssign', params)
       .subscribe(res => {
         this.common.loading--;
         console.log("--res", res['data'][0].r_id)
@@ -93,7 +93,7 @@ export class FormDataComponent implements OnInit {
           this.formField = res['data'];
           this.formatArray();
         }
-        
+
       },
         err => {
           this.common.loading--;
@@ -122,6 +122,6 @@ export class FormDataComponent implements OnInit {
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
   }
-  
- 
+
+
 }

@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
   <span aria-hidden="true">&times;</span>
 </button>
 </div>
@@ -17,16 +17,16 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-2">
             <div class="col-4">
-                <label>name<span class="require">*</span></label>
+                <label>name<span class="text-danger">*</span></label>
             </div>
             <div class="col-8">
                 <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-2">
             <div class="col-4">
                 <label>Modes:</label>
             </div>
@@ -39,7 +39,7 @@
     </div>
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveProcessAction()">{{button}}</button>
         </div>
     </div>
@@ -47,7 +47,7 @@
 
 <div class="modal-footer">
     <div class="row">
-        <div class="mt-2">
+        <div class="col-12">
             <smart-table [data]="table.data" [settings]="table.settings"></smart-table>
         </div>
     </div>

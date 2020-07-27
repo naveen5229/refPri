@@ -8,6 +8,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 import { AddActionComponent } from '../../modals/process-modals/add-action/add-action.component';
 import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
+import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -85,7 +86,7 @@ export class ProcessListComponent implements OnInit {
   }
 
   addProcess(processDate = null) {
-    this.common.params = { title: "Add Process", button: "Next", editData: processDate };
+    this.common.params = { title: "Add Process", button: "Next", editData: processDate, adminList: this.adminList };
     const activeModal = this.modalService.open(AddProcessComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -144,18 +145,34 @@ export class ProcessListComponent implements OnInit {
   actionIcons(process) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.addProcess.bind(this, process) },
-      { class: "fas fa-user ml-2", action: this.addProcessUsers.bind(this, process), title: "Add Users" },
-      { class: "fas fa-grip-horizontal ml-2", action: this.addProcessState.bind(this, process), title: "Add State" },
-      { class: "fas fa-list-alt pri_cat ml-2", action: this.openCatModal.bind(this, process, 1), title: "Primary Category Mapping" },
-      { class: "fas fa-list-alt ml-2", action: this.openCatModal.bind(this, process, 2), title: "Secondary Category Mapping" },
-      { class: "fas fa-handshake ml-2", action: this.addProcessAction.bind(this, process), title: "Add Action" },
+      { class: "fas fa-user", action: this.addProcessUsers.bind(this, process), title: "Add Users" },
+      { class: "fas fa-grip-horizontal", action: this.addProcessState.bind(this, process), title: "Add State" },
+      { class: "fas fa-list-alt pri_cat", action: this.openCatModal.bind(this, process, 1), title: "Primary Category Mapping" },
+      { class: "fas fa-list-alt", action: this.openCatModal.bind(this, process, 2), title: "Secondary Category Mapping" },
+      { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, process, 3), title: "Type Mapping" },
+      { class: "fas fa-handshake", action: this.addProcessAction.bind(this, process), title: "Add Action" },
+      { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, process), }
     ];
     return icons;
   }
 
+  openFieldModal(process) {
+    let refData = {
+      id: process._id,
+      type: 2
+    }
+    this.common.params = { ref: refData };
+    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
+  }
+
   addProcessUsers(process) {
     this.common.params = { process_id: process._id, adminList: this.adminList };
-    const activeModal = this.modalService.open(UserMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(UserMappingComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         console.log("UserMappingComponent:", data.response);
@@ -211,13 +228,16 @@ export class ProcessListComponent implements OnInit {
 
   getProcessCat() {
     this.resetTableCatList();
-    let apiName = "Processes/getProcessPriCat?processId=" + this.catForm.process_id;
+    let apiName = null;
     if (this.catType == 1) {
       this.catFormTitle = "Add Primary Category";
       apiName = "Processes/getProcessPriCat?processId=" + this.catForm.process_id;
-    } else {
+    } else if (this.catType == 2) {
       this.catFormTitle = "Add Secondary Category";
       apiName = "Processes/getProcessSecCat?processId=" + this.catForm.process_id;
+    } else if (this.catType == 3) {
+      this.catFormTitle = "Add Type";
+      apiName = "Processes/getProcessType?processId=" + this.catForm.process_id;
     }
     this.common.loading++;
     this.api.get(apiName).subscribe(res => {
@@ -296,13 +316,16 @@ export class ProcessListComponent implements OnInit {
   }
 
   addProcessCat() {
-    let apiName = "Processes/addProcessPriCat";
+    let apiName = null;
     if (this.catType == 1) {
       this.catFormTitle = "Add Primary Category";
       apiName = "Processes/addProcessPriCat";
-    } else {
+    } else if (this.catType == 2) {
       this.catFormTitle = "Add Secondary Category";
       apiName = "Processes/addProcessSecCat";
+    } else if (this.catType == 3) {
+      this.catFormTitle = "Add Type";
+      apiName = "Processes/addProcessType";
     }
     let params = {
       processId: this.catForm.process_id,
@@ -333,17 +356,19 @@ export class ProcessListComponent implements OnInit {
   deleteProcessCat(cat) {
     this.common.params = {
       title: 'Delete Category',
-      description: 'Are you sure you want to delete this Category?'
+      description: 'Are you sure to delete this record?'
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log('res', data);
       if (data.response) {
-        let apiName = "Processes/deleteProcessPriCat";
+        let apiName = null;
         if (this.catType == 1) {
           apiName = "Processes/deleteProcessPriCat";
-        } else {
+        } else if (this.catType == 2) {
           apiName = "Processes/deleteProcessSecCat";
+        } else if (this.catType == 3) {
+          apiName = "Processes/deleteProcessType";
         }
         let params = {
           id: cat._id
@@ -351,7 +376,6 @@ export class ProcessListComponent implements OnInit {
         this.common.loading++;
         this.api.post(apiName, params).subscribe(res => {
           this.common.loading--;
-          console.log("api data", res);
           if (res['code'] == 1) {
             if (res['data'][0]['y_id'] > 0) {
               this.common.showToast(res['msg']);
