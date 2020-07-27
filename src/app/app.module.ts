@@ -82,6 +82,8 @@ import { AddStateComponent } from './modals/process-modals/add-state/add-state.c
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
 import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
 import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
+import { AddvehicleComponent } from './modals/addvehicle/addvehicle.component';
+import { ImportbulkvehicleComponent } from './modals/importbulkvehicle/importbulkvehicle.component';
 import { AssignFieldsComponent } from './modals/process-modals/assign-fields/assign-fields.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormDataComponent } from './modals/process-modals/form-data/form-data.component';
@@ -139,6 +141,8 @@ const PAGE_COMPONENTS = [
   AddFieldComponent,
   AxestrackMappingComponent,
   AddActionComponent,
+  AddvehicleComponent,
+  ImportbulkvehicleComponent,
   AssignFieldsComponent,
   FormDataComponent,
   UserMappingComponent,
@@ -154,6 +158,8 @@ const PAGE_COMPONENTS = [
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
     AxestrackMappingComponent,
+    AddvehicleComponent,
+    ImportbulkvehicleComponent,
 
     // SendmessageComponent,
     // GenericModelComponent,

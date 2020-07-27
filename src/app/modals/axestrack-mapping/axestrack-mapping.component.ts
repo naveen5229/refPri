@@ -14,6 +14,7 @@ export class AxestrackMappingComponent implements OnInit {
   axestrackPartnerUserData=[];
   axestrackCompanyData=[];
   axestrackCompanyUserData=[];
+  vehicleData=[];
   elparid='';
   axesparid='';
   title='';
@@ -56,6 +57,13 @@ export class AxestrackMappingComponent implements OnInit {
       this.userName=this.common.params.companyUser.name;
       this.userMobile=this.common.params.companyUser.mobileno;
       this.getAxesCompanyUser();
+      }
+
+      else if(this.common.params.vehicle){
+        this.elparid=this.common.params.vehicle.id;
+        this.title=this.common.params.title;
+        this.userName=this.common.params.vehicle.regno;
+        this.getAxesCompanyVehicle();
       }
 
       
@@ -248,4 +256,49 @@ export class AxestrackMappingComponent implements OnInit {
         console.log(err);
       });
   }
+
+  getAxesCompanyVehicle(){
+    this.common.loading++;
+    this.api.getTranstruck('AxesUserMapping/getAxestrackCompanyVehicle.json?axCompanyId='+this.common.params.vehicle._ax_company_id)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+        if (!res['data']) return;
+        this.vehicleData = res['data'];
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+    // getAxestrackCompanyVehicle
+  }
+
+  getAxestrackCompanyVehicle(event){
+    console.log("Event:",event);
+    this.axesparid=event.autoid;
+  }
+
+  saveAxestrackCompanyVehicle(){
+    this.common.loading++;
+    let param={
+      elVehicleId:this.elparid,
+      axVehicleId:this.axesparid
+    }
+    console.log("PaRAM:",param);
+    this.api.postTranstruck('AxesUserMapping/saveVehicleMapping.json',param)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+        if (res['success']){
+          this.common.showToast(res['msg']);
+          this.activeModal.close({response:true});
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+  }
+
+
 }
