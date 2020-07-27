@@ -3,6 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AxestrackMappingComponent } from '../../modals/axestrack-mapping/axestrack-mapping.component';
+import { AddvehicleComponent } from '../../modals/addvehicle/addvehicle.component';
 
 @Component({
   selector: 'ngx-user-mapping',
@@ -12,7 +13,7 @@ import { AxestrackMappingComponent } from '../../modals/axestrack-mapping/axestr
 export class UserMappingComponent implements OnInit {
 
   activeTab='partnerMapping';
-
+  vehicleMapping=[];
   companyData=[];
   partnerMapping=[];
   partnerUserMappings=[];
@@ -58,11 +59,22 @@ export class UserMappingComponent implements OnInit {
     }
   };
 
+  table4 = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
 
   constructor(public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal) { 
       this.getPartnerMappingData();
+      this.getCompanyMappingData(null);
     }
 
   ngOnInit() {
@@ -382,6 +394,13 @@ companyMap(company){
 
   //Company User Mapping Start-----------------------------------------------------------------------
 
+  
+  
+  getElogistPartnerUser(event){
+    console.log("Elogist Partner:",event);
+    this.getCompanyMappingData(event.id);
+  }
+
   getCompanyMappingData(id){
     this.common.loading++;
     this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId='+id)
@@ -395,16 +414,30 @@ companyMap(company){
         console.log(err);
       });
   }
-  
-  getElogistPartnerUser(event){
-    console.log("Elogist Partner:",event);
-    this.getCompanyMappingData(event.id);
-  }
 
   getElogistCompanyUser(event){
     console.log("Elogist Company:",event);
     this.companyUserMapping(event.id);
   }
+
+  
+
+  // vehicleData(id){
+  //   this.common.loading++;
+  //   this.api.getTranstruck('AxesUserMapping/getCompanyVehicles.json?elCompanyId='+id)
+  //     .subscribe(res => {
+  //       this.common.loading--;
+  //       console.log("api data", res);
+  //       if (!res['data']) return;
+  //       this.vehData = res['data'];
+  //       this.companyUserMappings.length ? this.setTable3() : this.resetTable3();
+  //     }, err => {
+  //       this.common.loading--;
+  //       console.log(err);
+  //     });
+  // }
+
+  
 
 
 
@@ -504,6 +537,127 @@ companyMap(company){
     }else{
       this.common.showError('First Map Company!');
     }
+    }
+
+    // searchCompanyUserList(){
+    //   this.common.loading++;
+    //   this.api.getTranstruck('AxesUserMapping/getelo.json')
+    //     .subscribe(res => {
+    //       this.common.loading--;
+    //       console.log("api data", res);
+    //       if (!res['data']) return;
+    //       this.vehicleMapping = res['data'];
+    //       this.vehicleMapping.length ? this.setTable4() : this.resetTable4();
+    //     }, err => {
+    //       this.common.loading--;
+    //       console.log(err);
+    //     });
+    // }
+
+    getElogistPartnerUserForVehicle(event){
+      console.log("Elogist Partner for Vehicle:",event);
+      this.vehicleMap(event.id);
+    }
+  
+    vehicleMap(id){
+      
+      this.common.loading++;
+      this.api.getTranstruck('AxesUserMapping/getCompanyVehicles.json?elCompanyId='+id)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("api data", res);
+          if (!res['data']) return;
+          this.vehicleMapping = res['data'];
+          this.vehicleMapping.length ? this.setTable4() : this.resetTable4();
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
+    }
+
+    resetTable4(){
+      this.table4.data = {
+        headings: {},
+        columns: []
+      };
+    }
+    
+    
+    setTable4() {
+      this.table4.data = {
+        headings: this.generateHeadings4(),
+        columns: this.getTableColumns4()
+      };
+      return true;
+    }
+    
+    generateHeadings4() {
+      let headings = {};
+      for (var key in this.vehicleMapping[0]) {
+        if (key.charAt(0) != "_") {
+          headings[key] = { title: key, placeholder: this.formatTitle4(key) };
+        }
+      }
+      return headings;
+    }
+    
+    formatTitle4(strval) {
+      let pos = strval.indexOf('_');
+      if (pos > 0) {
+        return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+      } else {
+        return strval.charAt(0).toUpperCase() + strval.substr(1);
+      }
+    }
+    
+    getTableColumns4() {
+      let columns = [];
+      this.vehicleMapping.map(campaign => {
+        let column = {};
+        for (let key in this.generateHeadings4()) {
+          if (key == 'Action') {
+            column[key] = {
+              value: "",
+              isHTML: false,
+              action: null,
+              icons: this.actionIcons4(campaign)
+            };
+          } else {
+            column[key] = { value: campaign[key], class: 'black', action: '' };
+          }
+        }
+        columns.push(column);
+      })
+      return columns;
+    }
+    
+    actionIcons4(vehicle) {
+      let icons=[];
+      if(vehicle['ax_veh_id']=='' || vehicle['ax_veh_id'] == null){
+       icons = [
+         { class: "fa fa-plus", action: this.vehiclemappings.bind(this, vehicle) },
+      ];
+      return icons;
+    }
+    }
+
+    vehiclemappings(vehicle){
+      console.log(vehicle);
+    if(vehicle._ax_company_id!=null){
+    this.common.params = { 'vehicle':vehicle,'title':'Vehicle Mapping' };
+    const activeModal = this.modalService.open(AxestrackMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+         this.getCompanyMappingData(null);
+        }
+      });
+    }else{
+      this.common.showError('First Map Company!');
+    }
+    }
+
+    addVehicle(){
+    this.modalService.open(AddvehicleComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     }
   
 

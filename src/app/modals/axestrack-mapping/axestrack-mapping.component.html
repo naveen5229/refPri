@@ -53,11 +53,23 @@
   </div>
 </div>
 
+<div class="col-9" *ngIf="common.params.title==='Vehicle Mapping'">
+  <div class="col-6" style="display:inline-block;">
+    <label>Axestrack Company Vehicle</label>
+  </div>
+  <div class="col-6" style="display:inline-block;">
+    <auto-suggestion (onSelected)="getAxestrackCompanyVehicle($event)" [display]="['vehicle_name']" [data]="vehicleData"
+      placeholder="Axestrack Company Vehicle"   [preSelected]="null" className="borderStyle" inputId="autoid">
+    </auto-suggestion>
+  </div>
+</div>
+
 <div class="col-3">
-  <button *ngIf="common.params.title==='Partner Mapping'" type="submit" class="btn btn-primary" (click)="savePartnerMapping()">Map</button>
-  <button *ngIf="common.params.title==='Partner User Mapping'" type="submit" class="btn btn-primary" (click)="savePartnerUserMapping()">Map</button>
-  <button *ngIf="common.params.title==='Company Mapping'" type="submit" class="btn btn-primary" (click)="saveCompanyMapping()">Map</button>
-  <button *ngIf="common.params.title==='Company User Mapping'" type="submit" class="btn btn-primary" (click)="saveCompanyUserMapping()">Map</button>
+  <button *ngIf="common.params.title==='Partner Mapping'" type="submit" class="btn btn-primary" (click)="savePartnerMapping()">Map partner</button>
+  <button *ngIf="common.params.title==='Partner User Mapping'" type="submit" class="btn btn-primary" (click)="savePartnerUserMapping()">Map Partner User</button>
+  <button *ngIf="common.params.title==='Company Mapping'" type="submit" class="btn btn-primary" (click)="saveCompanyMapping()">Map Company</button>
+  <button *ngIf="common.params.title==='Company User Mapping'" type="submit" class="btn btn-primary" (click)="saveCompanyUserMapping()">Map Company User</button>
+  <button *ngIf="common.params.title==='Vehicle Mapping'" type="submit" class="btn btn-primary" (click)="saveAxestrackCompanyVehicle()">Map Vehicle</button>
 </div>
 </div>
 </div>
