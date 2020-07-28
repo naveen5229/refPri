@@ -72,8 +72,8 @@ export class AddTransactionActionComponent implements OnInit {
     this.getStateList();
   }
 
-  closeModal(res) {
-    this.activeModal.close({ response: res });
+  closeModal(res, nextFormType = null) {
+    this.activeModal.close({ response: res, nextFormType: nextFormType });
   }
 
   ngOnInit() { }
@@ -188,7 +188,8 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
-            this.transAction.formType = 1;
+            // this.transAction.formType = 1;
+            this.closeModal(true, 2);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -231,7 +232,48 @@ export class AddTransactionActionComponent implements OnInit {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
             this.transAction.formType = 0;
-            this.closeModal(true);
+            this.closeModal(true, null);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+    }
+  }
+
+  saveTransNextState() {
+    if (!this.transAction.state.id || !this.transAction.nextState.id) {
+      this.common.showError('Please Fill All Mandatory Field');
+    }
+    else {
+      const params = {
+        requestId: null,
+        transId: this.transAction.transId,
+        stateId: this.transAction.nextState.id,
+        actionId: null,
+        nextStateId: null,
+        nexActId: null,
+        nextActTarTime: null,
+        remark: null,
+        modeId: null,
+        actionOwnerId: null,
+        isNextAction: null
+      };
+      console.log("saveTransAction:", params);
+      this.common.loading++;
+      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.resetData();
+            // this.transAction.formType = 1;
+            this.closeModal(true, 1);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }

@@ -92,6 +92,7 @@ import { AddTransactionComponent } from './modals/process-modals/add-transaction
 import { AddTransactionActionComponent } from './modals/process-modals/add-transaction-action/add-transaction-action.component';
 import { ChatboxComponent } from './modals/process-modals/chatbox/chatbox.component';
 import { AddTransactionStateComponent } from './modals/process-modals/add-transaction-state/add-transaction-state.component';
+import { AddCategoryComponent } from './modals/process-modals/add-category/add-category.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -151,6 +152,7 @@ const PAGE_COMPONENTS = [
   AddTransactionComponent,
   AddTransactionActionComponent,
   AddTransactionStateComponent,
+  AddCategoryComponent,
   ChatboxComponent
 ];
 

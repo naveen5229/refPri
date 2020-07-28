@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false,null)">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -49,7 +49,7 @@
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,nunll)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransAction()">{{button}}</button>
         </div>
     </div>
@@ -104,7 +104,7 @@
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,null)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransNextAction()">{{button}}</button>
         </div>
     </div>
@@ -141,7 +141,7 @@
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(true,1)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransNextState()">{{button}}</button>
         </div>
     </div>

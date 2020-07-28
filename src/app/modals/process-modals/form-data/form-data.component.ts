@@ -10,11 +10,11 @@ import { ApiService } from '../../../Service/Api/api.service';
 })
 export class FormDataComponent implements OnInit {
   formField = [];
-
   evenArray = [];
   oddArray = [];
   refId = null;
   refType = null;
+  transId = null;
 
   Details = [{
     detail_type: 1,
@@ -29,19 +29,20 @@ export class FormDataComponent implements OnInit {
     private modalService: NgbModal,
     public api: ApiService) {
     console.log("id", this.common.params);
-    this.refId = this.common.params.ref.id;
-    this.refType = this.common.params.ref.type;
-    this.common.handleModalSize('class', 'modal-lg', '650');
-    this.getFormDetail();
+    if (this.common.params && this.common.params.actionData) {
+      this.transId = this.common.params.actionData.transId;
+      this.refId = this.common.params.actionData.refId;
+      this.refType = this.common.params.actionData.refType;
+      // this.common.handleModalSize('class', 'modal-lg', '650');
+      this.getFormDetail();
+    }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   dismiss(res) {
     this.activeModal.close({ response: res });
   }
-
 
   saveFromDetail() {
     this.Details = this.evenArray.concat(this.oddArray);
@@ -57,12 +58,13 @@ export class FormDataComponent implements OnInit {
     const params = {
       formDetails: JSON.stringify(details),
       refId: this.refId,
-      refType: this.refType
+      refType: this.refType,
+      transId: this.transId
     }
     console.log("para......", params);
 
     this.common.loading++;
-    this.api.post('Processes/saveProcessMatrixCalAssign', params)
+    this.api.post('Processes/saveTransactionFormData', params)
       .subscribe(res => {
         this.common.loading--;
         console.log("--res", res['data'][0].r_id)
@@ -71,12 +73,11 @@ export class FormDataComponent implements OnInit {
         } else {
           this.common.showError(res['data'][0].r_msg);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError(err);
-          console.error('Api Error:', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError(err);
+        console.error('Api Error:', err);
+      });
     // }
   }
 
@@ -94,11 +95,10 @@ export class FormDataComponent implements OnInit {
           this.formatArray();
         }
 
-      },
-        err => {
-          this.common.loading--;
-          console.error('Api Error:', err);
-        });
+      }, err => {
+        this.common.loading--;
+        console.error('Api Error:', err);
+      });
     // }
   }
 

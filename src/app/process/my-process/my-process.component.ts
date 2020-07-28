@@ -676,14 +676,20 @@ export class MyProcessComponent implements OnInit {
     // });
   }
 
-  openTransAction(lead, type) {
+  openTransAction(lead, type, formType = null) {
     console.log("openTransAction");
+    let formTypeTemp = 0;
+    if (!formType) {
+      formTypeTemp = (type == 2) ? 1 : 0;
+    } else {
+      formTypeTemp = (type == 2) ? 1 : 0;
+    }
     let actionData = {
       processId: lead._processid,
       transId: lead._transactionid,
       processName: lead._processname,
       identity: lead.identity,
-      formType: (type == 2) ? 1 : 0,
+      formType: formTypeTemp,
       requestId: (type == 1) ? lead._transaction_actionid : null,
       rowData: lead
     };
@@ -691,7 +697,59 @@ export class MyProcessComponent implements OnInit {
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      this.getProcessLeadByType(type);
+      if (data.response && data.nextFormType) {
+        // nextFormType: 1 = fromstate, 2=fromaction
+        if (data.nextFormType == 1) {
+          if (lead._state_form == 1) {
+            this.openTransFormData(lead, type, data.nextFormType);
+          } else {
+            this.openTransAction(lead, type, 2);
+          }
+
+        } else if (data.nextFormType == 2) {
+          if (lead._action_form == 1) {
+            this.openTransFormData(lead, type, data.nextFormType);
+          } else {
+            this.openTransAction(lead, type, 1);
+          }
+        }
+      } else {
+        this.getProcessLeadByType(type);
+      }
+    });
+  }
+
+  openTransFormData(lead, type, formType = null) {
+    console.log("openTransAction");
+    let title = 'Action Form';
+    let refId = 0;
+    let refType = 0;
+    if (formType == 1) {
+      title = 'State Form';
+      refId = lead._state_id;
+      refType = 0;
+    } else if (formType == 2) {
+      title = 'Action Form';
+      refId = lead._action_id;
+      refType = 1;
+    }
+    let actionData = {
+      processId: lead._processid,
+      processName: lead._processname,
+      transId: lead._transactionid,
+      refId: refId,
+      refType: refType,
+      formType: formType,
+    };
+
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (formType == 1) {
+        this.getProcessLeadByType(type);
+      } else if (formType == 2) {
+        this.openTransAction(lead, type, 1);
+      }
     });
   }
 
