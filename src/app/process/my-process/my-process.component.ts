@@ -558,12 +558,12 @@ export class MyProcessComponent implements OnInit {
       // } else if (lead._status == 0) {
       //   icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
       // }
-      icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, lead, type), txt: '', title: "Add Primary Info" });
+      icons.push({ class: 'fas fa-info-circle s-4', action: this.openTransFormData.bind(this, lead, type, 1), txt: '', title: "Add Primary Info" });
     } else if (type == 2) { //by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
-      icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, lead, type), txt: '', title: "Add Primary Info" });
+      icons.push({ class: 'fas fa-info-circle s-4', action: this.openTransFormData.bind(this, lead, type, 1), txt: '', title: "Add Primary Info" });
 
     } else if (type == 3 && !lead._cc_status) { //cc
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
@@ -682,7 +682,7 @@ export class MyProcessComponent implements OnInit {
     if (!formType) {
       formTypeTemp = (type == 2) ? 1 : 0;
     } else {
-      formTypeTemp = (type == 2) ? 1 : 0;
+      formTypeTemp = formType;
     }
     let actionData = {
       processId: lead._processid,
@@ -699,6 +699,7 @@ export class MyProcessComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
+        console.log("res data:", data, lead);
         if (data.nextFormType == 1) {
           if (lead._state_form == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
@@ -724,6 +725,7 @@ export class MyProcessComponent implements OnInit {
     let title = 'Action Form';
     let refId = 0;
     let refType = 0;
+    // formType: 1 = stateform, 2=actionform
     if (formType == 1) {
       title = 'State Form';
       refId = lead._state_id;
@@ -743,12 +745,15 @@ export class MyProcessComponent implements OnInit {
     };
 
     this.common.params = { actionData, title: title, button: "Save" };
-    const activeModal = this.modalService.open(FormDataComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (formType == 1) {
-        this.getProcessLeadByType(type);
-      } else if (formType == 2) {
+      console.log("formData:", formType);
+      if (formType == 2) {
         this.openTransAction(lead, type, 1);
+      } else if (formType == 1) {
+        this.openTransAction(lead, type, 2);
+      } else {
+        this.getProcessLeadByType(type);
       }
     });
   }

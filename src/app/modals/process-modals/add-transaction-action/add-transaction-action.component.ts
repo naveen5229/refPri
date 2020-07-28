@@ -25,6 +25,7 @@ export class AddTransactionActionComponent implements OnInit {
     remark: null,
     targetTime: new Date(),
     transId: null,
+    isCompleted: false,
     formType: 0 //0=action,1=state,2=next-action
   }
   stateDataList = [];
@@ -53,6 +54,12 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.action.name = (this.common.params.actionData.rowData._action_id > 0) ? this.common.params.actionData.rowData.action_name : null;
       this.transAction.state.id = (this.common.params.actionData.rowData._state_id > 0) ? this.common.params.actionData.rowData._state_id : null;
       this.transAction.state.name = (this.common.params.actionData.rowData._state_id > 0) ? this.common.params.actionData.rowData.state_name : null;
+      if (this.common.params.actionData.rowData._action_owner > 0) {
+        let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.rowData._action_owner);
+        if (actionOwner) {
+          this.transAction.actionOwner = actionOwner;
+        }
+      }
 
       if (this.transAction.formType == 2) {
         this.title = 'Add Transaction Next Action';
@@ -60,6 +67,7 @@ export class AddTransactionActionComponent implements OnInit {
         this.title = 'Add Transaction Next State';
       } else {
         this.title = 'Update Transaction Action';
+        this.transAction.isCompleted = true;
       }
       if (this.transAction.action.id > 0) {
         this.getActionModeList();
@@ -83,7 +91,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessState?processId=" + this.transAction.process.id).subscribe(res => {
       this.common.loading--;
       let stateDataList = res['data'];
-      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name } });
+      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate } });
       this.checkNextStateList();
     }, err => {
       this.common.loading--;
@@ -94,15 +102,20 @@ export class AddTransactionActionComponent implements OnInit {
 
   checkNextStateList() {
     if (this.transAction.state.id > 0) {
-      let selectedState = this.stateDataList.find(x => x.id = this.transAction.state.id);
-      if (selectedState && selectedState.__nextstate && selectedState.__nextstate.length) {
-        this.nextStateDataList = selectedState.__nextstate.map(x => { return { id: x._state_id, name: x.name } });
+      let selectedState = this.stateDataList.find(x => x.id == this.transAction.state.id);
+      console.log("selectedState:", selectedState);
+      if (selectedState && selectedState._nextstate && selectedState._nextstate.length) {
+        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name } });
+        console.log("nextStateDataList1:", this.nextStateDataList);
       } else {
         this.nextStateDataList = this.stateDataList;
+        console.log("nextStateDataList2:", this.nextStateDataList);
       }
     } else {
       this.nextStateDataList = this.stateDataList;
+      console.log("nextStateDataList3:", this.nextStateDataList);
     }
+    console.log("nextStateDataList4:", this.nextStateDataList);
   }
 
   onSelectState() {
@@ -172,13 +185,13 @@ export class AddTransactionActionComponent implements OnInit {
         transId: this.transAction.transId,
         stateId: this.transAction.state.id,
         actionId: this.transAction.action.id,
-        nextStateId: null,
         nexActId: null,
         nextActTarTime: null,
         remark: this.transAction.remark,
         modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
         actionOwnerId: null,
-        isNextAction: null
+        isNextAction: null,
+        isCompleted: (this.transAction.isCompleted) ? true : false
       };
       console.log("saveTransAction:", params);
       this.common.loading++;
@@ -215,13 +228,13 @@ export class AddTransactionActionComponent implements OnInit {
         transId: this.transAction.transId,
         stateId: this.transAction.state.id,
         actionId: this.transAction.action.id,
-        nextStateId: (this.transAction.nextState.id > 0) ? this.transAction.nextState.id : null,
         nexActId: (this.transAction.nextAction.id > 0) ? this.transAction.nextAction.id : null,
         nextActTarTime: targetTime,
         remark: this.transAction.remark,
         modeId: null,
         actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
-        isNextAction: true
+        isNextAction: true,
+        isCompleted: false
       };
       console.log("saveTransNextAction:", params);
       this.common.loading++;
@@ -231,7 +244,7 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
-            this.transAction.formType = 0;
+            // this.transAction.formType = 0;
             this.closeModal(true, null);
           } else {
             this.common.showError(res['data'][0].y_msg);
@@ -247,8 +260,8 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   saveTransNextState() {
-    if (!this.transAction.state.id || !this.transAction.nextState.id) {
-      this.common.showError('Please Fill All Mandatory Field');
+    if (!this.transAction.nextState.id) {
+      this.common.showError('Next state is missing');
     }
     else {
       const params = {
@@ -256,13 +269,13 @@ export class AddTransactionActionComponent implements OnInit {
         transId: this.transAction.transId,
         stateId: this.transAction.nextState.id,
         actionId: null,
-        nextStateId: null,
         nexActId: null,
         nextActTarTime: null,
         remark: null,
         modeId: null,
         actionOwnerId: null,
-        isNextAction: null
+        isNextAction: null,
+        isCompleted: false
       };
       console.log("saveTransAction:", params);
       this.common.loading++;
@@ -295,6 +308,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.transAction.actionOwner = { id: null, name: "" };
     this.transAction.remark = "";
     this.transAction.targetTime = new Date();
+    this.transAction.isCompleted = false;
     this.standards = [];
   }
 

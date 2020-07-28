@@ -3,7 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
+// import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
@@ -11,8 +11,8 @@ import { AddProjectComponent } from '../../modals/add-project/add-project.compon
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
 import { TaskScheduleMasterComponent } from '../../modals/task-schedule-master/task-schedule-master.component';
-import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
-import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
+// import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
+// import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 // import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 // import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
@@ -475,7 +475,7 @@ export class TaskComponent implements OnInit {
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate') {
-          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: ([101, 102].includes(ticket._tktype)) ? this.editTask.bind(this, ticket, type) : null };
+          column[key] = { value: ticket[key], type: 'date', class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: ([101, 102].includes(ticket._tktype)) ? this.editTask.bind(this, ticket, type) : null };
         }
         //  else if (key == 'expdate' && ticket['time_left'] <= 0) {
         //   column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };

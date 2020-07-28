@@ -9,6 +9,7 @@ import { ApiService } from '../../../Service/Api/api.service';
   styleUrls: ['./form-data.component.scss']
 })
 export class FormDataComponent implements OnInit {
+  title = 'Form Data';
   formField = [];
   evenArray = [];
   oddArray = [];
@@ -29,6 +30,7 @@ export class FormDataComponent implements OnInit {
     private modalService: NgbModal,
     public api: ApiService) {
     console.log("id", this.common.params);
+    this.title = this.common.params.title ? this.common.params.title : 'Form Data';
     if (this.common.params && this.common.params.actionData) {
       this.transId = this.common.params.actionData.transId;
       this.refId = this.common.params.actionData.refId;
@@ -56,7 +58,7 @@ export class FormDataComponent implements OnInit {
     });
 
     const params = {
-      formDetails: JSON.stringify(details),
+      info: JSON.stringify(details),
       refId: this.refId,
       refType: this.refType,
       transId: this.transId
@@ -64,14 +66,17 @@ export class FormDataComponent implements OnInit {
     console.log("para......", params);
 
     this.common.loading++;
-    this.api.post('Processes/saveTransactionFormData', params)
+    this.api.post('Processes/saveFormWrtRefId', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("--res", res['data'][0].r_id)
-        if (res['data'][0].r_id > 0) {
-          this.common.showToast("Successfully Eenterd");
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
-          this.common.showError(res['data'][0].r_msg);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -82,24 +87,20 @@ export class FormDataComponent implements OnInit {
   }
 
   getFormDetail() {
-    const params = "refId=" + this.refId +
-      "&refType=" + this.refType;
+    const params = "refId=" + this.refId + "&refType=" + this.refType + "&transId=" + this.transId;
     console.log("params", params);
     this.common.loading++;
-    this.api.get('Processes/getFormWrtRefId?' + params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("resss", res);
-        if (res['data']) {
-          this.formField = res['data'];
-          this.formatArray();
-        }
-
-      }, err => {
-        this.common.loading--;
-        console.error('Api Error:', err);
-      });
-    // }
+    this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
+      this.common.loading--;
+      console.log("resss", res);
+      if (res['data']) {
+        this.formField = res['data'];
+        this.formatArray();
+      }
+    }, err => {
+      this.common.loading--;
+      console.error('Api Error:', err);
+    });
   }
 
   formatArray() {

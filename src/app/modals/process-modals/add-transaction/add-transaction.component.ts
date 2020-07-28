@@ -192,7 +192,7 @@ export class AddTransactionComponent implements OnInit {
   }
 
   getFormDetail() {
-    const params = "refId=" + this.transForm.process.id + "&refType=" + this.refType;
+    const params = "refId=" + this.transForm.process.id + "&refType=" + this.refType + "&transId=" + this.transForm.requestId;
     this.common.loading++;
     this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
       this.common.loading--;
