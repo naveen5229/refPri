@@ -15,7 +15,6 @@ export class AddTransactionActionComponent implements OnInit {
   standards = [];
   transAction = {
     requestId: null,
-    actionId: null,
     process: { id: null, name: "" },
     state: { id: null, name: "" },
     nextState: { id: null, name: "" },
@@ -26,9 +25,10 @@ export class AddTransactionActionComponent implements OnInit {
     remark: null,
     targetTime: new Date(),
     transId: null,
-    isNextAction: false
+    formType: 0 //0=action,1=state,2=next-action
   }
   stateDataList = [];
+  nextStateDataList = [];
   actionDataList = [];
   nextActionDataList = [];
   remarkDataList = [];
@@ -41,23 +41,39 @@ export class AddTransactionActionComponent implements OnInit {
     public modalService: NgbModal) {
     console.log("params:", this.common.params);
 
-    this.title = this.common.params.title ? this.common.params.title : 'Add Target Campaign';
+    // this.title = this.common.params.title ? this.common.params.title : 'Add Transaction Action';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     if (this.common.params && this.common.params.actionData) {
+      this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
+      this.transAction.formType = (this.common.params.actionData.formType) ? this.common.params.actionData.formType : 0;
       this.transAction.process.id = (this.common.params.actionData.processId > 0) ? this.common.params.actionData.processId : null;
       this.transAction.process.name = (this.common.params.actionData.processId > 0) ? this.common.params.actionData.processName : null;
       this.transAction.transId = (this.common.params.actionData.transId > 0) ? this.common.params.actionData.transId : null;
-      this.transAction.actionId = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionId : null;
-      this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
-      this.transAction.isNextAction = (this.common.params.actionData.isNextAction) ? true : false;
+      this.transAction.action.id = (this.common.params.actionData.rowData._action_id > 0) ? this.common.params.actionData.rowData._action_id : null;
+      this.transAction.action.name = (this.common.params.actionData.rowData._action_id > 0) ? this.common.params.actionData.rowData.action_name : null;
+      this.transAction.state.id = (this.common.params.actionData.rowData._state_id > 0) ? this.common.params.actionData.rowData._state_id : null;
+      this.transAction.state.name = (this.common.params.actionData.rowData._state_id > 0) ? this.common.params.actionData.rowData.state_name : null;
 
+      if (this.transAction.formType == 2) {
+        this.title = 'Add Transaction Next Action';
+      } else if (this.transAction.formType == 1) {
+        this.title = 'Add Transaction Next State';
+      } else {
+        this.title = 'Update Transaction Action';
+      }
+      if (this.transAction.action.id > 0) {
+        this.getActionModeList();
+      }
+      if (this.transAction.state.id > 0) {
+        this.getActionList();
+      }
     };
     this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
     this.getStateList();
   }
 
-  closeModal() {
-    this.activeModal.close({ response: false });
+  closeModal(res) {
+    this.activeModal.close({ response: res });
   }
 
   ngOnInit() { }
@@ -68,11 +84,25 @@ export class AddTransactionActionComponent implements OnInit {
       this.common.loading--;
       let stateDataList = res['data'];
       this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name } });
+      this.checkNextStateList();
     }, err => {
       this.common.loading--;
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  checkNextStateList() {
+    if (this.transAction.state.id > 0) {
+      let selectedState = this.stateDataList.find(x => x.id = this.transAction.state.id);
+      if (selectedState && selectedState.__nextstate && selectedState.__nextstate.length) {
+        this.nextStateDataList = selectedState.__nextstate.map(x => { return { id: x._state_id, name: x.name } });
+      } else {
+        this.nextStateDataList = this.stateDataList;
+      }
+    } else {
+      this.nextStateDataList = this.stateDataList;
+    }
   }
 
   onSelectState() {
@@ -123,7 +153,8 @@ export class AddTransactionActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessActionModeList?processId=" + this.transAction.process.id + "&actionId=" + this.transAction.action.id).subscribe(res => {
       this.common.loading--;
-      this.modeList = res['data'] || [];
+      let modeList = res['data'] || [];
+      this.modeList = modeList.map(x => { return { id: x.mode_id, name: x.name } });
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -157,7 +188,7 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
-            this.transAction.isNextAction = true;
+            this.transAction.formType = 1;
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -191,7 +222,7 @@ export class AddTransactionActionComponent implements OnInit {
         actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
         isNextAction: true
       };
-      console.log("saveTransAction:", params);
+      console.log("saveTransNextAction:", params);
       this.common.loading++;
       this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
         this.common.loading--;
@@ -199,7 +230,8 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
-            this.transAction.isNextAction = false;
+            this.transAction.formType = 0;
+            this.closeModal(true);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }

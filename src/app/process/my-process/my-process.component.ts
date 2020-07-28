@@ -12,6 +12,7 @@ import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
 import { AddTransactionActionComponent } from '../../modals/process-modals/add-transaction-action/add-transaction-action.component';
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
+import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 // import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 // import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 // import { CampaignMessageComponent } from '../../modals/campaign-modals/campaign-message/campaign-message.component';
@@ -264,8 +265,6 @@ export class MyProcessComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        } else if (key == 'identity') {
-          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type) };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -554,11 +553,11 @@ export class MyProcessComponent implements OnInit {
     }
 
     if (type == 1) {//for me
-      if (lead._status == 2) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeActionStatus.bind(this, lead, type, 5), txt: '', title: "Mark Completed" });
-      } else if (lead._status == 0) {
-        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-      }
+      // if (lead._status == 2) {
+      icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
+      // } else if (lead._status == 0) {
+      //   icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
+      // }
       icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, lead, type), txt: '', title: "Add Primary Info" });
     } else if (type == 2) { //by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
@@ -684,10 +683,12 @@ export class MyProcessComponent implements OnInit {
       transId: lead._transactionid,
       processName: lead._processname,
       identity: lead.identity,
-      isNextAction: (type == 2) ? true : false,
-      requestId: (type == 1) ? null : null
+      formType: (type == 2) ? 1 : 0,
+      requestId: (type == 1) ? lead._transaction_actionid : null,
+      rowData: lead
     };
-    this.common.params = { actionData, adminList: this.adminList, title: "Transaction Action", button: "Add" };
+    let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
+    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getProcessLeadByType(type);
@@ -864,9 +865,18 @@ export class MyProcessComponent implements OnInit {
 
   infoMatrix(lead, type) {
     console.log("infoMatrix");
-    // this.common.params = { 'campaignId': campaign._campid, campaignTargetId: campaign._camptargetid, 'enableForm': true, 'title': 'Primary Info' };
-    // const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-
+    let ref = {
+      // id: lead._processid,
+      id: lead._state_id,
+      type: 0
+    }
+    this.common.params = { ref: ref };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
   }
 
 }
