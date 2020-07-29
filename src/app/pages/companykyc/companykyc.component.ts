@@ -232,6 +232,7 @@ export class CompanykycComponent implements OnInit {
       }
     },err => {
       this.common.loading--;
+      
       console.log(err);
     }
   );
