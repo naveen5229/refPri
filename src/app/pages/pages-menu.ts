@@ -61,6 +61,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Company KYC',
+        icon: 'file-text-outline',
+        link: '/pages/companykyc',
+        home: true,
+      },
+      {
         title: 'Task-Admin',
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',

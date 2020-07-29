@@ -73,14 +73,14 @@
     </div>
 
     <div class="row" *ngIf="activeTab == 'companyUserMapping'">
-      <div class="col-6">
+      <!-- <div class="col-6">
       <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
       <div class="col-8" style="display:inline-block">
         <auto-suggestion (onSelected)="getElogistPartnerUser($event)" [display]="['name','mobileno']" [data]="partnerMapping"
         placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
         </auto-suggestion>
       </div>
-    </div>
+    </div> -->
     <div class="col-6">
       <label class="col-4" style="display:inline-block;" >Company User</label>
       <div class="col-8" style="display:inline-block">
@@ -94,7 +94,6 @@
         <smart-table *ngIf="companyUserMappings.length" [data]="table3.data" [settings]="table3.settings"></smart-table>
     </div>
     </div>
-    
   </div>
 
   <div class="row" *ngIf="activeTab == 'vehicleMapping'">
@@ -105,7 +104,7 @@
       placeholder="Elogist Company"   [preSelected]="null" className="borderStyle" inputId="id">
       </auto-suggestion>
     </div>
-  </div>
+    </div>
   <div class="col-sm-3 offset-sm-3">
     <button  type="submit" class="btn btn-primary" (click)="addVehicle()">Add Vehicle</button>
   </div>
@@ -114,10 +113,7 @@
       <smart-table *ngIf="vehicleMapping.length" [data]="table4.data" [settings]="table4.settings"></smart-table>
   </div>
   </div>
-  
-</div>
-
-
-      </div>
+  </div>
+  </div>
   </nb-card-body>
 </nb-card>
