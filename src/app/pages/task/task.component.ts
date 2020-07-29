@@ -475,7 +475,7 @@ export class TaskComponent implements OnInit {
         } else if (key == 'time_left') {
           column[key] = { value: this.common.findRemainingTime(ticket[key]), class: 'black', action: '' };
         } else if (key == 'expdate') {
-          column[key] = { value: ticket[key], type: 'date', class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: ([101, 102].includes(ticket._tktype)) ? this.editTask.bind(this, ticket, type) : null };
+          column[key] = { value: ticket[key], class: (ticket['time_left'] <= 0) ? 'blue font-weight-bold' : 'blue', action: ([101, 102].includes(ticket._tktype)) ? this.editTask.bind(this, ticket, type) : null };
         }
         //  else if (key == 'expdate' && ticket['time_left'] <= 0) {
         //   column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };

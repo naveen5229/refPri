@@ -308,8 +308,6 @@ export class MyProcessComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        } else if (key == 'identity') {
-          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type) };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -553,17 +551,13 @@ export class MyProcessComponent implements OnInit {
     }
 
     if (type == 1) {//for me
-      // if (lead._status == 2) {
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
-      // } else if (lead._status == 0) {
-      //   icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-      // }
-      icons.push({ class: 'fas fa-info-circle s-4', action: this.openTransFormData.bind(this, lead, type, 1), txt: '', title: "Add Primary Info" });
+
     } else if (type == 2) { //by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
-      icons.push({ class: 'fas fa-info-circle s-4', action: this.openTransFormData.bind(this, lead, type, 1), txt: '', title: "Add Primary Info" });
+      icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Add Next State" });
 
     } else if (type == 3 && !lead._cc_status) { //cc
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
@@ -590,7 +584,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   editTransaction(lead, type) {
-    console.log("editTransaction:", lead);
+    this.common.showError("Edit Transaction on Working...");
     // let targetEditData = {
     //   rowId: campaign._camptargetid,
     //   campaignId: campaign._campid,
@@ -626,7 +620,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   deleteTransaction(row, type) {
-    console.log("deleteCampaign");
+    this.common.showError("Working...");
     // let params = {
     //   campTargetId: row._camptargetid,
     // }
@@ -655,7 +649,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   addTransContact(lead, type) {
-    console.log("targetAction");
+    this.common.showError("Add Contact on working...");
     // let targetActionData = {
     //   rowId: campaign._camptargetid,
     //   campaignId: campaign._campid,

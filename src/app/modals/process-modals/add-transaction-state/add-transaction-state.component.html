@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-12">
             <label><b>Process Name : </b></label>
-            <label>{{transAction.process.name}}</label>
+            <label>{{transState.process.name}}</label>
         </div>
     </div>
     <div class="row mb-2">
@@ -17,7 +17,7 @@
             <label><b>State : </b></label>
         </div>
         <div class="col-6">
-            <label>{{transAction.state.name}}</label>
+            <label>{{transState.state.name}}</label>
         </div>
     </div>
 
@@ -26,14 +26,14 @@
             <label>Next State : <span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);getNextActionList();" [preSelected]="{name:transAction.nextState.name}" autocomplete="off">
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transState.nextState=($event);" [preSelected]="{name:transState.nextState.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransNextState()">{{button}}</button>
         </div>
     </div>
