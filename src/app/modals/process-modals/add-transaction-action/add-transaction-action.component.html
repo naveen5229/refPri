@@ -1,112 +1,110 @@
 <div class="modal-header">
-    <h5>{{(transAction.isNextAction) ? 'Transaction Next Action' : title}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <h5>{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false,null)">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div *ngIf="!transAction.isNextAction" class="modal-body">
+<div *ngIf="!transAction.formType" class="modal-body">
     <div class="row">
-        <div class="col-12">
-            <label><b>Process Name : </b> </label>
+        <div class="col-4">
+            <label><b>Process Name :</b> </label>
+        </div>
+        <div class="col-8">
             <label> {{ transAction.process.name}}</label>
         </div>
     </div>
     <div class="row mb-2">
-        <div class="col-6">
-            <label>State<span class="text-danger">*</span></label>
+        <div class="col-4">
+            <label><b>State : </b></label>
         </div>
-        <div class="col-6">
-            <auto-suggestion [data]="stateDataList" display="name" placeholder="State Name" name="stateName" inputId="stateId" (onSelected)="transAction.state=($event);onSelectState();" [preSelected]="{name:transAction.state.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-6">
-            <label>Action<span class="text-danger">*</span></label>
-        </div>
-        <div class="col-6">
-            <auto-suggestion [data]="actionDataList" display="name" placeholder="Action Name" name="actionName" inputId="actionId" (onSelected)="transAction.action=($event);onSelectAction($event.id)" [preSelected]="{name:transAction.action.name}" autocomplete="off">
-            </auto-suggestion>
+        <div class="col-8">
+            <label> {{ transAction.state.name}}</label>
         </div>
     </div>
     <div class="row mb-2">
-        <div class="col-6">
+        <div class="col-4">
+            <label><b>Action : </b></label>
+        </div>
+        <div class="col-8">
+            <label> {{ transAction.action.name}}</label>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-4">
             <label>Mode<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <auto-suggestion [data]="modeList" display="name" placeholder="Action Name" name="modeName" inputId="modeId" (onSelected)="transAction.mode=($event);" [preSelected]="{name:transAction.mode.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
     <div class="row mb-2">
-        <div class="col-6">
+        <div class="col-4">
             <label>Remark</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <textarea maxlength="1000" name="remark" cols="5" rows="5" class="form-control" [(ngModel)]="transAction.remark"></textarea>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-4">
+            <label>Mark Completed</label>
+        </div>
+        <div class="col-8">
+            <input type="checkbox" [checked]="transAction.isCompleted" (change)="transAction.isCompleted = !transAction.isCompleted" />
         </div>
     </div>
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,nunll)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransAction()">{{button}}</button>
-            <button class="btn btn-primary btn-sm" type="button" (click)="transAction.isNextAction=true">Next</button>
         </div>
     </div>
 </div>
 <!-- start:next action form -->
-<div *ngIf="transAction.isNextAction" class="modal-body">
+<div *ngIf="transAction.formType==2" class="modal-body">
     <div class="row">
-        <div class="col-12">
-            <label><b>Process Name : </b> </label>
+        <div class="col-4">
+            <label><b>Process Name :</b> </label>
+        </div>
+        <div class="col-8">
             <label> {{ transAction.process.name}}</label>
         </div>
     </div>
     <div class="row mb-2">
-        <div class="col-6">
-            <label>State<span class="text-danger">*</span></label>
+        <div class="col-4">
+            <label><b>State : </b></label>
         </div>
-        <div class="col-6">
-            <auto-suggestion [data]="stateDataList" display="name" placeholder="State Name" name="stateName" inputId="stateId" (onSelected)="transAction.state=($event);onSelectState();" [preSelected]="{name:transAction.state.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-
-    <div class="row mb-2">
-        <div class="col-6">
-            <label>Next State</label>
-        </div>
-        <div class="col-6">
-            <auto-suggestion [data]="stateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);getNextActionList();" [preSelected]="{name:transAction.nextState.name}" autocomplete="off">
-            </auto-suggestion>
+        <div class="col-8">
+            <label>{{ transAction.state.name}}</label>
         </div>
     </div>
 
     <div class="row mb-2">
-        <div class="col-6">
+        <div class="col-4">
             <label>Action Owner</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner" inputId="actionOwnerId" (onSelected)="transAction.actionOwner=($event);" [preSelected]="{name:transAction.actionOwner.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
     <div class="row mb-2">
-        <div class="col-6">
+        <div class="col-4">
             <label>Next Action<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <auto-suggestion [data]="actionDataList" display="name" placeholder="Next Action Name" name="nextactionName" inputId="nextActionId" (onSelected)="transAction.nextAction=($event);onSelectNextAction($event.id)" [preSelected]="{name:transAction.nextAction.name}"
                 autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
     <div class="row mb-2">
-        <div class="col-6">
+        <div class="col-4">
             <label>Target Time<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <uj-date-time-picker (onChanged)="transAction.targetTime = $event" [dateTimeValue]="transAction.targetTime" [isTime]="false">
             </uj-date-time-picker>
         </div>
@@ -114,9 +112,46 @@
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,null)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransNextAction()">{{button}}</button>
         </div>
     </div>
 </div>
 <!-- end next action form -->
+<!-- start:state add -->
+<div *ngIf="transAction.formType==1" class="modal-body">
+    <div class="row">
+        <div class="col-4">
+            <label><b>Process Name :</b> </label>
+        </div>
+        <div class="col-8">
+            <label> {{ transAction.process.name}}</label>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-4">
+            <label><b>State : </b></label>
+        </div>
+        <div class="col-8">
+            <label>{{transAction.state.name}}</label>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-4">
+            <label>Next State : <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-8">
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);getNextActionList();" [preSelected]="{name:transAction.nextState.name}" autocomplete="off">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-right">
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(true,1)">Cancel</button>
+            <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransNextState()">{{button}}</button>
+        </div>
+    </div>
+</div>
+<!-- end: state add -->

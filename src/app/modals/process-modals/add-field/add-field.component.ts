@@ -79,7 +79,7 @@ export class AddFieldComponent implements OnInit {
     let tmpJson = {
       param: this.name,
       type: this.typeId,
-      drpOption: this.fixValues,
+      drpOption: (this.isFixedValue) ? this.fixValues : null,
       is_required: this.isRequired,
       order: this.order
 
@@ -89,7 +89,8 @@ export class AddFieldComponent implements OnInit {
       refid: this.refId,
       refType: this.refType,
       type: this.formType,
-      info: JSON.stringify(tmpJson)
+      info: JSON.stringify(tmpJson),
+      requestId: (this.fieldId > 0) ? this.fieldId : null
     }
     console.log("params", params);
     this.common.loading++;
@@ -99,6 +100,7 @@ export class AddFieldComponent implements OnInit {
         console.log(res);
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
+          this.resetData();
           this.getFieldName();
         }
         else {
@@ -251,15 +253,22 @@ export class AddFieldComponent implements OnInit {
   }
 
   setData(data) {
-    this.typeId = data.col_type;
-    this.name = data.col_title;
-    this.fixValues = data.newvalues ? JSON.parse(data.newvalues) : this.fixValues;
-    this.isFixedValue = data.is_active;
-    this.isRequired = data.is_autocalculate;
+    // this.typeId = data.col_type;
+    // this.name = data.col_title;
+    // this.fixValues = data.newvalues ? JSON.parse(data.newvalues) : this.fixValues;
+    // this.isFixedValue = data.is_active;
+    // this.isRequired = data.is_autocalculate;
+    // this.btn1 = "Update";
+    this.typeId = data.param_type;
+    this.name = data.param_name;
+    this.fixValues = data._param_info ? JSON.parse(data._param_info) : this.fixValues;
+    this.isFixedValue = (data._param_info && data._param_info.length);
+    this.isRequired = data.is_required;
+    this.fieldId = data._matrixid;
     this.btn1 = "Update";
   }
 
-  resetData(data) {
+  resetData() {
     this.typeId = null;
     this.name = null;
     this.isFixedValue = false;

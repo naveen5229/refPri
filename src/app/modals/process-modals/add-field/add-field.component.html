@@ -59,7 +59,7 @@
     </div>
     <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField"></smart-table>
 
-    <div *ngIf="data && data.length" class="row">
+    <div *ngIf="(data && data.length) || refType==2" class="row">
         <div class="col-12 text-right">
             <button class="btn btn-primary btn-sm" name="openAssignField" (click)="openAssignForm()">Assign Form</button>
         </div>
