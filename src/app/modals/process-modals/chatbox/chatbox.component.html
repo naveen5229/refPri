@@ -47,14 +47,14 @@
 
                     <td *ngIf="!showAssignUserAuto" class="bg-lavender">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
-                            <div class="col-6 text-right">
+                            <!-- <div class="col-6 text-right">
                                 <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign to new user" (click)="showAssignUserAuto=1"><i
                               class="fa fa-plus"></i></button>
                                 <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()" title="User Logs"></i>
-                            </div>
+                            </div> -->
                         </div>
                     </td>
                     <td *ngIf="showAssignUserAuto==1" class="bg-lavender">

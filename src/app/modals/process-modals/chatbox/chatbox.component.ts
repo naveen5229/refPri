@@ -302,7 +302,7 @@ export class ChatboxComponent implements OnInit {
       console.log("api data", res);
       // if (!res['data']) return;
       if (res['code'] == 1) {
-        this.transActionData = res['data'];
+        this.transActionData = res['data'] || [];
         this.transActionData.length ? this.setTable() : this.resetTable();
       }
     }, err => {

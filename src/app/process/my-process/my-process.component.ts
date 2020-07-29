@@ -12,6 +12,7 @@ import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
 import { AddTransactionActionComponent } from '../../modals/process-modals/add-transaction-action/add-transaction-action.component';
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
+import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 // import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 // import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 // import { CampaignMessageComponent } from '../../modals/campaign-modals/campaign-message/campaign-message.component';
@@ -264,8 +265,6 @@ export class MyProcessComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        } else if (key == 'identity') {
-          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type) };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -309,8 +308,6 @@ export class MyProcessComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        } else if (key == 'identity') {
-          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type) };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -554,17 +551,13 @@ export class MyProcessComponent implements OnInit {
     }
 
     if (type == 1) {//for me
-      if (lead._status == 2) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeActionStatus.bind(this, lead, type, 5), txt: '', title: "Mark Completed" });
-      } else if (lead._status == 0) {
-        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-      }
-      icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, lead, type), txt: '', title: "Add Primary Info" });
+      icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
+
     } else if (type == 2) { //by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
-      icons.push({ class: 'fas fa-info-circle s-4', action: this.infoMatrix.bind(this, lead, type), txt: '', title: "Add Primary Info" });
+      icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Add Next State" });
 
     } else if (type == 3 && !lead._cc_status) { //cc
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
@@ -591,7 +584,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   editTransaction(lead, type) {
-    console.log("editTransaction:", lead);
+    this.common.showError("Edit Transaction on Working...");
     // let targetEditData = {
     //   rowId: campaign._camptargetid,
     //   campaignId: campaign._campid,
@@ -627,7 +620,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   deleteTransaction(row, type) {
-    console.log("deleteCampaign");
+    this.common.showError("Working...");
     // let params = {
     //   campTargetId: row._camptargetid,
     // }
@@ -656,7 +649,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   addTransContact(lead, type) {
-    console.log("targetAction");
+    this.common.showError("Add Contact on working...");
     // let targetActionData = {
     //   rowId: campaign._camptargetid,
     //   campaignId: campaign._campid,
@@ -677,20 +670,85 @@ export class MyProcessComponent implements OnInit {
     // });
   }
 
-  openTransAction(lead, type) {
+  openTransAction(lead, type, formType = null) {
     console.log("openTransAction");
+    let formTypeTemp = 0;
+    if (!formType) {
+      formTypeTemp = (type == 2) ? 1 : 0;
+    } else {
+      formTypeTemp = formType;
+    }
     let actionData = {
       processId: lead._processid,
       transId: lead._transactionid,
       processName: lead._processname,
       identity: lead.identity,
-      isNextAction: (type == 2) ? true : false,
-      requestId: (type == 1) ? null : null
+      formType: formTypeTemp,
+      requestId: (type == 1) ? lead._transaction_actionid : null,
+      rowData: lead
     };
-    this.common.params = { actionData, adminList: this.adminList, title: "Transaction Action", button: "Add" };
+    let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
+    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      this.getProcessLeadByType(type);
+      if (data.response && data.nextFormType) {
+        // nextFormType: 1 = fromstate, 2=fromaction
+        console.log("res data:", data, lead);
+        if (data.nextFormType == 1) {
+          if (lead._state_form == 1) {
+            this.openTransFormData(lead, type, data.nextFormType);
+          } else {
+            this.openTransAction(lead, type, 2);
+          }
+
+        } else if (data.nextFormType == 2) {
+          if (lead._action_form == 1) {
+            this.openTransFormData(lead, type, data.nextFormType);
+          } else {
+            this.openTransAction(lead, type, 1);
+          }
+        }
+      } else {
+        this.getProcessLeadByType(type);
+      }
+    });
+  }
+
+  openTransFormData(lead, type, formType = null) {
+    console.log("openTransAction");
+    let title = 'Action Form';
+    let refId = 0;
+    let refType = 0;
+    // formType: 1 = stateform, 2=actionform
+    if (formType == 1) {
+      title = 'State Form';
+      refId = lead._state_id;
+      refType = 0;
+    } else if (formType == 2) {
+      title = 'Action Form';
+      refId = lead._action_id;
+      refType = 1;
+    }
+    let actionData = {
+      processId: lead._processid,
+      processName: lead._processname,
+      transId: lead._transactionid,
+      refId: refId,
+      refType: refType,
+      formType: formType,
+    };
+
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log("formData:", formType);
+      if (formType == 2) {
+        this.openTransAction(lead, type, 1);
+      } else if (formType == 1) {
+        this.openTransAction(lead, type, 2);
+      } else {
+        this.getProcessLeadByType(type);
+      }
     });
   }
 
@@ -864,9 +922,18 @@ export class MyProcessComponent implements OnInit {
 
   infoMatrix(lead, type) {
     console.log("infoMatrix");
-    // this.common.params = { 'campaignId': campaign._campid, campaignTargetId: campaign._camptargetid, 'enableForm': true, 'title': 'Primary Info' };
-    // const activeModal = this.modalService.open(InfoMatrixComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-
+    let ref = {
+      // id: lead._processid,
+      id: lead._state_id,
+      type: 0
+    }
+    this.common.params = { ref: ref };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
   }
 
 }
