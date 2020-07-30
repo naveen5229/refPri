@@ -1,3 +1,24 @@
-<p>
-  user-groups works!
-</p>
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-2">
+                <h5>User Groups</h5>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="row">
+            <div class="col-2">
+                <input placeholder="Enter Group Name" name="groupName" class="form-control" maxlength="50" [(ngModel)]="groupForm.name">
+            </div>
+            <div class="col-6">
+                <auto-suggestion (onSelected)="groupForm.users = $event.id" [data]="adminList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="groupForm.users">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row">
+            <smart-table [data]="table.data" [settings]="table.settings" id="userGroupId"></smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>
