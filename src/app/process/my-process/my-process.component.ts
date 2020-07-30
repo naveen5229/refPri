@@ -13,6 +13,7 @@ import { AddTransactionComponent } from '../../modals/process-modals/add-transac
 import { AddTransactionActionComponent } from '../../modals/process-modals/add-transaction-action/add-transaction-action.component';
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
+import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
 // import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 // import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
 // import { CampaignMessageComponent } from '../../modals/campaign-modals/campaign-message/campaign-message.component';
@@ -619,55 +620,52 @@ export class MyProcessComponent implements OnInit {
     // });
   }
 
-  deleteTransaction(row, type) {
-    this.common.showError("Working...");
-    // let params = {
-    //   campTargetId: row._camptargetid,
-    // }
-    // if (row._camptargetid) {
-    //   this.common.params = {
-    //     title: 'Delete Record',
-    //     description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
-    //   }
-
-    //   const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-    //   activeModal.result.then(data => {
-    //     if (data.response) {
-    //       this.common.loading++;
-    //       this.api.post('Campaigns/removeCampTarget', params)
-    //         .subscribe(res => {
-    //           this.common.loading--;
-    //           this.common.showToast(res['msg']);
-    //           this.getProcessLeadByType(type);
-    //         }, err => {
-    //           this.common.loading--;
-    //           console.log('Error: ', err);
-    //         });
-    //     }
-    //   });
-    // }
+  deleteTransaction(lead, type) {
+    let params = {
+      transId: lead._transactionid
+    }
+    if (lead._transactionid) {
+      this.common.params = {
+        title: 'Delete Record',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Processes/deleteTransaction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getProcessLeadByType(type);
+              } else {
+                this.common.showError(res['msg']);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    } else {
+      this.common.showError("Invalid Request");
+    }
   }
 
   addTransContact(lead, type) {
-    this.common.showError("Add Contact on working...");
-    // let targetActionData = {
-    //   rowId: campaign._camptargetid,
-    //   campaignId: campaign._campid,
-    //   campaignName: campaign.CampaignName,
-    //   potential: campaign.Potential,
-    //   name: campaign.Name,
-    //   mobile: campaign._mobileno,
-    //   locationId: campaign._locationid,
-    //   locationName: campaign.Location,
-    //   address: campaign._address,
-    //   camptargetid: campaign._camptargetid
-    // };
-
-    // this.common.params = { targetActionData, title: "Campaign Target Contacts", button: "Add" };
-    // const activeModal = this.modalService.open(AddContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   this.getProcessLeadByType(type);
-    // });
+    // this.common.showError("Add Contact on working...");
+    let editData = {
+      transId: lead._transactionid
+    };
+    this.common.params = { editData, title: "Transaction Contacts", button: "Add" };
+    const activeModal = this.modalService.open(AddTransactionContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getProcessLeadByType(type);
+    });
   }
 
   openTransAction(lead, type, formType = null) {
@@ -685,7 +683,11 @@ export class MyProcessComponent implements OnInit {
       identity: lead.identity,
       formType: formTypeTemp,
       requestId: (type == 1) ? lead._transaction_actionid : null,
-      rowData: lead
+      actionId: (lead._action_id > 0) ? lead._action_id : null,
+      actionName: (lead._action_id > 0) ? lead.action_name : '',
+      stateId: (lead._state_id > 0) ? lead._state_id : null,
+      stateName: (lead._state_id > 0) ? lead.state_name : '',
+      actionOwnerId: lead._action_owner
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };

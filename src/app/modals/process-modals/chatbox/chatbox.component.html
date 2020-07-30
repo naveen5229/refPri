@@ -6,9 +6,6 @@
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
     {{subTitle}}
-    <!-- <div class="action-icon">
-        <span><i class="fa fa-arrow-circle-right" title="Transaction Action" (click)="openTransAction()"></i></span>
-    </div> -->
 </div>
 <div class="modal-body">
     <div class="row">
@@ -95,6 +92,16 @@
             <!-- end : lead users -->
 
             <!-- start: target action list -->
+            <div class="tabs_style_main mt-2">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTab=='actionList'?'active':''" (click)="activeTab='actionList'; getTargetActionData(null)">
+                        Actions
+                    </li>
+                    <li [ngClass]="activeTab=='stateList'?'active':''" (click)="activeTab='stateList'; getTargetActionData(1)">
+                        States
+                    </li>
+                </ul>
+            </div>
             <div class="mt-2">
                 <smart-table *ngIf="transActionData.length" [data]="tableTransActionData.data" [settings]="tableTransActionData.settings" id="tableTransActionData">
                 </smart-table>

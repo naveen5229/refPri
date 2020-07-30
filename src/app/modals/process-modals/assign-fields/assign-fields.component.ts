@@ -24,24 +24,19 @@ export class AssignFieldsComponent implements OnInit {
     public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
-    private modalService: NgbModal,
-  ) {
-    this.common.handleModalSize('class', 'modal-lg', '1100', 'px', 1);
+    private modalService: NgbModal) {
     if (this.common.params && this.common.params.ref) {
       this.refId = this.common.params.ref.id;
       this.refType = this.common.params.ref.type;
       this.getFields();
-
     }
-
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
+
   closeModal(res) {
     this.activeModal.close({ response: res });
   }
-
 
   getFields() {
     this.common.loading++;
