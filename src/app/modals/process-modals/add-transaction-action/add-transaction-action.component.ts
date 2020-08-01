@@ -35,6 +35,7 @@ export class AddTransactionActionComponent implements OnInit {
   remarkDataList = [];
   modeList = [];
   adminList = [];
+  isFormHere = 0;
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -63,11 +64,14 @@ export class AddTransactionActionComponent implements OnInit {
 
       if (this.transAction.formType == 2) {
         this.title = 'Add Transaction Next Action';
+        this.isFormHere = 0;
       } else if (this.transAction.formType == 1) {
         this.title = 'Add Transaction Next State';
+        this.isFormHere = this.common.params.actionData.isStateForm;
       } else {
         this.title = 'Update Transaction Action';
         this.transAction.isCompleted = true;
+        this.isFormHere = this.common.params.actionData.isStateForm;
       }
       if (this.transAction.action.id > 0) {
         this.getActionModeList();
@@ -80,7 +84,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   closeModal(res, nextFormType = null) {
-    this.activeModal.close({ response: res, nextFormType: nextFormType });
+    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: this.isFormHere, state: this.transAction.state });
   }
 
   ngOnInit() { }
@@ -90,7 +94,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessState?processId=" + this.transAction.process.id).subscribe(res => {
       this.common.loading--;
       let stateDataList = res['data'];
-      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate } });
+      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0 } });
       this.checkNextStateList();
     }, err => {
       this.common.loading--;
@@ -104,7 +108,7 @@ export class AddTransactionActionComponent implements OnInit {
       let selectedState = this.stateDataList.find(x => x.id == this.transAction.state.id);
       console.log("selectedState:", selectedState);
       if (selectedState && selectedState._nextstate && selectedState._nextstate.length) {
-        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name } });
+        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name, _state_form: (x._state_form) ? x._state_form : 0 } });
         console.log("nextStateDataList1:", this.nextStateDataList);
       } else {
         this.nextStateDataList = this.stateDataList;
@@ -283,6 +287,7 @@ export class AddTransactionActionComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
+            this.transAction.state = this.transAction.nextState;
             this.resetData();
             // this.transAction.formType = 1;
             this.closeModal(true, 1);

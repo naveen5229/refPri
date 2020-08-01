@@ -564,7 +564,9 @@ export class MyProcessComponent implements OnInit {
       }
 
     } else if (type == -1) {
-      icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
+      // if()
+      icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
+      // icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
     } else if (type == 3 && !lead._cc_status) { //cc
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
 
@@ -692,7 +694,9 @@ export class MyProcessComponent implements OnInit {
       actionName: (lead._action_id > 0) ? lead.action_name : '',
       stateId: (lead._state_id > 0) ? lead._state_id : null,
       stateName: (lead._state_id > 0) ? lead.state_name : '',
-      actionOwnerId: lead._action_owner
+      actionOwnerId: lead._action_owner,
+      isStateForm: lead._state_form,
+      isActionForm: lead._action_form
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -702,14 +706,16 @@ export class MyProcessComponent implements OnInit {
         // nextFormType: 1 = fromstate, 2=fromaction
         console.log("res data:", data, lead);
         if (data.nextFormType == 1) {
-          if (lead._state_form == 1) {
+          lead._state_id = data.state.id;
+          lead.state_name = data.state.name;
+          if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
             this.openTransAction(lead, type, 2);
           }
 
         } else if (data.nextFormType == 2) {
-          if (lead._action_form == 1) {
+          if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
             this.openTransAction(lead, type, 1);
