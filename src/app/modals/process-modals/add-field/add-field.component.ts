@@ -13,6 +13,7 @@ import { AssignFieldsComponent } from '../assign-fields/assign-fields.component'
 })
 export class AddFieldComponent implements OnInit {
   // stateType = null;
+  title = "Add Field";
   refId = null;
   refType = null;
   formType = null;
@@ -65,6 +66,16 @@ export class AddFieldComponent implements OnInit {
       id: 'date',
       name: 'Date'
     }];
+
+    if (!this.refType) {
+      this.title = "Add State Form Field";
+    } else if (this.refType == 1) {
+      this.title = "Add Action Form Field";
+    } else if (this.refType == 2) {
+      this.title = "Add Transaction Form Field";
+    } else if (this.refType == 3) {
+      this.title = "Add Primary Info Form Field";
+    }
     this.getFieldName();
   }
 

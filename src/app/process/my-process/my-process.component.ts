@@ -163,32 +163,36 @@ export class MyProcessComponent implements OnInit {
       startDate = this.common.dateFormatter(this.searchData.startDate);
       endDate = this.common.dateFormatter(this.searchData.endDate);
     }
+    this.resetSmartTableData();
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
-      this.reserSmartTableData();
-      if (type == 1) {//for me
-        this.leadsForMe = res['data'] || [];
-        this.setTableLeadsForMe(type);
-      } else if (type == 2) { //by me
-        this.leadsByMe = res['data'] || [];
-        this.setTableLeadsByMe(type);
-      } else if (type == 3) {
-        this.ccLeads = res['data'] || [];
-        this.setTableCcLeads(type);
-      } else if (type == 4) {
-        this.allCompletedLeads = res['data'] || [];
-        this.setTableAllCompletedLeads(type);
-      } else if (type == 5) {
-        this.unreadLeads = res['data'] || [];
-        this.setTableUnreadLeads(type);
-      } else if (type == 0) {
-        this.missingOwnLeads = res['data'] || [];
-        this.setTableMissingOwnLeads(type);
-      } else if (type == -1) {
-        this.unassignedLeads = res['data'] || [];
-        this.setTableUnassignedLeads(type);
+      // console.log("data", res['data']);
+      if (res['code'] == 1) {
+        if (type == 1) {//for me
+          this.leadsForMe = res['data'] || [];
+          this.setTableLeadsForMe(type);
+        } else if (type == 2) { //by me
+          this.leadsByMe = res['data'] || [];
+          this.setTableLeadsByMe(type);
+        } else if (type == 3) {
+          this.ccLeads = res['data'] || [];
+          this.setTableCcLeads(type);
+        } else if (type == 4) {
+          this.allCompletedLeads = res['data'] || [];
+          this.setTableAllCompletedLeads(type);
+        } else if (type == 5) {
+          this.unreadLeads = res['data'] || [];
+          this.setTableUnreadLeads(type);
+        } else if (type == 0) {
+          this.missingOwnLeads = res['data'] || [];
+          this.setTableMissingOwnLeads(type);
+        } else if (type == -1) {
+          this.unassignedLeads = res['data'] || [];
+          this.setTableUnassignedLeads(type);
+        }
+      } else {
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.common.loading--;
@@ -197,7 +201,7 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
-  reserSmartTableData() {
+  resetSmartTableData() {
     this.tableLeadsForMe.data = {
       headings: {},
       columns: []
@@ -547,6 +551,7 @@ export class MyProcessComponent implements OnInit {
 
     if (type == 1) {//for me
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
+      icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
     } else if (type == 2) { //by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
@@ -751,6 +756,24 @@ export class MyProcessComponent implements OnInit {
       } else {
         this.getProcessLeadByType(type);
       }
+    });
+  }
+
+  openPrimaryInfoFormData(lead, type) {
+    let title = 'Primary Info Form';
+    let actionData = {
+      processId: lead._processid,
+      processName: lead._processname,
+      transId: lead._transactionid,
+      refId: lead._processid,
+      refType: 3,
+      formType: null,
+    };
+
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getProcessLeadByType(type);
     });
   }
 

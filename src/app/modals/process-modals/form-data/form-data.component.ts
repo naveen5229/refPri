@@ -35,8 +35,17 @@ export class FormDataComponent implements OnInit {
       this.transId = this.common.params.actionData.transId;
       this.refId = this.common.params.actionData.refId;
       this.refType = this.common.params.actionData.refType;
-      // this.common.handleModalSize('class', 'modal-lg', '650');
+
       this.getFormDetail();
+    }
+    if (!this.refType) {
+      this.title = "State Form";
+    } else if (this.refType == 1) {
+      this.title = "Action Form";
+    } else if (this.refType == 2) {
+      this.title = "Transaction Form";
+    } else if (this.refType == 3) {
+      this.title = "Primary Info Form";
     }
   }
 

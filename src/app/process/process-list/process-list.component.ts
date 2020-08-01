@@ -152,23 +152,24 @@ export class ProcessListComponent implements OnInit {
       { class: "fas fa-list-alt", action: this.openCatModal.bind(this, process, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, process, 3), title: "Type Mapping" },
       { class: "fas fa-handshake", action: this.addProcessAction.bind(this, process), title: "Add Action" },
-      { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, process), }
+      { class: "fas fa-plus-square", action: this.openFieldModal.bind(this, process, 2), title: "Add Transaction Form Field" },
+      { class: "fas fa-plus-square text-primary", action: this.openFieldModal.bind(this, process, 3), title: "Add Primary Info Field" }
     ];
     return icons;
   }
 
-  openFieldModal(process) {
+  openFieldModal(process, type) {
     let refData = {
       id: process._id,
-      type: 2
+      type: type
     }
     this.common.params = { ref: refData };
     const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.response);
-      }
-    });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     console.log(data.response);
+    //   }
+    // });
   }
 
   addProcessUsers(process) {
