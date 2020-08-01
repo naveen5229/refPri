@@ -31,6 +31,15 @@
     </div>
     <div class="row mb-2">
         <div class="col-4">
+            <label>Action Owner<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-8">
+            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner" inputId="actionOwnerId" (onSelected)="transAction.actionOwner=($event);" [preSelected]="{name:transAction.actionOwner.name}" autocomplete="off">
+            </auto-suggestion>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-4">
             <label>Mode<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">

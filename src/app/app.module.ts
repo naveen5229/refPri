@@ -93,6 +93,7 @@ import { AddTransactionActionComponent } from './modals/process-modals/add-trans
 import { ChatboxComponent } from './modals/process-modals/chatbox/chatbox.component';
 import { AddTransactionStateComponent } from './modals/process-modals/add-transaction-state/add-transaction-state.component';
 import { AddCategoryComponent } from './modals/process-modals/add-category/add-category.component';
+import { AddTransactionContactComponent } from './modals/process-modals/add-transaction-contact/add-transaction-contact.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -153,7 +154,8 @@ const PAGE_COMPONENTS = [
   AddTransactionActionComponent,
   AddTransactionStateComponent,
   AddCategoryComponent,
-  ChatboxComponent
+  ChatboxComponent,
+  AddTransactionContactComponent
 ];
 
 @NgModule({
