@@ -118,20 +118,20 @@
                             <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
                             </uj-date-time-picker>
 
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="transForm.priOwn.id=($event.id);"
-                                [preSelected]="{name:transForm.priOwn.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="oddArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
+                                [preSelected]="oddArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" placeholder="Select Primary Category" name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.priCat.id=($event.id);"
+                                [preSelected]="oddArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.secCat.id=($event.id);"
+                                [preSelected]="oddArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);"
-                                [preSelected]="{name:transForm.type.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="oddArray[i].r_value=($event.name);transForm.type.id=($event.id);"
+                                [preSelected]="oddArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                [preSelected]="{location:transForm.location.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="oddArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
+                                [preSelected]="oddArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
 
                             <!-- dynamic data array -->
@@ -149,20 +149,20 @@
                             <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
                             </uj-date-time-picker>
 
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="transForm.priOwn.id=($event.id);"
-                                [preSelected]="{name:transForm.priOwn.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="evenArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
+                                [preSelected]="evenArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" placeholder="Select Primary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.priCat.id=($event.id);"
+                                [preSelected]="evenArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.secCat.id=($event.id);"
+                                [preSelected]="evenArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);"
-                                [preSelected]="{name:transForm.type.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="evenArray[i].r_value=($event.name);transForm.type.id=($event.id);"
+                                [preSelected]="evenArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                [preSelected]="{location:transForm.location.name}" autocomplete="off">
+                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="evenArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
+                                [preSelected]="evenArray[i].r_value" autocomplete="off">
                             </auto-suggestion>
 
                             <!-- dynamic data array -->

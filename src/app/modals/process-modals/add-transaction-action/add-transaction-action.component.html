@@ -151,7 +151,8 @@
             <label>Next State : <span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);getNextActionList();" [preSelected]="{name:transAction.nextState.name}" autocomplete="off">
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;getNextActionList();" [preSelected]="{name:transAction.nextState.name}"
+                autocomplete="off">
             </auto-suggestion>
         </div>
     </div>

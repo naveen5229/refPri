@@ -702,9 +702,9 @@ export class MyProcessComponent implements OnInit {
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (data.response && data.nextFormType && type != -1) {
+      console.log("res data:", data, lead);
+      if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
-        console.log("res data:", data, lead);
         if (data.nextFormType == 1) {
           lead._state_id = data.state.id;
           lead.state_name = data.state.name;
