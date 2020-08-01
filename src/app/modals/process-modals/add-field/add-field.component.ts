@@ -262,7 +262,7 @@ export class AddFieldComponent implements OnInit {
     this.typeId = data.param_type;
     this.name = data.param_name;
     this.fixValues = data._param_info ? JSON.parse(data._param_info) : this.fixValues;
-    this.isFixedValue = (data._param_info && data._param_info.length);
+    this.isFixedValue = (data._param_info && data._param_info.length) ? true : false;
     this.isRequired = data.is_required;
     this.fieldId = data._matrixid;
     this.btn1 = "Update";

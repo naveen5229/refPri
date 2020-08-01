@@ -41,21 +41,21 @@ export class AddTransactionActionComponent implements OnInit {
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
     console.log("params:", this.common.params);
-
-    // this.title = this.common.params.title ? this.common.params.title : 'Add Transaction Action';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
+    this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
     if (this.common.params && this.common.params.actionData) {
       this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
       this.transAction.formType = (this.common.params.actionData.formType) ? this.common.params.actionData.formType : 0;
       this.transAction.process.id = (this.common.params.actionData.processId > 0) ? this.common.params.actionData.processId : null;
       this.transAction.process.name = (this.common.params.actionData.processId > 0) ? this.common.params.actionData.processName : null;
       this.transAction.transId = (this.common.params.actionData.transId > 0) ? this.common.params.actionData.transId : null;
-      this.transAction.action.id = (this.common.params.actionData.rowData._action_id > 0) ? this.common.params.actionData.rowData._action_id : null;
-      this.transAction.action.name = (this.common.params.actionData.rowData._action_id > 0) ? this.common.params.actionData.rowData.action_name : null;
-      this.transAction.state.id = (this.common.params.actionData.rowData._state_id > 0) ? this.common.params.actionData.rowData._state_id : null;
-      this.transAction.state.name = (this.common.params.actionData.rowData._state_id > 0) ? this.common.params.actionData.rowData.state_name : null;
-      if (this.common.params.actionData.rowData._action_owner > 0) {
-        let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.rowData._action_owner);
+      this.transAction.action.id = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionId : null;
+      this.transAction.action.name = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionName : null;
+      this.transAction.state.id = (this.common.params.actionData.stateId > 0) ? this.common.params.actionData.stateId : null;
+      this.transAction.state.name = (this.common.params.actionData.stateId > 0) ? this.common.params.actionData.stateName : null;
+      if (this.common.params.actionData.actionOwnerId > 0) {
+        let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
+        console.log("actionOwner:", actionOwner);
         if (actionOwner) {
           this.transAction.actionOwner = actionOwner;
         }
@@ -76,7 +76,6 @@ export class AddTransactionActionComponent implements OnInit {
         this.getActionList();
       }
     };
-    this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
     this.getStateList();
   }
 
@@ -189,7 +188,7 @@ export class AddTransactionActionComponent implements OnInit {
         nextActTarTime: null,
         remark: this.transAction.remark,
         modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
-        actionOwnerId: null,
+        actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
         isNextAction: null,
         isCompleted: (this.transAction.isCompleted) ? true : false
       };

@@ -214,7 +214,8 @@ export class TaskComponent implements OnInit {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
+        let adminList = res['data'] || [];
+        this.adminList = adminList.map(x => { return { id: x.id, name: x.name + ' - ' + x.department_name } });
       } else {
         this.common.showError(res['msg']);
       }

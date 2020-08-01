@@ -30,7 +30,7 @@
                     Unread Leads
                 </li>
                 <li [ngClass]="activeTab=='missingOwnLeads'?'active':''" (click)="activeTab='missingOwnLeads'; getProcessLeadByType(0)">
-                    missing Owner Leads
+                    Missing Owner Leads
                 </li>
                 <li [ngClass]="activeTab=='unassignedLeads'?'active':''" (click)="activeTab='unassignedLeads'; getProcessLeadByType(-1)">
                     Unassigned Leads
