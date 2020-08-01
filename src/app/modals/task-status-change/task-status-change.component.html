@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h5>{{title | titlecase}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row mt-1">
+    <div class="col-3">
+      <label>Status:</label>
+    </div>
+    <div class="col-9">
+      <select class="form-controlr" name="taskStatus" class="form-control" [(ngModel)]="taskStatus">
+        <!-- <option value="">Select Status</option> -->
+        <option value="0">Pending</option>
+        <option value="2">Ack</option>
+        <option value="5">Completed</option>
+        <option value="-1">Rejected</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <div class="text-right">
+    <button class="btn btn-primary text-capitalize" id="button" (click)="updateTicket()">Update
+    </button> </div>
+</div>

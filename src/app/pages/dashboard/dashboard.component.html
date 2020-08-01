@@ -1,0 +1,28 @@
+<nb-card>
+    <nb-card-header>
+        <h5>Dashboard</h5>
+    </nb-card-header>
+    <nb-card-body>
+        <table class="table table-bordered mt-2">
+            <thead class="thead" style="background-color:lightgrey">
+                <tr>
+                    <th>#</th>
+                    <th>Project</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Person Working</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dashboardData of dashboard; let i=index;">
+                    <td>0{{i + 1}}</td>
+                    <td>{{dashboardData.project | titlecase}}</td>
+                    <td>{{dashboardData.start_date | date :'dd MMM yyyy hh:mm a '}}</td>
+                    <td>{{dashboardData.end_date | date :'dd MMM yyyy hh:mm a '}}</td>
+                    <td style="color:#00695C; cursor: pointer;" (click)="countWorkingEmployee()">
+                        {{dashboardData.person}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </nb-card-body>
+</nb-card>

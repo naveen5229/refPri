@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h5>Transaction Next State</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <label><b>Process Name : </b></label>
+            <label>{{transState.process.name}}</label>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-6">
+            <label><b>State : </b></label>
+        </div>
+        <div class="col-6">
+            <label>{{transState.state.name}}</label>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-6">
+            <label>Next State : <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transState.nextState=($event);" [preSelected]="{name:transState.nextState.name}" autocomplete="off">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-right">
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
+            <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransNextState()">{{button}}</button>
+        </div>
+    </div>
+</div>
+<!-- end next action form -->

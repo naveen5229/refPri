@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <h5>Ticket Call Rating </h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(currentRate)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="container">
+
+    <div class="row form-group">
+      
+      <div class="col-3 mt-2">
+        <label>Is Negative: <span class="require"></span></label>
+        <input class="larger" type="checkbox" [checked]="isNegetive" (change)="isNegetive = !isNegetive" style="height: 40px; margin-left: 15px;"/>
+      </div>
+
+      <div class="col-3 mt-2">
+        <label>Future Ref: <span class="require"></span></label>
+        <input class="larger" type="checkbox" [checked]="isFutureRef" (change)="isFutureRef = !isFutureRef" style="height: 40px; margin-left: 15px;"/>
+      </div>
+
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6 mt-2">
+        <label>Rating: <span class="require"></span></label>
+        <ngb-rating [(rate)]="currentRate" style="font-size: 25px; margin-left: 15px;" 
+        [ngClass]="{
+   'class1': isNegetive,
+   'class2': !isNegetive
+}" ></ngb-rating>
+      </div>
+
+      <div class="col-6 mt-2">
+        <textarea class="larger" cols="30" type="text" placeholder="Remark" [(ngModel)]='remark' style=" margin-left: 15px;" ></textarea>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div class="row footer">
+    <div class="col ">
+      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal(currentRate)">Cancel</button>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary " type='submit' id="save" (click)="SendRating()">Send</button>
+    </div>
+  </div>
+</div>

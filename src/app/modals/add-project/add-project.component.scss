@@ -1,0 +1,13 @@
+:host ::ng-deep {
+    .fa-edit {
+        color: green;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .fa-trash-alt {
+        margin-right: 10px;
+        color: red;
+        font-size: 18px;
+        cursor: pointer;
+    }
+}

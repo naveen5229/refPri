@@ -1,0 +1,135 @@
+<div class="modal-header">
+    <h5>Raise Field Support Request</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <fieldset>
+        <div class="row">
+            <div class="col-3 text-center">
+                <span style="color: red;">*</span>
+                <label>Select Partner:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectPartner($event)" url="Partners/getPartnerListBySearch" [preSelected]="(requestData.partner.id>0)?{name:requestData.partner.name}:{name:''}" display="name" placeholder="Search By Name" autocomplete="off" name="partnerId"
+                    inputId="partnerId">
+                </auto-suggestion>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-3 text-center">
+                <span style="color: red;">*</span>
+                <label>Select Company:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectCompany($event)" [data]="companyList" [preSelected]="(requestData.company.id>0)?{name:requestData.company.name}:{name:''}" inputId="companyName" name="companyName" display="name" placeholder="Search By Name" autocomplete="off">
+                </auto-suggestion>
+            </div>
+            <div class="col-3 text-center">
+                <span style="color: red;">*</span>
+                <label>Request Type:-</label>
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectRequestType($event)" [data]="requestTypes" display="name" placeholder="Request Type" [preSelected]="(requestData.request_type.id>0)?{name:requestData.request_type.name}:{name:''}" inputId="request_type" name="request_type"
+                    autocomplete="off">
+                </auto-suggestion>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend class="border-bottom">Vehical Info<span class="require"></span></legend>
+        <div class="row mb-1" *ngFor="let v of requestData.vehicalInfo;let i = index;">
+            <div class="col-3">
+                <input type="text" class="form-control" maxlength="12" placeholder="Registration Number" [(ngModel)]="v.regno">
+            </div>
+            <div class="col-3">
+                <auto-suggestion (onSelected)="selectDeviceModal($event,v)" [data]="deviceModals" display="name" placeholder="Device Modal" inputId="deviceModel" name="deviceModel" [preSelected]="(v.device_model.id>0)?{name:v.device_model.name}:{name:''}">
+                </auto-suggestion>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" placeholder="Driver Name" [(ngModel)]="v.driver_name">
+            </div>
+            <div class="col-2">
+                <input class="form-control" maxlength="10" type="tel" [(ngModel)]='v.driver_mobileno' placeholder="Mobile Number">
+            </div>
+            <div *ngIf="!requestData.requestId>0" class="col-1">
+                <button *ngIf="i==0" class="btn btn-primary btn-sm" (click)="addMoreVehical(v)">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button *ngIf="i>0" class="btn btn-danger btn-sm" (click)="removeVehical(i)">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend class="border-bottom">Supervisor Info<span class="require">*</span></legend>
+        <div class="row">
+            <div class="col-3 text-center">
+                <span style="color: red;">*</span>
+                <label>Name:-</label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" placeholder="Supervisor Name" [(ngModel)]="requestData.supervisor_name">
+            </div>
+            <div class="col-3 text-center">
+                <span style="color: red;">*</span>
+                <label>Mobile Number:-</label>
+            </div>
+            <div class="col-3">
+                <input class="form-control" maxlength="10" type="tel" [(ngModel)]='requestData.supervisor_mobileno' placeholder="Mobile Number">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-3 text-center">
+                <label>SIM Provider:-</label>
+            </div>
+            <div class="col-3">
+                <select class="form-control" [(ngModel)]="requestData.sim_provider_id">
+          <option value="0">Airtel</option>
+          <option value="1">Vodafone</option>
+        </select>
+            </div>
+            <div class="col-3 text-center">
+                <span style="color: red;">*</span>
+                <label>Location:-</label>
+            </div>
+            <div class="col-3">
+                <div class="col-8" style="display: inline-block;padding:0;">
+                    <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="locationName" name="locationName" placeholder="Location"
+                        [value]="requestData.location" [preSelected]='{location:requestData.location}' autocomplete="off" [apiMethod]="'getBooster'">
+                    </auto-suggestion>
+                </div>
+                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                    <label class="btn-primary p-1" (click)="searchString='----'; takeAction(null);"><i
+            class="fa fa-plus"></i></label>
+                </div>
+                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                    <label class="btn-primary p-1"><i class="fas fa-globe-africa" title="show installer" (click)="showInstallerMap()"></i></label>
+                </div>
+            </div>
+            <div class="col-1 text-center"></div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-3 text-center">
+                <label>Remark:-</label>
+            </div>
+            <div class="col-3">
+                <textarea type="text" class="form-control" maxlength="150" placeholder="Remark" [(ngModel)]="requestData.remark"></textarea>
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-12">
+            <button style="float: right;" type="submit" id="submit" (click)="addRequest()" class="btn btn-primary"> Add</button>
+        </div>
+    </div>
+
+</div>

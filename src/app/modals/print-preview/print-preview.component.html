@@ -1,0 +1,27 @@
+
+
+<div class="modal-header">
+  <h6 style="height: 50px;" class="modal-title" id="modal-basic-title">Print Table</h6>
+
+  <div class="col-md-10 text-right">
+      <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <span (click)="printHandler()" class="doNotPrint print-icon iconsize"><i class="fa fa-print"></i></span>
+
+  </div>
+
+</div>
+
+<div class="modal-body">
+    <div class="row">
+      <div class="mt-2">
+        <smart-table  [data]="table.data" [settings]="table.settings" id="tollUsage" class="table_data">
+        </smart-table>
+      </div>
+    </div>
+    <!-- <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Admin/searchAdmin"
+          [display]="['name','mobileno']" seperator="-"
+          placeholder="Search By Mobile No. / Name" [preSelected]="preSelected">
+        </auto-suggestion> -->
+</div>

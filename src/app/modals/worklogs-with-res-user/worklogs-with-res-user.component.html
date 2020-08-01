@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h5>Worklog </h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered mt-2">
+        <thead class="thead" style="background-color:lightgrey">
+            <tr>
+                <!-- <th>#</th>
+                <th>Employee Name</th> -->
+                <th>Date</th>
+                <th>Stack</th>
+                <th>Project</th>
+                <th>Module</th>
+                <th>Segment</th>
+                <th>Component</th>
+                <th>Taks</th>
+                <th>Hour</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of userWorkDetail; let i=index;">
+                <!-- <td>0{{i +1 }}</td>
+                <td>{{user.name | titlecase}}</td> -->
+                <td>{{user.date | date :'dd MMM yyyy hh:mm '}}</td>
+                <td>{{user.stack | titlecase}}</td>
+                <td>{{user.project | titlecase }}</td>
+                <td>{{user.module | titlecase}}</td>
+                <td>{{user.segment | titlecase }}</td>
+                <td>{{user.component | titlecase}}</td>
+                <td>{{user.task | titlecase }}</td>
+                <td>{{user.hr | titlecase }}</td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>

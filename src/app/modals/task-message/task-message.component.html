@@ -1,0 +1,176 @@
+<div class="modal-header">
+    <h5 class="m-0">{{title | titlecase}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-header sub-title" *ngIf="subTitle">
+    <span [innerHtml]="subTitle"></span>
+    <div *ngIf="fromPage != 'campaign'" class="action-icon">
+        <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
+        <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle" title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
+
+        <span *ngIf="(ticketData && ticketData._isremind == 1 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell isRemind" title="Check Reminder" (click)="checkReminderSeen()"></i></span>
+        <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell reminderAdded" title="View/Edit Reminder" (click)="showReminderPopup()"></i></span>
+        <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" title="Add Reminder" (click)="showReminderPopup()"></i></span>
+
+        <!-- <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5) && [101,102].includes(ticketType))" (click)="editTaskAssignDate()"><i class="fa fa-calendar-alt text-dark" title="Change Expected Date"></i></span> -->
+        <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5) && [101,102].includes(ticketType))" class="blue cursor-pointer" title="Change Expected Date" (click)="editTaskAssignDate()">{{ticketData.expdate}}</span>
+    </div>
+
+    <div *ngIf="fromPage == 'campaign'" class="action-icon">
+        <span><i class="fa fa-arrow-circle-right" title="Target Action" (click)="addContactAction()"></i></span>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-9">
+            <div class="row mt-1 chat_block" #chat_block>
+                <div class="col-12" *ngFor="let msg of messageList;">
+                    <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
+                        {{msg.comment}}
+                        <span>{{msg.added_date}}</span>
+                    </div>
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'shake animated slow':''">
+                        {{msg.comment}}
+                        <span>{{msg.added_by +" "+msg.added_date}}</span>
+                    </div>
+                </div>
+                <div *ngIf="showLoading" class="col-12 text-center">
+                    <div class="spinner-border"></div>
+                </div>
+            </div>
+
+            <div class="row mt-1 bottom-block">
+                <div class="col-9">
+                    <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                </div>
+                <div class="col-3 text-right button-box">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="(fromPage == 'campaign')? saveLeadMessage() :saveTicketMessage()">Send
+                  </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-0" style="border-left:1px solid black;">
+            <table *ngIf="fromPage != 'campaign'" width="100%">
+                <tr valign="top" class="bg-lightblue">
+                    <td>By:</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}</td>
+                </tr>
+                <tr valign="top" class="bg-lavender">
+                    <td>To:</td>
+                    <td *ngIf="!showAssignUserAuto">{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
+                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn btn-primary btn-sm" title="assign to new user"
+                            (click)="showAssignUserAuto=1"><i
+                            class="fa fa-plus m-0"></i></button>
+                    </td>
+                    <td *ngIf="showAssignUserAuto==1">
+                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser" inputId="assigneeUser">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm" (click)="updateTaskAssigneeUser()"><i
+                            class="fa fa-check m-0"></i></button>
+                    </td>
+                </tr>
+                <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
+                    <td>PO:</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}</td>
+                </tr>
+                <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['projectUsers'] && userListByTask['projectUsers'].length>0">
+                    <td>PU:</td>
+                    <td><span *ngFor="let pu of userListByTask.projectUsers;let i = index">{{pu.project_user}}<br></span></td>
+                </tr>
+                <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
+                    <td>EU:</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
+                </tr>
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td>CC:</td>
+                    <td>
+                        <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
+                            <i class="fa fa-minus-circle cursor-pointer mr-0" style="color: cadetblue;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
+                            {{ccu.cc_user}}
+                        <br></span>
+                    </td>
+                </tr>
+                <!-- <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].rep_user">
+                    <td>RU:</td>
+                    <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
+                </tr> -->
+
+                <!-- <tr valign="top" *ngIf="taskId && taskId>0"> -->
+                <tr valign="top">
+                    <td colspan="2" class="pt-2">
+                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- start: lead users -->
+            <table *ngIf="fromPage == 'campaign'" width="100%">
+                <tr valign="top" class="bg-lightblue">
+                    <td>By:</td>
+                    <td>{{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].assignby:''}}</td>
+                </tr>
+                <tr valign="top" class="bg-lavender">
+                    <td>PO:</td>
+                    <td *ngIf="!showAssignUserAuto">{{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
+                        <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign to new user" (click)="showAssignUserAuto=1"><i
+                            class="fa fa-plus"></i></button>
+                        <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()"></i>
+                    </td>
+                    <td *ngIf="showAssignUserAuto==1">
+                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Primary Owner" autocomplete="off" name="primaryOwner" inputId="primaryOwner">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm" (click)="updateLeadPrimaryOwner()"><i
+                            class="fa fa-check"></i></button>
+                    </td>
+                </tr>
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td>CC:</td>
+                    <td><span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{ccu.cc_user}}<br></span></td>
+                </tr>
+                <tr valign="top">
+                    <td colspan="2" class="pt-2">
+                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        </auto-suggestion>
+                        <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToLead()">Add CC User</button>
+                    </td>
+                </tr>
+            </table>
+            <!-- end : lead users -->
+        </div>
+    </div>
+
+
+    <!-- start: lead userlogs modal -->
+    <div class="modal" id="userLogsModal" #userLogsModal>
+        <div class="modal-dialog mt-3">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#fff;">User Logs</h5>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeLeadUserLogsModal()">&times;</button>
+                </div>
+                <div class="modal-body p-0">
+                    <table *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length" class="table table-bordered table-hover">
+                        <thead class="thead" style="background-color: #c0b2b2">
+                            <tr style="text-align:center">
+                                <th>Name</th>
+                                <th>Add Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let l of userListByTask['userLogs']; let i = index;" style="text-align:center">
+                                <td>{{l.user_name}}</td>
+                                <td>{{l.addtime}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end: lead userlogs modal -->
+
+</div>

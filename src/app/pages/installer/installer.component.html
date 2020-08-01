@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6">
+                <h5>Installer</h5>
+            </div>
+            <div class="col-6 text-right">
+                <button type="submit" (click)="showInstallerMap()" class="btn btn-primary btn-sm mr-2">Installer View</button>
+                <button (click)="uploadDataByCsv()" class="btn btn-primary btn-sm mr-2">
+                    Upload CSV
+                </button>
+                <button (click)="showInstallerModal(null)" class="btn btn-primary btn-sm">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <smart-table *ngIf="installerlist.length>0" [data]="tableInstallerList.data" [settings]="tableInstallerList.settings" id="tableInstallerList">
+            </smart-table>
+            <div class="row no-record" *ngIf="installerlist.length==0">No Data Available</div>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Attendance Monthly Summary</h5>
+    <button style="float: right;" type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-1">
+            Month:
+        </div>
+        <div class="col-2">
+            <month-picker (select)="selectedDates = $event; onSelectMonth();"></month-picker>
+        </div>
+        <div class="col-6 text-left">
+            <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)" class="btn btn-primary btn-sm mr-2">Get Monthly Report</button>
+            <button type="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get Final Report</button>
+        </div>
+        <div class="col-3 text-right" style="margin-top: -15px;">
+            <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
+        </div>
+    </div>
+    <br>
+
+    <div class="row form-group" style="overflow: auto;" *ngIf="!reportType">
+        <div class="col-12">
+            <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover" id='attendanceSummary'>
+                <thead class="thead" style="background-color: #c0b2b2">
+                    <tr style="text-align:center">
+                        <th title="Name">Name</th>
+                        <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];" [title]="checkHolidayTypeTitle(department.htype)" [style.background]="checkHolidayTypeColor(department.htype)">{{department.date}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let activity of filteredAttendanceSummaryList; let i = index;">
+                        <td>{{activity.name}}</td>
+                        <td *ngFor="let dt of activity.data; let i = index;" [style.background]="checkHolidayTypeColor(dt.htype)" (click)="showShiftLogPopup(dt)">
+                            <!-- <i *ngIf='dt.present' title="p" class="fa fa-check text-success"></i> -->
+                            <span *ngIf='dt.present' [title]="dt.present" [style.color]="checkPresentTypeColor(dt)" (click)="(dt.present=='L')?markUnpaidLeave(dt):null" (dblclick)="deleteShiftLog(dt)">{{dt.present}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="reportType=='final'">
+        <div class="col-12">Final Report</div>
+        <smart-table [data]="tableFinalAttendanceList.data" [settings]="tableFinalAttendanceList.settings" id="tableFinalAttendanceList">
+        </smart-table>
+    </div>
+
+</div>

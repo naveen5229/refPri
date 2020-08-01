@@ -1,0 +1,72 @@
+<nb-card>
+    <nb-card-header>
+        Travel Distance
+    </nb-card-header>
+    <nb-card-body style="min-height: 450px;">
+        <div class="container">
+            <div class="row ">
+                <div class="col-2 p-0">
+                    <div class="form-group">
+                        <label>Select Partner</label>
+                        <auto-suggestion (onSelected)="selectPartner($event)" url="Partners/getPartnerListBySearch" [preSelected]="(partner.id>0)?{name:partner.name}:{name:''}" display="name" placeholder="Search By Partner Name" autocomplete="off" name="partnerId" inputId="partnerId">
+                        </auto-suggestion>
+                    </div>
+                </div>
+                <div class="col-2 pr-0">
+                    <div class="form-group">
+                        <label>Select Installer</label>
+                        <auto-suggestion (onSelected)="selectInstaller($event)" [data]="selectedInstaller" display="name" placeholder="Select Installer" inputId="selectInstaller" name="selectInstaller" [preSelected]="(installer.id>0)?{name:installer.name}:{name:''}">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="true">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="true" [isStart]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    <button class="btn btn-primary btn-sm mt-4" (click)="getTravelDistance()">Submit</button>
+                    <button class="btn btn-primary btn-sm ml-2 mt-4" (click)="clearMap()">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-4">
+                <table class="table table-bordered table-hover" *ngIf="final.length">
+                    <thead class="thead" style="background-color: #c0b2b2">
+                        <tr>
+                            <th colspan="3" style="text-align: center; background-color: cadetblue;">Travel Details</th>
+                        </tr>
+                        <tr style="text-align:center">
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Kms</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="text-align:center">
+                            <td>{{final[0].startDate}} </td>
+                            <td>{{final[0].endDate}}</td>
+                            <td>{{final[0].km}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div #map id="map"> </div>
+
+    </nb-card-body>
+</nb-card>

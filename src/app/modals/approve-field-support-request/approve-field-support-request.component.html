@@ -1,0 +1,46 @@
+<div class="modal-header">
+    <h5>Approve Field Support Request</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Partner:</label>
+        </div>
+        <div class="col-6">
+            <label>{{approveForm.partner.name}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>Installer:</label>
+        </div>
+        <div class="col-6">
+            <label>{{approveForm.installer.name}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>Amount:</label>
+        </div>
+        <div class="col-6">
+            <label>{{approveForm.amount}}</label>
+        </div>
+    </div>
+    <div *ngIf="approveForm.status==-2" class="row">
+        <div class="col-4">
+            <label>Rmark:</label>
+        </div>
+        <div class="col-6">
+            <textarea type="text" class="form-control" maxlength="150" placeholder="Remark" [(ngModel)]="approveForm.remark"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <button class="btn text-capitalize" [ngClass]="(approveForm.status==-2)?'btn-danger':'btn-primary'" (click)="approveFieldSupportRequest()">{{btn}}</button>
+        </div>
+    </div>
+</div>
