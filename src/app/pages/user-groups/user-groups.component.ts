@@ -34,10 +34,18 @@ export class UserGroupsComponent implements OnInit {
   constructor(public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal) {
+    this.common.refresh = this.refresh.bind(this);
     this.getAllAdmin();
+    this.getUserGroupList();
   }
 
   ngOnInit() { }
+
+  refresh() {
+    this.resetForm();
+    this.getAllAdmin();
+    this.getUserGroupList();
+  }
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
@@ -55,7 +63,7 @@ export class UserGroupsComponent implements OnInit {
 
   getUserGroupList() {
     this.common.loading++;
-    this.api.get('Admin/getUserGroups')
+    this.api.get('UserRole/getUserGroups')
       .subscribe(res => {
         this.common.loading--;
         this.groupList = res['data'] || [];
@@ -102,7 +110,7 @@ export class UserGroupsComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(row)
+            // icons: this.actionIcons(row)
           };
         } else {
           column[key] = { value: row[key], class: 'black', action: '' };
@@ -122,6 +130,14 @@ export class UserGroupsComponent implements OnInit {
     return icons;
   }
 
+  resetForm() {
+    this.groupForm = {
+      requestId: null,
+      name: "",
+      users: []
+    }
+  }
+
   addGroup() {
     let params = {
       requestId: (this.groupForm.requestId > 0) ? this.groupForm.requestId : null,
@@ -129,12 +145,13 @@ export class UserGroupsComponent implements OnInit {
       users: (this.groupForm.users && this.groupForm.users.length) ? JSON.stringify(this.groupForm.users) : null
     };
     this.common.loading++;
-    this.api.post('Admin/addUserGroup', params)
+    this.api.post('UserRole/addUserGroup', params)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['msg']);
+            this.resetForm();
             this.getUserGroupList();
           } else {
             this.common.showError(res['msg']);
@@ -160,23 +177,22 @@ export class UserGroupsComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.get('Admin/deleteUserGroup' + params)
-            .subscribe(res => {
-              this.common.loading--;
-              if (res['code'] == 1) {
-                if (res['data'][0].y_id > 0) {
-                  this.common.showToast(res['msg']);
-                  this.getUserGroupList();
-                } else {
-                  this.common.showError(res['msg']);
-                }
+          this.api.get('UserRole/deleteUserGroup' + params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getUserGroupList();
               } else {
                 this.common.showError(res['msg']);
               }
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
         }
       });
     } else {

@@ -25,6 +25,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'User Groups',
+        icon: 'grid-outline',
+        link: '/pages/user-groups',
+        home: true,
+      },
+      {
         title: 'Ticket-Call-Mapping',
         icon: 'file-text-outline',
         link: '/pages/ticket-call-mapping',
@@ -313,12 +319,6 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'My Process',
         icon: 'grid-outline',
         link: '/pages/my-process',
-        home: true,
-      },
-      {
-        title: 'User Groups',
-        icon: 'grid-outline',
-        link: '/pages/user-groups',
         home: true,
       }
     ]

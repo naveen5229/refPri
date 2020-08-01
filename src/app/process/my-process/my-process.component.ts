@@ -4,9 +4,6 @@ import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
-// import { CampaignTargetActionComponent } from '../../modals/campaign-modals/campaign-target-action/campaign-target-action.component';
-// import { AddContactComponent } from '../../modals/campaign-modals/add-contact/add-contact.component';
-// import { TargetCampaignComponent } from '../../modals/campaign-modals/target-campaign/target-campaign.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
@@ -14,9 +11,6 @@ import { AddTransactionActionComponent } from '../../modals/process-modals/add-t
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
-// import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
-// import { InfoMatrixComponent } from '../../modals/info-matrix/info-matrix.component';
-// import { CampaignMessageComponent } from '../../modals/campaign-modals/campaign-message/campaign-message.component';
 @Component({
   selector: 'ngx-my-process',
   templateUrl: './my-process.component.html',
@@ -84,7 +78,7 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
-  tableLeadsMissingOwn = {
+  tableMissingOwnLeads = {
     data: {
       headings: {},
       columns: []
@@ -94,7 +88,7 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
-  tableLeadsUnassigned = {
+  tableUnassignedLeads = {
     data: {
       headings: {},
       columns: []
@@ -224,12 +218,12 @@ export class MyProcessComponent implements OnInit {
       headings: {},
       columns: []
     };
-    this.tableLeadsMissingOwn.data = {
+    this.tableMissingOwnLeads.data = {
       headings: {},
       columns: []
     };
 
-    this.tableLeadsUnassigned.data = {
+    this.tableUnassignedLeads.data = {
       headings: {},
       columns: []
     };
@@ -450,7 +444,7 @@ export class MyProcessComponent implements OnInit {
   // end cc leads
   // start:missing own lead
   setTableMissingOwnLeads(type) {
-    this.tableLeadsMissingOwn.data = {
+    this.tableMissingOwnLeads.data = {
       headings: this.generateHeadingsMissingOwnLeads(),
       columns: this.getTableColumnsMissingOwnLeads(type)
     };
@@ -492,9 +486,9 @@ export class MyProcessComponent implements OnInit {
   // end:missing own lead
   // start:unsigned lead
   setTableUnassignedLeads(type) {
-    this.tableLeadsUnassigned.data = {
-      headings: this.generateHeadingsMissingOwnLeads(),
-      columns: this.getTableColumnsMissingOwnLeads(type)
+    this.tableUnassignedLeads.data = {
+      headings: this.generateHeadingsUnassignedLeads(),
+      columns: this.getTableColumnsUnassignedLeads(type)
     };
     return true;
   }
@@ -558,8 +552,14 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
-      icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Add Next State" });
+      if (lead._state_type == 2) {
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Completed" });
+      } else {
+        icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Add Next State" });
+      }
 
+    } else if (type == -1) {
+      icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
     } else if (type == 3 && !lead._cc_status) { //cc
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
 
@@ -693,7 +693,7 @@ export class MyProcessComponent implements OnInit {
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      if (data.response && data.nextFormType) {
+      if (data.response && data.nextFormType && type != -1) {
         // nextFormType: 1 = fromstate, 2=fromaction
         console.log("res data:", data, lead);
         if (data.nextFormType == 1) {
@@ -755,48 +755,47 @@ export class MyProcessComponent implements OnInit {
   }
 
   updateTransactionStatus(lead, type, status) {
-    console.log("updateTransactionStatus");
-    // if (campaign._camptargetid) {
-    //   let params = {
-    //     leadId: campaign._camptargetid,
-    //     status: status
-    //   }
-    //   this.common.loading++;
-    //   this.api.post('Campaigns/updateCampaignTargetTkt', params).subscribe(res => {
-    //     this.common.loading--;
-    //     if (res['code'] > 0) {
-    //       this.common.showToast(res['msg']);
-    //       this.getProcessLeadByType(type);
-    //     } else {
-    //       this.common.showError(res['data']);
-    //     }
-    //   }, err => {
-    //     this.common.loading--;
-    //     this.common.showError();
-    //     console.log('Error: ', err);
-    //   });
-    // } else {
-    //   this.common.showError("campaign ID Not Available");
-    // }
+    // console.log("updateTransactionStatus");
+    if (lead._transactionid) {
+      let params = {
+        transId: lead._transactionid,
+        status: status
+      }
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Transaction ID Not Available");
+    }
   }
 
-  changeActionStatus(campaign, type, status) {
-    console.log("changeCampaignStatusWithConfirm");
-    // if (campaign._camptargetid) {
-    //   let preText = (status == 5) ? "Complete" : "Reject";
-    //   this.common.params = {
-    //     title: preText + ' Lead',
-    //     description: `<b>` + 'Are You Sure You ' + preText + ` this Lead <b>`,
-    //   }
-    //   const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-    //   activeModal.result.then(data => {
-    //     if (data.response) {
-    //       this.updateCampaignStatus(campaign, type, status);
-    //     }
-    //   });
-    // } else {
-    //   this.common.showError("Lead ID Not Available");
-    // }
+  updateTransactionStatusWithConfirm(lead, type, status) {
+    let preText = "Complete";
+    this.common.params = {
+      title: preText + ' Lead',
+      description: `<b>` + 'Are You Sure to ' + preText + ` this Lead <b>`,
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.updateTransactionStatus(lead, type, status);
+      }
+    });
   }
 
   transMessage(lead, type) {
