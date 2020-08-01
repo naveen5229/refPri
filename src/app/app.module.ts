@@ -82,10 +82,18 @@ import { AddStateComponent } from './modals/process-modals/add-state/add-state.c
 import { AddFieldComponent } from './modals/process-modals/add-field/add-field.component';
 import { AxestrackMappingComponent } from './modals/axestrack-mapping/axestrack-mapping.component';
 import { AddActionComponent } from './modals/process-modals/add-action/add-action.component';
+import { AddvehicleComponent } from './modals/addvehicle/addvehicle.component';
+import { ImportbulkvehicleComponent } from './modals/importbulkvehicle/importbulkvehicle.component';
 import { AssignFieldsComponent } from './modals/process-modals/assign-fields/assign-fields.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormDataComponent } from './modals/process-modals/form-data/form-data.component';
 import { UserMappingComponent } from './modals/process-modals/user-mapping/user-mapping.component';
+import { AddTransactionComponent } from './modals/process-modals/add-transaction/add-transaction.component';
+import { AddTransactionActionComponent } from './modals/process-modals/add-transaction-action/add-transaction-action.component';
+import { ChatboxComponent } from './modals/process-modals/chatbox/chatbox.component';
+import { AddTransactionStateComponent } from './modals/process-modals/add-transaction-state/add-transaction-state.component';
+import { AddCategoryComponent } from './modals/process-modals/add-category/add-category.component';
+import { AddTransactionContactComponent } from './modals/process-modals/add-transaction-contact/add-transaction-contact.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -136,9 +144,18 @@ const PAGE_COMPONENTS = [
   AddFieldComponent,
   AxestrackMappingComponent,
   AddActionComponent,
+  AddvehicleComponent,
+  ImportbulkvehicleComponent,
   AssignFieldsComponent,
   FormDataComponent,
   UserMappingComponent,
+  AddActionComponent,
+  AddTransactionComponent,
+  AddTransactionActionComponent,
+  AddTransactionStateComponent,
+  AddCategoryComponent,
+  ChatboxComponent,
+  AddTransactionContactComponent
 ];
 
 @NgModule({
@@ -147,6 +164,8 @@ const PAGE_COMPONENTS = [
     ...PAGE_COMPONENTS,
     InfoMatrixComponent,
     AxestrackMappingComponent,
+    AddvehicleComponent,
+    ImportbulkvehicleComponent,
 
     // SendmessageComponent,
     // GenericModelComponent,

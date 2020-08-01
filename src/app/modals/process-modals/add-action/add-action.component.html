@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
   <span aria-hidden="true">&times;</span>
 </button>
 </div>
@@ -17,20 +17,21 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-4">
-                <label>name<span class="require">*</span></label>
-            </div>
-            <div class="col-8">
+        <div class="row mb-2">
+            <div class="col-2 pr-0">
+                <label>name<span class="text-danger">*</span></label>
                 <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-4">
-                <label>Modes:</label>
+            <div class="col-2 pr-0">
+                <label>Threshold</label>
+                <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)" [(ngModel)]="actionForm.threshold">
             </div>
-            <div class="col-8">
+            <div class="col-4 pr-0">
+                <label>Next Action</label>
+                <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action" (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
+            </div>
+            <div class="col-4 pr-0">
+                <label>Modes</label>
                 <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId" autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true" (onSelected)="actionForm.modes = $event">
                 </auto-suggestion>
             </div>
@@ -39,7 +40,7 @@
     </div>
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveProcessAction()">{{button}}</button>
         </div>
     </div>
@@ -47,7 +48,7 @@
 
 <div class="modal-footer">
     <div class="row">
-        <div class="mt-2">
+        <div class="col-12">
             <smart-table [data]="table.data" [settings]="table.settings"></smart-table>
         </div>
     </div>

@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h5>{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="container">
+        <div class="row">
+            <div class="col-4 pr-0">
+                <label>Name<span class="text-danger">*</span></label>
+                <input type="text" maxlength="60" placeholder="Name" [(ngModel)]="contactForm.name" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-3 pr-0">
+                <label>Mobile No.</label>
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" placeholder="Mobile No" [(ngModel)]="contactForm.mobile" class="form-control" autocomplete="off" required>
+            </div>
+            <div class="col-4 pr-0">
+                <label>Email</label>
+                <input type="text" maxlength="150" placeholder="Email" [(ngModel)]="contactForm.email" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-1 mt-4">
+                <button class="btn btn-primary btn-sm mt-2" type='submit' (click)="addTransactionContact()">{{button}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="row">
+        <div>
+            <smart-table [data]="table.data" [settings]="table.settings">
+            </smart-table>
+        </div>
+    </div>
+
+</div>

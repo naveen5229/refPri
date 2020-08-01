@@ -47,6 +47,8 @@ import { AddPagesComponent } from './add-pages/add-pages.component';
 import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
 import { ProcessModule } from '../process/process.module';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
+import { CompanykycComponent } from './companykyc/companykyc.component';
+import { UserGroupsComponent } from './user-groups/user-groups.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -98,7 +100,9 @@ import { UserMappingComponent } from './user-mapping/user-mapping.component';
     UserRoleComponent,
     AddPagesComponent,
     WifiLogsComponent,
-    UserMappingComponent
+    UserMappingComponent,
+    CompanykycComponent,
+    UserGroupsComponent
   ],
 })
 export class PagesModule {

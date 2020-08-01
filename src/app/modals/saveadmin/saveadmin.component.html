@@ -116,7 +116,7 @@
                 <label>Attendance Medium :-</label>
             </div>
             <div class="col-lg-8">
-                <select class="form-control" [(ngModel)]="selectedItems" (change)="Fouser.attenMedium='000'" placeholder="Select Medium">
+                <select class="form-control" [(ngModel)]="selectedItems" (change)="onSelectAttenMedium()" placeholder="Select Medium">
                     <option *ngFor="let t of dropdownList" [value]="t.id">{{t.item_text}}</option>
                 </select>
             </div>
@@ -124,7 +124,7 @@
         <!-- start:atten medium -->
         <div class="row mt-2">
             <div class="col-12">
-                <div *ngIf="selectedItems==1" class="row" style="margin-left: 15px;">
+                <!-- <div *ngIf="selectedItems==1" class="row" style="margin-left: 15px;">
                     <div class="col-4"></div>
                     <div class="col-2">
                         <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
@@ -134,23 +134,19 @@
                         <input id="attenMediumYes" type="radio" class="custom-control-input" [value]="'100'" [(ngModel)]="Fouser.attenMedium" name="attenMediumValue">
                         <label class="custom-control-label" for="attenMediumYes">Restricted</label>
                     </div>
-                </div>
+                </div> -->
                 <div *ngIf="selectedItems==2" class="row" style="margin-left: 15px;">
                     <div class="col-4"></div>
-                    <div class="col-2">
-                        <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
-                        <label class="custom-control-label" for="attenMediumNo">No</label>
-                    </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <input id="attenMediumYes" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'010'" name="attenMediumValue">
                         <label class="custom-control-label" for="attenMediumYes">Restricted</label>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <input id="attenMediumAll" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'020'" name="attenMediumValue">
                         <label class="custom-control-label" for="attenMediumAll">No Restricted</label>
                     </div>
                 </div>
-                <div *ngIf="selectedItems==3" class="row" style="margin-left: 15px;">
+                <!-- <div *ngIf="selectedItems==3" class="row" style="margin-left: 15px;">
                     <div class="col-4"></div>
                     <div class="col-2">
                         <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
@@ -160,7 +156,7 @@
                         <input id="attenMediumYes" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'001'" name="attenMediumValue">
                         <label class="custom-control-label" for="attenMediumYes">Restricted</label>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- end:atten medium -->

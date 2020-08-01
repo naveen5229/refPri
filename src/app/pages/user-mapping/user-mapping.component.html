@@ -21,6 +21,9 @@
                 <li [ngClass]="activeTab=='companyUserMapping'?'active':''" (click)="activeTab='companyUserMapping';">
                     Company User Mapping
                 </li>
+                <li [ngClass]="activeTab=='vehicleMapping'?'active':''" (click)="activeTab='vehicleMapping';">
+                  Vehicle Mapping
+              </li>
             </ul>
         </div>
 
@@ -70,14 +73,14 @@
     </div>
 
     <div class="row" *ngIf="activeTab == 'companyUserMapping'">
-      <div class="col-6">
+      <!-- <div class="col-6">
       <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
       <div class="col-8" style="display:inline-block">
         <auto-suggestion (onSelected)="getElogistPartnerUser($event)" [display]="['name','mobileno']" [data]="partnerMapping"
         placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
         </auto-suggestion>
       </div>
-    </div>
+    </div> -->
     <div class="col-6">
       <label class="col-4" style="display:inline-block;" >Company User</label>
       <div class="col-8" style="display:inline-block">
@@ -91,8 +94,26 @@
         <smart-table *ngIf="companyUserMappings.length" [data]="table3.data" [settings]="table3.settings"></smart-table>
     </div>
     </div>
-    
   </div>
-      </div>
+
+  <div class="row" *ngIf="activeTab == 'vehicleMapping'">
+    <div class="col-6">
+    <label class="col-4" style="display:inline-block;" >Elogist Company</label>
+    <div class="col-8" style="display:inline-block">
+      <auto-suggestion (onSelected)="getElogistPartnerUserForVehicle($event)" [display]="['name']" [data]="companyData"
+      placeholder="Elogist Company"   [preSelected]="null" className="borderStyle" inputId="id">
+      </auto-suggestion>
+    </div>
+    </div>
+  <div class="col-sm-3 offset-sm-3">
+    <button  type="submit" class="btn btn-primary" (click)="addVehicle()">Add Vehicle</button>
+  </div>
+  <div class="col-12">
+    <div class="mt-2">
+      <smart-table *ngIf="vehicleMapping.length" [data]="table4.data" [settings]="table4.settings"></smart-table>
+  </div>
+  </div>
+  </div>
+  </div>
   </nb-card-body>
 </nb-card>

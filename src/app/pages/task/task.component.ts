@@ -3,7 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
+// import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
@@ -11,8 +11,8 @@ import { AddProjectComponent } from '../../modals/add-project/add-project.compon
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TaskScheduleNewComponent } from '../../modals/task-schedule-new/task-schedule-new.component';
 import { TaskScheduleMasterComponent } from '../../modals/task-schedule-master/task-schedule-master.component';
-import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
-import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
+// import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
+// import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 // import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 // import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
@@ -214,7 +214,8 @@ export class TaskComponent implements OnInit {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
+        let adminList = res['data'] || [];
+        this.adminList = adminList.map(x => { return { id: x.id, name: x.name + ' - ' + x.department_name } });
       } else {
         this.common.showError(res['msg']);
       }
@@ -1725,18 +1726,19 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  assignModal() {
-    let ref = {
-      id: 2,
-      type: 2
-    }
-    this.common.params = { ref: ref };
-    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.response);
-      }
-    });
-  }
+  // assignModal() {
+  //   let ref = {
+  //     id: 2,
+  //     type: 2
+  //   }
+  //   this.common.params = { ref: ref };
+  //   // const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  //   const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  //   activeModal.result.then(data => {
+  //     if (data.response) {
+  //       console.log(data.response);
+  //     }
+  //   });
+  // }
 
 }

@@ -49,6 +49,8 @@ import { WifiLogsComponent } from './wifi-logs/wifi-logs.component';
 import { ProcessListComponent } from '../process/process-list/process-list.component';
 import { MyProcessComponent } from '../process/my-process/my-process.component';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
+import { CompanykycComponent } from './companykyc/companykyc.component';
+import { UserGroupsComponent } from './user-groups/user-groups.component';
 
 const routes: Routes = [{
   path: '',
@@ -202,6 +204,11 @@ const routes: Routes = [{
 
     },
     {
+      path: 'companykyc',
+      component: CompanykycComponent,
+      canActivate: [AuthGuard]
+    },
+    {
       path: 'task-scheduled',
       component: TaskScheduledComponent,
       canActivate: [AuthGuard, RouteGuard]
@@ -297,6 +304,11 @@ const routes: Routes = [{
     {
       path: 'my-process',
       component: MyProcessComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-groups',
+      component: UserGroupsComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
