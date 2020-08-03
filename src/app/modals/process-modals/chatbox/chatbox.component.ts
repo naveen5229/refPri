@@ -414,23 +414,24 @@ export class ChatboxComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
-        console.log("res data:", data, lead);
         if (data.nextFormType == 1) {
-          if (lead._state_form == 1) {
+          lead._state_id = data.state.id;
+          lead.state_name = data.state.name;
+          if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
             this.openTransAction(lead, type, 2);
           }
 
         } else if (data.nextFormType == 2) {
-          if (lead._action_form == 1) {
+          if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
             this.openTransAction(lead, type, 1);
           }
         }
       } else {
-        this.getTargetActionData(null);
+        this.getTargetActionData(type);
       }
     });
   }

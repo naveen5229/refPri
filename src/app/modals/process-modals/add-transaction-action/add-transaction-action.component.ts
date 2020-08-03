@@ -36,6 +36,7 @@ export class AddTransactionActionComponent implements OnInit {
   modeList = [];
   adminList = [];
   isFormHere = 0;
+  nextStateForm = 0;
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -67,7 +68,7 @@ export class AddTransactionActionComponent implements OnInit {
         this.isFormHere = 0;
       } else if (this.transAction.formType == 1) {
         this.title = 'Add Transaction Next State';
-        this.isFormHere = this.common.params.actionData.isStateForm;
+        this.isFormHere = 0;
       } else {
         this.title = 'Update Transaction Action';
         this.transAction.isCompleted = true;
@@ -288,6 +289,7 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.transAction.state = this.transAction.nextState;
+            this.isFormHere = this.nextStateForm;
             this.resetData();
             // this.transAction.formType = 1;
             this.closeModal(true, 1);
