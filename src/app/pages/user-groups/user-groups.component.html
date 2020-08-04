@@ -13,11 +13,12 @@
                 <input placeholder="Enter Group Name" name="groupName" class="form-control" maxlength="50" [(ngModel)]="groupForm.name">
             </div>
             <div class="col-6">
-                <auto-suggestion (onSelected)="groupForm.users = $event.id" [data]="adminList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="groupForm.users" isMultiSelect="true">
+                <auto-suggestion (onSelected)="groupForm.users = $event" [data]="adminList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="groupForm.users" isMultiSelect="true">
                 </auto-suggestion>
             </div>
             <div class="col-3">
-                <button class="btn btn-primary btn-sm mr-2" (click)="addGroup()">Add</button>
+                <button class="btn btn-primary btn-sm mr-2" (click)="addGroup()" [innerHTML] = "(groupForm.requestId > 0)?'Update':'Add'"></button>
+                <button class="btn btn-secondary btn-sm mr-2" (click)="resetForm()" >Reset</button>
             </div>
         </div>
         <div class="row">
