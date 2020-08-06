@@ -13,8 +13,10 @@ import { group } from 'console';
   styleUrls: ['./user-groups.component.scss']
 })
 export class UserGroupsComponent implements OnInit {
+  buttonVisible = true;
   adminList = [];
   groupList = [];
+  groupUsers;
   groupForm = {
     requestId: null,
     name: "",
@@ -110,7 +112,7 @@ export class UserGroupsComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(row)
+            icons: this.actionIcons(row)
           };
         } else {
           column[key] = { value: row[key], class: 'black', action: '' };
@@ -124,8 +126,8 @@ export class UserGroupsComponent implements OnInit {
 
   actionIcons(row) {
     let icons = [
-      // { class: "fa fa-edit", action: this.editActiveAdmin.bind(this, activity) },
-      { class: "fa fa-trash", action: this.deleteGroup.bind(this, row) },
+      { class: "fa fa-edit", action: this.editGroup.bind(this, row) },
+      // { class: "fa fa-trash", action: this.deleteGroup.bind(this, row) },
     ];
     return icons;
   }
@@ -139,11 +141,13 @@ export class UserGroupsComponent implements OnInit {
   }
 
   addGroup() {
+   console.log("groupForm:",this.groupForm);
     let params = {
       requestId: (this.groupForm.requestId > 0) ? this.groupForm.requestId : null,
       name: this.groupForm.name,
       users: (this.groupForm.users && this.groupForm.users.length) ? JSON.stringify(this.groupForm.users) : null
     };
+    console.log(params);
     this.common.loading++;
     this.api.post('UserRole/addUserGroup', params)
       .subscribe(res => {
@@ -164,6 +168,16 @@ export class UserGroupsComponent implements OnInit {
         console.log('Error: ', err);
       });
   }
+
+  editGroup(row) {
+    if (row._id) {
+      this.groupForm.requestId = row._id;
+      this.groupForm.name = row.name;
+      this.groupForm.users = (row._employee && row._employee.length>0) ? row._employee.map(x => {return {id: x._id, name: x.name}}) : null;
+    }
+  }
+
+  
 
   deleteGroup(row) {
     if (row._id) {
