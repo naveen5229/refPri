@@ -66,7 +66,7 @@
             <label>CC users:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="normalTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
         </div>
     </div>
 

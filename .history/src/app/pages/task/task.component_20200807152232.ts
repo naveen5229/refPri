@@ -245,7 +245,7 @@ export class TaskComponent implements OnInit {
           if (res["code"] > 0) {
             let groupList = res['data'] || [];
             this.groupList = groupList.map((x) => {
-              return { id:x._id,name:x.name,groupId:x._id,groupuser:x._employee};
+              return { id: x._aduserid, groupId: x._id, groupName: x.name};
             });
           } else {
             this.common.showError(res["msg"]);

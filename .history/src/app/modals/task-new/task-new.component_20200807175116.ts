@@ -117,6 +117,18 @@ export class TaskNewComponent implements OnInit {
 
   saveTask() {
 
+    let CCUsers = [];
+    this.normalTask.ccUsers.forEach(group=> {
+
+      console.log('group user',group)
+      if(group.groupId!>0){
+        CCUsers.push({user_id: group.id});
+      }else{
+        CCUsers.push(group.groupuser.filter(user => user._group_id === group.groupId).map((key)=> {return {user_id: key._id}}) );
+      }
+    });
+      console.log(CCUsers,'from save');
+
     console.log("normalTask:", this.normalTask);
     if (this.normalTask.userName == '') {
       return this.common.showError("User Name is missing");
@@ -146,19 +158,7 @@ export class TaskNewComponent implements OnInit {
       return this.common.showError("Last Date must be greater than future assign date");
     }
     else {
-      let CCUsers = [];
-      this.normalTask.ccUsers.forEach(x=> {
-        if(x.groupId!= null){
-          // CCUsers.push(x.groupuser.filter(user => user._group_id === x.groupId).map((key)=> {return {user_id: key._id}}));
-          x.groupuser.forEach(x2=> {
-            CCUsers.push({user_id:x2._id});
-          })
-        }else{
-          CCUsers.push({user_id: x.id});
-        }
-      });
-        console.log(CCUsers,'from save');
-
+    
       const params = {
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
@@ -166,11 +166,11 @@ export class TaskNewComponent implements OnInit {
         task: this.normalTask.task,
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
-        ccUsers: JSON.stringify(CCUsers),
+        ccUsers: JSON.stringify(this.normalTask.ccUsers),
         parentTaskId: this.normalTask.parentTaskId,
         isFuture: this.normalTask.isFuture,
         futureDate: this.common.dateFormatter(this.normalTask.futureDate)
-      }
+      }; return false;
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         console.log(res);

@@ -148,6 +148,8 @@ export class TaskNewComponent implements OnInit {
     else {
       let CCUsers = [];
       this.normalTask.ccUsers.forEach(x=> {
+  
+        console.log('group user',x)
         if(x.groupId!= null){
           // CCUsers.push(x.groupuser.filter(user => user._group_id === x.groupId).map((key)=> {return {user_id: key._id}}));
           x.groupuser.forEach(x2=> {
