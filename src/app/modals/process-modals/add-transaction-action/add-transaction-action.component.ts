@@ -55,6 +55,9 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.action.name = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionName : null;
       this.transAction.state.id = (this.common.params.actionData.stateId > 0) ? this.common.params.actionData.stateId : null;
       this.transAction.state.name = (this.common.params.actionData.stateId > 0) ? this.common.params.actionData.stateName : null;
+      this.transAction.mode.id = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeId : null;
+      this.transAction.mode.name = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeName : null;
+      this.transAction.remark = (this.common.params.actionData.remark) ? this.common.params.actionData.remark : null;
       if (this.common.params.actionData.actionOwnerId > 0) {
         let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
         console.log("actionOwner:", actionOwner);
