@@ -40,6 +40,10 @@ export class TaskMessageComponent implements OnInit {
     id: null,
     name: ""
   };
+  attachmentFile = {
+    name: null,
+    file: null
+  };
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -157,19 +161,22 @@ export class TaskMessageComponent implements OnInit {
   }
 
   saveTicketMessage() {
-    if (this.taskMessage == "") {
+    if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage
+        message: this.taskMessage,
+        attachment: this.attachmentFile.file
       }
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
+          this.attachmentFile.file = null;
+          this.attachmentFile.name = null;
           if (this.tabType == 101 && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
@@ -662,5 +669,35 @@ export class TaskMessageComponent implements OnInit {
     });
   }
   // end: campaign msg
+
+  handleFileSelection(event) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0]).then((res: any) => {
+      this.common.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
+      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+      } else {
+        this.common.showError("valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf");
+        return false;
+      }
+      this.attachmentFile.name = file.name;
+      this.attachmentFile.file = res;
+      console.log("attachmentFile:", this.attachmentFile)
+    }, err => {
+      this.common.loading--;
+      console.error('Base Err: ', err);
+    })
+  }
+
+  openViewImage(type, image) {
+    let images = [{ name: type, image: image }];
+    console.log("image", images);
+    // this.common.params = { images, title: 'Image' };
+    // const activeModal = this.modalService.open(ImageViewerComponent, { size: 'lg', container: 'nb-layout' });
+  }
 
 }
