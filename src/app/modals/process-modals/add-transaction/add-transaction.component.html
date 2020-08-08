@@ -110,7 +110,7 @@
 
                         <td *ngIf="oddArray[i]" style="padding-right: 5%;">
                             <span *ngIf="oddArray[i].r_coltitle">
-                                <label>{{oddArray[i].r_coltitle}}<span style="color: red"
+                                <label>{{oddArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="oddArray[i].r_required">*</span>
                             </label>
                             <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
@@ -119,19 +119,19 @@
                             </uj-date-time-picker>
 
                             <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="oddArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
-                                [preSelected]="oddArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" placeholder="Select Primary Category" name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.priCat.id=($event.id);"
-                                [preSelected]="oddArray[i].r_value" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Primary Category'"
+                                name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.priCat.id=($event.id);" [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.secCat.id=($event.id);"
-                                [preSelected]="oddArray[i].r_value" autocomplete="off">
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Secondary Category'"
+                                name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.secCat.id=($event.id);" [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
                             <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="oddArray[i].r_value=($event.name);transForm.type.id=($event.id);"
-                                [preSelected]="oddArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
                             <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="oddArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                [preSelected]="oddArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
 
                             <!-- dynamic data array -->
@@ -142,7 +142,7 @@
                             </span>
                         </td>
                         <td *ngIf="evenArray[i]"><span *ngIf="evenArray[i].r_coltitle">
-                              <label>{{evenArray[i].r_coltitle}} <span style="color: red"
+                              <label>{{evenArray[i].r_colalias}} <span style="color: red"
                                       *ngIf="evenArray[i].r_required">*</span></label>
                             <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
                             <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
@@ -150,19 +150,19 @@
                             </uj-date-time-picker>
 
                             <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="evenArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
-                                [preSelected]="evenArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" placeholder="Select Primary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.priCat.id=($event.id);"
-                                [preSelected]="evenArray[i].r_value" autocomplete="off">
+                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" placeholder="Select Primary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.priCat.id=($event.id);"
+                                [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
                             <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.secCat.id=($event.id);"
-                                [preSelected]="evenArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
                             <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="evenArray[i].r_value=($event.name);transForm.type.id=($event.id);"
-                                [preSelected]="evenArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
                             <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="evenArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                [preSelected]="evenArray[i].r_value" autocomplete="off">
+                                [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                             </auto-suggestion>
 
                             <!-- dynamic data array -->

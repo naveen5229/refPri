@@ -98,6 +98,17 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
+  ownedByMeList = [];
+  tableOwnedByMe = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   searchData = {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
@@ -112,7 +123,7 @@ export class MyProcessComponent implements OnInit {
   ngOnInit() { }
 
   addTransaction() {
-    console.log("addProcessLead");
+    // console.log("addProcessLead");
     this.common.params = { processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Add" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
@@ -190,6 +201,9 @@ export class MyProcessComponent implements OnInit {
         } else if (type == -1) {
           this.unassignedLeads = res['data'] || [];
           this.setTableUnassignedLeads(type);
+        } else if (type == 6) {
+          this.ownedByMeList = res['data'] || [];
+          this.setTableOwnedByMe(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -226,8 +240,11 @@ export class MyProcessComponent implements OnInit {
       headings: {},
       columns: []
     };
-
     this.tableUnassignedLeads.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableOwnedByMe.data = {
       headings: {},
       columns: []
     };
@@ -247,6 +264,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.leadsForMe[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -291,6 +311,9 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "action_expdate" || key === 'state_expdate') {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -334,6 +357,10 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+
+      if (key === "addtime" || key === "completion_time") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -362,7 +389,7 @@ export class MyProcessComponent implements OnInit {
   }
   // end: AllCompletedLeads
 
-  // start unread task for me list
+  // start unread lead
   setTableUnreadLeads(type) {
     this.tableUnreadLeads.data = {
       headings: this.generateHeadingsUnreadLeads(),
@@ -376,6 +403,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.unreadLeads[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_addtime") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -419,6 +449,9 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "action_expdate" || key === "state_expdate") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -460,6 +493,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.missingOwnLeads[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -503,6 +539,9 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -531,6 +570,52 @@ export class MyProcessComponent implements OnInit {
   }
   // end:unsigned lead
 
+  // start:ownedbyme lead
+  setTableOwnedByMe(type) {
+    this.tableOwnedByMe.data = {
+      headings: this.generateHeadingsOwnedByMe(),
+      columns: this.getTableColumnsOwnedByMe(type)
+    };
+    return true;
+  }
+
+  generateHeadingsOwnedByMe() {
+    let headings = {};
+    for (var key in this.ownedByMeList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_expdate" || key === "state_expdate") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsOwnedByMe(type) {
+    let columns = [];
+    this.ownedByMeList.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsOwnedByMe()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end:ownedbyme lead
+
   actionIcons(lead, type) {
     let icons = [
       { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" }
@@ -553,7 +638,7 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
-    } else if (type == 2) { //by me
+    } else if (type == 2 || type == 6) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
@@ -571,9 +656,13 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
 
     } else if (type == 5) {//unread
-      if (lead._status == 0) {
+      if (lead._is_action == 1 && lead._status == 0) {
+        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
+      } else if (lead._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-      } else if (lead._cc_user_id && !lead._cc_status) {
+      } else if (lead._status == 2) {
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
+      } else if (lead._cc_user_id > 0 && !lead._cc_status) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
       }
     }
@@ -592,39 +681,22 @@ export class MyProcessComponent implements OnInit {
   }
 
   editTransaction(lead, type) {
-    this.common.showError("Edit Transaction on Working...");
-    // let targetEditData = {
-    //   rowId: campaign._camptargetid,
-    //   campaignId: campaign._campid,
-    //   campainType: campaign._camtype,
-    //   campaignName: campaign._campaignname,
-    //   potential: campaign.FleetSize,
-    //   name: campaign.Company,
-    //   mobile: campaign._mobileno,
-    //   locationId: campaign._locationid,
-    //   locationName: campaign.Location,
-    //   address: campaign._address,
-    //   lat: campaign._lat,
-    //   long: campaign._long,
-    //   potCat: campaign._potcat,
-    //   priOwnId: campaign._priownid,
-    //   potCatname: campaign['Fleet Category'],
-    //   // priOwnname: campaign['Primary Owner'],
-    //   priOwnname: campaign._priown,
-    //   priCatId: (campaign._pri_cat_id) ? campaign._pri_cat_id : null,
-    //   priCatName: (campaign.pri_category) ? campaign.pri_category : "",
-    //   secCatId: (campaign._sec_cat_id) ? campaign._sec_cat_id : null,
-    //   secCatName: (campaign.sec_category) ? campaign.sec_category : "",
-    // }
+    // this.common.showError("Edit Transaction on Working...");
+    let rowData = {
+      transId: lead._transactionid,
+      processId: lead._processid,
+      processName: lead._processname,
+      identity: lead.identity,
+    }
 
-    // this.common.params = { targetEditData, title: "Edit Lead", button: "Edit" };
-
-    // const activeModal = this.modalService.open(TargetCampaignComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     this.getProcessLeadByType(type);
-    //   }
-    // });
+    this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
+    const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        // this.activeTab = 'leadsByMe';
+        this.getProcessLeadByType(type);
+      }
+    });
   }
 
   deleteTransaction(lead, type) {
@@ -695,6 +767,9 @@ export class MyProcessComponent implements OnInit {
       stateId: (lead._state_id > 0) ? lead._state_id : null,
       stateName: (lead._state_id > 0) ? lead.state_name : '',
       actionOwnerId: lead._action_owner,
+      modeId: (lead._mode_id > 0) ? lead._mode_id : null,
+      modeName: (lead._mode_id > 0) ? lead._mode_name : '',
+      remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
       isActionForm: lead._action_form
     };
@@ -827,6 +902,36 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
+  updateLeadActionStatus(lead, type, status) {
+    if (lead._transactionid) {
+      let params = {
+        transId: lead._transactionid,
+        actionId: lead._transaction_actionid,
+        status: status
+      }
+      this.common.loading++;
+      this.api.post('Processes/updateLeadActionStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Transaction ID Not Available");
+    }
+  }
+
   transMessage(lead, type) {
     console.log("transMessage:", lead);
     if (lead._transactionid > 0) {
@@ -858,58 +963,56 @@ export class MyProcessComponent implements OnInit {
   }
 
   showReminderPopup(lead, type) {
-    console.log("showReminderPopup");
-    // this.common.params = { ticketId: campaign._tktid, title: "Add Reminder", btn: "Set Reminder", fromPage: "canpaign" };
-    // const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     this.getProcessLeadByType(type);
-    //   }
-    // });
+    // console.log("showReminderPopup");
+    this.common.params = { ticketId: lead._transactionid, title: "Add Reminder", btn: "Set Reminder", fromPage: "trans" };
+    const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getProcessLeadByType(type);
+      }
+    });
   }
 
   checkReminderSeen(lead, type) {
-    console.log("checkReminderSeen");
-    // let params = {
-    //   ticketId: campaign._tktid
-    // };
-    // this.common.loading++;
-    // this.api.post('Campaigns/checkLeadReminderSeen', params)
-    //   .subscribe(res => {
-    //     this.common.loading--;
-    //     this.common.showToast(res['msg']);
-    //     this.getProcessLeadByType(type);
-    //   }, err => {
-    //     this.common.loading--;
-    //     console.log('Error: ', err);
-    //   });
+    // console.log("checkReminderSeen");
+    let params = {
+      ticketId: lead._transactionid
+    };
+    this.common.loading++;
+    this.api.post('Processes/checkLeadReminderSeen', params).subscribe(res => {
+      this.common.loading--;
+      this.common.showToast(res['msg']);
+      this.getProcessLeadByType(type);
+    }, err => {
+      this.common.loading--;
+      console.log('Error: ', err);
+    });
   }
 
   ackLeadByCcUser(lead, type) {
-    console.log("ackLeadByCcUser");
-    // if (campaign._tktid) {
-    //   let params = {
-    //     ticketId: campaign._tktid,
-    //     leadId: campaign._camptargetid
-    //   }
-    //   console.log("ackLeadByCcUser:", params);
-    //   this.common.loading++;
-    //   this.api.post('Campaigns/ackLeadByCcUser', params).subscribe(res => {
-    //     this.common.loading--;
-    //     if (res['code'] == 1) {
-    //       this.common.showToast(res['msg']);
-    //       this.getProcessLeadByType(type);
-    //     } else {
-    //       this.common.showError(res['data']);
-    //     }
-    //   }, err => {
-    //     this.common.loading--;
-    //     this.common.showError();
-    //     console.log('Error: ', err);
-    //   });
-    // } else {
-    //   this.common.showError("Lead ID Not Available");
-    // }
+    // console.log("ackLeadByCcUser");
+    if (lead._transactionid > 0) {
+      let params = {
+        transId: lead._transactionid
+      }
+      // console.log("ackLeadByCcUser:", params);
+      this.common.loading++;
+      this.api.post('Processes/ackLeadByCcUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.common.showToast(res['msg']);
+          this.getProcessLeadByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
   }
 
   // ackTaskByAssigner(campaign, type) {

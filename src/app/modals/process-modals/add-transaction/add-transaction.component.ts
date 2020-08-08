@@ -71,6 +71,13 @@ export class AddTransactionComponent implements OnInit {
       this.processList = this.common.params.processList.map(x => { return { id: x._id, name: x.name } });
       this.adminList = this.common.params.adminList;
     }
+    if (this.common.params && this.common.params.rowData) {
+      this.transForm.requestId = this.common.params.rowData.transId;
+      this.transForm.process.id = this.common.params.rowData.processId;
+      this.transForm.process.name = this.common.params.rowData.processName;
+      this.transForm.identity = this.common.params.rowData.identity;
+      this.onSelectProcess();
+    }
   }
 
   ngOnInit() { }

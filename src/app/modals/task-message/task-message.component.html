@@ -31,7 +31,7 @@
                         {{msg.comment}}
                         <span>{{msg.added_date}}</span>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'shake animated slow':''">
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'new_message':''">
                         {{msg.comment}}
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
@@ -42,12 +42,24 @@
             </div>
 
             <div class="row mt-1 bottom-block">
-                <div class="col-9">
+                <div class="col-8">
                     <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                </div>
+                <div col-1>
+                    <label class="custom-file-upload">
+                        <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)">
+                        <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
+                    </label>
                 </div>
                 <div class="col-3 text-right button-box">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="(fromPage == 'campaign')? saveLeadMessage() :saveTicketMessage()">Send
                   </button>
+                </div>
+            </div>
+            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
+                <div class="col-9">
+                    {{attachmentFile.name}}
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
             </div>
         </div>

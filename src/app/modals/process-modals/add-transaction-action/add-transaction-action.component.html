@@ -43,7 +43,7 @@
             <label>Mode<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="modeList" display="name" placeholder="Action Name" name="modeName" inputId="modeId" (onSelected)="transAction.mode=($event);" [preSelected]="{name:transAction.mode.name}" autocomplete="off">
+            <auto-suggestion [data]="modeList" display="name" placeholder="Select Mode" name="modeName" inputId="modeId" (onSelected)="transAction.mode=($event);" [preSelected]="{name:transAction.mode.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
@@ -104,7 +104,7 @@
             <label>Next Action<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="actionDataList" display="name" placeholder="Next Action Name" name="nextactionName" inputId="nextActionId" (onSelected)="transAction.nextAction=($event);onSelectNextAction($event.id)" [preSelected]="{name:transAction.nextAction.name}"
+            <auto-suggestion [data]="actionDataList" display="name" placeholder="Select Next Action" name="nextactionName" inputId="nextActionId" (onSelected)="transAction.nextAction=($event);onSelectNextAction($event.id)" [preSelected]="{name:transAction.nextAction.name}"
                 autocomplete="off">
             </auto-suggestion>
         </div>
@@ -151,7 +151,7 @@
             <label>Next State : <span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="State Name" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;getNextActionList();" [preSelected]="{name:transAction.nextState.name}"
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="Select State" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;getNextActionList();" [preSelected]="{name:transAction.nextState.name}"
                 autocomplete="off">
             </auto-suggestion>
         </div>
