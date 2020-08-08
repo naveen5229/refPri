@@ -1943,6 +1943,7 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       data: null,
       adminList: this.adminList,
+      groupList : this.groupList,
       departmentList: this.departmentList,
       title: "Add Schedule task",
       button: "Save",
