@@ -48,11 +48,6 @@ export class TaskNewComponent implements OnInit {
     public modalService: NgbModal,
     public userService: UserService) {
     console.log("task list", this.common.params);
-    let currentLast = new Date();
-    currentLast.setHours(23);
-    currentLast.setMinutes(59);
-    this.normalTask.date = currentLast;
-    // console.log(aaaaaa,'date from task new component')
     if (this.common.params != null) {
       console.log(this.common.params.groupList,'groupList from task-new component');
       this.userList = this.common.params.userList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
@@ -79,7 +74,6 @@ export class TaskNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.currentDate,'from task new')
   }
   getProjectList() {
     this.api.get("AdminTask/serachProject.json").subscribe(res => {
@@ -123,6 +117,21 @@ export class TaskNewComponent implements OnInit {
 
   saveTask() {
 
+    let CCUsers = [];
+    this.normalTask.ccUsers.forEach(x=> {
+
+      console.log('group user',x)
+      if(x.groupId!= null){
+        // CCUsers.push(x.groupuser.filter(user => user._group_id === x.groupId).map((key)=> {return {user_id: key._id}}));
+        x.groupuser.forEach(x2=> {
+          CCUsers.push({user_id:x2._id});
+        })
+      }else{
+        CCUsers.push({user_id: x.id});
+      }
+    });
+      console.log(CCUsers,'from save');
+
     console.log("normalTask:", this.normalTask);
     if (this.normalTask.userName == '') {
       return this.common.showError("User Name is missing");
@@ -152,19 +161,7 @@ export class TaskNewComponent implements OnInit {
       return this.common.showError("Last Date must be greater than future assign date");
     }
     else {
-      let CCUsers = [];
-      this.normalTask.ccUsers.forEach(x=> {
-        if(x.groupId!= null){
-          // CCUsers.push(x.groupuser.filter(user => user._group_id === x.groupId).map((key)=> {return {user_id: key._id}}));
-          x.groupuser.forEach(x2=> {
-            CCUsers.push({user_id:x2._id});
-          })
-        }else{
-          CCUsers.push({user_id: x.id});
-        }
-      });
-        console.log(CCUsers,'from save');
-
+    
       const params = {
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
@@ -172,11 +169,11 @@ export class TaskNewComponent implements OnInit {
         task: this.normalTask.task,
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
-        ccUsers: JSON.stringify(CCUsers),
+        ccUsers: JSON.stringify(this.normalTask.ccUsers),
         parentTaskId: this.normalTask.parentTaskId,
         isFuture: this.normalTask.isFuture,
         futureDate: this.common.dateFormatter(this.normalTask.futureDate)
-      }
+      }; return false;
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         console.log(res);

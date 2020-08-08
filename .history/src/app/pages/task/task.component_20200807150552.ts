@@ -238,23 +238,19 @@ export class TaskComponent implements OnInit {
   }
 
   getUserGroupList() {
+    this.common.loading++;
     this.api.get('UserRole/getUserGroups')
-      .subscribe(
-        (res) => {
-          console.log(" Group data", res["data"]);
-          if (res["code"] > 0) {
-            let groupList = res['data'] || [];
-            this.groupList = groupList.map((x) => {
-              return { id:x._id,name:x.name,groupId:x._id,groupuser:x._employee};
-            });
-          } else {
-            this.common.showError(res["msg"]);
-          }
-        },
-        (err) => {
-          this.common.showError();
-          console.log("Error: ", err);
+      .subscribe(res => {
+        this.common.loading--;
+        let groupList = res['data'] || [];
+        this.groupList = groupList.map((x) => {
+          return { id: x._aduserid, groupId: x._id, groupName: x.name};
         });
+        console.log(this.groupList,'group List from task component.ts')
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
   getDepartmentList() {
@@ -283,7 +279,7 @@ export class TaskComponent implements OnInit {
     });
   }
   showTaskPopup() {
-    this.common.params = { userList: this.adminList,groupList : this.groupList, parentTaskId: null };
+    this.common.params = { userList: this.adminList, parentTaskId: null };
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "lg",
       container: "nb-layout",
@@ -1943,7 +1939,6 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       data: null,
       adminList: this.adminList,
-      groupList : this.groupList,
       departmentList: this.departmentList,
       title: "Add Schedule task",
       button: "Save",

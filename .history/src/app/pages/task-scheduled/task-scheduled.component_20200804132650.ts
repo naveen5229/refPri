@@ -162,10 +162,7 @@ export class TaskScheduledComponent implements OnInit {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        let adminList = res["data"] || [];
-          this.adminList = adminList.map((x) => {
-            return { id: x.id, name: x.name + " - " + x.department_name };
-          });
+        this.adminList = res['data'] || [];
       } else {
         this.common.showError(res['msg']);
       }

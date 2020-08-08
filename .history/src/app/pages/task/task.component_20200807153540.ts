@@ -245,7 +245,7 @@ export class TaskComponent implements OnInit {
           if (res["code"] > 0) {
             let groupList = res['data'] || [];
             this.groupList = groupList.map((x) => {
-              return { id:x._id,name:x.name,groupId:x._id,groupuser:x._employee};
+              return { id: x._aduserid, name: x.name, groupId: x._id};
             });
           } else {
             this.common.showError(res["msg"]);
@@ -1943,7 +1943,6 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       data: null,
       adminList: this.adminList,
-      groupList : this.groupList,
       departmentList: this.departmentList,
       title: "Add Schedule task",
       button: "Save",
