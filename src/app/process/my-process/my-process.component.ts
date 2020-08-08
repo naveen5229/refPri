@@ -265,6 +265,9 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -307,6 +310,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.leadsByMe[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_expdate" || key === 'state_expdate') {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -351,6 +357,10 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+
+      if (key === "addtime" || key === "completion_time") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -379,7 +389,7 @@ export class MyProcessComponent implements OnInit {
   }
   // end: AllCompletedLeads
 
-  // start unread task for me list
+  // start unread lead
   setTableUnreadLeads(type) {
     this.tableUnreadLeads.data = {
       headings: this.generateHeadingsUnreadLeads(),
@@ -393,6 +403,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.unreadLeads[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_addtime") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -436,6 +449,9 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "action_expdate" || key === "state_expdate") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -477,6 +493,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.missingOwnLeads[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -520,6 +539,9 @@ export class MyProcessComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -562,6 +584,9 @@ export class MyProcessComponent implements OnInit {
     for (var key in this.ownedByMeList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_expdate" || key === "state_expdate") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
