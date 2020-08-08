@@ -48,11 +48,6 @@ export class TaskNewComponent implements OnInit {
     public modalService: NgbModal,
     public userService: UserService) {
     console.log("task list", this.common.params);
-    let currentLast = new Date();
-    currentLast.setHours(23);
-    currentLast.setMinutes(59);
-    this.normalTask.date = currentLast;
-    // console.log(aaaaaa,'date from task new component')
     if (this.common.params != null) {
       console.log(this.common.params.groupList,'groupList from task-new component');
       this.userList = this.common.params.userList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
@@ -79,7 +74,6 @@ export class TaskNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.currentDate,'from task new')
   }
   getProjectList() {
     this.api.get("AdminTask/serachProject.json").subscribe(res => {
