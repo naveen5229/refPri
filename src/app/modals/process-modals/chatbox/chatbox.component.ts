@@ -50,6 +50,7 @@ export class ChatboxComponent implements OnInit {
     }
   };
   activeTab = 'actionList';
+  priOwnId = null;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -61,6 +62,7 @@ export class ChatboxComponent implements OnInit {
       this.ticketId = this.common.params.editData.transactionid;
       this.tabType = (this.common.params.editData.tabType) ? this.common.params.editData.tabType : null;
       this.lastSeenId = this.common.params.editData.lastSeenId;
+      this.priOwnId = this.common.params.editData.priOwnId;
       this.ticketData = this.common.params.editData.rowData;
       this.getLeadMessage();
       this.getAllUserByLead();
@@ -68,7 +70,7 @@ export class ChatboxComponent implements OnInit {
       this.getTargetActionData();
     }
 
-    console.log("user_details:", this.userService._details)
+    // console.log("user_details:", this.userService._details)
   }
 
   ngOnInit() {
@@ -316,10 +318,7 @@ export class ChatboxComponent implements OnInit {
     let headings = {};
     for (var key in this.transActionData[0]) {
       if (key.charAt(0) != "_") {
-        if (key == 'Action') {
-        } else {
-          headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-        }
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     return headings;
@@ -335,10 +334,10 @@ export class ChatboxComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            icons: this.actionIcons(lead, type)
+            icons: (lead._action_form == 1 || lead._state_form == 1) ? this.actionIcons(lead, type) : null
           };
         } else if (!type && key == 'completion_time' && lead[key]) {
-          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, this.ticketData, this.tabType, null), title: 'Add next state' };
+          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type, null), title: 'Add next state' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -357,11 +356,11 @@ export class ChatboxComponent implements OnInit {
     return icons;
   }
 
-  deleteLead(row) {
+  deleteLead(row) { //not used
     let params = {
-      campTarActId: row._camptaractid,
+      tarnsActId: row._action_id,
     }
-    if (row._camptaractid) {
+    if (row._action_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -386,11 +385,11 @@ export class ChatboxComponent implements OnInit {
 
 
   openTransAction(lead, type, formType = null) {
-    if (![1, 2].includes(type)) {
+    if (![this.priOwnId].includes(this.userService._details.id)) {
       this.common.showError("Permission Denied");
       return false;
     }
-    console.log("openTransAction");
+    // console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = 1;
@@ -398,16 +397,16 @@ export class ChatboxComponent implements OnInit {
       formTypeTemp = formType;
     }
     let actionData = {
-      processId: lead._processid,
-      transId: lead._transactionid,
-      processName: lead._processname,
-      identity: lead.identity,
+      processId: this.ticketData._processid,
+      transId: lead._transid,
+      processName: this.ticketData._processname,
+      identity: this.ticketData.identity,
       formType: formTypeTemp,
       requestId: null,
       actionId: null,
-      actionName: '',
-      stateId: (lead._state_id > 0) ? lead._state_id : null,
-      stateName: (lead._state_id > 0) ? lead.state_name : null,
+      actionName: null,
+      stateId: (this.ticketData._state_id > 0) ? this.ticketData._state_id : null,
+      stateName: (this.ticketData._state_id > 0) ? this.ticketData._state_name : null,
       actionOwnerId: null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
@@ -454,9 +453,9 @@ export class ChatboxComponent implements OnInit {
       refType = 1;
     }
     let actionData = {
-      processId: lead._processid,
-      processName: lead._processname,
-      transId: lead._transactionid,
+      processId: this.ticketData._processid,
+      processName: this.ticketData._processname,
+      transId: lead._transid,
       refId: refId,
       refType: refType,
       formType: formType,
@@ -474,6 +473,22 @@ export class ChatboxComponent implements OnInit {
         this.getTargetActionData(type);
       }
     });
+  }
+
+  openPrimaryInfoFormData() {
+    let lead = this.ticketData;
+    let title = 'Primary Info Form';
+    let actionData = {
+      processId: lead._processid,
+      processName: lead._processname,
+      transId: lead._transactionid,
+      refId: lead._processid,
+      refType: 3,
+      formType: null,
+    };
+
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

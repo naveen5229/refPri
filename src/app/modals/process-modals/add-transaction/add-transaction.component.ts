@@ -76,6 +76,7 @@ export class AddTransactionComponent implements OnInit {
       this.transForm.process.id = this.common.params.rowData.processId;
       this.transForm.process.name = this.common.params.rowData.processName;
       this.transForm.identity = this.common.params.rowData.identity;
+      this.transForm.priOwn.id = this.common.params.rowData.priOwnId;
       this.onSelectProcess();
     }
   }

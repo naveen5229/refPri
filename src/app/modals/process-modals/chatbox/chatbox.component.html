@@ -1,11 +1,14 @@
 <div class="modal-header">
     <h5 class="m-0">{{title | titlecase}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-<span aria-hidden="true">&times;</span>
-</button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-    {{subTitle}}
+    <span [innerHtml]="subTitle"></span>
+    <div class="action-icon">
+        <span><i class="fas fa-plus-square text-primary" title="Primary Info Form" (click)="openPrimaryInfoFormData()"></i></span>
+    </div>
 </div>
 <div class="modal-body">
     <div class="row">
