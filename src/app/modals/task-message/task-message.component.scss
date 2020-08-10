@@ -203,3 +203,10 @@
     height: 100%;
     align-items: center;
 }
+
+.attachment-view {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: lightgray;
+}

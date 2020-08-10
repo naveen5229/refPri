@@ -644,6 +644,8 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       if (lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Completed" });
+      } else if (lead._state_id! > 0) {
+        icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       } else {
         icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Add Next State" });
       }
@@ -751,7 +753,7 @@ export class MyProcessComponent implements OnInit {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
-      formTypeTemp = (type == 2) ? 1 : 0;
+      formTypeTemp = (type == 2 || type == 6) ? 1 : 0;
     } else {
       formTypeTemp = formType;
     }
@@ -763,9 +765,9 @@ export class MyProcessComponent implements OnInit {
       formType: formTypeTemp,
       requestId: (type == 1) ? lead._transaction_actionid : null,
       actionId: (lead._action_id > 0) ? lead._action_id : null,
-      actionName: (lead._action_id > 0) ? lead.action_name : '',
+      actionName: (lead._action_id > 0) ? lead._action_name : '',
       stateId: (lead._state_id > 0) ? lead._state_id : null,
-      stateName: (lead._state_id > 0) ? lead.state_name : '',
+      stateName: (lead._state_id > 0) ? lead._state_name : '',
       actionOwnerId: lead._action_owner,
       modeId: (lead._mode_id > 0) ? lead._mode_id : null,
       modeName: (lead._mode_id > 0) ? lead._mode_name : '',
