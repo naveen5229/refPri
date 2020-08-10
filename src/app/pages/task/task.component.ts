@@ -397,6 +397,12 @@ export class TaskComponent implements OnInit {
       headings: {},
       columns: [],
     };
+    // this.tableNormalTaskByMe.data = this.tableSchedule.data = this.tableNormal.data = this.tableAllCompleted.data =
+    // this.tableCCTask.data = this.tableProjectTask.data = this.tableFutureTaskByMeList.data = this.tableUnreadTaskForMeList.data =
+    // this.tableHoldTask.data = this.tableScheduleMaster.data ={
+    //   headings: {},
+    //   columns: [],
+    // };
   }
 
   generateHeadingsNormal() {
@@ -1250,7 +1256,7 @@ export class TaskComponent implements OnInit {
         });
         icons.push({
           class: "fa fa-times text-danger",
-          action: this.updateTicketStatus.bind(this, ticket, type, -1),
+          action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
           txt: "",
           title: "Mark Rejected",
         });
@@ -1269,7 +1275,7 @@ export class TaskComponent implements OnInit {
         });
         icons.push({
           class: "fa fa-times text-danger",
-          action: this.updateTicketStatus.bind(this, ticket, type, -1),
+          action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
           txt: "",
           title: "Mark Rejected",
         });
@@ -1534,9 +1540,12 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
+    console.log(status,'status')
     if (ticket._refid) {
       let preTitle = "Complete";
-      if (status == 3) {
+      if(status === -1){
+        preTitle = "Reject";
+      }else if (status == 3) {
         preTitle = "Hold";
       } else if (ticket._status == 3) {
         preTitle = "Unhold";
