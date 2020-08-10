@@ -331,12 +331,12 @@ export class ChatboxComponent implements OnInit {
       let column = {};
       for (let key in this.generateHeadings()) {
         if (key.toLowerCase() == 'action') {
-          // column[key] = {
-          //   value: "",
-          //   isHTML: false,
-          //   action: null,
-          //   icons: this.actionIcons(lead)
-          // };
+          column[key] = {
+            value: "",
+            isHTML: false,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
         } else if (!type && key == 'completion_time' && lead[key]) {
           column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, this.ticketData, this.tabType, null), title: 'Add next state' };
         } else {
@@ -348,9 +348,11 @@ export class ChatboxComponent implements OnInit {
     return columns;
   }
 
-  actionIcons(lead) {
+  actionIcons(lead, type) {
+    let formType = (type == 1) ? 1 : 2;
     let icons = [
-      { class: 'fas fa-trash-alt ml-2', action: this.deleteLead.bind(this, lead) }
+      // { class: 'fas fa-trash-alt ml-2', action: this.deleteLead.bind(this, lead) }
+      { class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType), txt: '', title: "Action Form" }
     ];
     return icons;
   }
@@ -469,7 +471,7 @@ export class ChatboxComponent implements OnInit {
       } else if (formType == 1) {
         this.openTransAction(lead, type, 2);
       } else {
-        this.getTargetActionData(null);
+        this.getTargetActionData(type);
       }
     });
   }

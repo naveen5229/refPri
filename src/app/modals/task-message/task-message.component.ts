@@ -7,11 +7,30 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { ReminderComponent } from '../reminder/reminder.component';
 import { TaskNewComponent } from '../task-new/task-new.component';
 import { CampaignTargetActionComponent } from '../campaign-modals/campaign-target-action/campaign-target-action.component';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 @Component({
   selector: 'ngx-task-message',
   templateUrl: './task-message.component.html',
-  styleUrls: ['./task-message.component.scss']
+  styleUrls: ['./task-message.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        height: '*',
+        opacity: 1,
+      })),
+      state('closed', style({
+        height: '0',
+        opacity: 0
+      })),
+      transition('open => closed', [
+        animate('0.35s')
+      ]),
+      transition('closed => open', [
+        animate('0.35s')
+      ]),
+    ]),
+  ]
 })
 export class TaskMessageComponent implements OnInit {
   // this page in from 3 pages change carefully
@@ -44,6 +63,9 @@ export class TaskMessageComponent implements OnInit {
     name: null,
     file: null
   };
+  attachmentList = [];
+  isAttachmentShow = false;
+
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -73,9 +95,11 @@ export class TaskMessageComponent implements OnInit {
         this.getAllUserByTask();
       }
       this.getAllAdmin();
+      this.getAttachmentByTicket();
+
     }
 
-    console.log("user_details:", this.userService._details)
+    // console.log("user_details:", this.userService._details)
   }
 
   ngOnInit() {
@@ -205,6 +229,21 @@ export class TaskMessageComponent implements OnInit {
       console.log("userListByTask:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  getAttachmentByTicket() {
+    this.attachmentList = [];
+    this.api.get('AdminTask/getAttachmentByTicket?ticketId=' + this.ticketId).subscribe(res => {
+      if (res['code'] == 1) {
+        this.attachmentList = res['data'] || [];
       } else {
         this.common.showError(res['msg'])
       }

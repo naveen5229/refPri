@@ -142,7 +142,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   getActionList() {
-    console.log("transAction:", this.transAction);
+    // console.log("transAction:", this.transAction);
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
