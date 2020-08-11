@@ -47,10 +47,6 @@
     }
 }
 
-.new_message {
-    background: lightgray;
-}
-
 .bottom-block {
     .button-box {
         display: inline-grid;
@@ -190,23 +186,4 @@
         cursor: pointer;
         margin-right: 5px;
     }
-}
-
-#chat-attachment {
-    display: none;
-}
-
-.custom-file-upload {
-    display: flex;
-    padding: 6px 12px;
-    cursor: pointer;
-    height: 100%;
-    align-items: center;
-}
-
-.attachment-view {
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-    background: lightgray;
 }

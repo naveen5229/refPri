@@ -183,7 +183,7 @@
     <!-- end: dym field -->
     <div class="row">
         <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
+            <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
         </div>
     </div>
 </div>

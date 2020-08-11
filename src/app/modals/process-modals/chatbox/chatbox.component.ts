@@ -52,6 +52,12 @@ export class ChatboxComponent implements OnInit {
   };
   activeTab = 'actionList';
   priOwnId = null;
+  attachmentFile = {
+    name: null,
+    file: null
+  };
+  attachmentList = [];
+  isAttachmentShow = false;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -69,6 +75,7 @@ export class ChatboxComponent implements OnInit {
       this.getAllUserByLead();
       this.getAllAdmin();
       this.getTargetActionData();
+      this.getAttachmentByLead();
     }
 
     // console.log("user_details:", this.userService._details)
@@ -105,7 +112,21 @@ export class ChatboxComponent implements OnInit {
     });
   }
 
-  // start: campaign msg ----------------------------------------------------
+  getAttachmentByLead() {
+    this.attachmentList = [];
+    this.api.get('Processes/getAttachmentByLead?ticketId=' + this.ticketId).subscribe(res => {
+      if (res['code'] == 1) {
+        this.attachmentList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
   getLeadMessage() {
     this.showLoading = true;
     let params = {
@@ -141,14 +162,15 @@ export class ChatboxComponent implements OnInit {
   }
 
   saveLeadMessage() {
-    if (this.taskMessage == "") {
+    if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage
+        message: this.taskMessage,
+        attachment: this.attachmentFile.file
       }
       this.api.post('Processes/saveLeadMessage', params).subscribe(res => {
         this.common.loading--;
@@ -164,6 +186,29 @@ export class ChatboxComponent implements OnInit {
         console.log('Error: ', err);
       });
     }
+  }
+
+  handleFileSelection(event) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0]).then((res: any) => {
+      this.common.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
+      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+      } else {
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf");
+        return false;
+      }
+      this.attachmentFile.name = file.name;
+      this.attachmentFile.file = res;
+      console.log("attachmentFile:", this.attachmentFile)
+    }, err => {
+      this.common.loading--;
+      console.error('Base Err: ', err);
+    })
   }
 
   getAllUserByLead() {
