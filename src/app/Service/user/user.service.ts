@@ -69,6 +69,12 @@ export class UserService {
         return true;
       });
 
+    if (this._loggedInBy === 'admin') {
+      this._menu[type].push({
+        title: "Walle8",
+        icon: 'layers-outline',
+      });
+    }
   }
 
   reset() {
