@@ -7,6 +7,7 @@
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle"></span>
     <div class="action-icon">
+        <span><i class="fa fa-eye text-dark" title="View Transaction" (click)="viewTransaction()"></i></span>
         <span><i class="fas fa-plus-square text-primary" title="Primary Info Form" (click)="openPrimaryInfoFormData()"></i></span>
     </div>
 </div>
@@ -47,14 +48,15 @@
 
                     <td *ngIf="!showAssignUserAuto" class="bg-lavender">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-9">
                                 <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
-                            <!-- <div class="col-6 text-right">
-                                <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign to new user" (click)="showAssignUserAuto=1"><i
-                              class="fa fa-plus"></i></button>
-                                <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()" title="User Logs"></i>
-                            </div> -->
+                            <div class="col-3 text-right">
+                                <!-- <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign new Primary Owner" (click)="showAssignUserAuto=1"> -->
+                                <i class="fa fa-plus" *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
+                                <!-- </button> -->
+                                <!-- <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()" title="User Logs"></i> -->
+                            </div>
                         </div>
                     </td>
                     <td *ngIf="showAssignUserAuto==1" class="bg-lavender">
@@ -67,10 +69,12 @@
                                 </auto-suggestion>
                             </div>
                             <div class="col-3 text-right">
-                                <button class="btn btn-primary btn-sm" (click)="updateLeadPrimaryOwner()" title="Add PO"><i
-                                  class="fa fa-check"></i></button>
-                                <button class="btn btn-primary btn-sm ml-1" (click)="showAssignUserAuto=null" title="Cancel"><i
-                                      class="fa fa-times"></i></button>
+                                <!-- <button class="btn btn-primary btn-sm" (click)="updateLeadPrimaryOwner()" title="Add PO"> -->
+                                <i class="fa fa-check" (click)="updateLeadPrimaryOwner()" title="Add PO"></i>
+                                <!-- </button> -->
+                                <!-- <button class="btn btn-primary btn-sm ml-1" (click)="showAssignUserAuto=null" title="Cancel"> -->
+                                <i class="fa fa-times" (click)="showAssignUserAuto=null" title="Cancel"></i>
+                                <!-- </button> -->
                             </div>
                         </div>
                     </td>

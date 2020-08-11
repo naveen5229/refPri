@@ -62,13 +62,15 @@ export class AddTransactionComponent implements OnInit {
   processList = [];
   typeList = [];
   adminList = [];
+  isDisabled = false;
+
   constructor(public activeModal: NgbActiveModal,
     public common: CommonService,
     private modalService: NgbModal,
     public api: ApiService) {
     console.log("common params:", this.common.params);
     if (this.common.params) {
-      this.processList = this.common.params.processList.map(x => { return { id: x._id, name: x.name } });
+      this.processList = (this.common.params.processList && this.common.params.processList.length) ? this.common.params.processList.map(x => { return { id: x._id, name: x.name } }) : [];
       this.adminList = this.common.params.adminList;
     }
     if (this.common.params && this.common.params.rowData) {
@@ -77,6 +79,7 @@ export class AddTransactionComponent implements OnInit {
       this.transForm.process.name = this.common.params.rowData.processName;
       this.transForm.identity = this.common.params.rowData.identity;
       this.transForm.priOwn.id = this.common.params.rowData.priOwnId;
+      this.isDisabled = (this.common.params.rowData.isDisabled) ? true : false;
       this.onSelectProcess();
     }
   }

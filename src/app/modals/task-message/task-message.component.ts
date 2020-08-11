@@ -720,7 +720,7 @@ export class TaskMessageComponent implements OnInit {
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext)) {
       } else {
-        this.common.showError("valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf");
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf");
         return false;
       }
       this.attachmentFile.name = file.name;
