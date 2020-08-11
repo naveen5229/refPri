@@ -1,0 +1,286 @@
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "Open Sans", sans-serif !important;
+}
+
+p,
+a,
+label,
+input,
+select,
+textarea,
+.nb-theme-corporate nb-layout .layout {
+    font-family: "Poppins", sans-serif !important;
+}
+
+input,
+select,
+textarea {
+    padding: 6px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    height: auto !important;
+}
+
+input::placeholder {
+    font-size: 12px !important;
+    line-height: 20px !important;
+}
+
+.tooltip {
+    opacity: 1 !important;
+}
+
+.nb-theme-corporate nb-sidebar {
+    width: 15rem;
+    z-index: 1000 !important;
+}
+
+.nb-theme-corporate nb-sidebar.expanded {
+    width: 15rem;
+}
+
+.menu-sidebar .main-container {
+    width: 15rem !important;
+}
+
+.compacted .main-container {
+    width: auto !important;
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 12px !important;
+    background-color: #c1c1c1 !important;
+}
+
+.cdk-overlay-container {
+    z-index: 99999999999999999 !important;
+}
+
+.nb-theme-default nb-layout .layout .layout-container .content .columns nb-layout-column {
+    padding: 0;
+}
+
+.modal-header {
+    padding: 3px 15px !important;
+    background-color: #26a69a;
+}
+
+.modal-header h5 {
+    color: #fff;
+}
+
+.modal-header .close {
+    background: transparent;
+    color: #fff !important;
+    opacity: 1;
+    padding: 8px 20px;
+    margin: -10px -1rem -1rem auto;
+    outline: none;
+    font-size: 30px;
+}
+
+.control-icon.nb-notifications::before {
+    content: "\f0f3";
+    display: block;
+    font-family: "FontAwesome";
+    font-size: 22px;
+    margin-top: 5px;
+}
+
+.fas.fa-file-invoice:before,
+.fas.fa-weight-hanging::before,
+.fas.fa-file-invoice-dollar:before,
+.fas.fa-ticket-alt:before,
+.fas.fa-money-check-alt:before,
+.fas.fa-clipboard-check::before,
+.fas.fa-receipt::before,
+.fas.fa-coins::before,
+.fas.fa-user-cog::before,
+.fas.fa-gas-pump::before,
+.fas.fa-warehouse::before,
+.fas.fa-traffic-light::before,
+.fas.fa-city::before,
+.fas.fa-route::before,
+.fas.fa-file-signature::before,
+.fas.fa-sync-alt::before,
+.fas.fa-map-marked-alt::before,
+.fas.fa-comment-dots::before,
+.fas.fa-address-card::before,
+.fas.fa-file-alt::before,
+.fas.fa-map-marked-alt::before,
+.fas.fa-map-pin::before,
+.fas.fa-info-circle::before,
+.fas.fa-tools::before,
+.fas.fa-badge-check::before,
+.fas.fa-map-marked::before,
+.fas.fa-truck-pickup::before,
+.fas.fa-tachometer-alt::before,
+.fas.fa-chess-king::before,
+.fas.fa-briefcase::before,
+.fas.fa-car-battery::before {
+    font-family: inherit;
+}
+
+.bg-lightblue {
+    background: lightblue;
+}
+
+.bg-lavender {
+    background: lavender;
+}
+
+.bg-lavenderblush {
+    background: lavenderblush;
+}
+
+.bg-lightcyan {
+    background: lightcyan;
+}
+
+.bg-aliceblue {
+    background: aliceblue;
+}
+
+.pac-container {
+    z-index: 2147483647 !important;
+}
+
+.blue {
+    color: #0606e3;
+}
+
+table .fa,
+table .fas,
+table .far {
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+table .fa-edit {
+    color: green;
+}
+
+table .fa-trash {
+    color: red;
+}
+
+table .fa-trash-alt {
+    color: red;
+}
+
+table .fa-times {
+    color: red;
+}
+
+table .fa-user-plus {
+    color: blue;
+}
+
+table .fa-check {
+    color: darkblue;
+}
+
+table .fa-eye {
+    color: #7b0579;
+}
+
+table .fa-thumbs-up {
+    color: green;
+}
+
+.fa-bell {
+    color: gray;
+}
+
+.fa-bell.isRemind {
+    color: red;
+}
+
+.fa-bell.reminderAdded {
+    color: #ffba12;
+}
+
+.fa-pause-circle {
+    color: #ffba12;
+}
+
+.fa-play-circle {
+    color: #ffba12;
+}
+
+table .fa-comments {
+    color: limegreen;
+}
+
+table .fa-comments.no-comment {
+    color: gray;
+}
+
+table .fa-comments.new-comment span {
+    min-width: 13px;
+    min-height: 13px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: 1px;
+    padding: 1px;
+    font-size: 8px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 11px;
+    background: transparent;
+}
+
+.tabs_style {
+    width: 100%;
+    margin: 0px;
+    border-bottom: 2px solid #26a69a;
+    margin-bottom: 10px;
+    padding-left: 5px !important;
+}
+
+.tabs_style li {
+    padding: 5px 6px;
+    list-style: none;
+    margin-right: 5px;
+    background-color: #26a69a;
+    border: 2px solid #26a69a;
+    color: #fff;
+    border-bottom: 0px;
+    display: inline-block;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.tabs_style li.active {
+    background-color: #fff;
+    color: #26a69a;
+    position: relative;
+}
+
+.tabs_style li.active::after {
+    content: "";
+    display: block;
+    background-color: #fff;
+    height: 10px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

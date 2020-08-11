@@ -1,72 +1,281 @@
 <nb-card>
-  <nb-card-header>
-    Task Assign
-  </nb-card-header>
-  <nb-card>
-    <nb-card-body>
-      <div class="container">
-        <div class="row ">
-          <div class="col-2">
-            <div class="form-group">
-              <label>Module</label>
-              <input type="text" placeholder="Module Name" [(ngModel)]="module" name="name" class="form-control"
-                required>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-10">
+
+                <h5>Tasks</h5>
 
             </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label>Title</label>
-              <input type="text" class="form-control" name="title" [(ngModel)]="title" placeholder="Title" required>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label>Description</label>
-              <textarea rows="2" cols="15" placeholder="Description"></textarea>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label>Assigner</label>
-              <input type="text" class="form-control" placeholder="assigner" [(ngModel)]="assigner">
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label>Assigned</label>
-              <input type="text" class="form-control" placeholder="assigned" [(ngModel)]="assigned">
-            </div>
-          </div>
-          <div class="col-2 mt-4">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveUser()">Add</button> </div>
-
+            <div class="col text-right">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()"><i
+                        class="fa fa-plus"></i></button> </div>
 
         </div>
-        <table class="table table-border">
-          <thead class="thead">
-            <tr>
-              <th>S.no</th>
-              <th>Module Name</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Assigner</th>
-              <th>Assigned</th>
 
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of user; let i=index;">
-              <td>{{i +1}}</td>
-              <td>{{user.name}}</td>
-              <td>{{user.mobileno}}</td>
-              <td>{{user.emailid }}</td>
-              <td>{{user.dept_type }}</td>
 
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </nb-card-body>
+    </nb-card-header>
+    <nb-card>
+        <nb-card-body>
+            <div class="tabs_style_main">
+                <ul class="tabs_style text-left">
+                    <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'; getTask()">My
+                        Tasks
+                    </li>
+                    <li [ngClass]="activeTab=='Assigned By Me'?'active':''"
+                        (click)="activeTab='Assigned By Me'; getTask()">
+                        Assigned Tasks</li>
+                    <li [ngClass]="activeTab=='Waiting For Review'?'active':''"
+                        (click)="activeTab='Waiting For Review'; getTask()">Waiting For Review</li>
 
-  </nb-card>
+                    <li [ngClass]="activeTab=='Review But Change'?'active':''"
+                        (click)="activeTab='Review But Change'; getTask()">
+                        Review But Change</li>
+                    <li [ngClass]="activeTab=='Pending Review'?'active':''"
+                        (click)="activeTab='Pending Review'; getTask()">
+                        Pending Review</li>
+                    <li [ngClass]="activeTab=='Completed Task'?'active':''"
+                        (click)="activeTab='Completed Task'; getTask()">
+                        Completed Task</li>
+                </ul>
+
+            </div>
+            <!-- <div class="row mt-1">
+                <div class="col-2 text-right">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Review List</button> </div>
+                <div class="col-2 text-right">
+                    <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign Task</button> </div>
+            </div> -->
+            <div *ngIf="activeTab=='Assign Task'">
+
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Segment</th>
+                            <th>Assigner</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of taskList; let i=index;">
+                            <td>0{{i+1}}</td>
+                            <td>{{task.Title }}</td>
+                            <td>{{task.Description }}</td>
+                            <td>{{task.ProjectName }}</td>
+                            <td>{{task.SegmentName }}</td>
+                            <td>{{task.AssignerName }}</td>
+                            <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
+                            <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+                            <td><abbr title="Waiting for review  then click it"><i class="fas fa-check"
+                                        (click)="waitingForReview(task)"></i></abbr>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div *ngIf="activeTab=='Completed Task'">
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Segment</th>
+                            <th>Assigner</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of complateTask; let i=index;">
+                            <td>0{{i+1}}</td>
+                            <td>{{task.Title }}</td>
+                            <td>{{task.Description }}</td>
+                            <td>{{task.ProjectName }}</td>
+                            <td>{{task.SegmentName }}</td>
+                            <td>{{task.AssignerName }}</td>
+                            <td>{{task.assign_time |date :'dd MMM yyyy hh:mm a ' }}</td>
+                            <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="activeTab=='Assigned By Me'">
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Segment</th>
+                            <th>Assigned</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Action</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of assigned ; let i=index;">
+                            <td>0{{i+1}}</td>
+                            <td>{{task.Title }}</td>
+                            <td>{{task.Description }}</td>
+                            <td>{{task.ProjectName }}</td>
+                            <td>{{task.SegmentName }}</td>
+                            <td>{{task.AssigneeName }}</td>
+                            <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+                            <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+
+                            <td>
+                                <i class="fas fa-edit edit-icon" (click)="editTask(task)"></i>
+                                <i *ngIf="task.status == -1 || task.status == 0" class="fas fa-trash-alt"
+                                    (click)="deleteTask(task)"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="activeTab=='Waiting For Review'">
+                <table class="table table-bordered mt-1">
+                    <thead class="thead" style="background-color:lightgrey">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Segment</th>
+                            <th>Assigner</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of review ; let i=index;">
+                            <td>0{{i+1}}</td>
+                            <td>{{task.Title }}</td>
+                            <td>{{task.Description }}</td>
+                            <td>{{task.ProjectName }}</td>
+                            <td>{{task.SegmentName }}</td>
+                            <td>{{task.AssignerName }}</td>
+                            <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
+                            <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+                            <!-- <td><i class="fas fa-eye" (click)="reviewTask(task)"></i> -->
+                            <!-- </td> -->
+
+
+
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="activeTab=='Review But Change'">
+                <table class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Segment</th>
+                            <th>Assigner</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Remark</th>
+                            <th>Action</th>
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of changeReview; let i=index;">
+                            <td>0{{i+1}}</td>
+                            <td>{{task.Title }}</td>
+                            <td>{{task.Description }}</td>
+                            <td>{{task.ProjectName }}</td>
+                            <td>{{task.SegmentName}}</td>
+                            <td>{{task.AssignerName }}</td>
+                            <td>{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
+                            <!-- <td><i class="far fa-edit" (click)="editTask(task)"></i><i class="fas fa-trash-alt" (click)="deleteTask(task)"></i>
+                            </td> -->
+                            <td>{{task.review_time | date :'dd MMM yyyy hh:mm a ' }}</td>
+                            <td>{{task.review_remark}}</td>
+                            <td><abbr title="Check and Change then click it"><i class="fas  fa-check"
+                                        (click)="waitingForReview(task)"></i></abbr>
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="activeTab=='Pending Review'">
+
+                <table id="pandingReview" style="overflow-x:scroll;display:block;width:165%!important;"
+                    class="table table-border mt-1">
+                    <thead class="thead">
+                        <tr>
+                            <th style="width:5%">#</th>
+                            <th style="width:8%;">Title</th>
+                            <th style="width:8%;">Description</th>
+                            <th style="width:8%;">Project</th>
+                            <th style="width:8%;">Segment </th>
+                            <th style="width:8%;">Assigned</th>
+                            <th style="width:8%;">Start Time</th>
+                            <th style="width:8%;">Status</th>
+                            <th style="width:8%;">Remark</th>
+                            <th style="width:15%;">End Time</th>
+                            <th style="width:8%;">Action</th>
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of pendingReview ; let i=index;">
+                            <td style="width:5%;">0{{i+1}}</td>
+                            <td style="width:8%;">{{task.Title}}</td>
+                            <td style="width:8%;">{{task.Description}}</td>
+                            <td style="width:8%;">{{task.ProjectName}}</td>
+                            <td style="width:8%;">{{task.SegmentName}}</td>
+                            <td style="width:8%;">{{task.AssigneeName }}</td>
+                            <td style="width:8%;">{{task.assign_time | date :'dd MMM yyyy hh:mm a '}}</td>
+                            <td style="width:8%;"> <select class="form-control" name="taskStatus"
+                                    [(ngModel)]="task.status">
+                                    <option value="a">Select Status</option>
+                                    <option value="2">Completed</option>
+                                    <option value="-1">Review But Change</option>
+                                    <option value="-2">Reject</option>
+
+                                </select></td>
+                            <td style="width:8%;"><textarea row="2" cols="15" [(ngModel)]="task.remark"
+                                    class="form-control"></textarea>
+                            </td>
+                            <td style="width:15%;">
+                                <uj-date-time-picker (onChanged)="task.review_time=$event"
+                                    [dateTimeValue]="task.review_time" [isTime]="true" [isStart]="true">
+                                </uj-date-time-picker>
+                            </td>
+                            <td style="width:8%;"><button class="btn btn-primary text-capitalize" id="button"
+                                    (click)="statusChangeRemark(task)">Submit</button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </nb-card-body>
+
+    </nb-card>

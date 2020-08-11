@@ -1,21 +1,24 @@
 <div class="suggestion-container" [formGroup]="parentForm || searchForm" (keydown)="handleKeyDown($event)">
+
     <div class="tagsinput_main">
         <div class="tagsinput">
             <p *ngFor="let selectedSuggestion of selectedSuggestions; let i= index;">
                 <!-- <input [value]="generateString(selectedSuggestion)" readonly> -->
                 <span>{{generateString(selectedSuggestion)}}</span>
-                <i class="fa fa-close" (click)="selectedSuggestions.splice(i,1)"></i>
+                <i class="far fa-times-circle" (click)="removeSuggestion(i)"></i>
+
             </p>
             <span>
                 <input type="text" autocomplete="off" [formControlName]="controlName || 'search'"
                     name="suggestion-input" class="form-control search-input" (input)="getSuggestions()"
                     [ngClass]="className || 'custom-input-1'" [(ngModel)]="searchText"
                     [placeholder]="placeholder || 'Enter search text'" [id]="inputId || 'suggestion'"
-                    [name]="name || 'suggestion'" required autocomplete="no-auto-suggestion"
-                    (ngModelChange)="handleUnselected()">
+                    [name]="name || 'suggestion'" required (ngModelChange)="handleUnselected()">
+
                 <i class="fas fa-sort-down" *ngIf="data && data.length" style="cursor: pointer"
-                    (click)="showAllSuggestion()"></i>
+                    (click)="showAllSuggestion($event)"></i>
             </span>
+
         </div>
     </div>
     <div class="suggestions" *ngIf="showSuggestions && suggestions.length">
@@ -25,6 +28,7 @@
             {{generateString(suggestion)}}
         </p>
     </div>
+
     <!-- <div class="suggetion-all" *ngIf="!showSuggestions && suggestions.length ">
         <p *ngFor="let suggestion of suggestions; let i = index;" class="suggestion"
             [ngClass]="activeSuggestion == i ? 'active-suggestion' : classFinder(suggestion)"
@@ -32,14 +36,13 @@
             {{generateString(suggestion)}}
         </p>
     </div> -->
+
     <!-- <div *ngIf="parentForm && f.controlName.errors" class="invalid-feedback">
         <div *ngIf="f.controlName.errors.required"> Name is required</div>
     </div> -->
 </div>
+
 <!-- How To Use -->
+
 <!-- <auto-suggestion (onSelected)="selectedUser = $event" url=" Suggestion/getFoAdminList" display="employeename"
 placeholder="Enter User Name" [preSelected]="null"></auto-suggestion> -->
-
-
-
-

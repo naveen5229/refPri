@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../Service/Api/api.service';
 import { UserService } from '../../../Service/user/user.service';
+import { CommonService } from '../../../Service/common/common.service';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   currentTheme = 'default';
-
+  userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
@@ -51,7 +52,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public router: Router,
     private api: ApiService,
     public userService: UserService,
+    public common: CommonService,
     private breakpointService: NbMediaBreakpointsService) {
+    if (this.userService._details == null) {
+      this.router.navigate(['/auth/login']);
+    }
+    else {
+
+      this.userLogin = this.userService._details.name || [];
+      console.log("----------------", this.userLogin);
+    }
   }
 
   ngOnInit() {
@@ -96,23 +106,46 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     if (confirm('Are you sure to logout?')) {
+      let loggedInBy = localStorage.getItem('ITRM_LOGGED_IN_BY');
+      let apiCall = (loggedInBy == 'customer') ? 'FoAdmin/logout' : 'Login/logout';
       let params = {
         entrymode: "1",
         version: "1.1",
         authkey: this.userService._token
       }
-      this.api.post('Login/logout', params)
+      this.common.loading++;
+      this.api.post(apiCall, params)
         .subscribe(res => {
+          this.common.loading--;
           if (res['success']) {
             this.userService._token = '';
             this.userService._details = null;
-            localStorage.clear();
-            this.router.navigate(['/auth/login']);
+
+            localStorage.removeItem('ITRM_USER_TOKEN');
+            localStorage.removeItem('ITRM_USER_DETAILS');
+            localStorage.removeItem('ITRM_LOGGED_IN_BY');
+            localStorage.removeItem('ITRM_USER_PAGES');
+
+            this.common.showToast(res['msg']);
+            if (loggedInBy == 'customer') {
+              this.router.navigate(['/auth/login']);
+            } else {
+              this.router.navigate(['/auth/login/admin']);
+            }
           }
         },
           err => {
+            this.common.loading--;
+            this.common.showError();
           });
-      
     }
+  }
+  refresh() {
+    if (!this.common.refresh) {
+      // this.router.navigateByUrl('/pages/dashboard');
+      this.router.navigateByUrl('/pages/task');
+      return;
+    }
+    this.common.refresh();
   }
 }

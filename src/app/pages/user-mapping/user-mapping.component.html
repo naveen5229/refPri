@@ -1,0 +1,119 @@
+
+<nb-card>
+  <nb-card-header>
+      User Mapping
+  </nb-card-header>
+  <nb-card-body>
+      <div class="container">
+         <div class="row">
+           
+          <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='partnerMapping'?'active':''" (click)="activeTab='partnerMapping'; getPartnerMappingData()">
+                    Partner Mapping
+                </li>
+                <li [ngClass]="activeTab=='partnerUserMapping'?'active':''" (click)="activeTab='partnerUserMapping';">
+                    Partner User Mapping
+                </li>
+                <li [ngClass]="activeTab=='companyMapping'?'active':''" (click)="activeTab='companyMapping';">
+                    Company Mapping
+                </li>
+                <li [ngClass]="activeTab=='companyUserMapping'?'active':''" (click)="activeTab='companyUserMapping';">
+                    Company User Mapping
+                </li>
+                <li [ngClass]="activeTab=='vehicleMapping'?'active':''" (click)="activeTab='vehicleMapping';">
+                  Vehicle Mapping
+              </li>
+            </ul>
+        </div>
+
+
+
+         </div> 
+          <div class="row" *ngIf="activeTab == 'partnerMapping'">
+            <div class="mt-2">
+                <smart-table *ngIf="partnerMapping.length" [data]="table.data" [settings]="table.settings"></smart-table>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="activeTab == 'partnerUserMapping'">
+          <div class="col-6">
+          <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
+          <div class="col-8" style="display:inline-block">
+            <auto-suggestion (onSelected)="getElogistPartner($event)" [display]="['name','mobileno']" [data]="partnerMapping"
+            placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+            </auto-suggestion>
+          </div>
+        </div>
+        <div class="col-6"></div>
+        <div class="col-12">
+          <div class="mt-2">
+            <smart-table *ngIf="partnerUserMappings.length" [data]="table1.data" [settings]="table1.settings"></smart-table>
+        </div>
+        </div>
+        
+      </div>
+
+      <div class="row" *ngIf="activeTab == 'companyMapping'">
+        <div class="col-6">
+        <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
+        <div class="col-8" style="display:inline-block">
+          <auto-suggestion (onSelected)="getElogistCompany($event)" [display]="['name','mobileno']" [data]="partnerMapping"
+          placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+      <div class="col-6"></div>
+      <div class="col-12">
+        <div class="mt-2">
+          <smart-table *ngIf="companyMappings.length" [data]="table2.data" [settings]="table2.settings"></smart-table>
+      </div>
+      </div>
+      
+    </div>
+
+    <div class="row" *ngIf="activeTab == 'companyUserMapping'">
+      <!-- <div class="col-6">
+      <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
+      <div class="col-8" style="display:inline-block">
+        <auto-suggestion (onSelected)="getElogistPartnerUser($event)" [display]="['name','mobileno']" [data]="partnerMapping"
+        placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+        </auto-suggestion>
+      </div>
+    </div> -->
+    <div class="col-6">
+      <label class="col-4" style="display:inline-block;" >Company User</label>
+      <div class="col-8" style="display:inline-block">
+        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno']" [data]="companyData"
+        placeholder="Company User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+        </auto-suggestion>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="mt-2">
+        <smart-table *ngIf="companyUserMappings.length" [data]="table3.data" [settings]="table3.settings"></smart-table>
+    </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="activeTab == 'vehicleMapping'">
+    <div class="col-6">
+    <label class="col-4" style="display:inline-block;" >Elogist Company</label>
+    <div class="col-8" style="display:inline-block">
+      <auto-suggestion (onSelected)="getElogistPartnerUserForVehicle($event)" [display]="['name']" [data]="companyData"
+      placeholder="Elogist Company"   [preSelected]="null" className="borderStyle" inputId="id">
+      </auto-suggestion>
+    </div>
+    </div>
+  <div class="col-sm-3 offset-sm-3">
+    <button  type="submit" class="btn btn-primary" (click)="addVehicle()">Add Vehicle</button>
+  </div>
+  <div class="col-12">
+    <div class="mt-2">
+      <smart-table *ngIf="vehicleMapping.length" [data]="table4.data" [settings]="table4.settings"></smart-table>
+  </div>
+  </div>
+  </div>
+  </div>
+  </nb-card-body>
+</nb-card>

@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h5>Campaign User mapping</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+
+<div class="modal-body">
+
+
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Add Users:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Users" [preSelected]="selectedUserList" (onSelected)="changeUsers($event)" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+        </div>
+    </div>
+
+
+</div>
+<!-- start: update date form -->
+<div class="modal-footer">
+
+    <div class="row mt-2 ">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" (click)="saveUsers()">Save</button>
+        </div>
+    </div>
+</div>
+<!-- end: update date form -->

@@ -1,0 +1,103 @@
+<div class="modal-header">
+  <h5>Send Message</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="container">
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Select Admin <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <auto-suggestion [data]="messageDataList" [display]="['admin_name','admin_mobile']" seperator="-" placeholder="Admin Name"
+           (onSelected)="selectedAdmin($event)"  autocomplete="off"
+           
+           >
+        </auto-suggestion>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Contact Type <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-6">
+           
+            <select class="form-control" name="contact_type" [(ngModel)]="contact_type">
+              <option value="FOU">FOU</option>
+              <option value="PTN">PTN</option>
+              <option value="ADM">ADM</option>
+              <option value="UKN">UKN</option>
+          </select>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Images <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <input type="file" multiple name="ww-image" id="ww-image" (change)="handleFileSelectionImage($event)" >
+
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-6">
+        <label>Message <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+            <textarea style="resize: vertical;" rows="10" cols="30"  name="message" [(ngModel)]="message"></textarea>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf='imagesUrl.length && message != null'>
+      <div class="col-6">
+        <label>Order By <span class="require">*</span></label>
+      </div>
+      <div class="col-6">
+        <div class="row" style="margin-left: 15px;">
+            <div class="col-6">
+              <input id="imageFirst" type="radio" class="custom-control-input" [(ngModel)]="imageTextFirst" value="1" name="imageFirst" >
+              <label class="custom-control-label" for="imageFirst">Image First</label>
+            </div>
+            <div class="col-6">
+              <input id="textFirst" type="radio" class="custom-control-input" [(ngModel)]="imageTextFirst" value="2" name="textFirst" >
+              <label class="custom-control-label" for="textFirst">Text First</label>
+            </div>
+        </div>
+            
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-md-6">
+        <label>Upload Csv <span class="require">*</span></label>
+      </div>
+      <div class="col-md-6">
+        <div class="upload-btn-wrapper">
+          <input type="file" name="csv" (change)="handleFileSelection($event)" style="margin:4%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div class="row footer">
+    <div class="col ">
+      <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary " type='submit' id="save" (click)="SendMsg()">Send</button>
+    </div>
+  </div>
+</div>

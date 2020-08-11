@@ -1,0 +1,54 @@
+<nb-card style="border:0px;">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-9">
+                <h5>Add Pages</h5>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body style="min-height: 580px;">
+        <div class="row">
+            <div class="col-3">
+                <label>Page Name</label>
+                <input class="form-control" type="text" placeholder="Page Name" style="width: 100%;" [(ngModel)]='pageName'>
+            </div>
+            <div class="col-3">
+                <label>URL</label>
+                <input class="form-control" type="text" placeholder="URL" style="width: 100%;" [(ngModel)]='url'>
+            </div>
+            <div class="col-2">
+                <label>Select Group Name</label>
+                <auto-suggestion (onSelected)="getSelectedGroup($event)" [data]="groupdata" seperator="-" display="name" placeholder="Group" [preSelected]="groupName ? {name: groupName } : {name: ''} " inputId="id"></auto-suggestion>
+            </div>
+            <div class="col-2">
+                <label>Select Role Type</label>
+                <select class="form-control" [(ngModel)]="pageRoleType" placeholder="Select Role Type">
+                  <option [value]="1">Only Admin</option>
+                  <option [value]="2">Only Customer</option>
+                  <option [value]="-1">Both</option>
+              </select>
+            </div>
+            <div class="col-2 mt-4" *ngIf='rowId == null'>
+                <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Add</button>
+            </div>
+
+            <div class="col-2 mt-4" *ngIf='rowId != null'>
+                <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Update</button>
+                <button class="btn btn-primary btn-sm ml-2" (click)="resetUserRole()">Cancel</button>
+            </div>
+
+
+        </div>
+
+        <br>
+        <br>
+
+        <div class="row">
+            <smart-table *ngIf="data && data.length>0" [data]="table.data" [settings]="table.settings" id="data">
+            </smart-table>
+            <!-- <div class="row no-record" *ngIf="data.length==0">No Data Available</div> -->
+        </div>
+
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,28 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-2">
+                <h5>User Groups</h5>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="row mb-2">
+            <div class="col-3">
+                <input placeholder="Enter Group Name" name="groupName" class="form-control" maxlength="50" [(ngModel)]="groupForm.name">
+            </div>
+            <div class="col-6">
+                <auto-suggestion (onSelected)="groupForm.users = $event" [data]="adminList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="groupForm.users" isMultiSelect="true">
+                </auto-suggestion>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary btn-sm mr-2" (click)="addGroup()" [innerHTML] = "(groupForm.requestId > 0)?'Update':'Add'"></button>
+                <button class="btn btn-secondary btn-sm mr-2" (click)="resetForm()" >Reset</button>
+            </div>
+        </div>
+        <div class="row">
+            <smart-table [data]="table.data" [settings]="table.settings" id="userGroupId"></smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>

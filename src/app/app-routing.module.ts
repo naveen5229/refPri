@@ -9,12 +9,20 @@ import {
   NbResetPasswordComponent,
 } from '@nebular/auth';
 import { LoginComponent } from './auth/login/login.component';
+import { AdminToolComponent } from './pages/admin-tool/admin-tool.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
+
   {
     path: 'pages',
     loadChildren: () => import('../app/pages/pages.module')
       .then(m => m.PagesModule),
+  },
+  {
+    path: 'campaign',
+    loadChildren: () => import('../app/campaign/campaign.module')
+      .then(m => m.CampaignModule),
   },
   {
     path: 'auth',
@@ -26,6 +34,10 @@ const routes: Routes = [
       },
       {
         path: 'login',
+        component: LoginComponent,
+      },
+      {
+        path: 'login/:type',
         component: LoginComponent,
       },
       {
@@ -46,12 +58,17 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'process',
+    loadChildren: () => import('../app/process/process.module')
+      .then(m => m.ProcessModule),
+  },
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
 ];
 
 const config: ExtraOptions = {
-  useHash: false,
+  useHash: true,
 };
 
 @NgModule({

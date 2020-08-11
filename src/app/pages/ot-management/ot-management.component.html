@@ -1,0 +1,29 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-12">
+                <h5>OT-Management</h5>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-3">
+                <label>Select Date</label>
+            </div>
+            <div class="col-3">
+                <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
+                </uj-date-time-picker>
+            </div>
+            <div class="col-3">
+                <button type="submit" id="submit" (click)="getOtList()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-12">
+                <smart-table [data]="tableOtList.data" [settings]="tableOtList.settings" id="tableOtList"></smart-table>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,61 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Assign Columns</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="clearfix">
+        <div *ngIf="fields.length>0">
+            <div class="row mt-2">
+                <div class="col-4">
+                    <div class="drag-container">
+                        <h2 style="text-align: center;font-size: 19px;">Unassigned</h2>
+                        <div id="unassign" cdkDropList #unAssignList="cdkDropList" [cdkDropListData]="unassign" [cdkDropListConnectedTo]="[assignLeft,assignRight]" class="drag-list" (cdkDropListDropped)="drop($event)">
+                            <div class="drag-box " style="background: #D3D3D3;min-height:60px" *ngFor="let item of unassign" cdkDrag>
+                                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control">
+                                    <div>{{item.r_blockname}}</div>
+                                </div>
+                                <div><input type="checkbox" [(ngModel)]="item.r_required"> is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div Class="col-4">
+                    <div class="drag-container">
+                        <h2 style="text-align: center;font-size: 19px;">Left</h2>
+                        <div id="assign-left" cdkDropList #assignLeft="cdkDropList" [cdkDropListData]="assign.left" [cdkDropListConnectedTo]="[unAssignList, assignRight]" class="drag-list" (cdkDropListDropped)="drop($event)">
+                            <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.left" cdkDrag>
+                                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
+                                    <div>{{item.r_blockname}}</div>
+                                </div>
+                                <div *ngIf="item">
+                                    <input type="checkbox" [(ngModel)]="item.r_required"> is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div Class="col-4">
+                    <div class="drag-container">
+                        <h2 style="text-align: center;font-size: 19px;">Right</h2>
+                        <div id="assign-right" cdkDropList #assignRight="cdkDropList" [cdkDropListData]="assign.right" [cdkDropListConnectedTo]="[unAssignList, assignLeft]" class="drag-list" (cdkDropListDropped)="drop($event)">
+                            <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.right" cdkDrag>
+                                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
+                                    <div>{{item.r_blockname}}</div>
+                                </div>
+                                <div *ngIf="item">
+                                    <input type="checkbox" [(ngModel)]="item.r_required"> is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="fields.length>0" class="modal-footer">
+    <button class="btn btn-primary" (click)="saveColumns();">Save</button>
+</div>

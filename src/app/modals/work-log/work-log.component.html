@@ -1,0 +1,150 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Work Logs</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modalClose()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form onkeydown="return event.key != 'Enter';" #formFilling="ngForm" name="worklog-form" id="worklog-form"
+        (submit)="formFilling.valid && addWorkLog()">
+        <div class="row">
+            <div class="col-6">
+                <div class="row  mt-2">
+                    <div class="col-2">
+                        <label>Task:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-6 ml-2">
+                        <auto-suggestion [data]="tasks" display="title" placeholder="Enter Task Name" name="task"
+                            id="task" (onSelected)="workLog.taskId=($event.id)" [preSelected]="{title: taskname}"
+                            autocomplete="off"></auto-suggestion>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary" type="button" (click)="assignTask()" style="cursor: pointer;"><i
+                                class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <div *ngIf="workLog.taskId==null && isFormSubmit" class="err">
+                    <span class="text-red" style="margin-left: 85px;">value is mandatory</span>
+                </div>
+                <div class="row  mt-2">
+                    <div class="col-2">
+                        <label>Component:</label>
+                    </div>
+                    <div class="col-6 ml-2">
+                        <auto-suggestion [data]="components" display="name" inputId="componentId"
+                            placeholder="Enter component Name" (onSelected)="workLog.componentId=($event.id)"
+                            [preSelected]="{name: componentName}" autocomplete="off"></auto-suggestion>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-danger" type="button" (click)="addcomponent()"
+                            style="cursor: pointer;"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <div *ngIf="workLog.componentId==null && isFormSubmit" class="err">
+                    <span class="text-red" style="margin-left: 85px;">value is mandatory</span>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label>WorkLog Status:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-1"></div>
+                    <div class="col-3">
+                        <input type="radio" name="workLogStatus" value='1' [(ngModel)]="workLogStatus" checked> Runing
+                    </div>
+                    <div class="col-4">
+                        <input type="radio" name="workLogStatus" value='2' [(ngModel)]="workLogStatus"> Complete
+                    </div>
+                </div>
+                <div *ngIf="workLogStatus=='2'" class="row  mt-2">
+                    <div class="col-2">
+                        <label>Review User:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="users" display="name" placeholder="review user" name="reviewuser"
+                            (onSelected)="workLog.reviewUserId=($event.id)" [preSelected]="{name: reviewedBy}"
+                            autocomplete="off"></auto-suggestion>
+                    </div>
+                </div>
+                <!-- <div *ngIf="workLog.reviewUserId==null && isFormSubmit" class="err">
+                    <span class="text-red" style="margin-left: 85px;">value is mandatory</span>
+                </div> -->
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label>Remark:</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea placeholder="remark" name="remark" id="remark" [(ngModel)]="workLog.remark"
+                            class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label>Stack:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8 ">
+                        <auto-suggestion [data]="stacks" inputId="stackId" (onSelected)="selectStackId($event.id)"
+                            (onChange)="unselected()" [display]="['stackname','name']" seperator="-" name="stack"
+                            placeholder="Enter stack Name" style="width:60%;"
+                            [preSelected]="{stackname:stackName,name:stackChildName }">
+                        </auto-suggestion>
+                    </div>
+                </div>
+                <div *ngIf="workLog.stackId==null && isFormSubmit" class="err">
+                    <span class="text-red" style="margin-left: 85px;">value is mandatory</span>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label class="mt-2">Date:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="workLog.date = $event" [dateTimeValue]="workLog.date"
+                            [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+                <div class="row  mt-2">
+                    <div class="col-2">
+                        <label>Working Hour:<span class="text-red">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <input type="number" class="form-control" maxlength="2" [(ngModel)]="workLog.hrs"
+                            placeholder="HH" autocomplete="off" name="totalTime" id="totalTime" required
+                            #totalTime="ngModel">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" pattern="[0-9]{2}" class="form-control" name="time" id="time"
+                            [(ngModel)]="workLog.minutes" placeholder="MM" maxlength="2" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFormSubmit && totalTime.errors" class="err">
+                        <span class="text-red" style="margin-left: 85px;" [hidden]="!totalTime.errors.required"> value
+                            is mandatory </span>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label>Description:</label>
+                    </div>
+                    <div class="col-8 ml-1">
+                        <textarea placeholder="Description" name="description" id="description"
+                            [(ngModel)]="workLog.description" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer ">
+    <div class="row ">
+        <div class="col ">
+            <button class="btn btn-danger " type="button " id="cancel " (click)="modalClose() "
+                style="cursor: pointer; ">Cancel</button>
+        </div>
+        <div class="col text-right ">
+            <button class="btn btn-primary " form="worklog-form" type='submit' id="submit " (click)="isFormSubmit=true "
+                style="cursor: pointer; ">Submit</button>
+        </div>
+    </div>
+</div>

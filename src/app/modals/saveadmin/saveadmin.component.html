@@ -1,0 +1,208 @@
+<div class="modal-header">
+    <h6 style="color: white;" class="modal-title p-1" id="modal-basic-title">Save Admin</h6>
+    <div class="col-md-10 text-right">
+        <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div class="modal-body">
+
+    <div *ngIf='!isOtherShow'>
+        <div class="row">
+            <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Admin/searchAdmin?getAll=true" [display]="['name','mobileno']" seperator="-" placeholder="Search By Mobile No. / Name" [preSelected]="preSelected">
+            </auto-suggestion>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Name :-</label>
+            </div>
+            <div class="col-lg-8">
+                <input type="text" class="form-control " [(ngModel)]='Fouser.name' placeholder="Name" required>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Mobile Number :-</label>
+            </div>
+            <div class="col-lg-8">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">
+            </div>
+        </div>
+        <div class="row mt-2" *ngIf="Fouser.id && (this.user._loggedInBy == 'admin' || this.user._loggedInBy == 'customer')">
+            <div class="col-lg-4">
+                <label>Status :-</label>
+            </div>
+            <div class="col-lg-8">
+                <div class="row" style="margin-left: 15px;">
+                    <div class="col-6">
+                        <input id="active" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="true" name="active">
+                        <label class="custom-control-label" for="active">Active</label>
+                    </div>
+                    <div class="col-6">
+                        <input id="deactive" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="false" name="deactive">
+                        <label class="custom-control-label" for="deactive">DeActive</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf='isOtherShow'>
+        <div class="row">
+            <div class="col-lg-4">
+                <label>Department<span class="text-danger">*</span> :-</label>
+            </div>
+            <div class="col-lg-8">
+                <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(Fouser.department.id>0)?{name:Fouser.department.name}:{name:''}">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Reporting Manager :-</label>
+            </div>
+            <div class="col-lg-8">
+                <auto-suggestion (onSelected)="selectReportingManager($event)" url="Admin/searchAdmin?getAll=true" [display]="['name','mobileno']" seperator="-" placeholder="Search By Mobile No. / Name" [preSelected]="(Fouser.reportingManager.id>0)?{name:Fouser.reportingManager.name, mobileno:Fouser.reportingManager.mobileno }:{name:'', mobileno: ''}">
+                </auto-suggestion>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Date of Joining :-<span class="text-danger"></span></label>
+            </div>
+            <div class="col-lg-8">
+                <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="Fouser.doj=$event" [dateTimeValue]="Fouser.doj">
+                </uj-date-time-picker>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Date of Leaving :-</label>
+            </div>
+            <div class="col-lg-8">
+                <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="Fouser.dol=$event" [dateTimeValue]="Fouser.dol">
+                </uj-date-time-picker>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Base Location :-</label>
+            </div>
+            <div class="col-lg-8">
+                <div class="col-10" style="display: inline-block;padding:0;">
+                    <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="location" name="location" placeholder="Location"
+                        [value]="Fouser.location" [preSelected]="(Fouser.location!='')?{location:Fouser.location}:{location:''}" [apiMethod]="'getBooster'">
+                    </auto-suggestion>
+                </div>
+                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                    <label class="btn-primary" style="padding:7px" (click)="searchString='----'; takeAction(null);"><i
+            class="fa fa-plus"></i></label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Allow Radius (meter) :-</label>
+            </div>
+            <div class="col-lg-8">
+                <input type="number" placeholder="Radius" [(ngModel)]='Fouser.allowRadius'>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Attendance Medium :-</label>
+            </div>
+            <div class="col-lg-8">
+                <select class="form-control" [(ngModel)]="selectedItems" (change)="onSelectAttenMedium()" placeholder="Select Medium">
+                    <option *ngFor="let t of dropdownList" [value]="t.id">{{t.item_text}}</option>
+                </select>
+            </div>
+        </div>
+        <!-- start:atten medium -->
+        <div class="row mt-2">
+            <div class="col-12">
+                <!-- <div *ngIf="selectedItems==1" class="row" style="margin-left: 15px;">
+                    <div class="col-4"></div>
+                    <div class="col-2">
+                        <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
+                        <label class="custom-control-label" for="attenMediumNo">No</label>
+                    </div>
+                    <div class="col-2">
+                        <input id="attenMediumYes" type="radio" class="custom-control-input" [value]="'100'" [(ngModel)]="Fouser.attenMedium" name="attenMediumValue">
+                        <label class="custom-control-label" for="attenMediumYes">Restricted</label>
+                    </div>
+                </div> -->
+                <div *ngIf="selectedItems==2" class="row" style="margin-left: 15px;">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <input id="attenMediumYes" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'010'" name="attenMediumValue">
+                        <label class="custom-control-label" for="attenMediumYes">Restricted</label>
+                    </div>
+                    <div class="col-4">
+                        <input id="attenMediumAll" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'020'" name="attenMediumValue">
+                        <label class="custom-control-label" for="attenMediumAll">No Restricted</label>
+                    </div>
+                </div>
+                <!-- <div *ngIf="selectedItems==3" class="row" style="margin-left: 15px;">
+                    <div class="col-4"></div>
+                    <div class="col-2">
+                        <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
+                        <label class="custom-control-label" for="attenMediumNo">No</label>
+                    </div>
+                    <div class="col-2">
+                        <input id="attenMediumYes" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'001'" name="attenMediumValue">
+                        <label class="custom-control-label" for="attenMediumYes">Restricted</label>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <!-- end:atten medium -->
+
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Notification Alert :-</label>
+            </div>
+            <div class="col-lg-8">
+                <!-- <input type="checkbox" [checked]="Fouser.isNotify" (change)="Fouser.isNotify = !Fouser.isNotify" /> -->
+                <select class="form-control" [(ngModel)]="Fouser.isNotify" placeholder="Select Notification">
+                    <option  [value]="0">Disable</option>
+                    <option  [value]="1">Notification</option>
+                    <option  [value]="2">Mute Notification</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Comment Notification :-</label>
+            </div>
+            <div class="col-lg-8">
+                <!-- <input type="checkbox" [checked]="Fouser.isNotifyRing" (change)="Fouser.isNotifyRing = !Fouser.isNotifyRing" /> -->
+                <select class="form-control" [(ngModel)]="Fouser.isCommentNotify" placeholder="Select Comment Notification">
+                    <option [value]="0">Disable</option>
+                    <option [value]="1">Notification</option>
+                    <option [value]="2">Mute Notification</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Call Sync :-</label>
+            </div>
+            <div class="col-lg-8">
+                <input type="checkbox" [checked]="Fouser.isCallSync" (change)="Fouser.isCallSync = !Fouser.isCallSync" />
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row text-right mt-2">
+        <div class="col-12">
+            <!-- <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()">Next</button> -->
+            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="onCancel()">Cancel</button>
+            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary ml-2" (click)="saveAdmin()">{{(isOtherShow)?'Update':'Next'}}</button>
+            <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="saveAdmin()">Save</button>
+        </div>
+    </div>

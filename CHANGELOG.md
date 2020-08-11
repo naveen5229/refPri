@@ -219,5 +219,6 @@ Nebular changelog is available [here](https://github.com/akveo/nebular/blob/mast
 * **compodoc:** add compodoc documentation generator ([#1327](https://github.com/akveo/ngx-admin/issues/1327)) ([eebbc12](https://github.com/akveo/ngx-admin/commit/eebbc12))
 * **loader:** add loading progress indicator ([#1319](https://github.com/akveo/ngx-admin/issues/1319)) ([f479715](https://github.com/akveo/ngx-admin/commit/f479715))
 
+* **icons:** Since this is a major package update we recommend looking through the upgrade guide https://fontawesome.com/how-to-use/on-the-web/setup/upgrading-from-version-4
 
 

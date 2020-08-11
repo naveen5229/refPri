@@ -1,0 +1,11 @@
+:host ::ng-deep.blue{
+    color:blue;
+    text-decoration: underline;
+}
+.ng-star-inserted   { color: red;
+}
+:host ::ng-deep{
+    th:nth-child(2){
+        width: 200px;
+    }
+}

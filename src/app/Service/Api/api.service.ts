@@ -7,11 +7,21 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  URL: string = 'http://192.168.0.111/itrm_webservices/';//vishal local
+  //URL: string = 'http://localhost/itrm_webservices/';//komal local
+  // URL: string = 'http://192.168.1.124/itrm_webservices/';//komal local
+    URL: string = 'https://dev.elogist.in/itrm_webservices/';
+  // URL: string = 'http://elogist.in/itrm_webservices/';
+
+  URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
+  URLTranstruck: string = 'http://elogist.in/transtrucknew/';
+
+  entryMode = this.user._loggedInBy == 'admin' ? '1' : '3';
+
 
   constructor(private http: HttpClient,
     public router: Router,
     public user: UserService) {
+    console.log(this.user);
   }
 
   post(subURL: string, body: any, options?) {
@@ -23,13 +33,51 @@ export class ApiService {
   }
 
   setHeaders() {
-    const entryMode = '3';
+
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'version': '1.0',
-      'entrymode': '3',
+      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
       'apptype': 'dashboard',
-      'authkey': this.user._token || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6InZpc2hhbCIsIm1vYmlsZW5vIjoiODIzMzM3MTkzNCIsImVtYWlsIjoidmlzaGFsLmd1cmRhc2FuaUBlbG9naXN0LmluIiwidGltZSI6IjIwMTktMDgtMjZUMTE6MDI6MzIrMDA6MDAifQ.dUHoP3WpjpIyt6yvRZc5Va9OeN--0xgKWis5WQQJHiw'
+      'authkey': this.user._token
+    });
+    return headers;
+  }
+
+  postBooster(subURL: string, body: any, options?) {
+    return this.http.post(this.URLBooster + subURL, body, { headers: this.setHeadersBooster() })
+  }
+
+  getBooster(subURL: string, params?: any) {
+    return this.http.get(this.URLBooster + subURL, { headers: this.setHeadersBooster() })
+  }
+
+  postTranstruck(subURL: string, body: any, options?) {
+    return this.http.post(this.URLTranstruck + subURL, body, { headers: this.setHeadersTranstruck() })
+  }
+
+  getTranstruck(subURL: string, params?: any) {
+    return this.http.get(this.URLTranstruck + subURL, { headers: this.setHeadersTranstruck() })
+  }
+
+  setHeadersBooster() {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'version': '1.0',
+      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
+      'apptype': 'dashboard',
+      'authkey': this.user._details.authkey_booster
+    });
+    return headers;
+  }
+
+  setHeadersTranstruck() {
+    console.log(this.user._details.authkey_gisdb);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'version': '2.9',
+      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
+      'authkey': this.user._details.authkey_gisdb
     });
     return headers;
   }

@@ -1,13 +1,17 @@
-import { CommonService } from '../../Service/common/common.service';
+import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../Service/Api/api.service';
-import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
+import { CommonService } from '../../Service/common/common.service';
+
 
 
 @Component({
-  selector: 'ngx-auto-suggestion',
+  selector: 'auto-suggestion',
   templateUrl: './auto-suggestion.component.html',
-  styleUrls: ['./auto-suggestion.component.scss']
+  styleUrls: ['./auto-suggestion.component.scss'],
+  host: {
+    '(document:click)': 'hideSuggestions($event)'
+  }
 })
 export class AutoSuggestionComponent implements OnInit {
 
@@ -31,6 +35,7 @@ export class AutoSuggestionComponent implements OnInit {
   @Input() isNoDataFoundEmit: boolean;
   @Input() isMultiSelect: boolean;
   @Input() bGConditions: any[] = [];
+  @Input() apiMethod: string = 'get';
 
   counter = 0;
   searchText = '';
@@ -43,7 +48,6 @@ export class AutoSuggestionComponent implements OnInit {
   selectedSuggestions = [];
   isAllData = false;
   suggestionApiHitTimer: any = null;
-
 
   constructor(public api: ApiService,
     private cdr: ChangeDetectorRef,
@@ -74,6 +78,9 @@ export class AutoSuggestionComponent implements OnInit {
     if (changes.preSelected) {
       this.preSelected = changes.preSelected.currentValue;
       this.preSelected && this.handlePreSelection();
+      if (this.isMultiSelect) {
+        this.selectedSuggestions = this.preSelected || [];
+      }
     }
 
   }
@@ -123,7 +130,7 @@ export class AutoSuggestionComponent implements OnInit {
       params = '&'
     }
     params += 'search=' + this.searchText;
-    this.api.get(this.url + params)
+    this.api[this.apiMethod](this.url + params)
       .subscribe(res => {
         this.suggestions = res['data'];
         if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({ search: this.searchText });
@@ -152,6 +159,7 @@ export class AutoSuggestionComponent implements OnInit {
     let displayText = '';
     if (this.displayType == 'array') {
       this.display.map((display, index) => {
+
         if (index != this.display.length - 1) {
           displayText += suggestion[display] + ' ' + this.seperator + ' ';
         } else {
@@ -208,7 +216,8 @@ export class AutoSuggestionComponent implements OnInit {
     return className;
   }
 
-  showAllSuggestion() {
+  showAllSuggestion(event) {
+    event.stopPropagation();
     this.showSuggestions = true;
     this.suggestions = this.data;
   }
@@ -219,5 +228,15 @@ export class AutoSuggestionComponent implements OnInit {
     this.suggestions = [];
   }
 
-}
+  hideSuggestions() {
+    setTimeout(() => this.showSuggestions = false, 300);
+  }
 
+  removeSuggestion(index) {
+    if (this.isMultiSelect) {
+      this.selectedSuggestions.splice(index, 1);
+      this.onSelected.emit(this.selectedSuggestions);
+    }
+  }
+
+}
