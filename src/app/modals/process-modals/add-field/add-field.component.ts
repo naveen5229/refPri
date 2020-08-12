@@ -18,10 +18,11 @@ export class AddFieldComponent implements OnInit {
   refType = null;
   formType = null;
   order = null;
-  types = [{
-    id: null,
-    name: null,
-  }
+  types = [
+    { id: 'text', name: 'Text' },
+    { id: 'number', name: 'Number' },
+    { id: 'date', name: 'Date' },
+    { id: 'attachment', name: 'Attachment' }
   ];
   fixValues = [{
     option: ''
@@ -54,18 +55,11 @@ export class AddFieldComponent implements OnInit {
     private modalService: NgbModal) {
     this.refId = this.common.params.ref.id;
     this.refType = this.common.params.ref.type;
-    this.types = [{
-      id: 'text',
-      name: 'Text'
-    },
-    {
-      id: 'number',
-      name: 'Number'
-    },
-    {
-      id: 'date',
-      name: 'Date'
-    }];
+    // this.types = [
+    //   { id: 'text', name: 'Text' },
+    //   { id: 'number', name: 'Number' },
+    //   { id: 'date', name: 'Date' }
+    // ];
 
     if (!this.refType) {
       this.title = "Add State Form Field";

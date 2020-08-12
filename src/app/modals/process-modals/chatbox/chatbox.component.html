@@ -1,23 +1,45 @@
 <div class="modal-header">
     <h5 class="m-0">{{title | titlecase}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-<span aria-hidden="true">&times;</span>
-</button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-    {{subTitle}}
+    <span [innerHtml]="subTitle"></span>
+    <div class="action-icon">
+        <span><i class="fa fa-files-o text-dark" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+        <span><i class="fa fa-eye text-dark" title="View Transaction" (click)="viewTransaction()"></i></span>
+        <span><i class="fas fa-plus-square text-primary" title="Primary Info Form" (click)="openPrimaryInfoFormData()"></i></span>
+    </div>
 </div>
 <div class="modal-body">
+    <!-- start: view attachment -->
+    <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
+        <div class="col-11">
+            <ul *ngIf="attachmentList && attachmentList.length>0">
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{a.url}}</a></li>
+            </ul>
+            <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
+        </div>
+        <div class="col-1">
+            <button type="button" class="close" aria-label="Close" (click)="isAttachmentShow=false">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+    </div>
+    <!-- end: view attachment -->
     <div class="row">
         <div class="col-6">
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        {{msg.comment}}
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'shake animated slow':''">
-                        {{msg.comment}}
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'new_message':''">
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>
@@ -27,15 +49,28 @@
             </div>
 
             <div class="row mt-1 bottom-block">
-                <div class="col-9">
+                <div class="col-8">
                     <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                </div>
+                <div col-1>
+                    <label class="custom-file-upload">
+                        <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)">
+                        <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
+                    </label>
                 </div>
                 <div class="col-3 text-right button-box">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="saveLeadMessage()">Send
               </button>
                 </div>
             </div>
+            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
+                <div class="col-9">
+                    {{attachmentFile.name}}
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                </div>
+            </div>
         </div>
+
         <div class="col-6 p-0" style="border-left:1px solid black;">
             <!-- start: lead users -->
             <table width="100%">
@@ -44,14 +79,15 @@
 
                     <td *ngIf="!showAssignUserAuto" class="bg-lavender">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-9">
                                 <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
-                            <!-- <div class="col-6 text-right">
-                                <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign to new user" (click)="showAssignUserAuto=1"><i
-                              class="fa fa-plus"></i></button>
-                                <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()" title="User Logs"></i>
-                            </div> -->
+                            <div class="col-3 text-right">
+                                <!-- <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign new Primary Owner" (click)="showAssignUserAuto=1"> -->
+                                <i class="fa fa-plus" *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
+                                <!-- </button> -->
+                                <!-- <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()" title="User Logs"></i> -->
+                            </div>
                         </div>
                     </td>
                     <td *ngIf="showAssignUserAuto==1" class="bg-lavender">
@@ -64,10 +100,12 @@
                                 </auto-suggestion>
                             </div>
                             <div class="col-3 text-right">
-                                <button class="btn btn-primary btn-sm" (click)="updateLeadPrimaryOwner()" title="Add PO"><i
-                                  class="fa fa-check"></i></button>
-                                <button class="btn btn-primary btn-sm ml-1" (click)="showAssignUserAuto=null" title="Cancel"><i
-                                      class="fa fa-times"></i></button>
+                                <!-- <button class="btn btn-primary btn-sm" (click)="updateLeadPrimaryOwner()" title="Add PO"> -->
+                                <i class="fa fa-check" (click)="updateLeadPrimaryOwner()" title="Add PO"></i>
+                                <!-- </button> -->
+                                <!-- <button class="btn btn-primary btn-sm ml-1" (click)="showAssignUserAuto=null" title="Cancel"> -->
+                                <i class="fa fa-times" (click)="showAssignUserAuto=null" title="Cancel"></i>
+                                <!-- </button> -->
                             </div>
                         </div>
                     </td>

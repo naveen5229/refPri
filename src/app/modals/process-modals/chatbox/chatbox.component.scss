@@ -36,6 +36,7 @@
 
 .other_chat,
 .active_chat {
+    white-space: pre-wrap;
     max-width: 90%;
     margin-bottom: 1px;
     border-radius: 10px;
@@ -187,7 +188,7 @@
     }
 }
 
-:host ::ng-deep #tableCampaignTargetActionData {
+:host ::ng-deep #tableTransActionData {
     .tableFixHead {
         height: 50vh !important;
     }
