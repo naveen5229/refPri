@@ -6,64 +6,64 @@
 </div>
 <div class="modal-body">
     <div *ngIf="isAttendanceType" class="row">
-        <div class="col-6">
+        <div class="col-5">
             <label>Date:</label>
         </div>
-        <div class="col-6">
+        <div class="col-7">
             {{common.dateFormatter(common.params.date,'YYYYMMDD',false)}}
         </div>
     </div>
     <div class="row" [ngClass]="(isAttendanceType)?'mt-2':''">
-        <div class="col-6">
+        <div class="col-5">
             <label>User:<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-7">
             <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select Users" (onSelected)="changeUsers($event)" inputId="shiftUser" name="shiftUser" autocomplete="off" [preSelected]="(shiftForm.user.id>0) ? {name: shiftForm.user.name} : {name:''}"></auto-suggestion>
         </div>
     </div>
     <div *ngIf="isAttendanceType" class="row mt-2">
-        <div class="col-6">
+        <div class="col-5">
             <label>Attendance Type:</label>
         </div>
-        <div class="col-6">
+        <div class="col-7">
             <select class="form-control" [(ngModel)]="shiftForm.attendanceType">
                 <option *ngFor="let t of attendanceType" [value]="t.id">{{t.name}}</option>
             </select>
         </div>
     </div>
     <div class="row mt-2">
-        <div class="col-6">
+        <div class="col-5">
             <label>Start Time:<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6" [ngClass]="(disableStartTime)?'pointer-events-none':''">
-            <uj-date-time-picker [disabled]="true" (onChanged)="shiftForm.startTime=($event)" [dateTimeValue]="shiftForm.startTime" [isDate]="false" [isTime]="true" [maxd]='today'>
+        <div class="col-7" [ngClass]="(disableStartTime)?'pointer-events-none':''">
+            <uj-date-time-picker [disabled]="true" (onChanged)="shiftForm.startTime=($event)" [dateTimeValue]="shiftForm.startTime" [isDate]="true" [isTime]="true" [maxd]='today' [isDateDisabled] = "true">
             </uj-date-time-picker>
         </div>
     </div>
     <div class="row mt-2">
-        <div class="col-6">
+        <div class="col-5">
             <label>End Time:</label>
         </div>
-        <div class="col-6">
-            <uj-date-time-picker style="z-index: 999;" (onChanged)="shiftForm.endTime=($event)" [dateTimeValue]="shiftForm.endTime" [isDate]="false" [isTime]="true" [maxd]='today'>
+        <div class="col-7">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="shiftForm.endTime=($event)" [dateTimeValue]="shiftForm.endTime" [isDate]="true" [isTime]="true" [mind]='this.shiftForm.startTime' [maxd]='dateExtendForAttendance'>
             </uj-date-time-picker>
         </div>
     </div>
     <div class="row mt-2">
-        <div class="col-6">
+        <div class="col-5">
             <label>Type:</label>
         </div>
-        <div class="col-6">
+        <div class="col-7">
             <select class="form-control" [(ngModel)]="shiftForm.type">
                 <option *ngFor="let t of shiftType" [value]="t.id">{{t.name}}</option>
             </select>
         </div>
     </div>
     <div *ngIf="isAttendanceType" class="row mt-2">
-        <div class="col-6">
+        <div class="col-5">
             <label>Remark:</label>
         </div>
-        <div class="col-6">
+        <div class="col-7">
             <textarea row="2" cols="15" placeholder="Enter Remark" name="shiftRemark" class="form-control" [(ngModel)]="shiftForm.remark"></textarea>
         </div>
     </div>
