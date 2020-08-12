@@ -44,11 +44,13 @@
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        {{msg.comment}}
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'new_message':''">
-                        {{msg.comment}}
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>

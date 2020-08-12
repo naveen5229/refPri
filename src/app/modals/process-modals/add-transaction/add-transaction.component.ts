@@ -63,6 +63,7 @@ export class AddTransactionComponent implements OnInit {
   typeList = [];
   adminList = [];
   isDisabled = false;
+  attachmentFile = [{ name: null, file: null }];
 
   constructor(public activeModal: NgbActiveModal,
     public common: CommonService,
@@ -238,6 +239,58 @@ export class AddTransactionComponent implements OnInit {
     });
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
+  }
+
+  handleFileSelection(event, i) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0]).then((res: any) => {
+      this.common.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+      } else {
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        return false;
+      }
+      this.attachmentFile[i].name = file.name;
+      this.attachmentFile[i].file = res;
+      console.log("attachmentFile-" + i + " :", this.attachmentFile)
+    }, err => {
+      this.common.loading--;
+      console.error('Base Err: ', err);
+    })
+  }
+
+  uploadattachFile(arrayType, i) {
+    if (!this.attachmentFile[i].file) {
+      this.common.showError("Browse a file first");
+      return false;
+    }
+    let params = {
+      name: this.attachmentFile[i].name,
+      attachment: this.attachmentFile[i].file
+    }
+
+    this.common.loading++;
+    this.api.post('Processes/uploadAttachment', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.error('Api Error:', err);
+    });
+
+    if (arrayType == 'oddArray') {
+
+    } else {
+
+    }
   }
 
 }

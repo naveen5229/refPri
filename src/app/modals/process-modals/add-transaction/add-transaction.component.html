@@ -139,6 +139,13 @@
                                     <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+
+                            <!-- attachment -->
+                            <label class="custom-file-upload" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                <input type="file" class="file-control" [id]="'chat-attachment-'+i" (change)="handleFileSelection($event,i)">
+                                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                                <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                            </label>
                             </span>
                         </td>
                         <td *ngIf="evenArray[i]"><span *ngIf="evenArray[i].r_coltitle">
