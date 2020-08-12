@@ -11,7 +11,7 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-new.component.scss']
 })
 export class TaskNewComponent implements OnInit {
-  currentDate = this.common.getDate(2);
+  currentDate = this.common.getDate();
   normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
   title = "New Task";
   btn = 'Save';
@@ -48,7 +48,7 @@ export class TaskNewComponent implements OnInit {
     public modalService: NgbModal,
     public userService: UserService) {
     console.log("task list", this.common.params);
-    let currentLast = this.currentDate;
+    let currentLast = this.common.getDate(2);
     currentLast.setHours(23);
     currentLast.setMinutes(59);
     this.normalTask.date = currentLast;

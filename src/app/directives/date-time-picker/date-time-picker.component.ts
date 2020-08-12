@@ -20,6 +20,7 @@ export class DateTimePickerComponent implements OnInit {
   @Input() maxt: Date;
   @Input() mint: Date;
   @Input() dateTimeValue: Date;
+  @Input() isDateDisabled: Boolean;
 
 
   constructor() {
@@ -27,6 +28,8 @@ export class DateTimePickerComponent implements OnInit {
     this.isTime = true;
     this.isForm = true;
     this.isStart = true;
+    this.isDateDisabled = false;
+    console.log(this.isDateDisabled,'from shiftlog')
   }
 
   ngOnInit() {
