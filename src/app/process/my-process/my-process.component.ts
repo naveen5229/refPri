@@ -638,20 +638,23 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
+    } else if (!type) {
+      icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
     } else if (type == 2 || type == 6) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       if (lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Completed" });
-      } else if (lead._state_id! > 0) {
-        icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
-      } else {
+      }
+      else if (!(lead.pending_action)) {
         icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Add Next State" });
+      }
+      else {
+        icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       }
 
     } else if (type == -1) {
-      // if()
       icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
       // icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
     } else if (type == 3 && !lead._cc_status) { //cc
@@ -689,6 +692,7 @@ export class MyProcessComponent implements OnInit {
       processId: lead._processid,
       processName: lead._processname,
       identity: lead.identity,
+      priOwnId: lead._pri_own_id
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
@@ -941,6 +945,7 @@ export class MyProcessComponent implements OnInit {
         transactionid: lead._transactionid,
         lastSeenId: lead._lastreadid,
         tabType: type,
+        priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
         rowData: lead
       }
       this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };

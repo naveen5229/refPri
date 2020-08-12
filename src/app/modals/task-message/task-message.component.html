@@ -7,7 +7,7 @@
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle"></span>
     <div *ngIf="fromPage != 'campaign'" class="action-icon">
-        <span><i class="fa fa-files-o" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+        <span><i class="fa fa-files-o text-dark" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
         <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle" title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
 
@@ -27,9 +27,10 @@
     <!-- start: view attachment -->
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
-            <ul>
+            <ul *ngIf="attachmentList && attachmentList.length>0">
                 <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{a.url}}</a></li>
             </ul>
+            <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
         <div class="col-1">
             <button type="button" class="close" aria-label="Close" (click)="isAttachmentShow=false">
@@ -43,11 +44,13 @@
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        {{msg.comment}}
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'new_message':''">
-                        {{msg.comment}}
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>

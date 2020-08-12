@@ -36,7 +36,7 @@
                             </uj-date-time-picker>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol" *ngIf="evenArray[i].r_fixedvalues">
+                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues">
                                     <option [value]="fixValue.option"
                                         *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>

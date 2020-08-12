@@ -5,3 +5,9 @@
 :host ::ng-deep .fa-handshake {
     color: #00f;
 }
+
+:host ::ng-deep #tableOwnedByMe {
+    th:nth-child(4) {
+        width: 300px;
+    }
+}
