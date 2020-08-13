@@ -43,6 +43,14 @@ export class TaskScheduleMasterComponent implements OnInit {
   userGroupList = [];
   adminWithGroup = [];
 
+  bGConditions = [
+    {
+      key:'groupId',
+      class:'highlight-text',
+      isExist:true
+    }
+  ]
+
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
@@ -51,7 +59,7 @@ export class TaskScheduleMasterComponent implements OnInit {
 
       this.adminList = this.common.params.adminList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
       this.userGroupList = this.common.params.groupList;
-      this.adminWithGroup = this.adminList.concat(this.userGroupList);
+      this.adminWithGroup = this.userGroupList.concat(this.adminList);
     this.departmentList = this.common.params.departmentList;
     console.log("master param:", this.common.params);
     if (this.common.params != null && this.common.params.data != null) {

@@ -78,7 +78,9 @@
             <label>CC users:</label>
         </div>
         <div class="col-7">
-            <auto-suggestion [data]="adminWithGroup" display="name" seperator="-" placeholder="Select CC Users" [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="adminWithGroup" display="name" seperator="-" placeholder="Select CC Users" 
+            [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" 
+            inputId="ccUsers" name="ccUsers" isMultiSelect="true" [bGConditions]='bGConditions'></auto-suggestion>
         </div>
     </div>
     <div class="row mb-2">

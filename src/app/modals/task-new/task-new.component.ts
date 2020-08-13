@@ -41,6 +41,13 @@ export class TaskNewComponent implements OnInit {
   userGroupList = [];
   
   userWithGroup = [];
+  bGConditions = [
+    {
+      key:'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -57,7 +64,11 @@ export class TaskNewComponent implements OnInit {
       console.log(this.common.params.groupList,'groupList from task-new component');
       this.userList = this.common.params.userList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
       this.userGroupList = this.common.params.groupList;
+      if(this.userGroupList){
+      this.userWithGroup = this.userGroupList.concat(this.userList);
+    }else{
       this.userWithGroup = this.userList.concat(this.userGroupList);
+    }
       console.log(this.userWithGroup,'user data')
       if (this.common.params.parentTaskId && !this.common.params.editType) {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
