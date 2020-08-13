@@ -206,6 +206,7 @@ export class TaskMessageComponent implements OnInit {
             this.updateTicketStatus(2, null);
           }
           this.getMessageList();
+          this.getAttachmentByTicket();
         }
         else {
           this.common.showError(res['msg'])
