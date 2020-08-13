@@ -254,8 +254,7 @@ export class AddTransactionComponent implements OnInit {
         this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
         return false;
       }
-      this.attachmentFile[i].name = file.name;
-      this.attachmentFile[i].file = res;
+      this.attachmentFile[i] = { name: file.name, file: res };
       console.log("attachmentFile-" + i + " :", this.attachmentFile)
     }, err => {
       this.common.loading--;
@@ -264,11 +263,12 @@ export class AddTransactionComponent implements OnInit {
   }
 
   uploadattachFile(arrayType, i) {
-    if (!this.attachmentFile[i].file) {
+    if (!this.attachmentFile[i] || !this.attachmentFile[i].file) {
       this.common.showError("Browse a file first");
       return false;
     }
     let params = {
+      processId: (this.transForm.process.id > 0) ? this.transForm.process.id : null,
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
@@ -277,20 +277,27 @@ export class AddTransactionComponent implements OnInit {
     this.api.post('Processes/uploadAttachment', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] == 1) {
-        this.common.showToast(res['msg']);
+        if (res['data'][0]['r_id'] > 0) {
+          this.common.showToast(res['msg']);
+          if (arrayType == 'oddArray') {
+            this.oddArray[i].r_value = res['data'][0]['r_id'];
+          } else {
+            this.evenArray[i].r_value = res['data'][0]['r_id'];
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
       } else {
         this.common.showError(res['msg']);
       }
+      console.log("evenArray:::", this.evenArray[i]);
+      console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
       console.error('Api Error:', err);
     });
 
-    if (arrayType == 'oddArray') {
 
-    } else {
-
-    }
   }
 
 }

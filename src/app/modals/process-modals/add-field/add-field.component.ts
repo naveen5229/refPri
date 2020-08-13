@@ -264,13 +264,16 @@ export class AddFieldComponent implements OnInit {
     // this.isFixedValue = data.is_active;
     // this.isRequired = data.is_autocalculate;
     // this.btn1 = "Update";
+    console.log("data edit:", data);
     this.typeId = data.param_type;
     this.name = data.param_name;
-    this.fixValues = data._param_info ? JSON.parse(data._param_info) : this.fixValues;
+    this.fixValues = data._param_info ? data._param_info : this.fixValues;
     this.isFixedValue = (data._param_info && data._param_info.length) ? true : false;
     this.isRequired = data.is_required;
     this.fieldId = data._matrixid;
     this.btn1 = "Update";
+    console.log("isFixedValue:", this.isFixedValue);
+    console.log("fixValues:", this.fixValues);
   }
 
   resetData() {
