@@ -177,6 +177,7 @@ export class ChatboxComponent implements OnInit {
         if (res['code'] > 0) {
           this.taskMessage = "";
           this.getLeadMessage();
+          this.getAttachmentByLead();
         } else {
           this.common.showError(res['msg'])
         }
