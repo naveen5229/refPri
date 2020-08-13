@@ -95,7 +95,8 @@ export class TaskMessageComponent implements OnInit {
         this.getAllUserByTask();
       }
       console.log( this.common.params,'ticket data')
-      this.getAllAdmin();
+      this.adminList = this.common.params.userList;
+      // this.getAllAdmin();
       this.getAttachmentByTicket();
 
     }
@@ -343,18 +344,18 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
-  getAllAdmin() {
-    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
-      } else {
-        this.common.showError(res['msg']);
-      }
-    }, err => {
-      this.common.showError();
-      console.log('Error: ', err);
-    });
-  }
+  // getAllAdmin() {
+  //   this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+  //     if (res['code'] > 0) {
+  //       this.adminList = res['data'] || [];
+  //     } else {
+  //       this.common.showError(res['msg']);
+  //     }
+  //   }, err => {
+  //     this.common.showError();
+  //     console.log('Error: ', err);
+  //   });
+  // }
 
   updateTaskAssigneeUser() {
     if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {

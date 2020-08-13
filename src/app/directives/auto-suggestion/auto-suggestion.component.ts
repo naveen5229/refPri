@@ -209,7 +209,9 @@ export class AutoSuggestionComponent implements OnInit {
   classFinder(suggestion) {
     let className = '';
     this.bGConditions.forEach(condition => {
-      if (suggestion[condition.key] == condition.value) {
+      if(condition.isExist && suggestion[condition.key]){
+        className = condition.class;
+      }else if(!condition.isExist && suggestion[condition.key] == condition.value) {
         className = condition.class;
       }
     });

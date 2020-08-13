@@ -1596,6 +1596,7 @@ export class TaskComponent implements OnInit {
       title: "Ticket Comment",
       button: "Save",
       subTitle: subTitle,
+      userList: this.adminList,
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
       size: "lg",
@@ -2180,6 +2181,7 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       data: task,
       adminList: this.adminList,
+      groupList : this.groupList,
       departmentList: this.departmentList,
       title: "Add Schedule task",
       button: "Save",
