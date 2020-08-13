@@ -238,9 +238,16 @@ export class CommonService {
 
     return hours + ":" + minutes + ":";
   }
-  changeDateformate(date) {
+  // changeDateformate(date) {
+  //   let d = new Date(date);
+  //   return this.datePipe.transform(date, "dd-MMM-yyyy");
+  // }
+  changeDateformate(date, type = 'dd-MMM-yyyy hh:mm a') {
     let d = new Date(date);
-    return this.datePipe.transform(date, "dd-MMM-yyyy");
+    if(type === 'dd-MMM-yyyy hh:mm a'){ 
+      return this.datePipe.transform(date, type);
+    }else{
+    return this.datePipe.transform(date, type);}
   }
   changeDateformat(date) {
     let d = new Date(date);
@@ -260,7 +267,6 @@ export class CommonService {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd");
   }
-
 
   getBase64(files) {
     return new Promise((resolve, reject) => {

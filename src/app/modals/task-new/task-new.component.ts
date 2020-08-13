@@ -97,7 +97,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   closeModal(response) {
-    this.activeModal.close({ response: response });
+    this.activeModal.close({ response: response,returnNewDate:this.returnNewDate });
   }
 
   selectedNormalUser(event) {
@@ -185,10 +185,10 @@ export class TaskNewComponent implements OnInit {
           // this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.resetTask();
-            this.common.showToast(res['data'][0].y_msg)
+            this.common.showToast(res['data'][0].y_msg);
             this.closeModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg)
+            this.common.showError(res['data'][0].y_msg);
           }
         } else {
           this.common.showError(res['msg']);
@@ -276,6 +276,7 @@ export class TaskNewComponent implements OnInit {
   // end task mapping list
 
   // start: update assign date
+  returnNewDate = null;
   updateAssignDate() {
     if (this.updateLastDateForm.date == '' || !this.updateLastDateForm.date) {
       return this.common.showError("Date is missing");
@@ -299,6 +300,7 @@ export class TaskNewComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
+          this.returnNewDate = params.date;
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['msg']);
