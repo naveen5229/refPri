@@ -5,7 +5,7 @@
   </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-    <span [innerHtml]="subTitle"></span>
+    <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div *ngIf="fromPage != 'campaign'" class="action-icon">
         <span><i class="fa fa-files-o text-dark" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
