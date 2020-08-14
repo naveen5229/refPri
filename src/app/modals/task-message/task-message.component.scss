@@ -45,6 +45,9 @@
         display: flow-root;
         font-size: 10px;
     }
+    label {
+        margin: 0;
+    }
 }
 
 .bottom-block {
@@ -185,5 +188,11 @@
     .fa {
         cursor: pointer;
         margin-right: 5px;
+    }
+}
+
+:host::ng-deep {
+    .highlight-blue {
+        color: blue;
     }
 }

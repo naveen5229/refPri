@@ -130,8 +130,10 @@
                 <!-- <tr valign="top" *ngIf="taskId && taskId>0"> -->
                 <tr valign="top">
                     <td colspan="2" class="pt-2">
-                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
-                        </auto-suggestion>
+                        <!-- <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        </auto-suggestion> -->
+                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
+                            [preSelected]="newCCUserId"></auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
                     </td>
                 </tr>
@@ -163,7 +165,7 @@
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2">
-                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        <auto-suggestion (onSelected)="newCCUserId = $event" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
                         </auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToLead()">Add CC User</button>
                     </td>

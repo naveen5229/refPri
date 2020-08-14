@@ -267,8 +267,14 @@ export class AddTransactionComponent implements OnInit {
       this.common.showError("Browse a file first");
       return false;
     }
+    let refId = null;
+    if (arrayType == 'oddArray') {
+      refId = this.oddArray[i].r_colid;
+    } else {
+      refId = this.evenArray[i].r_colid;
+    }
     let params = {
-      processId: (this.transForm.process.id > 0) ? this.transForm.process.id : null,
+      refId: (refId > 0) ? refId : null,
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
