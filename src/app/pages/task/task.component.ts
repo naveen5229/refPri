@@ -209,7 +209,7 @@ export class TaskComponent implements OnInit {
     this.getUserGroupList();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   resetSearchTask() {
     this.searchTask = {
       startDate: <any>this.common.getDate(-2),
@@ -245,7 +245,7 @@ export class TaskComponent implements OnInit {
           if (res["code"] > 0) {
             let groupList = res['data'] || [];
             this.groupList = groupList.map((x) => {
-              return { id:x._id,name:x.name,groupId:x._id,groupuser:x._employee};
+              return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
             });
           } else {
             this.common.showError(res["msg"]);
@@ -283,7 +283,7 @@ export class TaskComponent implements OnInit {
     });
   }
   showTaskPopup() {
-    this.common.params = { userList: this.adminList,groupList : this.groupList, parentTaskId: null };
+    this.common.params = { userList: this.adminList, groupList: this.groupList, parentTaskId: null };
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "lg",
       container: "nb-layout",
@@ -584,12 +584,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -654,12 +654,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -787,12 +787,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -868,12 +868,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -945,12 +945,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -1023,12 +1023,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -1101,12 +1101,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -1394,6 +1394,7 @@ export class TaskComponent implements OnInit {
     console.log("type:", type);
     this.common.params = {
       userList: this.adminList,
+      groupList: this.groupList,
       parentTaskId: ticket._refid,
       parentTaskDesc: ticket.task_desc,
       editType: 1,
@@ -1540,12 +1541,12 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
-    console.log(status,'status')
+    console.log(status, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
-      if(status === -1){
+      if (status === -1) {
         preTitle = "Reject";
-      }else if (status == 3) {
+      } else if (status == 3) {
         preTitle = "Hold";
       } else if (ticket._status == 3) {
         preTitle = "Unhold";
@@ -1597,6 +1598,7 @@ export class TaskComponent implements OnInit {
       button: "Save",
       subTitle: subTitle,
       userList: this.adminList,
+      groupList: this.groupList,
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
       size: "lg",
@@ -1611,6 +1613,7 @@ export class TaskComponent implements OnInit {
   createChildTicket(ticket, type) {
     this.common.params = {
       userList: this.adminList,
+      groupList: this.groupList,
       parentTaskId: ticket._refid,
       parentTaskDesc: ticket.task_desc,
     };
@@ -1739,12 +1742,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: task[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -1953,7 +1956,7 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       data: null,
       adminList: this.adminList,
-      groupList : this.groupList,
+      groupList: this.groupList,
       departmentList: this.departmentList,
       title: "Add Schedule task",
       button: "Save",
@@ -1984,8 +1987,8 @@ export class TaskComponent implements OnInit {
     } else {
       let ccUsers = this.scheduledTask.ccUsers
         ? this.scheduledTask.ccUsers.map((user) => {
-            return { id: user.id };
-          })
+          return { id: user.id };
+        })
         : null;
       const params = {
         taskId: this.scheduledTask.taskId,
@@ -2069,7 +2072,7 @@ export class TaskComponent implements OnInit {
       container: "nb-layout",
       backdrop: "static",
     });
-    activeModal.result.then((data) => {});
+    activeModal.result.then((data) => { });
   }
 
   getScheduledTask() {
@@ -2138,12 +2141,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "isactive",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "isactive",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
@@ -2181,7 +2184,7 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       data: task,
       adminList: this.adminList,
-      groupList : this.groupList,
+      groupList: this.groupList,
       departmentList: this.departmentList,
       title: "Add Schedule task",
       button: "Save",
@@ -2284,12 +2287,12 @@ export class TaskComponent implements OnInit {
             isHTML: true,
             icons: ticket[key]
               ? [
-                  {
-                    class: "fa fa-check text-success",
-                    action: null,
-                    title: "high-priority",
-                  },
-                ]
+                {
+                  class: "fa fa-check text-success",
+                  action: null,
+                  title: "high-priority",
+                },
+              ]
               : "",
             action: null,
             class: "text-center",
