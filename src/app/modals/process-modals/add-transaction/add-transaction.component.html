@@ -142,6 +142,7 @@
 
                             <!-- attachment -->
                             <label class="custom-file-upload" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                <span *ngIf="oddArray[i].r_url">{{oddArray[i].r_url}}</span><br>
                                 <input type="file" class="file-control" [id]="'chat-attachment-'+i" (change)="handleFileSelection($event,i)">
                                 <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
                                 <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('oddArray',i)">Upload</button>
