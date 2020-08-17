@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row">
             <div class="col-6">
-                <h5>Daily Report</h5>
+                <h5 class="heading-design">Daily Report</h5>
             </div>
         </div>
 
@@ -28,8 +28,8 @@
                 <button type="submit" id="submit" (click)="getDailyReport()" class="btn btn-primary mr-2">Submit</button>
             </div>
         </div>
-        <br>
-        <div class="row">
+        
+        <div class="row mt-2">
 
             <div class="col-12 text-right mt-8">
                 <button type="submit" id="submit" (click)="showCallData1()" class="btn btn-primary mr-2">W8 Campaign Admin Wise</button>
@@ -40,8 +40,8 @@
         </div>
 
     </nb-card-header>
-    <nb-card-body style="min-height: 485px;">
-        <smart-table *ngIf="dailyReportList.length>0" [data]="table.data" [settings]="table.settings" id="dailyReportList">
+    <nb-card-body style="min-height: calc(100vh - 315px);">
+        <smart-table *ngIf="dailyReportList.length>0" [data]="table.data" [settings]="table.settings" id="dailyReportList" class="smrt-table">
         </smart-table>
         <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
     </nb-card-body>

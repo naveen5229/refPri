@@ -1,15 +1,15 @@
 .tabs_style {
   width: 100%;
   margin: 0px;
-  border-bottom: 2px solid #26a69a;
+ // border-bottom: 2px solid #26a69a;
   margin-bottom: 10px;
   padding-left: 5px !important;
   li {
     padding: 5px 6px;
     list-style: none;
     margin-right: 5px;
-    background-color: #26a69a;
-    border: 2px solid #26a69a;
+    // background-color: #26a69a;
+    // border: 2px solid #26a69a;
     color: #fff;
     border-bottom: 0px;
     display: inline-block;
@@ -19,7 +19,7 @@
     cursor: pointer;
     &.active {
       background-color: #fff;
-      color: #26a69a;
+     // color: #26a69a;
       position: relative;
       &::after {
         content: "";
@@ -34,12 +34,7 @@
   }
 }
 
-.table th,
-.table td {
-  padding: 0.5rem;
-  vertical-align: top;
-  border-top: 1px solid #dee2e6;
-}
+
 :host ::ng-deep .fa-edit {
   color: #3c6ac7;
   cursor: pointer;
@@ -56,4 +51,46 @@
   padding: 2px;
   border-radius: 3px;
   cursor: pointer;
+}
+table{
+
+  thead{
+     display: table;
+     width: 100%;
+     table-layout: fixed;
+    
+     th{
+      padding: 0.2rem!important;
+      background: #fff!important;
+      border: 6px solid #000000!important;
+      font-size: .80rem;
+      vertical-align: top;
+     }
+     th:first-child{
+       width: 60px;
+     }
+  }
+
+  tbody{
+      overflow-y: auto;
+      display: block;
+      width: 100%;
+      table-layout: fixed;
+      overflow: auto;
+      max-height: calc(100vh - 324px);
+      tr{
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        td{
+          padding: 0.5rem;
+          vertical-align: top;
+          border-top: 1px solid #dee2e6;
+        }
+        td:first-child{
+          width: 60px;
+        }     
+      }
+  
+  }
 }

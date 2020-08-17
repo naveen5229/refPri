@@ -1,8 +1,11 @@
-<div class="row" style="margin-left: 10px; margin-top: 10px;">
-    <div class="col-6">
-        <h5>Call KPI</h5>
-    </div>
-</div>
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6">
+                <h5 class="heading-design">Call KPI</h5>
+            </div>
+        </div>
+
 
 <div class="row ml-1">
     <div class="col-2">
@@ -36,24 +39,25 @@
 
     </div>
 </div>
-<br>
+</nb-card-header>
 
+<nb-card-body style="min-height: calc(100vh - 292px);">
 <div class="row">
     <div class="col-3">
         <div class="chartbox">
             <!-- <chart class="dashboard_chart" type="pie" 
                  id="chart"></chart> -->
             <canvas id="myChart1" width="350" height="200"></canvas>
-            <br>
-            <h6 *ngIf="showLabel" style="text-align: center;">Type Count</h6>
-            <br>
+          
+            <h6 *ngIf="showLabel" style="text-align: center;margin-top: 1rem;">Type Count</h6>
+          
             <canvas id="myChart2" width="450" height="300" chart-labels="labels" chart-legend="false"></canvas>
-            <br>
-            <h6 *ngIf="showLabel" style="text-align: center;">Call Count</h6>
-            <br>
+         
+            <h6 *ngIf="showLabel" style="text-align: center; margin-top: 1rem;">Call Count</h6>
+         
             <canvas id="myChart3" width="450" height="300"></canvas>
-            <br>
-            <h6 *ngIf="showLabel" style="text-align: center;">Call Duration</h6>
+        
+            <h6 *ngIf="showLabel" style="text-align: center;margin-top: 1rem;">Call Duration</h6>
 
 
         </div>
@@ -63,6 +67,6 @@
         </smart-table>
     </div>
 </div>
-
-
+</nb-card-body>
+</nb-card>
 <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->

@@ -2,12 +2,12 @@
     <nb-card-header>
         <div class="row">
             <div class="col-9">
-                <h5>Add Pages</h5>
+                <h5 class="heading-design">Add Pages</h5>
             </div>
         </div>
     </nb-card-header>
 
-    <nb-card-body style="min-height: 580px;">
+    <nb-card-body style="min-height: calc(100vh - 185px)">
         <div class="row">
             <div class="col-3">
                 <label>Page Name</label>
@@ -40,12 +40,8 @@
 
 
         </div>
-
-        <br>
-        <br>
-
-        <div class="row">
-            <smart-table *ngIf="data && data.length>0" [data]="table.data" [settings]="table.settings" id="data">
+        <div class="row mt-2">
+            <smart-table *ngIf="data && data.length>0" [data]="table.data" [settings]="table.settings" id="data" class="smrt-table">
             </smart-table>
             <!-- <div class="row no-record" *ngIf="data.length==0">No Data Available</div> -->
         </div>

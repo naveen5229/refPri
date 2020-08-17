@@ -14,3 +14,44 @@
     }
   }
 }
+
+table{
+  thead{
+     display: table;
+     width: 100%;
+     table-layout: fixed;
+     th{
+      padding: 0.2rem!important;
+      background: #fff!important;
+      border: 6px solid #000000!important;
+      font-size: .80rem;
+     }
+     th:first-child{
+       width: 60px;
+     }
+     th:last-child{
+      width: 160px;
+    }
+  }
+
+  tbody{
+      overflow-y: auto;
+      display: block;
+      width: 100%;
+      table-layout: fixed;
+      overflow: auto;
+      max-height: calc(100vh - 254px);
+      tr{
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        td:first-child{
+          width: 60px;
+        }
+        td:last-child{
+          width: 160px;
+        }
+      }
+  
+  }
+}
