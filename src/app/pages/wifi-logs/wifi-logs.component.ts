@@ -80,6 +80,9 @@ export class WifiLogsComponent implements OnInit {
       // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'lasttime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     return headings;

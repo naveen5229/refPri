@@ -512,6 +512,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.allTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+         if(key == 'expdate' || key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -568,6 +571,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.allScheduleTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -616,6 +622,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.unacknowledgedNormalTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'expdate' || key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -673,6 +682,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.unacknowledgedScheduledTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -718,6 +730,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.ackNormalTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'expdate' || key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -773,6 +788,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.ackScheduleTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
