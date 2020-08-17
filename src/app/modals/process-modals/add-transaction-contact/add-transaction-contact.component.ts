@@ -112,9 +112,30 @@ export class AddTransactionContactComponent implements OnInit {
 
   actionIcons(campaign) {
     let icons = [
-      { class: 'fas fa-trash-alt', action: this.deleteContact.bind(this, campaign) }
+      { class: 'fas fa-trash-alt', action: this.deleteContact.bind(this, campaign) },
+      { class: 'fa fa-phone', action: this.callSync.bind(this, campaign) }
     ];
     return icons;
+  }
+
+  callSync(lead) {
+    console.log("callSync:", lead);
+    let params = {
+      mobileno: lead.mobile
+    }
+    this.common.loading++;
+    this.api.post('Notification/sendCallSuggestionNotifications', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        this.common.showToast(res['msg']);
+        this.getTransactionContact();
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log('Error: ', err);
+    });
   }
 
   deleteContact(row) {

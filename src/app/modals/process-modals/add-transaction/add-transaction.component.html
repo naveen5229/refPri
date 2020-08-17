@@ -142,8 +142,10 @@
 
                             <!-- attachment -->
                             <label class="custom-file-upload" *ngIf="oddArray[i].r_coltype =='attachment'">
-                                <span *ngIf="oddArray[i].r_url">{{oddArray[i].r_url}}</span><br>
-                                <input type="file" class="file-control" [id]="'chat-attachment-'+i" (change)="handleFileSelection($event,i)">
+                                <span *ngIf="oddArray[i].r_url">
+                                    <a target="_blank" [href]="oddArray[i].r_url" [download] ="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
+                                </span>
+                                <input type="file" class="file-control" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
                                 <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
                                 <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('oddArray',i)">Upload</button>
                             </label>
@@ -179,6 +181,15 @@
                                       *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                       {{fixValue.option}}</option>
                               </select>
+
+                            <label class="custom-file-upload" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                <span *ngIf="evenArray[i].r_url">
+                                    <a *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
+                                </span>
+                                <input type="file" class="file-control" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                                <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                            </label>
                             </span>
                         </td>
                     </tr>
