@@ -9,7 +9,7 @@
 
     <nb-card-body style="min-height: calc(100vh - 185px)">
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <label>Page Name</label>
                 <input class="form-control" type="text" placeholder="Page Name" style="width: 100%;" [(ngModel)]='pageName'>
             </div>
@@ -33,7 +33,7 @@
                 <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Add</button>
             </div>
 
-            <div class="col-2 mt-4" *ngIf='rowId != null'>
+            <div class="col-3 mt-4" *ngIf='rowId != null'>
                 <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Update</button>
                 <button class="btn btn-primary btn-sm ml-2" (click)="resetUserRole()">Cancel</button>
             </div>
