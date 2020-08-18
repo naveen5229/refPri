@@ -244,10 +244,11 @@ export class CommonService {
   // }
   changeDateformate(date, type = 'dd-MMM-yyyy hh:mm a') {
     let d = new Date(date);
-    if(type === 'dd-MMM-yyyy hh:mm a'){ 
+    if (type === 'dd-MMM-yyyy hh:mm a') {
       return this.datePipe.transform(date, type);
-    }else{
-    return this.datePipe.transform(date, type);}
+    } else {
+      return this.datePipe.transform(date, type);
+    }
   }
   changeDateformat(date) {
     let d = new Date(date);
@@ -714,6 +715,24 @@ export class CommonService {
     new Angular5Csv(info, name);
   }
   // end: csv export from data
+
+  // start: download by url
+  downloadFile(file, text) {
+    //creating an invisible element 
+    var element = document.createElement('a');
+    element.setAttribute('href',
+      'data:text/plain;charset=utf-8, '
+      + encodeURIComponent(text));
+    element.setAttribute('download', file);
+
+    // Above code is equivalent to 
+    // <a href="path of file" download="file name"> 
+    document.body.appendChild(element);
+    //onClick property 
+    element.click();
+    document.body.removeChild(element);
+  }
+  // end: download by url
 
 }
 
