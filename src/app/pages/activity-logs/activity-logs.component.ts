@@ -103,6 +103,9 @@ export class ActivityLogsComponent implements OnInit {
   
         if (key.charAt(0) != "_") {
           headings[key] = { title: key, placeholder: this.formatTitle(key) };
+          if(key == 'addtime'){
+            headings[key]["type"] = "date";
+          }
         }
       }
       return headings;

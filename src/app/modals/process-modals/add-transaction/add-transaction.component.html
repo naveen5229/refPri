@@ -135,10 +135,18 @@
                             </auto-suggestion>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol" *ngIf="oddArray[i].r_fixedvalues">
+                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues">
                                     <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+
+                            <!-- attachment -->
+                            <label class="custom-file-upload" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                <span *ngIf="oddArray[i].r_url">{{oddArray[i].r_url}}</span><br>
+                                <input type="file" class="file-control" [id]="'chat-attachment-'+i" (change)="handleFileSelection($event,i)">
+                                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                                <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                            </label>
                             </span>
                         </td>
                         <td *ngIf="evenArray[i]"><span *ngIf="evenArray[i].r_coltitle">
@@ -166,7 +174,7 @@
                             </auto-suggestion>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol" *ngIf="evenArray[i].r_fixedvalues">
+                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues">
                                   <option [value]="fixValue.option"
                                       *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                       {{fixValue.option}}</option>
@@ -183,7 +191,7 @@
     <!-- end: dym field -->
     <div class="row">
         <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
+            <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
         </div>
     </div>
 </div>

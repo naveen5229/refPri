@@ -1,4 +1,3 @@
-
 h1,
 h2,
 h3,
@@ -283,4 +282,27 @@ table .fa-comments.new-comment span {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+#chat-attachment {
+    display: none;
+}
+
+.custom-file-upload {
+    display: flex;
+    padding: 6px 12px;
+    cursor: pointer;
+    height: 100%;
+    align-items: center;
+}
+
+.attachment-view {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: lightgray;
+}
+
+.new_message {
+    background: lightgray;
 }

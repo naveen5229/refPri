@@ -62,13 +62,16 @@ export class AddTransactionComponent implements OnInit {
   processList = [];
   typeList = [];
   adminList = [];
+  isDisabled = false;
+  attachmentFile = [{ name: null, file: null }];
+
   constructor(public activeModal: NgbActiveModal,
     public common: CommonService,
     private modalService: NgbModal,
     public api: ApiService) {
     console.log("common params:", this.common.params);
     if (this.common.params) {
-      this.processList = this.common.params.processList.map(x => { return { id: x._id, name: x.name } });
+      this.processList = (this.common.params.processList && this.common.params.processList.length) ? this.common.params.processList.map(x => { return { id: x._id, name: x.name } }) : [];
       this.adminList = this.common.params.adminList;
     }
     if (this.common.params && this.common.params.rowData) {
@@ -76,6 +79,8 @@ export class AddTransactionComponent implements OnInit {
       this.transForm.process.id = this.common.params.rowData.processId;
       this.transForm.process.name = this.common.params.rowData.processName;
       this.transForm.identity = this.common.params.rowData.identity;
+      this.transForm.priOwn.id = this.common.params.rowData.priOwnId;
+      this.isDisabled = (this.common.params.rowData.isDisabled) ? true : false;
       this.onSelectProcess();
     }
   }
@@ -234,6 +239,71 @@ export class AddTransactionComponent implements OnInit {
     });
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
+  }
+
+  handleFileSelection(event, i) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0]).then((res: any) => {
+      this.common.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+      } else {
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        return false;
+      }
+      this.attachmentFile[i] = { name: file.name, file: res };
+      console.log("attachmentFile-" + i + " :", this.attachmentFile)
+    }, err => {
+      this.common.loading--;
+      console.error('Base Err: ', err);
+    })
+  }
+
+  uploadattachFile(arrayType, i) {
+    if (!this.attachmentFile[i] || !this.attachmentFile[i].file) {
+      this.common.showError("Browse a file first");
+      return false;
+    }
+    let refId = null;
+    if (arrayType == 'oddArray') {
+      refId = this.oddArray[i].r_colid;
+    } else {
+      refId = this.evenArray[i].r_colid;
+    }
+    let params = {
+      refId: (refId > 0) ? refId : null,
+      name: this.attachmentFile[i].name,
+      attachment: this.attachmentFile[i].file
+    }
+
+    this.common.loading++;
+    this.api.post('Processes/uploadAttachment', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0]['r_id'] > 0) {
+          this.common.showToast(res['msg']);
+          if (arrayType == 'oddArray') {
+            this.oddArray[i].r_value = res['data'][0]['r_id'];
+          } else {
+            this.evenArray[i].r_value = res['data'][0]['r_id'];
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+      console.log("evenArray:::", this.evenArray[i]);
+      console.log("oddArray:::", this.oddArray[i]);
+    }, err => {
+      this.common.loading--;
+      console.error('Api Error:', err);
+    });
+
+
   }
 
 }

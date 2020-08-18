@@ -1,6 +1,6 @@
 <div class="date-time-container row m-0">
     <div class="date-picker pl-0 pr-2" *ngIf="isDate" [ngClass]="{'col-12':!isTime,'col-6':isTime,'form-type':isForm}">
-        <kendo-datepicker (valueChange)="setDate($event,'date')" [(min)]="mind" [(max)]="maxd" [(value)]="dateTimeValue" [format]="dateFormat">
+        <kendo-datepicker (valueChange)="setDate($event,'date')" [(min)]="mind" [(max)]="maxd" [(value)]="dateTimeValue" [format]="dateFormat" [disabled]="isDateDisabled">
         </kendo-datepicker>
     </div>
     <div class="time-picker col-6 pl-0 pr-0" *ngIf="isTime" [ngClass]="{'col-12':!isDate,'col-6':isDate,'form-type':isForm}">

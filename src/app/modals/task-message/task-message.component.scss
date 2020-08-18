@@ -23,7 +23,7 @@
 
 .active_chat {
     float: right;
-    text-align: right;
+    // text-align: right;
     background: #1def1d2e;
     border: 1px solid #1def1d2e;
 }
@@ -45,10 +45,9 @@
         display: flow-root;
         font-size: 10px;
     }
-}
-
-.new_message {
-    background: lightgray;
+    label {
+        margin: 0;
+    }
 }
 
 .bottom-block {
@@ -192,21 +191,8 @@
     }
 }
 
-#chat-attachment {
-    display: none;
-}
-
-.custom-file-upload {
-    display: flex;
-    padding: 6px 12px;
-    cursor: pointer;
-    height: 100%;
-    align-items: center;
-}
-
-.attachment-view {
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-    background: lightgray;
+:host::ng-deep {
+    .highlight-blue {
+        color: blue;
+    }
 }

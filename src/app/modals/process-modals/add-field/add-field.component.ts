@@ -18,10 +18,11 @@ export class AddFieldComponent implements OnInit {
   refType = null;
   formType = null;
   order = null;
-  types = [{
-    id: null,
-    name: null,
-  }
+  types = [
+    { id: 'text', name: 'Text' },
+    { id: 'number', name: 'Number' },
+    { id: 'date', name: 'Date' },
+    { id: 'attachment', name: 'Attachment' }
   ];
   fixValues = [{
     option: ''
@@ -54,18 +55,11 @@ export class AddFieldComponent implements OnInit {
     private modalService: NgbModal) {
     this.refId = this.common.params.ref.id;
     this.refType = this.common.params.ref.type;
-    this.types = [{
-      id: 'text',
-      name: 'Text'
-    },
-    {
-      id: 'number',
-      name: 'Number'
-    },
-    {
-      id: 'date',
-      name: 'Date'
-    }];
+    // this.types = [
+    //   { id: 'text', name: 'Text' },
+    //   { id: 'number', name: 'Number' },
+    //   { id: 'date', name: 'Date' }
+    // ];
 
     if (!this.refType) {
       this.title = "Add State Form Field";
@@ -270,13 +264,16 @@ export class AddFieldComponent implements OnInit {
     // this.isFixedValue = data.is_active;
     // this.isRequired = data.is_autocalculate;
     // this.btn1 = "Update";
+    console.log("data edit:", data);
     this.typeId = data.param_type;
     this.name = data.param_name;
-    this.fixValues = data._param_info ? JSON.parse(data._param_info) : this.fixValues;
+    this.fixValues = data._param_info ? data._param_info : this.fixValues;
     this.isFixedValue = (data._param_info && data._param_info.length) ? true : false;
     this.isRequired = data.is_required;
     this.fieldId = data._matrixid;
     this.btn1 = "Update";
+    console.log("isFixedValue:", this.isFixedValue);
+    console.log("fixValues:", this.fixValues);
   }
 
   resetData() {

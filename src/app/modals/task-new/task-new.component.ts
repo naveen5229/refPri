@@ -11,7 +11,7 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./task-new.component.scss']
 })
 export class TaskNewComponent implements OnInit {
-  currentDate = this.common.getDate(2);
+  currentDate = this.common.getDate();
   normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
   title = "New Task";
   btn = 'Save';
@@ -41,6 +41,13 @@ export class TaskNewComponent implements OnInit {
   userGroupList = [];
   
   userWithGroup = [];
+  bGConditions = [
+    {
+      key:'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -48,7 +55,7 @@ export class TaskNewComponent implements OnInit {
     public modalService: NgbModal,
     public userService: UserService) {
     console.log("task list", this.common.params);
-    let currentLast = this.currentDate;
+    let currentLast = this.common.getDate(2);
     currentLast.setHours(23);
     currentLast.setMinutes(59);
     this.normalTask.date = currentLast;
@@ -57,7 +64,11 @@ export class TaskNewComponent implements OnInit {
       console.log(this.common.params.groupList,'groupList from task-new component');
       this.userList = this.common.params.userList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
       this.userGroupList = this.common.params.groupList;
+      if(this.userGroupList){
+      this.userWithGroup = this.userGroupList.concat(this.userList);
+    }else{
       this.userWithGroup = this.userList.concat(this.userGroupList);
+    }
       console.log(this.userWithGroup,'user data')
       if (this.common.params.parentTaskId && !this.common.params.editType) {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
@@ -97,7 +108,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   closeModal(response) {
-    this.activeModal.close({ response: response });
+    this.activeModal.close({ response: response,returnNewDate:this.returnNewDate });
   }
 
   selectedNormalUser(event) {
@@ -185,10 +196,10 @@ export class TaskNewComponent implements OnInit {
           // this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.resetTask();
-            this.common.showToast(res['data'][0].y_msg)
+            this.common.showToast(res['data'][0].y_msg);
             this.closeModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg)
+            this.common.showError(res['data'][0].y_msg);
           }
         } else {
           this.common.showError(res['msg']);
@@ -276,6 +287,7 @@ export class TaskNewComponent implements OnInit {
   // end task mapping list
 
   // start: update assign date
+  returnNewDate = null;
   updateAssignDate() {
     if (this.updateLastDateForm.date == '' || !this.updateLastDateForm.date) {
       return this.common.showError("Date is missing");
@@ -299,6 +311,7 @@ export class TaskNewComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
+          this.returnNewDate = params.date;
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['msg']);

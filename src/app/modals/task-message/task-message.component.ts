@@ -47,7 +47,7 @@ export class TaskMessageComponent implements OnInit {
   lastSeenId = 0;
   userListByTask = [];
   adminList = [];
-  newCCUserId = null;
+  newCCUserId = [];
   taskId = null;
   ticketType = null;
   showAssignUserAuto = null;
@@ -65,6 +65,16 @@ export class TaskMessageComponent implements OnInit {
   };
   attachmentList = [];
   isAttachmentShow = false;
+
+  userGroupList = [];
+  userWithGroup = [];
+  bGConditions = [
+    {
+      key: 'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -94,7 +104,16 @@ export class TaskMessageComponent implements OnInit {
         this.getMessageList();
         this.getAllUserByTask();
       }
-      this.getAllAdmin();
+      console.log(this.common.params, 'ticket data')
+      // this.adminList = this.common.params.userList;
+      this.adminList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
+      this.userGroupList = this.common.params.groupList;
+      if (this.userGroupList) {
+        this.userWithGroup = this.userGroupList.concat(this.adminList);
+      } else {
+        this.userWithGroup = this.adminList.concat(this.userGroupList);
+      }
+      // this.getAllAdmin();
       this.getAttachmentByTicket();
 
     }
@@ -206,6 +225,7 @@ export class TaskMessageComponent implements OnInit {
             this.updateTicketStatus(2, null);
           }
           this.getMessageList();
+          this.getAttachmentByTicket();
         }
         else {
           this.common.showError(res['msg'])
@@ -267,19 +287,30 @@ export class TaskMessageComponent implements OnInit {
       this.common.showError("Not a valid user");
       return false;
     }
-    if (this.ticketId > 0 && this.newCCUserId > 0) {
+    let CCUsers = [];
+    this.newCCUserId.forEach(x => {
+      if (x.groupId != null) {
+        x.groupuser.forEach(x2 => {
+          CCUsers.push({ user_id: x2._id });
+        })
+      } else {
+        CCUsers.push({ user_id: x.id });
+      }
+    });
+    // console.log('from CCUsers:', CCUsers);
+    if (this.ticketId > 0 && CCUsers && CCUsers.length > 0) {
       let params = {
         ticketId: this.ticketId,
         taskId: this.ticketData._refid,
-        ccUserId: this.newCCUserId,
+        ccUserId: JSON.stringify(CCUsers),//this.newCCUserId,
         ticketType: this.ticketType
       }
       this.common.loading++;
       this.api.post('AdminTask/addNewCCUserToTask', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.newCCUserId = null;
           this.getAllUserByTask();
+          this.newCCUserId = [];
         } else {
           this.common.showError(res['msg']);
         }
@@ -341,18 +372,18 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
-  getAllAdmin() {
-    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
-      } else {
-        this.common.showError(res['msg']);
-      }
-    }, err => {
-      this.common.showError();
-      console.log('Error: ', err);
-    });
-  }
+  // getAllAdmin() {
+  //   this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+  //     if (res['code'] > 0) {
+  //       this.adminList = res['data'] || [];
+  //     } else {
+  //       this.common.showError(res['msg']);
+  //     }
+  //   }, err => {
+  //     this.common.showError();
+  //     console.log('Error: ', err);
+  //   });
+  // }
 
   updateTaskAssigneeUser() {
     if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
@@ -493,6 +524,8 @@ export class TaskMessageComponent implements OnInit {
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
+          this.ticketData.expdate = this.common.changeDateformate(data.returnNewDate, 'dd MMM yy hh:mm');
+          this.ticketData._expdate = data.returnNewDate;
           this.getMessageList();
         }
       });
@@ -587,7 +620,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   addNewCCUserToLead() {
-    if (this.taskId > 0 && this.newCCUserId > 0) {
+    if (this.taskId > 0 && this.newCCUserId) {
       let params = {
         leadId: this.taskId,
         ccUserId: this.newCCUserId
@@ -595,8 +628,8 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading++;
       this.api.post('Campaigns/addNewCCUserToLead', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
-          this.newCCUserId = null;
+        if (res['code'] == 1) {
+          this.newCCUserId = [];
           this.getAllUserByLead();
         } else {
           this.common.showError(res['data']);
@@ -720,7 +753,7 @@ export class TaskMessageComponent implements OnInit {
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext)) {
       } else {
-        this.common.showError("valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf");
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
         return false;
       }
       this.attachmentFile.name = file.name;

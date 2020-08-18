@@ -7,6 +7,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 import { ReminderComponent } from '../../reminder/reminder.component';
 import { AddTransactionActionComponent } from '../add-transaction-action/add-transaction-action.component';
 import { FormDataComponent } from '../form-data/form-data.component';
+import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 
 @Component({
   selector: 'ngx-chatbox',
@@ -50,6 +51,13 @@ export class ChatboxComponent implements OnInit {
     }
   };
   activeTab = 'actionList';
+  priOwnId = null;
+  attachmentFile = {
+    name: null,
+    file: null
+  };
+  attachmentList = [];
+  isAttachmentShow = false;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -61,14 +69,16 @@ export class ChatboxComponent implements OnInit {
       this.ticketId = this.common.params.editData.transactionid;
       this.tabType = (this.common.params.editData.tabType) ? this.common.params.editData.tabType : null;
       this.lastSeenId = this.common.params.editData.lastSeenId;
+      this.priOwnId = this.common.params.editData.priOwnId;
       this.ticketData = this.common.params.editData.rowData;
       this.getLeadMessage();
       this.getAllUserByLead();
       this.getAllAdmin();
       this.getTargetActionData();
+      this.getAttachmentByLead();
     }
 
-    console.log("user_details:", this.userService._details)
+    // console.log("user_details:", this.userService._details)
   }
 
   ngOnInit() {
@@ -91,7 +101,6 @@ export class ChatboxComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -103,7 +112,21 @@ export class ChatboxComponent implements OnInit {
     });
   }
 
-  // start: campaign msg ----------------------------------------------------
+  getAttachmentByLead() {
+    this.attachmentList = [];
+    this.api.get('Processes/getAttachmentByLead?ticketId=' + this.ticketId).subscribe(res => {
+      if (res['code'] == 1) {
+        this.attachmentList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
   getLeadMessage() {
     this.showLoading = true;
     let params = {
@@ -111,7 +134,7 @@ export class ChatboxComponent implements OnInit {
     }
     this.api.post('Processes/getLeadMessage', params).subscribe(res => {
       this.showLoading = false;
-      if (res['success']) {
+      if (res['code'] == 1) {
         this.messageList = res['data'] || [];
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
@@ -139,20 +162,22 @@ export class ChatboxComponent implements OnInit {
   }
 
   saveLeadMessage() {
-    if (this.taskMessage == "") {
+    if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage
+        message: this.taskMessage,
+        attachment: this.attachmentFile.file
       }
       this.api.post('Processes/saveLeadMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
           this.getLeadMessage();
+          this.getAttachmentByLead();
         } else {
           this.common.showError(res['msg'])
         }
@@ -164,16 +189,39 @@ export class ChatboxComponent implements OnInit {
     }
   }
 
+  handleFileSelection(event) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0]).then((res: any) => {
+      this.common.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
+      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+      } else {
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        return false;
+      }
+      this.attachmentFile.name = file.name;
+      this.attachmentFile.file = res;
+      console.log("attachmentFile:", this.attachmentFile)
+    }, err => {
+      this.common.loading--;
+      console.error('Base Err: ', err);
+    })
+  }
+
   getAllUserByLead() {
     let params = {
       leadId: this.ticketId
     }
     this.api.post('Processes/getAllUserByLead', params).subscribe(res => {
       console.log("getAllUserByLead:", res['data']);
-      if (res['success']) {
+      if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['data']);
       }
     }, err => {
       this.showLoading = false;
@@ -191,7 +239,7 @@ export class ChatboxComponent implements OnInit {
       this.common.loading++;
       this.api.post('Processes/addNewCCUserToLead', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code'] == 1) {
           this.newCCUserId = null;
           this.getAllUserByLead();
         } else {
@@ -210,23 +258,21 @@ export class ChatboxComponent implements OnInit {
   updateLeadPrimaryOwner() {
     if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
       let isCCUpdate = 0;
-      if (this.userListByTask['leadUsers'][0]._pri_own_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
+      if (this.userListByTask['leadUsers'][0]._pri_own_id == this.newAssigneeUser.id) {
         this.common.showError("Please assign a new user");
         return false;
       }
       let params = {
-        ticketId: this.ticketId,
         leadId: this.ticketId,
         assigneeUserId: this.newAssigneeUser.id,
         isCCUpdate: isCCUpdate,
         assigneeUserNameOld: this.userListByTask['leadUsers'][0].primary_owner,
         assigneeUserNameNew: this.newAssigneeUser.name
       }
-      console.log("updateLeadPrimaryOwner params:", params);
       this.common.loading++;
       this.api.post('Processes/updateLeadPrimaryOwner', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code'] == 1) {
           this.getAllUserByLead();
           this.getLeadMessage();
           this.showAssignUserAuto = null;
@@ -251,7 +297,7 @@ export class ChatboxComponent implements OnInit {
     console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
     if (this.lastSeenId < this.lastMsgId) {
       this.api.post('Processes/readLastMessage', params).subscribe(res => {
-        console.log("messageList:", res['data']);
+        // console.log("messageList:", res['data']);
         if (res['code'] > 0) {
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
@@ -273,7 +319,7 @@ export class ChatboxComponent implements OnInit {
   }
 
   showLeadUserLogsModal() {
-    console.log('userLogs:', this.userListByTask['userLogs']);
+    // console.log('userLogs:', this.userListByTask['userLogs']);
     document.getElementById("userLogsModal").style.display = "block";
   }
   // end: campaign msg
@@ -286,7 +332,6 @@ export class ChatboxComponent implements OnInit {
     this.common.loading++;
     this.api.get(apiName + params).subscribe(res => {
       this.common.loading--;
-      console.log("api data", res);
       if (res['code'] == 1) {
         this.transActionData = res['data'] || [];
         this.transActionData.length ? this.setTable(type) : this.resetTable();
@@ -316,10 +361,7 @@ export class ChatboxComponent implements OnInit {
     let headings = {};
     for (var key in this.transActionData[0]) {
       if (key.charAt(0) != "_") {
-        if (key == 'Action') {
-        } else {
-          headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-        }
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
     return headings;
@@ -335,10 +377,10 @@ export class ChatboxComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            icons: this.actionIcons(lead, type)
+            icons: (lead._action_form == 1 || lead._state_form == 1) ? this.actionIcons(lead, type) : null
           };
         } else if (!type && key == 'completion_time' && lead[key]) {
-          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, this.ticketData, this.tabType, null), title: 'Add next state' };
+          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type, null), title: 'Add next state' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -352,16 +394,16 @@ export class ChatboxComponent implements OnInit {
     let formType = (type == 1) ? 1 : 2;
     let icons = [
       // { class: 'fas fa-trash-alt ml-2', action: this.deleteLead.bind(this, lead) }
-      { class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType), txt: '', title: "Action Form" }
+      { class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" }
     ];
     return icons;
   }
 
-  deleteLead(row) {
+  deleteLead(row) { //not used
     let params = {
-      campTarActId: row._camptaractid,
+      tarnsActId: row._action_id,
     }
-    if (row._camptaractid) {
+    if (row._action_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -386,11 +428,11 @@ export class ChatboxComponent implements OnInit {
 
 
   openTransAction(lead, type, formType = null) {
-    if (![1, 2].includes(type)) {
+    if (![this.priOwnId].includes(this.userService._details.id)) {
       this.common.showError("Permission Denied");
       return false;
     }
-    console.log("openTransAction");
+    // console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = 1;
@@ -398,16 +440,16 @@ export class ChatboxComponent implements OnInit {
       formTypeTemp = formType;
     }
     let actionData = {
-      processId: lead._processid,
-      transId: lead._transactionid,
-      processName: lead._processname,
-      identity: lead.identity,
+      processId: this.ticketData._processid,
+      transId: lead._transid,
+      processName: this.ticketData._processname,
+      identity: this.ticketData.identity,
       formType: formTypeTemp,
       requestId: null,
       actionId: null,
-      actionName: '',
-      stateId: (lead._state_id > 0) ? lead._state_id : null,
-      stateName: (lead._state_id > 0) ? lead.state_name : null,
+      actionName: null,
+      stateId: (this.ticketData._state_id > 0) ? this.ticketData._state_id : null,
+      stateName: (this.ticketData._state_id > 0) ? this.ticketData._state_name : null,
       actionOwnerId: null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
@@ -420,14 +462,14 @@ export class ChatboxComponent implements OnInit {
           lead._state_id = data.state.id;
           lead.state_name = data.state.name;
           if (data.isFormHere == 1) {
-            this.openTransFormData(lead, type, data.nextFormType);
+            this.openTransFormData(lead, type, data.nextFormType, true);
           } else {
             this.openTransAction(lead, type, 2);
           }
 
         } else if (data.nextFormType == 2) {
           if (data.isFormHere == 1) {
-            this.openTransFormData(lead, type, data.nextFormType);
+            this.openTransFormData(lead, type, data.nextFormType, true);
           } else {
             this.openTransAction(lead, type, 1);
           }
@@ -438,8 +480,8 @@ export class ChatboxComponent implements OnInit {
     });
   }
 
-  openTransFormData(lead, type, formType = null) {
-    console.log("openTransAction");
+  openTransFormData(lead, type, formType = null, isNextForm = false) {
+    // console.log("openTransAction");
     let title = 'Action Form';
     let refId = 0;
     let refType = 0;
@@ -454,26 +496,59 @@ export class ChatboxComponent implements OnInit {
       refType = 1;
     }
     let actionData = {
-      processId: lead._processid,
-      processName: lead._processname,
-      transId: lead._transactionid,
+      processId: this.ticketData._processid,
+      processName: this.ticketData._processname,
+      transId: lead._transid,
       refId: refId,
       refType: refType,
       formType: formType,
+      isDisabled: lead.completion_time ? true : false
     };
 
     this.common.params = { actionData, title: title, button: "Save" };
     const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log("formData:", formType);
-      if (formType == 2) {
+      // console.log("formData:", formType);
+      if (isNextForm && formType == 2) {
         this.openTransAction(lead, type, 1);
-      } else if (formType == 1) {
+      } else if (isNextForm && formType == 1) {
         this.openTransAction(lead, type, 2);
       } else {
         this.getTargetActionData(type);
       }
     });
+  }
+
+  openPrimaryInfoFormData() {
+    let lead = this.ticketData;
+    let title = 'Primary Info Form';
+    let actionData = {
+      processId: lead._processid,
+      processName: lead._processname,
+      transId: lead._transactionid,
+      refId: lead._processid,
+      refType: 3,
+      formType: null,
+    };
+
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  viewTransaction() {
+    let lead = this.ticketData;
+    let rowData = {
+      transId: lead._transactionid,
+      processId: lead._processid,
+      processName: lead._processname,
+      identity: lead.identity,
+      priOwnId: lead._pri_own_id,
+      isDisabled: true
+    }
+
+    this.common.params = { rowData, processList: null, adminList: null, title: "View Transaction ", button: "Update" }
+    const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+
   }
 
 }
