@@ -406,12 +406,7 @@ smart-table{
     font-size: .875rem!important;
     font-weight: 500;
   }
-  .nb-theme-default nb-sidebar {
-    width: 15rem!important;
-}
-.main-container{
-    box-shadow: 8px 0px 11px rgba(44, 51, 73, 0.1);
-}
+
 .nb-theme-default nb-card-header {
     border-bottom: 1px solid #d1d9e8!important;
 }
