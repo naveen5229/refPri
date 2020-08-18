@@ -128,7 +128,7 @@ export class AddTransactionContactComponent implements OnInit {
       this.common.loading--;
       if (res['code'] == 1) {
         this.common.showToast(res['msg']);
-        this.getTransactionContact();
+        // this.getTransactionContact();
       } else {
         this.common.showError(res['msg']);
       }

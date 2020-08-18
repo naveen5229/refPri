@@ -48,7 +48,7 @@
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'new_message':''">
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <!-- {{msg.comment}} -->
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>

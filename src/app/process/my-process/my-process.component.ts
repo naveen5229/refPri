@@ -971,7 +971,7 @@ export class MyProcessComponent implements OnInit {
     if (this.searchData.startDate && this.searchData.endDate) {
       let startDate = this.common.dateFormatter(this.searchData.startDate);
       let endDate = this.common.dateFormatter(this.searchData.endDate);
-      this.getProcessLeadByType(3, startDate, endDate);
+      this.getProcessLeadByType(4, startDate, endDate);
     } else {
       this.common.showError("Select start date and end date");
     }

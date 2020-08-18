@@ -304,5 +304,5 @@ table .fa-comments.new-comment span {
 }
 
 .new_message {
-    background: lightgray;
+    background: lightgray !important;
 }
