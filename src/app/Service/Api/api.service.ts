@@ -7,13 +7,16 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  URL: string = 'http://localhost/itrm_webservices/';//komal local
+  // URL: string = 'http://localhost/itrm_webservices/';//komal local
   // URL: string = 'http://192.168.1.124/itrm_webservices/';//komal local
-  // URL: string = 'https://dev.elogist.in/itrm_webservices/';
-  // URL: string = 'http://elogist.in/itrm_webservices/';
 
+  URL: string = 'https://dev.elogist.in/itrm_webservices/';
   URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
-  URLTranstruck: string = 'http://elogist.in/transtrucknew/';
+  URLTranstruck: string = 'http://dev.elogist.in/transtrucknew/';
+
+  // URL: string = 'http://elogist.in/itrm_webservices/';
+  // URLBooster: string = 'http://elogist.in/booster_webservices/';
+  // URLTranstruck: string = 'http://elogist.in/transtrucknew/';
 
   entryMode = this.user._loggedInBy == 'admin' ? '1' : '3';
 
