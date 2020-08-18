@@ -19,9 +19,9 @@ export class AppComponent implements OnInit {
     public common: CommonService,
     public user: UserService,
     public api: ApiService) {
-      if (this.user._details) {
-        this.getUserPagesList();
-      }
+    if (this.user._details) {
+      this.getUserPagesList();
+    }
   }
 
   ngOnInit(): void {
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     console.log(params);
     this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
       .subscribe(res => {
-        console.log('res:',res);
+        console.log('res:', res);
         this.user._pages = res['data'].filter(page => { return page._userid; });
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");

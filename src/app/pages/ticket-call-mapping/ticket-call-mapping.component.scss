@@ -6,3 +6,9 @@
   //::ng-deep  .black {
   //   background-color: red($color: #000000);
   // }
+
+
+  .smrt-table{
+    display: block;
+    height: calc(100vh - 250px);
+}
