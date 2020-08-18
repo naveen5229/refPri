@@ -45,6 +45,7 @@ export class TaskMessageComponent implements OnInit {
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
   lastSeenId = 0;
+  lastSeenIdForView = 0; //only for view not update it
   userListByTask = [];
   adminList = [];
   newCCUserId = [];
@@ -104,6 +105,7 @@ export class TaskMessageComponent implements OnInit {
         this.getMessageList();
         this.getAllUserByTask();
       }
+      this.lastSeenIdForView = this.lastSeenId;
       console.log(this.common.params, 'ticket data')
       // this.adminList = this.common.params.userList;
       this.adminList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
@@ -524,7 +526,7 @@ export class TaskMessageComponent implements OnInit {
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
-          this.ticketData.expdate = this.common.changeDateformate(data.returnNewDate, 'dd MMM yy hh:mm');
+          this.ticketData.expdate = this.common.changeDateformate(data.returnNewDate, 'dd MMM yy HH:mm');
           this.ticketData._expdate = data.returnNewDate;
           this.getMessageList();
         }

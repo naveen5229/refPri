@@ -8,6 +8,10 @@
                 <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
                 <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value)">Search</button>
             </div>
+            <!-- <div class="col-3" style="display: flex;">
+                <auto-suggestion [data]="adminList" display="name" placeholder="Search Users" inputId="Users" name="Users"></auto-suggestion>
+                <button class="btn btn-primary btn-sm" (click)="getTaskByUser()">Search</button>
+            </div> -->
             <div class="col-6 text-right">
                 <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
                     <i class="fa fa-plus" style="font-size:12px;"></i> <b>ST</b>
