@@ -22,18 +22,9 @@
 </div>
 <div *ngIf="transForm.showDynField" class="modal-body">
     <div>
-        <div style="display: flex;">
-            <div style="flex:1">
+        <div class="row">
+            <div class="col-6">
                 <label>Process Name: {{transForm.process.name}}</label>
-            </div>
-            <div style="flex: 1;display: flex;">
-                <div style="flex: 1;">
-                    <label>Identity<span class="text-danger">*</span></label>
-                </div>
-                <div style="flex: 2;">
-                    <input type="text" class="form-control" placeholder="Enter Identity"
-                        [(ngModel)]="transForm.identity">
-                </div>
             </div>
         </div>
 
@@ -113,10 +104,63 @@
     <div>
         <div style="width: 100%;">
             <div>
+                
+            <div class="row">
+
+            
+            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                   <div class="row">
+                   <div class="col-4">
+                       <label>Identity<span class="text-danger">*</span></label>
+                   </div>
+                   <div class="col-8">
+                       <input type="text" class="form-control" placeholder="Enter Identity"
+                           [(ngModel)]="transForm.identity">
+                   </div>
+               </div>
+            </div>
+                         
+            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div class="row">
+                <div class="col-4">
+                    <label>Contact Name<span class="text-danger"></span></label>
+                </div>
+                <div class="col-8">
+                    <input type="text" class="form-control" placeholder="Enter Contact Name"
+                        [(ngModel)]="transForm.name">
+                </div>
+            </div>
+            </div>
+
+            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div class="row">
+                <div class="col-4">
+                    <label>Email<span class="text-danger"></span></label>
+                </div>
+                <div class="col-8">
+                    <input type="email" pattern=".+@globex.com" class="form-control" placeholder="Enter Email"
+                        [(ngModel)]="transForm.emailStatic">
+                </div>
+            </div>
+            </div>
+
+            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div class="row">
+                <div class="col-4">
+                    <label>Mob Number<span class="text-danger"></span></label>
+                </div>
+                <div class="col-8">
+                    <input type="number" class="form-control" placeholder="Enter Mobile Number"
+                        [(ngModel)]="transForm.mobileno">
+                </div>
+            </div>
+            </div>
+
+                </div>
 
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
-                    <div *ngIf="oddArray[i]" [class]="evenArray[i]? 'col-6' : 'col-12'">
+                    <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <div *ngIf="oddArray[i].r_coltitle" class="row">
                             <div class="col-4">
                                 <label>{{oddArray[i].r_colalias}}<span style="color: red"
@@ -193,7 +237,7 @@
                         </div>
                     </div>
 
-                    <div *ngIf="evenArray[i]" [class]="oddArray[i]? 'col-6' : 'col-12'">
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <span *ngIf="evenArray[i].r_coltitle" class="row">
                             <div class="col-4">
                                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
