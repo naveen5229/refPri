@@ -360,8 +360,8 @@ export class SaveadminComponent implements OnInit {
         rowId: null,
         isActive:null,
       };
-      let apiName = "FoAdmin/addUsers";
-      let apiType = "postBooster";
+      let apiName = "AddFouser/addCompanyUsers.json";
+      let apiType = "postTranstruck";
 
       if (this.isOtherShow) {
         params['foadminuserId'] = this.Fouser.id;
