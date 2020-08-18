@@ -1,10 +1,12 @@
 <nb-card>
     <nb-card-header>
-        <div class="row">
-            <div class="col-8">
-                <h5>Employee's Salary</h5>
-            </div>
+        <div class="row m-0">
+                <h5 class="heading-design">Employee's Salary</h5>
         </div>
+      
+    </nb-card-header>
+
+    <nb-card-body style="min-height: 420px;">
         <div class="row">
             <div class="col-2">
                 <label>Select Month:</label>
@@ -22,9 +24,6 @@
                 <button type="button" class="btn btn-primary mr-2 btn-sm" (click)="showSalaryDetailModal()">Salary Details</button>
             </div>
         </div>
-    </nb-card-header>
-
-    <nb-card-body style="min-height: 300px;">
         <div class="row form-group" style="overflow: auto;">
             <div *ngIf='salaryList && salaryList.length' class="col-12 tableWrap">
                 <table class="table table-bordered table-hover salaryTable">

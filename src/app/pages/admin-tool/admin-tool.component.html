@@ -2,7 +2,7 @@
     <nb-card-header class="employee-report">
         <div class="row">
             <div class="col-6">
-                <h5>Admin</h5>
+                <h5 class="heading-design">Admin</h5>
             </div>
             <div class="col-5 text-right">
                 <button (click)="exportCSV()" class="btn btn-primary btn-sm mr-2">View Excel</button>
@@ -24,7 +24,7 @@
     </div>
     <br> -->
         <div class="row">
-            <smart-table *ngIf="activeAdminUserList.length!=0" [data]="table.data" [settings]="table.settings" id="activeAdminUserList">
+            <smart-table *ngIf="activeAdminUserList.length!=0" [data]="table.data" [settings]="table.settings" id="activeAdminUserList" class="smrt-table">
             </smart-table>
         </div>
 

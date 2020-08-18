@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row">
             <div class="col-8">
-                <h5>Task-Admin</h5>
+                <h5 class="heading-design">Task-Admin</h5>
             </div>
             <div class="col-4 text-right">
                 <button class="btn btn-primary btn-sm" title="Add Shift Log" (click)="openSchedukedTaskMasterModal()">
@@ -11,7 +11,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card>
+
         <nb-card-body>
             <!-- Tabs      -->
             <div class="tabs_style_main">
@@ -48,11 +48,11 @@
                 </ul>
 
                 <div *ngIf="activeTabNormal=='pending'">
-                    <smart-table *ngIf="unacknowledgedNormalTaskList.length!=0" [data]="tableUnacknowledgedNormalTask.data" [settings]="tableUnacknowledgedNormalTask.settings" id="unacknowledgedNormalTaskList">
+                    <smart-table *ngIf="unacknowledgedNormalTaskList.length!=0" [data]="tableUnacknowledgedNormalTask.data" [settings]="tableUnacknowledgedNormalTask.settings" id="unacknowledgedNormalTaskList" class="sl-smart-table">
                     </smart-table>
                 </div>
                 <div *ngIf="activeTabNormal=='ack'">
-                    <smart-table *ngIf="ackNormalTaskList.length!=0" [data]="tableAckNormalTask.data" [settings]="tableAckNormalTask.settings" id="ackNormalTaskList">
+                    <smart-table *ngIf="ackNormalTaskList.length!=0" [data]="tableAckNormalTask.data" [settings]="tableAckNormalTask.settings" id="ackNormalTaskList" class="sl-smart-table">
                     </smart-table>
                 </div>
                 <div *ngIf="activeTabNormal=='completed'">
@@ -69,7 +69,7 @@
                             <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask('normal')">Search</button>
                         </div>
                     </div>
-                    <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList">
+                    <smart-table *ngIf="allTaskList.length!=0" [data]="tableAllTask.data" [settings]="tableAllTask.settings" id="allTaskList"  class="sl-smart-table">
                     </smart-table>
                 </div>
             </div>
@@ -89,11 +89,11 @@
                 </ul>
 
                 <div *ngIf="activeTabScheduled=='pending'">
-                    <smart-table *ngIf="unacknowledgedScheduledTaskList.length!=0" [data]="tableUnacknowledgedScheduledTask.data" [settings]="tableUnacknowledgedScheduledTask.settings" id="unacknowledgedScheduledTaskList">
+                    <smart-table *ngIf="unacknowledgedScheduledTaskList.length!=0" [data]="tableUnacknowledgedScheduledTask.data" [settings]="tableUnacknowledgedScheduledTask.settings" id="unacknowledgedScheduledTaskList" class="sl-smart-table">
                     </smart-table>
                 </div>
                 <div *ngIf="activeTabScheduled=='ack'">
-                    <smart-table *ngIf="ackScheduleTaskList.length!=0" [data]="tableAckScheduleTask.data" [settings]="tableAckScheduleTask.settings" id="ackScheduleTaskList">
+                    <smart-table *ngIf="ackScheduleTaskList.length!=0" [data]="tableAckScheduleTask.data" [settings]="tableAckScheduleTask.settings" id="ackScheduleTaskList" class="sl-smart-table">
                     </smart-table>
                 </div>
                 <div *ngIf="activeTabScheduled=='completed'">
@@ -110,7 +110,7 @@
                             <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedTask('scheduled')">Search</button>
                         </div>
                     </div>
-                    <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList">
+                    <smart-table *ngIf="allScheduleTaskList.length!=0" [data]="tableAllScheduleTask.data" [settings]="tableAllScheduleTask.settings" id="allScheduleTaskList" class="sl3-smart-table">
                     </smart-table>
                 </div>
             </div>
