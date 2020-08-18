@@ -526,7 +526,7 @@ export class TaskMessageComponent implements OnInit {
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.response) {
-          this.ticketData.expdate = this.common.changeDateformate(data.returnNewDate, 'dd MMM yy hh:mm');
+          this.ticketData.expdate = this.common.changeDateformate(data.returnNewDate, 'dd MMM yy HH:mm');
           this.ticketData._expdate = data.returnNewDate;
           this.getMessageList();
         }

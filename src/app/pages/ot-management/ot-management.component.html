@@ -1,11 +1,12 @@
 <nb-card>
     <nb-card-header>
-        <div class="row">
-            <div class="col-12">
-                <h5>OT-Management</h5>
-            </div>
+        <div class="row m-0">
+                <h5 class="heading-design">OT-Management</h5>
         </div>
-        <br>
+      
+       
+    </nb-card-header>
+    <nb-card-body>
         <div class="row">
             <div class="col-3">
                 <label>Select Date</label>
@@ -18,9 +19,7 @@
                 <button type="submit" id="submit" (click)="getOtList()" class="btn btn-primary mr-2 btn-sm">Submit</button>
             </div>
         </div>
-    </nb-card-header>
-    <nb-card-body>
-        <div class="row">
+        <div class="row mt-2">
             <div class="col-12">
                 <smart-table [data]="tableOtList.data" [settings]="tableOtList.settings" id="tableOtList"></smart-table>
             </div>

@@ -2202,6 +2202,8 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  getTaskByUser(){}
+
   getSearchTask(search) {
     console.log("search:", search);
     if (search && search.trim != "") {
