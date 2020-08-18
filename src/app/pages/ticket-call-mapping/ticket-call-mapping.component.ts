@@ -48,6 +48,9 @@ export class TicketCallMappingComponent implements OnInit {
 
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        if(key == 'Tk. Raise Time' || key == 'Tk. Claim Time' || key == 'Tk. Close Time'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     return headings;

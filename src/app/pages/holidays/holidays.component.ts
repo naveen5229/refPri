@@ -67,6 +67,9 @@ export class HolidaysComponent implements OnInit {
     for (var key in this.holidayList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'date'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     return headings;

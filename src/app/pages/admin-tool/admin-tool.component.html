@@ -1,10 +1,15 @@
 <nb-card>
     <nb-card-header class="employee-report">
         <div class="row">
-            <div class="col-8">
+            <div class="col-6">
                 <h5 class="heading-design">Admin</h5>
             </div>
-            <div class="col-4 text-right">
+            <div class="col-5 text-right">
+                <button (click)="exportCSV()" class="btn btn-primary btn-sm mr-2">View Excel</button>
+                <button (click)="common.getPDFFromTableId('activeAdminUserList')" class="btn btn-primary btn-sm mr-2">View Pdf</button>
+                <!-- <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span> -->
+            </div>
+            <div class="col-1 text-right">
                 <!-- <button value="Admin Tools" class="btn btn-primary btn-sm" (click)="adminTools()">Save Admin</button> -->
                 <button class="btn btn-primary btn-sm" id="addCampaign" (click)="adminTools()"><i
                     class="fa fa-plus"></i></button>

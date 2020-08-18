@@ -145,10 +145,12 @@ export class TaskScheduledComponent implements OnInit {
     endDate: <any>this.common.getDate()
   }
   departmentList = [];
+  groupList = [];
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAllAdmin();
     this.getDepartmentList();
+    this.getUserGroupList();
   }
 
   ngOnInit() { }
@@ -163,9 +165,9 @@ export class TaskScheduledComponent implements OnInit {
       console.log("data", res['data'])
       if (res['code'] > 0) {
         let adminList = res["data"] || [];
-          this.adminList = adminList.map((x) => {
-            return { id: x.id, name: x.name + " - " + x.department_name };
-          });
+        this.adminList = adminList.map((x) => {
+          return { id: x.id, name: x.name + " - " + x.department_name };
+        });
       } else {
         this.common.showError(res['msg']);
       }
@@ -189,6 +191,26 @@ export class TaskScheduledComponent implements OnInit {
         this.common.showError();
         console.log('Error: ', err);
       });
+  }
+
+  getUserGroupList() {
+    this.api.get('UserRole/getUserGroups')
+      .subscribe(
+        (res) => {
+          console.log(" Group data", res["data"]);
+          if (res["code"] > 0) {
+            let groupList = res['data'] || [];
+            this.groupList = groupList.map((x) => {
+              return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
+            });
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          this.common.showError();
+          console.log("Error: ", err);
+        });
   }
 
   selectedPrimarUser(event) {
@@ -299,7 +321,7 @@ export class TaskScheduledComponent implements OnInit {
   openSchedukedTaskMasterModal() {
     // document.getElementById("schedukedTaskMasterModal").style.display = "block";
     this.common.params = null;
-    this.common.params = { data: null, adminList: this.adminList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
+    this.common.params = { data: null, adminList: this.adminList, groupList: this.groupList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -490,6 +512,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.allTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+         if(key == 'expdate' || key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -546,6 +571,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.allScheduleTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -594,6 +622,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.unacknowledgedNormalTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'expdate' || key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -651,6 +682,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.unacknowledgedScheduledTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -696,6 +730,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.ackNormalTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'expdate' || key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -717,7 +754,7 @@ export class TaskScheduledComponent implements OnInit {
         } else if (key == 'subject' || key == 'task_subject') {
           column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
-          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '', type: 'date' };
+          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
         } else if (key == 'high_priority') {
           column[key] = {
             value: "",
@@ -727,7 +764,7 @@ export class TaskScheduledComponent implements OnInit {
             class: "text-center"
           };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '', type: (key == 'expdate') ? 'date' : null };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
@@ -751,6 +788,9 @@ export class TaskScheduledComponent implements OnInit {
     for (var key in this.ackScheduleTaskList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'addtime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     // console.log(headings);
@@ -881,7 +921,7 @@ export class TaskScheduledComponent implements OnInit {
     }
     let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
     // this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: (ticket._tktype == 103) ? ticket.sc_task_desc : ticket.task_desc };
-    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: subTitle };
+    this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: subTitle, userList: this.adminList, groupList: this.groupList, };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getAllTask(type);
@@ -976,7 +1016,7 @@ export class TaskScheduledComponent implements OnInit {
     // console.log("edit scheduledTask:", this.scheduledTask);
     // this.openSchedukedTaskMasterModal();
     this.common.params = null;
-    this.common.params = { data: task, adminList: this.adminList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
+    this.common.params = { data: task, adminList: this.adminList, groupList: this.groupList, departmentList: this.departmentList, title: "Add Schedule task", button: "Save" };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
