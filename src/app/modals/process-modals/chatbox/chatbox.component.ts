@@ -26,6 +26,7 @@ export class ChatboxComponent implements OnInit {
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
   lastSeenId = 0;
+  lastSeenIdForView = 0; //only for view
   userListByTask = [];
   adminList = [];
   newCCUserId = null;
@@ -77,6 +78,7 @@ export class ChatboxComponent implements OnInit {
       this.getTargetActionData();
       this.getAttachmentByLead();
     }
+    this.lastSeenIdForView = this.lastSeenId;
 
     // console.log("user_details:", this.userService._details)
   }

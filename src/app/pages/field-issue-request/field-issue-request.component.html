@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row">
             <div class="col-9">
-                <h5>Field Support Request</h5>
+                <h5 class="heading-design">Field Support Request</h5>
             </div>
             <div class="col-3 text-right">
                 <button (click)="addRequest()" class="btn btn-primary btn-sm">
@@ -76,19 +76,19 @@
             </ul>
 
             <div *ngIf="activeTabTicket=='pending'">
-                <smart-table [data]="tablePendingTicketList.data" [settings]="tablePendingTicketList.settings" id="tablePendingTicketList">
+                <smart-table [data]="tablePendingTicketList.data" [settings]="tablePendingTicketList.settings" id="tablePendingTicketList" class="seconlevel-tables">
                 </smart-table>
             </div>
             <div *ngIf="activeTabTicket=='ack'">
-                <smart-table [data]="tableAckTicketList.data" [settings]="tableAckTicketList.settings" id="tableAckTicketList">
+                <smart-table [data]="tableAckTicketList.data" [settings]="tableAckTicketList.settings" id="tableAckTicketList" class="seconlevel-tables">
                 </smart-table>
             </div>
             <div *ngIf="activeTabTicket=='completed'">
-                <smart-table [data]="tableCompletedTicketList.data" [settings]="tableCompletedTicketList.settings" id="tableCompletedTicketList">
+                <smart-table [data]="tableCompletedTicketList.data" [settings]="tableCompletedTicketList.settings" id="tableCompletedTicketList" class="seconlevel-tables">
                 </smart-table>
             </div>
             <div *ngIf="activeTabTicket=='rejected'">
-                <smart-table [data]="tableRejectedTicketList.data" [settings]="tableRejectedTicketList.settings" id="tableRejectedTicketList">
+                <smart-table [data]="tableRejectedTicketList.data" [settings]="tableRejectedTicketList.settings" id="tableRejectedTicketList" class="seconlevel-tables">
                 </smart-table>
             </div>
         </div>

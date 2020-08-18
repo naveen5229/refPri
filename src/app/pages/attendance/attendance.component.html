@@ -1,11 +1,10 @@
 <nb-card>
     <nb-card-header >
-        <div class="row">
-            <div class="col-12">
-                <h5>Attendance</h5>
-            </div>
+        <div class="row m-0">
+                <h5 class="heading-design">Attendance</h5>
         </div>
-        <br>
+    </nb-card-header>
+    <nb-card-body>
         <div class="row">
             <div class="col-3">
                 <label>Select Date</label>
@@ -24,11 +23,9 @@
             </div>
 
         </div>
-    </nb-card-header>
-    <nb-card-body>
-        <div class="row">
+        <div class="row mt-2">
             <div class="col-12">
-                <smart-table *ngIf="attandanceList.length!=0" [data]="tableAttandanceList.data" [settings]="tableAttandanceList.settings" id="attandanceList">
+                <smart-table *ngIf="attandanceList.length!=0" [data]="tableAttandanceList.data" [settings]="tableAttandanceList.settings" id="attandanceList" class="smrt-table">
                 </smart-table>
             </div>
         </div>

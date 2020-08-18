@@ -1,3 +1,7 @@
 :host ::ng-deep .blue {
     color: blue;
   }
+  .smrt-table{
+    display: block;
+    height: calc(100vh - 224px);
+}

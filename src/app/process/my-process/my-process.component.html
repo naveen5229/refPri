@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row">
             <div class="col-9">
-                <h5>My Process Dashboard</h5>
+                <h5 class="heading-design">My Process Dashboard</h5>
             </div>
             <div class="col-3 text-right">
                 <!-- <button class="btn btn-primary btn-sm mr-2" id="csvCmapaign" (click)="uploadDataByCsv()">Csv </button> -->
@@ -67,7 +67,7 @@
                     <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedLead()">Search</button>
                 </div>
             </div>
-            <smart-table [data]="tableAllCompletedLeads.data" [settings]="tableAllCompletedLeads.settings" id="tableAllCompletedLeads">
+            <smart-table [data]="tableAllCompletedLeads.data" [settings]="tableAllCompletedLeads.settings" id="tableAllCompletedLeads" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">
