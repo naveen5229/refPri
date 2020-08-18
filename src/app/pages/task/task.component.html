@@ -22,7 +22,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body>
+    <nb-card-body style="min-height: calc(100vh - 230px);">
         <!-- Tabs      -->
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
@@ -77,7 +77,7 @@
                     Hold
                 </li>
             </ul>
-            <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList">
+            <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='TasksByMe'">
@@ -95,7 +95,7 @@
                     Hold
                 </li>
             </ul>
-            <smart-table *ngIf="normalTaskByMeList.length!=0" [data]="tableNormalTaskByMe.data" [settings]="tableNormalTaskByMe.settings" id="normalTaskByMeListx">
+            <smart-table *ngIf="normalTaskByMeList.length!=0" [data]="tableNormalTaskByMe.data" [settings]="tableNormalTaskByMe.settings" id="normalTaskByMeListx" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='scheduleMaster'">
@@ -120,7 +120,7 @@
                     <button class="btn btn-primary text-capitalize" (click)="searchAllCompletedTask()">Search</button>
                 </div>
             </div>
-            <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList">
+            <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='ccTask'">
@@ -132,7 +132,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='todoList'">
-            <div class="row mb-2">
+            <div class="row mb-1">
                 <div class="col-5">
                     <textarea row="4" cols="15" placeholder="Enter Description" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"></textarea>
                 </div>
@@ -149,7 +149,7 @@
                     <button class="btn btn-primary btn-sm" (click)="saveTaskTodo()" title="Save ToDo">save</button>
                 </div>
             </div>
-            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList">
+            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='futureTaskByMe'">

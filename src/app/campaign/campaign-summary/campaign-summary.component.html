@@ -5,34 +5,33 @@
               <h5 class="heading-design">Campaign Summary</h5>
           </div>      
       </div>
-  <br>
-      <div class="row mt-3" style="z-index: 999; font-size: 12px;">
-          <div class="col-4">
-              <label>Campaign Name</label>
-              <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName" id="campaignName" (onSelected)="campaignid=($event.id);" [preSelected]="{name:campaignname}" autocomplete="off">
-              </auto-suggestion>
-          </div>
-          <div class="col-2">
-              <label>Start Date</label>
-              <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="false">
-              </uj-date-time-picker>
-          </div>
-          <div class="col-2">
-              <label>End Date</label>
-              <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
-              </uj-date-time-picker>
-          </div>
-      
-          <div class="col-3 mt-4">
-              <button class="btn btn-primary btn-sm" type='submit' id="save" (click)="getCampaignSummary()">Submit</button>
-          </div>
-      </div>
+   
 
   </nb-card-header>
 
-  <nb-card-body style="min-height: 360px;">
-
-      <div class="row">
+  <nb-card-body style="min-height: 460px;">
+    <div class="row" style="z-index: 999; font-size: 12px;">
+        <div class="col-4">
+            <label>Campaign Name</label>
+            <auto-suggestion [data]="campaignDataList" display="name" placeholder="Campaign Name" name="campaignName" id="campaignName" (onSelected)="campaignid=($event.id);" [preSelected]="{name:campaignname}" autocomplete="off">
+            </auto-suggestion>
+        </div>
+        <div class="col-2">
+            <label>Start Date</label>
+            <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-2">
+            <label>End Date</label>
+            <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="false" [isStart]="false">
+            </uj-date-time-picker>
+        </div>
+    
+        <div class="col-3 mt-4">
+            <button class="btn btn-primary btn-sm" type='submit' id="save" (click)="getCampaignSummary()">Submit</button>
+        </div>
+    </div>
+      <div class="row mt-2">
         <div class="col-4">
           <div  class="chartbox" >
               <canvas id="myChart1" width="350" height="200"></canvas>

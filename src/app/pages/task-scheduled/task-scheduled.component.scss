@@ -124,7 +124,15 @@
 }
 smart-table{
     display: block;
-    height: calc(100vh - 335px);
+    height: calc(100vh - 230px);
+}
+.sl-smart-table{
+    display: block;
+    height: calc(100vh - 272px);
+}
+.sl3-smart-table{
+    display: block;
+    height: calc(100vh - 305px);
 }
 nb-card-body {
     min-height: calc(100vh - 185px);

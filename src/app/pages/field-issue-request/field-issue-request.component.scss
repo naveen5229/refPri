@@ -37,6 +37,7 @@
         &.active {
             background-color: #fff;
            // color: #26a69a;
+           color: #3366ff;;
             position: relative;
             &::after {
                 content: "";
@@ -52,8 +53,8 @@
 }
 smart-table{
     display: block;
-    height: calc(100vh - 253px);
+    height: calc(100vh - 230px);
 }
 .seconlevel-tables{
-    height: calc(100vh - 300px);
+    height: calc(100vh - 275px);
 }

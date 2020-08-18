@@ -20,6 +20,7 @@
     &.active {
       background-color: #fff;
      // color: #26a69a;
+     color: #3366ff;
       position: relative;
       &::after {
         content: "";
@@ -77,7 +78,7 @@ table{
       width: 100%;
       table-layout: fixed;
       overflow: auto;
-      max-height: calc(100vh - 324px);
+      max-height: calc(100vh - 290px);
       tr{
         display: table;
         table-layout: fixed;

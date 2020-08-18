@@ -55,6 +55,7 @@
     cursor: pointer;
     &.active {
       background-color: #fff;
+      color: #3366ff;
       // color: #26a69a;
       position: relative;
       &::after {
@@ -92,7 +93,7 @@ table{
       width: 100%;
       table-layout: fixed;
       overflow: auto;
-      max-height: calc(100vh - 324px);
+      max-height: calc(100vh - 290px);
       tr{
         display: table;
         table-layout: fixed;

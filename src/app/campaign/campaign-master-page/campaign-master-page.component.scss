@@ -20,6 +20,7 @@
     &.active {
       background-color: #fff;
       //color: #26a69a;
+      color: #3366ff;
       position: relative;
       &::after {
         content: "";
@@ -83,5 +84,5 @@
 }
 smart-table{
   display: block;
-  height: calc(100vh - 308px);
+  height: calc(100vh - 275px);
 }

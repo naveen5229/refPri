@@ -331,9 +331,9 @@ nb-layout-footer{
     bottom: 0;
     width: 100%;
 }
-.layout-container .content .columns{
+/* .layout-container .content .columns{
     margin-bottom: 45px;
-}
+} */
 
 /* kavita singh */
 
@@ -341,9 +341,7 @@ smart-table{
     display: block;
     height: 73vh;
 }
-nb-card{
-    height: 98%;
-}
+
 .heading-design{
     position: relative;
     z-index: 1;
