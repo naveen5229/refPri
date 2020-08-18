@@ -91,7 +91,7 @@
 }
 nb-icon{
   border-radius: 40px;
-  padding: 5px;
+  padding: 9px;
   width: 1.5em;
   height: 1.5em;
   transition: .1s;
@@ -99,7 +99,7 @@ nb-icon{
 nb-icon:hover{
   background-color: #e9edf3;
   border-radius: 40px;
-  padding: 5px;
+  padding: 9px;
   width: 1.5em;
   height: 1.5em;
   transition: .1s;  
@@ -116,21 +116,4 @@ nb-icon:hover{
  vertical-align: -webkit-baseline-middle;
   }
 
-// .profilehead:after{
-//   content: "";
-//   position: absolute;
-//   width: 30px;
-//   height: 2px;
-//   bottom: -5px;
-//   background-color: #f7941e;
-//   right: 0;
-// }
-// .profilehead:before{
-//   content: "";
-//   position: absolute;
-//   width: 15px;
-//   height: 2px;
-//   bottom: -10px;
-//   background-color: #f7941e;
-//   right: 0;
-// }
+
