@@ -247,7 +247,7 @@ table .fa-comments.new-comment span {
     width: 100%;
     margin: 0px;
     /* border-bottom: 2px solid #26a69a; */
-    border-bottom: 1px solid #3366ff;
+    border-bottom: 2px solid #3366ff;
     margin-bottom: 10px;
     padding-left: 5px !important;
 }
@@ -259,7 +259,7 @@ table .fa-comments.new-comment span {
     /* background-color: #26a69a;
     border: 2px solid #26a69a; */
     background-color:#3366ff;
-    border: 1px solid #3366ff;
+    border: 2px solid #3366ff;
     color: #fff;
     border-bottom: 0px;
     display: inline-block;
@@ -421,4 +421,16 @@ nb-layout-header nav {
 .table th, .table td {
     padding: 0.2rem .5rem;
     font-size: 12px!important;
+}
+.modal-header.sub-title{
+    background-color: #93acc7;
+}
+:focus {
+    outline: none!important;
+}
+.nb-theme-default nb-layout-header.fixed~.layout-container {
+    padding-top: 2.7rem!important;
+}
+.main-container-fixed {
+    top: 2.7rem!important;
 }
