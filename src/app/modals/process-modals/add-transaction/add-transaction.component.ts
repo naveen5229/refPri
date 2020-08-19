@@ -38,6 +38,7 @@ export class AddTransactionComponent implements OnInit {
       name: ""
     },
     identity: null,
+    emailStatic:null,
     mobileno: null,
     priCat: {
       id: null,
@@ -168,6 +169,8 @@ export class AddTransactionComponent implements OnInit {
     });
 
     const params = {
+      email: this.transForm.emailStatic,
+      
       processId: this.transForm.process.id,
       name: this.transForm.name,
       identity: this.transForm.identity,
@@ -183,6 +186,7 @@ export class AddTransactionComponent implements OnInit {
     }
     console.log("para......", params);
 
+    // return;
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;

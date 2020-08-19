@@ -103,7 +103,7 @@
             <label>Next Action<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="actionDataList" display="name" placeholder="Select Next Action" name="nextactionName" inputId="nextActionId" (onSelected)="transAction.nextAction=($event);onSelectNextAction($event.id)" [preSelected]="{name:transAction.nextAction.name}"
+            <auto-suggestion [data]="actionDataList" display="name" placeholder="Select Next Action" name="nextactionName" inputId="nextActionId" (onSelected)="transAction.nextAction=($event);onSelectNextAction($event)" [preSelected]="{name:transAction.nextAction.name}"
                 autocomplete="off">
             </auto-suggestion>
         </div>
@@ -113,7 +113,7 @@
             <label>Target Time<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <uj-date-time-picker (onChanged)="transAction.targetTime = $event" [dateTimeValue]="transAction.targetTime" [isTime]="false">
+            <uj-date-time-picker [mind]="currentDate" (onChanged)="transAction.targetTime = $event" [dateTimeValue]="transAction.targetTime" [isTime]="true">
             </uj-date-time-picker>
         </div>
     </div>
