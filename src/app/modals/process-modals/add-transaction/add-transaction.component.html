@@ -26,6 +26,18 @@
             <div class="col-6">
                 <label>Process Name: {{transForm.process.name}}</label>
             </div>
+
+            <div class="col-6">
+                <div class="row">
+                <div class="col-4">
+                    <label>Identity<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-8">
+                    <input type="text" class="form-control" placeholder="Enter Identity"
+                        [(ngModel)]="transForm.identity">
+                </div>
+            </div>
+         </div>
         </div>
 
     </div>
@@ -106,21 +118,8 @@
             <div>
                 
             <div class="row">
-
-            
-            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
-                   <div class="row">
-                   <div class="col-4">
-                       <label>Identity<span class="text-danger">*</span></label>
-                   </div>
-                   <div class="col-8">
-                       <input type="text" class="form-control" placeholder="Enter Identity"
-                           [(ngModel)]="transForm.identity">
-                   </div>
-               </div>
-            </div>
                          
-            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+            <!-- <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                 <div class="row">
                 <div class="col-4">
                     <label>Contact Name<span class="text-danger"></span></label>
@@ -154,7 +153,7 @@
                         [(ngModel)]="transForm.mobileno">
                 </div>
             </div>
-            </div>
+            </div> -->
 
                 </div>
 
@@ -297,15 +296,26 @@
                                         *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+
                                 <!-- attachment -->
-                                <label class="custom-file-upload" *ngIf="evenArray[i].r_coltype =='attachment'">
+
+                                <!-- <label class="custom-file-upload" *ngIf="evenArray[i].r_coltype =='attachment'">
                                     <span *ngIf="evenArray[i].r_url">
                                         <a *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
                                     </span>
-                                    <input type="file" class="file-control" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <input type="file" class="file-control" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)"> -->
                                     <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('evenArray',i)">Upload</button>
-                                </label>
+                                    <!-- <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                                </label> -->
+                                
+                                <div class="row" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="evenArray[i].r_url">
+                                        <a *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                                </div>
                             </div>
                         </span>
                     </div>

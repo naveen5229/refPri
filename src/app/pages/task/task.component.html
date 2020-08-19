@@ -57,6 +57,9 @@
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
                     Unread Task
                 </li>
+                <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
+                    Unread Leads
+                </li>
                 <!-- <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
                     Scheduled Task
                 </li>
@@ -168,6 +171,11 @@
             <smart-table *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
+        <div *ngIf="activeTab=='unreadLeads'">
+            <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            </smart-table>
+        </div>
+        
     </nb-card-body>
 
 
