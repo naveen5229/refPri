@@ -186,6 +186,8 @@ export class ChatboxComponent implements OnInit {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
+          this.attachmentFile.file = null;
+          this.attachmentFile.name = null;
           this.getLeadMessage();
           this.getAttachmentByLead();
         } else {
@@ -387,7 +389,7 @@ export class ChatboxComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            icons: (lead._action_form == 1 || lead._state_form == 1) ? this.actionIcons(lead, type) : null
+            icons: this.actionIcons(lead, type)
           };
         } else if (!type && key == 'completion_time' && lead[key]) {
           column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type, null), title: 'Add next state' };
@@ -404,16 +406,29 @@ export class ChatboxComponent implements OnInit {
 
   actionIcons(lead, type) {
     let formType = (type == 1) ? 1 : 2;
-    let icons = [
-      // { class: 'fas fa-trash-alt ml-2', action: this.deleteLead.bind(this, lead) }
-      { class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" }
-    ];
+    let icons = [];
+
+    if (lead._action_form == 1 || lead._state_form == 1) {
+      icons.push({ class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
+    }
+    if (!type && !lead.completion_time) {
+      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
+    }
+    // else if(type==1){
+    //   icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead),txt:'',title:"Delete State" });
+    // }
+    console.log("icons:", icons);
     return icons;
   }
 
-  deleteLead(row) { //not used
+  deleteLeadAction(row) {
+    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+      this.common.showError("Primary Owner/Action Owner have access to delete");
+      return false;
+    }
     let params = {
-      tarnsActId: row._action_id,
+      transId: this.ticketData._transactionid,
+      transActionId: row._trans_action_id,
     }
     if (row._action_id) {
       this.common.params = {
@@ -424,15 +439,22 @@ export class ChatboxComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Processes/removeTransactionAction', params)
-            .subscribe(res => {
-              this.common.loading--;
-              this.common.showToast(res['msg']);
-              this.getTargetActionData();
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+          this.api.post('Processes/removeTransactionAction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getTargetActionData();
+              } else {
+                this.common.showError(res['msg']);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
         }
       });
     }
