@@ -754,7 +754,7 @@ export class TaskMessageComponent implements OnInit {
       var ext = file.name.split('.').pop();
       // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext)) {
+      if (formats.includes(ext.toLowerCase())) {
       } else {
         this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
         return false;

@@ -331,207 +331,207 @@ export class TaskComponent implements OnInit {
       console.log('Error: ', err);
     });
   }
-      
+
   // start unread lead
-      setTableUnreadLeads(type) {
-        this.tableUnreadLeads.data = {
-          headings: this.generateHeadingsUnreadLeads(),
-          columns: this.getTableColumnsUnreadLeads(type)
-        };
-        return true;
-      }
-    
-      generateHeadingsUnreadLeads() {
-        let headings = {};
-        for (var key in this.unreadLeads[0]) {
-          if (key.charAt(0) != "_") {
-            headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-          }
-          if (key === "addtime" || key === "action_addtime") {
-            headings[key]["type"] = "date";
-          }
-        }
-        return headings;
-      }
-    
-      getTableColumnsUnreadLeads(type) {
-        let columns = [];
-        this.unreadLeads.map(lead => {
-          let column = {};
-          for (let key in this.generateHeadingsUnreadLeads()) {
-            if (key.toLowerCase() == 'action') {
-              column[key] = {
-                value: "",
-                isHTML: true,
-                action: null,
-                icons: this.actionIconsForLeads(lead, type)
-              };
-            } else {
-              column[key] = { value: lead[key], class: 'black', action: '' };
-            }
-    
-            column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
-          }
-          columns.push(column);
-        });
-        return columns;
-      }
+  setTableUnreadLeads(type) {
+    this.tableUnreadLeads.data = {
+      headings: this.generateHeadingsUnreadLeads(),
+      columns: this.getTableColumnsUnreadLeads(type)
+    };
+    return true;
+  }
 
-      actionIconsForLeads(lead,type){
-
-        let icons = [
-          { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" }
-        ];
-        if (lead._unreadcount > 0) {
-          icons = [
-            { class: "fas fa-comments new-comment", action: this.transMessage.bind(this, lead, type), txt: lead._unreadcount, title: "Lead Comment" },
-          ];
-        } else if (lead._unreadcount == 0) {
-          icons = [
-            { class: "fas fa-comments", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" },
-          ];
-        } else if (lead._unreadcount == -1) {
-          icons = [
-            { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" },
-          ];
-        }
-        
-        if (type == 5) {//unread
-          if (lead._is_action == 1 && lead._status == 0) {
-            icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
-          } else if (lead._status == 0) {
-            icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-          } else if (lead._status == 2) {
-            icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
-          } else if (lead._cc_user_id > 0 && !lead._cc_status) {
-            icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
-          }
-        }
-        return icons;
+  generateHeadingsUnreadLeads() {
+    let headings = {};
+    for (var key in this.unreadLeads[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "action_addtime") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
 
-      transMessage(lead, type) {
-        console.log("transMessage:", lead);
-        if (lead._transactionid > 0) {
-          let editData = {
-            transactionid: lead._transactionid,
-            lastSeenId: lead._lastreadid,
-            tabType: type,
-            priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
-            rowData: lead
-          }
-          this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };
-          const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
-          activeModal.result.then(data => {
+  getTableColumnsUnreadLeads(type) {
+    let columns = [];
+    this.unreadLeads.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsUnreadLeads()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsForLeads(lead, type)
+          };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+
+  actionIconsForLeads(lead, type) {
+
+    let icons = [
+      { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" }
+    ];
+    if (lead._unreadcount > 0) {
+      icons = [
+        { class: "fas fa-comments new-comment", action: this.transMessage.bind(this, lead, type), txt: lead._unreadcount, title: "Lead Comment" },
+      ];
+    } else if (lead._unreadcount == 0) {
+      icons = [
+        { class: "fas fa-comments", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" },
+      ];
+    } else if (lead._unreadcount == -1) {
+      icons = [
+        { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" },
+      ];
+    }
+
+    if (type == 5) {//unread
+      if (lead._is_action == 1 && lead._status == 0) {
+        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
+      } else if (lead._status == 0) {
+        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
+      } else if (lead._status == 2) {
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
+      } else if (lead._cc_user_id > 0 && !lead._cc_status) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
+      }
+    }
+    return icons;
+  }
+
+  transMessage(lead, type) {
+    console.log("transMessage:", lead);
+    if (lead._transactionid > 0) {
+      let editData = {
+        transactionid: lead._transactionid,
+        lastSeenId: lead._lastreadid,
+        tabType: type,
+        priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
+        rowData: lead
+      }
+      this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };
+      const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        this.getProcessLeadByType(type);
+      });
+    } else {
+      this.common.showError("Invalid Lead");
+    }
+  }
+
+  ackLeadByCcUser(lead, type) {
+    // console.log("ackLeadByCcUser");
+    if (lead._transactionid > 0) {
+      let params = {
+        transId: lead._transactionid
+      }
+      // console.log("ackLeadByCcUser:", params);
+      this.common.loading++;
+      this.api.post('Processes/ackLeadByCcUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.common.showToast(res['msg']);
+          this.getProcessLeadByType(type);
+        } else {
+          this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
+
+
+  updateTransactionStatusWithConfirm(lead, type, status) {
+    let preText = "Complete";
+    this.common.params = {
+      title: preText + ' Lead',
+      description: `<b>` + 'Are You Sure to ' + preText + ` this Lead <b>`,
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.updateTransactionStatus(lead, type, status);
+      }
+    });
+  }
+
+  updateLeadActionStatus(lead, type, status) {
+    if (lead._transactionid) {
+      let params = {
+        transId: lead._transactionid,
+        actionId: lead._transaction_actionid,
+        status: status
+      }
+      this.common.loading++;
+      this.api.post('Processes/updateLeadActionStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
             this.getProcessLeadByType(type);
-          });
-        } else {
-          this.common.showError("Invalid Lead");
-        }
-      }
-
-      ackLeadByCcUser(lead, type) {
-        // console.log("ackLeadByCcUser");
-        if (lead._transactionid > 0) {
-          let params = {
-            transId: lead._transactionid
+          } else {
+            this.common.showError(res['msg']);
           }
-          // console.log("ackLeadByCcUser:", params);
-          this.common.loading++;
-          this.api.post('Processes/ackLeadByCcUser', params).subscribe(res => {
-            this.common.loading--;
-            if (res['code'] == 1) {
-              this.common.showToast(res['msg']);
-              this.getProcessLeadByType(type);
-            } else {
-              this.common.showError(res['data']);
-            }
-          }, err => {
-            this.common.loading--;
-            this.common.showError();
-            console.log('Error: ', err);
-          });
         } else {
-          this.common.showError("Lead ID Not Available");
+          this.common.showError(res['msg']);
         }
-      }
-    
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Transaction ID Not Available");
+    }
+  }
 
-      updateTransactionStatusWithConfirm(lead, type, status) {
-        let preText = "Complete";
-        this.common.params = {
-          title: preText + ' Lead',
-          description: `<b>` + 'Are You Sure to ' + preText + ` this Lead <b>`,
-        }
-        const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-        activeModal.result.then(data => {
-          if (data.response) {
-            this.updateTransactionStatus(lead, type, status);
-          }
-        });
+  updateTransactionStatus(lead, type, status) {
+    // console.log("updateTransactionStatus");
+    if (lead._transactionid) {
+      let params = {
+        transId: lead._transactionid,
+        status: status
       }
-
-      updateLeadActionStatus(lead, type, status) {
-        if (lead._transactionid) {
-          let params = {
-            transId: lead._transactionid,
-            actionId: lead._transaction_actionid,
-            status: status
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
           }
-          this.common.loading++;
-          this.api.post('Processes/updateLeadActionStatus', params).subscribe(res => {
-            this.common.loading--;
-            if (res['code'] == 1) {
-              if (res['data'][0].y_id > 0) {
-                this.common.showToast(res['msg']);
-                this.getProcessLeadByType(type);
-              } else {
-                this.common.showError(res['msg']);
-              }
-            } else {
-              this.common.showError(res['msg']);
-            }
-          }, err => {
-            this.common.loading--;
-            this.common.showError();
-            console.log('Error: ', err);
-          });
         } else {
-          this.common.showError("Transaction ID Not Available");
+          this.common.showError(res['msg']);
         }
-      }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Transaction ID Not Available");
+    }
+  }
+  // end unread lead
 
-      updateTransactionStatus(lead, type, status) {
-        // console.log("updateTransactionStatus");
-        if (lead._transactionid) {
-          let params = {
-            transId: lead._transactionid,
-            status: status
-          }
-          this.common.loading++;
-          this.api.post('Processes/updateTransactionStatus', params).subscribe(res => {
-            this.common.loading--;
-            if (res['code'] == 1) {
-              if (res['data'][0].y_id > 0) {
-                this.common.showToast(res['msg']);
-                this.getProcessLeadByType(type);
-              } else {
-                this.common.showError(res['msg']);
-              }
-            } else {
-              this.common.showError(res['msg']);
-            }
-          }, err => {
-            this.common.loading--;
-            this.common.showError();
-            console.log('Error: ', err);
-          });
-        } else {
-          this.common.showError("Transaction ID Not Available");
-        }
-      }
-      // end unread lead
-  
 
   getTaskByType(type, startDate = null, endDate = null) {
     this.activeSabTab = 0;
@@ -1369,7 +1369,7 @@ export class TaskComponent implements OnInit {
     return columns;
   }
   // end unread task for me list
-  
+
   actionIcons(ticket, type) {
     let icons = [
       {
@@ -2438,18 +2438,18 @@ export class TaskComponent implements OnInit {
   }
 
   getSearchTask(searchText, searchUserId) {
-    console.log("search:", searchText, "searchUseId:",searchUserId);
+    console.log("search:", searchText, "searchUseId:", searchUserId);
 
-    let params = "?search="+searchText+"&searchUserId="+searchUserId;
-    if ((searchText && searchText.trim != "") || searchUserId>0) {
+    let params = "?search=" + searchText + "&searchUserId=" + searchUserId;
+    if ((searchText && searchText.trim != "") || searchUserId > 0) {
       this.common.loading++;
-      this.api.get("AdminTask/searchTask"+params).subscribe(
+      this.api.get("AdminTask/searchTask" + params).subscribe(
         (res) => {
           this.common.loading--;
           console.log("data", res);
           this.searchTaskList = res["data"];
           if (res["code"] == 1) {
-            if (this.searchTaskList.length > 0) {
+            if (this.searchTaskList && this.searchTaskList.length > 0) {
               this.openSearchTaskModal();
               this.setTableSearchTaskList();
             } else {
