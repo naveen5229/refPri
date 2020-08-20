@@ -28,7 +28,7 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 p-0" style="border-left:1px solid black;">
+        <div class="col-3 p-0" style="border-left:1px solid black;font-size: 14px;">
             <table *ngIf="fromPage != 'campaign'" width="100%">
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
