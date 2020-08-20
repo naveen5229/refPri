@@ -151,3 +151,9 @@ smart-table{
     outline: 1px solid #3366ff;
     border: 0;
 }
+
+:host ::ng-deep #tableUnreadLeads{
+    th:nth-child(5) {
+        width: 300px;
+    }
+}

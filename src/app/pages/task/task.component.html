@@ -2,17 +2,30 @@
     <nb-card-header>
         <div class="row">
             <div class="col-2">
-                <h5 class="heading-design">fgfgTasks</h5>
+                <h5 class="heading-design">Tasks</h5>
             </div>
-            <div class="col-4">
-                <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
-                <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value)">Search</button>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-2">
+                        <select (change)="SearchBy = $event.target.value">
+                            <option>By Task</option>
+                            <option>By User</option>
+                        </select>
+                    </div>
+                    <div class="col-10">
+                        <span *ngIf = "SearchBy === 'By Task'">
+                            <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
+                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
+                        </span>
+                        <span *ngIf = "SearchBy === 'By User'" style="display: flex;">
+                            <auto-suggestion class="form-controls col-9" style="padding-right: 0;" [data]="adminList"
+                             display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
+                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
+                        </span>
+                    </div>
+                </div>
             </div>
-            <!-- <div class="col-3" style="display: flex;">
-                <auto-suggestion [data]="adminList" display="name" placeholder="Search Users" inputId="Users" name="Users"></auto-suggestion>
-                <button class="btn btn-primary btn-sm" (click)="getTaskByUser()">Search</button>
-            </div> -->
-            <div class="col-6 text-right">
+            <div class="col-4 text-right">
                 <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
                     <i class="fa fa-plus" style="font-size:12px;"></i> <b>ST</b>
                 </button>
@@ -56,6 +69,9 @@
                 </li>
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
                     Unread Task
+                </li>
+                <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
+                    Unread Leads
                 </li>
                 <!-- <li [ngClass]="activeTab=='ScheduledTask'?'active':''" (click)="activeTab='ScheduledTask'; getTaskByType(103)">
                     Scheduled Task
@@ -168,6 +184,11 @@
             <smart-table *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
+        <div *ngIf="activeTab=='unreadLeads'">
+            <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            </smart-table>
+        </div>
+        
     </nb-card-body>
 
 

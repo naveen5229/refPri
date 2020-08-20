@@ -17,7 +17,7 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
@@ -176,5 +176,36 @@
         </div>
     </div>
     <!-- end: lead userlogs modal -->
+
+
+    <!-- start: action owner change modal -->
+    <div class="modal" id="editActionOwnerModal" #editActionOwnerModal>
+        <div class="modal-dialog mt-3">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#fff;">Change Action Owner</h5>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeEditActionOwnerModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mt-2 mb-2">
+                        <div class="col-4">
+                            <label>Action Owner<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-8">
+                            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner" inputId="actionOwnerId" (onSelected)="actionOwnerForm.userId=($event.id);actionOwnerForm.userName=($event.name);" [preSelected]="{name:actionOwnerForm.userName}"
+                                autocomplete="off">
+                            </auto-suggestion>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button class="btn btn-primary btn-sm" type='submit' (click)="changeActionOwner()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end: action owner change modal -->
 
 </div>

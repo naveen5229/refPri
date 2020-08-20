@@ -214,7 +214,8 @@ export class TaskMessageComponent implements OnInit {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
-        attachment: this.attachmentFile.file
+        attachment: this.attachmentFile.file,
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
       }
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
