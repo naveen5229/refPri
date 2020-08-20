@@ -568,15 +568,27 @@ export class ChatboxComponent implements OnInit {
   }
 
   openEditActionOwnerModal(row) {
-    console.log('openEditActionOwnerModal:', row);
+    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+      this.common.showError("Primary Owner/Action Owner have access to change");
+      return false;
+    }
+    // console.log('openEditActionOwnerModal:', row);
     this.actionOwnerForm.transId = this.ticketData._transactionid;
     this.actionOwnerForm.actionId = row._trans_action_id;
     this.actionOwnerForm.oldOwnerName = row.action_owner;
     document.getElementById("editActionOwnerModal").style.display = "block";
   }
 
+  resetActionOwnerForm() {
+    this.actionOwnerForm.transId = null;
+    this.actionOwnerForm.actionId = null;
+    this.actionOwnerForm.userId = null;
+    this.actionOwnerForm.userName = null;
+    this.actionOwnerForm.oldOwnerName = null;
+  }
+
   changeActionOwner() {
-    console.log("changeActionOwner:", this.actionOwnerForm);
+    // console.log("changeActionOwner:", this.actionOwnerForm);
     if (this.actionOwnerForm.userId > 0) {
       let params = {
         transId: this.actionOwnerForm.transId,
@@ -593,6 +605,8 @@ export class ChatboxComponent implements OnInit {
           if (res['code'] == 1) {
             if (res['data'][0].y_id > 0) {
               this.common.showToast(res['msg']);
+              this.resetActionOwnerForm();
+              this.closeEditActionOwnerModal();
               this.getTargetActionData();
             } else {
               this.common.showError(res['msg']);
