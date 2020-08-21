@@ -6,9 +6,9 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 420px;">
+    <nb-card-body>
         <div class="row">
-            <div class="tabs_style_main">
+            <div class="tabs_style_main w-100">
                 <ul class="tabs_style text-left">
                     <li [ngClass]="activeTab=='productMaster'?'active':''" (click)="activeTab='productMaster'; getReportdata('productMaster')">Product Master </li>
                     <li [ngClass]="activeTab=='actionMaster'?'active':''" (click)="activeTab='actionMaster'; getReportdata(
@@ -42,7 +42,7 @@
             </div>
 
         </div>
-        <div class="mt-2">
+        <div>
             <div class="row" *ngIf="activeTab=='productMaster'">
                 <div class="col-3">
                     <label>Product Name</label>

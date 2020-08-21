@@ -4,7 +4,7 @@
                 <h5 class="heading-design">Ticket Call Mapping</h5>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: calc(100vh - 250px);">
+    <nb-card-body>
         <div class="row mb-2">
             <div class="col-2">
                 <label>Start Date</label>
@@ -24,9 +24,9 @@
     </select>
             </div>
             <div class="col-5 mt-4">
-                <button type="submit" id="submit" (click)="getTicketData()" class="btn btn-primary btn-sm mr-2 mt-2">Submit</button>
-                <button type="submit" (click)="callLogs()" class="btn btn-primary btn-sm mr-2 mt-2">Last Call Logs</button>
-                <button type="submit" (click)="missedCallLogs()" class="btn btn-primary btn-sm mt-2">Missed Call Logs</button>
+                <button type="submit" id="submit" (click)="getTicketData()" class="btn btn-primary btn-sm mr-2">Submit</button>
+                <button type="submit" (click)="callLogs()" class="btn btn-primary btn-sm mr-2">Last Call Logs</button>
+                <button type="submit" (click)="missedCallLogs()" class="btn btn-primary btn-sm">Missed Call Logs</button>
             </div>
         </div>  
         <smart-table *ngIf="ticketList.length!=0" [data]="table.data" [settings]="table.settings" id="pendinglist" class="smrt-table">
