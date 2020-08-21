@@ -54,7 +54,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='allCompletedLeads'">
-            <div class="row" style="z-index: 999;">
+            <div class="row mb-2" style="z-index: 999;">
                 <div class="col-4">
                     <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
                     </uj-date-time-picker>
