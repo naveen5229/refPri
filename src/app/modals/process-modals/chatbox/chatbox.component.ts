@@ -414,9 +414,9 @@ export class ChatboxComponent implements OnInit {
     if (!type && !lead.completion_time) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
     }
-    // else if (type == 1) {
-    //   icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead), txt: '', title: "Delete State" });
-    // }
+    else if (type == 1) {
+      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead), txt: '', title: "Delete State" });
+    }
     console.log("icons:", icons);
     return icons;
   }
@@ -430,7 +430,7 @@ export class ChatboxComponent implements OnInit {
       transId: this.ticketData._transactionid,
       transActionId: row._trans_action_id,
     }
-    if (row._action_id) {
+    if (row._trans_action_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -457,6 +457,8 @@ export class ChatboxComponent implements OnInit {
           });
         }
       });
+    } else {
+      this.common.showError("Invalid request");
     }
   }
 
@@ -469,7 +471,7 @@ export class ChatboxComponent implements OnInit {
       transId: this.ticketData._transactionid,
       transStateId: row._trans_state_id,
     }
-    if (row._action_id) {
+    if (row._trans_state_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -485,7 +487,7 @@ export class ChatboxComponent implements OnInit {
                 this.common.showToast(res['msg']);
                 this.getTargetActionData(1);
               } else {
-                this.common.showError(res['msg']);
+                this.common.showError(res['data'][0].y_msg);
               }
             } else {
               this.common.showError(res['msg']);
@@ -496,6 +498,8 @@ export class ChatboxComponent implements OnInit {
           });
         }
       });
+    } else {
+      this.common.showError("Invalid request");
     }
   }
 
