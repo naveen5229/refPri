@@ -32,7 +32,7 @@
 .tabs_style {
     width: 100%;
     margin: 0px;
-   // border-bottom: 2px solid #26a69a;
+    // border-bottom: 2px solid #26a69a;
     border-bottom: 2px solid #3366ff;
     margin-bottom: 10px;
     padding-left: 5px !important;
@@ -40,8 +40,8 @@
         padding: 5px 6px;
         list-style: none;
         margin-right: 5px;
-       // background-color: #26a69a;
-       // border: 2px solid #26a69a;
+        // background-color: #26a69a;
+        // border: 2px solid #26a69a;
         background-color: #3366ff;
         border: 2px solid #3366fe;
         color: #fff;
@@ -139,21 +139,27 @@
         width: 300px !important;
     }
 }
-smart-table{
+
+smart-table {
     display: block;
     height: calc(100vh - 230px);
 }
-.sl-smart-table{
+
+.sl-smart-table {
     height: calc(100vh - 275px);
 }
-.searchbtn{
+
+.searchbtn {
     margin-right: -2px;
     outline: 1px solid #3366ff;
     border: 0;
 }
 
-:host ::ng-deep #tableUnreadLeads{
+:host ::ng-deep #tableUnreadLeads {
     th:nth-child(5) {
         width: 300px;
+    }
+    th:nth-child(2) {
+        width: initial !important;
     }
 }
