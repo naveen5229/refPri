@@ -714,7 +714,7 @@ export class TaskScheduledComponent implements OnInit {
         } else if (key == 'subject' || key == 'task_subject') {
           column[key] = { value: ticket[key], class: 'black', action: '', isTitle: true, title: ticket['_task_desc'] };
         } else if (key == 'expdate' && ticket['time_left'] <= 0) {
-          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
+          column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '', type: 'date' };
         } else if (key == 'high_priority') {
           column[key] = {
             value: "",
@@ -724,7 +724,7 @@ export class TaskScheduledComponent implements OnInit {
             class: "text-center"
           };
         } else {
-          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '' };
+          column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(ticket[key]) : ticket[key], class: 'black', action: '', type: (key == 'expdate') ? 'date' : null };
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };

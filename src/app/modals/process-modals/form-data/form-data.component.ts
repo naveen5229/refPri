@@ -9,12 +9,13 @@ import { ApiService } from '../../../Service/Api/api.service';
   styleUrls: ['./form-data.component.scss']
 })
 export class FormDataComponent implements OnInit {
+  title = 'Form Data';
   formField = [];
-
   evenArray = [];
   oddArray = [];
   refId = null;
   refType = null;
+  transId = null;
 
   Details = [{
     detail_type: 1,
@@ -29,19 +30,30 @@ export class FormDataComponent implements OnInit {
     private modalService: NgbModal,
     public api: ApiService) {
     console.log("id", this.common.params);
-    this.refId = this.common.params.ref.id;
-    this.refType = this.common.params.ref.type;
-    this.common.handleModalSize('class', 'modal-lg', '650');
-    this.getFormDetail();
+    this.title = this.common.params.title ? this.common.params.title : 'Form Data';
+    if (this.common.params && this.common.params.actionData) {
+      this.transId = this.common.params.actionData.transId;
+      this.refId = this.common.params.actionData.refId;
+      this.refType = this.common.params.actionData.refType;
+
+      this.getFormDetail();
+    }
+    if (!this.refType) {
+      this.title = "State Form";
+    } else if (this.refType == 1) {
+      this.title = "Action Form";
+    } else if (this.refType == 2) {
+      this.title = "Transaction Form";
+    } else if (this.refType == 3) {
+      this.title = "Primary Info Form";
+    }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   dismiss(res) {
     this.activeModal.close({ response: res });
   }
-
 
   saveFromDetail() {
     this.Details = this.evenArray.concat(this.oddArray);
@@ -55,51 +67,49 @@ export class FormDataComponent implements OnInit {
     });
 
     const params = {
-      formDetails: JSON.stringify(details),
+      info: JSON.stringify(details),
       refId: this.refId,
-      refType: this.refType
+      refType: this.refType,
+      transId: this.transId
     }
     console.log("para......", params);
 
     this.common.loading++;
-    this.api.post('Processes/saveProcessMatrixCalAssign', params)
+    this.api.post('Processes/saveFormWrtRefId', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("--res", res['data'][0].r_id)
-        if (res['data'][0].r_id > 0) {
-          this.common.showToast("Successfully Eenterd");
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
-          this.common.showError(res['data'][0].r_msg);
+          this.common.showError(res['msg']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError(err);
-          console.error('Api Error:', err);
-        });
+      }, err => {
+        this.common.loading--;
+        this.common.showError(err);
+        console.error('Api Error:', err);
+      });
     // }
   }
 
   getFormDetail() {
-    const params = "refId=" + this.refId +
-      "&refType=" + this.refType;
+    const params = "refId=" + this.refId + "&refType=" + this.refType + "&transId=" + this.transId;
     console.log("params", params);
     this.common.loading++;
-    this.api.get('Processes/getFormWrtRefId?' + params)
-      .subscribe(res => {
-        this.common.loading--;
-        console.log("resss", res);
-        if (res['data']) {
-          this.formField = res['data'];
-          this.formatArray();
-        }
-
-      },
-        err => {
-          this.common.loading--;
-          console.error('Api Error:', err);
-        });
-    // }
+    this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
+      this.common.loading--;
+      console.log("resss", res);
+      if (res['data']) {
+        this.formField = res['data'];
+        this.formatArray();
+      }
+    }, err => {
+      this.common.loading--;
+      console.error('Api Error:', err);
+    });
   }
 
   formatArray() {

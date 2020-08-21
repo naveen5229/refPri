@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5>Form Data</h5>
+    <h5>{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="dismiss(false)">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -21,7 +21,7 @@
 
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol" *ngIf="oddArray[i].r_fixedvalues">
+                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues || true">
                                     <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
@@ -47,7 +47,7 @@
                     <tr>
                         <td></td>
                         <td style="text-align: center">
-                            <button type="button" class="btn btn-primary" (click)="saveFromDetail()">Submit</button>
+                            <button type="button" class="btn btn-primary btn-sm" (click)="saveFromDetail()">Submit</button>
                         </td>
                     </tr>
                 </table>

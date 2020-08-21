@@ -18,19 +18,20 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-4">
+            <div class="col-2 pr-0">
                 <label>name<span class="text-danger">*</span></label>
-            </div>
-            <div class="col-8">
                 <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
             </div>
-        </div>
-
-        <div class="row mb-2">
-            <div class="col-4">
-                <label>Modes:</label>
+            <div class="col-2 pr-0">
+                <label>Threshold</label>
+                <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)" [(ngModel)]="actionForm.threshold">
             </div>
-            <div class="col-8">
+            <div class="col-4 pr-0">
+                <label>Next Action</label>
+                <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action" (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
+            </div>
+            <div class="col-4 pr-0">
+                <label>Modes</label>
                 <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId" autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true" (onSelected)="actionForm.modes = $event">
                 </auto-suggestion>
             </div>

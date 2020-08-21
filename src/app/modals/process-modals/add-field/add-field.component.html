@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-basic-title">Add Field</h5>
+    <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -59,7 +59,7 @@
     </div>
     <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField"></smart-table>
 
-    <div *ngIf="data && data.length" class="row">
+    <div *ngIf="(data && data.length) || refType==2" class="row">
         <div class="col-12 text-right">
             <button class="btn btn-primary btn-sm" name="openAssignField" (click)="openAssignForm()">Assign Form</button>
         </div>

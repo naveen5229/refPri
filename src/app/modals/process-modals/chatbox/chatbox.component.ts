@@ -6,6 +6,7 @@ import { UserService } from '../../../Service/user/user.service';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { ReminderComponent } from '../../reminder/reminder.component';
 import { AddTransactionActionComponent } from '../add-transaction-action/add-transaction-action.component';
+import { FormDataComponent } from '../form-data/form-data.component';
 
 @Component({
   selector: 'ngx-chatbox',
@@ -48,6 +49,8 @@ export class ChatboxComponent implements OnInit {
       hideHeader: true
     }
   };
+  activeTab = 'actionList';
+
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -273,37 +276,20 @@ export class ChatboxComponent implements OnInit {
     console.log('userLogs:', this.userListByTask['userLogs']);
     document.getElementById("userLogsModal").style.display = "block";
   }
-
-  openTransAction(lead, type) {
-    console.log("openTransAction");
-    let actionData = {
-      processId: lead._processid,
-      transId: lead._transactionid,
-      processName: lead._processname,
-      identity: lead.identity,
-      isNextAction: (type == 2) ? true : false,
-      requestId: (type == 1) ? null : null
-    };
-    this.common.params = { actionData, adminList: this.adminList, title: "Transaction Action", button: "Add" };
-    const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      this.getTargetActionData();
-    });
-  }
   // end: campaign msg
 
-  getTargetActionData() {
+  getTargetActionData(type = null) {
     this.resetTable();
     this.transActionData = [];
-    const params = "transId=" + this.ticketId;
+    const params = "?transId=" + this.ticketId;
+    let apiName = (type == 1) ? 'Processes/getTransactionStateList' : 'Processes/getTransactionActionList';
     this.common.loading++;
-    this.api.get('Processes/getTransactionActionList?' + params).subscribe(res => {
+    this.api.get(apiName + params).subscribe(res => {
       this.common.loading--;
       console.log("api data", res);
-      // if (!res['data']) return;
       if (res['code'] == 1) {
-        this.transActionData = res['data'];
-        this.transActionData.length ? this.setTable() : this.resetTable();
+        this.transActionData = res['data'] || [];
+        this.transActionData.length ? this.setTable(type) : this.resetTable();
       }
     }, err => {
       this.common.loading--;
@@ -318,10 +304,10 @@ export class ChatboxComponent implements OnInit {
     };
   }
 
-  setTable() {
+  setTable(type) {
     this.tableTransActionData.data = {
       headings: this.generateHeadings(),
-      columns: this.getTableColumns()
+      columns: this.getTableColumns(type)
     };
     return true;
   }
@@ -339,7 +325,7 @@ export class ChatboxComponent implements OnInit {
     return headings;
   }
 
-  getTableColumns() {
+  getTableColumns(type) {
     let columns = [];
     this.transActionData.map(lead => {
       let column = {};
@@ -351,6 +337,8 @@ export class ChatboxComponent implements OnInit {
           //   action: null,
           //   icons: this.actionIcons(lead)
           // };
+        } else if (!type && key == 'completion_time' && lead[key]) {
+          column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, this.ticketData, this.tabType, null), title: 'Add next state' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -392,6 +380,97 @@ export class ChatboxComponent implements OnInit {
         }
       });
     }
+  }
+
+
+  openTransAction(lead, type, formType = null) {
+    if (![1, 2].includes(type)) {
+      this.common.showError("Permission Denied");
+      return false;
+    }
+    console.log("openTransAction");
+    let formTypeTemp = 0;
+    if (!formType) {
+      formTypeTemp = 1;
+    } else {
+      formTypeTemp = formType;
+    }
+    let actionData = {
+      processId: lead._processid,
+      transId: lead._transactionid,
+      processName: lead._processname,
+      identity: lead.identity,
+      formType: formTypeTemp,
+      requestId: null,
+      actionId: null,
+      actionName: '',
+      stateId: (lead._state_id > 0) ? lead._state_id : null,
+      stateName: (lead._state_id > 0) ? lead.state_name : null,
+      actionOwnerId: null
+    };
+    let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
+    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
+    const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response && data.nextFormType) {
+        // nextFormType: 1 = fromstate, 2=fromaction
+        console.log("res data:", data, lead);
+        if (data.nextFormType == 1) {
+          if (lead._state_form == 1) {
+            this.openTransFormData(lead, type, data.nextFormType);
+          } else {
+            this.openTransAction(lead, type, 2);
+          }
+
+        } else if (data.nextFormType == 2) {
+          if (lead._action_form == 1) {
+            this.openTransFormData(lead, type, data.nextFormType);
+          } else {
+            this.openTransAction(lead, type, 1);
+          }
+        }
+      } else {
+        this.getTargetActionData(null);
+      }
+    });
+  }
+
+  openTransFormData(lead, type, formType = null) {
+    console.log("openTransAction");
+    let title = 'Action Form';
+    let refId = 0;
+    let refType = 0;
+    // formType: 1 = stateform, 2=actionform
+    if (formType == 1) {
+      title = 'State Form';
+      refId = lead._state_id;
+      refType = 0;
+    } else if (formType == 2) {
+      title = 'Action Form';
+      refId = lead._action_id;
+      refType = 1;
+    }
+    let actionData = {
+      processId: lead._processid,
+      processName: lead._processname,
+      transId: lead._transactionid,
+      refId: refId,
+      refType: refType,
+      formType: formType,
+    };
+
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log("formData:", formType);
+      if (formType == 2) {
+        this.openTransAction(lead, type, 1);
+      } else if (formType == 1) {
+        this.openTransAction(lead, type, 2);
+      } else {
+        this.getTargetActionData(null);
+      }
+    });
   }
 
 }

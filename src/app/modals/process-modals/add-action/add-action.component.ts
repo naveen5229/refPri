@@ -18,10 +18,13 @@ export class AddActionComponent implements OnInit {
     name: "",
     process: { id: null, name: "" },
     state: { id: null, name: "" },
-    modes: []
+    threshold: null,
+    modes: [],
+    nextAction: []
   }
   modeList = [];
   actionList = [];
+  nextActionList = [];
   table = {
     data: {
       headings: {},
@@ -76,11 +79,13 @@ export class AddActionComponent implements OnInit {
     }
     else {
       const params = {
+        requestId: this.actionForm.rowId,
         processId: this.actionForm.process.id,
         stateId: this.actionForm.state.id,
         name: this.actionForm.name,
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
-        requestId: this.actionForm.rowId
+        threshold: this.actionForm.threshold,
+        nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
       };
       console.log("actionForm:", params);
       this.common.loading++;
@@ -105,7 +110,8 @@ export class AddActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessAction?processId=" + this.actionForm.process.id).subscribe(res => {
       this.common.loading--;
-      this.actionList = res['data'];
+      this.actionList = res['data'] || [];
+      this.nextActionList = this.actionList.map(x => { return { id: x._action_id, name: x.name } });
       this.actionList.length ? this.setTable() : this.resetTable();
     }, err => {
       this.common.loading--;
@@ -165,7 +171,7 @@ export class AddActionComponent implements OnInit {
     let icons = [
       // { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
       { class: "fas fa-edit", title: "Edit Action", action: this.editAction.bind(this, action) },
-      { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, action) },
+      { class: "fas fa-plus-square", title: "Add Action Form Field", action: this.openFieldModal.bind(this, action) },
     ];
     return icons;
   }
@@ -173,7 +179,7 @@ export class AddActionComponent implements OnInit {
   openFieldModal(action) {
     let refData = {
       id: action._action_id,
-      type: 0
+      type: 1
     }
     this.common.params = { ref: refData };
     const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
@@ -187,7 +193,9 @@ export class AddActionComponent implements OnInit {
   editAction(action) {
     this.actionForm.rowId = action._action_id;
     this.actionForm.name = action.name;
-    this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];;
+    this.actionForm.threshold = (action.threshold) ? action.threshold : null;
+    this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
+    this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
   }
 
   deleteAction(row) {
@@ -221,6 +229,8 @@ export class AddActionComponent implements OnInit {
     this.actionForm.rowId = null;
     this.actionForm.name = "";
     this.actionForm.modes = [];
+    this.actionForm.nextAction = [];
+    this.actionForm.threshold = null;
   }
 
 }
