@@ -34,7 +34,7 @@
     margin: 0px;
     // border-bottom: 2px solid #26a69a;
     border-bottom: 2px solid #3366ff;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
     padding-left: 5px !important;
     li {
         padding: 5px 6px;
@@ -142,15 +142,14 @@
 
 smart-table {
     display: block;
-    height: calc(100vh - 230px);
+    height: calc(100vh - 168px);
 }
 
 .sl-smart-table {
-    height: calc(100vh - 275px);
+    height: calc(100vh - 212px);
 }
 
 .searchbtn {
-    margin-right: -2px;
     outline: 1px solid #3366ff;
     border: 0;
 }
@@ -162,4 +161,10 @@ smart-table {
     th:nth-child(2) {
         width: initial !important;
     }
+}
+.byselect{
+    border: 1px solid #3366ff;
+    }
+.byselect:focus{
+outline: none;
 }

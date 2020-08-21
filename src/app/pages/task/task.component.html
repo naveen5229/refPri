@@ -7,7 +7,7 @@
             <div class="col-6">
                 <div class="row">
                     <div class="col-2">
-                        <select (change)="SearchBy = $event.target.value">
+                        <select (change)="SearchBy = $event.target.value" class="byselect">
                             <option>By Task</option>
                             <option>By User</option>
                         </select>
@@ -18,7 +18,7 @@
                             <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
                         </span>
                         <span *ngIf = "SearchBy === 'By User'" style="display: flex;">
-                            <auto-suggestion class="form-controls col-9" style="padding-right: 0;" [data]="adminList"
+                            <auto-suggestion class="form-controls col-9 p-0 searchselect"  [data]="adminList"
                              display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
                             <button class="btn btn-primary btn-sm" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
                         </span>
@@ -39,7 +39,7 @@
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: calc(100vh - 230px);">
+    <nb-card-body>
         <!-- Tabs      -->
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
@@ -154,7 +154,7 @@
         <div *ngIf="activeTab=='todoList'">
             <div class="row mb-1">
                 <div class="col-5">
-                    <textarea row="4" cols="15" placeholder="Enter Description" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"></textarea>
+                    <textarea row="3" cols="15" placeholder="Enter Description" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true" style="height: 40px!important;"></textarea>
                 </div>
                 <div class="col-3" style="z-index: 999;">
                     <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
