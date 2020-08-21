@@ -55,7 +55,7 @@ searchData = {
     let params = "?type=" + type + "&startDate=" + startdate + "&endDate=" + enddate;
     this.api.get("Processes/getProcessReportByType" + params).subscribe(res => {
       this.common.loading--;
-      // console.log("data", res['data']);
+      //  console.log("data", res['data']);
       if (res['code'] == 1) {
        if (type == 102) {
           this.Actions = res['data'] || [];
