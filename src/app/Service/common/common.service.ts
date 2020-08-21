@@ -238,9 +238,17 @@ export class CommonService {
 
     return hours + ":" + minutes + ":";
   }
-  changeDateformate(date) {
+  // changeDateformate(date) {
+  //   let d = new Date(date);
+  //   return this.datePipe.transform(date, "dd-MMM-yyyy");
+  // }
+  changeDateformate(date, type = 'dd-MMM-yyyy hh:mm a') {
     let d = new Date(date);
-    return this.datePipe.transform(date, "dd-MMM-yyyy");
+    if (type === 'dd-MMM-yyyy hh:mm a') {
+      return this.datePipe.transform(date, type);
+    } else {
+      return this.datePipe.transform(date, type);
+    }
   }
   changeDateformat(date) {
     let d = new Date(date);
@@ -260,7 +268,6 @@ export class CommonService {
     let d = new Date(date);
     return this.datePipe.transform(date, "dd");
   }
-
 
   getBase64(files) {
     return new Promise((resolve, reject) => {
@@ -300,7 +307,7 @@ export class CommonService {
   }
 
 
-  getPDFFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?) {
+  getPDFFromTableId(tblEltId,left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?, Title?) {
     // console.log("Action Data:", doNotIncludes); return;
     //remove table cols with del class
     let tblelt = document.getElementById(tblEltId);
@@ -487,7 +494,7 @@ export class CommonService {
     });
 
 
-    doc.save("report.pdf");
+    doc.save(`${Title}.pdf`);
   }
   getCSVFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?) {
     let tblelt = document.getElementById(tblEltId);
@@ -708,6 +715,24 @@ export class CommonService {
     new Angular5Csv(info, name);
   }
   // end: csv export from data
+
+  // start: download by url
+  downloadFile(file, text) {
+    //creating an invisible element 
+    var element = document.createElement('a');
+    element.setAttribute('href',
+      'data:text/plain;charset=utf-8, '
+      + encodeURIComponent(text));
+    element.setAttribute('download', file);
+
+    // Above code is equivalent to 
+    // <a href="path of file" download="file name"> 
+    document.body.appendChild(element);
+    //onClick property 
+    element.click();
+    document.body.removeChild(element);
+  }
+  // end: download by url
 
 }
 

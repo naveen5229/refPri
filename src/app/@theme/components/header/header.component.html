@@ -1,15 +1,15 @@
 <div class="header-container">
     <div class="logo-container">
+        <a class="logo" href="#" (click)="navigateHome()">E-<span>logist</span></a>
         <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
             <nb-icon icon="menu-2-outline"></nb-icon>
         </a>
-        <a class="logo" href="#" (click)="navigateHome()">E-<span>logist</span></a>
     </div>
     <!-- <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
         <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
     </nb-select> -->
 </div>
-<h4><img src="assets/images/user.png" style="height: 71px;">{{userLogin | titlecase}} </h4>
+<h6 style="color: #00000080; margin-bottom: 0;"><span class="profilehead">{{userLogin | titlecase}} </span></h6>
 
 <div class="header-container">
     <nb-actions size="small">
@@ -17,10 +17,10 @@
             <nb-search type="rotate-layout"></nb-search>
         </nb-action>
         <nb-action class="refresh_icon">
-            <button class="form-control refresh" (click)="refresh()"><i class="icon ion-refresh"></i></button>
+            <button class="form-control action-btn refresh" (click)="refresh()"><i class="icon ion-refresh"></i></button>
         </nb-action>
         <nb-action class="user-action" *nbIsGranted="['view', 'user']">
-            <button class="form-control refresh" (click)="logout()"><i class="icon ion-log-out"></i> </button>
+            <button class="form-control action-btn  refresh" (click)="logout()"><i class="icon ion-log-out"></i> </button>
 
             <!-- <nb-user [nbContextMenu]="userMenu" [name]="user?.name" [picture]="user?.picture" (click)="logout()">
                 <i class="fa fa-sign-out"></i>   

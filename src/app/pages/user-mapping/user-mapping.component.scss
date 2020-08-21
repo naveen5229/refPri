@@ -8,4 +8,9 @@
 
 :host ::ng-deep .green{
     color:green;
+    height: calc(100vh - 185px)!important;
+}
+smart-table{
+    display: block;
+    height: calc(100vh - 235px);
 }

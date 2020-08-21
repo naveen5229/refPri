@@ -11,6 +11,7 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 })
 export class ShiftLogAddComponent implements OnInit {
   today = new Date();
+  dateExtendForAttendance = new Date();
   shiftForm = {
     startTime: null,
     endTime: null,
@@ -47,11 +48,14 @@ export class ShiftLogAddComponent implements OnInit {
     { id: -1, name: 'Optional-Leave' }
   ];
   isAttendanceType = false;
+  endDateDis:Boolean = true;
 
   constructor(public activeModal: NgbActiveModal, public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
+    // this.dateExtendForAttendance.setDate(this.dateExtendForAttendance.getDate() + 1);
+    console.log("param:", this.common.params);
     if (this.common.params && this.common.params.isAttendanceType) {
-      console.log("param:", this.common.params);
+      this.endDateDis = false;
       this.isAttendanceType = this.common.params.isAttendanceType;
       this.shiftForm.user.id = this.common.params.userId;
       this.shiftForm.user.name = this.common.params.userName;
@@ -60,6 +64,12 @@ export class ShiftLogAddComponent implements OnInit {
       this.shiftForm.endTime.setHours(18);
       this.shiftForm.endTime.setMinutes(30);
       // this.shiftForm.addtime = this.common.params.date;
+
+      this.dateExtendForAttendance = new Date(this.shiftForm.endTime);
+      this.dateExtendForAttendance.setDate(this.dateExtendForAttendance.getDate() + 1);
+    }else{
+      this.shiftForm.startTime = this.today;
+      this.shiftForm.endTime =this.today;
     }
   }
 
@@ -74,7 +84,10 @@ export class ShiftLogAddComponent implements OnInit {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
+        let adminList = res["data"] || [];
+          this.adminList = adminList.map((x) => {
+            return { id: x.id, name: x.name + " - " + x.department_name };
+          });
       } else {
         this.common.showError(res['msg']);
       }

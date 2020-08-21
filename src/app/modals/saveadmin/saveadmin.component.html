@@ -30,7 +30,7 @@
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">
             </div>
         </div>
-        <div class="row mt-2" *ngIf="Fouser.id && this.user._loggedInBy == 'admin'">
+        <div class="row mt-2" *ngIf="Fouser.id && (this.user._loggedInBy == 'admin' || this.user._loggedInBy == 'customer')">
             <div class="col-lg-4">
                 <label>Status :-</label>
             </div>

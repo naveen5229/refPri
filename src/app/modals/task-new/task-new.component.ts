@@ -38,6 +38,16 @@ export class TaskNewComponent implements OnInit {
     reason: null
   }
   editType = 0;
+  userGroupList = [];
+  
+  userWithGroup = [];
+  bGConditions = [
+    {
+      key:'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -45,8 +55,21 @@ export class TaskNewComponent implements OnInit {
     public modalService: NgbModal,
     public userService: UserService) {
     console.log("task list", this.common.params);
+    let currentLast = this.common.getDate(2);
+    currentLast.setHours(23);
+    currentLast.setMinutes(59);
+    this.normalTask.date = currentLast;
+    // console.log(aaaaaa,'date from task new component')
     if (this.common.params != null) {
-      this.userList = this.common.params.userList;
+      console.log(this.common.params.groupList,'groupList from task-new component');
+      this.userList = this.common.params.userList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
+      this.userGroupList = this.common.params.groupList;
+      if(this.userGroupList){
+      this.userWithGroup = this.userGroupList.concat(this.userList);
+    }else{
+      this.userWithGroup = this.userList.concat(this.userGroupList);
+    }
+      console.log(this.userWithGroup,'user data')
       if (this.common.params.parentTaskId && !this.common.params.editType) {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
         this.parentTaskDesc = this.common.params.parentTaskDesc;
@@ -67,6 +90,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.currentDate,'from task new')
   }
   getProjectList() {
     this.api.get("AdminTask/serachProject.json").subscribe(res => {
@@ -84,7 +108,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   closeModal(response) {
-    this.activeModal.close({ response: response });
+    this.activeModal.close({ response: response,returnNewDate:this.returnNewDate });
   }
 
   selectedNormalUser(event) {
@@ -98,17 +122,18 @@ export class TaskNewComponent implements OnInit {
     this.normalTask.projectId = event.id;
   }
 
-  changeCCUsers(event) {
-    console.log("changeCCUsers:", event);
-    if (event && event.length) {
-      this.normalTask.ccUsers = event.map(user => { return { user_id: user.id } });
-      console.log("ccUsers", this.normalTask.ccUsers);
-    } else {
-      this.normalTask.ccUsers = [];
-    }
-  }
+  // changeCCUsers(event) {
+  //   console.log("changeCCUsers:", event);
+  //   if (event && event.length) {
+  //     this.normalTask.ccUsers = event.map(user => { return { user_id: user.id } });
+  //     console.log("ccUsers", this.normalTask.ccUsers);
+  //   } else {
+  //     this.normalTask.ccUsers = [];
+  //   }
+  // }
 
   saveTask() {
+
     console.log("normalTask:", this.normalTask);
     if (this.normalTask.userName == '') {
       return this.common.showError("User Name is missing");
@@ -138,6 +163,19 @@ export class TaskNewComponent implements OnInit {
       return this.common.showError("Last Date must be greater than future assign date");
     }
     else {
+      let CCUsers = [];
+      this.normalTask.ccUsers.forEach(x=> {
+        if(x.groupId!= null){
+          // CCUsers.push(x.groupuser.filter(user => user._group_id === x.groupId).map((key)=> {return {user_id: key._id}}));
+          x.groupuser.forEach(x2=> {
+            CCUsers.push({user_id:x2._id});
+          })
+        }else{
+          CCUsers.push({user_id: x.id});
+        }
+      });
+        console.log(CCUsers,'from save');
+
       const params = {
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
@@ -145,7 +183,7 @@ export class TaskNewComponent implements OnInit {
         task: this.normalTask.task,
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
-        ccUsers: JSON.stringify(this.normalTask.ccUsers),
+        ccUsers: JSON.stringify(CCUsers),
         parentTaskId: this.normalTask.parentTaskId,
         isFuture: this.normalTask.isFuture,
         futureDate: this.common.dateFormatter(this.normalTask.futureDate)
@@ -158,10 +196,10 @@ export class TaskNewComponent implements OnInit {
           // this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.resetTask();
-            this.common.showToast(res['data'][0].y_msg)
+            this.common.showToast(res['data'][0].y_msg);
             this.closeModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg)
+            this.common.showError(res['data'][0].y_msg);
           }
         } else {
           this.common.showError(res['msg']);
@@ -249,6 +287,7 @@ export class TaskNewComponent implements OnInit {
   // end task mapping list
 
   // start: update assign date
+  returnNewDate = null;
   updateAssignDate() {
     if (this.updateLastDateForm.date == '' || !this.updateLastDateForm.date) {
       return this.common.showError("Date is missing");
@@ -272,6 +311,7 @@ export class TaskNewComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
+          this.returnNewDate = params.date;
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['msg']);

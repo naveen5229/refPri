@@ -118,7 +118,7 @@ table.fixed {
     position: sticky;
     top: 0;
     background: #263238;
-    z-index: 999;
+    z-index: 100;
 }
 
 
@@ -164,6 +164,7 @@ tbody tr:nth-child(even) {
             border: 1px solid #dee2e6;
             float: left;
             cursor: pointer;
+            font-size: 12px;
         }
         button:hover,
         button:active,
@@ -231,3 +232,4 @@ th:hover {
         width: calc(100% - 17px);
     }
 }
+

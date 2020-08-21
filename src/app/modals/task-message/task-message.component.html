@@ -5,8 +5,9 @@
   </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-    <span [innerHtml]="subTitle"></span>
+    <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div *ngIf="fromPage != 'campaign'" class="action-icon">
+        <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
         <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle" title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
 
@@ -23,16 +24,33 @@
     </div>
 </div>
 <div class="modal-body">
+    <!-- start: view attachment -->
+    <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
+        <div class="col-11">
+            <ul *ngIf="attachmentList && attachmentList.length>0">
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+            </ul>
+            <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
+        </div>
+        <div class="col-1">
+            <button type="button" class="close" aria-label="Close" (click)="isAttachmentShow=false">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+    </div>
+    <!-- end: view attachment -->
     <div class="row">
         <div class="col-9">
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        {{msg.comment}}
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenId)? 'shake animated slow':''">
-                        {{msg.comment}}
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
+                        <!-- {{msg.comment}} -->
+                        <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>
@@ -42,16 +60,28 @@
             </div>
 
             <div class="row mt-1 bottom-block">
-                <div class="col-9">
+                <div class="col-8">
                     <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                </div>
+                <div col-1>
+                    <label class="custom-file-upload">
+                        <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)">
+                        <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
+                    </label>
                 </div>
                 <div class="col-3 text-right button-box">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="(fromPage == 'campaign')? saveLeadMessage() :saveTicketMessage()">Send
                   </button>
                 </div>
             </div>
+            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
+                <div class="col-9">
+                    {{attachmentFile.name}}
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                </div>
+            </div>
         </div>
-        <div class="col-3 p-0" style="border-left:1px solid black;">
+        <div class="col-3 p-0" style="border-left:1px solid black;font-size: 14px;">
             <table *ngIf="fromPage != 'campaign'" width="100%">
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
@@ -100,8 +130,10 @@
                 <!-- <tr valign="top" *ngIf="taskId && taskId>0"> -->
                 <tr valign="top">
                     <td colspan="2" class="pt-2">
-                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
-                        </auto-suggestion>
+                        <!-- <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        </auto-suggestion> -->
+                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
+                            [preSelected]="newCCUserId"></auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
                     </td>
                 </tr>
@@ -133,7 +165,7 @@
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2">
-                        <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                        <auto-suggestion (onSelected)="newCCUserId = $event" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
                         </auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToLead()">Add CC User</button>
                     </td>

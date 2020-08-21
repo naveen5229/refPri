@@ -22,7 +22,8 @@ export class FormDataComponent implements OnInit {
     param_value: null,
     param_date: new Date(),
     param_remarks: null,
-  }]
+  }];
+  isDisabled = false;
 
 
   constructor(public activeModal: NgbActiveModal,
@@ -35,6 +36,7 @@ export class FormDataComponent implements OnInit {
       this.transId = this.common.params.actionData.transId;
       this.refId = this.common.params.actionData.refId;
       this.refType = this.common.params.actionData.refType;
+      this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
 
       this.getFormDetail();
     }
@@ -81,6 +83,7 @@ export class FormDataComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
+            this.dismiss(true);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }

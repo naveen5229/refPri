@@ -2,3 +2,8 @@ smart-table .tableFixHead,
 #taskMapping .tableFixHead {
     height: auto;
 }
+:host::ng-deep{
+    .highlight-blue{
+        color: blue;
+    }
+}

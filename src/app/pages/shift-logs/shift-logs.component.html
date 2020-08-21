@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row">
             <div class="col-8">
-                <h5>Shift Logs</h5>
+                <h5 class="heading-design">Shift Logs</h5>
             </div>
             <div class="col-4 text-right">
                 <button class="btn btn-primary  btn-sm" title="Add Shift Log" (click)="showShiftLogPopup()">
@@ -10,7 +10,10 @@
                 </button>
             </div>
         </div>
-        <br>
+      
+      
+    </nb-card-header>
+    <nb-card-body style="min-height: 300px;">
         <div class="row">
             <div class="col-2">
                 <label>Select Date</label>
@@ -23,9 +26,7 @@
                 <button type="submit" id="submit" (click)="getShiftLogs()" class="btn btn-primary mr-2 btn-sm">Submit</button>
             </div>
         </div>
-    </nb-card-header>
-    <nb-card-body style="min-height: 300px;">
-        <div>
+        <div class="mt-2">
             <smart-table *ngIf="shiftLogList && shiftLogList.length>0" [data]="table.data" [settings]="table.settings" id="entries"></smart-table>
         </div>
     </nb-card-body>

@@ -4,6 +4,7 @@ import { ApiService } from '../../../Service/Api/api.service';
 import { CommonService } from '../../../Service/common/common.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../add-field/add-field.component';
+import { AddActionComponent } from '../add-action/add-action.component';
 
 @Component({
   selector: 'ngx-add-state',
@@ -17,6 +18,7 @@ export class AddStateComponent implements OnInit {
   typeId = null;
   stateName = null;
   processId = null;
+  processName = null;
   requestId = null;
   threshold = null;
 
@@ -41,6 +43,7 @@ export class AddStateComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal) {
     this.processId = this.common.params.process.id;
+    this.processName = this.common.params.process.name;
     this.getStates();
   }
 
@@ -190,6 +193,7 @@ export class AddStateComponent implements OnInit {
       { class: "fas fa-edit edit", title: "Edit State", action: this.setData.bind(this, row) },
       { class: "fas fa-trash-alt", title: "Delete State", action: this.deleteRow.bind(this, row) },
       { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, row) },
+      // { class: "fas fa-handshake", title: "Add Action", action: this.addProcessAction.bind(this, row) },
     )
     return icons;
   };
@@ -273,4 +277,25 @@ export class AddStateComponent implements OnInit {
       }
     });
   }
+
+  addProcessAction(row) {
+    if (row._state_id > 0) {
+      let param = {
+        process_id: this.processId,
+        process_name: this.processName,
+        state_id: row._state_id,
+        state_name: row.name
+      }
+      this.common.params = { actionData: param };
+      const activeModal = this.modalService.open(AddActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.response) {
+          console.log("addProcessAction:", data.response);
+        }
+      });
+    } else {
+      this.common.showError("State is missing");
+    }
+  }
+
 }
