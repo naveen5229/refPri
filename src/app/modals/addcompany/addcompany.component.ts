@@ -19,6 +19,8 @@ export class AddcompanyComponent implements OnInit {
   statename = null;
   stateId = null;
   statedatabind = null;
+  partnerId=null;
+  partnerData=[];
 
   newCustomer = {
     mobileno: '',
@@ -43,6 +45,7 @@ export class AddcompanyComponent implements OnInit {
     public activeModal:NgbActiveModal,
     public modalSService:NgbModal,
     public user: UserService) {
+      this.getPartnerData();
       this.displayLoginType();
       this.fetchLanguages();
       this.GetState();
@@ -53,6 +56,25 @@ export class AddcompanyComponent implements OnInit {
 
   closeModal(res) {
     this.activeModal.close();
+  }
+
+  getPartnerData(){
+    this.common.loading++;
+    this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+        if (!res['data']) return;
+        this.partnerData = res['data'];
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+  }
+
+  getElogistCompany(event){
+    console.log("Elogist Partner:",event);
+    this.partnerId=event.id;
   }
 
   displayLoginType() {
@@ -196,7 +218,7 @@ export class AddcompanyComponent implements OnInit {
       stateId: this.stateId,
       password: this.newCustomer.password,
       pincode: 1,
-      partner_id: this.user._details.partnerid,
+      partner_id: this.partnerId,
       language_id: this.newCustomer.language_id,
       aduserid: this.user._details.id,
       userName: this.newCustomer.username,
