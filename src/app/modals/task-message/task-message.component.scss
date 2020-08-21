@@ -23,7 +23,7 @@
 
 .active_chat {
     float: right;
-    text-align: right;
+    // text-align: right;
     background: #1def1d2e;
     border: 1px solid #1def1d2e;
 }
@@ -36,6 +36,7 @@
 
 .other_chat,
 .active_chat {
+    white-space: pre-wrap;
     max-width: 90%;
     margin-bottom: 1px;
     border-radius: 10px;
@@ -43,6 +44,9 @@
     span {
         display: flow-root;
         font-size: 10px;
+    }
+    label {
+        margin: 0;
     }
 }
 
@@ -179,10 +183,16 @@
 }
 
 .action-icon {
-    width: 150px;
+    //width: 150px;
     text-align: right;
     .fa {
         cursor: pointer;
         margin-right: 5px;
+    }
+}
+
+:host::ng-deep {
+    .highlight-blue {
+        color: blue;
     }
 }

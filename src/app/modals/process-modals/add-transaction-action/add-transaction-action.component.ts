@@ -10,6 +10,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
   styleUrls: ['./add-transaction-action.component.scss']
 })
 export class AddTransactionActionComponent implements OnInit {
+  currentDate = this.common.getDate();
   title = "";
   button = "Add";
   standards = [];
@@ -35,6 +36,8 @@ export class AddTransactionActionComponent implements OnInit {
   remarkDataList = [];
   modeList = [];
   adminList = [];
+  isFormHere = 0;
+  nextStateForm = 0;
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -43,6 +46,8 @@ export class AddTransactionActionComponent implements OnInit {
     console.log("params:", this.common.params);
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
+    // let threashold = new Date();
+    this.transAction.targetTime.setHours(23, 59);
     if (this.common.params && this.common.params.actionData) {
       this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
       this.transAction.formType = (this.common.params.actionData.formType) ? this.common.params.actionData.formType : 0;
@@ -53,6 +58,9 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.action.name = (this.common.params.actionData.actionId > 0) ? this.common.params.actionData.actionName : null;
       this.transAction.state.id = (this.common.params.actionData.stateId > 0) ? this.common.params.actionData.stateId : null;
       this.transAction.state.name = (this.common.params.actionData.stateId > 0) ? this.common.params.actionData.stateName : null;
+      this.transAction.mode.id = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeId : null;
+      this.transAction.mode.name = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeName : null;
+      this.transAction.remark = (this.common.params.actionData.remark) ? this.common.params.actionData.remark : null;
       if (this.common.params.actionData.actionOwnerId > 0) {
         let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
         console.log("actionOwner:", actionOwner);
@@ -63,11 +71,14 @@ export class AddTransactionActionComponent implements OnInit {
 
       if (this.transAction.formType == 2) {
         this.title = 'Add Transaction Next Action';
+        this.isFormHere = 0;
       } else if (this.transAction.formType == 1) {
         this.title = 'Add Transaction Next State';
+        this.isFormHere = 0;
       } else {
         this.title = 'Update Transaction Action';
         this.transAction.isCompleted = true;
+        this.isFormHere = this.common.params.actionData.isActionForm;
       }
       if (this.transAction.action.id > 0) {
         this.getActionModeList();
@@ -80,7 +91,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   closeModal(res, nextFormType = null) {
-    this.activeModal.close({ response: res, nextFormType: nextFormType });
+    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: this.isFormHere, state: this.transAction.state });
   }
 
   ngOnInit() { }
@@ -90,7 +101,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessState?processId=" + this.transAction.process.id).subscribe(res => {
       this.common.loading--;
       let stateDataList = res['data'];
-      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate } });
+      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0 } });
       this.checkNextStateList();
     }, err => {
       this.common.loading--;
@@ -104,7 +115,7 @@ export class AddTransactionActionComponent implements OnInit {
       let selectedState = this.stateDataList.find(x => x.id == this.transAction.state.id);
       console.log("selectedState:", selectedState);
       if (selectedState && selectedState._nextstate && selectedState._nextstate.length) {
-        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name } });
+        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name, _state_form: (x._state_form) ? x._state_form : 0 } });
         console.log("nextStateDataList1:", this.nextStateDataList);
       } else {
         this.nextStateDataList = this.stateDataList;
@@ -129,18 +140,27 @@ export class AddTransactionActionComponent implements OnInit {
     this.getActionModeList();
   }
 
-  onSelectNextAction() {
-    this.transAction.targetTime = new Date();
+  onSelectNextAction(event) {
+    console.log("onSelectNextAction:", event);
+    let threashold = new Date();
+    if (event.threshold > 0) {
+      let cHours = threashold.getHours();
+      threashold.setHours(cHours + event.threshold);
+      this.transAction.targetTime = threashold;
+    } else {
+      threashold.setHours(23, 59);
+      this.transAction.targetTime = threashold;
+    }
   }
 
   getActionList() {
-    console.log("transAction:", this.transAction);
+    // console.log("transAction:", this.transAction);
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
       let actionDataList = res['data'] || [];
-      this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
-      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+      this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
+      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -153,7 +173,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
       let actionDataList = res['data'] || [];
-      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -283,6 +303,8 @@ export class AddTransactionActionComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
+            this.transAction.state = this.transAction.nextState;
+            this.isFormHere = this.nextStateForm;
             this.resetData();
             // this.transAction.formType = 1;
             this.closeModal(true, 1);

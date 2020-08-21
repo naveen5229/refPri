@@ -66,7 +66,9 @@
             <label>CC users:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" 
+            (onSelected)="normalTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" 
+            [bGConditions]="bGConditions"></auto-suggestion>
         </div>
     </div>
 
@@ -75,7 +77,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
             </uj-date-time-picker>
         </div>
     </div>
@@ -127,7 +129,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
             </uj-date-time-picker>
         </div>
     </div>

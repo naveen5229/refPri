@@ -184,7 +184,8 @@ export class ProcessListComponent implements OnInit {
 
   addProcessState(process) {
     let param = {
-      id: process._id
+      id: process._id,
+      name: process.name
     }
     this.common.params = { process: param };
     const activeModal = this.modalService.open(AddStateComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
