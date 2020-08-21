@@ -38,7 +38,7 @@ export class AddTransactionComponent implements OnInit {
       name: ""
     },
     identity: null,
-    emailStatic:null,
+    emailStatic: null,
     mobileno: null,
     priCat: {
       id: null,
@@ -170,7 +170,7 @@ export class AddTransactionComponent implements OnInit {
 
     const params = {
       email: this.transForm.emailStatic,
-      
+
       processId: this.transForm.process.id,
       name: this.transForm.name,
       identity: this.transForm.identity,
@@ -289,6 +289,8 @@ export class AddTransactionComponent implements OnInit {
       if (res['code'] == 1) {
         if (res['data'][0]['r_id'] > 0) {
           this.common.showToast(res['msg']);
+          this.attachmentFile[i].name = null;
+          this.attachmentFile[i].file = null;
           if (arrayType == 'oddArray') {
             this.oddArray[i].r_value = res['data'][0]['r_id'];
           } else {
