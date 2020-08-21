@@ -334,6 +334,9 @@ export class MyProcessComponent implements OnInit {
           };
         } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
           column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        } 
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ?'font-weight-bold':'', action: '' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }

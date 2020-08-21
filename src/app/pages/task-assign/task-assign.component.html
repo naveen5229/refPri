@@ -15,7 +15,7 @@
 
     </nb-card-header>
 
-        <nb-card-body style="min-height: 450px;">
+        <nb-card-body>
             <div class="tabs_style_main">
                 <ul class="tabs_style text-left">
                     <li [ngClass]="activeTab=='Assign Task'?'active':''" (click)="activeTab='Assign Task'; getTask()">My
@@ -47,7 +47,7 @@
             </div> -->
             <div *ngIf="activeTab=='Assign Task'" class="table-responsive">
 
-                <table class="table table-border mt-1">
+                <table class="table table-border">
                     <thead class="thead">
                         <tr>
                             <th>#</th>
