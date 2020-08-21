@@ -51,6 +51,7 @@ import { MyProcessComponent } from '../process/my-process/my-process.component';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
+import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
 
 const routes: Routes = [{
   path: '',
@@ -304,6 +305,11 @@ const routes: Routes = [{
     {
       path: 'my-process',
       component: MyProcessComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'process-admin',
+      component: ProcessAdminComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {

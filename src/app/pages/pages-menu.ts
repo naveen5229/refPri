@@ -320,7 +320,13 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'grid-outline',
         link: '/pages/my-process',
         home: true,
-      }
+      },
+      {
+        title: 'Process Admin',
+        icon: 'grid-outline',
+        link: '/pages/process-admin',
+        home: true,
+      },
     ]
   }
 

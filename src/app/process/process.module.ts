@@ -8,9 +8,10 @@ import { DirectiveModule } from '../directives/directives.module';
 import { ProcessRoutingModule } from './process-routing.module';
 import { ProcessListComponent } from './process-list/process-list.component';
 import { MyProcessComponent } from './my-process/my-process.component';
+import { ProcessAdminComponent } from './process-admin/process-admin.component';
 
 @NgModule({
-  declarations: [ProcessListComponent, MyProcessComponent],
+  declarations: [ProcessListComponent, MyProcessComponent, ProcessAdminComponent],
   imports: [
     CommonModule,
     ProcessRoutingModule,
