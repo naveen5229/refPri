@@ -1,4 +1,13 @@
 :host ::ng-deep .container{
+    height:600px!important;
+}
+
+:host ::ng-deep .red{
+    color:red;
+}
+
+:host ::ng-deep .green{
+    color:green;
     height: calc(100vh - 185px)!important;
 }
 smart-table{

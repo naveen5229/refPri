@@ -259,7 +259,7 @@ table .fa-comments.new-comment span {
     margin-right: 5px;
     /* background-color: #26a69a;
     border: 2px solid #26a69a; */
-    background-color:#3366ff;
+    background-color: #3366ff;
     border: 2px solid #3366ff;
     color: #fff;
     border-bottom: 0px;
@@ -438,15 +438,23 @@ nb-layout-header nav {
     padding: 0.2rem .5rem;
     font-size: 12px!important;
 }
-.modal-header.sub-title{
+
+.modal-header.sub-title {
     background-color: #93acc7;
 }
-:focus {
+
+.logo:focus {
     outline: none!important;
 }
+
+.logo span:focus {
+    outline: none!important;
+}
+
 .nb-theme-default nb-layout-header.fixed~.layout-container {
     padding-top: 2.7rem!important;
 }
+
 .main-container-fixed {
     top: 2.7rem!important;
 }

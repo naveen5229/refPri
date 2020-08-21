@@ -24,3 +24,9 @@ smart-table {
 .sl-smart-table {
     height: calc(100vh - 260px);
 }
+
+
+:host ::ng-deep .font-weight-bold {
+    font-weight: 600;
+}
+
