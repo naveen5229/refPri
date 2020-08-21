@@ -1,5 +1,5 @@
 :host ::ng-deep .container{
-    height:600px!important;
+   min-height:calc(100vh - 235px)!important;
 }
 
 :host ::ng-deep .red{
@@ -8,9 +8,9 @@
 
 :host ::ng-deep .green{
     color:green;
-    height: calc(100vh - 185px)!important;
+    //height: calc(100vh - 185px)!important;
 }
 smart-table{
     display: block;
-    height: calc(100vh - 235px);
+    height: calc(100vh - 202px);
 }
