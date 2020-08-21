@@ -414,8 +414,8 @@ export class ChatboxComponent implements OnInit {
     if (!type && !lead.completion_time) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
     }
-    // else if(type==1){
-    //   icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead),txt:'',title:"Delete State" });
+    // else if (type == 1) {
+    //   icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead), txt: '', title: "Delete State" });
     // }
     console.log("icons:", icons);
     return icons;
@@ -460,6 +460,44 @@ export class ChatboxComponent implements OnInit {
     }
   }
 
+  deleteLeadState(row) {
+    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+      this.common.showError("Primary Owner have access to delete");
+      return false;
+    }
+    let params = {
+      transId: this.ticketData._transactionid,
+      transStateId: row._trans_state_id,
+    }
+    if (row._action_id) {
+      this.common.params = {
+        title: 'Delete Record',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Processes/removeTransactionState', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getTargetActionData(1);
+              } else {
+                this.common.showError(res['msg']);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    }
+  }
 
   openTransAction(lead, type, formType = null) {
     if (![this.priOwnId].includes(this.userService._details.id)) {
