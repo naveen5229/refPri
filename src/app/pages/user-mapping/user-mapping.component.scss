@@ -1,3 +1,11 @@
 :host ::ng-deep .container{
     height:600px!important;
 }
+
+:host ::ng-deep .red{
+    color:red;
+}
+
+:host ::ng-deep .green{
+    color:green;
+}
