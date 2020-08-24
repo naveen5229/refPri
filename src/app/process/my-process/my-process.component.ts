@@ -334,6 +334,9 @@ export class MyProcessComponent implements OnInit {
           };
         } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
           column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        }
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ? 'font-weight-bold' : '', action: '' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -672,15 +675,21 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
 
     } else if (type == 5) {//unread
-      if (lead._cc_user_id > 0 && !lead._cc_status) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
-      } else if (lead._is_action == 1 && lead._status == 0) {
-        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
+      if (lead._cc_user_id > 0) {
+        if (!lead._cc_status) {
+          icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
+        }
+      } else if (lead._is_action == 1) {
+        if (lead._status == 0) {
+          icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
+        }
       } else if (lead._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-      } else if (lead._status == 2) {
+      } else if (lead._status == 2 && lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
       }
+    } else if (type == 4) {
+      icons.push({ class: "fa fa-retweet", action: this.reviveTransAction.bind(this, lead, type, 1), txt: '', title: "Revive Transaction" });
     }
 
     if (type == 4 || lead._status == 5 || lead._status == -1) {
@@ -730,6 +739,42 @@ export class MyProcessComponent implements OnInit {
         if (data.response) {
           this.common.loading++;
           this.api.post('Processes/deleteTransaction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getProcessLeadByType(type);
+              } else {
+                this.common.showError(res['msg']);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    } else {
+      this.common.showError("Invalid Request");
+    }
+  }
+
+  reviveTransAction(lead, type) {
+    let params = {
+      transId: lead._transactionid
+    }
+    if (lead._transactionid) {
+      this.common.params = {
+        title: 'Revive Record',
+        description: `<b>&nbsp;` + 'Are Sure To Revive This Transaction' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Processes/reviveTransaction', params).subscribe(res => {
             this.common.loading--;
             if (res['code'] == 1) {
               if (res['data'][0].y_id > 0) {

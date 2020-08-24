@@ -18,25 +18,25 @@
                     Action For Me
                 </li>
                 <li [ngClass]="activeTab=='leadsByMe'?'active':''" (click)="activeTab='leadsByMe'; getProcessLeadByType(2)">
-                    Leads By Me
+                    Txn By Me
                 </li>
                 <li [ngClass]="activeTab=='ownedByMe'?'active':''" (click)="activeTab='ownedByMe'; getProcessLeadByType(6)">
                     Owned By Me
                 </li>
                 <li [ngClass]="activeTab=='ccLeads'?'active':''" (click)="activeTab='ccLeads'; getProcessLeadByType(3)">
-                    CC Leads
+                    CC Txn
                 </li>
                 <li [ngClass]="activeTab=='allCompletedLeads'?'active':''" (click)="activeTab='allCompletedLeads';resetSearchData(); getProcessLeadByType(4)">
-                    Completed Leads
+                    Completed Txn
                 </li>
                 <li [ngClass]="activeTab=='missingOwnLeads'?'active':''" (click)="activeTab='missingOwnLeads'; getProcessLeadByType(0)">
-                    Missing Owner Leads
+                    Missing Owner Txn
                 </li>
                 <li [ngClass]="activeTab=='unassignedLeads'?'active':''" (click)="activeTab='unassignedLeads'; getProcessLeadByType(-1)">
-                    Unassigned Leads
+                    Unassigned Txn
                 </li>
                 <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
-                    Unread Leads
+                    Unread Txn
                 </li>
             </ul>
         </div>
@@ -54,7 +54,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='allCompletedLeads'">
-            <div class="row" style="z-index: 999;">
+            <div class="row mb-2" style="z-index: 999;">
                 <div class="col-4">
                     <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
                     </uj-date-time-picker>
