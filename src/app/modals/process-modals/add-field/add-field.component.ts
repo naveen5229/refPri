@@ -43,6 +43,7 @@ export class AddFieldComponent implements OnInit {
       hideHeader: true
     }
   };
+  globalFiledList = [];
   headings = [];
   valobj = {};
 
@@ -71,6 +72,9 @@ export class AddFieldComponent implements OnInit {
       this.title = "Add Primary Info Form Field";
     }
     this.getFieldName();
+    if (this.refType == 2) {
+      this.getGlobalFormField();
+    }
   }
 
   ngOnInit() {
@@ -78,6 +82,25 @@ export class AddFieldComponent implements OnInit {
 
   closeModal(res) {
     this.activeModal.close({ response: res });
+  }
+
+  getGlobalFormField() {
+    this.globalFiledList = [];
+    let params = "?refId=" + this.refId + "&refType=" + this.refType;
+    this.common.loading++;
+    this.api.get('Processes/getGlobalFormField' + params).subscribe(res => {
+      this.common.loading--;
+      console.log("getGlobalFormField", res);
+      if (res['code'] == 1) {
+        this.globalFiledList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Err:', err);
+    });
   }
 
   Add() {
@@ -114,7 +137,7 @@ export class AddFieldComponent implements OnInit {
 
       }, err => {
         this.common.loading--;
-        this.common.showError(err);
+        this.common.showError();
         console.log('Err:', err);
       });
   }
