@@ -98,6 +98,7 @@ import { AddfouserComponent } from './modals/addfouser/addfouser.component';
 import { AddTransactionStateComponent } from './modals/process-modals/add-transaction-state/add-transaction-state.component';
 import { AddCategoryComponent } from './modals/process-modals/add-category/add-category.component';
 import { AddTransactionContactComponent } from './modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { AddDashboardFieldComponent } from './modals/process-modals/add-dashboard-field/add-dashboard-field.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -163,7 +164,8 @@ const PAGE_COMPONENTS = [
   AddfouserComponent,
   AddTransactionStateComponent,
   AddCategoryComponent,
-  AddTransactionContactComponent
+  AddTransactionContactComponent,
+  AddDashboardFieldComponent
 ];
 
 @NgModule({
