@@ -22,8 +22,15 @@ export class AddFieldComponent implements OnInit {
     { id: 'text', name: 'Text' },
     { id: 'number', name: 'Number' },
     { id: 'date', name: 'Date' },
-    { id: 'attachment', name: 'Attachment' }
+    { id: 'attachment', name: 'Attachment' },
+    { id: 'table', name: 'Table' },
+    { id: 'checkbox', name: 'Checkbox' }
   ];
+  childArray = [{
+    param: '',
+    type:'',
+    is_required:'',
+  }]
   fixValues = [{
     option: ''
   }];
@@ -80,6 +87,18 @@ export class AddFieldComponent implements OnInit {
   ngOnInit() {
   }
 
+  AddTable(child_name){
+    if(child_name.length == 0){
+
+    }else{
+    this.childArray.push({
+    param: '',
+    type:'',
+    is_required:'',
+  });}
+  console.log(this.childArray,'childArray')
+  }
+
   closeModal(res) {
     this.activeModal.close({ response: res });
   }
@@ -109,8 +128,8 @@ export class AddFieldComponent implements OnInit {
       type: this.typeId,
       drpOption: (this.isFixedValue) ? this.fixValues : null,
       is_required: this.isRequired,
-      order: this.order
-
+      order: this.order,
+      param_child: this.childArray
     }
     console.log("type:", this.typeId);
     let params = {
@@ -121,6 +140,24 @@ export class AddFieldComponent implements OnInit {
       requestId: (this.fieldId > 0) ? this.fieldId : null
     }
     console.log("params", params);
+    
+    let error_count = false;
+    if(tmpJson.type === 'table'){
+      tmpJson.param_child.forEach(ele => {
+        if(ele.param.length == 0 || !ele.type.length){
+          error_count = true;
+        }
+      })
+    }
+
+    if(!this.name || !this.typeId){
+      this.common.showError('Field Name or Type is missing');
+      return false;
+    }
+    if(error_count){
+      this.common.showError('Table Field Name or Type is missing');
+      return false;
+    }
     this.common.loading++;
     this.api.post('Processes/addProcessMatrix', params)
       .subscribe(res => {
@@ -274,10 +311,13 @@ export class AddFieldComponent implements OnInit {
     }
   }
 
-  addFixValue() {
+  addFixValue(fixvalue) {
+    if(fixvalue.length == 0){
+
+    }else{
     this.fixValues.push({
       option: ''
-    });
+    });}
   }
 
   setData(data) {
@@ -309,6 +349,11 @@ export class AddFieldComponent implements OnInit {
       option: ''
     }];
     this.btn1 = "Add";
+    this.childArray = [{
+      param: '',
+      type:'',
+      is_required:'',
+    }]
   }
 
   openAssignForm() {
