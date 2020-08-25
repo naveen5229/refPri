@@ -26,15 +26,24 @@ export class AddFieldComponent implements OnInit {
     { id: 'table', name: 'Table' },
     { id: 'checkbox', name: 'Checkbox' }
   ];
+  child_types = [
+    { id: 'text', name: 'Text' },
+    { id: 'number', name: 'Number' },
+    { id: 'date', name: 'Date' },
+  ];
   childArray = [{
     param: '',
     type:'',
-    is_required:'',
+    is_required: false,
   }]
   fixValues = [{
     option: ''
   }];
+  fixValuesChild = [{
+    option: ''
+  }];
   isFixedValue = false;
+  isFixedValueChild = false;
   isRequired = false;
   fieldId = null;
   typeId = null;
@@ -94,7 +103,7 @@ export class AddFieldComponent implements OnInit {
     this.childArray.push({
     param: '',
     type:'',
-    is_required:'',
+    is_required:false,
   });}
   console.log(this.childArray,'childArray')
   }
@@ -137,7 +146,8 @@ export class AddFieldComponent implements OnInit {
       refType: this.refType,
       type: this.formType,
       info: JSON.stringify(tmpJson),
-      requestId: (this.fieldId > 0) ? this.fieldId : null
+      requestId: (this.fieldId > 0) ? this.fieldId : null,
+      isDelete:0
     }
     console.log("params", params);
     
@@ -330,6 +340,14 @@ export class AddFieldComponent implements OnInit {
     console.log("data edit:", data);
     this.typeId = data.param_type;
     this.name = data.param_name;
+    for(let i=1; i < data._param_child.length; i++){
+      this.childArray.push({param: '',type:'',is_required:false,})
+    }
+    data._param_child.map((ele,index) => {
+      this.childArray[index].param = ele.param_name;
+      this.childArray[index].type = ele.param_type;
+      this.childArray[index].is_required = ele.is_required;
+    });
     this.fixValues = data._param_info ? data._param_info : this.fixValues;
     this.isFixedValue = (data._param_info && data._param_info.length) ? true : false;
     this.isRequired = data.is_required;
@@ -352,7 +370,7 @@ export class AddFieldComponent implements OnInit {
     this.childArray = [{
       param: '',
       type:'',
-      is_required:'',
+      is_required:false,
     }]
   }
 
