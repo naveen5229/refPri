@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
+import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
 
 @Component({
   selector: 'ngx-form-data',
@@ -114,6 +115,31 @@ export class FormDataComponent implements OnInit {
       console.error('Api Error:', err);
     });
   }
+
+  AdditionalForm(arraytype,i){
+    let additionalData;
+    if(arraytype === 'oddArray'){
+      additionalData = this.oddArray[i]._param_child;
+    }else if(arraytype === 'evenArray'){
+      additionalData = this.evenArray[i]._param_child;
+    }
+    console.log(additionalData,'final data')
+    this.common.params = { additionalform : additionalData }
+    const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.data,'response')
+        if(data.data){
+          if(arraytype === 'oddArray'){
+            this.oddArray[i]._param_child = data.data;
+          }else if(arraytype === 'evenArray'){
+            this.evenArray[i]._param_child = data.data;
+          }
+        }
+      }
+    });
+  }
+
 
   formatArray() {
     this.evenArray = [];

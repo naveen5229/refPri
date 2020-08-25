@@ -29,9 +29,34 @@
                 </div>
             </div>
 
+            <div *ngFor="let table of childArray ; let i = index">
+                <div class="row mb-2" *ngIf="typeId =='table'">
+                    <div class="col-3 mr-0">
+                        <label>Field Name</label>
+                        <input type="text" name="child_name" id="child_name" [(ngModel)]="table.param" class="form-control" maxlength="25" #child_name>
+                    </div>
+                    <div class="col-3 mr-0">
+                        <label>Type</label>
+                        <select class="form-control" [(ngModel)]="table.type">
+                        <option *ngFor="let type of child_types;" [value]="type.id" class="form-control">{{type.name}}</option>
+                      </select>
+                    </div>
+                    <div class="col-3">
+                        <label>Is Required?</label>
+                        <input type="checkbox" class="form-control" [(ngModel)]="table.is_required">
+                    </div>
+                    <div class="col-3 mr-0">
+                        <i class="fa fa-plus" *ngIf="i == childArray.length-1" (click)="AddTable(child_name.value)"></i>&nbsp;
+                        <i class="fa fa-trash" (click)="childArray.splice(i,1)" *ngIf="i !== 0"></i>
+                    </div>
+    
+            </div>
+
+            </div>
+
             <div class="row mb-2">
                 <div class="col-9">
-                    <div *ngIf="typeId!='date'" class="row">
+                    <div *ngIf="typeId =='text' || typeId =='number' " class="row">
                         <div class="col-4">
                             <label>
                                 <input type="checkbox" [(ngModel)]="isFixedValue">
@@ -41,10 +66,10 @@
                         <div class="col-8" *ngIf="isFixedValue">
                             <div class="row" *ngFor="let fixValue of fixValues; let i = index">
                                 <div class="col-8">
-                                    <input type="text" [(ngModel)]="fixValue.option" class="form-control">
+                                    <input type="text" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
                                 </div>
                                 <div class="col-4">
-                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue()"></i>&nbsp;
+                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue(fixvalue.value)"></i>&nbsp;
                                     <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
                                 </div>
                             </div>
