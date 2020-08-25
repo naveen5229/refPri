@@ -153,7 +153,11 @@ smart-table {
     outline: 1px solid #3366ff;
     border: 0;
 }
-
+@-moz-document url-prefix() {
+    .searchbtn {
+        padding: 3px 3px 5px 3px !important;
+    }
+}
 :host ::ng-deep #tableUnreadLeads {
     th:nth-child(5) {
         width: 300px;

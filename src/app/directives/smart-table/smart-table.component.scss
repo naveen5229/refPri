@@ -152,13 +152,13 @@ tbody tr:nth-child(even) {
 }
 
 .pagination {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 0px;
     .pagination_links {
         button {
             position: relative;
             display: block;
-            padding: 5px 7px;
+            padding: 2px 4px;
             color: #007bff;
             background-color: #fff;
             border: 1px solid #dee2e6;
@@ -193,6 +193,7 @@ tbody tr:nth-child(even) {
     width: 60px;
     border: 1px solid #b5b9b9;
     color: #007bff;
+    height: 20px!important;
 }
 
 .action-box {
