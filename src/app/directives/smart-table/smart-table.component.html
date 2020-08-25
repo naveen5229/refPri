@@ -1,4 +1,4 @@
-<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '93%'}">
+<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '95%'}">
     <table *ngIf="headings && !isTableHide" class="table table-bordered fixed">
         <thead *ngIf="!settings.hideHeader">
             <th style="width: 40px">#</th>
