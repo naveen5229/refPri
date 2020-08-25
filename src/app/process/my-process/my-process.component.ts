@@ -110,6 +110,16 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
+  AdminTxnList  = [];
+  tableAdminTxn = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
   searchData = {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
@@ -205,6 +215,9 @@ export class MyProcessComponent implements OnInit {
         } else if (type == 6) {
           this.ownedByMeList = res['data'] || [];
           this.setTableOwnedByMe(type);
+        }else if (type == 7) {
+          this.AdminTxnList = res['data'] || [];
+          this.setTableAdminTxn(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -631,6 +644,57 @@ export class MyProcessComponent implements OnInit {
   }
   // end:ownedbyme lead
 
+  // start: set table admin txn
+  setTableAdminTxn(type){
+    this.tableAdminTxn.data = {
+      headings: this.generateHeadingsAdminTxn(),
+      columns: this.getTableColumnsAdminTxn(type)
+    };
+    return true;
+  }
+
+  generateHeadingsAdminTxn(){
+    let headings = {};
+    for (var key in this.AdminTxnList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsAdminTxn(type){
+    let columns = [];
+    this.AdminTxnList.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsAdminTxn()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        }else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
+          column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        }
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ? 'font-weight-bold' : '', action: '' };
+        }
+        else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+        column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end:set table admin txn
+
   actionIcons(lead, type) {
     let icons = [
       { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" }
@@ -655,7 +719,7 @@ export class MyProcessComponent implements OnInit {
 
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
-    } else if (type == 2 || type == 6) { //by me or owned by me
+    } else if (type == 2 || type == 6 || type == 7) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });

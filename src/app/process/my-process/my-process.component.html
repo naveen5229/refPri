@@ -29,6 +29,9 @@
                 <li [ngClass]="activeTab=='ownedByMe'?'active':''" (click)="activeTab='ownedByMe'; getProcessLeadByType(6)">
                     Owned By Me
                 </li>
+                <li [ngClass]="activeTab=='admintxn'?'active':''" (click)="activeTab='admintxn'; getProcessLeadByType(7)">
+                    Admin Txn
+                </li>
                 <li [ngClass]="activeTab=='ccLeads'?'active':''" (click)="activeTab='ccLeads'; getProcessLeadByType(3)">
                     CC Txn
                 </li>
@@ -90,6 +93,10 @@
         </div>
         <div *ngIf="activeTab=='ownedByMe'">
             <smart-table [data]="tableOwnedByMe.data" [settings]="tableOwnedByMe.settings" id="tableOwnedByMe">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='admintxn'">
+            <smart-table [data]="tableAdminTxn.data" [settings]="tableAdminTxn.settings" id="tableOwnedByMe">
             </smart-table>
         </div>
     </nb-card-body>
