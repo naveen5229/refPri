@@ -1,0 +1,51 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Add Dynamic Dashboard Field</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-4">
+            <label><b>Process Name:</b></label>
+            <label>{{form.process.name}}</label>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-3">
+            <label>Type<span class="text-danger">*</span></label>
+            <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
+              <option value="1" class="form-control">State</option>
+              <option value="2" class="form-control">Action</option>
+              <option value="3" class="form-control">Transaction Form</option>
+              <option value="4" class="form-control">Primary Info Form</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <div *ngIf="!(form.type==3 || form.type==4)">
+                <label>Select State/Action<span class="text-danger">*</span></label>
+                <select class="form-control" [(ngModel)]="form.refId" (change)="onSelectRefId()">
+                    <option *ngFor="let s of stateOrActionList;" [value]="s.id" class="form-control">{{s.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <label>Select Field<span class="text-danger">*</span></label>
+            <select class="form-control" [(ngModel)]="form.infoId" (change)="onSelectField()">
+              <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
+            </select>
+        </div>
+        <div class="col-3 mt-3 text-right">
+            <button class="btn btn-primary btn-sm mt-2" name="submit" (click)="AddField()">{{btn1}}</button>
+            <button *ngIf="form.requestId" class="btn btn-danger btn-sm mt-2 ml-2" name="reset" (click)="resetData()">{{btn2}}</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="row">
+        <div class="col-12">
+            <smart-table [data]="table.data" [settings]="table.settings"></smart-table>
+        </div>
+    </div>
+</div>
