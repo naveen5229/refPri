@@ -220,7 +220,7 @@ export class ProcessListComponent implements OnInit {
 
   openDashboardFieldModal(process) {
     this.common.params = { processId: process._id, processName: process.name };
-    const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
   }
 
