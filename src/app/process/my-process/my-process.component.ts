@@ -11,6 +11,7 @@ import { AddTransactionActionComponent } from '../../modals/process-modals/add-t
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { ViewDashboardComponent } from '../../modals/process-modals/view-dashboard/view-dashboard.component';
 @Component({
   selector: 'ngx-my-process',
   templateUrl: './my-process.component.html',
@@ -1130,6 +1131,12 @@ export class MyProcessComponent implements OnInit {
         console.log(data.response);
       }
     });
+  }
+
+  openDynamicDashboard(processId, processName) {
+    this.common.params = { processId: processId, processName: processName };
+    console.log("params:", this.common.params);
+    const activeModal = this.modalService.open(ViewDashboardComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

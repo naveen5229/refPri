@@ -1,8 +1,14 @@
 <nb-card>
     <nb-card-header>
         <div class="row">
-            <div class="col-9">
+            <div class="col-4">
                 <h5 class="heading-design">My Process Dashboard</h5>
+            </div>
+            <div class="col-5">
+                <span style="display: flex;">
+                    <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess></auto-suggestion>
+                    <button class="btn btn-primary btn-sm" (click)="openDynamicDashboard(searchedProcess.selectedSuggestion._id,searchedProcess.selectedSuggestion.name)">Search</button>
+                </span>
             </div>
             <div class="col-3 text-right">
                 <!-- <button class="btn btn-primary btn-sm mr-2" id="csvCmapaign" (click)="uploadDataByCsv()">Csv </button> -->
