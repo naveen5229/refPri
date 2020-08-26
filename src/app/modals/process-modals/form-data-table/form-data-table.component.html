@@ -1,46 +1,55 @@
 <div class="modal-header">
-  <h5>Add Table</h5>
-  <button type="button" class="close" aria-label="Close" (click)="close(false)">
+    <h5>Add Table</h5>
+    <button type="button" class="close" aria-label="Close" (click)="close(false)">
       <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div  class="modal-body">
-  <div>
-      <div style="width: 100%;">
-          <div>
+<div class="modal-body">
+    <!-- <div class="row">
 
-              <div class="row">
-
-                  <div  class="col-6" style="margin-top: 1rem;" *ngFor="let dd of AdditionalFields ; let i = index; " >
-                      <span *ngIf="AdditionalFields[i].param_name" class="row">
-                          <div class="col-4">
+        <div class="col-12" style="margin-top: 1rem;" *ngFor="let dd of AdditionalFields ; let i = index; ">
+            <span *ngIf="AdditionalFields[i].param_name" class="row">
+                            <div class="col-4">
                               <label>{{AdditionalFields[i].param_name}} <span style="color: red"
                                       *ngIf="AdditionalFields[i].is_required">*</span></label>
-                          </div>
+        </div>
 
-                          <div class="col-8">
-                              <input type="text" class="form-control" [(ngModel)]=AdditionalFields[i].param_value
-                                  *ngIf="AdditionalFields[i].param_type == 'text'  && !AdditionalFields[i].r_fixedvalues">
-                              <input type="number" class="form-control" [(ngModel)]=AdditionalFields[i].param_value
-                                  *ngIf="AdditionalFields[i].param_type == 'number'  && !AdditionalFields[i].r_fixedvalues">
-                              <uj-date-time-picker (onChanged)="AdditionalFields[i].param_value = $event"
-                                  [dateTimeValue]="AdditionalFields[i].param_value" *ngIf="AdditionalFields[i].param_type =='date'"
-                                  [isTime]="false">
-                              </uj-date-time-picker>
-                          </div>
-                      </span>
-                  </div>
-              </div>
-
-          </div>
-
-      </div>
-  </div>
-  <!-- end: dym field -->
-  <div class="row">
-      <div class="col-12 text-right">
-          <button type="button" class="btn btn-primary btn-sm"
-              (click)="addTransaction()">Add</button>
-      </div>
-  </div>
+        <div class="col-8">
+            <input type="text" class="form-control" [(ngModel)]=AdditionalFields[i].param_value *ngIf="AdditionalFields[i].param_type == 'text'  && !AdditionalFields[i].r_fixedvalues">
+            <input type="number" class="form-control" [(ngModel)]=AdditionalFields[i].param_value *ngIf="AdditionalFields[i].param_type == 'number'  && !AdditionalFields[i].r_fixedvalues">
+            <uj-date-time-picker (onChanged)="AdditionalFields[i].param_value = $event" [dateTimeValue]="AdditionalFields[i].param_value" *ngIf="AdditionalFields[i].param_type =='date'" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+        </span>
+    </div>
+</div> -->
+    <!-- start: dym field -->
+    <div class="table-responsive">
+        <i class="fa fa-plus pull-right text-primary cursor-pointer" title="Add Row" (click)="AddTableRow()"></i>
+        <table class="table-bordered" width="100%">
+            <thead>
+                <tr>
+                    <th *ngFor="let head of tableHeader;">{{head.param_name}}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tr of additionalFields;let i=index">
+                    <td *ngFor="let td of tr;let vi=index">
+                        <input type="text" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'text'  && !td.r_fixedvalues">
+                        <input type="number" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'number'  && !td.r_fixedvalues">
+                        <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value" *ngIf="td.param_type =='date'" [isTime]="false">
+                        </uj-date-time-picker>
+                    </td>
+                    <td><i *ngIf="i !== 0" class="fa fa-trash" title="Remove Row" (click)="additionalFields.splice(i,1)"></i></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- end: dyn field -->
+    <div class="row">
+        <div class="col-12 text-right">
+            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Add</button>
+        </div>
+    </div>
 </div>

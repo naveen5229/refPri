@@ -33,7 +33,7 @@ export class AddFieldComponent implements OnInit {
   ];
   childArray = [{
     param: '',
-    type:'',
+    type: '',
     is_required: false,
   }]
   fixValues = [{
@@ -96,16 +96,17 @@ export class AddFieldComponent implements OnInit {
   ngOnInit() {
   }
 
-  AddTable(child_name){
-    if(child_name.length == 0){
+  AddTable(child_name) {
+    if (child_name.length == 0) {
 
-    }else{
-    this.childArray.push({
-    param: '',
-    type:'',
-    is_required:false,
-  });}
-  console.log(this.childArray,'childArray')
+    } else {
+      this.childArray.push({
+        param: '',
+        type: '',
+        is_required: false,
+      });
+    }
+    console.log(this.childArray, 'childArray')
   }
 
   closeModal(res) {
@@ -147,24 +148,24 @@ export class AddFieldComponent implements OnInit {
       type: this.formType,
       info: JSON.stringify(tmpJson),
       requestId: (this.fieldId > 0) ? this.fieldId : null,
-      isDelete:0
+      isDelete: 0
     }
     console.log("params", params);
-    
+
     let error_count = false;
-    if(tmpJson.type === 'table'){
+    if (tmpJson.type === 'table') {
       tmpJson.param_child.forEach(ele => {
-        if(ele.param.length == 0 || !ele.type.length){
+        if (ele.param.length == 0 || !ele.type.length) {
           error_count = true;
         }
       })
     }
 
-    if(!this.name || !this.typeId){
+    if (!this.name || !this.typeId) {
       this.common.showError('Field Name or Type is missing');
       return false;
     }
-    if(error_count){
+    if (error_count) {
       this.common.showError('Table Field Name or Type is missing');
       return false;
     }
@@ -287,8 +288,16 @@ export class AddFieldComponent implements OnInit {
 
   deleteRow(row) {
     if (row._matrixid) {
+      // let params = {
+      //   id: row._matrixid,
+      // }
       let params = {
-        id: row._matrixid,
+        refid: this.refId,
+        refType: this.refType,
+        type: this.formType,
+        info: JSON.stringify({ temp: null }),
+        requestId: row._matrixid,
+        isDelete: 1
       }
       this.common.params = {
         title: 'Delete  ',
@@ -298,7 +307,8 @@ export class AddFieldComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Processes/deleteProcessMatrix', params).subscribe(res => {
+          // this.api.post('Processes/deleteProcessMatrix', params).subscribe(res => {
+          this.api.post('Processes/addProcessMatrix', params).subscribe(res => {
             this.common.loading--;
             if (res['code'] == 1) {
               if (res['data'][0].y_id > 0) {
@@ -322,12 +332,13 @@ export class AddFieldComponent implements OnInit {
   }
 
   addFixValue(fixvalue) {
-    if(fixvalue.length == 0){
+    if (fixvalue.length == 0) {
 
-    }else{
-    this.fixValues.push({
-      option: ''
-    });}
+    } else {
+      this.fixValues.push({
+        option: ''
+      });
+    }
   }
 
   setData(data) {
@@ -340,10 +351,10 @@ export class AddFieldComponent implements OnInit {
     console.log("data edit:", data);
     this.typeId = data.param_type;
     this.name = data.param_name;
-    for(let i=1; i < data._param_child.length; i++){
-      this.childArray.push({param: '',type:'',is_required:false,})
+    for (let i = 1; i < data._param_child.length; i++) {
+      this.childArray.push({ param: '', type: '', is_required: false, })
     }
-    data._param_child.map((ele,index) => {
+    data._param_child.map((ele, index) => {
       this.childArray[index].param = ele.param_name;
       this.childArray[index].type = ele.param_type;
       this.childArray[index].is_required = ele.is_required;
@@ -369,8 +380,8 @@ export class AddFieldComponent implements OnInit {
     this.btn1 = "Add";
     this.childArray = [{
       param: '',
-      type:'',
-      is_required:false,
+      type: '',
+      is_required: false,
     }]
   }
 

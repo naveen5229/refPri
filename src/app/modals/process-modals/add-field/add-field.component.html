@@ -18,10 +18,10 @@
                     <option *ngFor="let type of types;" [value]="type.id" class="form-control">{{type.name}}</option>
                   </select>
                 </div>
-                <div class="col-3 mr-0">
+                <!-- <div class="col-3 mr-0">
                     <label>Order</label>
                     <input type="number" min="0" [(ngModel)]="order" class="form-control" placeholder="order">
-                </div>
+                </div> -->
 
                 <div class="col-3">
                     <label>Is Required?</label>
@@ -49,8 +49,8 @@
                         <i class="fa fa-plus" *ngIf="i == childArray.length-1" (click)="AddTable(child_name.value)"></i>&nbsp;
                         <i class="fa fa-trash" (click)="childArray.splice(i,1)" *ngIf="i !== 0"></i>
                     </div>
-    
-            </div>
+
+                </div>
 
             </div>
 
