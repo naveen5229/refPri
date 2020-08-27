@@ -22,7 +22,7 @@
 
 
       <div *ngIf="activeTab=='Actions'">
-          <div class="row mb-2" style="z-index: 999;">
+          <div class="row mb-1" style="z-index: 999;">
                   <div class="col-4">
                       <uj-date-time-picker [maxd]='today' [isStart]="true" [isTime]="false" (onChanged)="searchData.startdate=$event" [dateTimeValue]="searchData.startdate">
                       </uj-date-time-picker>
