@@ -263,7 +263,7 @@ export class ShiftLogAddComponent implements OnInit {
         description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
       }
 
-      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;

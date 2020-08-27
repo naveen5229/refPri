@@ -408,14 +408,17 @@ export class ChatboxComponent implements OnInit {
     let formType = (type == 1) ? 1 : 2;
     let icons = [];
 
-    if (lead._action_form == 1 || lead._state_form == 1) {
-      icons.push({ class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
-    }
+    
     if (!type && !lead.completion_time) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
     }
     else if (type == 1) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead), txt: '', title: "Delete State" });
+    }
+    if (lead._action_form == 1 || lead._state_form == 1) {
+      icons.push({ class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
+    }else if (lead._action_form == 2 || lead._state_form == 2) {
+      icons.push({ class: "fas fa-plus-square text-success", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
     }
     console.log("icons:", icons);
     return icons;
