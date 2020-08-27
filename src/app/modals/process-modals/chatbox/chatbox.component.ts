@@ -59,6 +59,13 @@ export class ChatboxComponent implements OnInit {
   };
   attachmentList = [];
   isAttachmentShow = false;
+  actionOwnerForm = {
+    transId: null,
+    actionId: null,
+    userId: null,
+    userName: null,
+    oldOwnerName: null
+  }
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -172,12 +179,15 @@ export class ChatboxComponent implements OnInit {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
-        attachment: this.attachmentFile.file
+        attachment: this.attachmentFile.file,
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
       }
       this.api.post('Processes/saveLeadMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
+          this.attachmentFile.file = null;
+          this.attachmentFile.name = null;
           this.getLeadMessage();
           this.getAttachmentByLead();
         } else {
@@ -200,7 +210,7 @@ export class ChatboxComponent implements OnInit {
       var ext = file.name.split('.').pop();
       // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext)) {
+      if (formats.includes(ext.toLowerCase())) {
       } else {
         this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
         return false;
@@ -379,10 +389,12 @@ export class ChatboxComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            icons: (lead._action_form == 1 || lead._state_form == 1) ? this.actionIcons(lead, type) : null
+            icons: this.actionIcons(lead, type)
           };
         } else if (!type && key == 'completion_time' && lead[key]) {
           column[key] = { value: lead[key], class: 'blue', action: this.openTransAction.bind(this, lead, type, null), title: 'Add next state' };
+        } else if (!type && key == 'action_owner' && !lead['completion_time']) {
+          column[key] = { value: lead[key], class: 'blue', action: this.openEditActionOwnerModal.bind(this, lead), title: 'Change Action Owner' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -394,18 +406,31 @@ export class ChatboxComponent implements OnInit {
 
   actionIcons(lead, type) {
     let formType = (type == 1) ? 1 : 2;
-    let icons = [
-      // { class: 'fas fa-trash-alt ml-2', action: this.deleteLead.bind(this, lead) }
-      { class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" }
-    ];
+    let icons = [];
+
+    if (lead._action_form == 1 || lead._state_form == 1) {
+      icons.push({ class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
+    }
+    if (!type && !lead.completion_time) {
+      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
+    }
+    else if (type == 1) {
+      icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadState.bind(this, lead), txt: '', title: "Delete State" });
+    }
+    console.log("icons:", icons);
     return icons;
   }
 
-  deleteLead(row) { //not used
-    let params = {
-      tarnsActId: row._action_id,
+  deleteLeadAction(row) {
+    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+      this.common.showError("Primary Owner/Action Owner have access to delete");
+      return false;
     }
-    if (row._action_id) {
+    let params = {
+      transId: this.ticketData._transactionid,
+      transActionId: row._trans_action_id,
+    }
+    if (row._trans_action_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -414,20 +439,69 @@ export class ChatboxComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Processes/removeTransactionAction', params)
-            .subscribe(res => {
-              this.common.loading--;
-              this.common.showToast(res['msg']);
-              this.getTargetActionData();
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+          this.api.post('Processes/removeTransactionAction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getTargetActionData();
+              } else {
+                this.common.showError(res['msg']);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
         }
       });
+    } else {
+      this.common.showError("Invalid request");
     }
   }
 
+  deleteLeadState(row) {
+    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+      this.common.showError("Primary Owner have access to delete");
+      return false;
+    }
+    let params = {
+      transId: this.ticketData._transactionid,
+      transStateId: row._trans_state_id,
+    }
+    if (row._trans_state_id) {
+      this.common.params = {
+        title: 'Delete Record',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Processes/removeTransactionState', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getTargetActionData(1);
+              } else {
+                this.common.showError(res['data'][0].y_msg);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    } else {
+      this.common.showError("Invalid request");
+    }
+  }
 
   openTransAction(lead, type, formType = null) {
     if (![this.priOwnId].includes(this.userService._details.id)) {
@@ -550,6 +624,68 @@ export class ChatboxComponent implements OnInit {
 
     this.common.params = { rowData, processList: null, adminList: null, title: "View Transaction ", button: "Update" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+
+  }
+
+  closeEditActionOwnerModal() {
+    document.getElementById("editActionOwnerModal").style.display = "none";
+  }
+
+  openEditActionOwnerModal(row) {
+    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+      this.common.showError("Primary Owner/Action Owner have access to change");
+      return false;
+    }
+    // console.log('openEditActionOwnerModal:', row);
+    this.actionOwnerForm.transId = this.ticketData._transactionid;
+    this.actionOwnerForm.actionId = row._trans_action_id;
+    this.actionOwnerForm.oldOwnerName = row.action_owner;
+    document.getElementById("editActionOwnerModal").style.display = "block";
+  }
+
+  resetActionOwnerForm() {
+    this.actionOwnerForm.transId = null;
+    this.actionOwnerForm.actionId = null;
+    this.actionOwnerForm.userId = null;
+    this.actionOwnerForm.userName = null;
+    this.actionOwnerForm.oldOwnerName = null;
+  }
+
+  changeActionOwner() {
+    // console.log("changeActionOwner:", this.actionOwnerForm);
+    if (this.actionOwnerForm.userId > 0) {
+      let params = {
+        transId: this.actionOwnerForm.transId,
+        transActionId: this.actionOwnerForm.actionId,
+        actionOwnerId: this.actionOwnerForm.userId,
+        actionOwnerName: this.actionOwnerForm.userName,
+        actionOwnerNameOld: this.actionOwnerForm.oldOwnerName,
+      }
+
+      this.common.loading++;
+      this.api.post('Processes/changeTransactionActionOwner', params)
+        .subscribe(res => {
+          this.common.loading--;
+          if (res['code'] == 1) {
+            if (res['data'][0].y_id > 0) {
+              this.common.showToast(res['msg']);
+              this.resetActionOwnerForm();
+              this.closeEditActionOwnerModal();
+              this.getTargetActionData();
+            } else {
+              this.common.showError(res['msg']);
+            }
+          } else {
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log('Error: ', err);
+        });
+
+    } else {
+      this.common.showError("Action owner is missing");
+    }
 
   }
 

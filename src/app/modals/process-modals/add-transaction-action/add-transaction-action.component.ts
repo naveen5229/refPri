@@ -10,6 +10,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
   styleUrls: ['./add-transaction-action.component.scss']
 })
 export class AddTransactionActionComponent implements OnInit {
+  currentDate = this.common.getDate();
   title = "";
   button = "Add";
   standards = [];
@@ -45,6 +46,8 @@ export class AddTransactionActionComponent implements OnInit {
     console.log("params:", this.common.params);
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
+    // let threashold = new Date();
+    this.transAction.targetTime.setHours(23, 59);
     if (this.common.params && this.common.params.actionData) {
       this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
       this.transAction.formType = (this.common.params.actionData.formType) ? this.common.params.actionData.formType : 0;
@@ -137,8 +140,17 @@ export class AddTransactionActionComponent implements OnInit {
     this.getActionModeList();
   }
 
-  onSelectNextAction() {
-    this.transAction.targetTime = new Date();
+  onSelectNextAction(event) {
+    console.log("onSelectNextAction:", event);
+    let threashold = new Date();
+    if (event.threshold > 0) {
+      let cHours = threashold.getHours();
+      threashold.setHours(cHours + event.threshold);
+      this.transAction.targetTime = threashold;
+    } else {
+      threashold.setHours(23, 59);
+      this.transAction.targetTime = threashold;
+    }
   }
 
   getActionList() {
@@ -147,8 +159,8 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
       let actionDataList = res['data'] || [];
-      this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
-      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+      this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
+      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -161,7 +173,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
       let actionDataList = res['data'] || [];
-      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
+      this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
       this.common.loading--;
       this.common.showError();

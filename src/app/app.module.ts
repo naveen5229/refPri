@@ -91,9 +91,16 @@ import { UserMappingComponent } from './modals/process-modals/user-mapping/user-
 import { AddTransactionComponent } from './modals/process-modals/add-transaction/add-transaction.component';
 import { AddTransactionActionComponent } from './modals/process-modals/add-transaction-action/add-transaction-action.component';
 import { ChatboxComponent } from './modals/process-modals/chatbox/chatbox.component';
+import { AddpartnerComponent } from './modals/addpartner/addpartner.component';
+import { AddpartneruserComponent } from './modals/addpartneruser/addpartneruser.component';
+import { AddcompanyComponent } from './modals/addcompany/addcompany.component';
+import { AddfouserComponent } from './modals/addfouser/addfouser.component';
 import { AddTransactionStateComponent } from './modals/process-modals/add-transaction-state/add-transaction-state.component';
 import { AddCategoryComponent } from './modals/process-modals/add-category/add-category.component';
 import { AddTransactionContactComponent } from './modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { AddDashboardFieldComponent } from './modals/process-modals/add-dashboard-field/add-dashboard-field.component';
+import { ViewDashboardComponent } from './modals/process-modals/view-dashboard/view-dashboard.component';
+import { FormDataTableComponent } from './modals/process-modals/form-data-table/form-data-table.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -152,10 +159,17 @@ const PAGE_COMPONENTS = [
   AddActionComponent,
   AddTransactionComponent,
   AddTransactionActionComponent,
+  ChatboxComponent,
+  AddpartnerComponent,
+  AddpartneruserComponent,
+  AddcompanyComponent,
+  AddfouserComponent,
   AddTransactionStateComponent,
   AddCategoryComponent,
-  ChatboxComponent,
-  AddTransactionContactComponent
+  AddTransactionContactComponent,
+  AddDashboardFieldComponent,
+  ViewDashboardComponent,
+  FormDataTableComponent
 ];
 
 @NgModule({
@@ -166,6 +180,10 @@ const PAGE_COMPONENTS = [
     AxestrackMappingComponent,
     AddvehicleComponent,
     ImportbulkvehicleComponent,
+    AddpartnerComponent,
+    AddpartneruserComponent,
+    AddcompanyComponent,
+    AddfouserComponent,
 
     // SendmessageComponent,
     // GenericModelComponent,

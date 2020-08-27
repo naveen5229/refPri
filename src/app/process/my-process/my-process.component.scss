@@ -6,15 +6,27 @@
     color: #00f;
 }
 
-:host ::ng-deep #tableOwnedByMe {
-    th:nth-child(4) {
+:host ::ng-deep #tableOwnedByMe,
+:host ::ng-deep #tableLeadsForMe,
+:host ::ng-deep #tableLeadsByMe,
+:host ::ng-deep #tableCcLeads,
+:host ::ng-deep #tableUnreadLeads {
+    th:nth-child(5) {
         width: 300px;
     }
 }
-smart-table{
+
+smart-table {
     display: block;
-    height: calc(100vh - 230px);
+    height: calc(100vh - 168px);
 }
-.sl-smart-table{
-    height: calc(100vh - 260px);
+
+.sl-smart-table {
+    height: calc(100vh - 198px);
 }
+
+
+:host ::ng-deep .font-weight-bold {
+    font-weight: 600;
+}
+

@@ -1,0 +1,25 @@
+.row1{
+    margin-top: 15px;
+}
+img{
+    width:40px;
+    height:40px;
+    margin-left: 35%;
+    display: inline-block;
+}
+:host ::ng-deep.red {
+    background: red;
+    color: #fff;
+    margin-left: 5px;
+  }
+  :host ::ng-deep.green {
+    background: green;
+    color: #fff;
+    margin-left: 5px;
+  }
+  :host ::ng-deep.icon{
+  font-size:20px;
+}
+:host ::ng-deep label{
+    font-weight:500;
+}

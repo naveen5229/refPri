@@ -11,6 +11,7 @@ import { AddTransactionActionComponent } from '../../modals/process-modals/add-t
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { ViewDashboardComponent } from '../../modals/process-modals/view-dashboard/view-dashboard.component';
 @Component({
   selector: 'ngx-my-process',
   templateUrl: './my-process.component.html',
@@ -109,6 +110,16 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
+  AdminTxnList  = [];
+  tableAdminTxn = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
   searchData = {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
@@ -204,6 +215,9 @@ export class MyProcessComponent implements OnInit {
         } else if (type == 6) {
           this.ownedByMeList = res['data'] || [];
           this.setTableOwnedByMe(type);
+        }else if (type == 7) {
+          this.AdminTxnList = res['data'] || [];
+          this.setTableAdminTxn(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -334,6 +348,9 @@ export class MyProcessComponent implements OnInit {
           };
         } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
           column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        }
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ? 'font-weight-bold' : '', action: '' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -612,6 +629,9 @@ export class MyProcessComponent implements OnInit {
           };
         } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
           column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        }
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ? 'font-weight-bold' : '', action: '' };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -623,6 +643,57 @@ export class MyProcessComponent implements OnInit {
     return columns;
   }
   // end:ownedbyme lead
+
+  // start: set table admin txn
+  setTableAdminTxn(type){
+    this.tableAdminTxn.data = {
+      headings: this.generateHeadingsAdminTxn(),
+      columns: this.getTableColumnsAdminTxn(type)
+    };
+    return true;
+  }
+
+  generateHeadingsAdminTxn(){
+    let headings = {};
+    for (var key in this.AdminTxnList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsAdminTxn(type){
+    let columns = [];
+    this.AdminTxnList.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsAdminTxn()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        }else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
+          column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        }
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ? 'font-weight-bold' : '', action: '' };
+        }
+        else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+        column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end:set table admin txn
 
   actionIcons(lead, type) {
     let icons = [
@@ -648,7 +719,7 @@ export class MyProcessComponent implements OnInit {
 
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
-    } else if (type == 2 || type == 6) { //by me or owned by me
+    } else if (type == 2 || type == 6 || type == 7) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
@@ -669,15 +740,21 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
 
     } else if (type == 5) {//unread
-      if (lead._is_action == 1 && lead._status == 0) {
-        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
+      if (lead._cc_user_id > 0) {
+        if (!lead._cc_status) {
+          icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
+        }
+      } else if (lead._is_action == 1) {
+        if (lead._status == 0) {
+          icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
+        }
       } else if (lead._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
-      } else if (lead._status == 2) {
+      } else if (lead._status == 2 && lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
-      } else if (lead._cc_user_id > 0 && !lead._cc_status) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
       }
+    } else if (type == 4) {
+      icons.push({ class: "fa fa-retweet", action: this.reviveTransAction.bind(this, lead, type, 1), txt: '', title: "Revive Transaction" });
     }
 
     if (type == 4 || lead._status == 5 || lead._status == -1) {
@@ -727,6 +804,42 @@ export class MyProcessComponent implements OnInit {
         if (data.response) {
           this.common.loading++;
           this.api.post('Processes/deleteTransaction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['msg']);
+                this.getProcessLeadByType(type);
+              } else {
+                this.common.showError(res['msg']);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    } else {
+      this.common.showError("Invalid Request");
+    }
+  }
+
+  reviveTransAction(lead, type) {
+    let params = {
+      transId: lead._transactionid
+    }
+    if (lead._transactionid) {
+      this.common.params = {
+        title: 'Revive Record',
+        description: `<b>&nbsp;` + 'Are Sure To Revive This Transaction' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Processes/reviveTransaction', params).subscribe(res => {
             this.common.loading--;
             if (res['code'] == 1) {
               if (res['data'][0].y_id > 0) {
@@ -1082,6 +1195,12 @@ export class MyProcessComponent implements OnInit {
         console.log(data.response);
       }
     });
+  }
+
+  openDynamicDashboard(processId, processName) {
+    this.common.params = { processId: processId, processName: processName };
+    console.log("params:", this.common.params);
+    const activeModal = this.modalService.open(ViewDashboardComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

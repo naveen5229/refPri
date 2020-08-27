@@ -22,19 +22,22 @@
 </div>
 <div *ngIf="transForm.showDynField" class="modal-body">
     <div>
-        <div style="display: flex;">
-            <div style="flex:1">
+        <div class="row">
+            <div class="col-6">
                 <label>Process Name: {{transForm.process.name}}</label>
             </div>
-            <div style="flex: 1;display: flex;">
-                <div style="flex: 1;">
+
+            <div class="col-6">
+                <div class="row">
+                <div class="col-4">
                     <label>Identity<span class="text-danger">*</span></label>
                 </div>
-                <div style="flex: 2;">
+                <div class="col-8">
                     <input type="text" class="form-control" placeholder="Enter Identity"
                         [(ngModel)]="transForm.identity">
                 </div>
             </div>
+         </div>
         </div>
 
     </div>
@@ -113,10 +116,50 @@
     <div>
         <div style="width: 100%;">
             <div>
+                
+            <div class="row">
+                         
+            <!-- <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div class="row">
+                <div class="col-4">
+                    <label>Contact Name<span class="text-danger"></span></label>
+                </div>
+                <div class="col-8">
+                    <input type="text" class="form-control" placeholder="Enter Contact Name"
+                        [(ngModel)]="transForm.name">
+                </div>
+            </div>
+            </div>
+
+            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div class="row">
+                <div class="col-4">
+                    <label>Email<span class="text-danger"></span></label>
+                </div>
+                <div class="col-8">
+                    <input type="email" pattern=".+@globex.com" class="form-control" placeholder="Enter Email"
+                        [(ngModel)]="transForm.emailStatic">
+                </div>
+            </div>
+            </div>
+
+            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div class="row">
+                <div class="col-4">
+                    <label>Mob Number<span class="text-danger"></span></label>
+                </div>
+                <div class="col-8">
+                    <input type="number" class="form-control" placeholder="Enter Mobile Number"
+                        [(ngModel)]="transForm.mobileno">
+                </div>
+            </div>
+            </div> -->
+
+                </div>
 
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
-                    <div *ngIf="oddArray[i]" [class]="evenArray[i]? 'col-6' : 'col-12'">
+                    <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <div *ngIf="oddArray[i].r_coltitle" class="row">
                             <div class="col-4">
                                 <label>{{oddArray[i].r_colalias}}<span style="color: red"
@@ -172,6 +215,11 @@
                                     [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
 
+                                <input type="checkbox" class="form-control" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+
+                                <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+
+
                                 <!-- dynamic data array -->
                                 <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12"
                                     *ngIf="oddArray[i].r_fixedvalues">
@@ -187,13 +235,13 @@
                                     </span>
                                     <input type="file" class="file-control" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
                                     <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile(i)">Upload</button>
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <div *ngIf="evenArray[i]" [class]="oddArray[i]? 'col-6' : 'col-12'">
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <span *ngIf="evenArray[i].r_coltitle" class="row">
                             <div class="col-4">
                                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
@@ -246,6 +294,10 @@
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
 
+                                <input type="checkbox" class="form-control" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+
+                                <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+
                                 <!-- dynamic data array -->
                                 <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
                                     *ngIf="evenArray[i].r_fixedvalues">
@@ -253,15 +305,26 @@
                                         *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+
                                 <!-- attachment -->
-                                <label class="custom-file-upload" *ngIf="evenArray[i].r_coltype =='attachment'">
+
+                                <!-- <label class="custom-file-upload" *ngIf="evenArray[i].r_coltype =='attachment'">
                                     <span *ngIf="evenArray[i].r_url">
                                         <a *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
                                     </span>
-                                    <input type="file" class="file-control" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <input type="file" class="file-control" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)"> -->
                                     <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('evenArray',i)">Upload</button>
-                                </label>
+                                    <!-- <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                                </label> -->
+                                
+                                <div class="row" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="evenArray[i].r_url">
+                                        <a *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile(i)">Upload</button>
+                                </div>
                             </div>
                         </span>
                     </div>

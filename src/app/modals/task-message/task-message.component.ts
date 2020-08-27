@@ -214,7 +214,8 @@ export class TaskMessageComponent implements OnInit {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
-        attachment: this.attachmentFile.file
+        attachment: this.attachmentFile.file,
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
       }
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
@@ -753,7 +754,7 @@ export class TaskMessageComponent implements OnInit {
       var ext = file.name.split('.').pop();
       // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext)) {
+      if (formats.includes(ext.toLowerCase())) {
       } else {
         this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
         return false;

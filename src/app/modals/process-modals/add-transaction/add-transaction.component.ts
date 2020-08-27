@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
+import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
 
 @Component({
   selector: 'ngx-add-transaction',
@@ -38,6 +39,7 @@ export class AddTransactionComponent implements OnInit {
       name: ""
     },
     identity: null,
+    emailStatic: null,
     mobileno: null,
     priCat: {
       id: null,
@@ -121,6 +123,30 @@ export class AddTransactionComponent implements OnInit {
     });
   }
 
+  AdditionalForm(arraytype,i){
+    let additionalData;
+    if(arraytype === 'oddArray'){
+      additionalData = this.oddArray[i]._param_child;
+    }else if(arraytype === 'evenArray'){
+      additionalData = this.evenArray[i]._param_child;
+    }
+    console.log(additionalData,'final data')
+    this.common.params = { additionalform : additionalData }
+    const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.data,'response')
+        if(data.data){
+          if(arraytype === 'oddArray'){
+            this.oddArray[i]._param_child = data.data;
+          }else if(arraytype === 'evenArray'){
+            this.evenArray[i]._param_child = data.data;
+          }
+        }
+      }
+    });
+  }
+
   getSecondaryCatList() {
     this.secCatList = [];
     if (!(this.transForm.process.id > 0)) {
@@ -166,8 +192,11 @@ export class AddTransactionComponent implements OnInit {
       }
       return copyDetails;
     });
+    console.log(details,'updated details from add transaction')
 
     const params = {
+      email: this.transForm.emailStatic,
+
       processId: this.transForm.process.id,
       name: this.transForm.name,
       identity: this.transForm.identity,
@@ -183,6 +212,7 @@ export class AddTransactionComponent implements OnInit {
     }
     console.log("para......", params);
 
+    // return;
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;
@@ -285,6 +315,8 @@ export class AddTransactionComponent implements OnInit {
       if (res['code'] == 1) {
         if (res['data'][0]['r_id'] > 0) {
           this.common.showToast(res['msg']);
+          this.attachmentFile[i].name = null;
+          this.attachmentFile[i].file = null;
           if (arrayType == 'oddArray') {
             this.oddArray[i].r_value = res['data'][0]['r_id'];
           } else {

@@ -6,7 +6,7 @@
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <label>Select Date</label>
             </div>
             <div class="col-3">
@@ -14,16 +14,16 @@
                 </uj-date-time-picker>
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
                 <button type="submit" id="submit" (click)="getAttendanceList()" class="btn btn-primary mr-2 btn-sm">Submit</button>
             </div>
 
-            <div class="col-3 text-right">
+            <div class="col-4 text-right">
                 <button id="summary" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2 btn-sm">Attendance Monthly Summary</button>
             </div>
 
         </div>
-        <div class="row mt-2">
+        <div class="row mt-1">
             <div class="col-12">
                 <smart-table *ngIf="attandanceList.length!=0" [data]="tableAttandanceList.data" [settings]="tableAttandanceList.settings" id="attandanceList" class="smrt-table">
                 </smart-table>

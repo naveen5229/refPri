@@ -1,0 +1,61 @@
+<div class="modal-header">
+    <h5 class="modal-title">Add Partner User</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="row mt-2">
+        <div class="col-sm-6">
+            <label>Parent Partner</label>
+            <auto-suggestion (onSelected)="getParentPartnerUser($event)" [display]="['name','mobileno']" [data]="partnerUserMapping" placeholder="Parent Partner" seperator="-" [preSelected]="null" className="borderStyle" inputId="id">
+            </auto-suggestion>
+        </div>
+        <div class="col-sm-6">
+            <label>Name</label>
+            <input type="text" class="wdth" placeholder="Name" id="name" name="name" [(ngModel)]="partnerUser.name">
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-sm-6">
+            <label>User Name</label>
+            <input type="text" class="wdth" placeholder="User Name" id="userName" name="userName" [(ngModel)]="partnerUser.userName">
+        </div>
+
+        <div class="col-sm-6">
+            <label>Password</label>
+            <input type="password" class="wdth" placeholder="Password" id="password" name="password" [(ngModel)]="partnerUser.password">
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-6">
+            <label>Mobile No</label>
+            <input type="text" class="wdth" placeholder="Mobile No" id="mobileNo" name="mobileNo" [(ngModel)]="partnerUser.mobileNo">
+        </div>
+        <div class="col-sm-6">
+            <label>Auth Type </label>
+            <select [(ngModel)]="partnerUser.authType" (change)="displayLoginType()" class="form-control">
+            <option value='1'>Mobile</option>
+            <option value='2'>User</option>
+          </select>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+
+        <div class="col-sm-6" *ngIf="partnerUser.authType=='1'">
+            <label>Login Type </label>
+            <select [(ngModel)]='loginType' class="form-control">
+        <option *ngFor='let data of loginData' [value]="data.id">
+          {{data.name}}
+        </option>
+      </select>
+        </div>
+
+        <div [ngClass]="partnerUser.authType=='1'?'col-sm-6':'col-sm-12'">
+            <button type="submit" style="float:right;margin-top:26px;" (click)="addPartnerUser()" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,159 @@
+<div class="modal-header">
+  <h5>Add Company</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Product Type</label></div>
+          <div class="col-sm-12">
+              <select [(ngModel)]="productType" class="form-control">
+            <option value='1'>Fastag</option>
+            <option value='2'>GPS</option>
+          </select>
+          </div>
+      </div>
+
+      <div class="col-sm-6">
+      <label class="col-12" style="display:inline-block;" >Elogist Partner</label>
+        <div class="col-12" style="display:inline-block">
+          <auto-suggestion (onSelected)="getElogistCompany($event)" [display]="['name','mobileno']" [data]="partnerData"
+          placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+  </div>
+
+  <div class="row mt-2">
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Company Name</label><span *ngIf="productType=='1' || productType=='2'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12"> <input type="text" name="fullName" id="full_name" class="form-control" [(ngModel)]="newCustomer.name" #nameField="ngModel" pattern="[a-zA-Z ]*" required></div>
+      </div>
+
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Mobile Number</label><span *ngIf="productType=='1'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              <input type="tel" name="mobile" class="form-control" [(ngModel)]="newCustomer.mobileno" maxlength="10" pattern="[0-9]{10}" #mobileField="ngModel" required id="mobileno">
+          </div>
+      </div>
+  </div>
+
+  <div class="row mt-2">
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Pan Card</label><span *ngIf="productType=='1'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              <input type="text" name="pan" class="form-control" [(ngModel)]="newCustomer.pan" #panField="ngModel" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10" required id="pan_card">
+          </div>
+      </div>
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Address</label><span *ngIf="productType=='1' || productType=='2'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              <input type="text" name="address" class="form-control" [(ngModel)]="newCustomer.address" #addressField="ngModel">
+          </div>
+      </div>
+  </div>
+
+  <div class="row mt-2">
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>State</label><span *ngIf="productType=='1' || productType=='2'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              <select [(ngModel)]='statedatabind' (change)='stateData($event)' class="form-control">
+        <option *ngFor='let data of statesData' [ngValue]="data">
+          {{data.name}}
+        </option>
+        </select>
+          </div>
+      </div>
+
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>User Name</label></div>
+          <div class="col-sm-12">
+              <input type="text" name="username" class="form-control" [(ngModel)]="newCustomer.username" #usernameField="ngModel">
+          </div>
+      </div>
+  </div>
+
+  <div class="row mt-2">
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Password</label></div>
+          <div class="col-sm-12">
+              <input [type]="showPassword? 'text': 'password'" style="width: 90%;border:2px solid lightgrey;" clearOnEdit="false" name="password" [(ngModel)]="newCustomer.password" #passwordField="ngModel" required id="password">
+              <button style="padding:2px;padding-right:8px;padding-bottom:8px;border: 2px solid lightgrey;border-radius: 0!important;border-left: 0!important;" *ngIf="!showPassword" id="hidden_password_btn" ion-button clear color="dark" type="button" item-right (click)="showPassword = true">
+            <i class="fa fa-eye"></i>
+          </button>
+              <button style="padding: 2px;padding-bottom:8px;padding-right:8px;border: 2px solid lightgrey;border-radius: 0!important;border-left: 0!important;" *ngIf="showPassword" id="show_password_btn" ion-button clear color="dark" type="button" item-right (click)="showPassword = false">
+            <i class="fa-eye-slash"></i>
+          </button>
+          </div>
+      </div>
+
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Auth Type</label></div>
+          <div class="col-sm-12">
+              <select [(ngModel)]="authType" (change)="displayLoginType()" class="form-control">
+        <option value='1'>Mobile</option>
+        <option value='2'>User</option>
+      </select>
+          </div>
+      </div>
+  </div>
+
+  <div class="row mt-2">
+      <div class="col-sm-6" *ngIf="authType=='1'">
+          <div class="col-sm-12"><label>Login Type</label></div>
+          <div class="col-sm-12">
+              <select [(ngModel)]='loginType' class="form-control">
+        <option *ngFor='let data of loginData' [value]="data.id">
+          {{data.name}}
+        </option>
+      </select>
+          </div>
+      </div>
+
+      <div class="col-sm-6">
+          <div class="col-sm-12"><label>Select Language</label></div>
+          <div class="col-sm-12">
+              <select [(ngModel)]="newCustomer.language_id" name="langugagr" #languageField="ngModel" required id="select_lang" class="form-control">
+            <option *ngFor="let language of languages" [value]="language.id" id="language.lang_name">
+              {{language.lang_name}}</option>
+          </select>
+          </div>
+      </div>
+  </div>
+
+  <div class="row mt-4">
+      <div class="col-sm-4">
+          <div class="col-sm-12"><label>Pan Card</label><span *ngIf="productType=='1'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              
+              <input *ngIf="!newCustomer.panIdImage" type="file" class="form-control" id="pan-card" (change)="handleFileSelection($event,'panId')">
+          </div>
+      </div>
+
+      <div class="col-sm-4">
+          <div class="col-sm-12"><label>Address Proof (Front)</label><span *ngIf="productType=='1'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              
+              <input *ngIf="!newCustomer.uidFrontImage" type="file" class="form-control" id="uid-FrontImage" (change)="handleFileSelection($event,'uidFront')">
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="col-sm-12"><label>Address Proof (Back)</label><span *ngIf="productType=='1'" style="color:red;font-size:16">    *</span></div>
+          <div class="col-sm-12">
+              <input *ngIf="!newCustomer.uidBackImage " type="file" class="form-control" id="uid-BackImage" (change)="handleFileSelection($event,'uidBack')">
+          </div>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-sm-12 mt-4">
+          <button (click)='addFO()' style="margin-left:48%!important;" class="btn btn-primary">Submit</button>
+      </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+</div>
