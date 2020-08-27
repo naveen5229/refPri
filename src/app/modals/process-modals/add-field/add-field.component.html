@@ -27,9 +27,12 @@
                     <label>Is Required?</label>
                     <input type="checkbox" class="form-control" [(ngModel)]="isRequired">
                 </div>
+                <div class="col-3">
+                    <span *ngIf="typeId =='table'" (click)="openAddFieldTable()"><i class="fa fa-table" aria-hidden="true"></i></span>
+                </div>
             </div>
 
-            <div *ngFor="let table of childArray ; let i = index">
+            <!-- <div *ngFor="let table of childArray ; let i = index">
                 <div class="row mb-2" *ngIf="typeId =='table'">
                     <div class="col-3 mr-0">
                         <label>Field Name</label>
@@ -52,7 +55,7 @@
 
                 </div>
 
-            </div>
+            </div> -->
 
             <div class="row mb-2">
                 <div class="col-9">

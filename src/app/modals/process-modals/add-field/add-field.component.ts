@@ -5,6 +5,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { UserService } from '../../../Service/user/user.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AssignFieldsComponent } from '../assign-fields/assign-fields.component';
+import { AddFieldTableComponent } from '../add-field-table/add-field-table.component';
 
 @Component({
   selector: 'ngx-add-field',
@@ -31,11 +32,12 @@ export class AddFieldComponent implements OnInit {
     { id: 'number', name: 'Number' },
     { id: 'date', name: 'Date' },
   ];
-  childArray = [{
-    param: '',
-    type: '',
-    is_required: false,
-  }]
+  // childArray = [{
+  //   param: '',
+  //   type: '',
+  //   is_required: false,
+  // }]
+  childArray = [];
   fixValues = [{
     option: ''
   }];
@@ -133,13 +135,14 @@ export class AddFieldComponent implements OnInit {
   }
 
   Add() {
+    let childArray = this.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info } });
     let tmpJson = {
       param: this.name,
       type: this.typeId,
       drpOption: (this.isFixedValue) ? this.fixValues : null,
       is_required: this.isRequired,
       order: this.order,
-      param_child: this.childArray
+      param_child: childArray
     }
     console.log("type:", this.typeId);
     let params = {
@@ -351,14 +354,19 @@ export class AddFieldComponent implements OnInit {
     console.log("data edit:", data);
     this.typeId = data.param_type;
     this.name = data.param_name;
-    for (let i = 1; i < data._param_child.length; i++) {
-      this.childArray.push({ param: '', type: '', is_required: false, })
+    // for (let i = 1; i < data._param_child.length; i++) {
+    //   this.childArray.push({ param: '', type: '', is_required: false, })
+    // }
+    if (data._param_child && data._param_child.length > 0) {
+      data._param_child.map((ele, index) => {
+        this.childArray.push({ param: '', type: '', order: null, is_required: false, _param_info: null });
+        this.childArray[index]['param'] = ele.param_name;
+        this.childArray[index]['type'] = ele.param_type;
+        this.childArray[index]['order'] = ele.param_order;
+        this.childArray[index]['is_required'] = ele.is_required;
+        this.childArray[index]['_param_info'] = ele._param_info ? ele._param_info : null;
+      });
     }
-    data._param_child.map((ele, index) => {
-      this.childArray[index].param = ele.param_name;
-      this.childArray[index].type = ele.param_type;
-      this.childArray[index].is_required = ele.is_required;
-    });
     this.fixValues = data._param_info ? data._param_info : this.fixValues;
     this.isFixedValue = (data._param_info && data._param_info.length) ? true : false;
     this.isRequired = data.is_required;
@@ -395,6 +403,16 @@ export class AddFieldComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data.response);
+      }
+    });
+  }
+
+  openAddFieldTable() {
+    this.common.params = { data: (this.childArray && this.childArray.length > 0) ? this.childArray : null };
+    const activeModal = this.modalService.open(AddFieldTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log("AddFieldTableComponent:", data);
       }
     });
   }

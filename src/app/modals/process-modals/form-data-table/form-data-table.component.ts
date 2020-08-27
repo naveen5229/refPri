@@ -10,24 +10,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./form-data-table.component.scss']
 })
 export class FormDataTableComponent implements OnInit {
-  additionalFields = [[{
-    "refid": 359,
-    "param_id": 362,
-    "param_name": "COLUMN_3",
-    "param_type": "date",
-    "param_info": null,
-    "is_required": true,
-    "param_value": null
-  },
-  {
-    "refid": 359,
-    "param_id": 360,
-    "param_name": "COLUMN_1",
-    "param_type": "text",
-    "param_info": null,
-    "is_required": true,
-    "param_value": null
-  }]];
+  additionalFields = [];
   tableHeader = null;
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     console.log(this.common.params.additionalform, 'additional data from formdata table')
@@ -46,8 +29,8 @@ export class FormDataTableComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
+
   close(res) {
     this.activeModal.close({ response: res, data: (this.additionalFields && this.additionalFields.length > 0) ? this.additionalFields : null });
   }
@@ -57,12 +40,11 @@ export class FormDataTableComponent implements OnInit {
     temp.forEach(e => {
       e.param_value = (e.param_type == 'date') ? new Date() : null;
     });
-    console.log("temp:", temp);
     this.additionalFields.push(temp);
   }
 
   addTransaction() {
-    console.log("additionalFields:", this.additionalFields);
+    // console.log("additionalFields:", this.additionalFields);
     this.close(true);
   }
 }

@@ -39,11 +39,11 @@ export class TaskNewComponent implements OnInit {
   }
   editType = 0;
   userGroupList = [];
-  
+
   userWithGroup = [];
   bGConditions = [
     {
-      key:'groupId',
+      key: 'groupId',
       class: 'highlight-blue',
       isExist: true
     }
@@ -61,15 +61,15 @@ export class TaskNewComponent implements OnInit {
     this.normalTask.date = currentLast;
     // console.log(aaaaaa,'date from task new component')
     if (this.common.params != null) {
-      console.log(this.common.params.groupList,'groupList from task-new component');
-      this.userList = this.common.params.userList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
+      console.log(this.common.params.groupList, 'groupList from task-new component');
+      this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
       this.userGroupList = this.common.params.groupList;
-      if(this.userGroupList){
-      this.userWithGroup = this.userGroupList.concat(this.userList);
-    }else{
-      this.userWithGroup = this.userList.concat(this.userGroupList);
-    }
-      console.log(this.userWithGroup,'user data')
+      if (this.userGroupList) {
+        this.userWithGroup = this.userGroupList.concat(this.userList);
+      } else {
+        this.userWithGroup = this.userList.concat(this.userGroupList);
+      }
+      console.log(this.userWithGroup, 'user data')
       if (this.common.params.parentTaskId && !this.common.params.editType) {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
         this.parentTaskDesc = this.common.params.parentTaskDesc;
@@ -82,7 +82,7 @@ export class TaskNewComponent implements OnInit {
         this.updateLastDateForm.taskId = this.common.params.parentTaskId;
         // this.updateLastDateForm.date = new Date(this.common.params.editData.expdate);
         this.updateLastDateForm.date = new Date(this.common.params.editData._expdate);
-        this.updateLastDateForm.dateOld = this.common.params.editData.expdate;
+        this.updateLastDateForm.dateOld = this.common.params.editData._expdate;
         this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
       }
     }
@@ -90,7 +90,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.currentDate,'from task new')
+    console.log(this.currentDate, 'from task new')
   }
   getProjectList() {
     this.api.get("AdminTask/serachProject.json").subscribe(res => {
@@ -108,7 +108,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   closeModal(response) {
-    this.activeModal.close({ response: response,returnNewDate:this.returnNewDate });
+    this.activeModal.close({ response: response, returnNewDate: this.returnNewDate });
   }
 
   selectedNormalUser(event) {
@@ -164,17 +164,17 @@ export class TaskNewComponent implements OnInit {
     }
     else {
       let CCUsers = [];
-      this.normalTask.ccUsers.forEach(x=> {
-        if(x.groupId!= null){
+      this.normalTask.ccUsers.forEach(x => {
+        if (x.groupId != null) {
           // CCUsers.push(x.groupuser.filter(user => user._group_id === x.groupId).map((key)=> {return {user_id: key._id}}));
-          x.groupuser.forEach(x2=> {
-            CCUsers.push({user_id:x2._id});
+          x.groupuser.forEach(x2 => {
+            CCUsers.push({ user_id: x2._id });
           })
-        }else{
-          CCUsers.push({user_id: x.id});
+        } else {
+          CCUsers.push({ user_id: x.id });
         }
       });
-        console.log(CCUsers,'from save');
+      console.log(CCUsers, 'from save');
 
       const params = {
         userId: this.userId,
