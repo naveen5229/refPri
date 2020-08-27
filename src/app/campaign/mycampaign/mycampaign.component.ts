@@ -564,7 +564,7 @@ export class MycampaignComponent implements OnInit {
     };
     console.log(campaign);
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: null, actionDataList: null, nextactionDataList: null };
-    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignByType(type);
     });
@@ -621,7 +621,7 @@ export class MycampaignComponent implements OnInit {
         title: preText + ' Lead',
         description: `<b>` + 'Are You Sure You ' + preText + ` this Lead <b>`,
       }
-      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
           this.updateCampaignStatus(campaign, type, status);
