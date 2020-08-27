@@ -123,23 +123,23 @@ export class AddTransactionComponent implements OnInit {
     });
   }
 
-  AdditionalForm(arraytype,i){
+  AdditionalForm(arraytype, i) {
     let additionalData;
-    if(arraytype === 'oddArray'){
+    if (arraytype === 'oddArray') {
       additionalData = this.oddArray[i]._param_child;
-    }else if(arraytype === 'evenArray'){
+    } else if (arraytype === 'evenArray') {
       additionalData = this.evenArray[i]._param_child;
     }
-    console.log(additionalData,'final data')
-    this.common.params = { additionalform : additionalData }
+    console.log(additionalData, 'final data')
+    this.common.params = { additionalform: additionalData }
     const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        console.log(data.data,'response')
-        if(data.data){
-          if(arraytype === 'oddArray'){
+        console.log(data.data, 'response')
+        if (data.data) {
+          if (arraytype === 'oddArray') {
             this.oddArray[i]._param_child = data.data;
-          }else if(arraytype === 'evenArray'){
+          } else if (arraytype === 'evenArray') {
             this.evenArray[i]._param_child = data.data;
           }
         }
@@ -192,7 +192,7 @@ export class AddTransactionComponent implements OnInit {
       }
       return copyDetails;
     });
-    console.log(details,'updated details from add transaction')
+    console.log(details, 'updated details from add transaction')
 
     const params = {
       email: this.transForm.emailStatic,
@@ -257,6 +257,9 @@ export class AddTransactionComponent implements OnInit {
       if (dd.r_coltype == 'date') {
         dd.r_value = dd.r_value ? new Date(dd.r_value) : new Date();
         console.log("date==", dd.r_value);
+      }
+      if (dd.r_coltype == 'checkbox') {
+        dd.r_value = (dd.r_value == "true") ? true : false;
       }
       if (dd.r_fixedvalues) {
         dd.r_fixedvalues = dd.r_fixedvalues;
