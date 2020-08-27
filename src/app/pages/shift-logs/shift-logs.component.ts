@@ -137,7 +137,7 @@ export class ShiftLogsComponent implements OnInit {
 
   showShiftLogPopup() {
     this.common.params = null;
-    const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getShiftLogs();

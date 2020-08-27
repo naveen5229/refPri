@@ -443,10 +443,7 @@ nb-layout-header nav {
     max-height: 100px;
      overflow: auto;
 }
-.modal-body {
-    max-height:  calc(100vh - 200px);
-    overflow: auto;
-}
+
 .logo:focus {
     outline: none!important;
 }
