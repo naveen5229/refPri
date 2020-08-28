@@ -5,41 +5,52 @@
 </button>
 </div>
 <div class="modal-body">
-    <div class="container">
-        <div class="row">
-            <div class="col-4">
-                <label><b>Process: </b></label>
-                <label>{{ actionForm.process.name}}</label>
-            </div>
-            <div class="col-4">
-                <label><b>State: </b></label>
-                <label>{{ actionForm.state.name}} </label>
-            </div>
-        </div>
-
-        <div class="row mb-2">
-            <div class="col-2 pr-0">
-                <label>name<span class="text-danger">*</span></label>
-                <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
-            </div>
-            <div class="col-2 pr-0">
-                <label>Threshold</label>
-                <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)" [(ngModel)]="actionForm.threshold">
-            </div>
-            <div class="col-4 pr-0">
-                <label>Next Action</label>
-                <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action" (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
-            </div>
-            <div class="col-4 pr-0">
-                <label>Modes</label>
-                <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId" autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true" (onSelected)="actionForm.modes = $event">
-                </auto-suggestion>
-            </div>
-        </div>
-
-    </div>
+    <!-- <div class="container"> -->
     <div class="row">
-        <div class="col-12 text-right">
+        <div class="col-4">
+            <label><b>Process: </b></label>
+            <label>{{ actionForm.process.name}}</label>
+        </div>
+        <div class="col-4">
+            <label><b>State: </b></label>
+            <label>{{ actionForm.state.name}} </label>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-2 pr-0">
+            <label>name<span class="text-danger">*</span></label>
+            <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
+        </div>
+        <div class="col-2 pr-0">
+            <label>Threshold</label>
+            <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)" [(ngModel)]="actionForm.threshold">
+        </div>
+        <div class="col-4 pr-0">
+            <label>Next Action</label>
+            <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action" (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
+        </div>
+        <div class="col-4 pr-0">
+            <label>Modes</label>
+            <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId" autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true" (onSelected)="actionForm.modes = $event">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <!-- </div> -->
+    <div class="row">
+        <div class="col-2 pr-0">
+            <label>Is Default</label>
+            <input type="checkbox" class="form-control" [checked]="actionForm.isDefault" (change)="actionForm.isDefault = !actionForm.isDefault" />
+        </div>
+        <div class="col-6 pr-0">
+            <span *ngIf="actionForm.isDefault">
+            <label>Default Owner<span class="text-danger">*</span></label>
+            <auto-suggestion [data]="adminList" display="name" placeholder="select Default Owner" name="defaultOwn" id="defaultOwn" (onSelected)="actionForm.defaultOwner.id=($event.id);" [preSelected]="{name:actionForm.defaultOwner.name}" autocomplete="off">
+            </auto-suggestion>
+            </span>
+        </div>
+        <div class="col-4 text-right">
             <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveProcessAction()">{{button}}</button>
         </div>

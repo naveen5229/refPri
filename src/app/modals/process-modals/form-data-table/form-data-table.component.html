@@ -16,18 +16,22 @@
             <tbody>
                 <tr *ngFor="let tr of additionalFields;let i=index">
                     <td *ngFor="let td of tr;let vi=index">
-                        <input type="text" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'text'  && !td.r_fixedvalues">
-                        <input type="number" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'number'  && !td.r_fixedvalues">
+                        <input type="text" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'text'  && !td.param_info">
+                        <input type="number" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'number'  && !td.param_info">
                         <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value" *ngIf="td.param_type =='date'" [isTime]="false">
                         </uj-date-time-picker>
-                        <select [(ngModel)]="td.param_value" class="form-conrol col-12" *ngIf="td.r_fixedvalues">
-                            <option [value]="td.option" *ngFor="let fixValue of td.r_fixedvalues">
+                        <select [(ngModel)]="td.param_value" class="form-conrol col-12" *ngIf="td.param_info">
+                            <option [value]="td.option" *ngFor="let fixValue of td.param_info">
                                 {{fixValue.option}}</option>
                         </select>
                     </td>
                     <td>
-                        <i *ngIf="i == additionalFields.length-1" class="fa fa-plus text-primary cursor-pointer" title="Add Row" (click)="AddTableRow()"></i>
-                        <i *ngIf="i !== 0" class="fa fa-trash" title="Remove Row" (click)="additionalFields.splice(i,1)"></i>
+                        <button *ngIf="i == additionalFields.length-1" type="button" class="btn btn-bg-transparent" title="Add Row" (click)="AddTableRow()">
+                            <i class="fa fa-plus text-primary cursor-pointer"></i>
+                        </button>
+                        <button *ngIf="i !== 0" type="button" class="btn btn-bg-transparent" title="Remove Row" (click)="additionalFields.splice(i,1)">
+                            <i  class="fa fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -36,7 +40,7 @@
 
     <div class="row">
         <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Add</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
         </div>
     </div>
 </div>
