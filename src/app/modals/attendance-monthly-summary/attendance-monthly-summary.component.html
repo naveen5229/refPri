@@ -21,9 +21,9 @@
             <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
         </div>
     </div>
-    <br>
+  
 
-    <div class="row form-group" style="overflow: auto;" *ngIf="!reportType">
+    <div class="row mt-1" style="overflow: auto;" *ngIf="!reportType">
         <div class="col-12">
             <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover" id='attendanceSummary'>
                 <thead class="thead" style="background-color: #c0b2b2">
@@ -45,8 +45,8 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="reportType=='final'">
-        <div class="col-12">Final Report</div>
+    <div class="row mt-2" *ngIf="reportType=='final'">
+        <div class="col-12"><span class="subhead">Final Report</span></div>
         <smart-table [data]="tableFinalAttendanceList.data" [settings]="tableFinalAttendanceList.settings" id="tableFinalAttendanceList">
         </smart-table>
     </div>
