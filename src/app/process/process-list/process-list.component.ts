@@ -3,8 +3,6 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddProcessComponent } from '../../modals/process-modals/add-process/add-process.component';
-import { DataMappingComponent } from '../../modals/campaign-modals/data-mapping/data-mapping.component';
-import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
 import { AddActionComponent } from '../../modals/process-modals/add-action/add-action.component';
 import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
@@ -200,7 +198,7 @@ export class ProcessListComponent implements OnInit {
       state_id: null,
       state_name: null
     }
-    this.common.params = { actionData: param };
+    this.common.params = { actionData: param, adminList: this.adminList };
     const activeModal = this.modalService.open(AddActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {

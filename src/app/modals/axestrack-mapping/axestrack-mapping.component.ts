@@ -17,6 +17,8 @@ export class AxestrackMappingComponent implements OnInit {
   vehicleData=[];
   elparid='';
   axesparid='';
+  axespartnerName='';
+  axcompanyName='';
   title='';
   userName='';
   userMobile='';
@@ -95,6 +97,7 @@ export class AxestrackMappingComponent implements OnInit {
   getAxestrackPartner(event){
     console.log("Event:",event);
     this.axesparid=event.provider_id;
+    this.axespartnerName=event.provider_name;
   }
 
 
@@ -103,7 +106,8 @@ export class AxestrackMappingComponent implements OnInit {
     this.common.loading++;
     let param={
       elPartnerId:this.elparid,
-      axPartnerId:this.axesparid
+      axPartnerId:this.axesparid,
+      axPartnerName:this.axespartnerName
     }
     console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/savePartnerMapping.json',param)
@@ -187,13 +191,15 @@ export class AxestrackMappingComponent implements OnInit {
   getAxestrackCompany(event){
     console.log("Event:",event);
     this.axesparid=event.company_id;
+    this.axcompanyName=event.company_name;
   }
 
   saveCompanyMapping(){
     this.common.loading++;
     let param={
       elCompanyId:this.elparid,
-      axCompanyId:this.axesparid
+      axCompanyId:this.axesparid,
+      axCompanyName:this.axcompanyName
     }
     console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/saveCompanyMapping.json',param)
