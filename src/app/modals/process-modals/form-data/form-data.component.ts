@@ -93,7 +93,7 @@ export class FormDataComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
-        this.common.showError(err);
+        this.common.showError();
         console.error('Api Error:', err);
       });
     // }
