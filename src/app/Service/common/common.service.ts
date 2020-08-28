@@ -6,6 +6,7 @@ import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
+import { Router } from '@angular/router';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -27,7 +28,8 @@ export class CommonService {
   }
   constructor(private toastrService: NbToastrService,
     // private http: Http,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    public router: Router) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -307,7 +309,7 @@ export class CommonService {
   }
 
 
-  getPDFFromTableId(tblEltId,left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?, Title?) {
+  getPDFFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?, Title?) {
     // console.log("Action Data:", doNotIncludes); return;
     //remove table cols with del class
     let tblelt = document.getElementById(tblEltId);
@@ -733,6 +735,12 @@ export class CommonService {
     document.body.removeChild(element);
   }
   // end: download by url
+
+  gotoPage(route) {
+    if (route) {
+      this.router.navigate([route]);
+    }
+  }
 
 }
 

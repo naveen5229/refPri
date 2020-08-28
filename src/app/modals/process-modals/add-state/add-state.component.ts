@@ -79,7 +79,7 @@ export class AddStateComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
-        this.common.showError(err);
+        this.common.showError();
         console.log('Err:', err);
       });
   }

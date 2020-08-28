@@ -164,41 +164,41 @@ export class InfoMatrixComponent implements OnInit {
     this.common.loading++;
     this.api.post('Campaigns/saveCampaignPrimaryInfoMatrix', params)
       .subscribe(res => {
-console.log(res);
-this.activeModal.close(false);
+        console.log(res);
+        this.activeModal.close(false);
         this.common.loading--;
 
       });
-    
+
   }
 
   submitFormData(infoType) {
     console.log(this.formData);
     console.log(this.formList);
-   
-    if (this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null) ) {
+
+    if (this.formData.length == 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
       this.common.showError('Please Fill All The Field');
     } else {
 
-      if (this.formData.length > 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null) ) {
+      if (this.formData.length > 1 && (this.formData[0]['param'] == '' || this.formData[0]['order'] == null)) {
         console.log(this.formData);
         console.log(this.formList);
 
 
         this.formData.shift();
-      } 
-      
-        console.log(this.formData); 
-        console.log(this.formList);
+      }
 
-        const sentFormData = this.formData.concat(this.formList);
+      console.log(this.formData);
+      console.log(this.formList);
+
+      const sentFormData = this.formData.concat(this.formList);
       console.log(sentFormData);
 
       if (this.isEdit) {
         console.log(this.formData);
         this.formData.forEach(item => {
           if (item.param_info.length && item.param_info.length > 1 && item.param_info[0].option == null) {
-               item.param_info.shift();
+            item.param_info.shift();
           }
           return item;
         });
@@ -293,7 +293,7 @@ this.activeModal.close(false);
         this.common.loading--;
       }, err => {
         this.common.loading--;
-        this.common.showError(err);
+        this.common.showError();
         console.log('Error: ', err);
       });
   }

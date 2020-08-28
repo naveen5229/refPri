@@ -129,7 +129,7 @@ const routes: Routes = [{
     {
       path: 'module-report',
       component: ModuleReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'employee-daywise-report',
@@ -195,19 +195,19 @@ const routes: Routes = [{
     {
       path: 'task',
       component: TaskComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'user-mapping',
       component: UserMappingComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'companykyc',
       component: CompanykycComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'task-scheduled',
