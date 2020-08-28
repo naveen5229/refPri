@@ -52,6 +52,7 @@ import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
 import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
+import { PersonalisedDashboardComponent } from '../process/personalised-dashboard/personalised-dashboard.component';
 
 const routes: Routes = [{
   path: '',
@@ -310,6 +311,11 @@ const routes: Routes = [{
     {
       path: 'process-admin',
       component: ProcessAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'personalised-dashboard',
+      component: PersonalisedDashboardComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {
