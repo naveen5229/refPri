@@ -24,6 +24,7 @@
                 </li>
             </ul>
         </div>
+        <div class="table-responsive">
         <table *ngIf="activeTab=='Pending WorkLogs'" class="table table-bordered mt-1">
             <thead class="thead" style="background-color:lightgrey">
                 <tr>
@@ -54,7 +55,8 @@
                 </tr>
             </tbody>
         </table>
-        <div *ngIf="activeTab=='Review WorkLogs'">
+        </div>
+        <div *ngIf="activeTab=='Review WorkLogs'" class="table-responsive">
             <table class="table table-border mt-1">
                 <thead class="thead">
                     <tr>
@@ -96,6 +98,7 @@
                 </tbody>
             </table>
         </div>
+        <div class="table-responsive">
         <table *ngIf="activeTab=='Complete WorkLogs'" class="table table-border mt-1">
             <thead class="thead">
                 <tr>
@@ -124,5 +127,6 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </nb-card-body>
 </nb-card>

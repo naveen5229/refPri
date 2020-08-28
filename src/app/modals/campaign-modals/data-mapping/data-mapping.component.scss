@@ -9,4 +9,15 @@ input.page-box {
   width: 16px;
   height: 16px !important;
   cursor: pointer;
+  margin-top: 3px;
+}
+label {
+  margin-bottom: 0.3rem;
+}
+.modal-body{
+  max-height: calc(100vh - 145px);
+  overflow: auto;
+}
+.modal-header h5 {
+  font-size: 0.9rem!important;
 }
