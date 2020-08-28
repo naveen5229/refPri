@@ -40,7 +40,7 @@
           <div class="col-6">
           <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
           <div class="col-8" style="display:inline-block">
-            <auto-suggestion (onSelected)="getElogistPartner($event)" [display]="['name','mobileno']" [data]="partnerMapping"
+            <auto-suggestion (onSelected)="getElogistPartner($event)" [display]="['name','mobileno','ax_provider_name']" [data]="partnerMapping"
             placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
             </auto-suggestion>
           </div>
@@ -86,7 +86,7 @@
     <div class="col-6">
       <label class="col-4" style="display:inline-block;" >Company User</label>
       <div class="col-8" style="display:inline-block">
-        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno']" [data]="companyData"
+        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno','ax_company_name']" [data]="companyData"
         placeholder="Company User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
         </auto-suggestion>
       </div>
