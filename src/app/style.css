@@ -88,7 +88,9 @@ input::placeholder {
     outline: none;
     font-size: 30px;
 }
-
+.modal-footer {
+    padding: .5rem 1rem;
+}
 .control-icon.nb-notifications::before {
     content: "\f0f3";
     display: block;
