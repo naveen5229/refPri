@@ -169,7 +169,7 @@ export class AddActionComponent implements OnInit {
 
   actionIcons(action) {
     let icons = [
-      // { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
+      { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
       { class: "fas fa-edit", title: "Edit Action", action: this.editAction.bind(this, action) },
       { class: "fas fa-plus-square", title: "Add Action Form Field", action: this.openFieldModal.bind(this, action) },
     ];
@@ -200,9 +200,10 @@ export class AddActionComponent implements OnInit {
 
   deleteAction(row) {
     let params = {
-      campTarActId: row._camptaractid,
+      processId: this.actionForm.process.id,
+      requestId: row._action_id,
     }
-    if (row._camptaractid) {
+    if (row._action_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -211,15 +212,22 @@ export class AddActionComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Processes/deleteAction', params)
-            .subscribe(res => {
-              this.common.loading--;
-              this.common.showToast(res['msg']);
-              this.getActionList();
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+          this.api.post('Processes/deleteProcessAction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['data'][0].y_msg);
+                this.getActionList();
+              } else {
+                this.common.showError(res['data'][0].y_msg);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
         }
       });
     }

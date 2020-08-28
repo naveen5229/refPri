@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="row mb-2">
+                <div class="col-3 mr-0">
+                    <label>Column Name</label>
+                    <input type="text" name="name" id="name" [(ngModel)]="childArray.param" class="form-control" maxlength="25">
+                </div>
+                <div class="col-3 mr-0">
+                    <label>Type</label>
+                    <select class="form-control" [(ngModel)]="childArray.type">
+                  <option *ngFor="let type of types;" [value]="type.id" class="form-control">{{type.name}}</option>
+                </select>
+                </div>
+                <div class="col-3 mr-0">
+                    <label>Order</label>
+                    <input type="number" min="0" [(ngModel)]="childArray.order" class="form-control" placeholder="order">
+                </div>
+
+                <div class="col-3">
+                    <label>Is Required?</label>
+                    <input type="checkbox" class="form-control" [(ngModel)]="childArray.is_required">
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-9">
+                    <div *ngIf="childArray.type =='text' || childArray.type =='number' " class="row">
+                        <div class="col-4">
+                            <label>
+                              <input type="checkbox" [(ngModel)]="isFixedValue">
+                              Is Fixed Value ?
+                          </label>
+                        </div>
+                        <div class="col-8" *ngIf="isFixedValue">
+                            <div class="row" *ngFor="let fixValue of fixValues; let i = index">
+                                <div class="col-8">
+                                    <input type="text" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
+                                </div>
+                                <div class="col-4">
+                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue(fixvalue.value)"></i>&nbsp;
+                                    <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="3">
+                    <div class="col-3 text-right">
+                        <button *ngIf="childArray.index!=null" class="btn btn-danger btn-sm" name="reset" (click)="resetData()">{{btn2}}</button>
+                        <button class="btn btn-primary btn-sm" name="submit" (click)="Add()">{{btn1}}</button>
+                    </div>
+                </div>
+            </div>
+            <smart-table [data]="table.data" [settings]="table.settings" id="tableColumnList"></smart-table>
+
+            <div class="row">
+                <div class="col-12 text-right">
+                    <button class="btn btn-primary btn-sm" name="openAssignField" (click)="closeModal(true)">Add Columns</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

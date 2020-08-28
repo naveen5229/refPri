@@ -101,6 +101,7 @@ import { AddTransactionContactComponent } from './modals/process-modals/add-tran
 import { AddDashboardFieldComponent } from './modals/process-modals/add-dashboard-field/add-dashboard-field.component';
 import { ViewDashboardComponent } from './modals/process-modals/view-dashboard/view-dashboard.component';
 import { FormDataTableComponent } from './modals/process-modals/form-data-table/form-data-table.component';
+import { AddFieldTableComponent } from './modals/process-modals/add-field-table/add-field-table.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -169,7 +170,8 @@ const PAGE_COMPONENTS = [
   AddTransactionContactComponent,
   AddDashboardFieldComponent,
   ViewDashboardComponent,
-  FormDataTableComponent
+  FormDataTableComponent,
+  AddFieldTableComponent
 ];
 
 @NgModule({
