@@ -21,6 +21,7 @@ export class AddStateComponent implements OnInit {
   processName = null;
   requestId = null;
   threshold = null;
+  isDefault = false;
 
   data = [];
   table = {
@@ -62,7 +63,8 @@ export class AddStateComponent implements OnInit {
       type: this.typeId,
       nextStates: (this.nextStates && this.nextStates.length) ? JSON.stringify(this.nextStates) : null,
       requestId: this.requestId,
-      threshold: this.threshold
+      threshold: this.threshold,
+      isDefault: this.isDefault,
     }
     // console.log("params", params);
     this.common.loading++;
@@ -79,7 +81,7 @@ export class AddStateComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
-        this.common.showError(err);
+        this.common.showError();
         console.log('Err:', err);
       });
   }
@@ -238,6 +240,7 @@ export class AddStateComponent implements OnInit {
     this.processId = this.processId;
     this.requestId = data._state_id;
     this.threshold = (data._threshold) ? data._threshold : null;
+    this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
   }
@@ -249,6 +252,7 @@ export class AddStateComponent implements OnInit {
     // this.nextState = null;
     this.requestId = null;
     this.threshold = null;
+    this.isDefault = false;
     this.btn1 = "Add";
   }
 

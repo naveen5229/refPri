@@ -69,7 +69,7 @@ export class AddActivityLogsComponent implements OnInit {
         }, err => {
           this.common.loading--;
           console.error(err);
-          this.common.showError(err);
+          this.common.showError();
         });
     }
   }

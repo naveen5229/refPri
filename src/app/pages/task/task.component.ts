@@ -12,6 +12,7 @@ import { ReminderComponent } from "../../modals/reminder/reminder.component";
 import { TaskScheduleNewComponent } from "../../modals/task-schedule-new/task-schedule-new.component";
 import { TaskScheduleMasterComponent } from "../../modals/task-schedule-master/task-schedule-master.component";
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
+import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
 // import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
 // import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 // import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
@@ -306,6 +307,19 @@ export class TaskComponent implements OnInit {
       if (data.response) {
         this.getTaskByType(-101);
         this.activeTab = "TasksByMe";
+      }
+    });
+  }
+
+  applyLeave(){
+    this.common.params = {userList: this.adminList  };
+    const activeModal = this.modalService.open(ApplyLeaveComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
       }
     });
   }
