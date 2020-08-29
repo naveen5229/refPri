@@ -24,7 +24,7 @@
                 <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe'; getProcessLeadByType(1)">
                     Action For Me
                 </li>
-                <li [ngClass]="activeTab=='leadsByMe'?'active':''" (click)="activeTab='leadsByMe'; getProcessLeadByType(2)">
+                <li [ngClass]="activeTab=='leadsByMe'?'active':''" (click)="activeTab='leadsByMe';activeSabTab=0; getProcessLeadByType(2)">
                     Txn By Me
                 </li>
                 <li [ngClass]="activeTab=='ownedByMe'?'active':''" (click)="activeTab='ownedByMe'; getProcessLeadByType(6)">
@@ -55,37 +55,39 @@
             <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
             </smart-table>
         </div>
+
         <div *ngIf="activeTab=='leadsByMe'">
             <ul class="tabs_style text-left">
                 <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0;  getProcessLeadByType(2)">
                     Pending
                 </li>
-                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; resetSmartTableData()">
+                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1;resetSearchData(); getProcessLeadByType(8)">
                     Completed
                 </li>
             </ul>
-        </div>
-        <div *ngIf="!activeSabTab">          
-            <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
-            </smart-table>
-        </div>
-        <div *ngIf="activeSabTab==1">
-            <div class="row mb-2" style="z-index: 999;">
-                <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
-                    </uj-date-time-picker>
+            <div *ngIf="!activeSabTab">
+                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
+                </smart-table>
+            </div>
+            <div *ngIf="activeSabTab==1">
+                <div class="row mb-2" style="z-index: 999;">
+                    <div class="col-4">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-4">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(8)">Search</button>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
-                    </uj-date-time-picker>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(8)">Search</button>
-                </div>
-            </div>            
-            <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
-            </smart-table>
+                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
+                </smart-table>
+            </div>
         </div>
+
         <div *ngIf="activeTab=='ccLeads'">
             <smart-table [data]="tableCcLeads.data" [settings]="tableCcLeads.settings" id="tableCcLeads">
             </smart-table>
