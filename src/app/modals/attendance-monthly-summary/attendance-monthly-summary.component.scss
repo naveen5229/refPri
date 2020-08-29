@@ -33,6 +33,7 @@
   smart-table{
     max-height: calc(100vh - 195px);
     display: block;
+    overflow: auto;
   }
   .subhead{
     color: #fff;
