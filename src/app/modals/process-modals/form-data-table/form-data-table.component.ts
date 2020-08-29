@@ -13,12 +13,10 @@ export class FormDataTableComponent implements OnInit {
   additionalFields = [];
   tableHeader = null;
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
-    console.log(this.common.params.additionalform, 'additional data from formdata table')
     this.additionalFields = this.common.params.additionalform;
-    this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
     console.log("additionalFields:", this.additionalFields);
-    console.log("tableHeader:", this.tableHeader);
     if (this.additionalFields && this.additionalFields.length > 0) {
+      this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
       this.additionalFields.forEach(element => {
         element.forEach(e => {
           if (e.param_type == 'date') {
