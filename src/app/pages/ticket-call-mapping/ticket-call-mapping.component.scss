@@ -8,7 +8,8 @@
   // }
 
 
-  .smrt-table{
+  smart-table{
     display: block;
-    height: calc(100vh - 188px);
+    max-height: calc(100vh - 188px);
+    overflow: auto;
 }

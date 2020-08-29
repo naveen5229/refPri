@@ -25,7 +25,8 @@
 }
 smart-table{
     display: block;
-    height: calc(100vh - 186px);
+    max-height: calc(100vh - 186px);
+    overflow: auto;
 }
 .chartbox{
     height: calc(100vh - 186px);

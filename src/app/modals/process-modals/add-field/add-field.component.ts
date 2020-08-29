@@ -275,10 +275,6 @@ export class AddFieldComponent implements OnInit {
     return columns;
   }
 
-  // formatTitle(title) {
-  //   return title.charAt(0).toUpperCase() + title.slice(1);
-  // }
-
   actionIcons(row) {
     let icons = [];
     icons.push(
@@ -416,13 +412,13 @@ export class AddFieldComponent implements OnInit {
     });
   }
 
-  closeOptionModal() {
-    document.getElementById("optionModal").style.display = "none";
-  }
+  // closeOptionModal() {
+  //   document.getElementById("optionModal").style.display = "none";
+  // }
 
-  openOptionModal(row) {
-    document.getElementById("optionModal").style.display = "block";
-  }
+  // openOptionModal(row) {
+  //   document.getElementById("optionModal").style.display = "block";
+  // }
 
 }
 
