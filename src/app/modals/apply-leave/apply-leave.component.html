@@ -10,13 +10,13 @@
   <div class="row mb-2">
       <div class="offset-3 col-3">
           <label class="form-check-inline">
-          <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isDate">
+          <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isDate" (change)="datereset()">
           Single Day Leave
         </label>
       </div>
       <div class="col-3">
           <label class="form-check-inline">
-          <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isDate">
+          <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isDate" (change)="datereset()">
           Multiple Day Leave
         </label>
       </div>
@@ -27,7 +27,7 @@
         <label>Date:<span class="text-danger">*</span></label>
     </div>
     <div class="col-6">
-        <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.Date.startDate=$event" [dateTimeValue]="LeaveArray.Date.startDate">
+        <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.startDate=$event" [dateTimeValue]="currentDate">
         </uj-date-time-picker>
     </div>
   </div>
@@ -39,7 +39,7 @@
           <label>From:<span class="text-danger">*</span></label>
       </div>
       <div class="col-6">
-          <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.Date.startDate=$event" [dateTimeValue]="LeaveArray.Date.startDate">
+          <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.startDate=$event" [dateTimeValue]="currentDate">
           </uj-date-time-picker>
       </div>
       </div>
@@ -51,7 +51,7 @@
           <label>To:<span class="text-danger">*</span></label>
       </div>
       <div class="col-6">
-          <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.Date.startDate=$event" [dateTimeValue]="LeaveArray.Date.endDate">
+          <uj-date-time-picker [mind]="LeaveArray.startDate?LeaveArray.startDate:nextDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.endDate=$event" [dateTimeValue]="LeaveArray.startDate?LeaveArray.startDate:nextDate">
           </uj-date-time-picker>
       </div>
       </div>
@@ -108,7 +108,7 @@
 
   <div class="row mt-1">
       <div class="col-12 text-right">
-          <button class="btn btn-primary text-capitalize" id="button"(click)="requesLeave()" >{{btn}}</button>
+          <button class="btn btn-primary text-capitalize" id="button"(click)="requestLeave()" >{{btn}}</button>
       </div>
   </div>
 

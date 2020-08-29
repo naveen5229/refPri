@@ -23,25 +23,28 @@
                     <input type="number" min="0" [(ngModel)]="order" class="form-control" placeholder="order">
                 </div> -->
 
-                <div class="col-3">
+                <div class="col-2 pt-3">
                     <label>Is Required?</label>
-                    <input type="checkbox" class="form-control" [(ngModel)]="isRequired">
+                </div>
+                <div class="col-1 pt-3">
+                    <input type="checkbox" [(ngModel)]="isRequired">
                 </div>
                 <div class="col-3 pt-4">
                     <span *ngIf="typeId =='table'" class="cursor-pointer" title="Add Table Column" (click)="openAddFieldTable()"><i class="fa fa-table" aria-hidden="true"></i></span>
                 </div>
             </div>
 
+
             <div class="row mb-2">
                 <div class="col-9">
                     <div *ngIf="typeId =='text' || typeId =='number' " class="row">
-                        <div class="col-4">
-                            <label>
-                                <input type="checkbox" [(ngModel)]="isFixedValue">
-                                Is Fixed Value ?
-                            </label>
+                        <div class="col-1">
+                            <input type="checkbox" [(ngModel)]="isFixedValue">
                         </div>
-                        <div class="col-8" *ngIf="isFixedValue">
+                        <div class="col-3">
+                            <label> Is Fixed Value ?</label>
+                        </div>
+                        <div class="col-6 custdrop" *ngIf="isFixedValue">
                             <div class="row" *ngFor="let fixValue of fixValues; let i = index">
                                 <div class="col-8">
                                     <input type="text" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
@@ -55,11 +58,10 @@
                     </div>
 
                 </div>
-                <div class="3">
-                    <div class="col-3 text-right">
-                        <button *ngIf="fieldId" class="btn btn-danger btn-sm" name="reset" (click)="resetData()">{{btn2}}</button>
-                        <button class="btn btn-primary btn-sm" name="submit" (click)="Add()">{{btn1}}</button>
-                    </div>
+                <div class="col-3 text-right">
+                    <button *ngIf="fieldId" class="btn btn-danger btn-sm mr-1" name="reset" (click)="resetData()">{{btn2}}</button>
+                    <button class="btn btn-primary btn-sm" name="submit" (click)="Add()">{{btn1}}</button>
+
                 </div>
             </div>
             <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField"></smart-table>
@@ -88,7 +90,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="color:#fff;">Add Option</h4>
+                <h5 class="modal-title">Add Option</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeOptionModal()">&times;</button>
             </div>
             <div class="modal-body">
