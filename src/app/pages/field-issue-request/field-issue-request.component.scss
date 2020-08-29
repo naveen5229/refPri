@@ -53,8 +53,9 @@
 }
 smart-table{
     display: block;
-    height: calc(100vh - 170px);
+    max-height: calc(100vh - 170px);
+    overflow: auto;
 }
 .seconlevel-tables{
-    height: calc(100vh - 212px);
+    max-height: calc(100vh - 212px);
 }

@@ -29,7 +29,7 @@
                 <button type="submit" (click)="missedCallLogs()" class="btn btn-primary btn-sm">Missed Call Logs</button>
             </div>
         </div>  
-        <smart-table *ngIf="ticketList.length!=0" [data]="table.data" [settings]="table.settings" id="pendinglist" class="smrt-table">
+        <smart-table *ngIf="ticketList.length!=0" [data]="table.data" [settings]="table.settings" id="pendinglist">
         </smart-table>
         <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
     </nb-card-body>

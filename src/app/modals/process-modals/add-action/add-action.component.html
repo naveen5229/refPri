@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="row mb-2">
+    <div class="row">
         <div class="col-2 pr-0">
             <label>name<span class="text-danger">*</span></label>
             <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
@@ -39,11 +39,13 @@
 
     <!-- </div> -->
     <div class="row">
-        <div class="col-2 pr-0">
+        <div class="col-2 pr-0 pt-3">
             <label>Is Default</label>
-            <input type="checkbox" class="form-control" [checked]="actionForm.isDefault" (change)="actionForm.isDefault = !actionForm.isDefault" />
         </div>
-        <div class="col-6 pr-0">
+        <div class="col-2 pr-0 pt-3">
+            <input type="checkbox" [checked]="actionForm.isDefault" (change)="actionForm.isDefault = !actionForm.isDefault" />
+        </div>
+        <div class="col-4 pr-0">
             <span *ngIf="actionForm.isDefault">
             <label>Default Owner<span class="text-danger">*</span></label>
             <auto-suggestion [data]="adminList" display="name" placeholder="select Default Owner" name="defaultOwn" id="defaultOwn" (onSelected)="actionForm.defaultOwner.id=($event.id);" [preSelected]="{name:actionForm.defaultOwner.name}" autocomplete="off">
@@ -51,17 +53,14 @@
             </span>
         </div>
         <div class="col-4 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false)">Cancel</button>
-            <button class="btn btn-primary btn-sm" type='submit' (click)="saveProcessAction()">{{button}}</button>
+            <button class="btn btn-danger btn-sm mr-2 mt-4" type="button" (click)="closeModal(false)">Cancel</button>
+            <button class="btn btn-primary btn-sm mt-4" type='submit' (click)="saveProcessAction()">{{button}}</button>
         </div>
     </div>
-</div>
-
-<div class="modal-footer">
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-12">
             <smart-table [data]="table.data" [settings]="table.settings"></smart-table>
         </div>
     </div>
-
 </div>
+

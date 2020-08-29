@@ -40,12 +40,10 @@
             <button *ngIf="form.requestId" class="btn btn-danger btn-sm mt-2 ml-2" name="reset" (click)="resetData()">{{btn2}}</button>
         </div>
     </div>
-</div>
-
-<div class="modal-footer">
-    <div class="row">
+    <div class="row mt-1">
         <div class="col-12">
             <smart-table [data]="table.data" [settings]="table.settings"></smart-table>
         </div>
     </div>
 </div>
+

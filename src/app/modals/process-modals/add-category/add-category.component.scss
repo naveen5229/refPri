@@ -1,0 +1,8 @@
+:host ::ng-deep .tableFixHead{
+    height: auto !important;
+}
+smart-table{
+    display: block;
+    max-height: calc(100vh - 164px);
+    overflow: auto;
+}

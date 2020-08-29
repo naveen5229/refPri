@@ -1,6 +1,7 @@
 smart-table{
     display: block;
-    height: calc(100vh - 168px);
+    max-height: calc(100vh - 168px);
+    overflow: auto;
 }
 .complt-lead{
     height: calc(100vh - 198px);
