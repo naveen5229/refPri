@@ -14,5 +14,6 @@
 }
 smart-table{
     display: block;
-    height: calc(100vh - 124px);
+    max-height: calc(100vh - 124px);
+    overflow: auto;
 }

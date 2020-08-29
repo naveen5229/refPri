@@ -311,8 +311,8 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  applyLeave(){
-    this.common.params = {userList: this.adminList  };
+  applyLeave() {
+    this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
       container: "nb-layout",
@@ -320,6 +320,8 @@ export class TaskComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
+        this.getTaskByType(-101);
+        this.activeTab = "TasksByMe";
       }
     });
   }
@@ -1488,6 +1490,14 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
+        if (ticket._tktype == 104) {//leave reject
+          icons.push({
+            class: "fa fa-times text-danger",
+            action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
+            txt: "",
+            title: "Mark Rejected",
+          });
+        }
       } else if (ticket._status == 3 && [101, 102].includes(ticket._tktype)) {
         icons.push({
           class: "fa fa-play-circle",
@@ -1534,7 +1544,7 @@ export class TaskComponent implements OnInit {
         });
         // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       } else if (
-        (ticket._tktype == 101 || ticket._tktype == 102) &&
+        ([101, 102, 104].includes(ticket._tktype)) &&
         ticket._cc_user_id &&
         !ticket._cc_status
       ) {
