@@ -26,6 +26,8 @@
                 </div>
             </div>
             <div class="col-4 text-right">
+
+                <button class="btn btn-primary btn-sm mr-2" title="Apply Leave" (click)="applyLeave()">Leave</button>
                 <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/my-process')">Go To Process</button>
                 <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
                     <i class="fa fa-plus" style="font-size:12px;"></i> <b>ST</b>
@@ -35,7 +37,6 @@
                 </button>
                 <button class="btn btn-primary btn-sm" title="Add Normal Task" (click)="showTaskPopup()"><i
                     class="fa fa-plus"></i></button>
-                <!-- <button class="btn btn-primary btn-sm" title="Add Normal Task" (click)="applyLeave()">Req Leave</button> -->
 
                 <!-- <span (click)="assignModal()">assign</span> -->
             </div>

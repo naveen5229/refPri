@@ -20,6 +20,7 @@ activeTab = 'leadsForMe';
 adminList = [];
 processList = [];
 ownedByMeList = [];
+processId=null;
   tableOwnedByMe = {
     data: {
       headings: {},
@@ -66,22 +67,25 @@ ownedByMeList = [];
       console.log(err);
     });
   }
-
-  getProcessLeadByType(type, startDate = null, endDate = null) {
+  
+  getProcessLeadByType(type) {
+    console.log(this.processId,'processid')
     this.common.loading++;
-    startDate = this.common.dateFormatter1(this.searchData.startDate);
-    endDate = this.common.dateFormatter1(this.searchData.endDate);
+    let processid = this.processId._id;
+    let startDate = this.common.dateFormatter1(this.searchData.startDate);
+    let endDate = this.common.dateFormatter1(this.searchData.endDate);
 
+    // return;
     this.resetSmartTableData();
-    let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
-    this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
+    let params = "?processId=" + processid + "&type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
+    this.api.get("Processes/getProcessDashboardData" + params).subscribe(res => {
       this.common.loading--;
       // console.log("data", res['data']);
       if (res['code'] == 1) {
-        if (type == 1) {//for me
+        if (type == 2) {//for me
           this.leadsForMe = res['data'] || [];
           this.setTableLeadsForMe(type);
-        } else if (type == 6) {
+        } else if (type == 1) {
           this.ownedByMeList = res['data'] || [];
           this.setTableOwnedByMe(type);
         }
@@ -219,11 +223,11 @@ ownedByMeList = [];
       ];
     }
 
-    if (type == 1) {//for me
+    if (type == 2) {//for me
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
-    } else if ( type == 6 ) { //by me or owned by me
+    } else if ( type == 1 ) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });

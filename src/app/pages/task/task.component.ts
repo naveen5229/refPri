@@ -320,6 +320,8 @@ export class TaskComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
+        this.getTaskByType(-101);
+        this.activeTab = "TasksByMe";
       }
     });
   }
