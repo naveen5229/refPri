@@ -25,15 +25,20 @@
       <div *ngIf="activeTab=='leadsForMe'">
         <div class="row mb-2" style="z-index: 999;">
           <div class="col-4">
+            <span style="display: flex;">
+                <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="processId = $event" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch"></auto-suggestion>
+            </span>
+          </div>
+          <div class="col-3">
               <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
               </uj-date-time-picker>
           </div>
-          <div class="col-4">
+          <div class="col-3">
               <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
               </uj-date-time-picker>
           </div>
-          <div class="col-4">
-              <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(1)">Search</button>
+          <div class="col-2">
+              <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(2)">Search</button>
           </div>
       </div>
           <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
@@ -41,16 +46,21 @@
       </div>
       <div *ngIf="activeTab=='ownedByMe'">
         <div class="row mb-2" style="z-index: 999;">
-          <div class="col-4">
+            <div class="col-4">
+                <span style="display: flex;">
+                    <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="processId = $event" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess></auto-suggestion>
+                </span>
+              </div>
+          <div class="col-3">
               <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
               </uj-date-time-picker>
           </div>
-          <div class="col-4">
+          <div class="col-3">
               <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
               </uj-date-time-picker>
           </div>
-          <div class="col-4">
-              <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(6)">Search</button>
+          <div class="col-2">
+              <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(1)">Search</button>
           </div>
       </div>
           <smart-table [data]="tableOwnedByMe.data" [settings]="tableOwnedByMe.settings" id="tableOwnedByMe">
