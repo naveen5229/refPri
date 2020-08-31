@@ -27,7 +27,7 @@
             </div>
             <div class="col-4 text-right">
 
-                <button class="btn btn-primary btn-sm mr-2" title="Apply Leave" (click)="applyLeave()">Leave</button>
+                <button class="btn btn-primary btn-sm mr-2 procss" title="Apply Leave" (click)="applyLeave()"><img src="../../assets/images/leave.svg" alt="leave"></button>
                 <button class="btn btn-primary btn-sm mr-2 procss" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="../../assets/images/process.svg" alt="process"></button>
                 <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
                     <i class="fa fa-plus" style="font-size:12px;"></i> <b> ST</b>
@@ -99,6 +99,9 @@
                 <li [ngClass]="activeSabTab==3?'active':''" (click)="activeSabTab=3; filterTaskBySubTab(101,3)">
                     Hold
                 </li>
+                <li [ngClass]="activeSabTab==4?'active':''" (click)="activeSabTab=4; filterTaskBySubTab(101,4)">
+                    Leave
+                </li>
             </ul>
             <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList" class="sl-smart-table">
             </smart-table>
@@ -116,6 +119,9 @@
                 </li>
                 <li [ngClass]="activeSabTab==3?'active':''" (click)="activeSabTab=3; filterTaskBySubTab(-101,3)">
                     Hold
+                </li>
+                <li [ngClass]="activeSabTab==4?'active':''" (click)="activeSabTab=4; filterTaskBySubTab(-101,4)">
+                    Leave
                 </li>
             </ul>
             <smart-table *ngIf="normalTaskByMeList.length!=0" [data]="tableNormalTaskByMe.data" [settings]="tableNormalTaskByMe.settings" id="normalTaskByMeListx" class="sl-smart-table">
