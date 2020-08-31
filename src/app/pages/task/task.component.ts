@@ -1421,7 +1421,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102].includes(ticket._tktype)) {
+      if ([101, 102, 104].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),

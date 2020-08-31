@@ -33,7 +33,7 @@ export class AddFieldTableComponent implements OnInit {
     option: ''
   }];
 
-  data = [];
+  // data = [];
   table = {
     data: {
       headings: {},
@@ -198,6 +198,7 @@ export class AddFieldTableComponent implements OnInit {
   }
 
   resetData() {
+    this.isFixedValue = false;
     this.fixValues = [{
       option: ''
     }];
