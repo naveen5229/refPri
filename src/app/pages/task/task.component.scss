@@ -184,3 +184,9 @@ outline: none;
         width: 22px;
     }
 }
+:host ::ng-deep .tableFixHead{
+   th:last-child{
+      width: 140px;
+   }
+}
+
