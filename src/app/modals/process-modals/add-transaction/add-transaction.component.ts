@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
+import { ChatboxComponent } from '../chatbox/chatbox.component';
 
 @Component({
   selector: 'ngx-add-transaction',
@@ -124,14 +125,14 @@ export class AddTransactionComponent implements OnInit {
   }
 
   AdditionalForm(arraytype, i) {
-    let additionalData;
+    let additionalData = null;
     if (arraytype === 'oddArray') {
       additionalData = this.oddArray[i]._param_child;
     } else if (arraytype === 'evenArray') {
       additionalData = this.evenArray[i]._param_child;
     }
-    console.log(additionalData, 'final data')
-    this.common.params = { additionalform: additionalData }
+    console.log(additionalData, 'final data');
+    this.common.params = { additionalform: (additionalData && additionalData.length > 0) ? additionalData : null };
     const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -183,7 +184,7 @@ export class AddTransactionComponent implements OnInit {
     });
   }
 
-  addTransaction() {
+  addTransaction(isChat = null) {
     this.Details = this.evenArray.concat(this.oddArray);
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -198,6 +199,7 @@ export class AddTransactionComponent implements OnInit {
       email: this.transForm.emailStatic,
 
       processId: this.transForm.process.id,
+      processName: this.transForm.process.name,
       name: this.transForm.name,
       identity: this.transForm.identity,
       priOwnId: this.transForm.priOwn.id,
@@ -220,6 +222,18 @@ export class AddTransactionComponent implements OnInit {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
           this.close(true);
+          if (isChat == 1) {
+            let editData = {
+              transactionid: res['data'][0].y_id,
+              lastSeenId: null,
+              tabType: -99,
+              priOwnId: (params.priOwnId > 0) ? params.priOwnId : null,
+              rowData: { _transactionid: res['data'][0].y_id, _processid: params.processId, _processname: params.processName, identity: params.identity, _pri_own_id: (params.priOwnId > 0) ? params.priOwnId : null }
+            }
+            this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: params.identity, fromPage: 'process' };
+            const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+
+          }
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
