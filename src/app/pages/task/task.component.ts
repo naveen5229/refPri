@@ -2632,6 +2632,11 @@ export class TaskComponent implements OnInit {
         selectedList = this.normalTaskListAll.filter((x) => {
           return x._status == 3;
         });
+      } else if (subTabType == 4) {
+        //leave
+        selectedList = this.normalTaskListAll.filter((x) => {
+          return x._tktype == 104;
+        });
       } else {
         //all
         selectedList = this.normalTaskListAll;
@@ -2654,6 +2659,11 @@ export class TaskComponent implements OnInit {
         //hold
         selectedList = this.normalTaskByMeListAll.filter((x) => {
           return x._status == 3;
+        });
+      } else if (subTabType == 4) {
+        //leave
+        selectedList = this.normalTaskByMeListAll.filter((x) => {
+          return x._tktype == 104;
         });
       } else {
         //all
