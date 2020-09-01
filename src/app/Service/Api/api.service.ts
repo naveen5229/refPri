@@ -7,12 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  // URL: string = 'http://localhost/itrm_webservices/';//komal local
-  // URL: string = 'http://192.168.1.124/itrm_webservices/';//komal local
-
-  URL: string = 'https://dev.elogist.in/itrm_webservices/';
-  URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
-  URLTranstruck: string = 'http://dev.elogist.in/transtrucknew/';
+  // I_URL: string = 'http://localhost/itrm_webservices/';//komal local
+  // I_URL: string = 'http://192.168.1.124/itrm_webservices/';//komal local
 
   I_URL: string = 'http://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'http://dev.elogist.in/booster_webservices/';
@@ -69,7 +65,7 @@ export class ApiService {
       B: '1.0',
       T: '2.9'
     };
-    
+
     const authKey = this.user._details ? this.user._details[authKeyType[apiBase]] : '';
     const version = versions[apiBase];
 
