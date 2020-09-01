@@ -28,6 +28,7 @@ export class AutoSuggestionComponent implements OnInit {
   @Input() seperator: string;
   @Input() data: any;
   @Input() inputId: string;
+  @Input() apiBase: string = 'T';
   @Input() name: string;
   @Input() parentForm: FormGroup;
   @Input() controlName: string;
@@ -130,7 +131,8 @@ export class AutoSuggestionComponent implements OnInit {
       params = '&'
     }
     params += 'search=' + this.searchText;
-    this.api[this.apiMethod](this.url + params)
+    console.log('jrx:', this.apiMethod, this.url, this.apiBase);
+    this.api[this.apiMethod](this.url + params, this.apiBase)
       .subscribe(res => {
         this.suggestions = res['data'];
         if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({ search: this.searchText });
@@ -209,9 +211,9 @@ export class AutoSuggestionComponent implements OnInit {
   classFinder(suggestion) {
     let className = '';
     this.bGConditions.forEach(condition => {
-      if(condition.isExist && suggestion[condition.key]){
+      if (condition.isExist && suggestion[condition.key]) {
         className = condition.class;
-      }else if(!condition.isExist && suggestion[condition.key] == condition.value) {
+      } else if (!condition.isExist && suggestion[condition.key] == condition.value) {
         className = condition.class;
       }
     });
