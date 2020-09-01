@@ -1,8 +1,14 @@
-:host::ng-deep{
-    .tableFixHead{
-        height: auto !important;
-    }
-}
+// :host::ng-deep{
+//     .tableFixHead{
+//         height: auto !important;
+//     }
+// }
+// smart-table{
+//     display: block;
+//     max-height: calc(100vh - 370px);
+//     overflow: auto;
+// }
+
 #devices{
     :host::ng-deep{
         .suggestion{
@@ -13,4 +19,38 @@
 .exel-icon {
     font-size: 30px;
     color: #217346;
+  }
+
+table{
+    margin-bottom: 0rem;
+    thead{
+       display: table;
+       //width: 100%;
+       table-layout: fixed;
+       th{
+        padding: .2rem!important;
+        background: #fff!important;
+        border: 6px solid #000!important;
+        min-width: 100px;
+        word-break: keep-all;
+        white-space: nowrap;
+       }
+     
+     
+    }
+  
+    tbody{
+        overflow-y: auto;
+        display: block;
+        width: 100%;
+        table-layout: fixed;
+        overflow: auto;
+        max-height: calc(100vh - 230px);
+        tr{
+          display: table;
+          table-layout: fixed;
+          width: 100%;
+        }
+    
+    }
   }
