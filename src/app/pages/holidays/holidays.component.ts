@@ -67,7 +67,7 @@ export class HolidaysComponent implements OnInit {
     for (var key in this.holidayList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-        if(key == 'date'){
+        if (key == 'date') {
           headings[key]["type"] = "date";
         }
       }
@@ -179,7 +179,7 @@ export class HolidaysComponent implements OnInit {
   }
 
   sampleCsv() {
-    window.open(this.api.URL + "sample/holidaySample.csv");
+    window.open(this.api.I_URL + "sample/holidaySample.csv");
   }
 
 }
