@@ -269,6 +269,7 @@ export class AddFieldComponent implements OnInit {
           column[key] = { value: doc[key], class: 'black', action: '' };
         }
       }
+      column['style'] = { 'background': this.common.taskStatusBg(doc._col_unassigned) };
       columns.push(column);
     })
 

@@ -24,7 +24,8 @@ export class CommonService {
     ack: "yellow",
     complete: "#32cd32b3",
     reject: "red",
-    hold: "antiquewhite"
+    hold: "antiquewhite",
+    col_unassigned: "#FFDAB9"
   }
   constructor(private toastrService: NbToastrService,
     // private http: Http,
@@ -649,6 +650,8 @@ export class CommonService {
       bg_color = this.taskBgColor.complete;
     } else if (status == 3) {
       bg_color = this.taskBgColor.hold;
+    } else if (status == 0){
+      bg_color = this.taskBgColor.col_unassigned;
     }
     return bg_color;
   }

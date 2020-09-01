@@ -9,6 +9,7 @@ import { UserMappingComponent } from '../../modals/process-modals/user-mapping/u
 import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 import { AddCategoryComponent } from '../../modals/process-modals/add-category/add-category.component';
 import { AddDashboardFieldComponent } from '../../modals/process-modals/add-dashboard-field/add-dashboard-field.component';
+import { SettingsComponent } from '../../modals/process-modals/settings/settings.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -153,7 +154,8 @@ export class ProcessListComponent implements OnInit {
       { class: "fas fa-handshake", action: this.addProcessAction.bind(this, process), title: "Add Action" },
       { class: "fas fa-plus-square", action: this.openFieldModal.bind(this, process, 2), title: "Add Transaction Form Field" },
       { class: "fas fa-plus-square text-primary", action: this.openFieldModal.bind(this, process, 3), title: "Add Primary Info Field" },
-      { class: "fas fa-bars text-primary", action: this.openDashboardFieldModal.bind(this, process, 3), title: "Add Dashboard Field" }
+      { class: "fas fa-bars text-primary", action: this.openDashboardFieldModal.bind(this, process, 3), title: "Add Dashboard Field" },
+      // { class: "fas fa-sliders-h", action: this.opensettingModal.bind(this, process, 3), title: "settings" }
     ];
     return icons;
   }
@@ -220,6 +222,10 @@ export class ProcessListComponent implements OnInit {
     this.common.params = { processId: process._id, processName: process.name };
     const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
+  }
+  opensettingModal(process){
+    this.common.params = { userList: this.adminList, process_info:process };
+    const activeModal = this.modalService.open(SettingsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

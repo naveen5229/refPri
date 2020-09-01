@@ -11,7 +11,7 @@
                 </span>
             </div>
             <div class="col-3 text-right">
-                <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/task')" title="go to task"><i class="fas fa-tasks"></i></button>
+                <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/task')" title="Go To Task"><i class="fas fa-tasks"></i></button>
                 <!-- <button class="btn btn-primary btn-sm mr-2" id="csvCmapaign" (click)="uploadDataByCsv()">Csv </button> -->
                 <button class="btn btn-primary btn-sm" id="addLead" (click)="addTransaction()"><i
                 class="fa fa-plus"></i></button>
@@ -21,7 +21,7 @@
     <nb-card-body>
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe'; getProcessLeadByType(1)">
+                <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe';activeSabTab1=0; getProcessLeadByType(1)">
                     Action For Me
                 </li>
                 <li [ngClass]="activeTab=='leadsByMe'?'active':''" (click)="activeTab='leadsByMe';activeSabTab=0; getProcessLeadByType(2)">
@@ -52,8 +52,35 @@
         </div>
 
         <div *ngIf="activeTab=='leadsForMe'">
-            <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
-            </smart-table>
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab1?'active':''" (click)="activeSabTab1=0;  getProcessLeadByType(1)">
+                    Pending
+                </li>
+                <li [ngClass]="activeSabTab1==1?'active':''" (click)="activeSabTab1=1;resetSearchData(); getProcessLeadByType(9)">
+                    Completed
+                </li>
+            </ul>
+            <div *ngIf="!activeSabTab1">
+                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
+                </smart-table>
+            </div>
+            <div *ngIf="activeSabTab1==1">
+                <div class="row mb-2" style="z-index: 999;">
+                    <div class="col-4">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-4">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(9)">Search</button>
+                    </div>
+                </div>
+                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
+                </smart-table>
+            </div>
         </div>
 
         <div *ngIf="activeTab=='leadsByMe'">
@@ -66,7 +93,7 @@
                 </li>
             </ul>
             <div *ngIf="!activeSabTab">
-                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
+                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe" class="sl-smart-table">
                 </smart-table>
             </div>
             <div *ngIf="activeSabTab==1">
@@ -83,7 +110,7 @@
                         <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(8)">Search</button>
                     </div>
                 </div>
-                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe">
+                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe" class="sl2-smart-table">
                 </smart-table>
             </div>
         </div>
