@@ -16,12 +16,13 @@ export class SettingsComponent implements OnInit {
   process_Info= null;
   stateDataList = [];
   actionDataList = [];
+  PreFilledData = [];
 
   transaction = {
-    primary_Owner: {id:'',name:''},
-    default_State:{id:'',name:''},
-    default_Action:{id:'',name:''},
-    action_Owner:{id:'',name:''},
+    primary_Owner: {id:null,name:''},
+    default_State:{id:null,name:''},
+    default_Action:{id:null,name:''},
+    action_Owner:{id:null,name:''},
     self:false,
     acktoaddUser:false,
     isIdentity:false,
@@ -37,6 +38,7 @@ export class SettingsComponent implements OnInit {
       this.userList = this.common.params.userList;
       this.process_Info = this.common.params.process_info;
       console.log(this.process_Info._id)
+      this.getPreFilledData()
       this.getStateList();
      }
 
@@ -71,8 +73,46 @@ export class SettingsComponent implements OnInit {
       console.log('Error: ', err);
     });
   }
+
+  getPreFilledData(){
+    this.common.loading++;
+    this.api.get("Processes/getProcessSetting?processId=" + this.process_Info._id).subscribe(res => {
+      this.common.loading--;
+      this.PreFilledData = res['data'] || [];
+      this.setData();
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  setData(){
+    this.transaction.primary_Owner = {id: this.PreFilledData[0]._default_po ,name: this.PreFilledData[0].pri_owner};
+    this.transaction.default_State = {id: this.PreFilledData[0]._default_state ,name: this.PreFilledData[0].default_state};
+    this.transaction.default_Action = {id: this.PreFilledData[0]._default_action ,name: this.PreFilledData[0].default_action};
+   
+    if(this.PreFilledData[0]._default_action_owner > 0){
+    this.transaction.action_Owner = {id: this.PreFilledData[0]._default_action_owner ,name: this.PreFilledData[0].default_action_owner};
+    }else{
+      this.transaction.self = true;
+      this.transaction.action_Owner = {id:null ,name: ''};
+    }
+
+    if(this.PreFilledData[0]._ack_to_aduser == 1){
+    this.transaction.acktoaddUser = true;
+    }else{
+      this.transaction.acktoaddUser = false;
+    }
+
+    if(this.PreFilledData[0]._default_identity == 1){
+    this.transaction.isIdentity = true;
+    }else{
+      this.transaction.isIdentity = false;
+    }
+  }
   
-  requestLeave(){
+  saveProcess(){
         console.log(this.transaction,'transaction')
         let actionOwner = null;
         let acktoaddUser = null;
@@ -107,13 +147,25 @@ export class SettingsComponent implements OnInit {
           isIdentity: defidentity
         }
 
+        console.log(params,'params')
+        // return;
+
         this.common.loading++;
         this.api.post("Processes/addProcessSetting ", params).subscribe(res => {
           this.common.loading--;
+          if (res['code'] == 1) {
+            if (res['data'][0].y_id > 0) {
+              this.common.showToast(res['data'][0].y_msg);
+              this.closeModal(true);
+            } else {
+              this.common.showError(res['data'][0].y_msg);
+            }
+          } else {
+            this.common.showError(res['msg']);
+          }
         }, err => {
           this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
+          console.log(err);
         });
   }
 
