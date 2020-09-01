@@ -87,19 +87,9 @@
     </div>
   </div>
 
-  <!-- <div class="row mt-2 " *ngIf="isProject=='1'">
-      <div class="col-4">
-          <label>Project:<span class="text-danger">*</span></label>
-      </div>
-      <div class="col-6">
-          <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
-          </auto-suggestion>
-      </div>
-  </div> -->
-
   <div class="row mt-2 ">
       <div class="col-4">
-          <label>Reason:</label>
+          <label>Reason:<span class="text-danger">*</span></label>
       </div>
       <div class="col-6">
           <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="LeaveArray.reason"></textarea>
@@ -112,40 +102,4 @@
       </div>
   </div>
 
-
-  
-  <!-- start: task mapping -->
-  <!-- <div class="row" *ngIf="normalTask.parentTaskId>0 && taskMapping.length > 0">
-      <div class="col-12">Task Mapping</div>
-      <smart-table *ngIf="taskMapping.length!=0" [data]="tableTaskMapping.data" [settings]="tableTaskMapping.settings" id="taskMapping">
-      </smart-table>
-  </div> -->
-  <!-- end: task mapping -->
 </div>
-
-<!-- start: update date form -->
-<!-- <div class="modal-body" *ngIf="editType==1">
-  <div class="row mt-2">
-      <div class="col-3">
-          <label>Last Date:<span class="text-danger">*</span></label>
-      </div>
-      <div class="col-6">
-          <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
-          </uj-date-time-picker>
-      </div>
-  </div>
-  <div class="row mt-2 ">
-      <div class="col-3">
-          <label>Reason:</label>
-      </div>
-      <div class="col-6">
-          <textarea row="2" cols="15" placeholder="Enter Reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
-      </div>
-  </div>
-  <div class="row mt-2 ">
-      <div class="col-12 text-right">
-          <button class="btn btn-primary btn-sm" (click)="updateAssignDate()">Update</button>
-      </div>
-  </div>
-</div> -->
-<!-- end: update date form -->
