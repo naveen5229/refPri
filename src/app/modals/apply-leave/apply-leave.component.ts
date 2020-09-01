@@ -59,17 +59,19 @@ export class ApplyLeaveComponent implements OnInit {
         endDate = this.LeaveArray.endDate;
     }
 
-    if (this.LeaveArray.startDate && this.LeaveArray.startDate < this.common.getDate()) {
-      return this.common.showError("Expected date must be future date");
+    if (!startDate || !endDate) {
+      return this.common.showError("Start/End date is missing");
+    }else if (startDate && startDate < this.common.getDate()) {
+      return this.common.showError("Start date must be future date");
     }
-    else if (this.LeaveArray.startDate && this.LeaveArray.endDate < this.LeaveArray.startDate) {
-      return this.common.showError("End Date date must be grater than Start Date");
+    else if (endDate && endDate < startDate) {
+      return this.common.showError("End date must be grater than start date");
     }
 
     let Datato=null;
     if(this.LeaveArray.To){
     Datato = this.LeaveArray.To.id;
-    console.log(this.LeaveArray.To,'objetc')
+    // console.log(this.LeaveArray.To,'objetc')
     }
 
     let CC=[];
@@ -80,8 +82,8 @@ export class ApplyLeaveComponent implements OnInit {
     }
 
     let params ={
-      startDate:this.common.dateFormatter1(startDate),
-      endDate:this.common.dateFormatter1(endDate),
+      startDate:this.common.dateFormatter(startDate),
+      endDate:this.common.dateFormatter(endDate),
       to:Datato,
       cc:JSON.stringify(CC),
       subject:this.LeaveArray.Subject,

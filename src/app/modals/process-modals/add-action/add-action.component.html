@@ -39,7 +39,7 @@
 
     <!-- </div> -->
     <div class="row">
-        <div class="col-2 pr-0 pt-3">
+        <!-- <div class="col-2 pr-0 pt-3">
             <label>Is Default</label>
         </div>
         <div class="col-2 pr-0 pt-3">
@@ -51,8 +51,8 @@
             <auto-suggestion [data]="adminList" display="name" placeholder="select Default Owner" name="defaultOwn" id="defaultOwn" (onSelected)="actionForm.defaultOwner.id=($event.id);" [preSelected]="{name:actionForm.defaultOwner.name}" autocomplete="off">
             </auto-suggestion>
             </span>
-        </div>
-        <div class="col-4 text-right">
+        </div> -->
+        <div class="col-12 text-right">
             <button class="btn btn-danger btn-sm mr-2 mt-4" type="button" (click)="closeModal(false)">Cancel</button>
             <button class="btn btn-primary btn-sm mt-4" type='submit' (click)="saveProcessAction()">{{button}}</button>
         </div>

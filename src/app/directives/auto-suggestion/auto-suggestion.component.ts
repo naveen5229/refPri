@@ -28,7 +28,7 @@ export class AutoSuggestionComponent implements OnInit {
   @Input() seperator: string;
   @Input() data: any;
   @Input() inputId: string;
-  @Input() apiBase: string = 'T';
+  @Input() apiBase: string = 'I';
   @Input() name: string;
   @Input() parentForm: FormGroup;
   @Input() controlName: string;
