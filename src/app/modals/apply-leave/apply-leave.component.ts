@@ -59,6 +59,13 @@ export class ApplyLeaveComponent implements OnInit {
         endDate = this.LeaveArray.endDate;
     }
 
+    if (this.LeaveArray.startDate && this.LeaveArray.startDate < this.common.getDate()) {
+      return this.common.showError("Expected date must be future date");
+    }
+    else if (this.LeaveArray.startDate && this.LeaveArray.endDate < this.LeaveArray.startDate) {
+      return this.common.showError("End Date date must be grater than Start Date");
+    }
+
     let Datato=null;
     if(this.LeaveArray.To){
     Datato = this.LeaveArray.To.id;

@@ -19,7 +19,8 @@ export class AddDashboardFieldComponent implements OnInit {
     refId: null,
     refType: null,
     infoId: null,
-    info: null
+    info: null,
+    order: null
   }
   stateOrActionList = [];
   fieldDataList = [];
@@ -209,6 +210,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.form.refType = null;
     this.form.infoId = null;
     this.form.info = null;
+    this.form.order = null;
     this.stateOrActionList = [];
     this.fieldDataList = [];
   }
@@ -248,7 +250,7 @@ export class AddDashboardFieldComponent implements OnInit {
       let selected = this.fieldDataList.find(x => { return x.id == this.form.infoId });
 
       if (selected) {
-        this.form.info = { r_colid: selected.r_colid, r_isdynamic: selected.r_isdynamic, r_selected: selected.r_selected };
+        this.form.info = { r_colid: selected.r_colid, r_isdynamic: selected.r_isdynamic, r_selected: selected.r_selected, r_colorder: (this.form.order) ? this.form.order : null };
       } else {
         this.form.info = null;
       }

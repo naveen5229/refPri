@@ -153,6 +153,14 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='ccTask'">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; filterTaskBySubTab(-5,0)">
+                    All
+                </li>
+                <li [ngClass]="activeSabTab==2?'active':''" (click)="activeSabTab=2; filterTaskBySubTab(-5,4)">
+                    Leave
+                </li>
+            </ul>
             <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
             </smart-table>
         </div>

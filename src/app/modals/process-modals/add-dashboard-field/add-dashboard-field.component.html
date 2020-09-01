@@ -13,6 +13,10 @@
     </div>
     <div class="row mb-2">
         <div class="col-3">
+            <label>Order</label>
+            <input type="number" min="0" [(ngModel)]="form.order" class="form-control" placeholder="order">
+        </div>
+        <div class="col-3">
             <label>Type<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
               <option value="1" class="form-control">State</option>
@@ -35,9 +39,11 @@
               <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
             </select>
         </div>
-        <div class="col-3 mt-3 text-right">
-            <button class="btn btn-primary btn-sm mt-2" name="submit" (click)="AddField()">{{btn1}}</button>
-            <button *ngIf="form.requestId" class="btn btn-danger btn-sm mt-2 ml-2" name="reset" (click)="resetData()">{{btn2}}</button>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" name="submit" (click)="AddField()">{{btn1}}</button>
+            <button *ngIf="form.requestId" class="btn btn-danger btn-sm ml-2" name="reset" (click)="resetData()">{{btn2}}</button>
         </div>
     </div>
     <div class="row mt-1">
@@ -46,4 +52,3 @@
         </div>
     </div>
 </div>
-
