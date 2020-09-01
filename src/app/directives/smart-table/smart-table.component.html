@@ -1,4 +1,4 @@
-<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '95%'}">
+<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '93%'}">
     <table *ngIf="headings && !isTableHide" class="table table-bordered fixed">
         <thead *ngIf="!settings.hideHeader">
             <th style="width: 40px">#</th>
@@ -125,6 +125,7 @@
         <button (click)="handlePagination(pages.active + 1)" [disabled]="pages.active == pages.count">Next</button>
     </div>
     <!-- Page Count END -->
+    
     <!-- Records Per Page -->
     <div class="numer_list ml-3">
         <input type="text" class="customPage form-control" name="customPageNo" (keyup.enter)="customPage()" [(ngModel)]="pages.limit">

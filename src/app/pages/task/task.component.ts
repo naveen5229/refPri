@@ -36,6 +36,7 @@ export class TaskComponent implements OnInit {
   scheduledTaskList = [];
   normalTaskByMeList = [];
   allCompletedTaskList = [];
+  ccTaskListAll = [];
   ccTaskList = [];
   projectTaskList = [];
   holdTaskList = [];
@@ -589,6 +590,7 @@ export class TaskComponent implements OnInit {
           this.setTableAllCompleted(type);
         } else if (type == -5) {
           this.ccTaskList = res["data"] || [];
+          this.ccTaskListAll = this.ccTaskList;
           this.setTableCCTask(type);
         } else if (type == -6) {
           this.projectTaskList = res["data"] || [];
@@ -2671,6 +2673,20 @@ export class TaskComponent implements OnInit {
       }
       this.normalTaskByMeList = selectedList.length > 0 ? selectedList : [];
       this.setTableNormalTaskByMe(type);
+    }else if(type == -5){
+      console.log('in -5')
+      let selectedList = [];
+      if (subTabType == 4) {
+        //leave
+        selectedList = this.ccTaskListAll.filter((x) => {
+          return x._tktype == 104;
+        });
+      } else {
+        //all
+        selectedList = this.ccTaskListAll;
+      }
+      this.ccTaskList = selectedList.length > 0 ? selectedList : [];
+      this.setTableCCTask(type);
     }
   }
 

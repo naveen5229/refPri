@@ -15,7 +15,7 @@
 }
 
 .chat_block {
-    max-height: 59vh;
+    max-height: calc(100vh - 290px);
     overflow: auto;
     background: ghostwhite;
     margin-top: 0!important;
@@ -190,11 +190,13 @@
         margin-right: 5px;
     }
 }
+smart-table{
+    display: block;
+    max-height: calc(100vh - 370px);
+    overflow: auto;
+}
 
 :host ::ng-deep #tableTransActionData {
-    .tableFixHead {
-        height: 44vh !important;
-    }
     th:nth-child(1),
     td:nth-child(1) {
         display: none;

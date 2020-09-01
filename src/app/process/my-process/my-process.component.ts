@@ -19,6 +19,7 @@ import { ViewDashboardComponent } from '../../modals/process-modals/view-dashboa
 })
 export class MyProcessComponent implements OnInit {
   activeSabTab = 0;
+  activeSabTab1 = 0;
   activeTab = 'leadsForMe';
   adminList = [];
   processList = [];
@@ -182,7 +183,7 @@ export class MyProcessComponent implements OnInit {
 
   getProcessLeadByType(type, startDate = null, endDate = null) {
     this.common.loading++;
-    if ((type == 4 || type == 8) && this.searchData.startDate && this.searchData.endDate) {
+    if ((type == 4 || type == 8 || type == 9) && this.searchData.startDate && this.searchData.endDate) {
       startDate = this.common.dateFormatter(this.searchData.startDate);
       endDate = this.common.dateFormatter(this.searchData.endDate);
     }
@@ -192,7 +193,10 @@ export class MyProcessComponent implements OnInit {
       this.common.loading--;
       // console.log("data", res['data']);
       if (res['code'] == 1) {
-        if (type == 1) {//for me
+        if (type == 1) {//for me pending
+          this.leadsForMe = res['data'] || [];
+          this.setTableLeadsForMe(type);
+        }else if (type == 9) { //for me Completd
           this.leadsForMe = res['data'] || [];
           this.setTableLeadsForMe(type);
         } else if (type == 2) { //by me pending
