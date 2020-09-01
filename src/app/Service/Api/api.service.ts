@@ -14,9 +14,13 @@ export class ApiService {
   URLBooster: string = 'http://dev.elogist.in/booster_webservices/';
   URLTranstruck: string = 'http://dev.elogist.in/transtrucknew/';
 
-  // URL: string = 'http://elogist.in/itrm_webservices/';
-  // URLBooster: string = 'http://elogist.in/booster_webservices/';
-  // URLTranstruck: string = 'http://elogist.in/transtrucknew/';
+  I_URL: string = 'http://dev.elogist.in/itrm_webservices/';
+  B_URL: string = 'http://dev.elogist.in/booster_webservices/';
+  T_URL: string = 'http://dev.elogist.in/transtrucknew/';
+
+  // I_URL: string = 'http://elogist.in/itrm_webservices/';
+  // B_URL: string = 'http://elogist.in/booster_webservices/';
+  // T_URL: string = 'http://elogist.in/transtrucknew/';
 
   entryMode = this.user._loggedInBy == 'admin' ? '1' : '3';
 
@@ -27,63 +31,56 @@ export class ApiService {
     console.log(this.user);
   }
 
-  post(subURL: string, body: any, options?) {
-    return this.http.post(this.URL + subURL, body, { headers: this.setHeaders() })
+  post(subURL: string, body: any, apiBase: string = 'I') {
+    return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
   }
 
-  get(subURL: string, params?: any) {
-    return this.http.get(this.URL + subURL, { headers: this.setHeaders() })
+  get(subURL: string, apiBase: string = 'I') {
+    return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
   }
 
-  setHeaders() {
+
+
+  postBooster(subURL: string, body: any, apiBase: string = 'B') {
+    return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+  }
+
+  getBooster(subURL: string, apiBase: string = 'B') {
+    return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+  }
+
+  postTranstruck(subURL: string, body: any, apiBase: string = 'T') {
+    return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+  }
+
+  getTranstruck(subURL: string, apiBase: string = 'T') {
+    return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+  }
+
+  setHeaders(apiBase = 'I') {
+    const authKeyType = {
+      I: 'authkey',
+      B: 'authkey_booster',
+      T: 'authkey_gisdb'
+    };
+
+    const versions = {
+      I: '1.0',
+      B: '1.0',
+      T: '2.9'
+    };
+    
+    const authKey = this.user._details ? this.user._details[authKeyType[apiBase]] : '';
+    const version = versions[apiBase];
 
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'version': '1.0',
+      'version': version,
       'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
       'apptype': 'dashboard',
-      'authkey': this.user._token
+      'authkey': authKey
     });
     return headers;
   }
-
-  postBooster(subURL: string, body: any, options?) {
-    return this.http.post(this.URLBooster + subURL, body, { headers: this.setHeadersBooster() })
-  }
-
-  getBooster(subURL: string, params?: any) {
-    return this.http.get(this.URLBooster + subURL, { headers: this.setHeadersBooster() })
-  }
-
-  postTranstruck(subURL: string, body: any, options?) {
-    return this.http.post(this.URLTranstruck + subURL, body, { headers: this.setHeadersTranstruck() })
-  }
-
-  getTranstruck(subURL: string, params?: any) {
-    return this.http.get(this.URLTranstruck + subURL, { headers: this.setHeadersTranstruck() })
-  }
-
-  setHeadersBooster() {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'version': '1.0',
-      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
-      'apptype': 'dashboard',
-      'authkey': this.user._details.authkey_booster
-    });
-    return headers;
-  }
-
-  setHeadersTranstruck() {
-    console.log(this.user._details.authkey_gisdb);
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'version': '2.9',
-      'entrymode': this.user._loggedInBy == 'admin' ? '1' : '3',
-      'authkey': this.user._details.authkey_gisdb
-    });
-    return headers;
-  }
-
 
 }
