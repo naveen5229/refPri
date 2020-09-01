@@ -12,6 +12,7 @@ import { ReminderComponent } from "../../modals/reminder/reminder.component";
 import { TaskScheduleNewComponent } from "../../modals/task-schedule-new/task-schedule-new.component";
 import { TaskScheduleMasterComponent } from "../../modals/task-schedule-master/task-schedule-master.component";
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
+import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
 // import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
 // import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 // import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
@@ -35,6 +36,7 @@ export class TaskComponent implements OnInit {
   scheduledTaskList = [];
   normalTaskByMeList = [];
   allCompletedTaskList = [];
+  ccTaskListAll = [];
   ccTaskList = [];
   projectTaskList = [];
   holdTaskList = [];
@@ -310,6 +312,21 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  applyLeave() {
+    this.common.params = { userList: this.adminList };
+    const activeModal = this.modalService.open(ApplyLeaveComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.getTaskByType(-101);
+        this.activeTab = "TasksByMe";
+      }
+    });
+  }
+
   getProcessLeadByType(type, startDate = null, endDate = null) {
     this.common.loading++;
     this.resetSmartTableData();
@@ -573,6 +590,7 @@ export class TaskComponent implements OnInit {
           this.setTableAllCompleted(type);
         } else if (type == -5) {
           this.ccTaskList = res["data"] || [];
+          this.ccTaskListAll = this.ccTaskList;
           this.setTableCCTask(type);
         } else if (type == -6) {
           this.projectTaskList = res["data"] || [];
@@ -1405,7 +1423,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102].includes(ticket._tktype)) {
+      if ([101, 102, 104].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),
@@ -1474,6 +1492,14 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
+        if (ticket._tktype == 104) {//leave reject
+          icons.push({
+            class: "fa fa-times text-danger",
+            action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
+            txt: "",
+            title: "Mark Rejected",
+          });
+        }
       } else if (ticket._status == 3 && [101, 102].includes(ticket._tktype)) {
         icons.push({
           class: "fa fa-play-circle",
@@ -1520,7 +1546,7 @@ export class TaskComponent implements OnInit {
         });
         // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       } else if (
-        (ticket._tktype == 101 || ticket._tktype == 102) &&
+        ([101, 102, 104].includes(ticket._tktype)) &&
         ticket._cc_user_id &&
         !ticket._cc_status
       ) {
@@ -2608,6 +2634,11 @@ export class TaskComponent implements OnInit {
         selectedList = this.normalTaskListAll.filter((x) => {
           return x._status == 3;
         });
+      } else if (subTabType == 4) {
+        //leave
+        selectedList = this.normalTaskListAll.filter((x) => {
+          return x._tktype == 104;
+        });
       } else {
         //all
         selectedList = this.normalTaskListAll;
@@ -2631,12 +2662,31 @@ export class TaskComponent implements OnInit {
         selectedList = this.normalTaskByMeListAll.filter((x) => {
           return x._status == 3;
         });
+      } else if (subTabType == 4) {
+        //leave
+        selectedList = this.normalTaskByMeListAll.filter((x) => {
+          return x._tktype == 104;
+        });
       } else {
         //all
         selectedList = this.normalTaskByMeListAll;
       }
       this.normalTaskByMeList = selectedList.length > 0 ? selectedList : [];
       this.setTableNormalTaskByMe(type);
+    }else if(type == -5){
+      console.log('in -5')
+      let selectedList = [];
+      if (subTabType == 4) {
+        //leave
+        selectedList = this.ccTaskListAll.filter((x) => {
+          return x._tktype == 104;
+        });
+      } else {
+        //all
+        selectedList = this.ccTaskListAll;
+      }
+      this.ccTaskList = selectedList.length > 0 ? selectedList : [];
+      this.setTableCCTask(type);
     }
   }
 

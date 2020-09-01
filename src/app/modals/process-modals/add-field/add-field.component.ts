@@ -98,18 +98,18 @@ export class AddFieldComponent implements OnInit {
   ngOnInit() {
   }
 
-  AddTable(child_name) {
-    if (child_name.length == 0) {
+  // AddTable(child_name) {
+  //   if (child_name.length == 0) {
 
-    } else {
-      this.childArray.push({
-        param: '',
-        type: '',
-        is_required: false,
-      });
-    }
-    console.log(this.childArray, 'childArray')
-  }
+  //   } else {
+  //     this.childArray.push({
+  //       param: '',
+  //       type: '',
+  //       is_required: false,
+  //     });
+  //   }
+  //   console.log(this.childArray, 'childArray')
+  // }
 
   closeModal(res) {
     this.activeModal.close({ response: res });
@@ -135,7 +135,7 @@ export class AddFieldComponent implements OnInit {
   }
 
   Add() {
-    let childArray = this.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info } });
+    let childArray = (this.childArray && this.childArray.length > 0) ? this.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
     let tmpJson = {
       param: this.name,
       type: this.typeId,
@@ -269,15 +269,12 @@ export class AddFieldComponent implements OnInit {
           column[key] = { value: doc[key], class: 'black', action: '' };
         }
       }
+      column['style'] = { 'background': this.common.taskStatusBg(doc._col_unassigned) };
       columns.push(column);
     })
 
     return columns;
   }
-
-  // formatTitle(title) {
-  //   return title.charAt(0).toUpperCase() + title.slice(1);
-  // }
 
   actionIcons(row) {
     let icons = [];
@@ -359,12 +356,14 @@ export class AddFieldComponent implements OnInit {
     // }
     if (data._param_child && data._param_child.length > 0) {
       data._param_child.map((ele, index) => {
-        this.childArray.push({ param: '', type: '', order: null, is_required: false, _param_info: null });
+        this.childArray.push({ param: '', type: '', order: null, is_required: false, _param_info: null, _param_id: null, _used_in: null });
         this.childArray[index]['param'] = ele.param_name;
         this.childArray[index]['type'] = ele.param_type;
         this.childArray[index]['order'] = ele.param_order;
         this.childArray[index]['is_required'] = ele.is_required;
         this.childArray[index]['_param_info'] = ele._param_info ? ele._param_info : null;
+        this.childArray[index]['_param_id'] = ele.param_id ? ele.param_id : null;
+        this.childArray[index]['_used_in'] = ele._used_in ? ele._used_in : null;
       });
     }
     this.fixValues = data._param_info ? data._param_info : this.fixValues;
@@ -386,11 +385,7 @@ export class AddFieldComponent implements OnInit {
       option: ''
     }];
     this.btn1 = "Add";
-    this.childArray = [{
-      param: '',
-      type: '',
-      is_required: false,
-    }]
+    this.childArray = []
   }
 
   openAssignForm() {
@@ -412,18 +407,19 @@ export class AddFieldComponent implements OnInit {
     const activeModal = this.modalService.open(AddFieldTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
+        this.childArray = (data.data && data.data.length > 0) ? data.data : [];
         console.log("AddFieldTableComponent:", data);
       }
     });
   }
 
-  closeOptionModal() {
-    document.getElementById("optionModal").style.display = "none";
-  }
+  // closeOptionModal() {
+  //   document.getElementById("optionModal").style.display = "none";
+  // }
 
-  openOptionModal(row) {
-    document.getElementById("optionModal").style.display = "block";
-  }
+  // openOptionModal(row) {
+  //   document.getElementById("optionModal").style.display = "block";
+  // }
 
 }
 

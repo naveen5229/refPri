@@ -23,7 +23,9 @@ export class AddFieldTableComponent implements OnInit {
     type: '',
     order: null,
     is_required: false,
-    _param_info: null
+    _param_info: null,
+    _param_id: null,
+    _used_in: null
   };
   finalArray = [];
   isFixedValue = false;
@@ -31,7 +33,7 @@ export class AddFieldTableComponent implements OnInit {
     option: ''
   }];
 
-  data = [];
+  // data = [];
   table = {
     data: {
       headings: {},
@@ -86,6 +88,7 @@ export class AddFieldTableComponent implements OnInit {
       this.finalArray[index].order = temp.order;
       this.finalArray[index].is_required = temp.is_required;
       this.finalArray[index]._param_info = (this.isFixedValue) ? this.fixValues : null;
+      this.finalArray[index]._param_id = (temp._param_id) ? temp._param_id : null;
     } else {
       delete temp['index'];
       temp['_param_info'] = (this.isFixedValue) ? this.fixValues : null;
@@ -152,9 +155,13 @@ export class AddFieldTableComponent implements OnInit {
   actionIcons(row, index) {
     let icons = [];
     icons.push(
-      { class: "fas fa-trash-alt", action: this.deleteRow.bind(this, row, index) },
-      { class: "fas fa-edit edit", action: this.setData.bind(this, row, index) },
+      { class: "fas fa-edit edit", title: "Edit Column", action: this.setData.bind(this, row, index) },
     )
+    if (!row._used_in) {
+      icons.push(
+        { class: "fas fa-trash-alt", title: "Remove Column", action: this.deleteRow.bind(this, row, index) }
+      )
+    }
     return icons;
   }
 
@@ -179,7 +186,9 @@ export class AddFieldTableComponent implements OnInit {
       type: data.type,
       order: data.order,
       is_required: data.is_required,
-      _param_info: (data._param_info && data._param_info.length) ? data._param_info : null
+      _param_info: (data._param_info && data._param_info.length) ? data._param_info : null,
+      _param_id: (data._param_id) ? data._param_id : null,
+      _used_in: (data._used_in) ? data._used_in : null
     }
 
     this.fixValues = data._param_info ? data._param_info : this.fixValues;
@@ -189,6 +198,7 @@ export class AddFieldTableComponent implements OnInit {
   }
 
   resetData() {
+    this.isFixedValue = false;
     this.fixValues = [{
       option: ''
     }];
@@ -199,7 +209,9 @@ export class AddFieldTableComponent implements OnInit {
       type: '',
       order: null,
       is_required: false,
-      _param_info: null
+      _param_info: null,
+      _param_id: null,
+      _used_in: null
     }
   }
 

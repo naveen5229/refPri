@@ -1,6 +1,27 @@
 :host ::ng-deep .tableFixHead{
     height: auto !important;
 }
+smart-table{
+    display: block;
+    max-height: calc(100vh - 333px);
+    overflow: auto;
+}
 :host ::ng-deep .edit{
     margin-left: 15px;
+}
+.fa-plus{
+cursor: pointer;
+color: #0062cc;
+}
+.fa-trash{
+color: red;
+}
+.custdrop{
+    max-height: 100px;
+    overflow: auto;
+    padding-bottom: 10px;
+    .row{
+        margin-top: 1px;
+    }
+
 }

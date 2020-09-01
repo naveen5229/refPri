@@ -96,6 +96,7 @@ export class UserMappingComponent implements OnInit {
 
   // Partner Mapping Start
   getPartnerMappingData(){
+    this.partnerMapping=[];
     this.common.loading++;
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
       .subscribe(res => {
@@ -610,7 +611,6 @@ companyMap(company){
       this.common.showError('First Map Company!');
     }
     }
-
     companyUserUnMap(companyUser){
       console.log(companyUser);
       this.common.loading++;

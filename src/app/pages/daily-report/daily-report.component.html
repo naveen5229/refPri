@@ -37,7 +37,7 @@
                 <!-- <button type="submit" (click)="getWrongCaptcha()" class="btn btn-primary">Wronge Captcha Latest</button> -->
             </div>
         </div>
-        <smart-table *ngIf="dailyReportList.length>0" [data]="table.data" [settings]="table.settings" id="dailyReportList" class="smrt-table">
+        <smart-table *ngIf="dailyReportList.length>0" [data]="table.data" [settings]="table.settings" id="dailyReportList">
         </smart-table>
         <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
     </nb-card-body>
@@ -48,7 +48,7 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title" style="color:#fff;">Wrong Captcha Latest</h4>
+                    <h5 class="modal-title">Wrong Captcha Latest</h5>
                     <button type="button" class="close" data-dismiss="modal" (click)="closeMapModal()">&times;</button>
                 </div>
                 <!-- Modal body -->

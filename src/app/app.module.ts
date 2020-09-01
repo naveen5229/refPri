@@ -102,6 +102,8 @@ import { AddDashboardFieldComponent } from './modals/process-modals/add-dashboar
 import { ViewDashboardComponent } from './modals/process-modals/view-dashboard/view-dashboard.component';
 import { FormDataTableComponent } from './modals/process-modals/form-data-table/form-data-table.component';
 import { AddFieldTableComponent } from './modals/process-modals/add-field-table/add-field-table.component';
+import { ApplyLeaveComponent } from './modals/apply-leave/apply-leave.component';
+import { SettingsComponent } from './modals/process-modals/settings/settings.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -171,7 +173,9 @@ const PAGE_COMPONENTS = [
   AddDashboardFieldComponent,
   ViewDashboardComponent,
   FormDataTableComponent,
-  AddFieldTableComponent
+  AddFieldTableComponent,
+  SettingsComponent,
+  ApplyLeaveComponent
 ];
 
 @NgModule({
@@ -186,6 +190,7 @@ const PAGE_COMPONENTS = [
     AddpartneruserComponent,
     AddcompanyComponent,
     AddfouserComponent,
+    
 
     // SendmessageComponent,
     // GenericModelComponent,

@@ -1,4 +1,5 @@
 smart-table{
     display: block;
-    height: calc(100vh - 204px);
+    max-height: calc(100vh - 204px);
+    overflow: auto;
 }

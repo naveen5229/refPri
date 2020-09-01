@@ -1,7 +1,8 @@
 :host ::ng-deep .blue {
     color: blue;
   }
-  .smrt-table{
+  smart-table{
     display: block;
     height: calc(100vh - 157px);
+    overflow: auto;
 }

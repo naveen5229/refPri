@@ -13,11 +13,11 @@
                         </select>
                     </div>
                     <div class="col-10">
-                        <span *ngIf = "SearchBy === 'By Task'">
+                        <span *ngIf="SearchBy === 'By Task'">
                             <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
                             <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
                         </span>
-                        <span *ngIf = "SearchBy === 'By User'" style="display: flex;">
+                        <span *ngIf="SearchBy === 'By User'" style="display: flex;">
                             <auto-suggestion class="form-controls col-9 p-0 searchselect"  [data]="adminList"
                              display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
                             <button class="btn btn-primary btn-sm" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
@@ -26,11 +26,14 @@
                 </div>
             </div>
             <div class="col-4 text-right">
+
+                <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
+                <button class="btn btn-primary btn-sm mr-2 procss" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
                 <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b>ST</b>
+                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> ST</b>
                 </button>
                 <button class="btn btn-primary btn-sm mr-2" title="Add Project" (click)="showProjectPopup()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b>P</b>
+                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> P</b>
                 </button>
                 <button class="btn btn-primary btn-sm" title="Add Normal Task" (click)="showTaskPopup()"><i
                     class="fa fa-plus"></i></button>
@@ -96,6 +99,9 @@
                 <li [ngClass]="activeSabTab==3?'active':''" (click)="activeSabTab=3; filterTaskBySubTab(101,3)">
                     Hold
                 </li>
+                <li [ngClass]="activeSabTab==4?'active':''" (click)="activeSabTab=4; filterTaskBySubTab(101,4)">
+                    Leave
+                </li>
             </ul>
             <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList" class="sl-smart-table">
             </smart-table>
@@ -113,6 +119,9 @@
                 </li>
                 <li [ngClass]="activeSabTab==3?'active':''" (click)="activeSabTab=3; filterTaskBySubTab(-101,3)">
                     Hold
+                </li>
+                <li [ngClass]="activeSabTab==4?'active':''" (click)="activeSabTab=4; filterTaskBySubTab(-101,4)">
+                    Leave
                 </li>
             </ul>
             <smart-table *ngIf="normalTaskByMeList.length!=0" [data]="tableNormalTaskByMe.data" [settings]="tableNormalTaskByMe.settings" id="normalTaskByMeListx" class="sl-smart-table">
@@ -144,6 +153,14 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='ccTask'">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; filterTaskBySubTab(-5,0)">
+                    All
+                </li>
+                <li [ngClass]="activeSabTab==2?'active':''" (click)="activeSabTab=2; filterTaskBySubTab(-5,4)">
+                    Leave
+                </li>
+            </ul>
             <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
             </smart-table>
         </div>
@@ -188,7 +205,7 @@
             <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
             </smart-table>
         </div>
-        
+
     </nb-card-body>
 
 
@@ -198,7 +215,7 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title" style="color:#fff;">Scheduled Task Master</h4>
+                    <h5 class="modal-title">Scheduled Task Master</h5>
                     <button type="button" class="close" data-dismiss="modal" (click)="closeSchedukedTaskMasterModal(null)">&times;</button>
                 </div>
                 <!-- Modal body -->
@@ -300,7 +317,7 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title" style="color:#fff;">Searched Task</h4>
+                    <h5 class="modal-title">Searched Task</h5>
                     <button type="button" class="close" data-dismiss="modal" (click)="closeSearchTaskModal()">&times;</button>
                 </div>
                 <!-- Modal body -->

@@ -327,6 +327,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/process-admin',
         home: true,
       },
+      {
+        title: 'Personalised Dashboard',
+        icon: 'grid-outline',
+        link: '/pages/personalised-dashboard',
+        home: true,
+      }
     ]
   }
 

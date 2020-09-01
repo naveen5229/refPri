@@ -52,6 +52,7 @@ import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
 import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
+import { PersonalisedDashboardComponent } from '../process/personalised-dashboard/personalised-dashboard.component';
 
 const routes: Routes = [{
   path: '',
@@ -129,7 +130,7 @@ const routes: Routes = [{
     {
       path: 'module-report',
       component: ModuleReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'employee-daywise-report',
@@ -195,19 +196,19 @@ const routes: Routes = [{
     {
       path: 'task',
       component: TaskComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'user-mapping',
       component: UserMappingComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'companykyc',
       component: CompanykycComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'task-scheduled',
@@ -310,6 +311,11 @@ const routes: Routes = [{
     {
       path: 'process-admin',
       component: ProcessAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'personalised-dashboard',
+      component: PersonalisedDashboardComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {

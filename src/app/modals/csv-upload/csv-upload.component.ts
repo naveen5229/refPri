@@ -82,9 +82,9 @@ export class CsvUploadComponent implements OnInit {
 
   sampleCsv() {
     if (this.typeFrom == 'installer') {
-      window.open(this.api.URL + "sample/addInstallerSample.csv");
+      window.open(this.api.I_URL + "sample/addInstallerSample.csv");
     } else {
-      window.open(this.api.URL + "sample/sampleCampaignCsv.csv");
+      window.open(this.api.I_URL + "sample/sampleCampaignCsv.csv");
     }
   }
 
