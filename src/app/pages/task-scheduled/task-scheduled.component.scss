@@ -123,12 +123,12 @@
 }
 smart-table{
     display: block;
-    max-height: calc(100vh - 168px);
+    height: calc(100vh - 168px);
     overflow: auto;
 }
 .sl-smart-table{
-    max-height: calc(100vh - 212px);
+    height: calc(100vh - 212px);
 }
 .sl3-smart-table{
-    max-height: calc(100vh - 242px);
+    height: calc(100vh - 242px);
 }

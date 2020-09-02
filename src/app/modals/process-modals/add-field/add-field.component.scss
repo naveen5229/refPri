@@ -3,7 +3,7 @@
 }
 smart-table{
     display: block;
-    max-height: calc(100vh - 333px);
+   height: calc(100vh - 333px);
     overflow: auto;
 }
 :host ::ng-deep .edit{
