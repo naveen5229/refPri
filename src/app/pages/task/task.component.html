@@ -28,15 +28,15 @@
             <div class="col-4 text-right">
 
                 <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 procss" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> ST</b>
+                <button class="btn btn-primary btn-sm mr-2 allicons" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
+                    <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
                 </button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Project" (click)="showProjectPopup()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> P</b>
+                <button class="btn btn-primary btn-sm mr-2 allicons" title="Add Project" (click)="showProjectPopup()">
+                    <img src="./assets/images/addproject.svg" alt="Add Project">
                 </button>
-                <button class="btn btn-primary btn-sm" title="Add Normal Task" (click)="showTaskPopup()"><i
-                    class="fa fa-plus"></i></button>
+                <button class="btn btn-primary btn-sm allicons" title="Add Normal Task" (click)="showTaskPopup()">
+                    <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
 
                 <!-- <span (click)="assignModal()">assign</span> -->
             </div>
@@ -161,7 +161,7 @@
                     Leave
                 </li>
             </ul>
-            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
+            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='projectTask'">
@@ -179,7 +179,7 @@
                 </div>
                 <div class="col-2">
                     <label>
-                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" />
+                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" style="vertical-align: middle;"/>
                     High-Priority</label>
                 </div>
                 <div class="col-2">
