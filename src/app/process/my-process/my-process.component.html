@@ -61,7 +61,7 @@
                 </li>
             </ul>
             <div *ngIf="!activeSabTab1">
-                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
+                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe" class="sl-smart-table">
                 </smart-table>
             </div>
             <div *ngIf="activeSabTab1==1">
@@ -78,7 +78,7 @@
                         <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(9)">Search</button>
                     </div>
                 </div>
-                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
+                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe" class="sl2-smart-table">
                 </smart-table>
             </div>
         </div>

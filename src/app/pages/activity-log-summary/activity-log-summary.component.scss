@@ -31,7 +31,7 @@ table{
         padding: .2rem!important;
         background: #fff!important;
         border: 6px solid #000!important;
-        min-width: 100px;
+        min-width: 135px;
         word-break: keep-all;
         white-space: nowrap;
        }
@@ -45,7 +45,7 @@ table{
         width: 100%;
         table-layout: fixed;
         overflow: auto;
-        max-height: calc(100vh - 230px);
+        max-height: calc(100vh - 238px);
         tr{
           display: table;
           table-layout: fixed;
