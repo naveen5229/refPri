@@ -12,6 +12,7 @@ import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.co
 import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
 import { ViewDashboardComponent } from '../../modals/process-modals/view-dashboard/view-dashboard.component';
+import { DocumentListingComponent } from '../../modals/document-listing/document-listing.component';
 @Component({
   selector: 'ngx-my-process',
   templateUrl: './my-process.component.html',
@@ -724,7 +725,6 @@ export class MyProcessComponent implements OnInit {
     if (type == 1) {//for me
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
-
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
     } else if (type == 2 || type == 6 || type == 7) { //by me or owned by me
@@ -741,6 +741,8 @@ export class MyProcessComponent implements OnInit {
         icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       }
 
+      icons.push({ class: "fa fa-files-o blue", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
+      
     } else if (type == -1) {
       icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
       // icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
@@ -991,6 +993,11 @@ export class MyProcessComponent implements OnInit {
     activeModal.result.then(data => {
       this.getProcessLeadByType(type);
     });
+  }
+
+  openDocList(lead){
+    this.common.params = { transId : lead._transactionid }
+    const activeModal = this.modalService.open(DocumentListingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   updateTransactionStatus(lead, type, status) {

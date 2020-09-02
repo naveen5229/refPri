@@ -17,6 +17,8 @@ export class SettingsComponent implements OnInit {
   stateDataList = [];
   actionDataList = [];
   PreFilledData = [];
+  showOtherFields:Boolean = false;
+  stateId = null;
 
   transaction = {
     primary_Owner: {id:null,name:''},
@@ -26,6 +28,7 @@ export class SettingsComponent implements OnInit {
     self:false,
     acktoaddUser:false,
     isIdentity:false,
+    isEditable:false
   }
   
 
@@ -60,6 +63,7 @@ export class SettingsComponent implements OnInit {
   
   getActionList(event) {
     // console.log("transAction:", this.transAction);
+    this.showOtherFields = true;
     console.log(event,'event for action')
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.process_Info._id + "&stateId=" + event.id).subscribe(res => {
@@ -91,11 +95,19 @@ export class SettingsComponent implements OnInit {
     this.transaction.primary_Owner = {id: this.PreFilledData[0]._default_po ,name: this.PreFilledData[0].pri_owner};
     this.transaction.default_State = {id: this.PreFilledData[0]._default_state ,name: this.PreFilledData[0].default_state};
     this.transaction.default_Action = {id: this.PreFilledData[0]._default_action ,name: this.PreFilledData[0].default_action};
+
+    
+    if(this.transaction.default_State.id > 0){
+        this.showOtherFields = true;
+        this.stateId = this.transaction.default_State;
+        this.getActionList(this.stateId)
+    }
    
     if(this.PreFilledData[0]._default_action_owner > 0){
     this.transaction.action_Owner = {id: this.PreFilledData[0]._default_action_owner ,name: this.PreFilledData[0].default_action_owner};
-    }else{
+    }else if(this.PreFilledData[0]._default_action_owner == -99){
       this.transaction.self = true;
+    }else{
       this.transaction.action_Owner = {id:null ,name: ''};
     }
 
@@ -110,6 +122,12 @@ export class SettingsComponent implements OnInit {
     }else{
       this.transaction.isIdentity = false;
     }
+
+    if(this.PreFilledData[0]._txn_editable == 1){
+      this.transaction.isEditable = true;
+      }else{
+        this.transaction.isEditable = false;
+      }
   }
   
   saveProcess(){
@@ -117,6 +135,7 @@ export class SettingsComponent implements OnInit {
         let actionOwner = null;
         let acktoaddUser = null;
         let defidentity = null;
+        let iseditable = null;
         if(this.transaction.self){
           actionOwner = -99;
         }else{
@@ -137,6 +156,12 @@ export class SettingsComponent implements OnInit {
           defidentity = 0;
         }
 
+        if(this.transaction.isEditable){
+          iseditable = 1;
+        }else{
+          iseditable = 0;
+        }
+
         let params = {
           processId: this.process_Info._id,
           poId: this.transaction.primary_Owner.id,
@@ -144,7 +169,8 @@ export class SettingsComponent implements OnInit {
           stateId: this.transaction.default_State.id,
           actionId: this.transaction.default_Action.id,
           actionOwnerId: actionOwner,
-          isIdentity: defidentity
+          isIdentity: defidentity,
+          isEditable: iseditable
         }
 
         console.log(params,'params')

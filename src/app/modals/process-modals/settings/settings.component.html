@@ -10,7 +10,7 @@
 
   <div class="row mt-2">
     <div class="col-4">
-        <label>Primary Owner:<span class="text-danger">*</span></label>
+        <label>Primary Owner:</label>
     </div>
     <div class="col-6">
         <auto-suggestion [data]="userList" display='name' (onSelected)="transaction.primary_Owner = $event" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" 
@@ -30,18 +30,18 @@
       </div>
   </div>
 
-      <div class="row mt-2" *ngIf="transaction.default_State">
+      <div class="row mt-2" *ngIf="showOtherFields">
         <div class="col-4">
             <label>Default Action:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="actionDataList" display="name" seperator="-" placeholder="Select Defaukt Action" 
+            <auto-suggestion [data]="actionDataList" display="name" seperator="-" placeholder="Select Default Action" 
             (onSelected)="transaction.default_Action = $event" inputId="deafult_action" name="deafult_action"
             [preSelected]="(transaction.default_Action.id>0) ? {name: transaction.default_Action.name} : {name: ''}"></auto-suggestion>
         </div>
       </div>
 
-    <div class="row mt-2" *ngIf="transaction.default_State">
+    <div class="row mt-2" *ngIf="showOtherFields">
       <div class="col-4">
           <label>Action Owner:</label>
       </div>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-        <div class="row mt-2 " *ngIf="transaction.default_State">
+        <div class="row mt-2 " *ngIf="showOtherFields">
           <div class="col-4">
               <label>Ack to Add User :</label>
           </div>
@@ -68,7 +68,7 @@
           </div>
       </div>
 
-        <div class="row mt-2 " *ngIf="transaction.default_State">
+        <div class="row mt-2 " *ngIf="showOtherFields">
           <div class="col-4">
               <label>Default Identity:</label>
           </div>
@@ -76,6 +76,15 @@
               <input type="checkbox" [checked]="transaction.isIdentity" (change)="transaction.isIdentity = !transaction.isIdentity" />
           </div>
       </div>
+
+      <div class="row mt-2 " *ngIf="showOtherFields">
+        <div class="col-4">
+            <label>Set Txn Editable:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="transaction.isEditable" (change)="transaction.isEditable = !transaction.isEditable" />
+        </div>
+    </div>
 
     <div class="row mt-1">
         <div class="col-12 text-right">
