@@ -24,7 +24,7 @@
                             </uj-date-time-picker>
 
                             <!-- <input type="checkbox" class="form-control" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues"> -->
-                            <input type="checkbox" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
 
                             <span *ngIf="oddArray[i].r_coltype == 'table'" class="cursor-pointer" title="Open Table" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
 
@@ -51,7 +51,7 @@
                             <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
                             </uj-date-time-picker>
 
-                            <input type="checkbox" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
 
                             <span *ngIf="evenArray[i].r_coltype == 'table'" class="cursor-pointer" title="Open Table" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
 
