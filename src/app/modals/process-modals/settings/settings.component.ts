@@ -70,7 +70,6 @@ export class SettingsComponent implements OnInit {
       this.common.loading--;
       let actionDataList = res['data'] || [];
       this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
-      // this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
       this.common.loading--;
       this.common.showError();

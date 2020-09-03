@@ -32,6 +32,9 @@ export class MyProcessComponent implements OnInit {
   ccLeads = [];
   missingOwnLeads = [];
   unassignedLeads = [];
+  processDashboardList = []
+  processDashboardHeaders = {};
+  processDashboardTitle = '';
 
   tableLeadsForMe = {
     data: {
@@ -149,6 +152,13 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
+  exportCSV() {
+    if(this.processDashboardList.length == 0){
+      this.common.showError('No Data Found')
+    }else{
+    this.common.getCSVFromDataArray(this.processDashboardList, this.processDashboardHeaders, this.processDashboardTitle)}
+  }
+
   resetSearchData() {
     this.searchData = {
       startDate: <any>this.common.getDate(-2),
@@ -197,36 +207,58 @@ export class MyProcessComponent implements OnInit {
       if (res['code'] == 1) {
         if (type == 1) {//for me pending
           this.leadsForMe = res['data'] || [];
+          this.processDashboardList = this.leadsForMe;
+          this.processDashboardTitle = 'Action_For_Me'
           this.setTableLeadsForMe(type);
         } else if (type == 9) { //for me Completd
           this.leadsForMe = res['data'] || [];
+          this.processDashboardList = this.leadsForMe;
+          this.processDashboardTitle = 'Action_For_Me'
           this.setTableLeadsForMe(type);
         } else if (type == 2) { //by me pending
           this.leadsByMe = res['data'] || [];
+          this.processDashboardList = this.leadsByMe;
+          this.processDashboardTitle = 'Transaction_By_Me'
           this.setTableLeadsByMe(type);
         } else if (type == 8) { //by me completed
           this.leadsByMe = res['data'] || [];
+          this.processDashboardList = this.leadsByMe;
+          this.processDashboardTitle = 'Transaction_By_Me'
           this.setTableLeadsByMe(type);
         } else if (type == 3) {
           this.ccLeads = res['data'] || [];
+          this.processDashboardList = this.ccLeads;
+          this.processDashboardTitle = 'CC_Transaction'
           this.setTableCcLeads(type);
         } else if (type == 4) {
           this.allCompletedLeads = res['data'] || [];
+          this.processDashboardList = this.allCompletedLeads;
+          this.processDashboardTitle = 'Completed_Transaction'
           this.setTableAllCompletedLeads(type);
         } else if (type == 5) {
           this.unreadLeads = res['data'] || [];
+          this.processDashboardList = this.unreadLeads;
+          this.processDashboardTitle = 'Unread_Transaction'
           this.setTableUnreadLeads(type);
         } else if (type == 0) {
           this.missingOwnLeads = res['data'] || [];
+          this.processDashboardList = this.missingOwnLeads;
+          this.processDashboardTitle = 'Missing_Owner_Transaction'
           this.setTableMissingOwnLeads(type);
         } else if (type == -1) {
           this.unassignedLeads = res['data'] || [];
+          this.processDashboardList = this.unassignedLeads;
+          this.processDashboardTitle = 'Unassigned_Transaction'
           this.setTableUnassignedLeads(type);
         } else if (type == 6) {
           this.ownedByMeList = res['data'] || [];
+          this.processDashboardList = this.ownedByMeList;
+          this.processDashboardTitle = 'Owned_By_Me'
           this.setTableOwnedByMe(type);
         } else if (type == 7) {
           this.AdminTxnList = res['data'] || [];
+          this.processDashboardList = this.AdminTxnList;
+          this.processDashboardTitle = 'Admin_Transaction'
           this.setTableAdminTxn(type);
         }
       } else {
@@ -293,6 +325,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -341,6 +374,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -393,6 +427,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -439,6 +474,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -484,6 +520,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -531,6 +568,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -576,6 +614,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -622,6 +661,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -673,6 +713,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -742,8 +783,8 @@ export class MyProcessComponent implements OnInit {
         icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       }
 
-      icons.push({ class: "fa fa-files-o blue", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
-
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
+      
     } else if (type == -1) {
       icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
       // icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
@@ -788,7 +829,8 @@ export class MyProcessComponent implements OnInit {
       processId: lead._processid,
       processName: lead._processname,
       identity: lead.identity,
-      priOwnId: lead._pri_own_id
+      priOwnId: lead._pri_own_id,
+      isDisabled: (lead._txn_editable) ? false : true
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
