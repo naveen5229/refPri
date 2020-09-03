@@ -13,6 +13,7 @@ import { FormDataComponent } from '../../modals/process-modals/form-data/form-da
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
 import { ViewDashboardComponent } from '../../modals/process-modals/view-dashboard/view-dashboard.component';
 import { DocumentListingComponent } from '../../modals/document-listing/document-listing.component';
+import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 @Component({
   selector: 'ngx-my-process',
   templateUrl: './my-process.component.html',
@@ -116,7 +117,7 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
-  AdminTxnList  = [];
+  AdminTxnList = [];
   tableAdminTxn = {
     data: {
       headings: {},
@@ -209,7 +210,7 @@ export class MyProcessComponent implements OnInit {
           this.processDashboardList = this.leadsForMe;
           this.processDashboardTitle = 'Action_For_Me'
           this.setTableLeadsForMe(type);
-        }else if (type == 9) { //for me Completd
+        } else if (type == 9) { //for me Completd
           this.leadsForMe = res['data'] || [];
           this.processDashboardList = this.leadsForMe;
           this.processDashboardTitle = 'Action_For_Me'
@@ -254,7 +255,7 @@ export class MyProcessComponent implements OnInit {
           this.processDashboardList = this.ownedByMeList;
           this.processDashboardTitle = 'Owned_By_Me'
           this.setTableOwnedByMe(type);
-        }else if (type == 7) {
+        } else if (type == 7) {
           this.AdminTxnList = res['data'] || [];
           this.processDashboardList = this.AdminTxnList;
           this.processDashboardTitle = 'Admin_Transaction'
@@ -694,7 +695,7 @@ export class MyProcessComponent implements OnInit {
   // end:ownedbyme lead
 
   // start: set table admin txn
-  setTableAdminTxn(type){
+  setTableAdminTxn(type) {
     this.tableAdminTxn.data = {
       headings: this.generateHeadingsAdminTxn(),
       columns: this.getTableColumnsAdminTxn(type)
@@ -702,7 +703,7 @@ export class MyProcessComponent implements OnInit {
     return true;
   }
 
-  generateHeadingsAdminTxn(){
+  generateHeadingsAdminTxn() {
     let headings = {};
     for (var key in this.AdminTxnList[0]) {
       if (key.charAt(0) != "_") {
@@ -716,7 +717,7 @@ export class MyProcessComponent implements OnInit {
     return headings;
   }
 
-  getTableColumnsAdminTxn(type){
+  getTableColumnsAdminTxn(type) {
     let columns = [];
     this.AdminTxnList.map(lead => {
       let column = {};
@@ -728,7 +729,7 @@ export class MyProcessComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        }else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
+        } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
           column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
         }
         else if (key == 'mobile_no') {
@@ -1037,8 +1038,8 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
-  openDocList(lead){
-    this.common.params = { transId : lead._transactionid }
+  openDocList(lead) {
+    this.common.params = { transId: lead._transactionid }
     const activeModal = this.modalService.open(DocumentListingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
@@ -1228,14 +1229,14 @@ export class MyProcessComponent implements OnInit {
 
   uploadDataByCsv() {
     console.log("uploadDataByCsv");
-    // this.common.params = { title: "CSV", button: "Upload" };
-    // const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     this.activeTab = 'leadsByMe';
-    //     this.getProcessLeadByType(2);
-    //   }
-    // });
+    this.common.params = { title: "CSV", button: "Upload", typeFrom: 'process' };
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.activeTab = 'leadsByMe';
+        this.getProcessLeadByType(2);
+      }
+    });
   }
 
   infoMatrix(lead, type) {
