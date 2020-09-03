@@ -25,7 +25,8 @@ export class CsvUploadComponent implements OnInit {
   selectedPartner = {
     id: null,
     name: ""
-  }
+  };
+  selectedProcess = null;
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -83,6 +84,9 @@ export class CsvUploadComponent implements OnInit {
   sampleCsv() {
     if (this.typeFrom == 'installer') {
       window.open(this.api.I_URL + "sample/addInstallerSample.csv");
+    } else if (this.typeFrom == 'process') {
+      alert("working...")
+      // window.open(this.api.I_URL + "sample/addInstallerSample.csv");
     } else {
       window.open(this.api.I_URL + "sample/sampleCampaignCsv.csv");
     }
@@ -105,6 +109,15 @@ export class CsvUploadComponent implements OnInit {
       if (!params.addInstallerCsv || !params.partnerId) {
         return this.common.showError("Partner or CSV is missing");
       }
+    } else if (this.typeFrom == 'process') {
+      params = {
+        processId: this.selectedProcess,
+        csv: this.upload.csv
+      };
+      apiPath = 'Processes/importTransactionCsv';
+      if (!params.csv || !params.processId) {
+        return this.common.showError("Process or CSV is missing");
+      }
     } else {
       params = {
         CmpTarCsv: this.upload.csv,
@@ -116,7 +129,7 @@ export class CsvUploadComponent implements OnInit {
         return this.common.showError("Select Option First");
       }
     }
-    console.log(params);
+    console.log("upload params:", params, apiPath);
     // if (!params.CmpTarCsv && !params.campaignId) {
     //   return this.common.showError("Select Option First");
     // }
