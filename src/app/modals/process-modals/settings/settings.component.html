@@ -25,7 +25,7 @@
       </div>
       <div class="col-6">
           <auto-suggestion [data]="stateDataList" display="name" seperator="-" placeholder="Select Default State" 
-          (onSelected)="transaction.default_State = $event;getActionList($event)" inputId="default_state" name="default_state" 
+          (onSelected)="transaction.default_State = $event;transaction.default_Action = {id:null,name:''};getActionList($event)" inputId="default_state" name="default_state" 
           [preSelected]="(transaction.default_State.id>0) ? {name: transaction.default_State.name} : {name: ''}"></auto-suggestion>
       </div>
   </div>
