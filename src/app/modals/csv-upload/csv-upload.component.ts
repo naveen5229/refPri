@@ -85,8 +85,37 @@ export class CsvUploadComponent implements OnInit {
     if (this.typeFrom == 'installer') {
       window.open(this.api.I_URL + "sample/addInstallerSample.csv");
     } else if (this.typeFrom == 'process') {
-      alert("working...")
-      // window.open(this.api.I_URL + "sample/addInstallerSample.csv");
+      if (!this.selectedProcess) {
+        this.common.showError("Process is missing");
+        return false;
+      }
+      let formField = null;
+      const params = "refId=" + this.selectedProcess + "&refType=2&transId=null";
+      this.common.loading++;
+      this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
+        this.common.loading--;
+        console.log("resss", res);
+        if (res['data']) {
+          formField = res['data'] || [];
+          if (formField && formField.length > 0) {
+            let headings = {};
+            headings['identity'] = { title: 'identity', placeholder: 'identity' };
+            for (var key of formField) {
+              headings[key['r_coltitle']] = { title: key['r_coltitle'], placeholder: key['r_coltitle'] };
+            }
+            console.log("headings:", headings);
+            this.common.getCSVFromDataArray([{ identity: "" }], headings, null);
+          } else {
+            this.common.showError("Data not found");
+          }
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.error('Api Error:', err);
+      });
+
+
     } else {
       window.open(this.api.I_URL + "sample/sampleCampaignCsv.csv");
     }
