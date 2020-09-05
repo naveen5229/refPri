@@ -26,7 +26,11 @@ export class CsvUploadComponent implements OnInit {
     id: null,
     name: ""
   };
-  selectedProcess = null;
+  processForm = {
+    processId: null,
+    isValidationCheck: 1
+  }
+  processList = [];
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -35,7 +39,11 @@ export class CsvUploadComponent implements OnInit {
     this.button = this.common.params.button;
     this.typeFrom = (this.common.params.typeFrom) ? this.common.params.typeFrom : null;
     this.common.handleModalSize('class', 'modal-lg', '450', 'px');
-    this.getcampaignList();
+    if (this.typeFrom == "process") {
+      this.processList = (this.common.params.processList) ? this.common.params.processList : [];
+    } else {
+      this.getcampaignList();
+    }
 
   }
 
@@ -85,17 +93,16 @@ export class CsvUploadComponent implements OnInit {
     if (this.typeFrom == 'installer') {
       window.open(this.api.I_URL + "sample/addInstallerSample.csv");
     } else if (this.typeFrom == 'process') {
-      if (!this.selectedProcess) {
+      if (!this.processForm.processId) {
         this.common.showError("Process is missing");
         return false;
       }
       let formField = null;
-      const params = "refId=" + this.selectedProcess + "&refType=2&transId=null";
+      const params = "refId=" + this.processForm.processId + "&refType=2&transId=null";
       this.common.loading++;
       this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
         this.common.loading--;
-        console.log("resss", res);
-        if (res['data']) {
+        if (res['code'] == 1) {
           formField = res['data'] || [];
           if (formField && formField.length > 0) {
             let headings = {};
@@ -108,6 +115,8 @@ export class CsvUploadComponent implements OnInit {
           } else {
             this.common.showError("Data not found");
           }
+        } else {
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -140,8 +149,9 @@ export class CsvUploadComponent implements OnInit {
       }
     } else if (this.typeFrom == 'process') {
       params = {
-        processId: this.selectedProcess,
-        csv: this.upload.csv
+        processId: this.processForm.processId,
+        csv: this.upload.csv,
+        isValidationCheck: this.processForm.isValidationCheck
       };
       apiPath = 'Processes/importTransactionCsv';
       if (!params.csv || !params.processId) {
@@ -175,11 +185,19 @@ export class CsvUploadComponent implements OnInit {
         let errorData = res['data']['fail'];
         console.log("error: ", errorData);
         alert(res["msg"]);
-        this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+        let title = 'Csv Uploaded Data';
+        if (this.typeFrom == "process" && this.processForm.isValidationCheck == 1) {
+          title = 'Preview';
+        }
+        this.common.params = { successData, errorData, title: title };
         const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
         activeModal.result.then(data => {
           if (data.response) {
-            this.activeModal.close({ response: true });
+            if (this.typeFrom == "process" && this.processForm.isValidationCheck == 1) {
+
+            } else {
+              this.activeModal.close({ response: true });
+            }
           }
         });
       }, err => {

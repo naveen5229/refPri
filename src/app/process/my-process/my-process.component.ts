@@ -1234,8 +1234,8 @@ export class MyProcessComponent implements OnInit {
   }
 
   uploadDataByCsv() {
-    console.log("uploadDataByCsv");
-    this.common.params = { title: "CSV", button: "Upload", typeFrom: 'process' };
+    //console.log("uploadDataByCsv");
+    this.common.params = { title: "CSV", button: "Upload", typeFrom: 'process', processList: this.processList };
     const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {

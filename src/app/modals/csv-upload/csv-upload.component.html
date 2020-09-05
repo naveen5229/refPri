@@ -97,7 +97,7 @@
                 <label>Process<span class="require">*</span></label>
             </div>
             <div class="col-8">
-                <auto-suggestion url="Processes/getProcessList" display="name" seperator="-" placeholder="select Process" (onSelected)="selectedProcess = $event._id" autocomplete="off" name="processId" inputId="processId">
+                <auto-suggestion [data]="processList" display="name" seperator="-" placeholder="select Process" (onSelected)="processForm.processId = $event._id" autocomplete="off" name="processId" inputId="processId">
                 </auto-suggestion>
             </div>
         </div>
@@ -125,11 +125,12 @@
 
 <div class="modal-footer">
     <div class="row footer">
-        <div class="col ">
-            <button class="btn btn-danger" type="button" id="cancel " (click)="closeModal()">Cancel</button>
-        </div>
         <div class="col text-right">
-            <button class="btn btn-primary " type='submit' id="save" (click)="uploadCsv()">{{button}}</button>
+            <button class="btn btn-danger mr-2" type="button" id="cancel " (click)="closeModal()">Cancel</button>
+            <!-- </div>
+        <div class="col text-right"> -->
+            <button *ngIf="typeFrom=='process'" class="btn btn-primary mr-2" type='button' (click)="processForm.isValidationCheck = 1;uploadCsv()">Preview</button>
+            <button class="btn btn-primary" type='submit' id="save" (click)="processForm.isValidationCheck = 0;uploadCsv()">{{button}}</button>
         </div>
     </div>
 </div>
