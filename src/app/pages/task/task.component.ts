@@ -444,6 +444,8 @@ export class TaskComponent implements OnInit {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
       } else if (lead._status == 2 && lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
+      } else if (lead._status == 5 && lead._ack_to_aduser == 1 && !lead._is_send) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByAssigner.bind(this, lead, type), txt: '', title: "Mark Ack by Adduser" });
       }
     }
     return icons;
@@ -484,6 +486,35 @@ export class TaskComponent implements OnInit {
           this.getProcessLeadByType(type);
         } else {
           this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
+
+  ackLeadByAssigner(lead, type) {
+    if (lead._transactionid > 0) {
+      let params = {
+        transId: lead._transactionid
+      }
+      // console.log("ackLeadByAssigner:", params);
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
