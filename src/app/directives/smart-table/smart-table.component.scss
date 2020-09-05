@@ -236,4 +236,11 @@ th:hover {
         width: calc(100% - 17px);
     }
 }
+table tr.highlight {
+    background-color: orange !important;
+    color: #000 !important;
+}
+.highlightcolor {
+    background-color: gray 
+}
 
