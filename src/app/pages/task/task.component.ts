@@ -1,4 +1,4 @@
-import { Component, OnInit, Directive } from "@angular/core";
+import { Component, OnInit, Directive, HostListener } from "@angular/core";
 import { CommonService } from "../../Service/common/common.service";
 import { ApiService } from "../../Service/Api/api.service";
 import { UserService } from "../../Service/user/user.service";
@@ -146,6 +146,7 @@ export class TaskComponent implements OnInit {
     },
     settings: {
       hideHeader: true,
+      arrow:true
     },
   };
 
@@ -155,7 +156,7 @@ export class TaskComponent implements OnInit {
       columns: []
     },
     settings: {
-      hideHeader: true
+      hideHeader: true,
     }
   };
 
@@ -211,7 +212,11 @@ export class TaskComponent implements OnInit {
   };
   activeSabTab = 0;
   unreadLeads = [];
-
+  selectedRow = -1;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
   constructor(
     public common: CommonService,
     public api: ApiService,
@@ -232,6 +237,14 @@ export class TaskComponent implements OnInit {
     };
   }
 
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    let activeId = document.activeElement.id;
+    if (key == 'enter' && this.unreadTaskForMeList.length && this.selectedRow != -1) {
+      this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
+    }
+
+  }
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
       (res) => {
@@ -251,7 +264,11 @@ export class TaskComponent implements OnInit {
       }
     );
   }
-
+  actionHandler(event) {
+    this.selectedRow = event.rowcount;
+   // console.log('row data again', this.unreadTaskForMeList[this.selectedRow]);
+    //  this.transMessage(this, lead, type)
+  }
   getUserGroupList() {
     this.api.get('UserRole/getUserGroups')
       .subscribe(
@@ -381,7 +398,8 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIconsForLeads(lead, type)
+            icons: this.actionIconsForLeads(lead, type),
+            _data: lead
           };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
@@ -1666,7 +1684,7 @@ export class TaskComponent implements OnInit {
       editData: ticket,
     };
     const activeModal = this.modalService.open(TaskNewComponent, {
-      size: "md",
+      size: "sm",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -1841,7 +1859,7 @@ export class TaskComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    // console.log("type:", type);
+     console.log("type:", type);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -1870,7 +1888,9 @@ export class TaskComponent implements OnInit {
       container: "nb-layout",
       backdrop: "static",
     });
+    console.log('reszponse',activeModal,type);
     activeModal.result.then((data) => {
+    console.log('reszponse 2nd',activeModal,type);
       type ? this.getTaskByType(type) : null;
     });
   }
@@ -2673,7 +2693,7 @@ export class TaskComponent implements OnInit {
       }
       this.normalTaskByMeList = selectedList.length > 0 ? selectedList : [];
       this.setTableNormalTaskByMe(type);
-    }else if(type == -5){
+    } else if (type == -5) {
       console.log('in -5')
       let selectedList = [];
       if (subTabType == 4) {

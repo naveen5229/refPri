@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input,Output,HostListener,EventEmitter } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 
 @Component({
@@ -9,6 +9,7 @@ import { CommonService } from '../../Service/common/common.service';
 export class SmartTableComponent implements OnInit {
   @Input() data: any;
   @Input() settings: any;
+  @Output() action = new EventEmitter();
   objectKeys = Object.keys;
   headings = null;
   columns = [];
@@ -32,7 +33,12 @@ export class SmartTableComponent implements OnInit {
     column: null,
     heading: ''
   };
+  selectedRow = 0;
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
   constructor(private cdr: ChangeDetectorRef,
     public common: CommonService) { }
 
@@ -51,8 +57,22 @@ export class SmartTableComponent implements OnInit {
 
   ngAfterViewInit() {
     this.setData();
+   this.selectedRow= (this.settings && this.settings.arrow)? 0: -20;
+   console.log('settings',this.settings);
   }
 
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    let activeId = document.activeElement.id;
+
+    if ((key.includes('arrowup') || key.includes('arrowdown')) && this.columns.length && (this.settings && this.settings.arrow)) {
+     // console.log('selected row data',this.selectedRow,'row count ',this.columns[this.selectedRow]);
+      if (key == 'arrowup' && this.selectedRow != 0) this.selectedRow--;
+      else if (this.selectedRow != this.columns.length - 1) this.selectedRow++;
+      this.action.emit({'data':this.columns[this.selectedRow],'rowcount':this.selectedRow});
+
+    }
+  }
   setData() {
     this.headings = this.data.headings;
     this.handlePagination(this.pages.active);
