@@ -31,8 +31,15 @@
     
     }
   }
+  @-moz-document url-prefix() {
+    table{
+      tbody{
+          width: 101.4% !important;
+      }
+    }
+}
   smart-table{
-    max-height: calc(100vh - 195px);
+   height: calc(100vh - 195px);
     display: block;
     overflow: auto;
   }

@@ -104,6 +104,7 @@ import { FormDataTableComponent } from './modals/process-modals/form-data-table/
 import { AddFieldTableComponent } from './modals/process-modals/add-field-table/add-field-table.component';
 import { ApplyLeaveComponent } from './modals/apply-leave/apply-leave.component';
 import { SettingsComponent } from './modals/process-modals/settings/settings.component';
+import { DocumentListingComponent } from './modals/document-listing/document-listing.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -175,7 +176,8 @@ const PAGE_COMPONENTS = [
   FormDataTableComponent,
   AddFieldTableComponent,
   SettingsComponent,
-  ApplyLeaveComponent
+  ApplyLeaveComponent,
+  DocumentListingComponent,
 ];
 
 @NgModule({

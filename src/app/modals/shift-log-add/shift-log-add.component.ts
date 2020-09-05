@@ -248,8 +248,8 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   resetDate() {
-    this.shiftForm.startTime = null;
-    this.shiftForm.endTime = null;
+    this.shiftForm.startTime = this.today;
+    this.shiftForm.endTime = this.today;
     this.shiftForm.type = 1;
     this.shiftForm.addtime = null;
     this.disableStartTime = false;

@@ -155,7 +155,7 @@ export class ProcessListComponent implements OnInit {
       { class: "fas fa-plus-square", action: this.openFieldModal.bind(this, process, 2), title: "Add Transaction Form Field" },
       { class: "fas fa-plus-square text-primary", action: this.openFieldModal.bind(this, process, 3), title: "Add Primary Info Field" },
       { class: "fas fa-bars text-primary", action: this.openDashboardFieldModal.bind(this, process, 3), title: "Add Dashboard Field" },
-      // { class: "fas fa-sliders-h", action: this.opensettingModal.bind(this, process, 3), title: "settings" }
+      { class: "fas fa-cog", action: this.opensettingModal.bind(this, process), title: "Process settings" }
     ];
     return icons;
   }
@@ -226,6 +226,11 @@ export class ProcessListComponent implements OnInit {
   opensettingModal(process){
     this.common.params = { userList: this.adminList, process_info:process };
     const activeModal = this.modalService.open(SettingsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getProcessList();
+      }
+    });
   }
 
 }

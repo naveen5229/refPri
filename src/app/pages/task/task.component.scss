@@ -137,16 +137,26 @@
     th:nth-child(2) {
         width: 300px !important;
     }
+    .searchselect .tagsinput{
+        border: 1px solid #3366ff!important;
+        border-radius: 0px!important;
+        margin-left: 1px!important;
+        margin-top: 1px!important;
+    
+      }
+      .searchselect .tagsinput input{
+       padding: 4px 5px!important;
+      }
 }
 
 smart-table {
     display: block;
-    max-height: calc(100vh - 168px);
+   height: calc(100vh - 168px);
     overflow: auto;
 }
 
 .sl-smart-table {
-    max-height: calc(100vh - 212px);
+    height: calc(100vh - 212px);
 }
 
 .searchbtn {
@@ -168,20 +178,24 @@ smart-table {
 }
 .byselect{
     border: 1px solid #3366ff;
+    color: #7f7f7f;
     }
 .byselect:focus{
 outline: none;
 }
-.procss{
-    padding: 1px 5px 2px 5px !important;
+
+.leave{
+    height: 32px !important;
+    padding: 1px 0px 1px 1px !important;
     img{
-        width: 25px;
+        width: 28px;
     }
 }
-.leave{
-    padding: 1px 5px 2px 5px !important;
+.allicons{
+    height: 32px !important;
+    padding: 1px 0px 1px 1px !important;
     img{
-        width: 22px;
+        width: 26px;
     }
 }
 :host ::ng-deep .tableFixHead{

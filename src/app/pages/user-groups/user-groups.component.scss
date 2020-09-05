@@ -1,5 +1,14 @@
 smart-table {
     display: block;
-    max-height: calc(100vh - 168px);
+    height: calc(100vh - 170px);
     overflow: auto;
+}
+:host ::ng-deep {
+    .tagsinput{
+        max-height: 85px;
+        overflow: auto;
+    }
+    .tagsinput p{
+        font-size: 12px!important;
+    }
 }
