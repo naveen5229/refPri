@@ -40,6 +40,7 @@ export class AddTransactionComponent implements OnInit {
       name: ""
     },
     identity: null,
+    isAutoIdentity: 0,
     emailStatic: null,
     mobileno: null,
     priCat: {
@@ -74,7 +75,7 @@ export class AddTransactionComponent implements OnInit {
     public api: ApiService) {
     console.log("common params:", this.common.params);
     if (this.common.params) {
-      this.processList = (this.common.params.processList && this.common.params.processList.length) ? this.common.params.processList.map(x => { return { id: x._id, name: x.name } }) : [];
+      this.processList = (this.common.params.processList && this.common.params.processList.length) ? this.common.params.processList.map(x => { return { id: x._id, name: x.name, _default_identity: x._default_identity } }) : [];
       this.adminList = this.common.params.adminList;
     }
     if (this.common.params && this.common.params.rowData) {
@@ -189,26 +190,25 @@ export class AddTransactionComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter1(detail['r_value']);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
       }
       return copyDetails;
     });
     console.log(details, 'updated details from add transaction')
 
     const params = {
-      email: this.transForm.emailStatic,
-
       processId: this.transForm.process.id,
       processName: this.transForm.process.name,
       name: this.transForm.name,
       identity: this.transForm.identity,
       priOwnId: this.transForm.priOwn.id,
       mobileno: this.transForm.mobileno,
-      priCatId: this.transForm.priCat.id,
-      secCatId: this.transForm.secCat.id,
-      typeId: this.transForm.type.id,
-      locationId: this.transForm.location.id,
-      address: this.transForm.address,
+      email: this.transForm.emailStatic,
+      // priCatId: this.transForm.priCat.id,
+      // secCatId: this.transForm.secCat.id,
+      // typeId: this.transForm.type.id,
+      // locationId: this.transForm.location.id,
+      // address: this.transForm.address,
       additionalInfo: JSON.stringify(details),
       requestId: (this.transForm.requestId > 0) ? this.transForm.requestId : null,
     }

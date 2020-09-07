@@ -43,3 +43,8 @@
     text-decoration:underline;
     cursor: pointer;
 }
+smart-table {
+    display: block;
+    height: calc(100vh - 160px);
+    overflow: auto;
+}

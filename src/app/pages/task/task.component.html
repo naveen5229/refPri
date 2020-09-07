@@ -161,7 +161,7 @@
                     Leave
                 </li>
             </ul>
-            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
+            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='projectTask'">
@@ -179,7 +179,7 @@
                 </div>
                 <div class="col-2">
                     <label>
-                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" />
+                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" style="vertical-align: middle;"/>
                     High-Priority</label>
                 </div>
                 <div class="col-2">
