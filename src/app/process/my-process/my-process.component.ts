@@ -153,10 +153,11 @@ export class MyProcessComponent implements OnInit {
   }
 
   exportCSV() {
-    if(this.processDashboardList.length == 0){
+    if (this.processDashboardList.length == 0) {
       this.common.showError('No Data Found')
-    }else{
-    this.common.getCSVFromDataArray(this.processDashboardList, this.processDashboardHeaders, this.processDashboardTitle)}
+    } else {
+      this.common.getCSVFromDataArray(this.processDashboardList, this.processDashboardHeaders, this.processDashboardTitle)
+    }
   }
 
   resetSearchData() {
@@ -765,6 +766,7 @@ export class MyProcessComponent implements OnInit {
     }
 
     if (type == 1) {//for me
+      icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
     } else if (!type) {
@@ -784,7 +786,7 @@ export class MyProcessComponent implements OnInit {
       }
 
       icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
-      
+
     } else if (type == -1) {
       icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
       // icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
@@ -804,6 +806,8 @@ export class MyProcessComponent implements OnInit {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
       } else if (lead._status == 2 && lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
+      } else if (lead._status == 5 && lead._ack_to_aduser == 1 && !lead._is_send) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByAssigner.bind(this, lead, type), txt: '', title: "Mark Ack by Adduser" });
       }
     } else if (type == 4) {
       icons.push({ class: "fa fa-retweet", action: this.reviveTransAction.bind(this, lead, type, 1), txt: '', title: "Revive Transaction" });
@@ -1189,7 +1193,7 @@ export class MyProcessComponent implements OnInit {
           this.common.showToast(res['msg']);
           this.getProcessLeadByType(type);
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -1201,35 +1205,38 @@ export class MyProcessComponent implements OnInit {
     }
   }
 
-  // ackTaskByAssigner(campaign, type) {
-  //   if (campaign._tktid && campaign._refid) {
-  //     let params = {
-  //       campaignId: campaign._tktid,
-  //       taskId: campaign._refid
-  //     }
-  //     console.log("ackTaskByAssigner:", params);
-  //     this.common.loading++;
-  //     this.api.post('AdminTask/ackTaskByAssigner', params).subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] > 0) {
-  //         this.common.showToast(res['msg']);
-  //         this.getProcessLeadByType(type);
-  //       } else {
-  //         this.common.showError(res['data']);
-  //       }
-  //     }, err => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log('Error: ', err);
-  //     });
-  //   } else {
-  //     this.common.showError("Task ID Not Available");
-  //   }
-  // }
+  ackLeadByAssigner(lead, type) {
+    if (lead._transactionid > 0) {
+      let params = {
+        transId: lead._transactionid
+      }
+      // console.log("ackLeadByAssigner:", params);
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
 
   uploadDataByCsv() {
-    console.log("uploadDataByCsv");
-    this.common.params = { title: "CSV", button: "Upload", typeFrom: 'process' };
+    //console.log("uploadDataByCsv");
+    this.common.params = { title: "CSV", button: "Upload", typeFrom: 'process', processList: this.processList };
     const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
