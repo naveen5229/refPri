@@ -1,13 +1,13 @@
 <div class="modal-header">
     <h5>New Project</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" aria-label="Close" id="close" (click)="closeModal(false)">
     <span aria-hidden="true">&times;</span>
 </button>
 </div>
 <div class="modal-body">
     <div class="row mt-2 ">
         <div class="col-4">
-            <textarea row="2" cols="15" placeholder="Enter Description" name="projectDesc" class="form-control" [(ngModel)]="project.projectDesc"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Description" id="dexcription" name="projectDesc" class="form-control" [(ngModel)]="project.projectDesc"></textarea>
         </div>
         <div class="col-3">
             <auto-suggestion (onSelected)="project.owner = $event" [data]="userList" display="name" seperator="-" placeholder="Search Owner" [preSelected]="project.owner.id ? { name: project.owner.name} : {name: ''}" autocomplete="off" name="ownerId" inputId="ownerId">
