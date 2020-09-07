@@ -146,7 +146,7 @@ export class TaskComponent implements OnInit {
     },
     settings: {
       hideHeader: true,
-      arrow:true
+      arrow: true
     },
   };
 
@@ -266,7 +266,7 @@ export class TaskComponent implements OnInit {
   }
   actionHandler(event) {
     this.selectedRow = event.rowcount;
-   // console.log('row data again', this.unreadTaskForMeList[this.selectedRow]);
+    // console.log('row data again', this.unreadTaskForMeList[this.selectedRow]);
     //  this.transMessage(this, lead, type)
   }
   getUserGroupList() {
@@ -1715,7 +1715,7 @@ export class TaskComponent implements OnInit {
       editData: ticket,
     };
     const activeModal = this.modalService.open(TaskNewComponent, {
-      size: "sm",
+      size: "md",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -1890,7 +1890,7 @@ export class TaskComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-     console.log("type:", type);
+    console.log("type:", type);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -1919,9 +1919,9 @@ export class TaskComponent implements OnInit {
       container: "nb-layout",
       backdrop: "static",
     });
-    console.log('reszponse',activeModal,type);
+    console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
-    console.log('reszponse 2nd',activeModal,type);
+      console.log('reszponse 2nd', activeModal, type);
       type ? this.getTaskByType(type) : null;
     });
   }

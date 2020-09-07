@@ -766,6 +766,7 @@ export class MyProcessComponent implements OnInit {
     }
 
     if (type == 1) {//for me
+      icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
     } else if (!type) {

@@ -172,7 +172,7 @@ export class SettingsComponent implements OnInit {
       isEditable: iseditable
     }
 
-    console.log(params, 'params'); return false;
+    console.log(params, 'params');
 
     this.common.loading++;
     this.api.post("Processes/addProcessSetting ", params).subscribe(res => {
