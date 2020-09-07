@@ -19,7 +19,7 @@
             <label>Subject<span class="text-danger">*</span></label>
         </div>
         <div class="col-7">
-            <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="scheduledTask.subject">
+            <input placeholder="Enter Subject" name="subject" id="subject" class="form-control" maxlength="50" [(ngModel)]="scheduledTask.subject">
         </div>
     </div>
     <div class="row mb-2">
@@ -27,7 +27,7 @@
             <label>Description</label>
         </div>
         <div class="col-7">
-            <textarea row="2" cols="15" placeholder="Enter Description" name="description" class="form-control" [(ngModel)]="scheduledTask.description"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Description" id="description" name="description" class="form-control" [(ngModel)]="scheduledTask.description"></textarea>
         </div>
     </div>
     <div class="row mb-2">
@@ -62,7 +62,7 @@
             <label>Days<span class="text-danger">*</span></label>
         </div>
         <div class="col-7">
-            <input style="width: 100%;" type="number" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
+            <input style="width: 100%;" type="number" id="days" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
         </div>
     </div>
     <div class="row mb-2">
@@ -70,7 +70,7 @@
             <label>Hours<span class="text-danger">*</span></label>
         </div>
         <div class="col-7">
-            <input style="width: 100%;" type="number" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
+            <input style="width: 100%;" type="number" id="hours" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
         </div>
     </div>
     <div class="row mb-2">
@@ -88,7 +88,7 @@
             <label class="mr-1">Is Active</label>
         </div>
         <div class="col-7">
-            <input type="checkbox" [checked]="scheduledTask.isActive" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
+            <input type="checkbox" [checked]="scheduledTask.isActive" id="chk" (change)="scheduledTask.isActive = !scheduledTask.isActive" />
         </div>
     </div>
     <div class="row">

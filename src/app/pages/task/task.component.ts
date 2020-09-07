@@ -240,7 +240,9 @@ export class TaskComponent implements OnInit {
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
-    if (key == 'enter' && this.unreadTaskForMeList.length && this.selectedRow != -1) {
+    //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
+    //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
+    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1) {
       this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
     }
 

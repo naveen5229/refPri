@@ -14,28 +14,28 @@
                     </div>
                     <div class="col-10">
                         <span *ngIf="SearchBy === 'By Task'">
-                            <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
-                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
+                            <input type="text" class="form-controls col-9 searchbtn" id="searchtask" placeholder="Search Task" #searchTaskText>
+                            <button class="btn btn-primary btn-sm" id="searchbutton" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
                         </span>
                         <span *ngIf="SearchBy === 'By User'" style="display: flex;">
-                            <auto-suggestion class="form-controls col-9 p-0 searchselect"  [data]="adminList"
+                            <auto-suggestion class="form-controls col-9 p-0 searchselect" id="users" [data]="adminList"
                              display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
-                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
+                            <button class="btn btn-primary btn-sm" id="search" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="col-4 text-right">
 
-                <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 procss" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
+                <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" id="applyleave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
+                <button class="btn btn-primary btn-sm mr-2 procss" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
+                <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" id="st" (click)="openSchedukedTaskMasterModal()">
                     <i class="fa fa-plus" style="font-size:12px;"></i> <b> ST</b>
                 </button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Project" (click)="showProjectPopup()">
+                <button class="btn btn-primary btn-sm mr-2" title="Add Project" id="p" (click)="showProjectPopup()">
                     <i class="fa fa-plus" style="font-size:12px;"></i> <b> P</b>
                 </button>
-                <button class="btn btn-primary btn-sm" title="Add Normal Task" (click)="showTaskPopup()"><i
+                <button class="btn btn-primary btn-sm" title="Add Normal Task" id="taskpopup" (click)="showTaskPopup()"><i
                     class="fa fa-plus"></i></button>
 
                 <!-- <span (click)="assignModal()">assign</span> -->
