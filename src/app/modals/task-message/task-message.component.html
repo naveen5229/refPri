@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5 class="m-0">{{title | titlecase}}</h5>
-    <button type="button" class="close" *ngIf="isLoaded" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" *ngIf="isLoaded" aria-label="Close" id="close" (click)="closeModal(false)">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -61,7 +61,7 @@
 
             <div class="row mt-1 bottom-block">
                 <div class="col-8">
-                    <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                    <textarea name="taskMessage" class="form-control" id="msgtext" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
                 </div>
                 <div col-1>
                     <label class="custom-file-upload">
