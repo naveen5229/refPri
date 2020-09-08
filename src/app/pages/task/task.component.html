@@ -26,19 +26,16 @@
                 </div>
             </div>
             <div class="col-4 text-right">
-
-                <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" id="applyleave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 procss" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" id="st" (click)="openSchedukedTaskMasterModal()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> ST</b>
+                <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
+                    <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
                 </button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Project" id="p" (click)="showProjectPopup()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> P</b>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="p" title="Add Project" (click)="showProjectPopup()">
+                    <img src="./assets/images/addproject.svg" alt="Add Project">
                 </button>
-                <button class="btn btn-primary btn-sm" title="Add Normal Task" id="taskpopup" (click)="showTaskPopup()"><i
-                    class="fa fa-plus"></i></button>
-
-                <!-- <span (click)="assignModal()">assign</span> -->
+                <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task" (click)="showTaskPopup()">
+                    <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
             </div>
         </div>
     </nb-card-header>
@@ -198,7 +195,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTaskByMe'">
-            <smart-table  (action)="actionHandler($event)"  *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
+            <smart-table (action)="actionHandler($event)" *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">
