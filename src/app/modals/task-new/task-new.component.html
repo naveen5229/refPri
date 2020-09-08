@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title || 'New Task'}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" aria-label="Close" id="close" (click)="closeModal(false)">
       <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -48,7 +48,7 @@
             <label>Subject<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
+            <input placeholder="Enter Subject" name="subject" id="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
         </div>
     </div>
 
@@ -57,7 +57,7 @@
             <label>Task Description:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Task" id="description" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
         </div>
     </div>
 

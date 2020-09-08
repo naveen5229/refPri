@@ -137,6 +137,9 @@ export class TaskMessageComponent implements OnInit {
 
   ngAfterViewInit() {
     this.isLoaded = true;
+    setTimeout(() => {
+    this.taskMessage='';
+    }, 30);
   }
 
   scrollToBottom(): void {

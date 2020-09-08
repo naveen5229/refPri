@@ -10,13 +10,13 @@
     <div class="row mb-2">
         <div class="offset-3 col-3">
             <label class="form-check-inline">
-          <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isDate" (change)="datereset()">
+          <input class="form-check-input" type="radio" name="mode" value="" id="single" [(ngModel)]="isDate" (change)="datereset()">
           Single Day Leave
         </label>
         </div>
         <div class="col-3">
             <label class="form-check-inline">
-          <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isDate" (change)="datereset()">
+          <input class="form-check-input" type="radio" name="mode" value="1" id="multiple" [(ngModel)]="isDate" (change)="datereset()">
           Multiple Day Leave
         </label>
         </div>
@@ -82,16 +82,16 @@
         <label>Subject<span class="text-danger">*</span></label>
     </div>
     <div class="col-6">
-        <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="LeaveArray.Subject">
+        <input placeholder="Enter Subject" name="subject" id="subject" class="form-control" maxlength="50" [(ngModel)]="LeaveArray.Subject">
     </div>
   </div> -->
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Reason:<span class="text-danger">*</span></label>
+            <label>Reason:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="LeaveArray.reason"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Task" id="normaltask" name="nomaltask" class="form-control" [(ngModel)]="LeaveArray.reason"></textarea>
         </div>
     </div>
 
@@ -100,5 +100,4 @@
             <button class="btn btn-primary text-capitalize" id="button" (click)="requestLeave()">{{btn}}</button>
         </div>
     </div>
-
 </div>
