@@ -1,80 +1,87 @@
 <div class="modal-header">
-  <h5>{{title || 'New Task'}}</h5>
-  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <h5>{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
     <span aria-hidden="true">&times;</span>
 </button>
 </div>
 <div class="modal-body">
-  <div class="row" >
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-4">
-        <label>Primary Owner:<span class="text-danger">*</span></label>
+    <div class="row">
     </div>
-    <div class="col-6">
-        <auto-suggestion [data]="userList" display='name' (onSelected)="transaction.primary_Owner = $event" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" >
-        </auto-suggestion>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Primary Owner:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display='name' (onSelected)="transaction.primary_Owner = $event" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="(transaction.primary_Owner.id>0) ? {name: transaction.primary_Owner.name} : {name: ''}">
+            </auto-suggestion>
+        </div>
     </div>
-  </div>
 
-  <div class="row mt-2">
-      <div class="col-4">
-          <label>Default State:</label>
-      </div>
-      <div class="col-6">
-          <auto-suggestion [data]="stateDataList" display="name" seperator="-" placeholder="Select Default State" 
-          (onSelected)="transaction.default_State = $event;getActionList($event)" inputId="default_state" name="default_state" ></auto-suggestion>
-      </div>
-  </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Default State:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="stateDataList" display="name" seperator="-" placeholder="Select Default State" (onSelected)="transaction.default_State = $event;transaction.default_Action = {id:null,name:''};getActionList($event)" inputId="default_state" name="default_state"
+                [preSelected]="(transaction.default_State.id>0) ? {name: transaction.default_State.name} : {name: ''}"></auto-suggestion>
+        </div>
+    </div>
 
-      <div class="row mt-2" *ngIf="transaction.default_State">
+    <div class="row mt-2" *ngIf="transaction.default_State.id>0">
         <div class="col-4">
             <label>Default Action:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="actionDataList" display="name" seperator="-" placeholder="Select Defaukt Action" 
-            (onSelected)="transaction.default_Action = $event" inputId="deafult_action" name="deafult_action"></auto-suggestion>
+            <auto-suggestion [data]="actionDataList" display="name" seperator="-" placeholder="Select Default Action" (onSelected)="transaction.default_Action = $event" inputId="deafult_action" name="deafult_action" [preSelected]="(transaction.default_Action.id>0) ? {name: transaction.default_Action.name} : {name: ''}"></auto-suggestion>
         </div>
-      </div>
-
-    <div class="row mt-2" *ngIf="transaction.default_State">
-      <div class="col-4">
-          <label>Action Owner:</label>
-      </div>
-      <div class="col-6">
-          <div class="row">
-              <div class="col-8">
-                <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Action Owner" 
-                (onSelected)="transaction.action_Owner = $event" inputId="action_owner" name="action_owner" [disabled]="transaction.self"></auto-suggestion>
-              </div>
-              <div class="col-4">
-                <input type="checkbox" [checked]="transaction.self" (change)="transaction.self = !transaction.self" />  <label>Self:</label>
-              </div>
-          </div>
-      </div>
     </div>
 
-        <div class="row mt-2 " *ngIf="transaction.default_State">
-          <div class="col-4">
-              <label>Ack to Add User :</label>
-          </div>
-          <div class="col-6">
-              <input type="checkbox" [checked]="transaction.acktoaddUser" (change)="transaction.acktoaddUser = !transaction.acktoaddUser" />
-          </div>
-      </div>
+    <div class="row mt-2" *ngIf="transaction.default_State.id>0">
+        <div class="col-4">
+            <label>Action Owner:</label>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-8" *ngIf="!transaction.self">
+                    <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Action Owner" (onSelected)="transaction.action_Owner = $event" inputId="action_owner" name="action_owner" [preSelected]="(transaction.action_Owner.id>0) ? {name: transaction.action_Owner.name} : {name: ''}"></auto-suggestion>
+                </div>
+                <div class="col-4">
+                    <input type="checkbox" [checked]="transaction.self" (change)="transaction.self = !transaction.self" /> <label style="padding-left: 5px;">Self</label>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="row mt-2 " *ngIf="transaction.default_State">
-          <div class="col-4">
-              <label>Default Identity:</label>
-          </div>
-          <div class="col-6">
-              <input type="checkbox" [checked]="transaction.isIdentity" (change)="transaction.isIdentity = !transaction.isIdentity" />
-          </div>
-      </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Ack to Add User:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="transaction.acktoaddUser" (change)="transaction.acktoaddUser = !transaction.acktoaddUser" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Default Identity:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="transaction.isIdentity" (change)="transaction.isIdentity = !transaction.isIdentity" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Set Txn Editable:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="transaction.isEditable" (change)="transaction.isEditable = !transaction.isEditable" />
+        </div>
+    </div>
 
     <div class="row mt-1">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize" id="button"(click)="requestLeave()" >{{btn}}</button>
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveProcess()">{{btn}}</button>
         </div>
     </div>

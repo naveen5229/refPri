@@ -328,7 +328,7 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Personalised Dashboard',
+        title: 'Custom Dashboard',
         icon: 'grid-outline',
         link: '/pages/personalised-dashboard',
         home: true,

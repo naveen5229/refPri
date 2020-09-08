@@ -72,8 +72,8 @@ processId=null;
     console.log(this.processId,'processid')
     this.common.loading++;
     let processid = this.processId._id;
-    let startDate = this.common.dateFormatter1(this.searchData.startDate);
-    let endDate = this.common.dateFormatter1(this.searchData.endDate);
+    let startDate = this.common.dateFormatter(this.searchData.startDate,null,false);
+    let endDate = this.common.dateFormatter(this.searchData.endDate,null,false);
 
     // return;
     this.resetSmartTableData();

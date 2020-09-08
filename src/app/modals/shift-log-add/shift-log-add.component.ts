@@ -48,7 +48,7 @@ export class ShiftLogAddComponent implements OnInit {
     { id: -1, name: 'Optional-Leave' }
   ];
   isAttendanceType = false;
-  endDateDis:Boolean = true;
+  endDateDis: Boolean = true;
 
   constructor(public activeModal: NgbActiveModal, public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
@@ -67,9 +67,9 @@ export class ShiftLogAddComponent implements OnInit {
 
       this.dateExtendForAttendance = new Date(this.shiftForm.endTime);
       this.dateExtendForAttendance.setDate(this.dateExtendForAttendance.getDate() + 1);
-    }else{
+    } else {
       this.shiftForm.startTime = this.today;
-      this.shiftForm.endTime =this.today;
+      this.shiftForm.endTime = null;
     }
   }
 
@@ -85,17 +85,16 @@ export class ShiftLogAddComponent implements OnInit {
       console.log("data", res['data'])
       if (res['code'] > 0) {
         let adminList = res["data"] || [];
-          this.adminList = adminList.map((x) => {
-            return { id: x.id, name: x.name + " - " + x.department_name };
-          });
+        this.adminList = adminList.map((x) => {
+          return { id: x.id, name: x.name + " - " + x.department_name };
+        });
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   // start: shift log list
@@ -248,7 +247,7 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   resetDate() {
-    this.shiftForm.startTime = null;
+    this.shiftForm.startTime = this.today;
     this.shiftForm.endTime = null;
     this.shiftForm.type = 1;
     this.shiftForm.addtime = null;

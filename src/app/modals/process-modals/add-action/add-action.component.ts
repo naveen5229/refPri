@@ -21,8 +21,8 @@ export class AddActionComponent implements OnInit {
     threshold: null,
     modes: [],
     nextAction: [],
-    isDefault: false,
-    defaultOwner: { id: null, name: null }
+    // isDefault: false,
+    // defaultOwner: { id: null, name: null }
   }
   modeList = [];
   actionList = [];
@@ -80,9 +80,7 @@ export class AddActionComponent implements OnInit {
   saveProcessAction() {
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
-    } else if (this.actionForm.isDefault && !this.actionForm.defaultOwner.id) {
-      this.common.showError('Please Select Default Owner');
-    }
+    } 
     else {
       const params = {
         requestId: this.actionForm.rowId,
@@ -92,8 +90,8 @@ export class AddActionComponent implements OnInit {
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         threshold: this.actionForm.threshold,
         nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
-        isDefault: this.actionForm.isDefault,
-        defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
+        // isDefault: this.actionForm.isDefault,
+        // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };
       console.log("actionForm:", params);
       this.common.loading++;
@@ -208,12 +206,12 @@ export class AddActionComponent implements OnInit {
     this.actionForm.threshold = (action.threshold) ? action.threshold : null;
     this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
     this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
-    this.actionForm.isDefault = (action._is_default) ? true : false;
-    if (action._default_owner_id > 0) {
-      let selectedUser = this.adminList.find(x => (x.id == action._default_owner_id));
-      this.actionForm.defaultOwner.id = action._default_owner_id;
-      this.actionForm.defaultOwner.name = (selectedUser) ? selectedUser.name : 'Inactive User';
-    }
+    // this.actionForm.isDefault = (action._is_default) ? true : false;
+    // if (action._default_owner_id > 0) {
+    //   let selectedUser = this.adminList.find(x => (x.id == action._default_owner_id));
+      // this.actionForm.defaultOwner.id = action._default_owner_id;
+      // this.actionForm.defaultOwner.name = (selectedUser) ? selectedUser.name : 'Inactive User';
+    // }
   }
 
   deleteAction(row) {
@@ -257,8 +255,8 @@ export class AddActionComponent implements OnInit {
     this.actionForm.modes = [];
     this.actionForm.nextAction = [];
     this.actionForm.threshold = null;
-    this.actionForm.isDefault = null;
-    this.actionForm.defaultOwner = { id: null, name: null };
+    // this.actionForm.isDefault = null;
+    // this.actionForm.defaultOwner = { id: null, name: null };
   }
 
 }

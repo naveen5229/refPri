@@ -14,31 +14,28 @@
                     </div>
                     <div class="col-10">
                         <span *ngIf="SearchBy === 'By Task'">
-                            <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
-                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
+                            <input type="text" class="form-controls col-9 searchbtn" id="searchtask" placeholder="Search Task" #searchTaskText>
+                            <button class="btn btn-primary btn-sm" id="searchbutton" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
                         </span>
                         <span *ngIf="SearchBy === 'By User'" style="display: flex;">
-                            <auto-suggestion class="form-controls col-9 p-0 searchselect"  [data]="adminList"
+                            <auto-suggestion class="form-controls col-9 p-0 searchselect" id="users" [data]="adminList"
                              display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
-                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
+                            <button class="btn btn-primary btn-sm" id="search" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="col-4 text-right">
-
-                <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 procss" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> ST</b>
+                <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
+                    <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
                 </button>
-                <button class="btn btn-primary btn-sm mr-2" title="Add Project" (click)="showProjectPopup()">
-                    <i class="fa fa-plus" style="font-size:12px;"></i> <b> P</b>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="p" title="Add Project" (click)="showProjectPopup()">
+                    <img src="./assets/images/addproject.svg" alt="Add Project">
                 </button>
-                <button class="btn btn-primary btn-sm" title="Add Normal Task" (click)="showTaskPopup()"><i
-                    class="fa fa-plus"></i></button>
-
-                <!-- <span (click)="assignModal()">assign</span> -->
+                <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task" (click)="showTaskPopup()">
+                    <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
             </div>
         </div>
     </nb-card-header>
@@ -161,7 +158,7 @@
                     Leave
                 </li>
             </ul>
-            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList">
+            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='projectTask'">
@@ -179,7 +176,7 @@
                 </div>
                 <div class="col-2">
                     <label>
-                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" />
+                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" style="vertical-align: middle;"/>
                     High-Priority</label>
                 </div>
                 <div class="col-2">
@@ -198,7 +195,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTaskByMe'">
-            <smart-table *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
+            <smart-table (action)="actionHandler($event)" *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">

@@ -10,7 +10,8 @@
             <label>Process Name<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="processList" display="name" placeholder="Process Name" name="processName" id="processName" (onSelected)="transForm.process=($event);" [preSelected]="{name:transForm.process.name}" autocomplete="off">
+            <auto-suggestion [data]="processList" display="name" placeholder="Process Name" name="processName" id="processName" (onSelected)="transForm.process=($event);transForm.isAutoIdentity = $event._default_identity" [preSelected]="{name:transForm.process.name}"
+                autocomplete="off">
             </auto-suggestion>
         </div>
         <div class="col-2 text-right">
@@ -28,132 +29,20 @@
             <div class="col-6">
                 <div class="row">
                     <div class="col-4">
-                        <label>Identity<span class="text-danger">*</span></label>
+                        <label>Identity<span *ngIf="!transForm.isAutoIdentity" class="text-danger">*</span></label>
                     </div>
                     <div class="col-8">
-                        <input type="text" class="form-control" placeholder="Enter Identity" [(ngModel)]="transForm.identity">
+                        <input type="text" class="form-control" placeholder="Enter Identity" [(ngModel)]="transForm.identity" [disabled]="(transForm.isAutoIdentity==1 || transForm.requestId>0)">
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-    <!-- <div class="row mb-2">
-        <div class="col-4">
-            <label>Transaction Name<span class="text-danger">*</span></label>
-        </div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Transaction Name" [(ngModel)]="transForm.name">
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Primary Owner</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="transForm.priOwn.id=($event.id);" [preSelected]="{name:transForm.priOwn.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Mobile No</label>
-        </div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Mobile Mo" [(ngModel)]="transForm.mobileno">
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Primary Category</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="priCatList" display="name" placeholder="Select Primary Category" name="priCat" id="priCat" (onSelected)="transForm.priCat.id=($event.id);" [preSelected]="{name:transForm.priCat.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Secondary Category</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);" [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Type</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);" [preSelected]="{name:transForm.type.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Location</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)" [preSelected]="{location:transForm.location.name}"
-                autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Address</label>
-        </div>
-        <div class="col-8">
-            <textarea name="address" cols="5" rows="5" class="form-control" [(ngModel)]="transForm.address"></textarea>
-        </div>
-    </div> -->
     <!-- start:dym field -->
     <div>
         <div style="width: 100%;">
             <div>
-
-                <div class="row">
-
-                    <!-- <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
-                <div class="row">
-                <div class="col-4">
-                    <label>Contact Name<span class="text-danger"></span></label>
-                </div>
-                <div class="col-8">
-                    <input type="text" class="form-control" placeholder="Enter Contact Name"
-                        [(ngModel)]="transForm.name">
-                </div>
-            </div>
-            </div>
-
-            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
-                <div class="row">
-                <div class="col-4">
-                    <label>Email<span class="text-danger"></span></label>
-                </div>
-                <div class="col-8">
-                    <input type="email" pattern=".+@globex.com" class="form-control" placeholder="Enter Email"
-                        [(ngModel)]="transForm.emailStatic">
-                </div>
-            </div>
-            </div>
-
-            <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
-                <div class="row">
-                <div class="col-4">
-                    <label>Mob Number<span class="text-danger"></span></label>
-                </div>
-                <div class="col-8">
-                    <input type="number" class="form-control" placeholder="Enter Mobile Number"
-                        [(ngModel)]="transForm.mobileno">
-                </div>
-            </div>
-            </div> -->
-
-                </div>
-
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
                     <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
@@ -186,7 +75,7 @@
                                     [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
 
-                                <input type="checkbox" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+                                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
 
                                 <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
 
@@ -199,13 +88,13 @@
                                 </select>
 
                                 <!-- attachment -->
-                                <label class="custom-file-upload" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
                                     <span *ngIf="oddArray[i].r_url">
                                         <a target="_blank" [href]="oddArray[i].r_url" [download] ="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
                                     </span>
-                                    <input type="file" class="file-control" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
                                     <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
                                 </label>
                             </div>
                         </div>
@@ -240,7 +129,7 @@
                             [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                         </auto-suggestion>
 
-                        <input type="checkbox" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+                        <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
 
                         <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
 

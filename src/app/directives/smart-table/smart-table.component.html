@@ -1,4 +1,4 @@
-<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '93%'}">
+<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '94%'}">
     <table *ngIf="headings && !isTableHide" class="table table-bordered fixed">
         <thead *ngIf="!settings.hideHeader">
             <th style="width: 40px">#</th>
@@ -47,7 +47,7 @@
         </thead>
         <tbody>
 
-            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick(column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column)}"
+            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick(column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column),'highlight' : selectedRow == i, 'highlightcolor' : columns.length-1 == i}"
                 [ngStyle]="column.style">
 
                 <!-- Records Count -->
