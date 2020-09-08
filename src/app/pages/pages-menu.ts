@@ -332,7 +332,13 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'grid-outline',
         link: '/pages/personalised-dashboard',
         home: true,
-      }
+      },
+      // {
+      //   title: 'Graphical Reports',
+      //   icon: 'grid-outline',
+      //   link: '/pages/graphical-reports',
+      //   home: true,
+      // }
     ]
   }
 

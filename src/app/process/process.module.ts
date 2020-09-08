@@ -10,9 +10,10 @@ import { ProcessListComponent } from './process-list/process-list.component';
 import { MyProcessComponent } from './my-process/my-process.component';
 import { ProcessAdminComponent } from './process-admin/process-admin.component';
 import { PersonalisedDashboardComponent } from './personalised-dashboard/personalised-dashboard.component';
+import { GraphicalReportsComponent } from './graphical-reports/graphical-reports.component';
 
 @NgModule({
-  declarations: [ProcessListComponent, MyProcessComponent, ProcessAdminComponent, PersonalisedDashboardComponent],
+  declarations: [ProcessListComponent, MyProcessComponent, ProcessAdminComponent, PersonalisedDashboardComponent, GraphicalReportsComponent],
   imports: [
     CommonModule,
     ProcessRoutingModule,

@@ -53,6 +53,7 @@ import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
 import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
 import { PersonalisedDashboardComponent } from '../process/personalised-dashboard/personalised-dashboard.component';
+import { GraphicalReportsComponent } from '../process/graphical-reports/graphical-reports.component';
 
 const routes: Routes = [{
   path: '',
@@ -316,6 +317,10 @@ const routes: Routes = [{
     {
       path: 'personalised-dashboard',
       component: PersonalisedDashboardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },{
+      path: 'graphical-reports',
+      component: GraphicalReportsComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {
