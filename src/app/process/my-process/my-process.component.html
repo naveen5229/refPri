@@ -11,8 +11,9 @@
                 </span>
             </div>
             <div class="col-3 text-right">
+                <button class="btn btn-primary btn-sm mr-2" (click)="exportCSV()" title="Download Excel"><i class="fas fa-download"></i></button>
                 <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/task')" title="Go To Task"><i class="fas fa-tasks"></i></button>
-                <!-- <button class="btn btn-primary btn-sm mr-2" id="csvCmapaign" (click)="uploadDataByCsv()">Csv </button> -->
+                <button class="btn btn-primary btn-sm mr-2" id="csvProcess" (click)="uploadDataByCsv()">Csv</button>
                 <button class="btn btn-primary btn-sm" id="addLead" (click)="addTransaction()"><i
                 class="fa fa-plus"></i></button>
             </div>

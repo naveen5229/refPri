@@ -14,31 +14,28 @@
                     </div>
                     <div class="col-10">
                         <span *ngIf="SearchBy === 'By Task'">
-                            <input type="text" class="form-controls col-9 searchbtn" placeholder="Search Task" #searchTaskText>
-                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
+                            <input type="text" class="form-controls col-9 searchbtn" id="searchtask" placeholder="Search Task" #searchTaskText>
+                            <button class="btn btn-primary btn-sm" id="searchbutton" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
                         </span>
                         <span *ngIf="SearchBy === 'By User'" style="display: flex;">
-                            <auto-suggestion class="form-controls col-9 p-0 searchselect"  [data]="adminList"
+                            <auto-suggestion class="form-controls col-9 p-0 searchselect" id="users" [data]="adminList"
                              display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
-                            <button class="btn btn-primary btn-sm" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
+                            <button class="btn btn-primary btn-sm" id="search" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="col-4 text-right">
-
-                <button class="btn btn-primary btn-sm mr-2 leave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
+                <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave" (click)="applyLeave()"><img src="./assets/images/leave.svg" alt="leave"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
                     <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
                 </button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" title="Add Project" (click)="showProjectPopup()">
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="p" title="Add Project" (click)="showProjectPopup()">
                     <img src="./assets/images/addproject.svg" alt="Add Project">
                 </button>
-                <button class="btn btn-primary btn-sm allicons" title="Add Normal Task" (click)="showTaskPopup()">
+                <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task" (click)="showTaskPopup()">
                     <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
-
-                <!-- <span (click)="assignModal()">assign</span> -->
             </div>
         </div>
     </nb-card-header>
@@ -198,7 +195,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTaskByMe'">
-            <smart-table *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
+            <smart-table (action)="actionHandler($event)" *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">

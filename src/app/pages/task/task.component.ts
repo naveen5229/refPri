@@ -1,4 +1,4 @@
-import { Component, OnInit, Directive } from "@angular/core";
+import { Component, OnInit, Directive, HostListener } from "@angular/core";
 import { CommonService } from "../../Service/common/common.service";
 import { ApiService } from "../../Service/Api/api.service";
 import { UserService } from "../../Service/user/user.service";
@@ -146,6 +146,7 @@ export class TaskComponent implements OnInit {
     },
     settings: {
       hideHeader: true,
+      arrow: true
     },
   };
 
@@ -155,7 +156,7 @@ export class TaskComponent implements OnInit {
       columns: []
     },
     settings: {
-      hideHeader: true
+      hideHeader: true,
     }
   };
 
@@ -211,7 +212,11 @@ export class TaskComponent implements OnInit {
   };
   activeSabTab = 0;
   unreadLeads = [];
-
+  selectedRow = -1;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
   constructor(
     public common: CommonService,
     public api: ApiService,
@@ -232,6 +237,16 @@ export class TaskComponent implements OnInit {
     };
   }
 
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    let activeId = document.activeElement.id;
+    //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
+    //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
+    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1) {
+      this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
+    }
+
+  }
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
       (res) => {
@@ -251,7 +266,11 @@ export class TaskComponent implements OnInit {
       }
     );
   }
-
+  actionHandler(event) {
+    this.selectedRow = event.rowcount;
+    // console.log('row data again', this.unreadTaskForMeList[this.selectedRow]);
+    //  this.transMessage(this, lead, type)
+  }
   getUserGroupList() {
     this.api.get('UserRole/getUserGroups')
       .subscribe(
@@ -381,7 +400,8 @@ export class TaskComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIconsForLeads(lead, type)
+            icons: this.actionIconsForLeads(lead, type),
+            _data: lead
           };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
@@ -426,6 +446,8 @@ export class TaskComponent implements OnInit {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
       } else if (lead._status == 2 && lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
+      } else if (lead._status == 5 && lead._ack_to_aduser == 1 && !lead._is_send) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByAssigner.bind(this, lead, type), txt: '', title: "Mark Ack by Adduser" });
       }
     }
     return icons;
@@ -466,6 +488,35 @@ export class TaskComponent implements OnInit {
           this.getProcessLeadByType(type);
         } else {
           this.common.showError(res['data']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
+
+  ackLeadByAssigner(lead, type) {
+    if (lead._transactionid > 0) {
+      let params = {
+        transId: lead._transactionid
+      }
+      // console.log("ackLeadByAssigner:", params);
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -1841,7 +1892,7 @@ export class TaskComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    // console.log("type:", type);
+    console.log("type:", type);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -1870,7 +1921,9 @@ export class TaskComponent implements OnInit {
       container: "nb-layout",
       backdrop: "static",
     });
+    console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
+      console.log('reszponse 2nd', activeModal, type);
       type ? this.getTaskByType(type) : null;
     });
   }
@@ -2673,7 +2726,7 @@ export class TaskComponent implements OnInit {
       }
       this.normalTaskByMeList = selectedList.length > 0 ? selectedList : [];
       this.setTableNormalTaskByMe(type);
-    }else if(type == -5){
+    } else if (type == -5) {
       console.log('in -5')
       let selectedList = [];
       if (subTabType == 4) {

@@ -13,6 +13,7 @@ import { FormDataComponent } from '../../modals/process-modals/form-data/form-da
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
 import { ViewDashboardComponent } from '../../modals/process-modals/view-dashboard/view-dashboard.component';
 import { DocumentListingComponent } from '../../modals/document-listing/document-listing.component';
+import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component';
 @Component({
   selector: 'ngx-my-process',
   templateUrl: './my-process.component.html',
@@ -31,6 +32,9 @@ export class MyProcessComponent implements OnInit {
   ccLeads = [];
   missingOwnLeads = [];
   unassignedLeads = [];
+  processDashboardList = []
+  processDashboardHeaders = {};
+  processDashboardTitle = '';
 
   tableLeadsForMe = {
     data: {
@@ -113,7 +117,7 @@ export class MyProcessComponent implements OnInit {
     }
   };
 
-  AdminTxnList  = [];
+  AdminTxnList = [];
   tableAdminTxn = {
     data: {
       headings: {},
@@ -146,6 +150,14 @@ export class MyProcessComponent implements OnInit {
         this.getProcessLeadByType(2);
       }
     });
+  }
+
+  exportCSV() {
+    if (this.processDashboardList.length == 0) {
+      this.common.showError('No Data Found')
+    } else {
+      this.common.getCSVFromDataArray(this.processDashboardList, this.processDashboardHeaders, this.processDashboardTitle)
+    }
   }
 
   resetSearchData() {
@@ -196,36 +208,58 @@ export class MyProcessComponent implements OnInit {
       if (res['code'] == 1) {
         if (type == 1) {//for me pending
           this.leadsForMe = res['data'] || [];
+          this.processDashboardList = this.leadsForMe;
+          this.processDashboardTitle = 'Action_For_Me'
           this.setTableLeadsForMe(type);
-        }else if (type == 9) { //for me Completd
+        } else if (type == 9) { //for me Completd
           this.leadsForMe = res['data'] || [];
+          this.processDashboardList = this.leadsForMe;
+          this.processDashboardTitle = 'Action_For_Me'
           this.setTableLeadsForMe(type);
         } else if (type == 2) { //by me pending
           this.leadsByMe = res['data'] || [];
+          this.processDashboardList = this.leadsByMe;
+          this.processDashboardTitle = 'Transaction_By_Me'
           this.setTableLeadsByMe(type);
         } else if (type == 8) { //by me completed
           this.leadsByMe = res['data'] || [];
+          this.processDashboardList = this.leadsByMe;
+          this.processDashboardTitle = 'Transaction_By_Me'
           this.setTableLeadsByMe(type);
         } else if (type == 3) {
           this.ccLeads = res['data'] || [];
+          this.processDashboardList = this.ccLeads;
+          this.processDashboardTitle = 'CC_Transaction'
           this.setTableCcLeads(type);
         } else if (type == 4) {
           this.allCompletedLeads = res['data'] || [];
+          this.processDashboardList = this.allCompletedLeads;
+          this.processDashboardTitle = 'Completed_Transaction'
           this.setTableAllCompletedLeads(type);
         } else if (type == 5) {
           this.unreadLeads = res['data'] || [];
+          this.processDashboardList = this.unreadLeads;
+          this.processDashboardTitle = 'Unread_Transaction'
           this.setTableUnreadLeads(type);
         } else if (type == 0) {
           this.missingOwnLeads = res['data'] || [];
+          this.processDashboardList = this.missingOwnLeads;
+          this.processDashboardTitle = 'Missing_Owner_Transaction'
           this.setTableMissingOwnLeads(type);
         } else if (type == -1) {
           this.unassignedLeads = res['data'] || [];
+          this.processDashboardList = this.unassignedLeads;
+          this.processDashboardTitle = 'Unassigned_Transaction'
           this.setTableUnassignedLeads(type);
         } else if (type == 6) {
           this.ownedByMeList = res['data'] || [];
+          this.processDashboardList = this.ownedByMeList;
+          this.processDashboardTitle = 'Owned_By_Me'
           this.setTableOwnedByMe(type);
-        }else if (type == 7) {
+        } else if (type == 7) {
           this.AdminTxnList = res['data'] || [];
+          this.processDashboardList = this.AdminTxnList;
+          this.processDashboardTitle = 'Admin_Transaction'
           this.setTableAdminTxn(type);
         }
       } else {
@@ -292,6 +326,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -340,6 +375,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -392,6 +428,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -438,6 +475,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -483,6 +521,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -530,6 +569,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -575,6 +615,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -621,6 +662,7 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
@@ -654,7 +696,7 @@ export class MyProcessComponent implements OnInit {
   // end:ownedbyme lead
 
   // start: set table admin txn
-  setTableAdminTxn(type){
+  setTableAdminTxn(type) {
     this.tableAdminTxn.data = {
       headings: this.generateHeadingsAdminTxn(),
       columns: this.getTableColumnsAdminTxn(type)
@@ -662,7 +704,7 @@ export class MyProcessComponent implements OnInit {
     return true;
   }
 
-  generateHeadingsAdminTxn(){
+  generateHeadingsAdminTxn() {
     let headings = {};
     for (var key in this.AdminTxnList[0]) {
       if (key.charAt(0) != "_") {
@@ -672,10 +714,11 @@ export class MyProcessComponent implements OnInit {
         headings[key]["type"] = "date";
       }
     }
+    this.processDashboardHeaders = headings;
     return headings;
   }
 
-  getTableColumnsAdminTxn(type){
+  getTableColumnsAdminTxn(type) {
     let columns = [];
     this.AdminTxnList.map(lead => {
       let column = {};
@@ -687,7 +730,7 @@ export class MyProcessComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        }else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
+        } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
           column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
         }
         else if (key == 'mobile_no') {
@@ -723,6 +766,7 @@ export class MyProcessComponent implements OnInit {
     }
 
     if (type == 1) {//for me
+      icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
     } else if (!type) {
@@ -741,8 +785,8 @@ export class MyProcessComponent implements OnInit {
         icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       }
 
-      icons.push({ class: "fa fa-files-o blue", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
-      
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
+
     } else if (type == -1) {
       icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
       // icons.push({ class: "fa fa-user-plus", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Assign Action Owner" });
@@ -762,6 +806,8 @@ export class MyProcessComponent implements OnInit {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
       } else if (lead._status == 2 && lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Lead As completed" });
+      } else if (lead._status == 5 && lead._ack_to_aduser == 1 && !lead._is_send) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByAssigner.bind(this, lead, type), txt: '', title: "Mark Ack by Adduser" });
       }
     } else if (type == 4) {
       icons.push({ class: "fa fa-retweet", action: this.reviveTransAction.bind(this, lead, type, 1), txt: '', title: "Revive Transaction" });
@@ -787,7 +833,8 @@ export class MyProcessComponent implements OnInit {
       processId: lead._processid,
       processName: lead._processname,
       identity: lead.identity,
-      priOwnId: lead._pri_own_id
+      priOwnId: lead._pri_own_id,
+      isDisabled: (lead._txn_editable) ? false : true
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
@@ -995,8 +1042,8 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
-  openDocList(lead){
-    this.common.params = { transId : lead._transactionid }
+  openDocList(lead) {
+    this.common.params = { transId: lead._transactionid }
     const activeModal = this.modalService.open(DocumentListingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
@@ -1146,7 +1193,7 @@ export class MyProcessComponent implements OnInit {
           this.common.showToast(res['msg']);
           this.getProcessLeadByType(type);
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -1158,42 +1205,45 @@ export class MyProcessComponent implements OnInit {
     }
   }
 
-  // ackTaskByAssigner(campaign, type) {
-  //   if (campaign._tktid && campaign._refid) {
-  //     let params = {
-  //       campaignId: campaign._tktid,
-  //       taskId: campaign._refid
-  //     }
-  //     console.log("ackTaskByAssigner:", params);
-  //     this.common.loading++;
-  //     this.api.post('AdminTask/ackTaskByAssigner', params).subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] > 0) {
-  //         this.common.showToast(res['msg']);
-  //         this.getProcessLeadByType(type);
-  //       } else {
-  //         this.common.showError(res['data']);
-  //       }
-  //     }, err => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log('Error: ', err);
-  //     });
-  //   } else {
-  //     this.common.showError("Task ID Not Available");
-  //   }
-  // }
+  ackLeadByAssigner(lead, type) {
+    if (lead._transactionid > 0) {
+      let params = {
+        transId: lead._transactionid
+      }
+      // console.log("ackLeadByAssigner:", params);
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Lead ID Not Available");
+    }
+  }
 
   uploadDataByCsv() {
-    console.log("uploadDataByCsv");
-    // this.common.params = { title: "CSV", button: "Upload" };
-    // const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     this.activeTab = 'leadsByMe';
-    //     this.getProcessLeadByType(2);
-    //   }
-    // });
+    //console.log("uploadDataByCsv");
+    this.common.params = { title: "CSV", button: "Upload", typeFrom: 'process', processList: this.processList };
+    const activeModal = this.modalService.open(CsvUploadComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.activeTab = 'leadsByMe';
+        this.getProcessLeadByType(2);
+      }
+    });
   }
 
   infoMatrix(lead, type) {

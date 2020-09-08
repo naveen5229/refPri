@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild ,HostListener} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
@@ -76,7 +76,11 @@ export class TaskMessageComponent implements OnInit {
       isExist: true
     }
   ];
-
+  isLoaded = false;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -131,6 +135,13 @@ export class TaskMessageComponent implements OnInit {
     this.scrollToBottom();
   }
 
+  ngAfterViewInit() {
+    this.isLoaded = true;
+    setTimeout(() => {
+    this.taskMessage='';
+    }, 30);
+  }
+
   scrollToBottom(): void {
     try {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
@@ -139,6 +150,15 @@ export class TaskMessageComponent implements OnInit {
 
   closeModal(response) {
     this.activeModal.close({ response: response });
+  }
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    let activeId = document.activeElement.id;
+    console.log('row data',key);
+    if (key == 'escape') {
+      this.closeModal(false);
+    }
+
   }
 
   getMessageList() {
