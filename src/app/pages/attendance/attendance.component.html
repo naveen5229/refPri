@@ -1,7 +1,7 @@
 <nb-card>
-    <nb-card-header >
+    <nb-card-header>
         <div class="row m-0">
-                <h5 class="heading-design">Attendance</h5>
+            <h5 class="heading-design">Attendance</h5>
         </div>
     </nb-card-header>
     <nb-card-body>
@@ -20,6 +20,9 @@
 
             <div class="col-4 text-right">
                 <button id="summary" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2 btn-sm">Attendance Monthly Summary</button>
+            </div>
+            <div class="col-1 text-right">
+                <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
             </div>
 
         </div>

@@ -133,4 +133,8 @@ export class AttendanceComponent implements OnInit {
     const activeModal = this.modalService.open(AttendanceMonthlySummaryComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
   }
+
+  exportCSV() {
+    this.common.getCSVFromTableId('attandanceList')
+  }
 }
