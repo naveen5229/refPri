@@ -1,7 +1,7 @@
 <nb-card>
     <nb-card-header>
         <div class="row">
-                <h5 class="heading-design">User Groups</h5>
+            <h5 class="heading-design">User Groups</h5>
         </div>
     </nb-card-header>
 
@@ -15,8 +15,8 @@
                 </auto-suggestion>
             </div>
             <div class="col-3">
-                <button class="btn btn-primary btn-sm mr-2" (click)="addGroup()" [innerHTML] = "(groupForm.requestId > 0)?'Update':'Add'"></button>
-                <button class="btn btn-secondary btn-sm mr-2" (click)="resetForm()" >Reset</button>
+                <button class="btn btn-primary btn-sm mr-2" (click)="addGroup()" [innerHTML]="(groupForm.requestId > 0)?'Update':'Add'"></button>
+                <button class="btn btn-secondary btn-sm mr-2" (click)="resetForm()">Reset</button>
             </div>
         </div>
         <div class="row">
@@ -24,3 +24,23 @@
         </div>
     </nb-card-body>
 </nb-card>
+
+
+<!-- start: admin detail modal -->
+<div class="modal" id="groupUserModal" #groupUserModal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" style="color:#fff;">Group Users</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeGroupUserModal()">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <span class="badge badge-secondary mr-2" *ngFor="let user of selectedGroupUsers">{{user.name}}</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end: admin detail modal -->

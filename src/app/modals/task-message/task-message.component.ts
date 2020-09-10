@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild ,HostListener} from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
@@ -106,6 +106,9 @@ export class TaskMessageComponent implements OnInit {
         this.ticketType = this.common.params.ticketEditData.taskType;
         this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
         this.ticketData = this.common.params.ticketEditData.ticketData;
+        if (!this.ticketData || true) {
+          this.getTicketDataByTktId();
+        }
         this.getMessageList();
         this.getAllUserByTask();
       }
@@ -138,7 +141,7 @@ export class TaskMessageComponent implements OnInit {
   ngAfterViewInit() {
     this.isLoaded = true;
     setTimeout(() => {
-    this.taskMessage='';
+      this.taskMessage = '';
     }, 30);
   }
 
@@ -154,11 +157,37 @@ export class TaskMessageComponent implements OnInit {
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
-    console.log('row data',key);
+    console.log('row data', key);
     if (key == 'escape') {
       this.closeModal(false);
     }
 
+  }
+
+  getTicketDataByTktId() {
+    this.common.loading++;
+    this.api.get('AdminTask/getTicketDataByTktId?ticketId=' + this.ticketId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        let ticketData = res['data'] || null;
+        if (ticketData && ticketData.length > 0) {
+          this.ticketData = ticketData[0];
+          this.statusId = this.ticketData._status;
+          this.lastSeenId = this.ticketData._lastreadid;
+          this.taskId = [101, 102, 104].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.ticketType = this.ticketData._tktype;
+        } else {
+          this.common.showError("Something went wrong, Please reopen chatbox");
+        }
+        console.log("getTicketMessage", ticketData);
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getMessageList() {

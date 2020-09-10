@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NormalTask } from '../../classes/normal-task';
 import { UserService } from '../../Service/user/user.service';
+import { TaskMessageComponent } from '../task-message/task-message.component';
 
 @Component({
   selector: 'ngx-task-new',
@@ -132,7 +133,7 @@ export class TaskNewComponent implements OnInit {
   //   }
   // }
 
-  saveTask() {
+  saveTask(isChat = null) {
 
     console.log("normalTask:", this.normalTask);
     if (this.normalTask.userName == '') {
@@ -195,9 +196,24 @@ export class TaskNewComponent implements OnInit {
         if (res['code'] == 1) {
           // this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
-            this.resetTask();
-            this.common.showToast(res['data'][0].y_msg);
-            this.closeModal(true);
+            if (isChat == 1) {
+              let ticketEditData = {
+                ticketData: null,
+                ticketId: res['data'][0]['y_tktid'],
+                statusId: 0,
+                lastSeenId: null,
+                taskId: null,
+                taskType: 101,
+                tabType: -101,
+              };
+              let subTitle = params.subject + ":<br>" + params.task;
+              this.resetTask();
+              this.common.showToast(res['data'][0].y_msg);
+              this.closeModal(true);
+              this.ticketMessage(ticketEditData, subTitle);
+
+            }
+
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -331,5 +347,22 @@ export class TaskNewComponent implements OnInit {
 
   }
   // end: update assign date
+
+  ticketMessage(ticketEditData, subTitle) {
+
+    this.common.params = {
+      ticketEditData,
+      title: "Ticket Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.userList,
+      groupList: this.userGroupList,
+    };
+    const activeModal = this.modalService.open(TaskMessageComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+  }
 
 }

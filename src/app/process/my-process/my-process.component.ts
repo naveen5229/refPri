@@ -190,6 +190,7 @@ export class MyProcessComponent implements OnInit {
 
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -874,6 +875,7 @@ export class MyProcessComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -910,6 +912,7 @@ export class MyProcessComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -1175,6 +1178,7 @@ export class MyProcessComponent implements OnInit {
       this.getProcessLeadByType(type);
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error: ', err);
     });
   }
