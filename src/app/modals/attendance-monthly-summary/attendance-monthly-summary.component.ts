@@ -24,7 +24,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     end: ''
   };
   reportType = null;
-
+  groupList = [];
+  selectedGroup = -1;
 
   constructor(public common: CommonService,
     public modalService: NgbModal,
@@ -35,6 +36,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.common.handleModalSize('class', 'modal-lg', '1300', 'px', 0);
     this.startTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth(), 1);
     this.endTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth() + 1, 0);
+    this.groupList = (this.common.params.groupList) ? this.common.params.groupList : [];
   }
 
   ngOnInit() {
@@ -65,7 +67,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let enddate = this.common.dateFormatter(this.endTime);
     const params =
       "?startDate=" + startdate +
-      "&endDate=" + enddate;
+      "&endDate=" + enddate + "&groupId=" + this.selectedGroup;
     // console.log(params);
     let apiName = (type && type == "final") ? 'Admin/getAttendanceMonthlySummaryFinal' : 'Admin/getAttendanceMonthlySummary';
     this.common.loading++;

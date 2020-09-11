@@ -115,7 +115,7 @@ export class UserGroupsComponent implements OnInit {
             icons: this.actionIcons(row)
           };
         } else {
-          if (key == 'user_name') {
+          if (key == 'users') {
             column[key] = { value: row['_employee'].length, class: 'blue', action: this.openGroupUserModal.bind(this, row) };
           } else {
             column[key] = { value: row[key], class: 'black', action: '' };

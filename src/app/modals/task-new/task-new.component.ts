@@ -194,7 +194,9 @@ export class TaskNewComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         if (res['code'] == 1) {
-          // this.resetTask();
+          this.resetTask();
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeModal(true);
           if (res['data'][0]['y_id'] > 0) {
             if (isChat == 1) {
               let ticketEditData = {
@@ -207,11 +209,7 @@ export class TaskNewComponent implements OnInit {
                 tabType: -101,
               };
               let subTitle = params.subject + ":<br>" + params.task;
-              this.resetTask();
-              this.common.showToast(res['data'][0].y_msg);
-              this.closeModal(true);
               this.ticketMessage(ticketEditData, subTitle);
-
             }
 
           } else {

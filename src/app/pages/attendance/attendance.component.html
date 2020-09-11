@@ -6,12 +6,18 @@
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <div class="col-2">
+            <div class="col-1">
                 <label>Select Date</label>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
                 </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <select [(ngModel)]="selectedGroup">
+                    <option value="-1">All</option>
+                    <option *ngFor="let g of groupList" [value]="g._id">{{g.name}}</option>
+                </select>
             </div>
 
             <div class="col-2">

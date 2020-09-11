@@ -143,7 +143,7 @@
                         <!-- attachment -->
                         <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
                             <span *ngIf="evenArray[i].r_url">
-                                        <a *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
+                                        <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
                                     </span>
                             <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
                             <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
