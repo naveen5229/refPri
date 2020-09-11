@@ -1,8 +1,8 @@
 .drag-container {
-    width: 400px;
+    // width: 400px;
     max-width: 100%;
     min-height: 30px;
-    margin: 0 25px 25px 0;
+    // margin: 0 25px 25px 0;
     display: inline-block;
     vertical-align: top;
     // z-index: 99999999;
@@ -32,4 +32,15 @@
 .cancelButtonCss{
     color: red;
     cursor: pointer;
+}
+.margin_right{
+    margin-right:0.5rem;
+}
+.chartbox{
+    height: calc(100vh - 186px);
+    overflow: auto;
+}
+
+.selectInsideSelected{
+    padding: 0 !important;
 }

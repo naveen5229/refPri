@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, copyArrayItem } from '@angular/cdk/drag-drop';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
+import { ChartService } from '../../Service/Chart/chart.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'ngx-graphical-reports',
@@ -10,8 +12,10 @@ import { ApiService } from '../../Service/Api/api.service';
 })
 export class GraphicalReportsComponent implements OnInit {
   processList = [];
+  reportPreviewData = [];
+  graphPieCharts = [];
   assign = {
-    data: [],
+    data: {x:[],y:[]},
     filter: [],
     chart: []
   }
@@ -25,7 +29,8 @@ sideBarData = [
 
   constructor(
     public common: CommonService,
-    public api: ApiService,) {
+    public api: ApiService,
+    public chart: ChartService) {
       this.getProcessList();
      }
 
@@ -92,14 +97,20 @@ sideBarData = [
       console.log("if2:", event.previousContainer.data);
       
       let exists =0;
-      this.assign.data.forEach(ele=> {
+      let pushTo ='';
+      if(event.container.id === "assignDataRow"){
+        pushTo = 'x'
+      }else if(event.container.id === "assignDataColumn"){
+        pushTo = 'y'
+      }
+      this.assign.data[pushTo].forEach(ele=> {
         if(ele.r_colid === event.previousContainer.data[event.previousIndex]['r_colid'] &&
         (ele.r_isdynamic === event.previousContainer.data[event.previousIndex]['r_isdynamic'] &&
         ele.r_ismasterfield === event.previousContainer.data[event.previousIndex]['r_ismasterfield'])){
             exists++;
         };
       })
-      if(exists > 0) return; this.assign.data.push(event.previousContainer.data[event.previousIndex]);
+      if(exists > 0) return; this.assign.data[pushTo].push(event.previousContainer.data[event.previousIndex]);
       
       
       console.log('stored:',this.assign.data)
@@ -117,12 +128,27 @@ sideBarData = [
     return false;
   }
 
-  removeField(index){
-    this.assign.data.splice(index,1)
+  removeField(index,axis){
+    this.assign.data[axis].splice(index,1)
     console.log('deleted:',index,'from:',this.assign.data)
+  }
+  addMeasure(index,axis,measure){
+        console.log('index:',index,'axis:',axis,'measure:',measure);
+        this.assign.data[axis][index].measure=measure;
+        console.log('measure inserted:',this.assign.data)
   }
 
   getReportPreview(){
+    this.assign.data.x.map(ele=> {
+      if(!ele.measure){
+        ele.measure = null;
+      }
+    });
+    this.assign.data.y.map(ele=> {
+      if(!ele.measure){
+        ele.measure = null;
+      }
+    })
       let params = {
       processId:this.processId['_id'],
       reportFilter:null,
@@ -132,9 +158,32 @@ sideBarData = [
       this.api.post('Processes/getPreviewGraphicalReport',params).subscribe(res=>{
           this.common.loading--;
           console.log('Response:',res);
+          this.reportPreviewData = res['data'];
+          this.showdata(this.reportPreviewData);
       },err=>{
         this.common.loading--;
         console.log('Error:',err)
       })
+  }
+
+  showdata(stateTableData) {
+    this.graphPieCharts.forEach(ele => ele.destroy());
+    console.log('data to send to chart module:',stateTableData);
+    stateTableData.map((key,e) => 
+            {
+              console.log('key:',key , 'element:',e)
+            }
+    );
+    const labels = stateTableData.map((e) => e['Mobile No']);
+    const data = stateTableData.map((e) => e['count']);
+
+    let chartData2 = {
+      canvas: document.getElementById('myChart1'),
+      data: data,
+      labels: labels,
+      showLegend: true
+    }
+    this.graphPieCharts = this.chart.generatePieChartforCall([chartData2]);
+
   }
 }
