@@ -88,9 +88,11 @@ input::placeholder {
     outline: none;
     font-size: 30px;
 }
+
 .modal-footer {
     padding: .5rem 1rem;
 }
+
 .control-icon.nb-notifications::before {
     content: "\f0f3";
     display: block;
@@ -343,15 +345,12 @@ nb-layout-footer {
 }
 
 
-
 /* .layout-container .content .columns{
     margin-bottom: 45px;
 } */
 
 
 /* kavita singh */
-
-
 
 .heading-design {
     position: relative;
@@ -403,18 +402,22 @@ nb-layout-footer {
 }
 
 .btn-primary:hover,
-.btn-danger:hover, .btn-secondary:hover {
+.btn-danger:hover,
+.btn-secondary:hover {
     box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, .12);
 }
 
 .btn-primary:active,
 .btn-primary:focus,
 .btn-danger:active,
-.btn-danger:focus, .btn-secondary:focus, .btn-secondary:active {
+.btn-danger:focus,
+.btn-secondary:focus,
+.btn-secondary:active {
     box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, .12);
 }
 
-.btn-danger, .btn-secondary  {
+.btn-danger,
+.btn-secondary {
     height: 30px;
     box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
     transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -441,9 +444,10 @@ nb-layout-header nav {
 .modal-header.sub-title {
     background-color: #93acc7;
 }
-.modal-header.sub-title span{
+
+.modal-header.sub-title span {
     max-height: 100px;
-     overflow: auto;
+    overflow: auto;
 }
 
 .logo:focus {
@@ -469,9 +473,15 @@ nb-layout-header nav {
     display: none!important;
 }
 
-nb-card-body{
+nb-card-body {
     min-height: calc(100vh - 100px)!important;
 }
+
 .nb-theme-default nb-card {
     margin-bottom: 0!important;
+}
+
+.exel-icon {
+    font-size: 25px;
+    color: #217346;
 }
