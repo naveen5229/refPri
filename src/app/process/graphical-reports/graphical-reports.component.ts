@@ -11,6 +11,8 @@ import * as _ from 'lodash';
   styleUrls: ['./graphical-reports.component.scss']
 })
 export class GraphicalReportsComponent implements OnInit {
+  active = 1;
+  selectedChart = 'pie';
   processList = [];
   reportPreviewData = [];
   graphPieCharts = [];
@@ -26,6 +28,29 @@ sideBarData = [
   {title:'Form Fields', children:[{title:'',children:''}]
   },
 ];
+
+chartTypes = [
+  {
+    id:1,
+    type:'pie',
+    url:"../../../assets/images/charts/piechart.jpg"
+  },
+  {
+    id:2,
+    type:'bar',
+    url:"../../../assets/images/charts/barchart.png"
+  },
+  {
+    id:3,
+    type:'bubble',
+    url:"../../../assets/images/charts/bubblechart.png"
+  },
+  {
+    id:4,
+    type:'line',
+    url:"../../../assets/images/charts/linechart.png"
+  }
+]
 
   constructor(
     public common: CommonService,
@@ -139,14 +164,14 @@ sideBarData = [
   }
 
   getReportPreview(){
-    this.assign.data.x.map(ele=> {
-      if(!ele.measure){
-        ele.measure = null;
-      }
-    });
+    // this.assign.data.x.map(ele=> {
+    //   if(!ele.measure){
+    //     ele.measure = 'Count';
+    //   }
+    // });
     this.assign.data.y.map(ele=> {
       if(!ele.measure){
-        ele.measure = null;
+        ele.measure = 'Count';
       }
     })
       let params = {
@@ -159,14 +184,23 @@ sideBarData = [
           this.common.loading--;
           console.log('Response:',res);
           this.reportPreviewData = res['data'];
-          this.showdata(this.reportPreviewData);
+          // this.showChart(this.reportPreviewData,'pie');
+          this.getChartofType(this.selectedChart);
       },err=>{
         this.common.loading--;
         console.log('Error:',err)
       })
   }
 
-  showdata(stateTableData) {
+  getChartofType(chartType){
+    if(this.reportPreviewData){
+      this.showChart(this.reportPreviewData,chartType);
+    }else{
+      return;
+    }
+  }
+
+  showChart(stateTableData,chartType) {
     this.graphPieCharts.forEach(ele => ele.destroy());
     console.log('data to send to chart module:',stateTableData);
     stateTableData.map((key,e) => 
@@ -183,7 +217,7 @@ sideBarData = [
       labels: labels,
       showLegend: true
     }
-    this.graphPieCharts = this.chart.generatePieChartforCall([chartData2]);
+    this.graphPieCharts = this.chart.generateChart([chartData2],chartType);
 
   }
 }

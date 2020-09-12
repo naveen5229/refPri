@@ -14,6 +14,16 @@
   </nb-card-header>
   <nb-card-body>
       <!-- <div class="container-fluid" style="padding: 0;"> -->
+
+            <div class="row mt-2 centarize">
+              <div class="col-1 hoverChart"  *ngFor="let image of chartTypes;let i = index"
+                 (click)="active = image.id;getChartofType(image.type);selectedChart = image.type">
+                <span>
+                  <img src="{{image.url}}" height="80px" width="80px" [ngClass]="active==image.id?'active':''">
+                </span>
+              </div>
+          </div>
+
             <div class="row mt-2">
                 <div class="col-2">
                     <!-- <div class="sidenav"> -->
@@ -39,12 +49,13 @@
                           <div id="assignDataRow" cdkDropList [cdkDropListData]="assign.data.x" cdkDropListConnectedTo="menuList"  class="col-10 drag-container" (cdkDropListDropped)="drop($event)" >
                               <div class="example-box fieldStyle" *ngFor="let n of assign.data.x;let i =index" cdkDrag [cdkDragData]="n">{{n.r_coltitle}}
                                 <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'x')"></i>
-                                <select class="selectInsideSelected" (change)="addMeasure(i,'x',$event.target.value)">
+                                <!-- <select class="selectInsideSelected" (change)="addMeasure(i,'x',$event.target.value)">
                                   <option disabled selected>measure</option>
+                                  <option>Date</option>
                                   <option>Count</option>
                                   <option>Avarage</option>
                                   <option>Sum</option>
-                                </select>
+                                </select> -->
                                 <!-- <i class="fa fa-plus-circle" aria-hidden="true" ></i> -->
                               </div>
                           </div>
@@ -55,16 +66,17 @@
                             <div class="example-box fieldStyle" *ngFor="let n of assign.data.y;let i =index" cdkDrag [cdkDragData]="n">{{n.r_coltitle}}
                               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'y')"></i>
                                 <select class="selectInsideSelected" (change)="addMeasure(i,'y',$event.target.value)">
-                                  <option disabled selected>measure</option>
-                                  <option>Count</option>
-                                  <option>Avarage</option>
+                                  <!-- <option disabled selected>measure</option> -->
+                                  <option>Date</option>
+                                  <option selected>Count</option>
+                                  <option>Average</option>
                                   <option>Sum</option>
                                 </select>
                                 <!-- <i class="fa fa-plus-circle" aria-hidden="true"></i> -->
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2" style="float: right;">
+                    <div class="row mt-2">
                       <div class="col-12">
                         <button class="btn btn-primary margin_right">Save</button>
                         <button class="btn btn-primary" (click)="getReportPreview()">Preview</button>
@@ -72,7 +84,7 @@
                     </div>
 
                     <div class="row mt-2">
-                      <div class="col-8">
+                      <div class="col-12">
                         <div  class="chartbox" >
                             <canvas id="myChart1" ></canvas>
                         </div>

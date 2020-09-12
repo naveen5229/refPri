@@ -44,3 +44,14 @@
 .selectInsideSelected{
     padding: 0 !important;
 }
+.active{
+    // background:blue;
+    border-bottom: 2px solid #000000;
+}
+.hoverChart:hover{
+    cursor: pointer;
+}
+.centarize{
+    text-align: center;
+    border-bottom: 1px solid #d1d9e8!important;
+}
