@@ -772,7 +772,9 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
-      icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.updateLeadPrimaryOwner.bind(this, lead, type), txt: '', title: "Claim Txn" });
+      if (lead._claim_txn) {
+        icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.updateLeadPrimaryOwner.bind(this, lead, type), txt: '', title: "Claim Txn" });
+      }
     } else if (type == 2 || type == 6 || type == 7) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Txn" });
@@ -828,7 +830,7 @@ export class MyProcessComponent implements OnInit {
     return icons;
   }
 
-  editTransaction(lead, type) {
+  editTransaction(lead, type) { //used in multi pages same func
     // this.common.showError("Edit Transaction on Working...");
     let rowData = {
       transId: lead._transactionid,
@@ -836,7 +838,8 @@ export class MyProcessComponent implements OnInit {
       processName: lead._processname,
       identity: lead.identity,
       priOwnId: lead._pri_own_id,
-      isDisabled: (lead._txn_editable) ? false : true
+      isDisabled: (lead._txn_editable) ? false : true,
+      _default_identity: (lead._default_identity) ? lead._default_identity : 0,
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
@@ -959,7 +962,8 @@ export class MyProcessComponent implements OnInit {
       modeName: (lead._mode_id > 0) ? lead._mode_name : '',
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
-      isActionForm: lead._action_form
+      isActionForm: lead._action_form,
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -1287,9 +1291,14 @@ export class MyProcessComponent implements OnInit {
       this.api.post('Processes/updateLeadPrimaryOwner', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getProcessLeadByType(type);
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;

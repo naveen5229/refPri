@@ -285,11 +285,15 @@ export class ChatboxComponent implements OnInit {
       this.api.post('Processes/updateLeadPrimaryOwner', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByLead();
-          this.getLeadMessage();
-          this.showAssignUserAuto = null;
+          if (res['data'][0].y_id > 0) {
+            this.getAllUserByLead();
+            this.getLeadMessage();
+            this.showAssignUserAuto = null;
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -408,7 +412,7 @@ export class ChatboxComponent implements OnInit {
     let formType = (type == 1) ? 1 : 2;
     let icons = [];
 
-    
+
     if (!type && !lead.completion_time) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
     }
@@ -417,7 +421,7 @@ export class ChatboxComponent implements OnInit {
     }
     if (lead._action_form == 1 || lead._state_form == 1) {
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
-    }else if (lead._action_form == 2 || lead._state_form == 2) {
+    } else if (lead._action_form == 2 || lead._state_form == 2) {
       icons.push({ class: "fas fa-plus-square text-success", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
     }
     console.log("icons:", icons);
