@@ -227,9 +227,19 @@ export class TaskComponent implements OnInit {
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
+
+  refresh() {
+    this.activeTab = "unreadTaskByMe";
+    this.getTaskByType(-8);
+    this.getAllAdmin();
+    this.getDepartmentList();
+    this.getUserGroupList();
+  }
+
   resetSearchTask() {
     this.searchTask = {
       startDate: <any>this.common.getDate(-2),
@@ -1757,6 +1767,7 @@ export class TaskComponent implements OnInit {
             },
             (err) => {
               this.common.loading--;
+              this.common.showError();
               console.log("Error: ", err);
             }
           );
@@ -1991,6 +2002,7 @@ export class TaskComponent implements OnInit {
       },
       (err) => {
         this.common.loading--;
+        this.common.showError();
         console.log("Error: ", err);
       }
     );
@@ -2105,6 +2117,7 @@ export class TaskComponent implements OnInit {
         },
         (err) => {
           this.common.loading--;
+          this.common.showError();
           console.log("Error: ", err);
         }
       );

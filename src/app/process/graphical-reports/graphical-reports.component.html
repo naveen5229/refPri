@@ -1,0 +1,86 @@
+<nb-card>
+  <nb-card-header>
+      <div class="row">
+          <div class="col-4">
+              <h5 class="heading-design">Graphical Reports</h5>
+          </div>
+          <div class="col-5">
+              <span style="display: flex;">
+                  <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess></auto-suggestion>
+                  <button class="btn btn-primary btn-sm" (click)="getSideBarData(searchedProcess.selectedSuggestion)">Search</button>
+              </span>
+          </div>
+      </div>
+  </nb-card-header>
+  <nb-card-body>
+      <!-- <div class="container-fluid" style="padding: 0;"> -->
+            <div class="row mt-2">
+                <div class="col-2">
+                    <!-- <div class="sidenav"> -->
+                      <div *ngFor="let data of sideBarData">
+                        <h5>{{data.title}}</h5>
+                        <ul *ngIf="data.children && data.children.length >0" class="child-ul">
+                            <li *ngFor="let head of data.children;let i = index" style="font-weight:bold"><!--(click)="head.children? head.hideMe = !head.hideMe: head.hideMe = head.hideMe"-->
+                              {{head.title}}
+                              <ul *ngIf="head.children && head.children.length > 0" id="unassign" cdkDropList [cdkDropListData]="head.children" 
+                                [cdkDropListConnectedTo]="['assignDataRow','assignDataColumn']" class="child-ul" (cdkDropListDropped)="drop($event)" [cdkDropListEnterPredicate]="noReturnPredicate">
+                                  <li class="drag-list" *ngFor="let sub of head.children;let i = index" cdkDrag>
+                                    {{sub.r_coltitle}}
+                                  </li>
+                              </ul>
+                            </li>
+                        </ul></div>
+                    <!-- </div> -->
+                </div>
+
+                <div class="col-10">
+                    <div class="row mt-2">
+                          <div class="col-2">X-Axis:</div>
+                          <div id="assignDataRow" cdkDropList [cdkDropListData]="assign.data.x" cdkDropListConnectedTo="menuList"  class="col-10 drag-container" (cdkDropListDropped)="drop($event)" >
+                              <div class="example-box fieldStyle" *ngFor="let n of assign.data.x;let i =index" cdkDrag [cdkDragData]="n">{{n.r_coltitle}}
+                                <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'x')"></i>
+                                <select class="selectInsideSelected" (change)="addMeasure(i,'x',$event.target.value)">
+                                  <option disabled selected>measure</option>
+                                  <option>Count</option>
+                                  <option>Avarage</option>
+                                  <option>Sum</option>
+                                </select>
+                                <!-- <i class="fa fa-plus-circle" aria-hidden="true" ></i> -->
+                              </div>
+                          </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-2">Y-Axis:</div>
+                        <div id="assignDataColumn" cdkDropList [cdkDropListData]="assign.data.y" cdkDropListConnectedTo="menuList"  class="col-10 drag-container" (cdkDropListDropped)="drop($event)" >
+                            <div class="example-box fieldStyle" *ngFor="let n of assign.data.y;let i =index" cdkDrag [cdkDragData]="n">{{n.r_coltitle}}
+                              <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'y')"></i>
+                                <select class="selectInsideSelected" (change)="addMeasure(i,'y',$event.target.value)">
+                                  <option disabled selected>measure</option>
+                                  <option>Count</option>
+                                  <option>Avarage</option>
+                                  <option>Sum</option>
+                                </select>
+                                <!-- <i class="fa fa-plus-circle" aria-hidden="true"></i> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2" style="float: right;">
+                      <div class="col-12">
+                        <button class="btn btn-primary margin_right">Save</button>
+                        <button class="btn btn-primary" (click)="getReportPreview()">Preview</button>
+                      </div>
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-8">
+                        <div  class="chartbox" >
+                            <canvas id="myChart1" ></canvas>
+                        </div>
+                    </div>
+                    </div>
+                    
+                </div>
+                </div>
+      <!-- </div> -->
+  </nb-card-body>
+</nb-card>

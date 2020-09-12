@@ -82,6 +82,7 @@ export class ProcessListComponent implements OnInit {
 
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -223,8 +224,8 @@ export class ProcessListComponent implements OnInit {
     const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
   }
-  opensettingModal(process){
-    this.common.params = { userList: this.adminList, process_info:process };
+  opensettingModal(process) {
+    this.common.params = { userList: this.adminList, process_info: process };
     const activeModal = this.modalService.open(SettingsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
