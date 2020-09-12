@@ -1,0 +1,46 @@
+.drag-container {
+    // width: 400px;
+    max-width: 100%;
+    min-height: 30px;
+    // margin: 0 25px 25px 0;
+    display: inline-block;
+    vertical-align: top;
+    // z-index: 99999999;
+    z-index:0;
+    border: 1px solid #000000;
+    padding: 5px;
+}
+
+.child-ul{
+    list-style-type: none;
+    padding: 0 15px;
+}
+
+.fieldStyle{
+    background-color: #d1dada;
+    color: #000;
+    display: inline-block;
+    border-radius: 30px;
+    padding: 2px 12px 5px 10px;
+    position: relative;
+    margin: 0 0 0 4px;
+    height: 26px;
+    vertical-align: middle;
+    font-size: 14px;
+    margin-top: 1px;
+}
+.cancelButtonCss{
+    color: red;
+    cursor: pointer;
+}
+.margin_right{
+    margin-right:0.5rem;
+}
+.chartbox{
+    height: calc(100vh - 186px);
+    overflow: auto;
+}
+
+.selectInsideSelected{
+    padding: 0 !important;
+}
