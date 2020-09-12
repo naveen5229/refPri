@@ -331,7 +331,7 @@ table .fa-comments.new-comment span {
 }
 
 .nb-theme-default nb-card-body {
-    padding: .5rem 1.25rem 1rem 1.25rem;
+    padding: .5rem 1rem .5rem 1rem;
 }
 
 .nb-theme-default nb-layout .layout .layout-container .content nb-layout-footer nav {
