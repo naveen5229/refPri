@@ -80,8 +80,27 @@
         </div>
     </div>
 
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Mode Applicable:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="transaction.isModeApplicable" (change)="transaction.isModeApplicable = !transaction.isModeApplicable" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Claim Applicable:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="transaction.isClaimApplicable" (change)="transaction.isClaimApplicable = !transaction.isClaimApplicable" />
+        </div>
+    </div>
+
     <div class="row mt-1">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveProcess()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm mr-2" id="buttonReset" (click)="resetData()">Reset</button>
+            <button class="btn btn-primary btn-sm" id="button" (click)="saveProcess()">{{btn}}</button>
         </div>
     </div>

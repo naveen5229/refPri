@@ -32,7 +32,7 @@
                         <label>Identity<span *ngIf="!transForm.isAutoIdentity" class="text-danger">*</span></label>
                     </div>
                     <div class="col-8">
-                        <input type="text" class="form-control" placeholder="Enter Identity" [(ngModel)]="transForm.identity" [disabled]="(transForm.isAutoIdentity==1 || transForm.requestId>0)">
+                        <input type="text" class="form-control" placeholder="Enter Identity" [(ngModel)]="transForm.identity" [disabled]="transForm.isAutoIdentity==1">
                     </div>
                 </div>
             </div>
