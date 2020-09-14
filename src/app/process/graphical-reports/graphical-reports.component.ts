@@ -208,8 +208,8 @@ chartTypes = [
               console.log('key:',key , 'element:',e)
             }
     );
-    const labels = stateTableData.map((e) => e['Mobile No']);
-    const data = stateTableData.map((e) => e['count']);
+    const labels = stateTableData.map((e) => JSON.parse(e['xAxis']));
+    const data = stateTableData.map((e) => e['series']);
 
     let chartData2 = {
       canvas: document.getElementById('myChart1'),
