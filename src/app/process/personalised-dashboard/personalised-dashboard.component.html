@@ -1,29 +1,41 @@
 <nb-card>
-  <nb-card-header>
-      <div class="row">
-          <div class="col-12">
-              <h5 class="heading-design">Custom Dashboard</h5>
-          </div>
-          <!-- <div class="col-5">       </div>
-          <div class="col-3 text-right">
-              <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/task')">GoTo Task</button>
-          </div> -->
-      </div>
-  </nb-card-header>
-  <nb-card-body>
-      <div class="tabs_style_main">
-          <ul class="tabs_style text-left">
-              <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe'">
-                  Action For Me
-              </li>
-              <li [ngClass]="activeTab=='ownedByMe'?'active':''" (click)="activeTab='ownedByMe'">
-                  Owned By Me
-              </li>
-          </ul>
-      </div>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-3">
+                <h5 class="heading-design">Custom Dashboard</h5>
+            </div>
+            <div class="col-3">
+                <span style="display: flex;">
+                <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="processId = $event" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch"></auto-suggestion>
+            </span>
+            </div>
+            <div class="col-2">
+                <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary text-capitalize" id="button" (click)="activeTab='leadsForMe';getProcessLeadByType(2)">Search</button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe';getProcessLeadByType(2)">
+                    Action For Me
+                </li>
+                <li [ngClass]="activeTab=='ownedByMe'?'active':''" (click)="activeTab='ownedByMe';getProcessLeadByType(1)">
+                    Owned By Me
+                </li>
+            </ul>
+        </div>
 
-      <div *ngIf="activeTab=='leadsForMe'">
-        <div class="row mb-2" style="z-index: 999;">
+        <div *ngIf="activeTab=='leadsForMe'">
+            <!-- <div class="row mb-2" style="z-index: 999;">
           <div class="col-4">
             <span style="display: flex;">
                 <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="processId = $event" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch"></auto-suggestion>
@@ -40,12 +52,12 @@
           <div class="col-2">
               <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(2)">Search</button>
           </div>
-      </div>
-          <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
-          </smart-table>
-      </div>
-      <div *ngIf="activeTab=='ownedByMe'">
-        <div class="row mb-2" style="z-index: 999;">
+      </div> -->
+            <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ownedByMe'">
+            <!-- <div class="row mb-2" style="z-index: 999;">
             <div class="col-4">
                 <span style="display: flex;">
                     <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="processId = $event" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess></auto-suggestion>
@@ -62,10 +74,10 @@
           <div class="col-2">
               <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(1)">Search</button>
           </div>
-      </div>
-      
-          <smart-table [data]="tableOwnedByMe.data" [settings]="tableOwnedByMe.settings" id="tableOwnedByMe">
-          </smart-table>
-      </div>
-  </nb-card-body>
+      </div> -->
+
+            <smart-table [data]="tableOwnedByMe.data" [settings]="tableOwnedByMe.settings" id="tableOwnedByMe">
+            </smart-table>
+        </div>
+    </nb-card-body>
 </nb-card>
