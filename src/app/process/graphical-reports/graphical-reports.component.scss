@@ -1,22 +1,21 @@
 .drag-container {
-    // width: 400px;
     max-width: 100%;
     min-height: 30px;
-    // margin: 0 25px 25px 0;
     display: inline-block;
     vertical-align: top;
-    // z-index: 99999999;
-    z-index:0;
-    border: 1px solid #000000;
+    z-index: 0;
+    border: 1px solid #d0d0d0;
     padding: 5px;
+    border-radius: 3px;
+    border-radius: 3px;
 }
 
-.child-ul{
+.child-ul {
     list-style-type: none;
-    padding: 0 15px;
+    padding: 0 5px;
 }
 
-.fieldStyle{
+.fieldStyle {
     background-color: #d1dada;
     color: #000;
     display: inline-block;
@@ -29,18 +28,95 @@
     font-size: 14px;
     margin-top: 1px;
 }
-.cancelButtonCss{
+.cancelButtonCss {
     color: red;
     cursor: pointer;
 }
-.margin_right{
-    margin-right:0.5rem;
+.margin_right {
+    margin-right: 0.5rem;
 }
-.chartbox{
-    height: calc(100vh - 186px);
+.chartbox {
+    height: calc(100vh - 220px);
     overflow: auto;
 }
 
-.selectInsideSelected{
+.selectInsideSelected {
     padding: 0 !important;
+}
+.sidenavleft {
+    background-color: #e4f0fe;
+    max-height: calc(100vh - 125px);
+    overflow: auto;
+    h6 {
+        color: #ffffff;
+        font-size: 0.8rem;
+        background: #3366ff;
+        padding: 0 10px;
+    }
+    .drophead {
+        font-size: 0.7rem;
+        border: 1px solid #d0d0d0;
+        padding: 0px 5px;
+        margin-bottom: 0.2rem;
+        background: #fff;
+        position: relative;
+        .dropcaret {
+            position: absolute;
+            right: 5px;
+            top: -1px;
+            color: #7f7f7f;
+        }
+    }
+
+    .child-ul .top:first-child {
+        display: none;
+    }
+
+    .innerdrop {
+        background: #fff;
+        padding: 5px 5px 0 5px;
+        margin-bottom: 10px;
+        margin-top: -4px;
+        border: 1px solid #dedede;
+        max-height: 130px;
+        overflow: auto;
+        li {
+            font-family: "Poppins", sans-serif !important;
+            font-size: 0.68rem;
+            border-bottom: 1px solid #dedede;
+            padding-left: 5px;
+            position: relative;
+        }
+        li:before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 1px;
+            background: #d0cccc;
+            left: -1px;
+            top: 10px;
+        }
+        li:after {
+            content: "";
+            position: absolute;
+            width: 1px;
+            height: 21px;
+            background: #d0cccc;
+            left: -2px;
+            top: 0px;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+    }
+}
+.active {
+    border-bottom: 2px solid #000000;
+}
+.hoverChart:hover {
+    cursor: pointer;
+}
+.centarize {
+    text-align: center;
+    border-bottom: 1px solid #d1d9e8 !important;
 }
