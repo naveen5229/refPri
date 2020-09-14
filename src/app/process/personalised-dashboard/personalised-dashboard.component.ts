@@ -16,7 +16,7 @@ import { AddTransactionContactComponent } from '../../modals/process-modals/add-
   styleUrls: ['./personalised-dashboard.component.scss']
 })
 export class PersonalisedDashboardComponent implements OnInit {
-  activeTab = 'leadsForMe';
+  activeTab = null;
   adminList = [];
   processList = [];
   ownedByMeList = [];
@@ -69,7 +69,11 @@ export class PersonalisedDashboardComponent implements OnInit {
   }
 
   getProcessLeadByType(type) {
-    console.log(this.processId, 'processid')
+    if (!this.processId) {
+      this.common.showError("Process is missing");
+      this.activeTab = null;
+      return false;
+    }
     this.common.loading++;
     let processid = this.processId._id;
     let startDate = this.common.dateFormatter(this.searchData.startDate, null, false);
@@ -289,7 +293,8 @@ export class PersonalisedDashboardComponent implements OnInit {
       modeName: (lead._mode_id > 0) ? lead._mode_name : '',
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
-      isActionForm: lead._action_form
+      isActionForm: lead._action_form,
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -383,7 +388,9 @@ export class PersonalisedDashboardComponent implements OnInit {
       processId: lead._processid,
       processName: lead._processname,
       identity: lead.identity,
-      priOwnId: lead._pri_own_id
+      priOwnId: lead._pri_own_id,
+      isDisabled: (lead._txn_editable) ? false : true,
+      _default_identity: (lead._default_identity) ? lead._default_identity : 0,
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }

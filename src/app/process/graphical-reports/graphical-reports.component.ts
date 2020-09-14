@@ -23,9 +23,9 @@ export class GraphicalReportsComponent implements OnInit {
   }
   processId = '';
 sideBarData = [
-  {title:'Transaction Fields', children:[{title:'',children:''}]
+  {title:'Transaction Fields', children:[{title:'',children:'',isHide:false}]
   },
-  {title:'Form Fields', children:[{title:'',children:''}]
+  {title:'Form Fields', children:[{title:'',children:'',isHide:false}]
   },
 ];
 
@@ -89,7 +89,7 @@ chartTypes = [
       sideBarData.map(ele=> {
         this.sideBarData.map(data=>{
           if(data.title == ele.reftype){
-            data.children.push({title:ele.title,children:JSON.parse(ele.children)})
+            data.children.push({title:ele.title,children:JSON.parse(ele.children),isHide:false})
           }
         })
       })
@@ -103,9 +103,9 @@ chartTypes = [
 
   resetSidebarData(){
     this.sideBarData = [
-      {title:'Transaction Fields', children:[{title:'',children:''}]
+      {title:'Transaction Fields', children:[{title:'',children:'',isHide:false}]
       },
-      {title:'Form Fields', children:[{title:'',children:''}]
+      {title:'Form Fields', children:[{title:'',children:'',isHide:false}]
       },
     ];
   }
@@ -219,5 +219,23 @@ chartTypes = [
     }
     this.graphPieCharts = this.chart.generateChart([chartData2],chartType);
 
+  }
+
+  onHideShow(head,index){
+    this.sideBarData.forEach(element => {
+      let i=0;
+      if(element.children && element.children.length){
+        element.children.forEach(element2 => {
+          if(element2.isHide && index !=i){
+            element2.isHide = false;
+          }
+          i++;
+        });
+      }
+    });
+    console.log("head:",head);
+    setTimeout(() => {
+      head.isHide = !head.isHide;
+    }, 10);
   }
 }
