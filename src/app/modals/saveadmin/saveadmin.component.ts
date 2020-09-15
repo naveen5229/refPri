@@ -325,6 +325,7 @@ export class SaveadminComponent implements OnInit {
               } else {
                 if (!this.isOtherShow && !this.Fouser.id) {
                   this.Fouser.id = this.data[0]['y_id'];
+                  this.Fouser.isActive = 'true';
                 }
                 this.common.showToast(this.data[0]['y_msg']);
                 this.isOtherShow = !this.isOtherShow;
@@ -358,7 +359,7 @@ export class SaveadminComponent implements OnInit {
         foAdminId: null,
         multipleAccounts: null,
         rowId: null,
-        isActive:null,
+        isActive: null,
       };
       let apiName = "AddFouser/addCompanyUsers.json";
       let apiType = "postTranstruck";
