@@ -150,7 +150,7 @@ export class ChartService {
   generateChart(charDatas,type='pie') {
     let charts = [];
     let dataSet = [];
-    console.log('chartData',charDatas);
+    console.log('chartData',charDatas,type);
     charDatas.map(ele => {
         if(ele.data){
           ele.data.map((data,index)=>{
