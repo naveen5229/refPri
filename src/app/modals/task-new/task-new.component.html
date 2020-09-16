@@ -137,12 +137,12 @@
             <label>Reason:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Reason" id="reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
         </div>
     </div>
     <div class="row mt-2 ">
         <div class="col-12 text-right">
-            <button class="btn btn-primary btn-sm" (click)="updateAssignDate()">Update</button>
+            <button class="btn btn-primary btn-sm" id="updateExpDatebtn" (click)="updateAssignDate()">Update</button>
         </div>
     </div>
 </div>
