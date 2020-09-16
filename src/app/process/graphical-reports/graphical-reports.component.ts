@@ -33,22 +33,22 @@ chartTypes = [
   {
     id:1,
     type:'pie',
-    url:"../../../assets/images/charts/piechart.jpg"
+    url:"./assets/images/charts/piechart.jpg"
   },
   {
     id:2,
     type:'bar',
-    url:"../../../assets/images/charts/barchart.png"
+    url:"./assets/images/charts/barchart.png"
   },
   {
     id:3,
     type:'bubble',
-    url:"../../../assets/images/charts/bubblechart.png"
+    url:"./assets/images/charts/bubblechart.png"
   },
   {
     id:4,
     type:'line',
-    url:"../../../assets/images/charts/linechart.png"
+    url:"./assets/images/charts/linechart.png"
   }
 ]
 
@@ -135,7 +135,7 @@ chartTypes = [
             exists++;
         };
       })
-      if(exists > 0) return; this.assign.data[pushTo].push(event.previousContainer.data[event.previousIndex]);
+      if(exists > 0) return; this.assign.data[pushTo].push(_.clone(event.previousContainer.data[event.previousIndex]));
       
       
       console.log('stored:',this.assign.data)
@@ -164,16 +164,13 @@ chartTypes = [
   }
 
   getReportPreview(){
-    // this.assign.data.x.map(ele=> {
-    //   if(!ele.measure){
-    //     ele.measure = 'Count';
-    //   }
-    // });
-    this.assign.data.y.map(ele=> {
+    this.assign.data.y.forEach(ele=> {
       if(!ele.measure){
         ele.measure = 'Count';
       }
     })
+    // console.log('data to send',this.assign.data)
+    // return;
       let params = {
       processId:this.processId['_id'],
       reportFilter:null,
@@ -184,6 +181,7 @@ chartTypes = [
           this.common.loading--;
           console.log('Response:',res);
           this.reportPreviewData = res['data'];
+          console.log('chart data',this.reportPreviewData)
           // this.showChart(this.reportPreviewData,'pie');
           this.getChartofType(this.selectedChart);
       },err=>{
@@ -208,15 +206,61 @@ chartTypes = [
               console.log('key:',key , 'element:',e)
             }
     );
-    const labels = stateTableData.map((e) => e['Mobile No']);
-    const data = stateTableData.map((e) => e['count']);
+
+    // const labels = stateTableData.map((e) => JSON.parse(e['xAxis']));
+    // const data = stateTableData.map((e) => e['series']);
+
+    let labels =[];
+    let dataSet = [];
+    if(stateTableData.length == 1){
+    stateTableData.map(e=>{
+      labels =[];
+      e.series.data.map(label=>{
+        labels.push(label.name)
+      })
+    });
+    
+    stateTableData.map(e=> {
+      dataSet.push({label:e.series.y_name,data:[],bgColor:[]});
+        dataSet.map(sub=>{
+          if(sub.label === e.series.y_name){
+            e.series.data.map(data => {
+              sub.data.push(data.y)
+            })
+          }
+        })
+    });
+    }
+    else{
+      stateTableData.map(e=>{
+        labels =[];
+        e.series.data.map(label=>{
+          labels.push(label.name)
+        })
+      });
+      
+      stateTableData.map((e,index)=> {
+        dataSet.push({label:e.series.y_name,data:[],bgColor:['#1F618D', '#1E8449', '#A04000', '#B03A2E', '#922B21',
+        '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+        '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']});
+          dataSet.map(sub=>{
+            if(sub.label === e.series.y_name){
+              e.series.data.map(data => {
+                sub.data.push({x:data.x,y:data.y})
+              })
+            }
+          })
+      });
+
+      console.log('DataSet from graphics',dataSet)
+    }
 
     let chartData2 = {
-      canvas: document.getElementById('myChart1'),
-      data: data,
+      canvas: document.getElementById('Graph'),
+      data: dataSet,
       labels: labels,
       showLegend: true
-    }
+    };
     this.graphPieCharts = this.chart.generateChart([chartData2],chartType);
 
   }
