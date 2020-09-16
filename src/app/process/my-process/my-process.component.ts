@@ -190,6 +190,7 @@ export class MyProcessComponent implements OnInit {
 
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -770,10 +771,13 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
     } else if (!type) {
-      icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
+      icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
+      if (lead._claim_txn) {
+        icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.updateLeadPrimaryOwner.bind(this, lead, type), txt: '', title: "Claim Txn" });
+      }
     } else if (type == 2 || type == 6 || type == 7) { //by me or owned by me
-      icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
-      icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
+      icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
+      icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Txn" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       if (lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTransactionStatusWithConfirm.bind(this, lead, type, 5), txt: '', title: "Mark Completed" });
@@ -826,7 +830,7 @@ export class MyProcessComponent implements OnInit {
     return icons;
   }
 
-  editTransaction(lead, type) {
+  editTransaction(lead, type) { //used in multi pages same func
     // this.common.showError("Edit Transaction on Working...");
     let rowData = {
       transId: lead._transactionid,
@@ -834,7 +838,8 @@ export class MyProcessComponent implements OnInit {
       processName: lead._processname,
       identity: lead.identity,
       priOwnId: lead._pri_own_id,
-      isDisabled: (lead._txn_editable) ? false : true
+      isDisabled: (lead._txn_editable) ? false : true,
+      _default_identity: (lead._default_identity) ? lead._default_identity : 0,
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
@@ -874,6 +879,7 @@ export class MyProcessComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -910,6 +916,7 @@ export class MyProcessComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -955,7 +962,8 @@ export class MyProcessComponent implements OnInit {
       modeName: (lead._mode_id > 0) ? lead._mode_name : '',
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
-      isActionForm: lead._action_form
+      isActionForm: lead._action_form,
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -1175,6 +1183,7 @@ export class MyProcessComponent implements OnInit {
       this.getProcessLeadByType(type);
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error: ', err);
     });
   }
@@ -1266,6 +1275,39 @@ export class MyProcessComponent implements OnInit {
     this.common.params = { processId: processId, processName: processName };
     console.log("params:", this.common.params);
     const activeModal = this.modalService.open(ViewDashboardComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  updateLeadPrimaryOwner(lead, type) {
+    if (lead._transactionid > 0) {
+      let params = {
+        leadId: lead._transactionid,
+        assigneeUserId: this.userService._details.id,
+        isCCUpdate: 0,
+        assigneeUserNameOld: null,
+        assigneeUserNameNew: this.userService._details.name,
+        isClaim: 1
+      }
+      this.common.loading++;
+      this.api.post('Processes/updateLeadPrimaryOwner', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Select Primary Owner")
+    }
   }
 
 }

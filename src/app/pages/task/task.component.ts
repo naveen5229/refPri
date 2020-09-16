@@ -3,7 +3,6 @@ import { CommonService } from "../../Service/common/common.service";
 import { ApiService } from "../../Service/Api/api.service";
 import { UserService } from "../../Service/user/user.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-// import { TaskStatusChangeComponent } from '../../modals/task-status-change/task-status-change.component';
 import { ConfirmComponent } from "../../modals/confirm/confirm.component";
 import { TaskMessageComponent } from "../../modals/task-message/task-message.component";
 import { TaskNewComponent } from "../../modals/task-new/task-new.component";
@@ -13,10 +12,6 @@ import { TaskScheduleNewComponent } from "../../modals/task-schedule-new/task-sc
 import { TaskScheduleMasterComponent } from "../../modals/task-schedule-master/task-schedule-master.component";
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
-// import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
-// import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
-// import { AddStateComponent } from '../../modals/process-modals/add-state/add-state.component';
-// import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
 @Component({
   selector: "ngx-task",
@@ -160,30 +155,6 @@ export class TaskComponent implements OnInit {
     }
   };
 
-  scheduledTask = {
-    taskId: null,
-    description: "",
-    primaryUser: {
-      id: "",
-      name: "",
-    },
-    escalationUser: {
-      id: "",
-      name: "",
-    },
-    reportingUser: {
-      id: "",
-      name: "",
-    },
-    days: "",
-    hours: "",
-    isActive: true,
-    department: {
-      id: "",
-      name: "",
-    },
-    ccUsers: [],
-  };
   departmentList = [];
 
   scheduleMasterList = [];
@@ -227,9 +198,19 @@ export class TaskComponent implements OnInit {
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
+
+  refresh() {
+    this.activeTab = "unreadTaskByMe";
+    this.getTaskByType(-8);
+    this.getAllAdmin();
+    this.getDepartmentList();
+    this.getUserGroupList();
+  }
+
   resetSearchTask() {
     this.searchTask = {
       startDate: <any>this.common.getDate(-2),
@@ -309,14 +290,19 @@ export class TaskComponent implements OnInit {
   }
 
   showProjectPopup() {
+    this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(AddProjectComponent, {
       size: "lg",
       container: "nb-layout",
       backdrop: "static",
     });
+    activeModal.result.then((data) => {
+      this.tableUnreadTaskForMeList.settings.arrow = true;
+    });
   }
   showTaskPopup() {
+    this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = { userList: this.adminList, groupList: this.groupList, parentTaskId: null };
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "lg",
@@ -328,10 +314,12 @@ export class TaskComponent implements OnInit {
         this.getTaskByType(-101);
         this.activeTab = "TasksByMe";
       }
+      this.tableUnreadTaskForMeList.settings.arrow = true;
     });
   }
 
   applyLeave() {
+    this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
@@ -343,6 +331,7 @@ export class TaskComponent implements OnInit {
         this.getTaskByType(-101);
         this.activeTab = "TasksByMe";
       }
+      this.tableUnreadTaskForMeList.settings.arrow = true;
     });
   }
 
@@ -352,7 +341,6 @@ export class TaskComponent implements OnInit {
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
-      // console.log("data", res['data']);
       if (res['code'] == 1) {
         if (type == 5) {
           this.unreadLeads = res['data'] || [];
@@ -474,12 +462,10 @@ export class TaskComponent implements OnInit {
   }
 
   ackLeadByCcUser(lead, type) {
-    // console.log("ackLeadByCcUser");
     if (lead._transactionid > 0) {
       let params = {
         transId: lead._transactionid
       }
-      // console.log("ackLeadByCcUser:", params);
       this.common.loading++;
       this.api.post('Processes/ackLeadByCcUser', params).subscribe(res => {
         this.common.loading--;
@@ -504,7 +490,6 @@ export class TaskComponent implements OnInit {
       let params = {
         transId: lead._transactionid
       }
-      // console.log("ackLeadByAssigner:", params);
       this.common.loading++;
       this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
         this.common.loading--;
@@ -604,10 +589,8 @@ export class TaskComponent implements OnInit {
   }
   // end unread lead
 
-
   getTaskByType(type, startDate = null, endDate = null) {
     this.activeSabTab = 0;
-    // console.log("searchTask in tast api:", this.searchTask); return false;
     this.common.loading++;
     if (type == -102 && this.searchTask.startDate && this.searchTask.endDate) {
       startDate = this.common.dateFormatter(this.searchTask.startDate);
@@ -706,19 +689,11 @@ export class TaskComponent implements OnInit {
       headings: {},
       columns: [],
     };
-    // this.tableNormalTaskByMe.data = this.tableSchedule.data = this.tableNormal.data = this.tableAllCompleted.data =
-    // this.tableCCTask.data = this.tableProjectTask.data = this.tableFutureTaskByMeList.data = this.tableUnreadTaskForMeList.data =
-    // this.tableHoldTask.data = this.tableScheduleMaster.data ={
-    //   headings: {},
-    //   columns: [],
-    // };
   }
 
   generateHeadingsNormal() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.normalTaskList[0]) {
-      // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
         headings[key] = {
           title: key,
@@ -729,10 +704,8 @@ export class TaskComponent implements OnInit {
     return headings;
   }
   generateHeadingsNormalTaskByMe() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.normalTaskByMeList[0]) {
-      // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
         headings[key] = {
           title: key,
@@ -743,10 +716,8 @@ export class TaskComponent implements OnInit {
     return headings;
   }
   generateHeadingsSchedule() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.scheduledTaskList[0]) {
-      // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
         headings[key] = {
           title: key,
@@ -754,7 +725,6 @@ export class TaskComponent implements OnInit {
         };
       }
     }
-    // console.log(headings);
     return headings;
   }
 
@@ -788,10 +758,8 @@ export class TaskComponent implements OnInit {
   }
 
   generateHeadingsAllCompleted() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.allCompletedTaskList[0]) {
-      // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
         headings[key] = {
           title: key,
@@ -799,7 +767,6 @@ export class TaskComponent implements OnInit {
         };
       }
     }
-    // console.log(headings);
     return headings;
   }
   getTableColumnsAllCompleted(type) {
@@ -838,7 +805,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
 
@@ -884,9 +850,6 @@ export class TaskComponent implements OnInit {
               : null,
           };
         }
-        //  else if (key == 'expdate' && ticket['time_left'] <= 0) {
-        //   column[key] = { value: ticket[key], class: 'black font-weight-bold', action: '' };
-        // }
         else if (key == "high_priority") {
           column[key] = {
             value: "",
@@ -1036,7 +999,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
 
@@ -1050,10 +1012,8 @@ export class TaskComponent implements OnInit {
   }
 
   generateHeadingsCCTask() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.ccTaskList[0]) {
-      // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
         headings[key] = {
           title: key,
@@ -1061,7 +1021,6 @@ export class TaskComponent implements OnInit {
         };
       }
     }
-    // console.log(headings);
     return headings;
   }
   getTableColumnsCCTask(type) {
@@ -1116,7 +1075,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
   // end cc task list
@@ -1131,10 +1089,8 @@ export class TaskComponent implements OnInit {
   }
 
   generateHeadingsProjectTask() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.projectTaskList[0]) {
-      // console.log(key.charAts(0));
       if (key.charAt(0) != "_") {
         headings[key] = {
           title: key,
@@ -1142,7 +1098,6 @@ export class TaskComponent implements OnInit {
         };
       }
     }
-    // console.log(headings);
     return headings;
   }
   getTableColumnsProjectTask(type) {
@@ -1197,7 +1152,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
   // end project task list
@@ -1274,7 +1228,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
   // end future task by me list
@@ -1352,7 +1305,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
   // end hold task list
@@ -1438,7 +1390,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    // console.log(columns);
     return columns;
   }
   // end unread task for me list
@@ -1482,7 +1433,6 @@ export class TaskComponent implements OnInit {
           title: "Delete Task",
         });
       }
-      // icons.push({ class: "fas fa-calendar-alt text-success", action: this.editTask.bind(this, ticket, type), txt: '', title: "Edit Last Date" });
       if (ticket._status == 2 && [101, 102].includes(ticket._tktype)) {
         //for hold
         icons.push({
@@ -1576,7 +1526,6 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
-        // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       }
     } else if (type == -8) {
       if (
@@ -1595,7 +1544,6 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
-        // icons.push({ class: "fa fa-edit", action: this.editTicket.bind(this, ticket, type), txt: '' });
       } else if (
         ([101, 102, 104].includes(ticket._tktype)) &&
         ticket._cc_user_id &&
@@ -1691,21 +1639,6 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  // editTicket(ticket, type) {
-  //   console.log("type:", type);
-  //   let ticketEditData = {
-  //     ticketId: ticket._tktid,
-  //     statusId: ticket._status
-  //   }
-  //   this.common.params = { ticketEditData, title: "Change Ticket Status", button: "Edit" };
-  //   const activeModal = this.modalService.open(TaskStatusChangeComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       this.getTaskByType(type);
-  //     }
-  //   });
-  // }
-
   editTask(ticket, type) {
     console.log("type:", type);
     this.common.params = {
@@ -1757,6 +1690,7 @@ export class TaskComponent implements OnInit {
             },
             (err) => {
               this.common.loading--;
+              this.common.showError();
               console.log("Error: ", err);
             }
           );
@@ -1788,22 +1722,6 @@ export class TaskComponent implements OnInit {
       activeModal.result.then((data) => {
         if (data.response) {
           this.updateTicketStatus(ticket, type, 0);
-          // this.common.loading++;
-          // this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
-          //   this.common.loading--;
-          //   if (res['code'] > 0) {
-          //     this.common.showToast(res['msg']);
-          //     this.getTaskByType(type);
-          //   }
-          //   else {
-          //     this.common.showError(res['data']);
-          //   }
-          // },
-          //   err => {
-          //     this.common.loading--;
-          //     this.common.showError();
-          //     console.log('Error: ', err);
-          //   });
         }
       });
     } else {
@@ -1892,6 +1810,7 @@ export class TaskComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
+    this.tableUnreadTaskForMeList.settings.arrow = false;
     console.log("type:", type);
     let ticketEditData = {
       ticketData: ticket,
@@ -1925,6 +1844,7 @@ export class TaskComponent implements OnInit {
     activeModal.result.then((data) => {
       console.log('reszponse 2nd', activeModal, type);
       type ? this.getTaskByType(type) : null;
+      this.tableUnreadTaskForMeList.settings.arrow = true;
     });
   }
 
@@ -1991,6 +1911,7 @@ export class TaskComponent implements OnInit {
       },
       (err) => {
         this.common.loading--;
+        this.common.showError();
         console.log("Error: ", err);
       }
     );
@@ -2105,6 +2026,7 @@ export class TaskComponent implements OnInit {
         },
         (err) => {
           this.common.loading--;
+          this.common.showError();
           console.log("Error: ", err);
         }
       );
@@ -2259,17 +2181,8 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  closeSchedukedTaskMasterModal(response) {
-    this.resetScheduleTask();
-    document.getElementById("schedukedTaskMasterModal").style.display = "none";
-    if (response && response.id) {
-      let task = { _id: response.id };
-      this.addScheduleTaskparam(task, -1);
-    }
-  }
-
   openSchedukedTaskMasterModal() {
-    // document.getElementById("schedukedTaskMasterModal").style.display = "block";
+    this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = null;
     this.common.params = {
       data: null,
@@ -2289,93 +2202,8 @@ export class TaskComponent implements OnInit {
         this.getScheduledTask();
         this.activeTab = "scheduleMaster";
       }
+      this.tableUnreadTaskForMeList.settings.arrow = true;
     });
-  }
-
-  saveScheduleTask() {
-    console.log("scheduledTask:", this.scheduledTask);
-    if (this.scheduledTask.description == "") {
-      return this.common.showError("Description is missing");
-    } else if (this.scheduledTask.primaryUser.id == "") {
-      return this.common.showError("Primary User is missing");
-    } else if (this.scheduledTask.escalationUser.id == "") {
-      return this.common.showError("Escalation User is missing");
-    } else if (this.scheduledTask.reportingUser.id == "") {
-      return this.common.showError("Reporting User is missing");
-    } else {
-      let ccUsers = this.scheduledTask.ccUsers
-        ? this.scheduledTask.ccUsers.map((user) => {
-          return { id: user.id };
-        })
-        : null;
-      const params = {
-        taskId: this.scheduledTask.taskId,
-        description: this.scheduledTask.description,
-        primaryUser: this.scheduledTask.primaryUser.id,
-        escalationUser: this.scheduledTask.escalationUser.id,
-        reportingUser: this.scheduledTask.reportingUser.id,
-        days: this.scheduledTask.days,
-        hours: this.scheduledTask.hours,
-        isActive: this.scheduledTask.isActive,
-        departmentId: this.scheduledTask.department.id,
-        ccUsers: ccUsers,
-      };
-      // console.log("params:", params); return false;
-      this.common.loading++;
-      this.api.post("AdminTask/createScheduleTask", params).subscribe(
-        (res) => {
-          console.log(res);
-          this.common.loading--;
-          if (res["code"] > 0) {
-            if (res["data"][0]["y_id"] > 0) {
-              this.common.showToast(res["data"][0].y_msg);
-              // this.resetScheduleTask();
-              this.closeSchedukedTaskMasterModal({
-                id: res["data"][0]["y_id"],
-              });
-              this.getScheduledTask();
-              this.activeTab = "scheduleMaster";
-            } else {
-              this.common.showError(res["data"][0].y_msg);
-            }
-          } else {
-            this.common.showError(res["msg"]);
-          }
-        },
-        (err) => {
-          this.common.loading--;
-          this.common.showError();
-          console.log("Error: ", err);
-        }
-      );
-    }
-  }
-
-  resetScheduleTask() {
-    this.scheduledTask = {
-      taskId: null,
-      description: "",
-      primaryUser: {
-        id: "",
-        name: "",
-      },
-      escalationUser: {
-        id: "",
-        name: "",
-      },
-      reportingUser: {
-        id: "",
-        name: "",
-      },
-      days: "",
-      hours: "",
-      isActive: true,
-      department: {
-        id: "",
-        name: "",
-      },
-      ccUsers: [],
-    };
   }
 
   addScheduleTaskparam(task, type) {
@@ -2429,12 +2257,10 @@ export class TaskComponent implements OnInit {
         };
       }
     }
-    // console.log(headings);
     return headings;
   }
 
   getTableColumnsScheduleMaster() {
-    // console.log(this.generateHeadingsSchedule());
     let columns = [];
     this.scheduleMasterList.map((ticket) => {
       let column = {};
@@ -2743,18 +2569,4 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  // assignModal() {
-  //   let ref = {
-  //     id: 2,
-  //     type: 2
-  //   }
-  //   this.common.params = { ref: ref };
-  //   // const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  //   const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       console.log(data.response);
-  //     }
-  //   });
-  // }
 }

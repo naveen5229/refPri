@@ -16,11 +16,11 @@ import { AddTransactionContactComponent } from '../../modals/process-modals/add-
   styleUrls: ['./personalised-dashboard.component.scss']
 })
 export class PersonalisedDashboardComponent implements OnInit {
-activeTab = 'leadsForMe';
-adminList = [];
-processList = [];
-ownedByMeList = [];
-processId=null;
+  activeTab = null;
+  adminList = [];
+  processList = [];
+  ownedByMeList = [];
+  processId = null;
   tableOwnedByMe = {
     data: {
       headings: {},
@@ -48,10 +48,9 @@ processId=null;
   }
 
 
-  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService)
-   { 
-     this.getProcessList();
-   }
+  constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
+    this.getProcessList();
+  }
 
   ngOnInit() {
   }
@@ -64,16 +63,21 @@ processId=null;
 
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
-  
+
   getProcessLeadByType(type) {
-    console.log(this.processId,'processid')
+    if (!this.processId) {
+      this.common.showError("Process is missing");
+      this.activeTab = null;
+      return false;
+    }
     this.common.loading++;
     let processid = this.processId._id;
-    let startDate = this.common.dateFormatter(this.searchData.startDate,null,false);
-    let endDate = this.common.dateFormatter(this.searchData.endDate,null,false);
+    let startDate = this.common.dateFormatter(this.searchData.startDate, null, false);
+    let endDate = this.common.dateFormatter(this.searchData.endDate, null, false);
 
     // return;
     this.resetSmartTableData();
@@ -147,8 +151,8 @@ processId=null;
   }
   // end: leads for me
 
-   // start:ownedbyme lead
-   setTableOwnedByMe(type) {
+  // start:ownedbyme lead
+  setTableOwnedByMe(type) {
     this.tableOwnedByMe.data = {
       headings: this.generateHeadingsOwnedByMe(),
       columns: this.getTableColumnsOwnedByMe(type)
@@ -227,7 +231,7 @@ processId=null;
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
-    } else if ( type == 1 ) { //by me or owned by me
+    } else if (type == 1) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
       icons.push({ class: 'fas fa-trash-alt', action: this.deleteTransaction.bind(this, lead, type), txt: '', title: "Delete Lead" });
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
@@ -289,7 +293,8 @@ processId=null;
       modeName: (lead._mode_id > 0) ? lead._mode_name : '',
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
-      isActionForm: lead._action_form
+      isActionForm: lead._action_form,
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -383,7 +388,9 @@ processId=null;
       processId: lead._processid,
       processName: lead._processname,
       identity: lead.identity,
-      priOwnId: lead._pri_own_id
+      priOwnId: lead._pri_own_id,
+      isDisabled: (lead._txn_editable) ? false : true,
+      _default_identity: (lead._default_identity) ? lead._default_identity : 0,
     }
 
     this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
@@ -423,6 +430,7 @@ processId=null;
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }

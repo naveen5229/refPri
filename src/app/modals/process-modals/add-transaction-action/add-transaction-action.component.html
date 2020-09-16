@@ -39,7 +39,7 @@
     </div>
     <div class="row mb-2">
         <div class="col-4">
-            <label>Mode<span class="text-danger">*</span></label>
+            <label>Mode<span *ngIf="transAction.isModeApplicable" class="text-danger">*</span></label>
         </div>
         <div class="col-8">
             <auto-suggestion [data]="modeList" display="name" placeholder="Select Mode" name="modeName" inputId="modeId" (onSelected)="transAction.mode=($event);" [preSelected]="{name:transAction.mode.name}" autocomplete="off">

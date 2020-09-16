@@ -17,7 +17,7 @@ export class SettingsComponent implements OnInit {
   stateDataList = [];
   actionDataList = [];
   PreFilledData = [];
-  showOtherFields: Boolean = false;
+  // showOtherFields: Boolean = false;
   stateId = null;
 
   transaction = {
@@ -28,9 +28,10 @@ export class SettingsComponent implements OnInit {
     self: false,
     acktoaddUser: false,
     isIdentity: false,
-    isEditable: false
+    isEditable: false,
+    isModeApplicable: false,
+    isClaimApplicable: false
   }
-
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -40,7 +41,6 @@ export class SettingsComponent implements OnInit {
 
     this.userList = this.common.params.userList;
     this.process_Info = this.common.params.process_info;
-    console.log(this.process_Info._id)
     this.getPreFilledData()
     this.getStateList();
   }
@@ -65,7 +65,7 @@ export class SettingsComponent implements OnInit {
   }
 
   getActionList(event) {
-    this.showOtherFields = true;
+    // this.showOtherFields = true;
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.process_Info._id + "&stateId=" + event.id).subscribe(res => {
       this.common.loading--;
@@ -97,7 +97,7 @@ export class SettingsComponent implements OnInit {
     this.transaction.default_Action = { id: this.PreFilledData[0]._default_action, name: this.PreFilledData[0].default_action };
 
     if (this.transaction.default_State.id > 0) {
-      this.showOtherFields = true;
+      // this.showOtherFields = true;
       this.stateId = this.transaction.default_State;
       this.getActionList(this.stateId)
     }
@@ -110,31 +110,15 @@ export class SettingsComponent implements OnInit {
       this.transaction.action_Owner = { id: null, name: '' };
     }
 
-    if (this.PreFilledData[0]._ack_to_aduser == 1) {
-      this.transaction.acktoaddUser = true;
-    } else {
-      this.transaction.acktoaddUser = false;
-    }
-
-    if (this.PreFilledData[0]._default_identity == 1) {
-      this.transaction.isIdentity = true;
-    } else {
-      this.transaction.isIdentity = false;
-    }
-
-    if (this.PreFilledData[0]._txn_editable == 1) {
-      this.transaction.isEditable = true;
-    } else {
-      this.transaction.isEditable = false;
-    }
+    this.transaction.acktoaddUser = (this.PreFilledData[0]._ack_to_aduser == 1) ? true : false;
+    this.transaction.isIdentity = (this.PreFilledData[0]._default_identity == 1) ? true : false;
+    this.transaction.isEditable = (this.PreFilledData[0]._txn_editable == 1) ? true : false;
+    this.transaction.isModeApplicable = (this.PreFilledData[0]._is_mode_applicable) ? true : false;
+    this.transaction.isClaimApplicable = (this.PreFilledData[0]._claim_txn) ? true : false;
   }
 
   saveProcess() {
-    console.log(this.transaction, 'transaction')
     let actionOwner = null;
-    let acktoaddUser = null;
-    let defidentity = null;
-    let iseditable = null;
     if (this.transaction.self) {
       actionOwner = -99;
     } else {
@@ -143,36 +127,19 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    if (this.transaction.acktoaddUser) {
-      acktoaddUser = 1;
-    } else {
-      acktoaddUser = 0;
-    }
-
-    if (this.transaction.isIdentity) {
-      defidentity = 1;
-    } else {
-      defidentity = 0;
-    }
-
-    if (this.transaction.isEditable) {
-      iseditable = 1;
-    } else {
-      iseditable = 0;
-    }
-
     let params = {
       processId: this.process_Info._id,
       poId: this.transaction.primary_Owner.id,
-      isAckToAddUser: acktoaddUser,
+      isAckToAddUser: (this.transaction.acktoaddUser) ? 1 : 0,
       stateId: this.transaction.default_State.id,
       actionId: this.transaction.default_Action.id,
       actionOwnerId: actionOwner,
-      isIdentity: defidentity,
-      isEditable: iseditable
+      isIdentity: (this.transaction.isIdentity) ? 1 : 0,
+      isEditable: (this.transaction.isEditable) ? 1 : 0,
+      isModeApplicable: (this.transaction.isModeApplicable) ? 1 : null,
+      isClaimApplicable: (this.transaction.isClaimApplicable) ? 1 : null,
     }
-
-    console.log(params, 'params');
+    // console.log(params, 'params');
 
     this.common.loading++;
     this.api.post("Processes/addProcessSetting ", params).subscribe(res => {
@@ -195,6 +162,22 @@ export class SettingsComponent implements OnInit {
 
   closeModal(response) {
     this.activeModal.close({ response: response });
+  }
+
+  resetData() {
+    this.transaction = {
+      primary_Owner: { id: null, name: '' },
+      default_State: { id: null, name: '' },
+      default_Action: { id: null, name: '' },
+      action_Owner: { id: null, name: '' },
+      self: false,
+      acktoaddUser: false,
+      isIdentity: false,
+      isEditable: false,
+      isModeApplicable: false,
+      isClaimApplicable: false
+    }
+    this.stateId = null;
   }
 
   // onUnselectState(event) {

@@ -27,7 +27,8 @@ export class AddTransactionActionComponent implements OnInit {
     targetTime: new Date(),
     transId: null,
     isCompleted: false,
-    formType: 0 //0=action,1=state,2=next-action
+    formType: 0, //0=action,1=state,2=next-action
+    isModeApplicable: 0
   }
   stateDataList = [];
   nextStateDataList = [];
@@ -61,6 +62,7 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.mode.id = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeId : null;
       this.transAction.mode.name = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeName : null;
       this.transAction.remark = (this.common.params.actionData.remark) ? this.common.params.actionData.remark : null;
+      this.transAction.isModeApplicable = (this.common.params.actionData.isModeApplicable) ? this.common.params.actionData.isModeApplicable : 0;
       if (this.common.params.actionData.actionOwnerId > 0) {
         let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
         console.log("actionOwner:", actionOwner);
