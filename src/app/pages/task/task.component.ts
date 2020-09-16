@@ -223,7 +223,7 @@ export class TaskComponent implements OnInit {
     let activeId = document.activeElement.id;
     //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
     //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
-    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1) {
+    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
       this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
     }
 
