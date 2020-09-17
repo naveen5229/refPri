@@ -7,54 +7,57 @@
 <div class="modal-body">
     <div class="row">
     </div>
-    <div class="row mb-2">
-        <div class="offset-3 col-3">
+    <div class="row mb-2 font-weight-bold">
+        <div class="col-3">
             <label class="form-check-inline">
-          <input class="form-check-input" type="radio" name="mode" value="" id="single" [(ngModel)]="isDate" (change)="datereset()">
-          Single Day Leave
-        </label>
+                <input class="form-check-input" type="radio" name="mode" [value]='0' id="single" [(ngModel)]="leaveArray.type" (change)="datereset()">
+                Single Day Leave
+            </label>
         </div>
         <div class="col-3">
             <label class="form-check-inline">
-          <input class="form-check-input" type="radio" name="mode" value="1" id="multiple" [(ngModel)]="isDate" (change)="datereset()">
-          Multiple Day Leave
-        </label>
+                <input class="form-check-input" type="radio" name="mode" [value]='1' id="multiple" [(ngModel)]="leaveArray.type" (change)="datereset()">
+                Multiple Day Leave
+            </label>
+        </div>
+        <div class="col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='2' id="firstHalf" [(ngModel)]="leaveArray.type" (change)="datereset()">
+                1st Half Leave
+            </label>
+        </div>
+        <div class="col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='3' id="secondHalf" [(ngModel)]="leaveArray.type" (change)="datereset()">
+                2nd Half Leave
+            </label>
         </div>
     </div>
 
-    <div class="row mt-2" *ngIf="!isDate">
+    <div class="row mt-2" *ngIf="leaveArray.type!=1">
         <div class="col-4">
             <label>Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.startDate=$event" [dateTimeValue]="currentDate">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="leaveArray.startDate=$event" [dateTimeValue]="leaveArray.startDate">
             </uj-date-time-picker>
         </div>
     </div>
 
-    <div class="row mt-2" *ngIf="isDate">
-        <div class="col-6">
-            <div class="row">
-                <div class="col-4">
-                    <label>From:<span class="text-danger">*</span></label>
-                </div>
-                <div class="col-6">
-                    <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.startDate=$event" [dateTimeValue]="currentDate">
-                    </uj-date-time-picker>
-                </div>
-            </div>
+    <div class="row mt-2" *ngIf="leaveArray.type==1">
+        <div class="col-2">
+            <label>From:<span class="text-danger">*</span></label>
         </div>
-
-        <div class="col-6">
-            <div class="row">
-                <div class="col-4">
-                    <label>To:<span class="text-danger">*</span></label>
-                </div>
-                <div class="col-6">
-                    <uj-date-time-picker [mind]="LeaveArray.startDate?LeaveArray.startDate:nextDate" [isStart]="false" [isTime]="false" (onChanged)="LeaveArray.endDate=$event" [dateTimeValue]="LeaveArray.startDate?LeaveArray.startDate:nextDate">
-                    </uj-date-time-picker>
-                </div>
-            </div>
+        <div class="col-3">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="leaveArray.startDate=$event" [dateTimeValue]="leaveArray.startDate">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-2">
+            <label>To:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-3">
+            <uj-date-time-picker [mind]="leaveArray.startDate?leaveArray.startDate:nextDate" [isStart]="false" [isTime]="false" (onChanged)="leaveArray.endDate=$event" [dateTimeValue]="leaveArray.startDate?leaveArray.startDate:nextDate">
+            </uj-date-time-picker>
         </div>
     </div>
 
@@ -63,7 +66,7 @@
             <label>To:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" display='name' (onSelected)="LeaveArray.To = $event" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser">
+            <auto-suggestion [data]="userList" display='name' (onSelected)="leaveArray.To = $event" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="(leaveArray.To && leaveArray.To.id>0) ? {name: leaveArray.To.name} : {name:''}">
             </auto-suggestion>
         </div>
     </div>
@@ -73,25 +76,16 @@
             <label>CC:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="LeaveArray.cc = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true"></auto-suggestion>
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="leaveArray.cc = $event" inputId="ccUsers" name="ccUsers" [preSelected]="leaveArray.cc" isMultiSelect="true"></auto-suggestion>
         </div>
     </div>
-
-    <!-- <div class="row mt-2">
-    <div class="col-4">
-        <label>Subject<span class="text-danger">*</span></label>
-    </div>
-    <div class="col-6">
-        <input placeholder="Enter Subject" name="subject" id="subject" class="form-control" maxlength="50" [(ngModel)]="LeaveArray.Subject">
-    </div>
-  </div> -->
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Reason:</label>
+            <label>Reason:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Task" id="normaltask" name="nomaltask" class="form-control" [(ngModel)]="LeaveArray.reason"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Task" id="normaltask" name="nomaltask" class="form-control" [(ngModel)]="leaveArray.reason"></textarea>
         </div>
     </div>
 
