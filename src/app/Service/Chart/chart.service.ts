@@ -173,6 +173,7 @@ export class ChartService {
   //       })
   //     }
   // })
+  // 
     
     charDatas.forEach(chartData => {
       charts.push(new Chart(chartData.canvas.getContext('2d'), {
