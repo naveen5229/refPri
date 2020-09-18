@@ -11,13 +11,15 @@ import * as _ from 'lodash';
   styleUrls: ['./graphical-reports.component.scss']
 })
 export class GraphicalReportsComponent implements OnInit {
+  reportFileName = '';
   active = 1;
   selectedChart = 'pie';
   processList = [];
   reportPreviewData = [];
   graphPieCharts = [];
   assign = {
-    data: {x:[],y:[]},
+    x:[],
+    y:[],
     filter: [],
     chart: []
   }
@@ -28,6 +30,8 @@ sideBarData = [
   {title:'Form Fields', children:[{title:'',children:'',isHide:false}]
   },
 ];
+Operators =[];
+filterObject = {};
 
 chartTypes = [
   {
@@ -117,7 +121,6 @@ chartTypes = [
       console.log("if1:", event.container.data);
       if (event.container.id == "menuList")
         return false;
-      // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       console.log("if2:", event.previousContainer.data);
       
@@ -127,55 +130,186 @@ chartTypes = [
         pushTo = 'x'
       }else if(event.container.id === "assignDataColumn"){
         pushTo = 'y'
+      }else if(event.container.id === "filter"){
+        this.openFilterModal(event.previousContainer.data[event.previousIndex]);
       }
-      this.assign.data[pushTo].forEach(ele=> {
+
+      if(pushTo == 'x' || pushTo == 'y'){
+      this.assign[pushTo].forEach(ele=> {
         if(ele.r_colid === event.previousContainer.data[event.previousIndex]['r_colid'] &&
         (ele.r_isdynamic === event.previousContainer.data[event.previousIndex]['r_isdynamic'] &&
         ele.r_ismasterfield === event.previousContainer.data[event.previousIndex]['r_ismasterfield'])){
             exists++;
         };
       })
-      if(exists > 0) return; this.assign.data[pushTo].push(_.clone(event.previousContainer.data[event.previousIndex]));
+      if(exists > 0) return; this.assign[pushTo].push(_.clone(event.previousContainer.data[event.previousIndex]));
+      }
       
-      
-      console.log('stored:',this.assign.data)
-      // transferArrayItem(event.previousContainer.data,event.container.data,event.previousIndex,event.currentIndex);
+      console.log('stored:',this.assign)
     }
   }
-
-  /* Predicate function that only allows even numbers to be dropped into a list. /
-  evenPredicate(item: CdkDrag<number>) {
-    return true;
-  }
-
-  /* Predicate function that doesn't allow items to be dropped into a list. */
   noReturnPredicate() {
     return false;
   }
 
+  openFilterModal(data){
+    this.filterObject = data;
+    if(this.filterObject['r_coltype'] === "number"){
+      this.Operators =[
+        { id:0, name:'='},
+        { id:1, name:'<'},
+        { id:2, name:'>'},
+        { id:5, name:'in'},
+        { id:6, name:'not in'},
+        { id:7, name:'<>'},
+      ];
+    }else if(this.filterObject['r_coltype'] === "text" && this.filterObject['r_coltype'] === "auto"){
+      this.Operators =[
+        { id:0, name:'='},
+        { id:3, name:'ilike'},
+        { id:4, name:'not ilike'},
+        { id:5, name:'in'},
+        { id:6, name:'not in'},
+        { id:7, name:'<>'},
+      ];
+    }else if(this.filterObject['r_coltype'] === "boolean" && this.filterObject['r_coltype'] === "checkbox"){
+      this.Operators =[
+        { id:0, name:'='},
+      ];
+    }else if(this.filterObject['r_coltype'] === "timestamp"){
+      this.Operators =[
+        { id:0, name:'='},
+        { id:1, name:'<'},
+        { id:2, name:'>'},
+        { id:5, name:'in'},
+        { id:6, name:'not in'},
+        { id:7, name:'<>'},
+      ];
+    }else{
+      this.Operators =[
+        { id:0, name:'='},
+        { id:1, name:'<'},
+        { id:2, name:'>'},
+        { id:3, name:'ilike'},
+        { id:4, name:'not ilike'},
+        { id:5, name:'in'},
+        { id:6, name:'not in'},
+        { id:7, name:'<>'},
+      ];
+    }
+    this.filterObject['filterdata'] = [{r_threshold:[{r_value:''}],r_operators:''}];
+    console.log('filter modal data',data)
+    document.getElementById('filterModal').style.display = 'block';
+  }
+
+  addFilter(){
+      this.filterObject['filterdata'].push({r_threshold:[{r_value:''}],r_operators:''});
+  }
+
+  deletFilter(index){
+    this.filterObject['filterdata'].splice(index,1)
+  }
+
+  storeFilter(){
+    let exists = 0;
+    this.assign.filter.forEach(ele=> {
+      if(ele.r_colid === this.filterObject['r_colid'] &&
+      (ele.r_isdynamic === this.filterObject['r_isdynamic'] &&
+      ele.r_ismasterfield === this.filterObject['r_ismasterfield'])){
+          exists++;
+      };
+    })
+
+    if(exists > 0) return; this.assign.filter.push(_.clone(this.filterObject));
+    this.closeSearchTaskModal()
+    console.log('data after filter add:',this.assign)
+  }
+
+  closeSearchTaskModal(){
+    document.getElementById('filterModal').style.display = 'none';
+  }
+
   removeField(index,axis){
-    this.assign.data[axis].splice(index,1)
-    console.log('deleted:',index,'from:',this.assign.data)
+    this.assign[axis].splice(index,1)
+    console.log('deleted:',index,'from:',this.assign)
   }
   addMeasure(index,axis,measure){
         console.log('index:',index,'axis:',axis,'measure:',measure);
-        this.assign.data[axis][index].measure=measure;
-        console.log('measure inserted:',this.assign.data)
+        this.assign[axis][index].measure=measure;
+        console.log('measure inserted:',this.assign)
+  }
+
+  openSaveModal(){
+      if(this.assign.x.length > 0 && this.assign.y.length > 0){
+      document.getElementById('saveAs').style.display = 'block'
+      }else{
+        this.common.showError('please fill Mandatory fileds first')
+      }
+  }
+  closeSaveModal(){
+    document.getElementById('saveAs').style.display = 'none'
+  }
+  saveGraphicReport(){
+    this.assign.y.forEach(ele=> {
+      if(!ele.measure){
+        ele.measure = 'Count';
+      }
+    })
+
+    let info = {x:this.assign.x,y:this.assign.y};
+    let params = {
+    processId:this.processId['_id'],
+    reportFilter:JSON.stringify(this.assign.filter),
+    info:JSON.stringify(info),
+    name: this.reportFileName,
+    reportId:null,
+    isActive:true,
+    requestId:null
+  };
+
+  if(params.name){
+    this.common.loading++;
+    this.api.post('Processes/saveGraphicalReport',params).subscribe(res=>{
+      this.common.loading--;
+        if(res['code'] == 1){
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.reportPreviewData = res['data'];
+            // this.getChartofType(this.selectedChart);
+            this.closeSaveModal();
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        
+      }else{
+        this.common.loading--;
+        this.common.showError(res['msg']);
+      }
+    },err=>{
+      this.common.loading--;
+      console.log('Error:',err)
+    })
+  }else{
+      this.common.showError('Please enter File Name')
+    }
   }
 
   getReportPreview(){
-    this.assign.data.y.forEach(ele=> {
+    this.assign.y.forEach(ele=> {
       if(!ele.measure){
         ele.measure = 'Count';
       }
     })
     // console.log('data to send',this.assign.data)
     // return;
+    let info = {x:this.assign.x,y:this.assign.y};
       let params = {
       processId:this.processId['_id'],
-      reportFilter:null,
-      info:JSON.stringify(this.assign.data)
+      reportFilter:JSON.stringify(this.assign.filter),
+      info:JSON.stringify(info),
     };
+
+    if(this.assign.x.length && this.assign.y.length){
       this.common.loading++;
       this.api.post('Processes/getPreviewGraphicalReport',params).subscribe(res=>{
           this.common.loading--;
@@ -188,10 +322,13 @@ chartTypes = [
         this.common.loading--;
         console.log('Error:',err)
       })
+    }else{
+        this.common.showError('please fill Mandatory fileds first')
+      }
   }
 
   getChartofType(chartType){
-    if(this.reportPreviewData){
+    if(this.reportPreviewData.length>0){
       this.showChart(this.reportPreviewData,chartType);
     }else{
       return;
@@ -212,6 +349,8 @@ chartTypes = [
 
     let labels =[];
     let dataSet = [];
+    let chartDataSet = [];
+    
     if(stateTableData.length == 1){
     stateTableData.map(e=>{
       labels =[];
@@ -246,7 +385,7 @@ chartTypes = [
           dataSet.map(sub=>{
             if(sub.label === e.series.y_name){
               e.series.data.map(data => {
-                sub.data.push({x:data.x,y:data.y})
+                sub.data.push({x:data.x,y:data.y,r:index*3})
               })
             }
           })
@@ -255,13 +394,60 @@ chartTypes = [
       console.log('DataSet from graphics',dataSet)
     }
 
-    let chartData2 = {
+    // start:managed service data
+    if(chartType === 'line'){
+      dataSet.map((data,index)=>{
+        chartDataSet.push({
+            label: data.label,
+            data: data.data,
+            borderWidth: 1,
+            lineTension:0,
+            borderColor:data.bgColor[index] ? data.bgColor[index] : '#1AB399',
+            fill: false
+          })
+      });
+    }else{
+        dataSet.map((data,index)=>{
+          chartDataSet.push({
+              label: data.label,
+              data: data.data,
+              backgroundColor: data.bgColor[index] ? data.bgColor[index] : ['#1F618D', '#1E8449', '#A04000', '#B03A2E', '#922B21',
+              '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+              '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF',
+                '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+                '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+                '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'],
+              borderWidth: 1
+            })
+        });}
+        // end:managed service data
+    
+    
+    let chartData:any; 
+    if(chartType === 'pie'){
+    chartData = {
       canvas: document.getElementById('Graph'),
-      data: dataSet,
+      data: chartDataSet,
       labels: labels,
       showLegend: true
     };
-    this.graphPieCharts = this.chart.generateChart([chartData2],chartType);
+    }else{
+      chartData = {
+        canvas: document.getElementById('Graph'),
+        data: chartDataSet,
+        labels: labels,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          }]
+        },
+        showLegend: true
+      };
+    }
+    this.graphPieCharts = this.chart.generateChart([chartData],chartType);
 
   }
 
