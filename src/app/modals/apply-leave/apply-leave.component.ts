@@ -12,19 +12,18 @@ import { JsonPipe } from '@angular/common';
 })
 export class ApplyLeaveComponent implements OnInit {
   title = "Apply Leave";
-  isDate = "";
   userList = [];
   btn = 'Apply';
   currentDate = this.common.getDate();
   nextDate = this.common.getDate(1);
 
-  LeaveArray = {
-    startDate: null,
-    endDate: null,
-    // Subject: '',
+  leaveArray = {
+    startDate: this.currentDate,
+    endDate: this.currentDate,
     To: null,
     cc: [],
     reason: '',
+    type: 0
   }
 
   constructor(public activeModal: NgbActiveModal,
@@ -34,6 +33,7 @@ export class ApplyLeaveComponent implements OnInit {
     public userService: UserService) {
 
     this.userList = this.common.params.userList;
+    this.getLastLeaveRequestData();
   }
 
   ngOnInit() {
@@ -44,19 +44,56 @@ export class ApplyLeaveComponent implements OnInit {
   }
 
   datereset() {
-    this.LeaveArray.startDate = null;
-    this.LeaveArray.endDate = null;
+    this.leaveArray.startDate = this.currentDate;
+    this.leaveArray.endDate = this.currentDate;
+  }
+
+  getLastLeaveRequestData() {
+    this.common.loading++;
+    this.api.get("AdminTask/getLastLeaveRequestData").subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let lastDetail = (res['data'] && res['data'][0]) ? res['data'][0] : null;
+        if (lastDetail) {
+          let toUser = null;
+          let ccUsers = [];
+          if (this.userList.length > 0 && lastDetail.assignee_user_id) {
+            toUser = this.userList.find(x => x.id == lastDetail.assignee_user_id);
+          }
+          if (this.userList.length > 0 && lastDetail.cc_users) {
+            let ccUserIds = lastDetail.cc_users.split(",");
+            ccUserIds.forEach(element => {
+              let ccUser = this.userList.find(x => x.id == element);
+              if (ccUser) {
+                ccUsers.push(ccUser);
+              }
+            });
+          }
+
+          this.leaveArray.To = toUser;
+          this.leaveArray.cc = ccUsers;
+          console.log("leaveArray111:", this.leaveArray);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   requestLeave() {
+    console.log("leaveArray:", this.leaveArray)
     let startDate = null;
     let endDate = null;
-    if (!this.isDate) {
-      startDate = this.LeaveArray.startDate;
-      endDate = this.LeaveArray.startDate;
+    if (this.leaveArray.type == 1) {
+      startDate = this.leaveArray.startDate;
+      endDate = this.leaveArray.endDate;
     } else {
-      startDate = this.LeaveArray.startDate;
-      endDate = this.LeaveArray.endDate;
+      startDate = this.leaveArray.startDate;
+      endDate = this.leaveArray.startDate;
     }
 
     if (!startDate || !endDate) {
@@ -69,14 +106,13 @@ export class ApplyLeaveComponent implements OnInit {
     }
 
     let Datato = null;
-    if (this.LeaveArray.To) {
-      Datato = this.LeaveArray.To.id;
-      // console.log(this.LeaveArray.To,'objetc')
+    if (this.leaveArray.To) {
+      Datato = this.leaveArray.To.id;
     }
 
     let CC = [];
-    if (this.LeaveArray.cc) {
-      this.LeaveArray.cc.map(ele => {
+    if (this.leaveArray.cc) {
+      this.leaveArray.cc.map(ele => {
         CC.push({ user_id: ele.id });
       })
     }
@@ -86,8 +122,8 @@ export class ApplyLeaveComponent implements OnInit {
       endDate: this.common.dateFormatter(endDate),
       to: Datato,
       cc: JSON.stringify(CC),
-      // subject: this.LeaveArray.Subject,
-      reason: this.LeaveArray.reason
+      reason: this.leaveArray.reason,
+      type: this.leaveArray.type
     }
 
     this.common.loading++;
@@ -103,13 +139,12 @@ export class ApplyLeaveComponent implements OnInit {
           this.common.showError(res['data'][0].y_msg);
         }
       } else {
-        this.common.showError(res['msg'])
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.common.loading--;
       this.common.showError();
     })
-    console.log(this.LeaveArray)
-    console.log(params, 'updated')
+    console.log(params, 'updated');
   }
 }
