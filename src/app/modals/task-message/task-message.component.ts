@@ -160,7 +160,7 @@ export class TaskMessageComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.taskId = [101, 102, 104, 111, 112, 113].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
         } else {
           this.common.showError("Something went wrong, Please reopen chatbox");
@@ -255,7 +255,7 @@ export class TaskMessageComponent implements OnInit {
           this.taskMessage = "";
           this.attachmentFile.file = null;
           this.attachmentFile.name = null;
-          if (this.tabType == 101 && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
           }
