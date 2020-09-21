@@ -295,7 +295,7 @@ dropdownFilter = [];
   }
 
   storeFilter(){
-    // console.log('check:',this.filterObject['filterdata'],this.dropdownFilter)
+    // console.log('check:',this.filterObject['filterdata'],this.dropdownFilter)  
     let filterObject = _.clone(this.filterObject)
     let inEle = [];
     let notInEle = [];
