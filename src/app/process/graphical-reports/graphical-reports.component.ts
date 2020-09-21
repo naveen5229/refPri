@@ -11,6 +11,9 @@ import * as _ from 'lodash';
   styleUrls: ['./graphical-reports.component.scss']
 })
 export class GraphicalReportsComponent implements OnInit {
+  addFilterDropData = false;
+  btnName = 'Filter Raw Data'
+  checked:Boolean;
   reportFileName = '';
   active = 1;
   selectedChart = 'pie';
@@ -55,6 +58,8 @@ chartTypes = [
     url:"./assets/images/charts/linechart.png"
   }
 ]
+
+dropdownFilter = [];
 
   constructor(
     public common: CommonService,
@@ -153,7 +158,47 @@ chartTypes = [
   }
 
   openFilterModal(data){
-    this.filterObject = data;
+    this.filterObject = _.clone(data);
+    let params = {
+      processId:this.processId['_id'],
+      info:JSON.stringify(this.filterObject),
+    }
+
+    this.dropdownFilter.forEach(ele=>{
+      if(ele.status){
+        this.checked = true;
+      }else{
+        this.checked = false;
+      };
+    })
+
+    this.common.loading++;
+    this.api.post('Processes/getFilterList',params).subscribe(res=>{
+      this.common.loading--;
+      if(res['code'] == 1){
+        this.dropdownFilter = res['data'];
+      }else{
+        this.common.showError(res['msg'])
+      }
+      console.log(res['data'])
+    },err=>{
+      this.common.loading--;
+      console.log('Error:',err)
+    })
+
+    if(this.filterObject['filterdata']){
+      console.log('datafiltered',this.filterObject['filterdata'])
+      this.filterObject['filterdata'][0].r_threshold[0]['r_value'].map((data)=> {
+        console.log(data.status)
+        this.dropdownFilter.forEach(ele=>{
+          if(ele.value === data.value){
+            console.log(ele)
+            ele.status = !ele.status;
+          }
+        })
+      })
+    }
+    
     if(this.filterObject['r_coltype'] === "number"){
       this.Operators =[
         { id:0, name:'='},
@@ -197,20 +242,78 @@ chartTypes = [
         { id:7, name:'<>'},
       ];
     }
-    this.filterObject['filterdata'] = [{r_threshold:[{r_value:''}],r_operators:''}];
+    this.filterObject['filterdata'] = [];
+    this.addFilterDropData = true;
+    // this.filterObject['filterdata'] = [{r_threshold:[{r_value:''}],r_operators:''}];
     console.log('filter modal data',data)
+    this.btnName = 'Filter Raw Data'
     document.getElementById('filterModal').style.display = 'block';
   }
 
   addFilter(){
+      // if(this.filterObject['filterdata'].length>0){
+      if(this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_threshold[0].r_value &&
+      this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_operators)
+      {
       this.filterObject['filterdata'].push({r_threshold:[{r_value:''}],r_operators:''});
+      }else{
+        this.common.showError('Insert values')
+      }
+    // }
   }
 
   deletFilter(index){
+    if(index === 0){
+      return;
+    }else{
     this.filterObject['filterdata'].splice(index,1)
+    }
+  }
+
+  checkUncheckAll(){
+    console.log('status',status)
+      this.dropdownFilter.forEach(ele=>{
+        ele.status = !ele.status;
+      })
+  }
+
+  rowFilter(btn){
+    if(btn === 'Filter Raw Data'){
+      this.addFilterDropData = false;
+      document.getElementById('rowFilter').style.display = 'block';
+      document.getElementById('basicFilter').style.display = 'none';
+      this.filterObject['filterdata'] = [{r_threshold:[{r_value:''}],r_operators:''}];
+      this.btnName = 'Cancel'
+    }
+    else if(btn === 'Cancel'){
+      this.addFilterDropData = true;
+      document.getElementById('rowFilter').style.display = 'none';
+      document.getElementById('basicFilter').style.display = 'block';
+      this.filterObject['filterdata'] = [];
+      this.btnName ='Filter Raw Data'
+    }
   }
 
   storeFilter(){
+    // console.log('check:',this.filterObject['filterdata'],this.dropdownFilter)
+    let filterObject = _.clone(this.filterObject)
+    let inEle = [];
+    let notInEle = [];
+    
+    if(this.addFilterDropData){
+      inEle = this.dropdownFilter.filter(ele=> ele.status)
+    notInEle =this.dropdownFilter.filter(ele=> !ele.status)
+
+    console.log('in',inEle,'notin:',notInEle)
+    if(inEle.length > notInEle.length){
+      filterObject['filterdata'].push({r_threshold:[{r_value:notInEle}],r_operators:6});
+    }else{
+      filterObject['filterdata'].push({r_threshold:[{r_value:inEle}],r_operators:5});
+    }
+    }
+    // filterObject['filterdata'].push({r_threshold:{r_value:inEle},r_operators:5});
+    // filterObject['filterdata'].push({r_threshold:{r_value:notInEle},r_operators:6});
+    // console.log('check 2:',this.filterObject['filterdata'])
     let exists = 0;
     this.assign.filter.forEach(ele=> {
       if(ele.r_colid === this.filterObject['r_colid'] &&
@@ -219,8 +322,9 @@ chartTypes = [
           exists++;
       };
     })
-
-    if(exists > 0) return; this.assign.filter.push(_.clone(this.filterObject));
+    // console.log('check 3:',this.filterObject['filterdata'])
+    if(exists > 0) return; this.assign.filter.push(filterObject);
+    // console.log('check 4:',this.filterObject['filterdata'])
     this.closeSearchTaskModal()
     console.log('data after filter add:',this.assign)
   }
@@ -233,6 +337,12 @@ chartTypes = [
     this.assign[axis].splice(index,1)
     console.log('deleted:',index,'from:',this.assign)
   }
+
+  editFilter(index){
+    console.log('edit data:',this.assign.filter[index]);
+    this.openFilterModal(this.assign.filter[index])
+  }
+
   addMeasure(index,axis,measure){
         console.log('index:',index,'axis:',axis,'measure:',measure);
         this.assign[axis][index].measure=measure;
@@ -313,11 +423,15 @@ chartTypes = [
       this.common.loading++;
       this.api.post('Processes/getPreviewGraphicalReport',params).subscribe(res=>{
           this.common.loading--;
-          console.log('Response:',res);
-          this.reportPreviewData = res['data'];
-          console.log('chart data',this.reportPreviewData)
-          // this.showChart(this.reportPreviewData,'pie');
-          this.getChartofType(this.selectedChart);
+          if(res['code'] == 1){
+            console.log('Response:',res);
+            this.reportPreviewData = res['data'];
+            console.log('chart data',this.reportPreviewData)
+            // this.showChart(this.reportPreviewData,'pie');
+            this.getChartofType(this.selectedChart);
+          }else{
+            this.common.showError(res['msg'])
+          }
       },err=>{
         this.common.loading--;
         console.log('Error:',err)
@@ -328,28 +442,23 @@ chartTypes = [
   }
 
   getChartofType(chartType){
-    if(this.reportPreviewData.length>0){
+    // if(this.reportPreviewData.length>0){
       this.showChart(this.reportPreviewData,chartType);
-    }else{
-      return;
-    }
+    // }else{
+    //   return;
+    // }
   }
 
   showChart(stateTableData,chartType) {
     this.graphPieCharts.forEach(ele => ele.destroy());
     console.log('data to send to chart module:',stateTableData);
-    stateTableData.map((key,e) => 
-            {
-              console.log('key:',key , 'element:',e)
-            }
-    );
-
     // const labels = stateTableData.map((e) => JSON.parse(e['xAxis']));
     // const data = stateTableData.map((e) => e['series']);
 
     let labels =[];
     let dataSet = [];
     let chartDataSet = [];
+
     
     if(stateTableData.length == 1){
     stateTableData.map(e=>{
@@ -369,6 +478,8 @@ chartTypes = [
           }
         })
     });
+    }else if(!stateTableData){
+      chartDataSet = [];
     }
     else{
       stateTableData.map(e=>{
