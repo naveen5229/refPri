@@ -80,6 +80,7 @@
             <div class="example-box fieldStyle" *ngFor="let n of assign.filter;let i =index" cdkDrag [cdkDragData]="n">
               {{n.r_coltitle}}
               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'filter')"></i>
+              <i class="far fa-edit" (click)="editFilter(i)"></i>
             </div>
           </div>
         </div>
@@ -116,38 +117,61 @@
           </div>
           <!-- Modal body -->
           <div class="modal-body">
-              <div class="row mt-2">
-                    <div class="col-4">
-                          <label>{{filterObject['r_coltitle']}}</label>
-                    </div>
-                    <div class="col-8" >
-                          <div class="row" *ngFor="let subIndex of filterObject['filterdata'];let i = index">
-                            <div class="col-2">
-                              <select [(ngModel)]="subIndex.r_operators" #btw>
-                                <option *ngFor="let sign of Operators" value="{{sign.id}}">{{sign.name | uppercase}}</option>
-                              </select>
-                            </div>
-                            <div class="col-6">
-                                  <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value']" *ngIf="filterObject['r_coltype'] != 'timestamp'">
-                                  <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value']" *ngIf="filterObject['r_coltype'] === 'timestamp'">
-                            </div>
-                            <i class="fas fa-trash-alt" (click)="deletFilter(i)"></i>
-                          </div>
-                    </div>
-                    <!-- {{filterObject | json}} -->
+
+            <div class="row mt-2" id="basicFilter">
+              <div class="col-12">
+                <div class="filter-Container">
+                    <ul style="list-style-type: none;">
+                      <li>
+                        <input type="checkbox" (click)="checkUncheckAll()" [checked]="checked">Select All
+                      </li>
+                      <li *ngFor="let data of dropdownFilter">
+                        <input type="checkbox" [(ngModel)]="data.status">{{data.value}}
+                      </li>
+                    </ul>
+                    <!-- {{dropdownFilter | json}} -->
+                </div>
               </div>
-              
-              <div class="row mt-2">
-                <div class="col-4">
-                  <button type="submit" class="btn btn-primary" (click)="addFilter()">Add Filter</button>
-                </div>                  
+            </div>
+            
+              <div class="row mt-2" id="rowFilter" style="display: none;">
+                  <div class="col-12">
+                      <div class="row mt-2">
+                        <div class="col-4">
+                              <label>{{filterObject['r_coltitle']}}</label>
+                        </div>
+                        <div class="col-8" >
+                              <div class="row" *ngFor="let subIndex of filterObject['filterdata'];let i = index">
+                                <div class="col-2">
+                                  <select [(ngModel)]="subIndex.r_operators" #btw>
+                                    <option *ngFor="let sign of Operators" value="{{sign.id}}">{{sign.name | uppercase}}</option>
+                                  </select>
+                                </div>
+                                <div class="col-6">
+                                      <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value']" *ngIf="filterObject['r_coltype'] != 'timestamp'">
+                                      <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value']" *ngIf="filterObject['r_coltype'] === 'timestamp'">
+                                </div>
+                                <i class="fas fa-trash-alt" (click)="deletFilter(i)"></i>
+                              </div>
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                        <div class="col-4">
+                          <button type="submit" class="btn btn-primary" (click)="addFilter()">Add Filter</button>
+                        </div>                  
+                      </div>
+                  </div>
               </div>
 
               <div class="row mt-2" style="text-align: center;">
-                <div class="col-12">
-                  <button type="button" class="btn btn-success" (click)="storeFilter()">Save</button>
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary" (click)="rowFilter(btnName)">{{btnName}}</button></div>
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary" (click)="storeFilter()">Save</button>
                 </div>
               </div>
+              
           </div>
       </div>
   </div>
