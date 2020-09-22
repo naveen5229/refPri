@@ -76,6 +76,11 @@ export class TaskMessageComponent implements OnInit {
     }
   ];
   isLoaded = false;
+  parentCommentId = null;
+  mentionedUsers = null;
+  replyStatus = null;
+  parentComment = null;
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
     this.keyHandler(event);
@@ -237,6 +242,18 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
+  replyToComment(msg) {
+    this.parentCommentId = msg._id;
+    this.parentComment = msg.comment;
+    this.replyStatus = -1;
+  }
+
+  resetQuatedMsg() {
+    this.parentCommentId = null;
+    this.replyStatus = null;
+    this.parentComment = null;
+  }
+
   saveTicketMessage() {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
@@ -247,7 +264,10 @@ export class TaskMessageComponent implements OnInit {
         status: this.statusId,
         message: this.taskMessage,
         attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        parentId: this.parentCommentId,
+        users: (this.mentionedUsers) ? JSON.stringify(this.mentionedUsers) : null,
+        replyStatus: this.replyStatus
       }
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
@@ -255,6 +275,7 @@ export class TaskMessageComponent implements OnInit {
           this.taskMessage = "";
           this.attachmentFile.file = null;
           this.attachmentFile.name = null;
+          this.resetQuatedMsg();
           if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
