@@ -1544,11 +1544,7 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
-      } else if (
-        ([101, 102, 104, 111, 112, 113].includes(ticket._tktype)) &&
-        ticket._cc_user_id &&
-        !ticket._cc_status
-      ) {
+      } else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
           action: this.ackTaskByCcUser.bind(this, ticket, type),
@@ -2097,6 +2093,7 @@ export class TaskComponent implements OnInit {
       let params = {
         ticketId: ticket._tktid,
         taskId: ticket._refid,
+        ticketType: ticket._tktype
       };
       console.log("ackTaskByCcUser:", params);
       this.common.loading++;
