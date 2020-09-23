@@ -77,7 +77,7 @@ export class TaskMessageComponent implements OnInit {
   ];
   isLoaded = false;
   parentCommentId = null;
-  mentionedUsers = null;
+  mentionedUsers = [];
   replyStatus = null;
   parentComment = null;
 
@@ -242,40 +242,65 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
+  replyType = null;
+  isReplyOnDemand = false;
+  setReplyWithType(type) {
+    console.log("setReplyWithType:", type);
+    this.replyType = type;
+    if (type == 1) {
+      this.replyStatus = -1;
+    } else if (type == 2) {
+      this.replyStatus = 0;
+    } else if (type == 3) {
+      this.replyStatus = 5;
+    } else {
+      this.replyStatus = null;
+      this.replyType = null;
+    }
+  }
+
   replyToComment(msg) {
+    this.replyType = null;
     this.parentCommentId = msg._id;
     this.parentComment = msg.comment;
     this.replyStatus = -1;
+    this.isReplyOnDemand = (msg.parent_comment_id > 0) ? true : false;
   }
 
-  resetQuatedMsg() {
+  resetQuotedMsg() {
+    this.replyType = null;
     this.parentCommentId = null;
     this.replyStatus = null;
     this.parentComment = null;
+    this.mentionedUsers = [];
+    this.isReplyOnDemand = false;
   }
 
   saveTicketMessage() {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
-      this.common.loading++;
+      let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
-        parentId: this.parentCommentId,
-        users: (this.mentionedUsers) ? JSON.stringify(this.mentionedUsers) : null,
-        replyStatus: this.replyStatus
+        parentId: (this.replyType > 0) ? this.parentCommentId : null,
+        users: (this.replyType > 0 && mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
+        replyStatus: (this.replyType > 0) ? this.replyStatus : null
       }
+      console.log("params:", params);
+      // return false;
+      this.common.loading++;
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
           this.attachmentFile.file = null;
           this.attachmentFile.name = null;
-          this.resetQuatedMsg();
+          this.resetQuotedMsg();
           if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
