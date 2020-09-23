@@ -20,6 +20,7 @@ export class GraphicalReportsComponent implements OnInit {
   processList = [];
   reportPreviewData = [];
   graphPieCharts = [];
+  savedReports = [];
   assign = {
     x:[],
     y:[],
@@ -89,6 +90,12 @@ dropdownFilter = [];
     if(!this.processId){
       this.common.showError('Select Process')
     }else{
+    this.getSideBarList();
+    this.getSavedReportList();
+  }
+  }
+
+  getSideBarList(){
     this.common.loading++;
     this.api.get(`Processes/getAllReportFieldsForNav?processId=${this.processId['_id']}`).subscribe(res => {
       this.common.loading--;
@@ -107,7 +114,22 @@ dropdownFilter = [];
     }, err => {
       this.common.loading--;
       console.log(err);
-    });}
+    });
+  }
+
+  getSavedReportList(){
+    this.common.loading++;
+    this.api.get(`Processes/getGraphicalReportListByProcess?processId=${this.processId['_id']}`).subscribe(res => {
+      this.common.loading--;
+      if (!res['data']) return;
+      this.savedReports = [];
+      this.savedReports = res['data'];
+      console.log('Data:',this.sideBarData);
+
+    }, err => {
+      this.common.loading--;
+      console.log(err);
+    });
   }
 
   resetSidebarData(){
@@ -118,6 +140,29 @@ dropdownFilter = [];
       },
     ];
   }
+
+
+  openPreviewModal(graphdata){
+    if(graphdata){
+    console.log('graphData:',graphdata);
+    this.assign.x = graphdata.x;
+    this.assign.y = graphdata.y;
+    this.assign.filter = graphdata.report_filter;
+    this.getReportPreview();
+  }else{
+    this.common.showError('Please Select Report')
+  }
+    // document.getElementById('graphPreview').style.display = 'block';
+
+  }
+
+  // closePreviewModal(){
+  //   document.getElementById('graphPreview').style.display = 'none';
+  // }
+
+  // editPreviewReport(){
+    
+  // }
 
 
   drop(event: CdkDragDrop<number[]>) {
@@ -241,15 +286,8 @@ dropdownFilter = [];
 
   assignFilteredValue(){
     if(this.filterObject['filterdata'] && this.filterObject['filterdata'].length){
-      // this.assign.filter.forEach((ele,index)=> {
-      //   if(ele.r_colid === this.filterObject['r_colid'] &&
-      //   (ele.r_isdynamic === this.filterObject['r_isdynamic'] &&
-      //   ele.r_ismasterfield === this.filterObject['r_ismasterfield'])){
-      //         this.assign.filter.splice(index,1);
-      //   };
-      // })
 
-      console.log(this.filterObject['filterdata'][0].r_operators)
+    console.log(this.filterObject['filterdata'][0].r_operators)
 
     if(this.filterObject['filterdata'][0].r_operators === 5 ||
     this.filterObject['filterdata'][0].r_operators === 6){
@@ -339,7 +377,6 @@ dropdownFilter = [];
   }
 
   storeFilter(){
-    // console.log('check:',this.filterObject['filterdata'],this.dropdownFilter)  
     let filterObject = _.clone(this.filterObject)
     let inEle = [];
     let notInEle = [];
@@ -358,9 +395,6 @@ dropdownFilter = [];
       filterObject['filterdata'].push({r_threshold:[{r_value:inEle}],r_operators:5});
     }
     }
-    // filterObject['filterdata'].push({r_threshold:{r_value:inEle},r_operators:5});
-    // filterObject['filterdata'].push({r_threshold:{r_value:notInEle},r_operators:6});
-    // console.log('check 2:',this.filterObject['filterdata'])
     let exists = 0;
     let index = null;
     this.assign.filter.forEach((ele,ind)=> {

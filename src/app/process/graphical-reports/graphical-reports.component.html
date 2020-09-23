@@ -13,6 +13,14 @@
             (click)="getSideBarData(searchedProcess.selectedSuggestion)">Search</button>
         </span>
       </div>
+      <div class="col-3">
+        <span style="display: flex;">
+          <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="savedReports" display="name"
+            placeholder="Saved Report Preview" inputId="ProcessSearch" name="ProcessSearch" #graphPreview>
+          </auto-suggestion>
+          <button class="btn btn-primary btn-sm" (click)="openPreviewModal(graphPreview.selectedSuggestion)">View</button>
+        </span>
+      </div>
     </div>
   </nb-card-header>
   <nb-card-body>
@@ -206,3 +214,34 @@
   </div>
 </div>
 <!-- end : save as -->
+
+
+<!-- start : Graph Preview Modal-->
+<!-- <div class="modal" id="graphPreview" #graphPreview>
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content"> -->
+          <!-- Modal Header -->
+          <!-- <div class="modal-header">
+              <h5 class="modal-title">Preview</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closePreviewModal()">&times;</button>
+          </div> -->
+          <!-- Modal body -->
+          <!-- <div class="modal-body">
+              
+            <div class="row mt-2">
+              <div class="col-12">
+                <div class="chartbox">
+                  <canvas id="Graph"></canvas>
+                </div>
+            </div>
+          </div>
+
+          <div class="row mt-2" style="text-align: center;">
+            <div class="col-12">
+              <button type="button" class="btn btn-success" (click)="editPreviewReport()">Edit</button>
+            </div>
+          </div>
+      </div>
+  </div>
+</div> -->
+<!-- end : Graph Preview Modal -->
