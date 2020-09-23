@@ -13,6 +13,14 @@
             (click)="getSideBarData(searchedProcess.selectedSuggestion)">Search</button>
         </span>
       </div>
+      <div class="col-3">
+        <span style="display: flex;">
+          <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="savedReports" display="name"
+            placeholder="Saved Report Preview" inputId="ProcessSearch" name="ProcessSearch" #graphPreview>
+          </auto-suggestion>
+          <button class="btn btn-primary btn-sm" (click)="openPreviewModal(graphPreview.selectedSuggestion)">View</button>
+        </span>
+      </div>
     </div>
   </nb-card-header>
   <nb-card-body>
@@ -80,7 +88,7 @@
             <div class="example-box fieldStyle" *ngFor="let n of assign.filter;let i =index" cdkDrag [cdkDragData]="n">
               {{n.r_coltitle}}
               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'filter')"></i>
-              <i class="far fa-edit" (click)="editFilter(i)"></i>
+              <i class="far fa-edit padding-left" (click)="editFilter(i)"></i>
             </div>
           </div>
         </div>
@@ -113,7 +121,7 @@
           <!-- Modal Header -->
           <div class="modal-header">
               <h5 class="modal-title">Apply Filters</h5>
-              <button type="button" class="close" data-dismiss="modal" (click)="closeSearchTaskModal()">&times;</button>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeFilterModal()">&times;</button>
           </div>
           <!-- Modal body -->
           <div class="modal-body">
@@ -123,10 +131,10 @@
                 <div class="filter-Container">
                     <ul style="list-style-type: none;">
                       <li>
-                        <input type="checkbox" (click)="checkUncheckAll()" [checked]="checked">Select All
+                        <input type="checkbox" (click)="checkUncheckAll($event)" [checked]="checked">Select All
                       </li>
                       <li *ngFor="let data of dropdownFilter">
-                        <input type="checkbox" [(ngModel)]="data.status">{{data.value}}
+                        <input type="checkbox" [(ngModel)]="data.status" (click)="data.status = !data.status;manageCheckUncheckAll()">{{data.value}}
                       </li>
                     </ul>
                     <!-- {{dropdownFilter | json}} -->
@@ -206,3 +214,34 @@
   </div>
 </div>
 <!-- end : save as -->
+
+
+<!-- start : Graph Preview Modal-->
+<!-- <div class="modal" id="graphPreview" #graphPreview>
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content"> -->
+          <!-- Modal Header -->
+          <!-- <div class="modal-header">
+              <h5 class="modal-title">Preview</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closePreviewModal()">&times;</button>
+          </div> -->
+          <!-- Modal body -->
+          <!-- <div class="modal-body">
+              
+            <div class="row mt-2">
+              <div class="col-12">
+                <div class="chartbox">
+                  <canvas id="Graph"></canvas>
+                </div>
+            </div>
+          </div>
+
+          <div class="row mt-2" style="text-align: center;">
+            <div class="col-12">
+              <button type="button" class="btn btn-success" (click)="editPreviewReport()">Edit</button>
+            </div>
+          </div>
+      </div>
+  </div>
+</div> -->
+<!-- end : Graph Preview Modal -->
