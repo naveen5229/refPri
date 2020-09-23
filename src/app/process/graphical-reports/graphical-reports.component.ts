@@ -136,7 +136,7 @@ dropdownFilter = [];
       }else if(event.container.id === "assignDataColumn"){
         pushTo = 'y'
       }else if(event.container.id === "filter"){
-        this.openFilterModal(event.previousContainer.data[event.previousIndex]);
+        this.openFilterModal(event.previousContainer.data[event.previousIndex],null);
       }
 
       if(pushTo == 'x' || pushTo == 'y'){
@@ -157,26 +157,33 @@ dropdownFilter = [];
     return false;
   }
 
-  openFilterModal(data){
+  openFilterModal(data,type){
+    document.getElementById('rowFilter').style.display = 'none';
+    document.getElementById('basicFilter').style.display = 'block';
     this.filterObject = _.clone(data);
     let params = {
       processId:this.processId['_id'],
       info:JSON.stringify(this.filterObject),
     }
 
-    this.dropdownFilter.forEach(ele=>{
+    let checkCount = 0;
+    this.dropdownFilter.map(ele=>{
       if(ele.status){
-        this.checked = true;
-      }else{
-        this.checked = false;
-      };
+        checkCount++;
+      }
     })
+    if(checkCount == this.dropdownFilter.length){
+      this.checked =true;
+    }else{
+      this.checked= false
+    }
 
     this.common.loading++;
     this.api.post('Processes/getFilterList',params).subscribe(res=>{
       this.common.loading--;
       if(res['code'] == 1){
         this.dropdownFilter = res['data'];
+        this.assignFilteredValue();
       }else{
         this.common.showError(res['msg'])
       }
@@ -185,27 +192,12 @@ dropdownFilter = [];
       this.common.loading--;
       console.log('Error:',err)
     })
-
-    if(this.filterObject['filterdata']){
-      console.log('datafiltered',this.filterObject['filterdata'])
-      this.filterObject['filterdata'][0].r_threshold[0]['r_value'].map((data)=> {
-        console.log(data.status)
-        this.dropdownFilter.forEach(ele=>{
-          if(ele.value === data.value){
-            console.log(ele)
-            ele.status = !ele.status;
-          }
-        })
-      })
-    }
     
     if(this.filterObject['r_coltype'] === "number"){
       this.Operators =[
         { id:0, name:'='},
         { id:1, name:'<'},
         { id:2, name:'>'},
-        { id:5, name:'in'},
-        { id:6, name:'not in'},
         { id:7, name:'<>'},
       ];
     }else if(this.filterObject['r_coltype'] === "text" && this.filterObject['r_coltype'] === "auto"){
@@ -213,8 +205,6 @@ dropdownFilter = [];
         { id:0, name:'='},
         { id:3, name:'ilike'},
         { id:4, name:'not ilike'},
-        { id:5, name:'in'},
-        { id:6, name:'not in'},
         { id:7, name:'<>'},
       ];
     }else if(this.filterObject['r_coltype'] === "boolean" && this.filterObject['r_coltype'] === "checkbox"){
@@ -226,8 +216,6 @@ dropdownFilter = [];
         { id:0, name:'='},
         { id:1, name:'<'},
         { id:2, name:'>'},
-        { id:5, name:'in'},
-        { id:6, name:'not in'},
         { id:7, name:'<>'},
       ];
     }else{
@@ -237,17 +225,59 @@ dropdownFilter = [];
         { id:2, name:'>'},
         { id:3, name:'ilike'},
         { id:4, name:'not ilike'},
-        { id:5, name:'in'},
-        { id:6, name:'not in'},
         { id:7, name:'<>'},
       ];
     }
-    this.filterObject['filterdata'] = [];
-    this.addFilterDropData = true;
+    console.log('filter modal data test first',this.filterObject)
+    if(!type){
+      this.filterObject['filterdata'] = [];
+      this.addFilterDropData = true;
+    }
     // this.filterObject['filterdata'] = [{r_threshold:[{r_value:''}],r_operators:''}];
     console.log('filter modal data',data)
     this.btnName = 'Filter Raw Data'
     document.getElementById('filterModal').style.display = 'block';
+  }
+
+  assignFilteredValue(){
+    if(this.filterObject['filterdata'] && this.filterObject['filterdata'].length){
+      // this.assign.filter.forEach((ele,index)=> {
+      //   if(ele.r_colid === this.filterObject['r_colid'] &&
+      //   (ele.r_isdynamic === this.filterObject['r_isdynamic'] &&
+      //   ele.r_ismasterfield === this.filterObject['r_ismasterfield'])){
+      //         this.assign.filter.splice(index,1);
+      //   };
+      // })
+
+      console.log(this.filterObject['filterdata'][0].r_operators)
+
+    if(this.filterObject['filterdata'][0].r_operators === 5 ||
+    this.filterObject['filterdata'][0].r_operators === 6){
+
+    this.btnName ='Filter Raw Data'
+    document.getElementById('rowFilter').style.display = 'none';
+    document.getElementById('basicFilter').style.display = 'block';
+    
+      console.log('datafiltered',this.filterObject['filterdata'])
+      this.filterObject['filterdata'][0].r_threshold[0]['r_value'].forEach((data)=> {
+        console.log('data edit filter',data)
+        this.dropdownFilter.forEach(ele=>{
+          if(ele.value === data.value){
+            // console.log(ele)
+            ele.status = data.status;
+            console.log('data edit filter 1',data);
+          }
+        })
+      })
+    }else{
+      this.btnName ='Cancel'
+      document.getElementById('rowFilter').style.display = 'block';
+      document.getElementById('basicFilter').style.display = 'none';
+      return this.filterObject['filterdata'];
+    }
+    }
+    this.filterObject['filterdata'] = [];
+    this.manageCheckUncheckAll();
   }
 
   addFilter(){
@@ -270,11 +300,25 @@ dropdownFilter = [];
     }
   }
 
-  checkUncheckAll(){
-    console.log('status',status)
+  checkUncheckAll(event){
+    const checked = event.target.checked;
       this.dropdownFilter.forEach(ele=>{
-        ele.status = !ele.status;
+        ele.status = checked;
       })
+  }
+
+  manageCheckUncheckAll(){
+    let count = 0;
+    this.dropdownFilter.map(ele=>{
+        if(ele.status){
+          count++;
+        }
+    });
+    if(count < this.dropdownFilter.length){
+      this.checked = false;
+    }else if(count == this.dropdownFilter.length){
+      this.checked = true;
+    }
   }
 
   rowFilter(btn){
@@ -299,8 +343,11 @@ dropdownFilter = [];
     let filterObject = _.clone(this.filterObject)
     let inEle = [];
     let notInEle = [];
+
+    console.log('edit time filter object',this.filterObject)
     
     if(this.addFilterDropData){
+      console.log('edit time',this.dropdownFilter)
       inEle = this.dropdownFilter.filter(ele=> ele.status)
     notInEle =this.dropdownFilter.filter(ele=> !ele.status)
 
@@ -315,21 +362,37 @@ dropdownFilter = [];
     // filterObject['filterdata'].push({r_threshold:{r_value:notInEle},r_operators:6});
     // console.log('check 2:',this.filterObject['filterdata'])
     let exists = 0;
-    this.assign.filter.forEach(ele=> {
+    let index = null;
+    this.assign.filter.forEach((ele,ind)=> {
       if(ele.r_colid === this.filterObject['r_colid'] &&
       (ele.r_isdynamic === this.filterObject['r_isdynamic'] &&
       ele.r_ismasterfield === this.filterObject['r_ismasterfield'])){
           exists++;
+          index = ind;
       };
     })
     // console.log('check 3:',this.filterObject['filterdata'])
-    if(exists > 0) return; this.assign.filter.push(filterObject);
+    if(exists > 0) {
+      this.assign.filter.splice(index,1,filterObject);
+    }else{
+      this.assign.filter.push(filterObject);
+    }
+
+    // multiple insert:start
+    // if(!this.filterType){
+    //   this.assign.filter.push(filterObject);
+    // }else{
+    //   let index = parseInt(this.filterType.charAt(4));
+    //   console.log('index',index)
+    //   this.assign.filter.splice(index,1,filterObject);
+    // }
     // console.log('check 4:',this.filterObject['filterdata'])
-    this.closeSearchTaskModal()
+    // multiple insert:end
+    this.closeFilterModal()
     console.log('data after filter add:',this.assign)
   }
 
-  closeSearchTaskModal(){
+  closeFilterModal(){
     document.getElementById('filterModal').style.display = 'none';
   }
 
@@ -340,7 +403,7 @@ dropdownFilter = [];
 
   editFilter(index){
     console.log('edit data:',this.assign.filter[index]);
-    this.openFilterModal(this.assign.filter[index])
+    this.openFilterModal(this.assign.filter[index],'edit');
   }
 
   addMeasure(index,axis,measure){

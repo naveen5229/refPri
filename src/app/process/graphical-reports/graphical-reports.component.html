@@ -80,7 +80,7 @@
             <div class="example-box fieldStyle" *ngFor="let n of assign.filter;let i =index" cdkDrag [cdkDragData]="n">
               {{n.r_coltitle}}
               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'filter')"></i>
-              <i class="far fa-edit" (click)="editFilter(i)"></i>
+              <i class="far fa-edit padding-left" (click)="editFilter(i)"></i>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@
           <!-- Modal Header -->
           <div class="modal-header">
               <h5 class="modal-title">Apply Filters</h5>
-              <button type="button" class="close" data-dismiss="modal" (click)="closeSearchTaskModal()">&times;</button>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeFilterModal()">&times;</button>
           </div>
           <!-- Modal body -->
           <div class="modal-body">
@@ -123,10 +123,10 @@
                 <div class="filter-Container">
                     <ul style="list-style-type: none;">
                       <li>
-                        <input type="checkbox" (click)="checkUncheckAll()" [checked]="checked">Select All
+                        <input type="checkbox" (click)="checkUncheckAll($event)" [checked]="checked">Select All
                       </li>
                       <li *ngFor="let data of dropdownFilter">
-                        <input type="checkbox" [(ngModel)]="data.status">{{data.value}}
+                        <input type="checkbox" [(ngModel)]="data.status" (click)="data.status = !data.status;manageCheckUncheckAll()">{{data.value}}
                       </li>
                     </ul>
                     <!-- {{dropdownFilter | json}} -->
