@@ -11,21 +11,25 @@ import * as _ from 'lodash';
   styleUrls: ['./graphical-reports.component.scss']
 })
 export class GraphicalReportsComponent implements OnInit {
+  reportIdUpdate = null;
+  editState = false;
+  graphBodyVisi = true;
   addFilterDropData = false;
   btnName = 'Filter Raw Data'
   checked:Boolean;
-  reportFileName = '';
   active = 1;
   selectedChart = 'pie';
   processList = [];
   reportPreviewData = [];
   graphPieCharts = [];
   savedReports = [];
+  // measure = ['Date','Count','Average','Sum','distinct count']
   assign = {
     x:[],
     y:[],
     filter: [],
-    chart: []
+    reportFileName:'',
+    // chart: []
   }
   processId = '';
 sideBarData = [
@@ -144,16 +148,39 @@ dropdownFilter = [];
 
   openPreviewModal(graphdata){
     if(graphdata){
+    this.reportIdUpdate = graphdata._id;
+    this.assign.reportFileName = graphdata.name;
+    this.graphBodyVisi = false;
     console.log('graphData:',graphdata);
     this.assign.x = graphdata.x;
     this.assign.y = graphdata.y;
     this.assign.filter = graphdata.report_filter;
     this.getReportPreview();
   }else{
+    this.reportIdUpdate = null;
+    this.assign.reportFileName = ''
+    this.graphBodyVisi = true;
     this.common.showError('Please Select Report')
   }
     // document.getElementById('graphPreview').style.display = 'block';
 
+  }
+
+  editGraph(){
+    this.editState =true;
+    this.graphBodyVisi = true;
+    this.getReportPreview();
+  }
+  resetAssignForm(){
+    this.assign = {
+      x:[],
+      y:[],
+      filter: [],
+      reportFileName:'',
+    }
+    this.reportIdUpdate =null;
+    this.graphPieCharts.forEach(ele => ele.destroy());
+    // this.getReportPreview();
   }
 
   // closePreviewModal(){
@@ -179,6 +206,7 @@ dropdownFilter = [];
       if(event.container.id === "assignDataRow"){
         pushTo = 'x'
       }else if(event.container.id === "assignDataColumn"){
+        // this.setMeasure(event.previousContainer.data[event.previousIndex])
         pushTo = 'y'
       }else if(event.container.id === "filter"){
         this.openFilterModal(event.previousContainer.data[event.previousIndex],null);
@@ -201,6 +229,21 @@ dropdownFilter = [];
   noReturnPredicate() {
     return false;
   }
+
+  // setMeasure(data){
+  //   let measureObject = _.clone(data);
+  //   if(measureObject['r_coltype'] == "number"){
+  //     this.measure =['distinct count','count','average','sum'];
+  //     }else if(measureObject['r_coltype'] == "text" && measureObject['r_coltype'] == "auto"){
+  //     this.measure =['distinct count','count'];
+  //     }else if(measureObject['r_coltype'] == "boolean" && measureObject['r_coltype'] == "checkbox"){
+  //     this.measure =['distinct count','count'];
+  //     }else if(measureObject['r_coltype'] == "timestamp"){
+  //     this.measure =['distinct count','count','Date'];
+  //     }else{
+  //     this.measure =['distinct count','count'];
+  //     }
+  // }
 
   openFilterModal(data,type){
     document.getElementById('rowFilter').style.display = 'none';
@@ -389,11 +432,11 @@ dropdownFilter = [];
     notInEle =this.dropdownFilter.filter(ele=> !ele.status)
 
     console.log('in',inEle,'notin:',notInEle)
-    if(inEle.length > notInEle.length){
+    // if(inEle.length > notInEle.length){
       filterObject['filterdata'].push({r_threshold:[{r_value:notInEle}],r_operators:6});
-    }else{
+    // }else{
       filterObject['filterdata'].push({r_threshold:[{r_value:inEle}],r_operators:5});
-    }
+    // }
     }
     let exists = 0;
     let index = null;
@@ -449,6 +492,9 @@ dropdownFilter = [];
   openSaveModal(){
       if(this.assign.x.length > 0 && this.assign.y.length > 0){
       document.getElementById('saveAs').style.display = 'block'
+      if(!this.editState){
+        this.assign.reportFileName = ''
+      }
       }else{
         this.common.showError('please fill Mandatory fileds first')
       }
@@ -462,16 +508,22 @@ dropdownFilter = [];
         ele.measure = 'Count';
       }
     })
+    let reqID = null;
+    if(!this.editState){
+      reqID = null;
+    }else{
+      reqID = this.reportIdUpdate;
+    }
 
     let info = {x:this.assign.x,y:this.assign.y};
     let params = {
     processId:this.processId['_id'],
-    reportFilter:JSON.stringify(this.assign.filter),
+    reportFilter:this.assign.filter? JSON.stringify(this.assign.filter) : JSON.stringify([]),
     info:JSON.stringify(info),
-    name: this.reportFileName,
+    name: this.assign.reportFileName,
     reportId:null,
     isActive:true,
-    requestId:null
+    requestId:reqID
   };
 
   if(params.name){
