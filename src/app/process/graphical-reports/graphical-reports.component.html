@@ -32,7 +32,29 @@
         </span>
       </div>
     </div>
-    <div class="row mr-0">
+
+    <div class="row mt-2" *ngIf="!graphBodyVisi">
+      <div class="col-12">
+          <div class="row mt-2">
+            <div class="col-2"></div>
+            <div class="col-8">
+              <div class="chartbox">
+                <canvas id="Graph"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4" style="text-align: center;">
+              <div class="col-6">
+                <button class="btn btn-primary" (click)="resetAssignForm();graphBodyVisi=true;editState=false">Cancel</button>
+              </div>
+              <div class="col-6">
+                <button class="btn btn-primary" (click)="editGraph()">Edit</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row mr-0" *ngIf="graphBodyVisi">
       <div class="col-2 sidenavleft p-0">
         <div *ngFor="let data of sideBarData">
           <h6>{{data.title}}</h6>
@@ -53,6 +75,7 @@
           </ul>
         </div>
       </div>
+      
       <div class="col-10">
         <div class="row mt-2">
           <div class="col-2 text-right"><span style="color: red;">*</span><label> X-Axis:</label> </div>
@@ -73,10 +96,12 @@
               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'y')"></i>
               <select class="selectInsideSelected" (change)="addMeasure(i,'y',$event.target.value)">
                 <!-- <option disabled selected>measure</option> -->
-                <option>Date</option>
+                <option *ngIf="n.r_coltype === 'timestamp'">Date</option>
                 <option selected>Count</option>
-                <option>Average</option>
-                <option>Sum</option>
+                <option *ngIf="n.r_coltype === 'number'">Average</option>
+                <option *ngIf="n.r_coltype === 'number'">Sum</option>
+                <option>distinct count</option>
+                <!-- <option *ngFor="let subMeasure of measure">{{subMeasure}}</option> -->
               </select>
             </div>
           </div>
@@ -96,7 +121,8 @@
         <div class="row mt-2" style="text-align: right;">
           <div class="col-12">
             <button class="btn btn-primary margin_right" (click)="openSaveModal()">Save</button>
-            <button class="btn btn-primary" (click)="getReportPreview()">Preview</button>
+            <button class="btn btn-primary margin_right" (click)="getReportPreview()">Preview</button>
+            <button class="btn btn-primary" (click)="resetAssignForm()">Clear</button>
           </div>
         </div>
         
@@ -200,7 +226,7 @@
               
               <div class="row mt-2" style="text-align: center;">
                 <div class="col-12">
-                  <label>Name:</label><input type="text" [(ngModel)]="reportFileName">
+                  <label>Name:</label><input type="text" [(ngModel)]="assign.reportFileName">
                 </div>                  
               </div>
 
