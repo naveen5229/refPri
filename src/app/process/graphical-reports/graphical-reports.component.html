@@ -182,11 +182,12 @@
                                   </select>
                                 </div>
                                 <div class="col-6">
-                                      <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value']" *ngIf="filterObject['r_coltype'] != 'timestamp'">
-                                      <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value']" *ngIf="filterObject['r_coltype'] === 'timestamp'">
+                                      <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" *ngIf="filterObject['r_coltype'] != 'timestamp'">
+                                      <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" *ngIf="filterObject['r_coltype'] === 'timestamp'">
                                 </div>
                                 <i class="fas fa-trash-alt" (click)="deletFilter(i)"></i>
                               </div>
+                              <!-- {{filterObject | json}} -->
                         </div>
                       </div>
 
