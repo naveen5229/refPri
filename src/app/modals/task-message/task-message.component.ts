@@ -76,6 +76,16 @@ export class TaskMessageComponent implements OnInit {
     }
   ];
   isLoaded = false;
+  parentCommentId = null;
+  mentionedUsers = [];
+  replyStatus = null;
+  parentComment = null;
+  replyType = null;
+  isReplyOnDemand = false;
+  commentInfo = [];
+  isMentionedUser = false;
+  mentionedUserList = [];
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
     this.keyHandler(event);
@@ -160,7 +170,7 @@ export class TaskMessageComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.taskId = [101, 102, 104, 111, 112, 113].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
         } else {
           this.common.showError("Something went wrong, Please reopen chatbox");
@@ -237,25 +247,66 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
+  setReplyWithType(type) {
+    console.log("setReplyWithType:", type);
+    this.replyType = type;
+    if (type == 1) {
+      this.replyStatus = -1;
+    } else if (type == 2) {
+      this.replyStatus = 0;
+    } else if (type == 3) {
+      this.replyStatus = 5;
+    } else {
+      this.replyStatus = null;
+      this.replyType = null;
+      this.messageReadInfo(this.parentCommentId);
+    }
+  }
+
+  replyToComment(msg, userType) {
+    this.replyType = null;
+    this.parentCommentId = msg._id;
+    this.parentComment = msg.comment;
+    this.replyStatus = -1;
+    this.isReplyOnDemand = (msg.parent_comment_id > 0 && userType == 'other') ? true : false;
+  }
+
+  resetQuotedMsg() {
+    this.replyType = null;
+    this.parentCommentId = null;
+    this.replyStatus = null;
+    this.parentComment = null;
+    this.mentionedUsers = [];
+    this.isReplyOnDemand = false;
+  }
+
   saveTicketMessage() {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
-      this.common.loading++;
+      let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
         attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        parentId: (this.replyType > 0) ? this.parentCommentId : null,
+        users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
+        replyStatus: (this.replyType > 0) ? this.replyStatus : null,
+        requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
+      console.log("params:", params);
+      // return false;
+      this.common.loading++;
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
           this.attachmentFile.file = null;
           this.attachmentFile.name = null;
-          if (this.tabType == 101 && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          this.resetQuotedMsg();
+          if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
           }
@@ -569,6 +620,47 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  messageReadInfo(commentId) {
+    this.commentInfo = [];
+    let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
+    if (this.ticketId < this.lastMsgId) {
+      this.api.get('AdminTask/getMessageReadInfo' + params).subscribe(res => {
+        if (res['code'] > 0) {
+          this.commentInfo = res['data'] || [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+  }
+
+  onMessageType(e) {
+    let value = e.data;
+    console.log("target value:", e);
+    console.log("target value22:", value);
+    if (e && value && value == "@") {
+      console.log("onMessageType");
+      this.isMentionedUser = true;
+      this.mentionedUserList = this.adminList;
+      let mentionedUserList = this.adminList.filter(x => { return x.name.match(value) });
+      console.log("mentionedUserList:", mentionedUserList);
+    } else if (e && value && value == " ") {
+      console.log("onMessageType2");
+      this.isMentionedUser = false;
+    }
+  }
+
+  onSelectMenstionedUser(user) {
+    this.mentionedUsers.push({ id: user.id, name: user.name });
+    console.log("mentionedUsers2:", this.mentionedUsers);
+    let splieted = this.taskMessage.split('@');
+    splieted.pop();
+    this.taskMessage = splieted.join('@') + '@' + user.name;
   }
 
 }

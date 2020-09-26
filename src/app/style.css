@@ -318,6 +318,23 @@ table .fa-comments.new-comment span {
     background: lightgray !important;
 }
 
+.quoted_msg {
+    background: darkgray;
+    margin: 0 -10px;
+    padding: 0 10px;
+}
+
+.quoted_selected {
+    background: darkgray;
+}
+
+.comment_reply {
+    display: initial;
+    float: right;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 
 /* kavita singh */
 

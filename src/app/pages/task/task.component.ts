@@ -223,7 +223,7 @@ export class TaskComponent implements OnInit {
     let activeId = document.activeElement.id;
     //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
     //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
-    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1) {
+    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
       this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
     }
 
@@ -1425,7 +1425,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102, 104].includes(ticket._tktype)) {
+      if ([101, 102, 104, 111, 112, 113].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),
@@ -1493,7 +1493,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if (ticket._tktype == 104) {//leave reject
+        if ([104, 111, 112, 113].includes(ticket._tktype)) {//leave reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -1544,11 +1544,7 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
-      } else if (
-        ([101, 102, 104].includes(ticket._tktype)) &&
-        ticket._cc_user_id &&
-        !ticket._cc_status
-      ) {
+      } else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
           action: this.ackTaskByCcUser.bind(this, ticket, type),
@@ -2097,6 +2093,7 @@ export class TaskComponent implements OnInit {
       let params = {
         ticketId: ticket._tktid,
         taskId: ticket._refid,
+        ticketType: ticket._tktype
       };
       console.log("ackTaskByCcUser:", params);
       this.common.loading++;
@@ -2516,7 +2513,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskListAll.filter((x) => {
-          return x._tktype == 104;
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
         });
       } else {
         //all
@@ -2544,7 +2541,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskByMeListAll.filter((x) => {
-          return x._tktype == 104;
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
         });
       } else {
         //all
@@ -2558,7 +2555,7 @@ export class TaskComponent implements OnInit {
       if (subTabType == 4) {
         //leave
         selectedList = this.ccTaskListAll.filter((x) => {
-          return x._tktype == 104;
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
         });
       } else {
         //all
