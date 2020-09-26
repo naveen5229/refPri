@@ -39,23 +39,38 @@
             <ng-template #replyPopContent>
                 <ul class="replyPopContent">
                     <li (click)="setReplyWithType(1)">Reply</li>
-                    <li (click)="setReplyWithType(2)">Set Reply Demanded</li>
+                    <!-- <li (click)="setReplyWithType(2)">Set Reply Demanded</li> -->
                     <li (click)="setReplyWithType(3)" *ngIf="isReplyOnDemand">Reply for demand</li>
-                    <li (click)="setReplyWithType(11)">Info</li>
+                    <!-- <li (click)="setReplyWithType(11)" [ngbPopover]="commentInfoPopContent" placement="bottom">Info</li> -->
+                </ul>
+            </ng-template>
+            <ng-template #commentInfoPopContent>
+                <span><b>Read Receipts</b></span>
+                <ul *ngIf="commentInfo && commentInfo.length" class="replyPopContent">
+                    <li *ngFor="let in of commentInfo">{{in.username}}</li>
+                </ul>
+                <ul *ngIf="!commentInfo || !commentInfo.length" class="replyPopContent">
+                    <li>No Data Found</li>
                 </ul>
             </ng-template>
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        <span class="comment_reply"><i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="bottom" (click)="replyToComment(msg,'mine')"></i></span>
+                        <span class="comment_reply">
+                            <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="left" (click)="messageReadInfo(msg._id)"></i>
+                            <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="left" (click)="replyToComment(msg,'mine')"></i>
+                        </span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment"></label>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.mentioned_user_data && msg.mentioned_user_data[0].reply_demanded)? 'reply_demand':''"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                        <span class="comment_reply"><i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="bottom" (click)="replyToComment(msg,'other')"></i></span>
+                        <span class="comment_reply">
+                            <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="right" (click)="messageReadInfo(msg._id)"></i>
+                            <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="right" (click)="replyToComment(msg,'other')"></i>
+                        </span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment"></label>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.mentioned_user_data && msg.mentioned_user_data[0].reply_demanded)? 'reply_demand':''"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>
@@ -67,20 +82,13 @@
             <div class="row mt-1 bottom-block">
                 <div *ngIf="parentCommentId>0 && replyType>0" class="col-12 quoted_selected">
                     <label [innerHTML]="parentComment"></label>
-                    <div *ngIf="replyStatus==0" class="row">
-                        <div class="col-4">
-                            Add User:
-                        </div>
-                        <div class="col-6">
-                            <auto-suggestion (onSelected)="mentionedUsers = $event" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="replyUser" inputId="replyUser" isMultiSelect="true">
-                            </auto-suggestion>
-                        </div>
-                        <div class="col-2"></div>
-                    </div>
                     <span class="comment_reply"><i class="fa fa-times" aria-hidden="true" (click)="resetQuotedMsg()"></i></span>
                 </div>
+                <div *ngIf="isMentionedUser" class="col-12 mentioned_user">
+                    <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false">{{u.name}}</span>
+                </div>
                 <div class="col-8">
-                    <textarea name="taskMessage" class="form-control" id="msgtext" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                    <textarea name="taskMessage" class="form-control" id="msgtext" placeholder="New Comment" [(ngModel)]="taskMessage" (input)="onMessageType($event)"></textarea>
                 </div>
                 <div col-1>
                     <label class="custom-file-upload">

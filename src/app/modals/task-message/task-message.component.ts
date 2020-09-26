@@ -80,6 +80,11 @@ export class TaskMessageComponent implements OnInit {
   mentionedUsers = [];
   replyStatus = null;
   parentComment = null;
+  replyType = null;
+  isReplyOnDemand = false;
+  commentInfo = [];
+  isMentionedUser = false;
+  mentionedUserList = [];
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -242,8 +247,6 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
-  replyType = null;
-  isReplyOnDemand = false;
   setReplyWithType(type) {
     console.log("setReplyWithType:", type);
     this.replyType = type;
@@ -254,9 +257,9 @@ export class TaskMessageComponent implements OnInit {
     } else if (type == 3) {
       this.replyStatus = 5;
     } else {
-      alert("working...");
       this.replyStatus = null;
       this.replyType = null;
+      this.messageReadInfo(this.parentCommentId);
     }
   }
 
@@ -289,8 +292,9 @@ export class TaskMessageComponent implements OnInit {
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
-        users: (this.replyType > 0 && mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
-        replyStatus: (this.replyType > 0) ? this.replyStatus : null
+        users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
+        replyStatus: (this.replyType > 0) ? this.replyStatus : null,
+        requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
       console.log("params:", params);
       // return false;
@@ -616,6 +620,47 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  messageReadInfo(commentId) {
+    this.commentInfo = [];
+    let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
+    if (this.ticketId < this.lastMsgId) {
+      this.api.get('AdminTask/getMessageReadInfo' + params).subscribe(res => {
+        if (res['code'] > 0) {
+          this.commentInfo = res['data'] || [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+  }
+
+  onMessageType(e) {
+    let value = e.data;
+    console.log("target value:", e);
+    console.log("target value22:", value);
+    if (e && value && value == "@") {
+      console.log("onMessageType");
+      this.isMentionedUser = true;
+      this.mentionedUserList = this.adminList;
+      let mentionedUserList = this.adminList.filter(x => { return x.name.match(value) });
+      console.log("mentionedUserList:", mentionedUserList);
+    } else if (e && value && value == " ") {
+      console.log("onMessageType2");
+      this.isMentionedUser = false;
+    }
+  }
+
+  onSelectMenstionedUser(user) {
+    this.mentionedUsers.push({ id: user.id, name: user.name });
+    console.log("mentionedUsers2:", this.mentionedUsers);
+    let splieted = this.taskMessage.split('@');
+    splieted.pop();
+    this.taskMessage = splieted.join('@') + '@' + user.name;
   }
 
 }
