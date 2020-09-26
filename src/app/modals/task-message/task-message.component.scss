@@ -24,27 +24,39 @@
 .active_chat {
     float: right;
     // text-align: right;
-    background: #1def1d2e;
-    border: 1px solid #1def1d2e;
+    background: #e0ff302e;
+    //border: 1px solid #1def1d2e;
+    box-shadow: 0 1px 3px #c2c2c2;
+    .quoted_msg{
+        background: #eff9c6;
+        border-left: 2px solid #c6ed24;
+    }
 }
 
 .other_chat {
     float: left;
     background-color: #fff;
-    border: 1px solid lightgray;
+   // border: 1px solid lightgray;
+   box-shadow: 0 1px 3px #c2c2c2;
 }
 
 .other_chat,
 .active_chat {
     white-space: pre-wrap;
     max-width: 90%;
-    margin-bottom: 1px;
-    border-radius: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
     padding: 0 10px;
     span {
         //display: flow-root;
         display: block;
         font-size: 10px;
+        i{           
+            color: #3366ff;
+            font-size: 14px;
+            vertical-align: -webkit-baseline-middle;
+        }
+       
     }
     label {
         margin: 0;
@@ -52,6 +64,7 @@
 }
 
 .bottom-block {
+    background: ghostwhite;
     .button-box {
         display: inline-grid;
     }
@@ -219,4 +232,25 @@
         display: block;
         cursor: pointer;
     }
+}
+.send{
+    color: #3366ff;
+    width: fit-content;
+}
+.send:focus{
+    outline: 0;
+    box-shadow: none;
+}
+.chatmsg{
+    height: auto !important;
+    resize: none;
+    border: 1px solid white;
+    background: #e9e5e5;
+    color: #000;
+}
+.chatmsg:focus{
+   box-shadow: none;
+}
+.chatmsg::placeholder{
+    color: #000;
 }
