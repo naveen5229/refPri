@@ -374,7 +374,7 @@ dropdownFilter = [];
       this.filterObject['filterdata'].push({r_threshold:[{r_value:[{"value":''}]}],r_operators:''});
       }else{
         this.common.showError('Insert values')
-      }
+      } 
     // }
   }
 
