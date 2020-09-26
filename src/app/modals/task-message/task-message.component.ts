@@ -254,17 +254,18 @@ export class TaskMessageComponent implements OnInit {
     } else if (type == 3) {
       this.replyStatus = 5;
     } else {
+      alert("working...");
       this.replyStatus = null;
       this.replyType = null;
     }
   }
 
-  replyToComment(msg) {
+  replyToComment(msg, userType) {
     this.replyType = null;
     this.parentCommentId = msg._id;
     this.parentComment = msg.comment;
     this.replyStatus = -1;
-    this.isReplyOnDemand = (msg.parent_comment_id > 0) ? true : false;
+    this.isReplyOnDemand = (msg.parent_comment_id > 0 && userType == 'other') ? true : false;
   }
 
   resetQuotedMsg() {

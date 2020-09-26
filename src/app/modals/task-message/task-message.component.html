@@ -39,7 +39,7 @@
             <ng-template #replyPopContent>
                 <ul class="replyPopContent">
                     <li (click)="setReplyWithType(1)">Reply</li>
-                    <li (click)="setReplyWithType(2)">Reply demanded</li>
+                    <li (click)="setReplyWithType(2)">Set Reply Demanded</li>
                     <li (click)="setReplyWithType(3)" *ngIf="isReplyOnDemand">Reply for demand</li>
                     <li (click)="setReplyWithType(11)">Info</li>
                 </ul>
@@ -47,13 +47,13 @@
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        <span class="comment_reply"><i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="bottom" (click)="replyToComment(msg)"></i></span>
+                        <span class="comment_reply"><i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="bottom" (click)="replyToComment(msg,'mine')"></i></span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                        <span class="comment_reply"><i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="bottom" (click)="replyToComment(msg)"></i></span>
+                        <span class="comment_reply"><i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="bottom" (click)="replyToComment(msg,'other')"></i></span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
