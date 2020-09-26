@@ -42,7 +42,8 @@
     border-radius: 10px;
     padding: 0 10px;
     span {
-        display: flow-root;
+        //display: flow-root;
+        display: block;
         font-size: 10px;
     }
     label {
@@ -201,4 +202,21 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+    li {
+        font-size: 12px;
+    }
+}
+
+.reply_demand {
+    color: red;
+}
+
+.mentioned_user {
+    max-width: 60%;
+    max-height: 60vh;
+    overflow: auto;
+    span {
+        display: block;
+        cursor: pointer;
+    }
 }
