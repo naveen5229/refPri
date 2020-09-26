@@ -105,6 +105,7 @@ dropdownFilter = [];
       this.common.loading--;
       if (!res['data']) return;
       this.resetSidebarData();
+      this.resetAssignForm();
       let sideBarData = res['data'];
       sideBarData.map(ele=> {
         this.sideBarData.map(data=>{
@@ -125,9 +126,13 @@ dropdownFilter = [];
     this.common.loading++;
     this.api.get(`Processes/getGraphicalReportListByProcess?processId=${this.processId['_id']}`).subscribe(res => {
       this.common.loading--;
-      if (!res['data']) return;
       this.savedReports = [];
+      if(res['code'] == 1){
+      if (!res['data']) return;
       this.savedReports = res['data'];
+      }else{
+        this.common.showError(res['msg']);
+      }
       console.log('Data:',this.sideBarData);
 
     }, err => {
@@ -363,10 +368,10 @@ dropdownFilter = [];
 
   addFilter(){
       // if(this.filterObject['filterdata'].length>0){
-      if(this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_threshold[0].r_value &&
+      if(this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_threshold[0].r_value[0].value &&
       this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_operators)
       {
-      this.filterObject['filterdata'].push({r_threshold:[{r_value:''}],r_operators:''});
+      this.filterObject['filterdata'].push({r_threshold:[{r_value:[{"value":''}]}],r_operators:''});
       }else{
         this.common.showError('Insert values')
       }
@@ -407,7 +412,7 @@ dropdownFilter = [];
       this.addFilterDropData = false;
       document.getElementById('rowFilter').style.display = 'block';
       document.getElementById('basicFilter').style.display = 'none';
-      this.filterObject['filterdata'] = [{r_threshold:[{r_value:''}],r_operators:''}];
+      this.filterObject['filterdata'] = [{r_threshold:[{r_value:[{"value":''}]}],r_operators:''}];
       this.btnName = 'Cancel'
     }
     else if(btn === 'Cancel'){
