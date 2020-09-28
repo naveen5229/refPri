@@ -319,12 +319,20 @@ table .fa-comments.new-comment span {
 .new_message {
     background: lightgray !important;
 }
+.other_chat.new_message .quoted_msg{
+    background: #c2bebe;
 
+}
+.popover-body{
+    padding: 0.2rem 0.45rem !important;
+}
 .quoted_msg {
     background: #f9f9f9;
     margin: 3px -7px;
     padding: 5px 10px;
     border-left: 2px solid #1a3380;
+    font-style: italic;
+    color: #000 !important;
 }
 
 .quoted_selected {
@@ -467,7 +475,9 @@ nb-layout-header nav {
 
 .modal-header.sub-title span {
     max-height: 100px;
-    overflow: auto;
+    overflow: auto;    
+    font-size: 12px;
+
 }
 
 .logo:focus {
