@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <div class="row mt-1 bottom-block">
+            <div class="row pt-1 pb-2 bottom-block">
                 <div *ngIf="parentCommentId>0 && replyType>0" class="col-12 quoted_selected">
                     <label [innerHTML]="parentComment"></label>
                     <span class="comment_reply"><i class="fa fa-times" aria-hidden="true" (click)="resetQuotedMsg()"></i></span>
@@ -87,17 +87,17 @@
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user">
                     <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false">{{u.name}}</span>
                 </div>
-                <div class="col-8">
-                    <textarea name="taskMessage" class="form-control" id="msgtext" placeholder="New Comment" [(ngModel)]="taskMessage" (input)="onMessageType($event)"></textarea>
+                <div class="col-10 pr-0">
+                    <textarea name="taskMessage" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)"></textarea>
                 </div>
-                <div col-1>
+                <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
                         <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)">
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
-                <div class="col-3 text-right button-box">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="saveTicketMessage()">Send
+                <div class="col-1 pl-0 text-right button-box">
+                    <button class="btn send" id="button" (click)="saveTicketMessage()" title="Send"><i class="fas fa-paper-plane"></i>
                   </button>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 p-0" style="border-left:1px solid black;font-size: 14px;">
+        <div class="col-3 p-0" style="border-left:1px solid black;font-size: 12px;">
             <table width="100%">
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
@@ -117,14 +117,14 @@
                 <tr valign="top" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto">{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
-                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn btn-primary btn-sm" title="assign to new user"
+                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn add" title="assign to new user"
                             (click)="showAssignUserAuto=1"><i
                             class="fa fa-plus m-0"></i></button>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">
                         <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser" inputId="assigneeUser">
                         </auto-suggestion>
-                        <button class="btn btn-primary btn-sm" (click)="updateTaskAssigneeUser()"><i
+                        <button class="btn add" (click)="updateTaskAssigneeUser()"><i
                             class="fa fa-check m-0"></i></button>
                     </td>
                 </tr>
@@ -150,7 +150,7 @@
                     </td>
                 </tr>
                 <tr valign="top">
-                    <td colspan="2" class="pt-2">
+                    <td colspan="2" class="pt-2 text-center">
                         <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
                             [preSelected]="newCCUserId"></auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
