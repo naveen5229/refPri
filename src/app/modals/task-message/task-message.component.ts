@@ -131,7 +131,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   ngAfterViewInit() {
@@ -143,7 +143,9 @@ export class TaskMessageComponent implements OnInit {
 
   scrollToBottom(): void {
     try {
-      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      setTimeout(() => {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      }, 100);
     } catch (err) { }
   }
 
@@ -196,6 +198,7 @@ export class TaskMessageComponent implements OnInit {
       console.log("messageList:", res['data']);
       if (res['success']) {
         this.messageList = res['data'] || [];
+        this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
@@ -268,7 +271,7 @@ export class TaskMessageComponent implements OnInit {
     this.parentCommentId = msg._id;
     this.parentComment = msg.comment;
     this.replyStatus = -1;
-    this.isReplyOnDemand = (msg.parent_comment_id > 0 && userType == 'other') ? true : false;
+    this.isReplyOnDemand = (userType == 'other' && msg.reply_demanded && !msg.is_send) ? true : false;
   }
 
   resetQuotedMsg() {
@@ -647,11 +650,13 @@ export class TaskMessageComponent implements OnInit {
       console.log("onMessageType");
       this.isMentionedUser = true;
       this.mentionedUserList = this.adminList;
-      let mentionedUserList = this.adminList.filter(x => { return x.name.match(value) });
-      console.log("mentionedUserList:", mentionedUserList);
     } else if (e && value && value == " ") {
       console.log("onMessageType2");
       this.isMentionedUser = false;
+    } else if (this.isMentionedUser) {
+      let splieted = this.taskMessage.split('@');
+      let searchableTxt = splieted[splieted.length - 1];
+      this.mentionedUserList = this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
     }
   }
 
