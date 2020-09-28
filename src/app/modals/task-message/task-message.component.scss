@@ -228,12 +228,23 @@
 }
 
 .mentioned_user {
-    max-width: 60%;
-    max-height: 60vh;
+    max-width: 50%;
+    max-height: 50vh;
     overflow: auto;
+    position: absolute;
+    bottom: 60px;
+    background: #ffffff;
+    font-size: 12px;
+    left: 15px;
+    z-index: 1;
+    border-radius: 4px;
+    border: 1px solid #e1e1e1;
+    box-shadow: 0 2px 4px #e6e6e6;
     span {
         display: block;
         cursor: pointer;
+        padding: 3px 0;
+        letter-spacing: .5px;
     }
 }
 .send{
@@ -270,6 +281,7 @@
 }
 .add{
     color: #0062cc;
+    padding: 0 8px;
     i{
         font-size: 12px;
     }
