@@ -137,3 +137,19 @@
     text-align: center;
     border-bottom: 1px solid #d1d9e8 !important;
 }
+
+.disablePieClick{
+    pointer-events: none;
+    -webkit-filter: blur(2px); 
+	-moz-filter: blur(2px); 
+	-o-filter: blur(2px); 
+	-ms-filter: blur(2px); 
+	filter: blur(2px); 
+}
+
+.tableref{
+    background: black;
+    padding: 4px;
+    border-radius: 20px;
+    color: white;
+}

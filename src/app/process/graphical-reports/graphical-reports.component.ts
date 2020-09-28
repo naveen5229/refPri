@@ -40,6 +40,16 @@ sideBarData = [
 ];
 Operators =[];
 filterObject = {};
+tableGraph = {
+  data: {
+    headings: {},
+    columns: []
+  },
+  label:[],
+  settings: {
+    hideHeader: true
+  }
+}
 
 chartTypes = [
   {
@@ -61,6 +71,11 @@ chartTypes = [
     id:4,
     type:'line',
     url:"./assets/images/charts/linechart.png"
+  },
+  {
+    id:5,
+    type:'table',
+    url:"./assets/images/charts/table.webp"
   }
 ]
 
@@ -128,12 +143,12 @@ dropdownFilter = [];
       this.common.loading--;
       this.savedReports = [];
       if(res['code'] == 1){
-      if (!res['data']) return;
-      this.savedReports = res['data'];
+      // if (!res['data']) return;
+      this.savedReports = res['data']?res['data']:[];
       }else{
         this.common.showError(res['msg']);
       }
-      console.log('Data:',this.sideBarData);
+      console.log('savedData:',this.savedReports);
 
     }, err => {
       this.common.loading--;
@@ -182,6 +197,16 @@ dropdownFilter = [];
       y:[],
       filter: [],
       reportFileName:'',
+    }
+    this.tableGraph = {
+      data: {
+        headings: {},
+        columns: []
+      },
+      label:[],
+      settings: {
+        hideHeader: true
+      }
     }
     this.reportIdUpdate =null;
     this.graphPieCharts.forEach(ele => ele.destroy());
@@ -580,6 +605,12 @@ dropdownFilter = [];
           if(res['code'] == 1){
             console.log('Response:',res);
             this.reportPreviewData = res['data'];
+            if(this.reportPreviewData.length>1){
+              this.active = 2;
+              this.selectedChart = 'bar';
+            }else{
+              this.active = 1;
+              this.selectedChart = 'pie';}
             console.log('chart data',this.reportPreviewData)
             // this.showChart(this.reportPreviewData,'pie');
             this.getChartofType(this.selectedChart);
@@ -597,10 +628,57 @@ dropdownFilter = [];
 
   getChartofType(chartType){
     // if(this.reportPreviewData.length>0){
-      this.showChart(this.reportPreviewData,chartType);
+      if(chartType === 'table'){
+        document.getElementById('table').style.display ='block';
+        document.getElementById('graph').style.display ='none';
+        this.getTable();
+      }else{
+        document.getElementById('table').style.display ='none';
+        document.getElementById('graph').style.display ='block';
+        this.showChart(this.reportPreviewData,chartType);
+    }
     // }else{
     //   return;
     // }
+  }
+
+  getTable(){
+    this.tableGraph.data = {
+      headings:this.setHeaders(),
+      columns: this.setColumns() 
+    };
+    return true;;
+  }
+  setHeaders(){
+    let head = JSON.parse(this.reportPreviewData[0]['xAxis'])
+    let headings = {};
+      for(let key in head){
+        headings[head[key]] = { title: head[key],placeholder: head[key]}
+      };
+      headings['Label'] = { title: 'Label',placeholder: 'Label'}
+      return headings;
+  }
+
+  setColumns(){
+    let columns = [];
+    this.reportPreviewData.map(ele=> {
+      this.tableGraph.label.push(ele.series['y_name'])
+      let column = {};
+      console.log(ele)
+      ele.series.data.map(data => {
+          for(let key in this.setHeaders()){
+            if(key === data.name)
+            {
+              column[key] = { value: data['y']};
+            }
+          }
+      })
+      column['Label'] = { value: ele.series['y_name']};
+      columns.push(column);
+    });
+    
+    console.log('headings',this.tableGraph)
+    return columns;
   }
 
   showChart(stateTableData,chartType) {
