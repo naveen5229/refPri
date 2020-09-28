@@ -61,7 +61,7 @@
                             <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="left" (click)="replyToComment(msg,'mine')"></i>
                         </span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment" [ngClass]="(msg.mentioned_user_data && msg.mentioned_user_data[0].reply_demanded)? 'reply_demand':''"></label>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
@@ -70,7 +70,7 @@
                             <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="right" (click)="replyToComment(msg,'other')"></i>
                         </span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment" [ngClass]="(msg.mentioned_user_data && msg.mentioned_user_data[0].reply_demanded)? 'reply_demand':''"></label>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>
