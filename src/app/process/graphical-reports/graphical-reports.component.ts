@@ -198,6 +198,16 @@ dropdownFilter = [];
       filter: [],
       reportFileName:'',
     }
+    this.tableGraph = {
+      data: {
+        headings: {},
+        columns: []
+      },
+      label:[],
+      settings: {
+        hideHeader: true
+      }
+    }
     this.reportIdUpdate =null;
     this.graphPieCharts.forEach(ele => ele.destroy());
     // this.getReportPreview();
