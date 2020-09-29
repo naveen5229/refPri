@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <h5>{{title || 'New Task'}}</h5>
+    <h5>{{title || 'Apply Leave'}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
     <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body">
+<div class="modal-body" *ngIf="!formType">
     <div class="row">
     </div>
     <div class="row mb-2 font-weight-bold">
@@ -92,6 +92,52 @@
     <div class="row mt-1">
         <div class="col-12 text-right">
             <button class="btn btn-primary text-capitalize" id="button" (click)="requestLeave()">{{btn}}</button>
+        </div>
+    </div>
+</div>
+<!-- end:leave -->
+<!-- start:broadcast -->
+<div class="modal-body" *ngIf="formType==1">
+    <div class="row">
+        <div class="col-4">
+            <label>Subject<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input placeholder="Enter Subject" name="broadcastSub" id="broadcastSub" class="form-control" maxlength="50" [(ngModel)]="broadcast.subject">
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Description:</label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Task" id="broadCastDesc" name="broadCastDesc" class="form-control" [(ngModel)]="broadcast.desc"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Users:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Users" (onSelected)="broadcast.cc = $event" inputId="broadcastUsers" name="broadcastUsers" [preSelected]="broadcast.cc" isMultiSelect="true"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2" *ngIf="leaveArray.type!=1">
+        <div class="col-4">
+            <label>Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="broadcast.endDate=$event" [dateTimeValue]="broadcast.endDate">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="addBroadcastBtn" (click)="addBroadcast()">{{btn}}</button>
         </div>
     </div>
 </div>

@@ -3,14 +3,13 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-apply-leave',
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.scss']
 })
-export class ApplyLeaveComponent implements OnInit {
+export class ApplyLeaveComponent implements OnInit { //user for two forms 1. leave,2. broadcast
   title = "Apply Leave";
   userList = [];
   btn = 'Apply';
@@ -26,6 +25,16 @@ export class ApplyLeaveComponent implements OnInit {
     type: 0
   }
 
+  formType = null; //null=leave,1=broadcast
+  broadcast = {
+    subject: null,
+    desc: null,
+    to: null,
+    cc: [],
+    endDate: this.common.getDate(1),
+    type: 4
+  }
+
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
@@ -33,7 +42,12 @@ export class ApplyLeaveComponent implements OnInit {
     public userService: UserService) {
 
     this.userList = this.common.params.userList;
-    this.getLastLeaveRequestData();
+    this.formType = (this.common.params.formType > 0) ? this.common.params.formType : null;
+    this.title = (this.common.params.title) ? this.common.params.title : "Apply Leave";
+    this.btn = (this.common.params.btn) ? this.common.params.btn : "Apply";
+    if (!this.formType) {
+      this.getLastLeaveRequestData();
+    }
   }
 
   ngOnInit() {
@@ -147,4 +161,54 @@ export class ApplyLeaveComponent implements OnInit {
     })
     console.log(params, 'updated');
   }
+
+  addBroadcast() {
+    if (!this.broadcast.subject) {
+      return this.common.showError("Subject is missing");
+    }
+    if (!this.broadcast.endDate) {
+      return this.common.showError("Date is missing");
+    } else if (this.broadcast.endDate && this.broadcast.endDate < this.common.getDate()) {
+      return this.common.showError("Date must be Current/future date");
+    } else if (!this.broadcast.cc || !this.broadcast.cc.length) {
+      return this.common.showError("User is missing");
+    }
+
+    let CC = [];
+    if (this.broadcast.cc) {
+      this.broadcast.cc.map(ele => {
+        CC.push({ user_id: ele.id });
+      })
+    }
+
+    let params = {
+      date: this.common.dateFormatter(this.broadcast.endDate),
+      to: this.userService._details.id,
+      cc: JSON.stringify(CC),
+      subject: this.broadcast.subject,
+      desc: this.broadcast.desc,
+      type: this.broadcast.type
+    }
+
+    this.common.loading++;
+    this.api.post('AdminTask/addBroadcast', params).subscribe(res => {
+      console.log(res);
+      this.common.loading--;
+      if (res['code'] === 1) {
+        if (res['data'][0]['y_id'] > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeModal(true);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+    })
+  }
+
+
 }
