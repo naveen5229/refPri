@@ -11,6 +11,7 @@ import * as _ from 'lodash';
   styleUrls: ['./graphical-reports.component.scss']
 })
 export class GraphicalReportsComponent implements OnInit {
+  savedReportSelect = {};
   reportIdUpdate = null;
   editState = false;
   graphBodyVisi = true;
@@ -167,15 +168,17 @@ dropdownFilter = [];
   }
 
 
-  openPreviewModal(graphdata){
-    if(graphdata){
-    this.reportIdUpdate = graphdata._id;
-    this.assign.reportFileName = graphdata.name;
+  openPreviewModal(){
+    let objectLength = Object.keys(this.savedReportSelect).length
+  
+    if(objectLength >0){
+    this.reportIdUpdate = this.savedReportSelect['_id'];
+    this.assign.reportFileName = this.savedReportSelect['name'];
     this.graphBodyVisi = false;
-    console.log('graphData:',graphdata);
-    this.assign.x = graphdata.x;
-    this.assign.y = graphdata.y;
-    this.assign.filter = graphdata.report_filter;
+    console.log('this.savedReportSelect:',this.savedReportSelect);
+    this.assign.x = this.savedReportSelect['x'];
+    this.assign.y = this.savedReportSelect['y'];
+    this.assign.filter = this.savedReportSelect['report_filter'];
     this.getReportPreview();
   }else{
     this.reportIdUpdate = null;
