@@ -212,6 +212,7 @@ dropdownFilter = [];
     this.reportIdUpdate =null;
     this.reportPreviewData = [];
     this.graphPieCharts.forEach(ele => ele.destroy());
+      document.getElementById('table').style.display ='none';
     // this.getReportPreview();
   }
 
