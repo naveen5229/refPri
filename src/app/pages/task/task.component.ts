@@ -318,9 +318,14 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  applyLeave() {
+  applyLeave(formType) {
     this.tableUnreadTaskForMeList.settings.arrow = false;
-    this.common.params = { userList: this.adminList };
+    this.common.params = {
+      userList: this.adminList,
+      formType: formType,
+      title: (formType == 1) ? "Add Broadcast" : "Apply Leave",
+      btn: (formType == 1) ? "Add" : "Apply"
+    };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
       container: "nb-layout",
@@ -1425,7 +1430,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102, 104, 111, 112, 113].includes(ticket._tktype)) {
+      if ([101, 102, 104, 111, 112, 113, 114].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),

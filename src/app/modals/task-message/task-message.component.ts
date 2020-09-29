@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, HostListener, ViewChildren, QueryList } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
@@ -90,6 +90,8 @@ export class TaskMessageComponent implements OnInit {
   handleKeyboardEvent(event) {
     this.keyHandler(event);
   }
+  @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
+
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
     console.log("common params:", this.common.params);
@@ -172,7 +174,7 @@ export class TaskMessageComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104, 111, 112, 113].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.taskId = [101, 102, 104, 111, 112, 113, 114].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
         } else {
           this.common.showError("Something went wrong, Please reopen chatbox");
@@ -650,6 +652,9 @@ export class TaskMessageComponent implements OnInit {
       console.log("onMessageType");
       this.isMentionedUser = true;
       this.mentionedUserList = this.adminList;
+      setTimeout(() => {
+        this.userlistInput.toArray()[0].nativeElement.focus();
+      }, 100);
     } else if (e && value && value == " ") {
       console.log("onMessageType2");
       this.isMentionedUser = false;

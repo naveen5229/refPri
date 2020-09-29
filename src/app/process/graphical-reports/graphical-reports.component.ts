@@ -11,6 +11,7 @@ import * as _ from 'lodash';
   styleUrls: ['./graphical-reports.component.scss']
 })
 export class GraphicalReportsComponent implements OnInit {
+  savedReportSelect = {};
   reportIdUpdate = null;
   editState = false;
   graphBodyVisi = true;
@@ -105,6 +106,7 @@ dropdownFilter = [];
   }
 
   getSideBarData(processId){
+    this.resetAssignForm();
     this.processId = processId;
     if(!this.processId){
       this.common.showError('Select Process')
@@ -166,15 +168,17 @@ dropdownFilter = [];
   }
 
 
-  openPreviewModal(graphdata){
-    if(graphdata){
-    this.reportIdUpdate = graphdata._id;
-    this.assign.reportFileName = graphdata.name;
+  openPreviewModal(){
+    let objectLength = Object.keys(this.savedReportSelect).length
+  
+    if(objectLength >0){
+    this.reportIdUpdate = this.savedReportSelect['_id'];
+    this.assign.reportFileName = this.savedReportSelect['name'];
     this.graphBodyVisi = false;
-    console.log('graphData:',graphdata);
-    this.assign.x = graphdata.x;
-    this.assign.y = graphdata.y;
-    this.assign.filter = graphdata.report_filter;
+    console.log('this.savedReportSelect:',this.savedReportSelect);
+    this.assign.x = this.savedReportSelect['x'];
+    this.assign.y = this.savedReportSelect['y'];
+    this.assign.filter = this.savedReportSelect['report_filter'];
     this.getReportPreview();
   }else{
     this.reportIdUpdate = null;
@@ -209,7 +213,9 @@ dropdownFilter = [];
       }
     }
     this.reportIdUpdate =null;
+    this.reportPreviewData = [];
     this.graphPieCharts.forEach(ele => ele.destroy());
+      document.getElementById('table').style.display ='none';
     // this.getReportPreview();
   }
 
@@ -652,10 +658,10 @@ dropdownFilter = [];
   setHeaders(){
     let head = JSON.parse(this.reportPreviewData[0]['xAxis'])
     let headings = {};
+    headings['Label'] = { title: 'Label',placeholder: 'Label'}
       for(let key in head){
         headings[head[key]] = { title: head[key],placeholder: head[key]}
       };
-      headings['Label'] = { title: 'Label',placeholder: 'Label'}
       return headings;
   }
 
@@ -673,7 +679,7 @@ dropdownFilter = [];
             }
           }
       })
-      column['Label'] = { value: ele.series['y_name']};
+      column['Label'] = { value: this.common.formatTitle(ele.series['y_name']), class: 'black font-weight-bold'};
       columns.push(column);
     });
     
@@ -728,7 +734,7 @@ dropdownFilter = [];
           dataSet.map(sub=>{
             if(sub.label === e.series.y_name){
               e.series.data.map(data => {
-                sub.data.push({x:data.x,y:data.y,r:index*3})
+                sub.data.push({x:data.x,y:data.y,r:(index+1)*4})
               })
             }
           })
@@ -781,6 +787,12 @@ dropdownFilter = [];
         labels: labels,
         scales: {
           yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          }],
+          xAxes: [{
             ticks: {
               beginAtZero: true,
               stepSize: 1

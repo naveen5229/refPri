@@ -7,25 +7,26 @@
       <div class="col-5">
         <span style="display: flex;">
           <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="processList" display="name"
-            placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess>
+            placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch"  #searchedProcess>
           </auto-suggestion>
           <button class="btn btn-primary btn-sm"
-            (click)="getSideBarData(searchedProcess.selectedSuggestion)">Search</button>
+            (click)="getSideBarData(searchedProcess.selectedSuggestion);savedReportSelect = {}">Search</button>
         </span>
       </div>
       <div class="col-3">
         <span style="display: flex;">
           <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="savedReports" display="name"
-            placeholder="Saved Report Preview" inputId="ProcessSearch" name="ProcessSearch" #graphPreview>
+          (onSelected)="savedReportSelect = $event" [preSelected]="savedReportSelect['_id'] ? {name: savedReportSelect['name']}:{name:''}"
+            placeholder="Saved Report Preview" inputId="ProcessSearch" name="ProcessSearch">
           </auto-suggestion>
-          <button class="btn btn-primary btn-sm" (click)="openPreviewModal(graphPreview.selectedSuggestion)">View</button>
+          <button class="btn btn-primary btn-sm" (click)="openPreviewModal()">View</button>
         </span>
       </div>
     </div>
   </nb-card-header>
   <nb-card-body>
     <div class="row mt-2 centarize">
-      <div class="col-1 hoverChart" [ngClass]="reportPreviewData.length>1?{'disablePieClick': i == 0}:''" 
+      <div class="col-1 hoverChart" [ngClass]="reportPreviewData.length>1?{'disablePieClick': i == 0}:'' || !reportPreviewData.length?'disablePieClick':'' " 
         *ngFor="let image of chartTypes;let i = index" (click)="active = image.id;getChartofType(image.type);selectedChart = image.type">
         <span>
           <img src="{{image.url}}" height="80px" width="80px" [ngClass]="active==image.id?'active':''">
@@ -142,7 +143,7 @@
         </div>
 
 
-        <div class="row mt-2"  id="table">
+        <div class="row mt-2"  id="table" style="display: none;">
           <div class="col-8" style="margin-left: 12%;">
             <smart-table [data]="tableGraph.data" [settings]="tableGraph.settings" id="tableLeadsForMe" class="sl-smart-table">
             </smart-table>
