@@ -105,6 +105,7 @@ dropdownFilter = [];
   }
 
   getSideBarData(processId){
+    this.resetAssignForm();
     this.processId = processId;
     if(!this.processId){
       this.common.showError('Select Process')
@@ -209,6 +210,7 @@ dropdownFilter = [];
       }
     }
     this.reportIdUpdate =null;
+    this.reportPreviewData = [];
     this.graphPieCharts.forEach(ele => ele.destroy());
     // this.getReportPreview();
   }
@@ -652,10 +654,10 @@ dropdownFilter = [];
   setHeaders(){
     let head = JSON.parse(this.reportPreviewData[0]['xAxis'])
     let headings = {};
+    headings['Label'] = { title: 'Label',placeholder: 'Label'}
       for(let key in head){
         headings[head[key]] = { title: head[key],placeholder: head[key]}
       };
-      headings['Label'] = { title: 'Label',placeholder: 'Label'}
       return headings;
   }
 
@@ -673,7 +675,7 @@ dropdownFilter = [];
             }
           }
       })
-      column['Label'] = { value: ele.series['y_name']};
+      column['Label'] = { value: this.common.formatTitle(ele.series['y_name']), class: 'black font-weight-bold'};
       columns.push(column);
     });
     
@@ -728,7 +730,7 @@ dropdownFilter = [];
           dataSet.map(sub=>{
             if(sub.label === e.series.y_name){
               e.series.data.map(data => {
-                sub.data.push({x:data.x,y:data.y,r:index*3})
+                sub.data.push({x:data.x,y:data.y,r:(index+1)*4})
               })
             }
           })
@@ -781,6 +783,12 @@ dropdownFilter = [];
         labels: labels,
         scales: {
           yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          }],
+          xAxes: [{
             ticks: {
               beginAtZero: true,
               stepSize: 1
