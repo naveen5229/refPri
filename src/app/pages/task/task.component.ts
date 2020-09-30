@@ -1472,6 +1472,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Re-Active",
         });
+      } else if (ticket._reply_demanded > 0) {
+        // no action for reply demanded pending
       } else if (ticket._status == 2) {
         icons.push({
           class: "fa fa-thumbs-up text-success",

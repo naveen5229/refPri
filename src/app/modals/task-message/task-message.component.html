@@ -62,7 +62,7 @@
                         </span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
                         <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
-                        <span>{{msg.added_date}}</span>
+                        <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true" title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <span class="comment_reply">

@@ -648,10 +648,23 @@ export class TaskMessageComponent implements OnInit {
     let value = e.data;
     console.log("target value:", e);
     console.log("target value22:", value);
+    let accessUsers = [];
+    accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
+    accessUsers.push({ id: this.userListByTask['taskUsers'][0]._aduserid, name: this.userListByTask['taskUsers'][0].assignby });
+    if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+      this.userListByTask['ccUsers'].forEach(element => {
+        accessUsers.push({ id: element._cc_user_id, name: element.cc_user });
+      });
+    }
+    if (this.userListByTask['projectUsers'] && this.userListByTask['projectUsers'].length > 0) {
+      this.userListByTask['projectUsers'].forEach(element => {
+        accessUsers.push({ id: element._pu_user_id, name: element.project_user });
+      });
+    }
     if (e && value && value == "@") {
       console.log("onMessageType");
       this.isMentionedUser = true;
-      this.mentionedUserList = this.adminList;
+      this.mentionedUserList = accessUsers;//this.adminList;
       setTimeout(() => {
         this.userlistInput.toArray()[0].nativeElement.focus();
       }, 100);
@@ -661,7 +674,7 @@ export class TaskMessageComponent implements OnInit {
     } else if (this.isMentionedUser) {
       let splieted = this.taskMessage.split('@');
       let searchableTxt = splieted[splieted.length - 1];
-      this.mentionedUserList = this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+      this.mentionedUserList = accessUsers.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) }); //this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
     }
   }
 
