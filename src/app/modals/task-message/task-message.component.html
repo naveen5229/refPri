@@ -62,7 +62,7 @@
                         </span>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
                         <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
-                        <span>{{msg.added_date}}</span>
+                        <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true" title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <span class="comment_reply">
@@ -114,7 +114,7 @@
                     <td>By:</td>
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}</td>
                 </tr>
-                <tr valign="top" class="bg-lavender">
+                <tr *ngIf="ticketType!=114" valign="top" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto">{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
                         <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn add" title="assign to new user"
@@ -146,6 +146,7 @@
                         <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
                             <i class="fa fa-minus-circle cursor-pointer mr-0" style="color: cadetblue;font-size: 16px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                             {{ccu.cc_user}}
+                            <i class="fa mr-0" style="font-size: 16px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-slash'"></i>
                         <br></span>
                     </td>
                 </tr>

@@ -834,8 +834,8 @@ export class TaskComponent implements OnInit {
           };
         } else if (key == "subject" || key == "task_subject") {
           column[key] = {
-            value: ticket[key],
-            class: "black",
+            value: (ticket['_reply_demanded'] > 0) ? ticket[key] + " (reply demanded)" : ticket[key],
+            class: (ticket['_reply_demanded'] > 0) ? "black font-weight-bold" : "black",
             action: "",
             isTitle: true,
             title: ticket["_task_desc"],
@@ -850,7 +850,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: [101, 102].includes(ticket._tktype)
+            action: ([101, 102].includes(ticket._tktype) && !ticket['_reply_demanded'])
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -1472,6 +1472,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Re-Active",
         });
+      } else if (ticket._reply_demanded > 0) {
+        // no action for reply demanded pending
       } else if (ticket._status == 2) {
         icons.push({
           class: "fa fa-thumbs-up text-success",
