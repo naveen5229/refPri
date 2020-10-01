@@ -248,7 +248,7 @@ dropdownFilter = [];
         this.openFilterModal(event.previousContainer.data[event.previousIndex],null);
       }
 
-      if(pushTo == 'x' || pushTo == 'y'){
+      if(pushTo == 'x'){
       this.assign[pushTo].forEach(ele=> {
         if(ele.r_colid === event.previousContainer.data[event.previousIndex]['r_colid'] &&
         (ele.r_isdynamic === event.previousContainer.data[event.previousIndex]['r_isdynamic'] &&
@@ -257,6 +257,8 @@ dropdownFilter = [];
         };
       })
       if(exists > 0) return; this.assign[pushTo].push(_.clone(event.previousContainer.data[event.previousIndex]));
+      }else if(pushTo == 'y'){
+        this.assign[pushTo].push(_.clone(event.previousContainer.data[event.previousIndex]));
       }
       
       console.log('stored:',this.assign)
@@ -594,7 +596,7 @@ dropdownFilter = [];
       if(!ele.measure){
         ele.measure = 'Count';
       }
-    })
+    });
     // console.log('data to send',this.assign.data)
     // return;
     let info = {x:this.assign.x,y:this.assign.y};
@@ -610,6 +612,7 @@ dropdownFilter = [];
           this.common.loading--;
           if(res['code'] == 1){
             console.log('Response:',res);
+            if(res['data']){
             this.reportPreviewData = res['data'];
             if(this.reportPreviewData.length>1){
               this.active = 2;
@@ -621,6 +624,10 @@ dropdownFilter = [];
             // this.showChart(this.reportPreviewData,'pie');
             this.getChartofType(this.selectedChart);
           }else{
+            this.common.showError('No Data to Display');
+            this.graphPieCharts.forEach(ele => ele.destroy());
+          }
+          }else{
             this.common.showError(res['msg'])
           }
       },err=>{
@@ -628,7 +635,10 @@ dropdownFilter = [];
         console.log('Error:',err)
       })
     }else{
-        this.common.showError('please fill Mandatory fileds first')
+        this.common.showError('please fill Mandatory fileds first');
+        this.graphPieCharts.forEach(ele => ele.destroy());
+        this.resetAssignForm();
+
       }
   }
 
