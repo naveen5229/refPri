@@ -125,13 +125,22 @@
         </div>
     </div>
 
-    <div class="row mt-2" *ngIf="leaveArray.type!=1">
+    <div class="row mt-2">
         <div class="col-4">
-            <label>Date:<span class="text-danger">*</span></label>
+            <label>Exp Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="broadcast.endDate=$event" [dateTimeValue]="broadcast.endDate">
             </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Chat Feature:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="broadcast.chatFeature" (change)="broadcast.chatFeature = !broadcast.chatFeature" />
         </div>
     </div>
 
