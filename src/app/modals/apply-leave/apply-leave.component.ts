@@ -31,8 +31,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     desc: null,
     to: null,
     cc: [],
-    endDate: this.common.getDate(1),
-    type: 4
+    endDate: this.common.getDate(2),
+    type: 4,
+    chatFeature: false
   }
 
   constructor(public activeModal: NgbActiveModal,
@@ -187,7 +188,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,
       desc: this.broadcast.desc,
-      type: this.broadcast.type
+      type: this.broadcast.type,
+      chatFeature: this.broadcast.chatFeature
     }
 
     this.common.loading++;

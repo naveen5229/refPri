@@ -15,7 +15,7 @@
 }
 
 .chat_block {
-    min-height: 56vh;
+    // min-height: 56vh;
     max-height: 56vh;
     overflow: auto;
     background: ghostwhite;
@@ -58,6 +58,10 @@
             color: #3366ff;
             font-size: 14px;
             vertical-align: -webkit-baseline-middle;
+            &.fa-star {
+                display: contents;
+                font-size: 10px;
+            }
         }
     }
     label {

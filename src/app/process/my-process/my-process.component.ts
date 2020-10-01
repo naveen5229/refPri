@@ -942,7 +942,7 @@ export class MyProcessComponent implements OnInit {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
-      formTypeTemp = (type == 2 || type == 6) ? 1 : 0;
+      formTypeTemp = ([2, 6, 7].includes(type)) ? 1 : 0;
     } else {
       formTypeTemp = formType;
     }
