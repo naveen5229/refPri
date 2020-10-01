@@ -126,16 +126,20 @@ if (!this.order.length ) {
     this.api.post('WhatsappWeb/importContactsCsv', params)
     .subscribe(res => {
       this.common.loading--;
-          let successData = res['data']['success'];
-          let errorData = res['data']['fail'];
-          this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
-          const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-              activeModal.result.then(data => {
-                if (data.response) {
-                  this.activeModal.close({ response: true });
-                }
-              });
-      this.closeModal();
+          if(res['success']){
+            let successData = res['data']['success'];
+            let errorData = res['data']['fail'];
+            this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+            const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+                activeModal.result.then(data => {
+                  if (data.response) {
+                    this.activeModal.close({ response: true });
+                  }
+                });
+          this.closeModal();
+          }else{
+            this.common.showError(res['msg']);
+          }
       // console.log(res)
     }, err => {
       this.common.loading--;
