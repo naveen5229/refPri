@@ -122,6 +122,9 @@ export class TaskMessageComponent implements OnInit {
       } else {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
+      if (this.ticketType == 114) {
+        this.title = "Broadcast";
+      }
       this.getAttachmentByTicket();
 
     }
@@ -176,6 +179,9 @@ export class TaskMessageComponent implements OnInit {
           this.lastSeenId = this.ticketData._lastreadid;
           this.taskId = [101, 102, 104, 111, 112, 113, 114].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
+          if (this.ticketType == 114) {
+            this.title = "Broadcast";
+          }
         } else {
           this.common.showError("Something went wrong, Please reopen chatbox");
         }
