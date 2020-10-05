@@ -207,10 +207,13 @@
                                     <option *ngFor="let sign of Operators" value="{{sign.id}}">{{sign.name | uppercase}}</option>
                                   </select>
                                 </div>
-                                <div class="col-6">
-                                      <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" *ngIf="filterObject['r_coltype'] != 'timestamp'">
-                                      <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" *ngIf="filterObject['r_coltype'] === 'timestamp'">
+                                <div class="col-6" *ngIf="filterObject['r_coltype'] != 'timestamp'">
+                                      <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" >
                                 </div>
+                                <div class="col-6" *ngIf="filterObject['r_coltype'] === 'timestamp'">
+                                  <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" >
+                                </div>
+                                
                                 <i class="fas fa-trash-alt" (click)="deletFilter(i)"></i>
                               </div>
                               <!-- {{filterObject | json}} -->
