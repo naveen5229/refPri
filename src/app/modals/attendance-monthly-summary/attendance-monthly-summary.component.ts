@@ -27,6 +27,27 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   groupList = [];
   selectedGroup = -1;
 
+  finalAttendanceList = [];
+  tableFinalAttendanceList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  leaveRequestList = [];
+  tableLeaveRequestList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   constructor(public common: CommonService,
     public modalService: NgbModal,
     public activeModal: NgbActiveModal,
@@ -80,10 +101,14 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
           this.common.showError(res['data']);
 
         } else {
-          if (type && (type == "final" || type == "leave")) {
+          if (type && type == "final") {
             this.finalAttendanceList = res['data'] || [];
             console.log("finalAttendanceList:", this.finalAttendanceList);
             (this.finalAttendanceList.length > 0) ? this.setTableFinalAttendanceList() : this.resetTableFinalAttendanceList()
+          } else if (type && type == "leave") {
+            this.leaveRequestList = res['data'] || [];
+            console.log("leaveList:", this.leaveRequestList);
+            (this.leaveRequestList.length > 0) ? this.setTableLeaveRequestList() : this.resetTableFinalAttendanceList()
           } else {
 
             this.attendanceSummaryList = res['data'] || [];
@@ -263,19 +288,14 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   // start: report final
-  finalAttendanceList = [];
-  tableFinalAttendanceList = {
-    data: {
-      headings: {},
-      columns: []
-    },
-    settings: {
-      hideHeader: true
-    }
-  };
+
 
   resetTableFinalAttendanceList() {
     this.tableFinalAttendanceList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableLeaveRequestList.data = {
       headings: {},
       columns: []
     };
@@ -315,6 +335,45 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     return columns;
   }
   // end: report final
+
+  setTableLeaveRequestList() {
+    this.tableLeaveRequestList.data = {
+      headings: this.generateHeadingsLeaveRequestList(),
+      columns: this.getTableColumnsLeaveRequestList()
+    };
+    return true;
+  }
+
+  generateHeadingsLeaveRequestList() {
+    let headings = {};
+    for (var key in this.leaveRequestList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    console.log("headings:", headings);
+    return headings;
+  }
+
+  getTableColumnsLeaveRequestList() {
+    let columns = [];
+    this.leaveRequestList.map(shift => {
+      let column = {};
+      for (let key in this.generateHeadingsLeaveRequestList()) {
+        if (key == 'Action' || key == 'action') {
+        } else {
+          column[key] = { value: shift[key], class: 'black', action: '' };
+        }
+      }
+      if (shift['_task_id']) {
+      } else {
+        column['style'] = { 'background': 'antiquewhite' };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: leave list
 
   exportCSV() {
     if (this.reportType == 'final') {
