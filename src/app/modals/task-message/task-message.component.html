@@ -141,12 +141,12 @@
                     <td>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}</td>
                 </tr>
                 <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
-                    <td>CC:</td>
+                    <td>{{(ticketType==114) ? 'Users' : 'CC'}}:</td>
                     <td>
                         <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
                             <i class="fa fa-minus-circle cursor-pointer mr-0" style="color: cadetblue;font-size: 16px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                             {{ccu.cc_user}}
-                            <i class="fa mr-0" style="font-size: 16px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-slash'"></i>
+                            <i class="fa mr-0" style="font-size: 12px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'" [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
                         <br></span>
                     </td>
                 </tr>
