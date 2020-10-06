@@ -92,8 +92,9 @@
             <div class="example-box fieldStyle" *ngFor="let n of assign.x;let i =index" cdkDrag [cdkDragData]="n">
               {{n.r_coltitle}}
               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'x')"></i>
-              <select class="selectInsideSelected" *ngIf="n.r_coltype === 'timestamp'" (change)="addMeasure(i,'x',$event.target.value)">
+              <select class="selectInsideSelected" *ngIf="n.r_coltype === 'timestamp'" [(ngModel)]="n.measure" (change)="addMeasure(i,'x',$event.target.value)">
                 <option selected disabled>--Select--</option>
+                <option>None</option>
                 <option>Date</option>
               </select>
             </div>
@@ -107,7 +108,7 @@
             <div class="example-box fieldStyle" *ngFor="let n of assign.y;let i =index" cdkDrag [cdkDragData]="n">
               {{n.r_coltitle}}
               <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'y')"></i>
-              <select class="selectInsideSelected" (change)="addMeasure(i,'y',$event.target.value)">
+              <select class="selectInsideSelected" (change)="addMeasure(i,'y',$event.target.value)" [(ngModel)]="n.measure">
                 <!-- <option disabled selected>measure</option> -->
                 <option *ngIf="n.r_coltype === 'timestamp'">Date</option>
                 <option selected>Count</option>
