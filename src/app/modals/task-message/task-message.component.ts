@@ -652,7 +652,7 @@ export class TaskMessageComponent implements OnInit {
 
   onMessageType(e) {
     let value = e.data;
-    console.log("target value:", e);
+    console.log("target value:", e.target.value);
     console.log("target value22:", value);
     let accessUsers = [];
     if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
