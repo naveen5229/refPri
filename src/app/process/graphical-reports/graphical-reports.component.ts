@@ -370,24 +370,54 @@ dropdownFilter = [];
 
     console.log(this.filterObject['filterdata'][0].r_operators)
 
+    // this.filterObject['filterdata'].map(data=>{
+    //   if(data.r_operators === 5 || data.r_operators ===6){
+
+    //     this.btnName ='Filter Raw Data'
+    //     document.getElementById('rowFilter').style.display = 'none';
+    //     document.getElementById('basicFilter').style.display = 'block';
+        
+    //       console.log('datafiltered',this.filterObject['filterdata'])
+    //       this.filterObject['filterdata'][0].r_threshold[0]['r_value'].forEach((data)=> {
+    //         console.log('data edit filter',data)
+    //         this.dropdownFilter.forEach(ele=>{
+    //           if(ele.value === data.value){
+    //             // console.log(ele)
+    //             ele.status = data.status;
+    //             console.log('data edit filter 1',data);
+    //           }
+    //         })
+    //       })
+    //     }else{
+    //       this.btnName ='Cancel'
+    //       document.getElementById('rowFilter').style.display = 'block';
+    //       document.getElementById('basicFilter').style.display = 'none';
+    //       return this.filterObject['filterdata'];
+    //     }
+    // })
+
     if(this.filterObject['filterdata'][0].r_operators === 5 ||
     this.filterObject['filterdata'][0].r_operators === 6){
-
-    this.btnName ='Filter Raw Data'
-    document.getElementById('rowFilter').style.display = 'none';
-    document.getElementById('basicFilter').style.display = 'block';
-    
-      console.log('datafiltered',this.filterObject['filterdata'])
-      this.filterObject['filterdata'][0].r_threshold[0]['r_value'].forEach((data)=> {
-        console.log('data edit filter',data)
-        this.dropdownFilter.forEach(ele=>{
-          if(ele.value === data.value){
-            // console.log(ele)
-            ele.status = data.status;
-            console.log('data edit filter 1',data);
+      this.filterObject['filterdata'].map(data=>{
+        if(data.r_operators === 5 || data.r_operators ===6){
+  
+          this.btnName ='Filter Raw Data'
+          document.getElementById('rowFilter').style.display = 'none';
+          document.getElementById('basicFilter').style.display = 'block';
+          
+            console.log('datafiltered',this.filterObject['filterdata'])
+            this.filterObject['filterdata'][0].r_threshold[0]['r_value'].forEach((data)=> {
+              console.log('data edit filter',data)
+              this.dropdownFilter.forEach(ele=>{
+                if(ele.value === data.value){
+                  // console.log(ele)
+                  ele.status = data.status;
+                  console.log('data edit filter 1',data);
+                }
+              })
+            })
           }
-        })
-      })
+      });
     }else{
       this.btnName ='Cancel'
       document.getElementById('rowFilter').style.display = 'block';
@@ -404,7 +434,7 @@ dropdownFilter = [];
       if(this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_threshold[0].r_value[0].value &&
       this.filterObject['filterdata'][this.filterObject['filterdata'].length-1].r_operators)
       {
-      this.filterObject['filterdata'].push({r_threshold:[{r_value:[{"value":''}]}],r_operators:''});
+      this.filterObject['filterdata'].push({r_threshold:[{r_value:[{value:''}]}],r_operators:''});
       }else{
         this.common.showError('Insert values')
       } 
@@ -445,7 +475,7 @@ dropdownFilter = [];
       this.addFilterDropData = false;
       document.getElementById('rowFilter').style.display = 'block';
       document.getElementById('basicFilter').style.display = 'none';
-      this.filterObject['filterdata'] = [{r_threshold:[{r_value:[{"value":''}]}],r_operators:''}];
+      this.filterObject['filterdata'] = [{r_threshold:[{r_value:[{value:''}]}],r_operators:''}];
       this.btnName = 'Cancel'
     }
     else if(btn === 'Cancel'){
@@ -471,9 +501,9 @@ dropdownFilter = [];
 
     console.log('in',inEle,'notin:',notInEle)
     // if(inEle.length > notInEle.length){
-      filterObject['filterdata'].push({r_threshold:[{r_value:notInEle}],r_operators:6});
+      filterObject['filterdata'].push({r_threshold:[{r_value:notInEle.length>0 ? notInEle : [{value:''}]}],r_operators:6});
     // }else{
-      filterObject['filterdata'].push({r_threshold:[{r_value:inEle}],r_operators:5});
+      filterObject['filterdata'].push({r_threshold:[{r_value:inEle.length>0 ? inEle : [{value:''}]}],r_operators:5});
     // }
     }
     let exists = 0;
@@ -624,6 +654,7 @@ dropdownFilter = [];
             // this.showChart(this.reportPreviewData,'pie');
             this.getChartofType(this.selectedChart);
           }else{
+            // this.resetAssignForm();
             this.common.showError('No Data to Display');
             this.graphPieCharts.forEach(ele => ele.destroy());
           }
@@ -666,9 +697,11 @@ dropdownFilter = [];
     return true;;
   }
   setHeaders(){
-    let head = JSON.parse(this.reportPreviewData[0]['xAxis'])
+    let headers = [];
+    this.reportPreviewData.map(ele=> {headers.push(ele.series['y_name'])});
+    let head = headers;
     let headings = {};
-    headings['Label'] = { title: 'Label',placeholder: 'Label'}
+    headings['Status'] = { title: 'Status',placeholder: 'Status'}
       for(let key in head){
         headings[head[key]] = { title: head[key],placeholder: head[key]}
       };
@@ -677,21 +710,55 @@ dropdownFilter = [];
 
   setColumns(){
     let columns = [];
-    this.reportPreviewData.map(ele=> {
-      this.tableGraph.label.push(ele.series['y_name'])
-      let column = {};
-      console.log(ele)
-      ele.series.data.map(data => {
-          for(let key in this.setHeaders()){
-            if(key === data.name)
-            {
-              column[key] = { value: data['y']};
-            }
-          }
-      })
-      column['Label'] = { value: this.common.formatTitle(ele.series['y_name']), class: 'black font-weight-bold'};
-      columns.push(column);
+    let labels = [];
+    this.reportPreviewData[0].series.data.map(label=> {
+      labels.push(_.clone(label.name))
     });
+    
+    console.log('preview of report',this.reportPreviewData);
+
+    for(let key in this.setHeaders()){
+    this.reportPreviewData.map((ele,index)=>{
+      let column = {};
+        console.log('key is',key,ele.y_name)
+                if(key === ele.series.y_name)
+                {
+                  ele.series.data.map((data,subindex) => {
+                          if(index == 0){
+                            console.log('data in loop',data)
+                            column[key] = { value: data['y']};
+                            columns.push(_.clone(column));
+                          }else{
+                            columns[subindex][key] = _.clone({value: data['y']})
+                          } 
+                    })
+                }
+                // else if(key == 'Status'){
+                //   ele.series.data.map(data => {
+                //     column['Status'] = { value: this.common.formatTitle(data['name']), class: 'black font-weight-bold'};
+                // })
+                // }
+              })
+              console.log(labels,'labels for table')
+    }
+    labels.map((val,indexLabel)=>{
+      columns[indexLabel]['Status'] = { value: this.common.formatTitle(val), class: 'black font-weight-bold'};
+    })
+    // this.reportPreviewData.map(ele=> {
+    //   this.tableGraph.label.push(ele.series['y_name'])
+    //   let column = {};
+    //   console.log(ele)
+    //   ele.series.data.map(data => {
+    //       for(let key in this.setHeaders()){
+    //         if(key === data.name)
+    //         {
+    //           column[key] = { value: data['y']};
+    //         }
+    //       }
+    //   })
+    //   column['Status'] = { value: this.common.formatTitle(ele.series['y_name']), class: 'black font-weight-bold'};
+    //   columns.push(column);
+    // });
     
     console.log('headings',this.tableGraph)
     return columns;
