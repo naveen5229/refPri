@@ -365,10 +365,14 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
       }
-      if (shift['_task_id']) {
-        column['style'] = { 'background': '#fff' };
-      } else {
+      if (!shift['_task_id'] && shift['_id']) {
         column['style'] = { 'background': 'antiquewhite' };
+      } else if (shift['_task_id'] && !shift['_id'] && shift['_status'] == 5) {
+        column['style'] = { 'background': 'pink' };
+      } else if (shift['_task_id'] && !shift['_id'] && shift['_status'] == -1) {
+        column['style'] = { 'background': 'red' };
+      } else {
+        column['style'] = { 'background': '#fff' };
       }
       columns.push(column);
     });

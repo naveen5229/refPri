@@ -83,7 +83,8 @@
                     <span class="comment_reply"><i class="fa fa-times" aria-hidden="true" (click)="resetQuotedMsg()"></i></span>
                 </div>
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
-                    <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a>
+                    <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                    <!-- <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a> -->
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)"></textarea>
@@ -144,6 +145,7 @@
                         <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
                             <i class="fa fa-minus-circle cursor-pointer mr-0" style="color: cadetblue;font-size: 16px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                             {{ccu.cc_user}}
+                            <i class="fa fa-circle" style="font-size: 8px;" [ngClass]="(ccu.present) ? 'text-success' : ''" aria-hidden="true"></i>
                             <i class="fa mr-0" style="font-size: 12px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'" [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
                         <br></span>
                     </td>
