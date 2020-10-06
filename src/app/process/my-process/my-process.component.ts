@@ -350,6 +350,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -402,6 +403,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -450,6 +452,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -497,6 +500,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -545,6 +549,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -591,6 +596,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -637,6 +643,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -689,6 +696,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -741,6 +749,7 @@ export class MyProcessComponent implements OnInit {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -1293,6 +1302,9 @@ export class MyProcessComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
+            if (!lead.pending_action) {
+              this.openTransAction(lead, type, 1);
+            }
             this.getProcessLeadByType(type);
           } else {
             this.common.showError(res['data'][0].y_msg);

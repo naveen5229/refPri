@@ -366,6 +366,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
         }
       }
       if (shift['_task_id']) {
+        column['style'] = { 'background': '#fff' };
       } else {
         column['style'] = { 'background': 'antiquewhite' };
       }
