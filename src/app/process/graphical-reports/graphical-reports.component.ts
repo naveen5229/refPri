@@ -171,6 +171,7 @@ dropdownFilter = [];
   openPreviewModal(){
     let objectLength = Object.keys(this.savedReportSelect).length
   
+    console.log(this.savedReportSelect,'preview data')
     if(objectLength >0){
     this.reportIdUpdate = this.savedReportSelect['_id'];
     this.assign.reportFileName = this.savedReportSelect['name'];
@@ -553,8 +554,13 @@ dropdownFilter = [];
 
   addMeasure(index,axis,measure){
         console.log('index:',index,'axis:',axis,'measure:',measure);
+        if(measure === 'None'){
+          this.assign[axis][index].measure=null;  
+        }else{
         this.assign[axis][index].measure=measure;
+      }
         console.log('measure inserted:',this.assign)
+
   }
 
   openSaveModal(){
@@ -701,7 +707,7 @@ dropdownFilter = [];
     this.reportPreviewData.map(ele=> {headers.push(ele.series['y_name'])});
     let head = headers;
     let headings = {};
-    headings['Status'] = { title: 'Status',placeholder: 'Status'}
+    headings['Label'] = { title: 'Label',placeholder: 'Label'}
       for(let key in head){
         headings[head[key]] = { title: head[key],placeholder: head[key]}
       };
@@ -733,16 +739,16 @@ dropdownFilter = [];
                           } 
                     })
                 }
-                // else if(key == 'Status'){
+                // else if(key == 'Label'){
                 //   ele.series.data.map(data => {
-                //     column['Status'] = { value: this.common.formatTitle(data['name']), class: 'black font-weight-bold'};
+                //     column['Label'] = { value: this.common.formatTitle(data['name']), class: 'black font-weight-bold'};
                 // })
                 // }
               })
               console.log(labels,'labels for table')
     }
     labels.map((val,indexLabel)=>{
-      columns[indexLabel]['Status'] = { value: this.common.formatTitle(val), class: 'black font-weight-bold'};
+      columns[indexLabel]['Label'] = { value: val, class: 'black font-weight-bold'};
     })
     // this.reportPreviewData.map(ele=> {
     //   this.tableGraph.label.push(ele.series['y_name'])
