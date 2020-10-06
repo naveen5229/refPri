@@ -655,16 +655,24 @@ export class TaskMessageComponent implements OnInit {
     console.log("target value:", e);
     console.log("target value22:", value);
     let accessUsers = [];
-    accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
-    accessUsers.push({ id: this.userListByTask['taskUsers'][0]._aduserid, name: this.userListByTask['taskUsers'][0].assignby });
+    if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
+    }
+    if (this.userListByTask['taskUsers'][0]._aduserid != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['taskUsers'][0]._aduserid, name: this.userListByTask['taskUsers'][0].assignby });
+    }
     if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
       this.userListByTask['ccUsers'].forEach(element => {
-        accessUsers.push({ id: element._cc_user_id, name: element.cc_user });
+        if (element._cc_user_id != this.loginUserId) {
+          accessUsers.push({ id: element._cc_user_id, name: element.cc_user });
+        }
       });
     }
     if (this.userListByTask['projectUsers'] && this.userListByTask['projectUsers'].length > 0) {
       this.userListByTask['projectUsers'].forEach(element => {
-        accessUsers.push({ id: element._pu_user_id, name: element.project_user });
+        if (element._pu_user_id != this.loginUserId) {
+          accessUsers.push({ id: element._pu_user_id, name: element.project_user });
+        }
       });
     }
     if (e && value && value == "@") {

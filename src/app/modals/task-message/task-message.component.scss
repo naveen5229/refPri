@@ -243,14 +243,16 @@
     border-radius: 4px;
     border: 1px solid #e1e1e1;
     box-shadow: 0 2px 4px #e6e6e6;
-    span {
+    a {
         display: block;
         cursor: pointer;
-        padding: 3px 0;
+        padding: 3px 10px;
         letter-spacing: .5px;
+        color: #000;
     }
-    span:focus {
-        color: yellowgreen;
+    a:focus {
+        background: yellow !important;
+        border: none;
     }
 }
 

@@ -26,9 +26,9 @@
                 </div>
             </div>
             <div class="col-4 text-right">
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
                 <button class="btn btn-primary btn-sm mr-2 allicons" id="addBroadcast" title="Add Broadcast" (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
                 <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave" (click)="applyLeave(null)"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
                 <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
                     <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
                 </button>

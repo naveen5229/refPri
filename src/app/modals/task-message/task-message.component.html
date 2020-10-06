@@ -39,9 +39,7 @@
             <ng-template #replyPopContent>
                 <ul class="replyPopContent">
                     <li (click)="setReplyWithType(1)">Reply</li>
-                    <!-- <li (click)="setReplyWithType(2)">Set Reply Demanded</li> -->
-                    <li (click)="setReplyWithType(3)" *ngIf="isReplyOnDemand">Reply for demand</li>
-                    <!-- <li (click)="setReplyWithType(11)" [ngbPopover]="commentInfoPopContent" placement="bottom">Info</li> -->
+                    <li (click)="setReplyWithType(3)" *ngIf="isReplyOnDemand">Answer</li>
                 </ul>
             </ng-template>
             <ng-template #commentInfoPopContent>
@@ -84,8 +82,8 @@
                     <label [innerHTML]="parentComment"></label>
                     <span class="comment_reply"><i class="fa fa-times" aria-hidden="true" (click)="resetQuotedMsg()"></i></span>
                 </div>
-                <div *ngIf="isMentionedUser" class="col-12 mentioned_user">
-                    <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false" #userlistInput>{{u.name}}</span>
+                <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
+                    <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a>
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)"></textarea>

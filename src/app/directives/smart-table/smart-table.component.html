@@ -57,7 +57,7 @@
                 <!-- Records Count End -->
 
                 <!-- Smart Table Value -->
-                <td *ngFor="let heading of objectKeys(headings);" [ngClass]="column[heading] ? column[heading].class : ''" (click)="handleColumnClick(column, heading, i)" (dblclick)="handleColDoubleClick(column, heading)" (mouseover)="handleMouseHover(column, heading)"
+                <td *ngFor="let heading of objectKeys(headings);" [ngClass]="column[heading] ? column[heading].class : ''" (click)="handleColumnClick($event,column, heading, i)" (dblclick)="handleColDoubleClick(column, heading)" (mouseover)="handleMouseHover(column, heading)"
                     (mouseout)="handleMouseOut(column, heading)" [ngStyle]="{cursor: (column[heading] && column[heading].action) ? 'pointer' : ''}">
 
                     <!-- Auto Suggestion -->
@@ -125,7 +125,7 @@
         <button (click)="handlePagination(pages.active + 1)" [disabled]="pages.active == pages.count">Next</button>
     </div>
     <!-- Page Count END -->
-    
+
     <!-- Records Per Page -->
     <div class="numer_list ml-3">
         <input type="text" class="customPage form-control" name="customPageNo" (keyup.enter)="customPage()" [(ngModel)]="pages.limit">
