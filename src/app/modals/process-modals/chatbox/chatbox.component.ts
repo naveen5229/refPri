@@ -379,6 +379,9 @@ export class ChatboxComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "completion_time" || key === 'action_target_time') {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
