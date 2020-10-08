@@ -638,7 +638,7 @@ dropdownFilter = [];
     let info = {x:this.assign.x,y:this.assign.y};
       let params = {
       processId:this.processId['_id'],
-      reportFilter:JSON.stringify(this.assign.filter),
+      reportFilter:this.assign.filter ? JSON.stringify(this.assign.filter) : [],
       info:JSON.stringify(info),
     };
 
@@ -812,6 +812,9 @@ dropdownFilter = [];
       
       stateTableData.map((e,index)=> {
         dataSet.push({label:e.series.y_name,data:[],bgColor:['#1F618D', '#1E8449', '#A04000', '#B03A2E', '#922B21',
+        '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+        '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF',
+        '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
         '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
         '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']});
           dataSet.map(sub=>{
