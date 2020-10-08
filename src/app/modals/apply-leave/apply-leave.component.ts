@@ -36,13 +36,30 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     chatFeature: false
   }
 
+  userGroupList = [];
+  userWithGroup = [];
+  bGConditions = [
+    {
+      key: 'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
+
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal,
     public userService: UserService) {
 
-    this.userList = this.common.params.userList;
+    this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
+    this.userGroupList = this.common.params.groupList;
+    if (this.userGroupList) {
+      this.userWithGroup = this.userGroupList.concat(this.userList);
+    } else {
+      this.userWithGroup = this.userList.concat(this.userGroupList);
+    }
+
     this.formType = (this.common.params.formType > 0) ? this.common.params.formType : null;
     this.title = (this.common.params.title) ? this.common.params.title : "Apply Leave";
     this.btn = (this.common.params.btn) ? this.common.params.btn : "Apply";
@@ -178,7 +195,13 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     let CC = [];
     if (this.broadcast.cc) {
       this.broadcast.cc.map(ele => {
-        CC.push({ user_id: ele.id });
+        if (ele.groupId != null) {
+          ele.groupuser.forEach(x2 => {
+            CC.push({ user_id: x2._id });
+          })
+        } else {
+          CC.push({ user_id: ele.id });
+        }
       })
     }
 
