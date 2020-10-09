@@ -95,7 +95,7 @@
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
-                <div class="col-1 pl-0 text-right button-box">
+                <div *ngIf="isChatFeature || (userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId)" class="col-1 pl-0 text-right button-box">
                     <button class="btn send" id="button" (click)="saveTicketMessage()" title="Send"><i class="fas fa-paper-plane"></i>
                   </button>
                 </div>
