@@ -326,3 +326,9 @@
 .chatmsg::placeholder {
     color: #888585;
 }
+
+.cc_user {
+    max-height: 300px;
+    overflow: auto;
+    display: block;
+}

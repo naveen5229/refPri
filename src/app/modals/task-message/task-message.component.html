@@ -148,7 +148,7 @@
                 </tr>
                 <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
                     <td>{{(ticketType==114) ? 'Users' : 'CC'}}:</td>
-                    <td>
+                    <td class="cc_user">
                         <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
                             <i class="fa fa-minus-circle cursor-pointer mr-0" style="color: cadetblue;font-size: 16px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                             {{ccu.cc_user}}
