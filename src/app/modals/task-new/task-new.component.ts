@@ -353,7 +353,7 @@ export class TaskNewComponent implements OnInit {
     if (!userPresence) {
       this.common.params = {
         title: 'User Presence',
-        description: '<b>User not present.<br> Are you sure to add this user ?<b>'
+        description: '<b>At this moment, user is not available to work.<br> Are you sure to add this user ?<b>'
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {

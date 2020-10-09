@@ -85,6 +85,7 @@ export class TaskMessageComponent implements OnInit {
   commentInfo = [];
   isMentionedUser = false;
   mentionedUserList = [];
+  isChatFeature = true;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -107,7 +108,7 @@ export class TaskMessageComponent implements OnInit {
       this.ticketType = this.common.params.ticketEditData.taskType;
       this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
       this.ticketData = this.common.params.ticketEditData.ticketData;
-      if (!this.ticketData) {
+      if (!this.ticketData || this.ticketType == 114) {
         this.getTicketDataByTktId();
       }
       this.getMessageList();
@@ -179,6 +180,7 @@ export class TaskMessageComponent implements OnInit {
           this.lastSeenId = this.ticketData._lastreadid;
           this.taskId = [101, 102, 104, 111, 112, 113, 114].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
+          this.isChatFeature = this.ticketData._chat_feature;
           if (this.ticketType == 114) {
             this.title = "Broadcast";
           }
