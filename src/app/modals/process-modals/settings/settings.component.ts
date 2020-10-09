@@ -103,7 +103,7 @@ export class SettingsComponent implements OnInit {
       this.transaction.isEndByActionOwn = {id:0,name:'only admin and PO'};
     }else if(this.PreFilledData[0]._to_mark_outstate == 1){
       this.transaction.isEndByActionOwn = {id:1,name:'admin, PO and Action owner'};
-    }
+    } 
 
     if (this.transaction.default_State.id > 0) {
       // this.showOtherFields = true;
