@@ -1843,6 +1843,7 @@ export class TaskComponent implements OnInit {
       subTitle: subTitle,
       userList: this.adminList,
       groupList: this.groupList,
+      departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
       size: "lg",

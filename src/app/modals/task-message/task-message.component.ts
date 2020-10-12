@@ -7,6 +7,8 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { ReminderComponent } from '../reminder/reminder.component';
 import { TaskNewComponent } from '../task-new/task-new.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { TaskScheduleMasterComponent } from '../task-schedule-master/task-schedule-master.component';
+import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
 
 @Component({
   selector: 'ngx-task-message',
@@ -86,12 +88,14 @@ export class TaskMessageComponent implements OnInit {
   isMentionedUser = false;
   mentionedUserList = [];
   isChatFeature = true;
+  departmentList = [];
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
     this.keyHandler(event);
   }
   @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
+  @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -100,6 +104,7 @@ export class TaskMessageComponent implements OnInit {
       this.title = this.common.params.title;
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
+      this.departmentList = this.common.params.departmentList;
 
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
@@ -123,6 +128,7 @@ export class TaskMessageComponent implements OnInit {
       } else {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
+      console.log("userGroupList:", this.userGroupList);
       if (this.ticketType == 114) {
         this.title = "Broadcast";
       }
@@ -325,8 +331,8 @@ export class TaskMessageComponent implements OnInit {
           }
           this.getMessageList();
           this.getAttachmentByTicket();
-        }
-        else {
+          this.msgtextarea.nativeElement.focus();
+        } else {
           this.common.showError(res['msg'])
         }
       }, err => {
@@ -700,6 +706,30 @@ export class TaskMessageComponent implements OnInit {
     let splieted = this.taskMessage.split('@');
     splieted.pop();
     this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.msgtextarea.nativeElement.focus();
+  }
+
+  openSchedukedTaskMasterModal() {
+    this.common.params = null;
+    this.common.params = {
+      data: null,
+      adminList: this.adminList,
+      groupList: this.userGroupList,
+      departmentList: this.departmentList,
+      title: "Add Schedule task",
+      button: "Save",
+    };
+    const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
+  }
+
+  addScheduleTaskparam(task, type) {
+    console.log("type:", type);
+    this.common.params = {
+      taskId: task._id,
+      title: "Schedule task action",
+      button: "Save",
+    };
+    const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
   }
 
 }
