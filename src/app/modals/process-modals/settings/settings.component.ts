@@ -20,7 +20,10 @@ export class SettingsComponent implements OnInit {
   // showOtherFields: Boolean = false;
   stateId = null;
 
-  allowStateChangeValues = [{id:0,name:'only admin and PO'},{id:1,name:'admin, PO and Action owner'}]
+  allowStateChangeValues = [
+  {id:0,name:'only admin and PO'},
+  {id:1,name:'admin, PO and Action owner'},
+  {id:2,name:'admin, po and action owner with txn complete permission'}]
 
   transaction = {
     primary_Owner: { id: null, name: '' },
@@ -103,6 +106,8 @@ export class SettingsComponent implements OnInit {
       this.transaction.isEndByActionOwn = {id:0,name:'only admin and PO'};
     }else if(this.PreFilledData[0]._to_mark_outstate == 1){
       this.transaction.isEndByActionOwn = {id:1,name:'admin, PO and Action owner'};
+    }else if(this.PreFilledData[0]._to_mark_outstate == 2){
+      this.transaction.isEndByActionOwn = {id:2,name:'admin, po and action owner with txn complete permission'};
     } 
 
     if (this.transaction.default_State.id > 0) {

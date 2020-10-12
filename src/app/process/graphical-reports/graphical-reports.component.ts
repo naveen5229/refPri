@@ -188,6 +188,7 @@ dropdownFilter = [];
     this.common.showError('Please Select Report')
   }
     // document.getElementById('graphPreview').style.display = 'block';
+    // console.log('viewData',this.assign)
 
   }
 
@@ -288,6 +289,7 @@ dropdownFilter = [];
     document.getElementById('rowFilter').style.display = 'none';
     document.getElementById('basicFilter').style.display = 'block';
     this.filterObject = _.clone(data);
+    // console.log('filter_Object',this.filterObject)
     let params = {
       processId:this.processId['_id'],
       info:JSON.stringify(this.filterObject),
@@ -549,6 +551,10 @@ dropdownFilter = [];
 
   editFilter(index){
     console.log('edit data:',this.assign.filter[index]);
+    this.assign.filter[index].filterdata.map(ele=> {
+      console.log('type of filterdata', typeof ele.r_threshold);
+      if(typeof ele.r_threshold === 'string') {ele.r_threshold = JSON.parse(ele.r_threshold)};
+    })
     this.openFilterModal(this.assign.filter[index],'edit');
   }
 
