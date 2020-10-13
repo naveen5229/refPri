@@ -16,6 +16,8 @@
         <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" title="Add Reminder" (click)="showReminderPopup()"></i></span>
 
         <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5) && [101,102].includes(ticketType))" class="blue cursor-pointer" title="Change Expected Date" (click)="editTaskAssignDate()">{{ticketData.expdate}}</span>
+        <span *ngIf="stTaskMaster && ticketType == 103"><i class="fa fa-edit text-success" title="Edit Schedule task master" (click)="openSchedukedTaskMasterModal()"></i></span>
+        <span *ngIf="stTaskMaster && ticketType == 103"><i class="fa fa-calendar-alt text-dark" title="Edit Schedule task param" (click)="addScheduleTaskparam({_id:null})"></i></span>
     </div>
 </div>
 <div class="modal-body">

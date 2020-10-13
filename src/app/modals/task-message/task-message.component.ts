@@ -89,6 +89,7 @@ export class TaskMessageComponent implements OnInit {
   mentionedUserList = [];
   isChatFeature = true;
   departmentList = [];
+  stTaskMaster = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -115,6 +116,8 @@ export class TaskMessageComponent implements OnInit {
       this.ticketData = this.common.params.ticketEditData.ticketData;
       if (!this.ticketData || this.ticketType == 114) {
         this.getTicketDataByTktId();
+      } else if (this.ticketType == 103 || this.ticketData._tktype == 103) {
+        this.getScheduledMasterByTaskId();
       }
       this.getMessageList();
       this.getAllUserByTask();
@@ -709,10 +712,26 @@ export class TaskMessageComponent implements OnInit {
     this.msgtextarea.nativeElement.focus();
   }
 
+  getScheduledMasterByTaskId() {
+    this.common.loading++;
+    this.api.get('AdminTask/getScheduledMasterByTaskId?taskId=' + this.ticketData._refid).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        this.stTaskMaster = (res['data']) ? res['data'][0] : null;
+        console.log("getTicketMessage", this.stTaskMaster);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
   openSchedukedTaskMasterModal() {
-    this.common.params = null;
     this.common.params = {
-      data: null,
+      data: this.stTaskMaster,
       adminList: this.adminList,
       groupList: this.userGroupList,
       departmentList: this.departmentList,
@@ -720,12 +739,16 @@ export class TaskMessageComponent implements OnInit {
       button: "Save",
     };
     const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getScheduledMasterByTaskId();
+      }
+    });
   }
 
-  addScheduleTaskparam(task, type) {
-    console.log("type:", type);
+  addScheduleTaskparam() {
     this.common.params = {
-      taskId: task._id,
+      taskId: this.stTaskMaster._id,
       title: "Schedule task action",
       button: "Save",
     };
