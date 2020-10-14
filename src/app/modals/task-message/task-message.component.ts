@@ -116,7 +116,7 @@ export class TaskMessageComponent implements OnInit {
       this.ticketData = this.common.params.ticketEditData.ticketData;
       if (!this.ticketData || this.ticketType == 114) {
         this.getTicketDataByTktId();
-      } else if (this.ticketType == 103 || this.ticketData._tktype == 103) {
+      } else if (this.tabType == -8 && this.ticketType == 103 || this.ticketData._tktype == 103) {
         this.getScheduledMasterByTaskId();
       }
       this.getMessageList();
