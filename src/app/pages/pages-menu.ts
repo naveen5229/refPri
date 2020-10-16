@@ -340,6 +340,25 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       }
     ]
+  },
+  {
+    title: "Tickets",
+    icon: 'layers-outline',
+    home: true,
+    children: [
+      {
+        title: 'Ticket Process',
+        icon: 'grid-outline',
+        link: '/pages/ticket-process',
+        home: true,
+      },
+      {
+      title: 'Ticket',
+      icon: 'grid-outline',
+      link: '/pages/ticket',
+      home: true,
+      }
+    ]
   }
 
 ]);
