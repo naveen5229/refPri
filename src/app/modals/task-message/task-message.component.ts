@@ -7,6 +7,8 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { ReminderComponent } from '../reminder/reminder.component';
 import { TaskNewComponent } from '../task-new/task-new.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { TaskScheduleMasterComponent } from '../task-schedule-master/task-schedule-master.component';
+import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
 
 @Component({
   selector: 'ngx-task-message',
@@ -86,12 +88,15 @@ export class TaskMessageComponent implements OnInit {
   isMentionedUser = false;
   mentionedUserList = [];
   isChatFeature = true;
+  departmentList = [];
+  stTaskMaster = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
     this.keyHandler(event);
   }
   @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
+  @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -100,6 +105,7 @@ export class TaskMessageComponent implements OnInit {
       this.title = this.common.params.title;
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
+      this.departmentList = this.common.params.departmentList;
 
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
@@ -110,6 +116,8 @@ export class TaskMessageComponent implements OnInit {
       this.ticketData = this.common.params.ticketEditData.ticketData;
       if (!this.ticketData || this.ticketType == 114) {
         this.getTicketDataByTktId();
+      } else if (this.tabType == -8 && this.ticketType == 103 || this.ticketData._tktype == 103) {
+        this.getScheduledMasterByTaskId();
       }
       this.getMessageList();
       this.getAllUserByTask();
@@ -123,6 +131,7 @@ export class TaskMessageComponent implements OnInit {
       } else {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
+      console.log("userGroupList:", this.userGroupList);
       if (this.ticketType == 114) {
         this.title = "Broadcast";
       }
@@ -261,7 +270,6 @@ export class TaskMessageComponent implements OnInit {
   }
 
   setReplyWithType(type) {
-    console.log("setReplyWithType:", type);
     this.replyType = type;
     if (type == 1) {
       this.replyStatus = -1;
@@ -274,6 +282,7 @@ export class TaskMessageComponent implements OnInit {
       this.replyType = null;
       this.messageReadInfo(this.parentCommentId);
     }
+    this.msgtextarea.nativeElement.focus();
   }
 
   replyToComment(msg, userType) {
@@ -325,8 +334,8 @@ export class TaskMessageComponent implements OnInit {
           }
           this.getMessageList();
           this.getAttachmentByTicket();
-        }
-        else {
+          this.msgtextarea.nativeElement.focus();
+        } else {
           this.common.showError(res['msg'])
         }
       }, err => {
@@ -387,10 +396,14 @@ export class TaskMessageComponent implements OnInit {
     this.newCCUserId.forEach(x => {
       if (x.groupId != null) {
         x.groupuser.forEach(x2 => {
-          CCUsers.push({ user_id: x2._id });
+          if (!accessUsers.includes(x2._id)) {
+            CCUsers.push({ user_id: x2._id });
+          }
         })
       } else {
-        CCUsers.push({ user_id: x.id });
+        if (!accessUsers.includes(x.id)) {
+          CCUsers.push({ user_id: x.id });
+        }
       }
     });
 
@@ -416,7 +429,7 @@ export class TaskMessageComponent implements OnInit {
         console.log('Error: ', err);
       });
     } else {
-      this.common.showError("Select CC user");
+      this.common.showError("Select new CC user");
     }
   }
 
@@ -473,6 +486,15 @@ export class TaskMessageComponent implements OnInit {
       let isCCUpdate = 0;
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
         isCCUpdate = 1;
+        if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+          console.log("ccuser check");
+          let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
+          console.log("ccuser check2", findCC);
+          if (findCC) {
+            console.log("ccuser check3");
+            isCCUpdate = 0;
+          }
+        }
       }
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
         this.common.showError("Please assign a new user");
@@ -700,6 +722,50 @@ export class TaskMessageComponent implements OnInit {
     let splieted = this.taskMessage.split('@');
     splieted.pop();
     this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.msgtextarea.nativeElement.focus();
+  }
+
+  getScheduledMasterByTaskId() {
+    this.common.loading++;
+    this.api.get('AdminTask/getScheduledMasterByTaskId?taskId=' + this.ticketData._refid).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        this.stTaskMaster = (res['data']) ? res['data'][0] : null;
+        console.log("getTicketMessage", this.stTaskMaster);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  openSchedukedTaskMasterModal() {
+    this.common.params = {
+      data: this.stTaskMaster,
+      adminList: this.adminList,
+      groupList: this.userGroupList,
+      departmentList: this.departmentList,
+      title: "Add Schedule task",
+      button: "Save",
+    };
+    const activeModal = this.modalService.open(TaskScheduleMasterComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getScheduledMasterByTaskId();
+      }
+    });
+  }
+
+  addScheduleTaskparam() {
+    this.common.params = {
+      taskId: this.stTaskMaster._id,
+      title: "Schedule task action",
+      button: "Save",
+    };
+    const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
   }
 
 }

@@ -18,7 +18,7 @@ export class AddTransactionActionComponent implements OnInit {
     requestId: null,
     process: { id: null, name: "" },
     state: { id: null, name: "" },
-    nextState: { id: null, name: "" },
+    nextState: { id: null, name: "", type: null },
     mode: { id: null, name: "" },
     action: { id: null, name: "" },
     nextAction: { id: null, name: "" },
@@ -39,6 +39,7 @@ export class AddTransactionActionComponent implements OnInit {
   adminList = [];
   isFormHere = 0;
   nextStateForm = 0;
+  isMarkTxnComplete = null;
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -63,9 +64,10 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.mode.name = (this.common.params.actionData.modeId > 0) ? this.common.params.actionData.modeName : null;
       this.transAction.remark = (this.common.params.actionData.remark) ? this.common.params.actionData.remark : null;
       this.transAction.isModeApplicable = (this.common.params.actionData.isModeApplicable) ? this.common.params.actionData.isModeApplicable : 0;
+      this.isMarkTxnComplete = (this.common.params.actionData.isMarkTxnComplete) ? this.common.params.actionData.isMarkTxnComplete : null;
+      console.log("isMarkTxnComplete:", this.isMarkTxnComplete);
       if (this.common.params.actionData.actionOwnerId > 0) {
         let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
-        console.log("actionOwner:", actionOwner);
         if (actionOwner) {
           this.transAction.actionOwner = actionOwner;
         }
@@ -103,7 +105,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.api.get("Processes/getProcessState?processId=" + this.transAction.process.id).subscribe(res => {
       this.common.loading--;
       let stateDataList = res['data'];
-      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0 } });
+      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id } });
       this.checkNextStateList();
     }, err => {
       this.common.loading--;
@@ -115,25 +117,20 @@ export class AddTransactionActionComponent implements OnInit {
   checkNextStateList() {
     if (this.transAction.state.id > 0) {
       let selectedState = this.stateDataList.find(x => x.id == this.transAction.state.id);
-      console.log("selectedState:", selectedState);
       if (selectedState && selectedState._nextstate && selectedState._nextstate.length) {
-        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name, _state_form: (x._state_form) ? x._state_form : 0 } });
-        console.log("nextStateDataList1:", this.nextStateDataList);
+        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id } });
       } else {
         this.nextStateDataList = this.stateDataList;
-        console.log("nextStateDataList2:", this.nextStateDataList);
       }
     } else {
       this.nextStateDataList = this.stateDataList;
-      console.log("nextStateDataList3:", this.nextStateDataList);
     }
-    console.log("nextStateDataList4:", this.nextStateDataList);
   }
 
   onSelectState() {
     this.transAction.action = { id: null, name: "" };
     this.transAction.mode = { id: null, name: "" };
-    this.transAction.nextState = { id: null, name: "" };
+    this.transAction.nextState = { id: null, name: "", type: null };
     this.getActionList();
   }
 
@@ -143,7 +140,6 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   onSelectNextAction(event) {
-    console.log("onSelectNextAction:", event);
     let threashold = new Date();
     if (event.threshold > 0) {
       let cHours = threashold.getHours();
@@ -222,7 +218,6 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
-            // this.transAction.formType = 1;
             this.closeModal(true, 2);
           } else {
             this.common.showError(res['data'][0].y_msg);
@@ -265,7 +260,6 @@ export class AddTransactionActionComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
-            // this.transAction.formType = 0;
             this.closeModal(true, null);
           } else {
             this.common.showError(res['data'][0].y_msg);
@@ -307,9 +301,15 @@ export class AddTransactionActionComponent implements OnInit {
             this.common.showToast(res['data'][0].y_msg);
             this.transAction.state = this.transAction.nextState;
             this.isFormHere = this.nextStateForm;
+            let stateType = this.transAction.nextState.type;
             this.resetData();
-            // this.transAction.formType = 1;
             this.closeModal(true, 1);
+            console.log("on save nxt state:", this.isMarkTxnComplete, stateType);
+            if (this.isMarkTxnComplete == 1 && stateType == 2) {
+              setTimeout(() => {
+                this.markTxnComplete(params.transId);
+              }, 1000);
+            }
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -326,13 +326,55 @@ export class AddTransactionActionComponent implements OnInit {
   resetData() {
     this.transAction.mode = { id: null, name: "" };
     this.transAction.action = { id: null, name: "" };
-    this.transAction.nextState = { id: null, name: "" };
+    this.transAction.nextState = { id: null, name: "", type: null };
     this.transAction.nextAction = { id: null, name: "" };
     this.transAction.actionOwner = { id: null, name: "" };
     this.transAction.remark = "";
     this.transAction.targetTime = new Date();
     this.transAction.isCompleted = false;
     this.standards = [];
+  }
+
+  markTxnComplete(transId) {
+    console.log("confrm transId:", transId);
+    this.common.params = {
+      title: 'Mark Txn Complete',
+      description: '<b>Are you sure to complete this Transaction ?<b>'
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.updateTransactionStatus(transId, 5);
+      }
+    });
+  }
+
+  updateTransactionStatus(transId, status) {
+    if (transId) {
+      let params = {
+        transId: transId,
+        status: status
+      }
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Transaction ID Not Available");
+    }
   }
 
 }
