@@ -49,6 +49,7 @@ import { ProcessModule } from '../process/process.module';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
+import {TicketModule} from '../ticket/ticket.module'
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -59,7 +60,8 @@ import { UserGroupsComponent } from './user-groups/user-groups.component';
     DirectiveModule,
     DashboardModule,
     CampaignModule,
-    ProcessModule
+    ProcessModule,
+    TicketModule
   ],
   declarations: [
     PagesComponent,
