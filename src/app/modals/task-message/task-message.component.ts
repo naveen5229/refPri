@@ -270,7 +270,6 @@ export class TaskMessageComponent implements OnInit {
   }
 
   setReplyWithType(type) {
-    console.log("setReplyWithType:", type);
     this.replyType = type;
     if (type == 1) {
       this.replyStatus = -1;
@@ -283,6 +282,7 @@ export class TaskMessageComponent implements OnInit {
       this.replyType = null;
       this.messageReadInfo(this.parentCommentId);
     }
+    this.msgtextarea.nativeElement.focus();
   }
 
   replyToComment(msg, userType) {
@@ -396,10 +396,14 @@ export class TaskMessageComponent implements OnInit {
     this.newCCUserId.forEach(x => {
       if (x.groupId != null) {
         x.groupuser.forEach(x2 => {
-          CCUsers.push({ user_id: x2._id });
+          if (!accessUsers.includes(x2._id)) {
+            CCUsers.push({ user_id: x2._id });
+          }
         })
       } else {
-        CCUsers.push({ user_id: x.id });
+        if (!accessUsers.includes(x.id)) {
+          CCUsers.push({ user_id: x.id });
+        }
       }
     });
 
@@ -425,7 +429,7 @@ export class TaskMessageComponent implements OnInit {
         console.log('Error: ', err);
       });
     } else {
-      this.common.showError("Select CC user");
+      this.common.showError("Select new CC user");
     }
   }
 
@@ -482,6 +486,15 @@ export class TaskMessageComponent implements OnInit {
       let isCCUpdate = 0;
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
         isCCUpdate = 1;
+        if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+          console.log("ccuser check");
+          let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
+          console.log("ccuser check2", findCC);
+          if (findCC) {
+            console.log("ccuser check3");
+            isCCUpdate = 0;
+          }
+        }
       }
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
         this.common.showError("Please assign a new user");
