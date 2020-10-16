@@ -851,7 +851,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: ([101, 102].includes(ticket._tktype) && !ticket['_reply_demanded'])
+            action: ([101, 102].includes(ticket._tktype) && (!ticket['_reply_demanded'] || ticket['_assignee_user_id'] == this.userService._details.id))
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -1843,6 +1843,7 @@ export class TaskComponent implements OnInit {
       subTitle: subTitle,
       userList: this.adminList,
       groupList: this.groupList,
+      departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
       size: "lg",

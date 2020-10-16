@@ -59,12 +59,10 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Allow to mark out state:</label>
+            <label>Allow state change:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="allowStateChangeValues" display="name" seperator="-" placeholder="Allow State Change" 
-            (onSelected)="transaction.isEndByActionOwn = $event" inputId="isEndByActionOwn" name="isEndByActionOwn" 
-            [preSelected]="(transaction.isEndByActionOwn.id>=0) ? {name: transaction.isEndByActionOwn.name} : {name: ''}"></auto-suggestion>
+            <auto-suggestion [data]="allowStateChangeValues" display="name" seperator="-" placeholder="Allow State Change" (onSelected)="transaction.isEndByActionOwn = $event" inputId="isEndByActionOwn" name="isEndByActionOwn" [preSelected]="(transaction.isEndByActionOwn.id>=0) ? {name: transaction.isEndByActionOwn.name} : {name: ''}"></auto-suggestion>
         </div>
     </div>
 

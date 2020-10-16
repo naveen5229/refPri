@@ -33,12 +33,10 @@
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        <!-- {{msg.comment}} -->
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                        <!-- {{msg.comment}} -->
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
@@ -50,7 +48,7 @@
 
             <div class="row mt-1 bottom-block">
                 <div class="col-8">
-                    <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                    <textarea name="taskMessage" maxlength="500" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
                 </div>
                 <div col-1>
                     <label class="custom-file-upload">
@@ -83,10 +81,7 @@
                                 <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
                             <div class="col-3 text-right">
-                                <!-- <button *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" class="btn btn-primary btn-sm" title="assign new Primary Owner" (click)="showAssignUserAuto=1"> -->
                                 <i class="fa fa-plus" *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
-                                <!-- </button> -->
-                                <!-- <i *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length>0" class="fa fa-info-circle ml-1" (click)="showLeadUserLogsModal()" title="User Logs"></i> -->
                             </div>
                         </div>
                     </td>
@@ -100,12 +95,8 @@
                                 </auto-suggestion>
                             </div>
                             <div class="col-3 text-right">
-                                <!-- <button class="btn btn-primary btn-sm" (click)="updateLeadPrimaryOwner()" title="Add PO"> -->
                                 <i class="fa fa-check" (click)="updateLeadPrimaryOwner()" title="Add PO"></i>
-                                <!-- </button> -->
-                                <!-- <button class="btn btn-primary btn-sm ml-1" (click)="showAssignUserAuto=null" title="Cancel"> -->
                                 <i class="fa fa-times" (click)="showAssignUserAuto=null" title="Cancel"></i>
-                                <!-- </button> -->
                             </div>
                         </div>
                     </td>
@@ -176,8 +167,6 @@
         </div>
     </div>
     <!-- end: lead userlogs modal -->
-
-
     <!-- start: action owner change modal -->
     <div class="modal" id="editActionOwnerModal" #editActionOwnerModal>
         <div class="modal-dialog mt-3">
