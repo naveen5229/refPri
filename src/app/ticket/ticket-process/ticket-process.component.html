@@ -13,7 +13,7 @@
   </nb-card-header>
   <nb-card-body>
       <div class="row">
-          <div class="">
+          <div class="smart-table">
               <smart-table *ngIf="ticketData.length" [data]="table.data" [settings]="table.settings"></smart-table>
           </div>
       </div>
@@ -68,7 +68,7 @@
                   <input type="text" class="form-control" name="priCatAlias" placeholder="Primary Category Alias" [(ngModel)]="ticketForm.priCatAlias">
               </div>
               <div class="col-1">
-                <button class="btn btn-primary btn-sm" id="button" (click)="addFields('priCatList')">
+                <button class="btn btn-primary btn-sm" id="button" (click)="addFields('priCatList')" *ngIf="disableAddFields">
                 <i class="fa fa-plus"></i>
                 </button>
              </div>
@@ -81,7 +81,7 @@
                   <input type="text" class="form-control" name="secCatAlias" placeholder="Secondary Category Alias" [(ngModel)]="ticketForm.secCatAlias">
               </div>
               <div class="col-1">
-                <button class="btn btn-primary btn-sm" id="button" (click)="addFields('secCatList')">
+                <button class="btn btn-primary btn-sm" id="button" (click)="addFields('secCatList')" *ngIf="disableAddFields">
                 <i class="fa fa-plus"></i>
                 </button>
              </div>
@@ -94,7 +94,7 @@
                 <input type="text" class="form-control" name="secCatAlias" placeholder="Type List" [(ngModel)]="ticketForm.typeList">
             </div> -->
             <div class="col-1">
-              <button class="btn btn-primary btn-sm" id="button" (click)="addFields('typeList')">
+              <button class="btn btn-primary btn-sm" id="button" (click)="addFields('typeList')" *ngIf="disableAddFields">
               <i class="fa fa-plus"></i>
               </button>
            </div>
@@ -104,7 +104,7 @@
                   <label>Claim Ticket</label>
               </div>
               <div class="col-8">
-                  <auto-suggestion [data]="claimStatusData" display="name" placeholder="Claim Ticket" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.claimStatus.id=($event['id']);" [preSelected]="ticketForm.claimStatus['id'] ? {name: ticketForm.claimStatus['name']}:{name:''}" autocomplete="off">
+                  <auto-suggestion [data]="claimStatusData" display="name" placeholder="Claim Ticket" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.claimStatus=$event;" [preSelected]="ticketForm.claimStatus['id'] ? {name: ticketForm.claimStatus['name']}:{name:''}" autocomplete="off">
                   </auto-suggestion>
               </div>
           </div>
@@ -194,16 +194,6 @@
                     <smart-table *ngIf="ticketPropertyData.length" [data]="ticketPropertyTable.data" [settings]="ticketPropertyTable.settings"></smart-table>
                 </div>
             </div>
-        <!-- <div class="modal-footer">
-          <div class="row footer">
-              <div class="col ">
-                  <button class="btn btn-danger btn-sm" type="button" id="cancel " (click)="closeTicketPropertyModal()">reset</button>
-              </div>
-              <div class="col text-right">
-                  <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save" (click)="saveList()">save</button>
-              </div>
-          </div>
-      </div> -->
     </div>
   </div>
   </div>
@@ -326,7 +316,6 @@
                   <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save" (click)="saveTicketPropertyList()">Save</button>
               </div>
           </div>
-          {{ticketPropertyForm | json}}
       </div>
     </div>
   </div>

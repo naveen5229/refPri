@@ -5,3 +5,19 @@
 :host ::ng-deep .process_type {
     color: lawngreen;
 }
+
+:host ::ng-deep .fa-grip-horizontal {
+    color: #07f8d4;
+}
+
+:host ::ng-deep .fa-handshake {
+    color: #00f;
+}
+.smart-table{
+    display: block;
+    height: calc(100vh - 124px);
+    overflow: auto;
+}
+
+
+

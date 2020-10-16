@@ -11,6 +11,7 @@ import { tick } from '@angular/core/testing';
 })
 export class TicketProcessComponent implements OnInit {
 
+  disableAddFields = true;
   primaryCategoryListForProperty = [];
   secondaryCategoryListForProperty = [];
   typeCategoryListForProperty = [];
@@ -137,7 +138,7 @@ export class TicketProcessComponent implements OnInit {
         id: null,
         name: ""
       },
-      isActive: false,
+      isActive: true,
     }
   }
 
@@ -222,6 +223,9 @@ export class TicketProcessComponent implements OnInit {
 
   saveTicketProcess(){
     let reqId = null;
+    if(this.ticketForm.id){
+      reqId = this.ticketForm.id;
+    }
     console.log(this.ticketForm);
     let params = {
       name:this.ticketForm.name,
@@ -379,6 +383,7 @@ export class TicketProcessComponent implements OnInit {
   }
 
   editTicket(ticket){
+    this.disableAddFields = false;
     if(ticket){
       console.log(ticket);
       this.ticketForm.id = ticket._id;
@@ -463,6 +468,9 @@ export class TicketProcessComponent implements OnInit {
 
   saveTicketPropertyList(){
       let reqId = null;
+      if(this.ticketPropertyForm.tpId){
+        reqId = this.ticketPropertyForm.tpId;
+      }
 
       let params ={
         tpId:this.ticketPropertyForm.tpId,
