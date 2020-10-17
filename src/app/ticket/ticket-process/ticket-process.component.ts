@@ -20,6 +20,7 @@ export class TicketProcessComponent implements OnInit {
   ];
   ticketData = [];
   ticketPropertyData = [];
+  esclationMatrixList = [];
   table = {
     data: {
       headings: {},
@@ -31,6 +32,16 @@ export class TicketProcessComponent implements OnInit {
   };
 
   ticketPropertyTable = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  esclationTable = {
     data: {
       headings: {},
       columns: [],
@@ -72,6 +83,16 @@ export class TicketProcessComponent implements OnInit {
     requestId: ''
   }
 
+  esclationMatrix ={
+    tpPropertyId:'', 
+    userId:{id:null,name:''}, 
+    seniorUserId:{id:null,name:''}, 
+    userLevel:null, 
+    fromTime:this.common.getDate(), 
+    toTime:this.common.getDate(), 
+    requestId:''
+  }
+
   tableCat = {
     data: {
       headings: {},
@@ -101,7 +122,9 @@ export class TicketProcessComponent implements OnInit {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
+        let data;
+        data = res['data'] || [];
+        this.adminList = data.map(ele=> {return{id:ele.id,name:ele.name}})
       } else {
         this.common.showError(res['msg']);
       }
@@ -360,13 +383,22 @@ export class TicketProcessComponent implements OnInit {
     this.resetForm();
   }
 
+  openTicketFormMatrixModal(id){
+    document.getElementById('ticketFormMatrix').style.display = 'block';
+  }
+
+  closeTicketFormMatrixModal(){
+    document.getElementById('ticketFormMatrix').style.display = 'none';
+  }
+
   actionIcons(ticket) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editTicket.bind(this, ticket) },
       { class: "fas fa-list-alt pri_cat", action: this.openCatModal.bind(this, ticket, 1), title: "Primary Category Mapping" },
       { class: "fas fa-list-alt", action: this.openCatModal.bind(this, ticket, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, ticket, 3), title: "Type Mapping" },
-      { class: "fas fa-plus-square", action: this.openTicketPropertyModal.bind(this, ticket._id), title: "Ticket Property" }
+      { class: "fas fa-plus-square", action: this.openTicketPropertyModal.bind(this, ticket._id), title: "Ticket Property" },
+      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixModal.bind(this, ticket._id), title: "Form Matrix" }
     ];
     return icons;
   }
@@ -634,6 +666,7 @@ export class TicketProcessComponent implements OnInit {
   actionPropertyIcons(property) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editPropertyTicket.bind(this, property) },
+      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" }
     ];
     return icons;
   }
@@ -663,78 +696,153 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.requestId = property._id;
     }
     document.getElementById('addTicketProperty').style.display = 'block';
+    if (!this.ticketPropertyForm.tpId) {
+      this.setDataForFields(this.ticketPropertyForm.tpId);
+    } else {
+      this.setDataForFields(this.ticketPropertyForm.tpId);
+    }
   }
-  // openFieldModal(process, type) {
-  //   let refData = {
-  //     id: process._id,
-  //     type: type
-  //   }
-  //   this.common.params = { ref: refData };
-  //   const activeModal = this.modalService.open(AddFieldComponent, { size: (type == 2) ? 'xl' : 'lg', container: 'nb-layout', backdrop: 'static' });
+
+  openTicketEsclationMatrixModal(property){
+    console.log(property);
+    this.resetEsclation();
+    this.esclationMatrix.tpPropertyId = property._id;
+    this.getPreFilledMatrix(this.esclationMatrix.tpPropertyId);
+    document.getElementById('esclationMatrix').style.display = 'block';
+  }
+  
+  getPreFilledMatrix(tpPropertyId){
+    this.api.get(`Ticket/getTicketEsclationMatrix?tpPropertyId=${tpPropertyId}`).subscribe(res => {
+      console.log("data", res['data'])
+      this.resetEsclationTable();
+      if (res['code'] > 0) {
+        if(res['data']){
+        // this.setPreFilledMatrix(res['data'][0]);
+        this.esclationMatrixList = res['data'];
+        this.setesclationTable();
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  resetEsclationTable(){
+    this.esclationTable = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
+    };
+  }
+
+  setesclationTable() {
+    this.esclationTable.data = {
+      headings: this.generateesclationTableHeadings(),
+      columns: this.getesclationTableColumns()
+    };
+    return true;
+  }
+
+  generateesclationTableHeadings() {
+    let headings = {};
+    for (var key in this.esclationMatrixList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getesclationTableColumns() {
+    let columns = [];
+    this.esclationMatrixList.map(esclation => {
+      let column = {};
+      for (let key in this.generateesclationTableHeadings()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: false,
+            action: null,
+            icons: this.actionPropertyIcons(esclation)
+          };
+        } else {
+          column[key] = { value: esclation[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    })
+
+    return columns;
+  }
+  // setPreFilledMatrix(data){
+  //   console.log('esclation',data)
+  //   // this.esclationMatrix.tpPropertyId = '';
+  //   this.esclationMatrix.userId = {id:data._userid,name:data.user};
+  //   this.esclationMatrix.seniorUserId = {id:data._senior_userid,name:data.senior_user};
+  //   this.esclationMatrix.userLevel = data.user_level;
+  //   this.esclationMatrix.fromTime = new Date(data._from_time);
+  //   this.esclationMatrix.toTime = new Date(data._to_time);
+  //   this.esclationMatrix.requestId = data._id;
+
+  //   console.log('after update esclation',this.esclationMatrix);
   // }
 
-  // addProcessUsers(process) {
-  //   this.common.params = { process_id: process._id, adminList: this.adminList };
-  //   const activeModal = this.modalService.open(UserMappingComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       console.log("UserMappingComponent:", data.response);
-  //     }
-  //   });
-  // }
+  closeTicketEsclationMatrixModal(){
+    document.getElementById('esclationMatrix').style.display = 'none';
+  }
 
-  // addProcessState(process) {
-  //   let param = {
-  //     id: process._id,
-  //     name: process.name
-  //   }
-  //   this.common.params = { process: param };
-  //   const activeModal = this.modalService.open(AddStateComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       console.log("AddStateComponent:", data.response);
-  //     }
-  //   });
-  // }
+  resetEsclation(){
+    this.esclationMatrix ={
+      tpPropertyId:'', 
+      userId:{id:null,name:''}, 
+      seniorUserId:{id:null,name:''}, 
+      userLevel:null, 
+      fromTime:this.common.getDate(), 
+      toTime:this.common.getDate(), 
+      requestId:''
+    }
+  }
 
-  // addProcessAction(process) {
-  //   let param = {
-  //     process_id: process._id,
-  //     process_name: process.name,
-  //     state_id: null,
-  //     state_name: null
-  //   }
-  //   this.common.params = { actionData: param, adminList: this.adminList };
-  //   const activeModal = this.modalService.open(AddActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       console.log("addProcessAction:", data.response);
-  //     }
-  //   });
-  // }
+  saveTicketEsclationMatrixModal(){
+    let requestID = null;
+    if(this.esclationMatrix.requestId){
+      requestID = this.esclationMatrix.requestId;
+    }
+    let params={
+      tpPropertyId:this.esclationMatrix.tpPropertyId, 
+      userId:this.esclationMatrix.userId.id, 
+      seniorUserId:this.esclationMatrix.seniorUserId.id, 
+      userLevel:this.esclationMatrix.userLevel, 
+      fromTime:this.common.dateFormatter(this.esclationMatrix.fromTime), 
+      toTime:this.common.dateFormatter(this.esclationMatrix.toTime), 
+      requestId:requestID
+    }
 
-  // openCatModal(process, type) {
-  //   let actionData = {
-  //     catType: type,
-  //     process_id: process._id
-  //   }
-  //   this.common.params = { actionData };
-  //   const activeModal = this.modalService.open(AddCategoryComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-  // }
-
-  // openDashboardFieldModal(process) {
-  //   this.common.params = { processId: process._id, processName: process.name };
-  //   const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-
-  // }
-  // opensettingModal(process) {
-  //   this.common.params = { userList: this.adminList, process_info: process };
-  //   const activeModal = this.modalService.open(SettingsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     if (data.response) {
-  //       this.getProcessList();
-  //     }
-  //   });
-  // }
+    this.common.loading++;
+    this.api.post('Ticket/saveTicketEsclationMatrix', params).subscribe(res => {
+      this.common.loading--;
+      console.log('response:', res)
+      if (res['code'] == 1) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeTicketEsclationMatrixModal();
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log('Error:', err)
+    })
+  }
 
 }
