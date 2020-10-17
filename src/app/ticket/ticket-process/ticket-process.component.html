@@ -313,3 +313,103 @@
     </div>
 </div>
 <!--end:add Ticket Property -->
+
+<!--start: Ticket Property Esclation Matrix -->
+<div class="modal" id="esclationMatrix">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Esclation Matrix</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeTicketEsclationMatrixModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="User" name="defaultOwn" id="defaultOwn" (onSelected)="esclationMatrix.userId=$event;" [preSelected]="esclationMatrix.userId['id'] ? {name: esclationMatrix.userId['name']}:{name:''}"
+                        autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Senior User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Senior User" name="defaultOwn" id="defaultOwn" (onSelected)="esclationMatrix.seniorUserId=$event;" [preSelected]="esclationMatrix.seniorUserId['id'] ? {name: esclationMatrix.seniorUserId['name']}:{name:''}"
+                        autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User Level</label>
+                    </div>
+                    <div class="col-8">
+                        <select [(ngModel)]="esclationMatrix.userLevel">
+                            <option selected disabled>--Select--</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>From Time<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="esclationMatrix.fromTime = $event" [dateTimeValue]="esclationMatrix.fromTime" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>TO Time</label>
+                    </div>
+                    <div class="col-8">
+                        <uj-date-time-picker (onChanged)="esclationMatrix.toTime = $event" [isStart]="false" [dateTimeValue]="esclationMatrix.toTime" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row footer">
+                    <!-- <div class="col ">
+                        <button class="btn btn-danger btn-sm" type="button" id="cancel " (click)="closeTicketEsclationMatrixModal()">Cancel</button>
+                    </div> -->
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save" (click)="saveTicketEsclationMatrixModal()">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row footer">
+                   <smart-table *ngIf="esclationMatrixList.length" [data]="esclationTable.data" [settings]="esclationTable.settings"></smart-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: Ticket Property Esclation Matrix -->
+
+<!--start: Ticket Form Matrix -->
+<div class="modal" id="ticketFormMatrix">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Form Matrix</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeTicketFormMatrixModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                Dummy
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: Ticket Form Matrix -->
