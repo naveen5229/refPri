@@ -86,12 +86,12 @@
                 </button>
                     </div>
                 </div>
-                <div class="row form-group">
+                <div class="row form-group" *ngIf="!ticketForm.id">
                     <div class="col-4">
                         <label>Type List</label>
                     </div>
                     <div class="col-1">
-                        <button class="btn btn-primary btn-sm" id="button" (click)="addFields('typeList')" *ngIf="!ticketForm.id">
+                        <button class="btn btn-primary btn-sm" id="button" (click)="addFields('typeList')" >
               <i class="fa fa-plus"></i>
               </button>
                     </div>
