@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -10,14 +9,15 @@ import { tick } from '@angular/core/testing';
   styleUrls: ['./ticket-process.component.scss']
 })
 export class TicketProcessComponent implements OnInit {
-
-  disableAddFields = true;
   primaryCategoryListForProperty = [];
   secondaryCategoryListForProperty = [];
   typeCategoryListForProperty = [];
   listTarget = null;
   listModalTitle = null;
-  claimStatusData = [{id:0,name:'Disable'},{id:1,name:'Enable'}]
+  claimStatusData = [
+    { id: 0, name: 'Disable' },
+    { id: 1, name: 'Enable' }
+  ];
   ticketData = [];
   ticketPropertyData = [];
   table = {
@@ -30,7 +30,7 @@ export class TicketProcessComponent implements OnInit {
     }
   };
 
-  ticketPropertyTable ={
+  ticketPropertyTable = {
     data: {
       headings: {},
       columns: [],
@@ -40,16 +40,16 @@ export class TicketProcessComponent implements OnInit {
     }
   };
 
-  ticketForm={
-    id:null,
+  ticketForm = {
+    id: null,
     name: '',
     startTime: this.common.getDate(),
     endTime: this.common.getDate(2),
     priCatAlias: "",
     secCatAlias: "",
-    priCatList:[{name:''}],
-    secCatList:[{name:''}],
-    typeList:[{name:''}],
+    priCatList: [{ name: '' }],
+    secCatList: [{ name: '' }],
+    typeList: [{ name: '' }],
     claimStatus: {
       id: null,
       name: ""
@@ -57,43 +57,59 @@ export class TicketProcessComponent implements OnInit {
     isActive: true,
   }
 
-  ticketPropertyForm ={
-    tpId:'',
-    priCatId:{id:null,name:''}, 
-    SecCatId:{id:null,name:''}, 
-    typeId:{id:null,name:''}, 
-    allocationAuto:{id:null,name:''}, 
-    esclationAuto:{id:null,name:''}, 
-    escTime:'', 
-    complRemTime:'', 
-    complEscTime:'', 
-    isUrgent:false, 
-    isActive:true, 
-    requestId:''
+  ticketPropertyForm = {
+    tpId: '',
+    priCatId: { id: null, name: '' },
+    SecCatId: { id: null, name: '' },
+    typeId: { id: null, name: '' },
+    allocationAuto: { id: null, name: '' },
+    esclationAuto: { id: null, name: '' },
+    escTime: '',
+    complRemTime: '',
+    complEscTime: '',
+    isUrgent: false,
+    isActive: true,
+    requestId: ''
+  }
+
+  tableCat = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  catForm = {
+    tpId: null,
+    requestId: null,
+    type: null
   }
 
   adminList = [];
 
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
-    // this.getAllAdmin();
+    this.getAllAdmin();
     this.getTicketList();
   }
 
   ngOnInit() { }
 
-  // getAllAdmin() {
-  //   this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-  //     console.log("data", res['data'])
-  //     if (res['code'] > 0) {
-  //       this.adminList = res['data'] || [];
-  //     } else {
-  //       this.common.showError(res['msg']);
-  //     }
-  //   }, err => {
-  //     this.common.showError();
-  //     console.log('Error: ', err);
-  //   });
-  // }
+  getAllAdmin() {
+    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.adminList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
 
   getTicketList() {
     this.common.loading++;
@@ -116,24 +132,24 @@ export class TicketProcessComponent implements OnInit {
     this.resetForm();
     document.getElementById('addTicket').style.display = 'block';
   }
-  
-  closeaddticketModal(){
+
+  closeaddticketModal() {
     document.getElementById('addTicket').style.display = 'none';
     // this.resetForm();
   }
 
 
-  resetForm(){
-    this.ticketForm={
-      id:null,
+  resetForm() {
+    this.ticketForm = {
+      id: null,
       name: '',
       startTime: this.common.getDate(),
       endTime: this.common.getDate(2),
       priCatAlias: "",
       secCatAlias: "",
-      priCatList:[{name:''}],
-      secCatList:[{name:''}],
-      typeList:[{name:''}],
+      priCatList: [{ name: '' }],
+      secCatList: [{ name: '' }],
+      typeList: [{ name: '' }],
       claimStatus: {
         id: null,
         name: ""
@@ -189,93 +205,90 @@ export class TicketProcessComponent implements OnInit {
     return columns;
   }
 
-  addFields(toField){
+  addFields(toField) {
     this.listTarget = toField;
-    if(toField === 'priCatList'){
+    if (toField === 'priCatList') {
       this.listModalTitle = 'Primary Category';
-    }else if(toField === 'secCatList'){
+    } else if (toField === 'secCatList') {
       this.listModalTitle = 'Secondary Category';
-    }else if(toField === 'typeList'){
+    } else if (toField === 'typeList') {
       this.listModalTitle = 'Type';
     }
     document.getElementById('addFields').style.display = 'block';
   }
 
-  insertFields(insertTo){
-      if(!this.ticketForm[insertTo][this.ticketForm[insertTo].length-1].name){
-        this.common.showError('Please Fill The Empty Field First');
-      }else{
-        this.ticketForm[insertTo].push({name:''});
-      }
-  }
-
-  closeFieldsModal(ListTarget){
-    if(ListTarget == null){
-    document.getElementById('addFields').style.display = 'none';
-    }else{
-      this.ticketForm[ListTarget] = [{name:''}]
+  insertFields(insertTo) {
+    if (!this.ticketForm[insertTo][this.ticketForm[insertTo].length - 1].name) {
+      this.common.showError('Please Fill The Empty Field First');
+    } else {
+      this.ticketForm[insertTo].push({ name: '' });
     }
   }
 
-  saveList(){
-    document.getElementById('addFields').style.display = 'none';
+  closeFieldsModal(ListTarget) {
+    if (ListTarget == null) {
+      document.getElementById('addFields').style.display = 'none';
+    } else {
+      this.ticketForm[ListTarget] = [{ name: '' }]
+    }
+    this.catForm = {
+      tpId: null,
+      requestId: null,
+      type: null
+    }
   }
 
-  saveTicketProcess(){
-    let reqId = null;
-    if(this.ticketForm.id){
-      reqId = this.ticketForm.id;
-    }
+  saveTicketProcess() {
     console.log(this.ticketForm);
     let params = {
-      name:this.ticketForm.name,
-      startDate:this.common.dateFormatter(this.ticketForm.startTime),
-      endDate:this.common.dateFormatter(this.ticketForm.endTime),
-      priCatAlias:this.ticketForm.priCatAlias, 
-      secCatAlias:this.ticketForm.secCatAlias, 
-      priCatInfo:JSON.stringify(this.ticketForm.priCatList), 
-      secCatInfo:JSON.stringify(this.ticketForm.secCatList), 
-      typeInfo:JSON.stringify(this.ticketForm.typeList), 
-      claimTicket:this.ticketForm.claimStatus.id, 
-      isActive:this.ticketForm.isActive, 
-      requestId:reqId
+      name: this.ticketForm.name,
+      startDate: this.common.dateFormatter(this.ticketForm.startTime),
+      endDate: this.common.dateFormatter(this.ticketForm.endTime),
+      priCatAlias: this.ticketForm.priCatAlias,
+      secCatAlias: this.ticketForm.secCatAlias,
+      priCatInfo: JSON.stringify(this.ticketForm.priCatList),
+      secCatInfo: JSON.stringify(this.ticketForm.secCatList),
+      typeInfo: JSON.stringify(this.ticketForm.typeList),
+      claimTicket: this.ticketForm.claimStatus.id,
+      isActive: this.ticketForm.isActive,
+      requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null
     }
 
-    if(params.name){
+    if (params.name) {
       this.common.loading++;
-      this.api.post('Ticket/saveTicketProcess',params).subscribe(res=>{
+      this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
         this.common.loading--;
-        console.log('response:',res)
-          if(res['code'] == 1){
-            if (res['data'][0].y_id > 0) {
-              this.common.showToast(res['data'][0].y_msg);
-              this.ticketForm.id = res['data'][0].y_id;
-              this.ticketPropertyForm.tpId = res['data'][0].y_id;
-              this.closeaddticketModal();
-              this.openTicketPropertyModal(this.ticketForm.id);
-            } else {
-              this.common.showError(res['data'][0].y_msg);
-            }   
-        }else{
+        console.log('response:', res)
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.ticketForm.id = res['data'][0].y_id;
+            this.ticketPropertyForm.tpId = res['data'][0].y_id;
+            this.closeaddticketModal();
+            this.openTicketPropertyModal(this.ticketForm.id);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
           this.common.showError(res['msg']);
         }
-      },err=>{
+      }, err => {
         this.common.loading--;
-        console.log('Error:',err)
+        console.log('Error:', err)
       })
-    }else{
-        this.common.showError('Please enter File Name')
-      }
+    } else {
+      this.common.showError('Please enter File Name')
+    }
   }
 
-  getTicketProcessProperty(id){
+  getTicketProcessProperty(id) {
     this.common.loading++;
     this.api.get(`Ticket/getTicketProcessProperty?tpId=${id}`).subscribe(res => {
       this.common.loading--;
       this.resetTicketPropertyTable();
-      if (!res['data']){
+      if (!res['data']) {
         return;
-      }else{
+      } else {
         this.ticketPropertyData = res['data'];
         this.setTicketPropertyTable();
         // this.openTicketPropertyModal();
@@ -335,15 +348,16 @@ export class TicketProcessComponent implements OnInit {
   }
 
 
-  openTicketPropertyModal(id){
-      this.ticketPropertyForm.tpId = id;
-      this.getTicketProcessProperty(id);
-      document.getElementById('ticketPropertyList').style.display = 'block';
+  openTicketPropertyModal(id) {
+    this.ticketPropertyForm.tpId = id;
+    this.getTicketProcessProperty(id);
+    document.getElementById('ticketPropertyList').style.display = 'block';
   }
 
-  closeTicketPropertyModal(){
+  closeTicketPropertyModal() {
     document.getElementById('ticketPropertyList').style.display = 'none';
     this.getTicketList();
+    this.resetForm();
   }
 
   actionIcons(ticket) {
@@ -357,34 +371,142 @@ export class TicketProcessComponent implements OnInit {
     return icons;
   }
 
-  openCatModal(ticket,type){
-    console.log(type);
+  openCatModal(ticket, type) {
+    console.log("openCatModal:", ticket);
     let setDataTo;
-    if(type == 1){
+    if (type == 1) {
       setDataTo = 'priCatList';
-    }else if(type == 2){
+    } else if (type == 2) {
       setDataTo = 'secCatList';
-    }else if(type == 3){
+    } else if (type == 3) {
       setDataTo = 'typeList';
     }
+    this.catForm.tpId = ticket._id;
+    this.catForm.requestId = null;
+    this.catForm.type = type;
 
     this.addFields(setDataTo);
-    this.api.get(`Ticket/getTicketProcessCatByType?tpId=${ticket._id}&type=${type}`).subscribe(res => {
-          console.log("data", res['data'])
-          if (res['code'] > 0) {
-            this.ticketForm[setDataTo] = res['data'] || [];
-          } else {
-            this.common.showError(res['msg']);
-          }
-        }, err => {
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+    this.getCatListByType(setDataTo);
   }
 
-  editTicket(ticket){
-    this.disableAddFields = false;
-    if(ticket){
+  getCatListByType(setDataTo) {
+    this.common.loading++;
+    this.api.get(`Ticket/getTicketProcessCatByType?tpId=${this.catForm.tpId}&type=${this.catForm.type}`).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.ticketForm[setDataTo] = res['data'] || [];
+        (this.ticketForm[setDataTo].length) ? this.setTableCat(setDataTo) : this.resetTableCat(setDataTo);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  // start: cat list table
+  resetTableCat(setDataTo) {
+    this.tableCat.data = {
+      headings: {},
+      columns: []
+    };
+  }
+
+  setTableCat(setDataTo) {
+    this.tableCat.data = {
+      headings: this.generateHeadingsCat(setDataTo),
+      columns: this.getTableColumnsCat(setDataTo)
+    };
+    return true;
+  }
+
+  generateHeadingsCat(setDataTo) {
+    let headings = {};
+    for (var key in this.ticketForm[setDataTo][0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsCat(setDataTo) {
+    let columns = [];
+    this.ticketForm[setDataTo].map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsCat(setDataTo)) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: false,
+            action: null,
+            icons: this.actionIconsCat(ticket)
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    })
+    return columns;
+  }
+
+  actionIconsCat(ticket) {
+    let icons = [
+      { class: "far fa-edit", title: "Edit", action: this.editTpCat.bind(this, ticket) }
+    ];
+    return icons;
+  }
+
+  editTpCat(ticket) {
+    this.catForm.requestId = ticket._id;
+  }
+  // end: cat list table
+
+  addTpCatByType(listTarget) {
+    if (!this.ticketForm[listTarget][0].name) {
+      this.common.showError("Name is missing");
+      return false;
+    }
+    let type = null;
+    if (listTarget === 'priCatList') {
+      type = 1;
+    } else if (listTarget === 'secCatList') {
+      type = 2;
+    } else if (listTarget === 'typeList') {
+      type = 3;
+    }
+    let params = {
+      tpId: this.catForm.tpId,
+      type: type,
+      name: this.ticketForm[listTarget][0].name,
+      requestId: this.catForm.requestId
+    }
+    this.common.loading++;
+    this.api.post('Ticket/addTicketProcessCatByType', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0].y_id > 0) {
+          this.catForm.requestId = null;
+          this.common.showToast(res['msg']);
+          this.getCatListByType(listTarget);
+        } else {
+          this.common.showError(res['msg']);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log('Error:', err)
+    })
+
+  }
+
+  editTicket(ticket) {
+    if (ticket) {
       console.log(ticket);
       this.ticketForm.id = ticket._id;
       this.ticketForm.name = ticket.name;
@@ -392,155 +514,155 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.endTime = new Date(ticket.end_date);
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
-      if(ticket._claim_ticket === 0){
-        this.ticketForm.claimStatus = {id:0,name:'Disable'}
-      }else{
-        this.ticketForm.claimStatus = {id:1,name:'Enable'}
+      if (ticket._claim_ticket === 0) {
+        this.ticketForm.claimStatus = { id: 0, name: 'Disable' }
+      } else {
+        this.ticketForm.claimStatus = { id: 1, name: 'Enable' }
       }
       this.ticketForm.isActive = ticket._is_active;
-      this.ticketForm.priCatList = [{name:''}],
-      this.ticketForm.secCatList = [{name:''}],
-      this.ticketForm.typeList = [{name:''}]
-  }
-  
-  console.log(this.ticketForm);
-  
-  document.getElementById('addTicket').style.display = 'block';
+      this.ticketForm.priCatList = [{ name: '' }],
+        this.ticketForm.secCatList = [{ name: '' }],
+        this.ticketForm.typeList = [{ name: '' }]
+    }
+
+    console.log(this.ticketForm);
+
+    document.getElementById('addTicket').style.display = 'block';
   }
 
-  addTicketProperty(){
-    if(!this.ticketPropertyForm.tpId){
+  addTicketProperty() {
+    if (!this.ticketPropertyForm.tpId) {
       this.resetAddTicketPropertyForm(this.ticketForm.id);
       this.setDataForFields(this.ticketPropertyForm.tpId);
-    }else{
+    } else {
       this.resetAddTicketPropertyForm(this.ticketPropertyForm.tpId);
       this.setDataForFields(this.ticketPropertyForm.tpId);
     }
     document.getElementById('addTicketProperty').style.display = 'block';
   }
-  closeAddTicketPropertyModal(){
+  closeAddTicketPropertyModal() {
     document.getElementById('addTicketProperty').style.display = 'none';
   }
 
-  setDataForFields(id){
-    const num =3;
-    for(let i =1; i <= num; i++){
-    this.api.get(`Ticket/getTicketProcessCatByType?tpId=${id}&type=${i}`).subscribe(res => {
-      console.log("data", res['data'])
-      if (res['code'] > 0) {
-        let data;
-        if(i === 1){
-          data = res['data'] ? res['data'] : [];
-          this.primaryCategoryListForProperty = data.map(ele=> {return {id:ele._id,name:ele.name}})
-        }else if(i === 2){
-          data = res['data'] ? res['data'] : [];
-          this.secondaryCategoryListForProperty = data.map(ele=> {return {id:ele._id,name:ele.name}})
-        }else if(i === 3){
-          data = res['data'] ? res['data'] : [];
-          this.typeCategoryListForProperty = data.map(ele=> {return {id:ele._id,name:ele.name}})
+  setDataForFields(id) {
+    const num = 3;
+    for (let i = 1; i <= num; i++) {
+      this.api.get(`Ticket/getTicketProcessCatByType?tpId=${id}&type=${i}`).subscribe(res => {
+        console.log("data", res['data'])
+        if (res['code'] > 0) {
+          let data;
+          if (i === 1) {
+            data = res['data'] ? res['data'] : [];
+            this.primaryCategoryListForProperty = data.map(ele => { return { id: ele._id, name: ele.name } })
+          } else if (i === 2) {
+            data = res['data'] ? res['data'] : [];
+            this.secondaryCategoryListForProperty = data.map(ele => { return { id: ele._id, name: ele.name } })
+          } else if (i === 3) {
+            data = res['data'] ? res['data'] : [];
+            this.typeCategoryListForProperty = data.map(ele => { return { id: ele._id, name: ele.name } })
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+  }
+
+  resetAddTicketPropertyForm(id) {
+    this.ticketPropertyForm = {
+      tpId: id,
+      priCatId: { id: null, name: '' },
+      SecCatId: { id: null, name: '' },
+      typeId: { id: null, name: '' },
+      allocationAuto: { id: null, name: '' },
+      esclationAuto: { id: null, name: '' },
+      escTime: '',
+      complRemTime: '',
+      complEscTime: '',
+      isUrgent: false,
+      isActive: true,
+      requestId: ''
+    }
+  }
+
+  saveTicketPropertyList() {
+    let reqId = null;
+    if (this.ticketPropertyForm.tpId) {
+      reqId = this.ticketPropertyForm.tpId;
+    }
+
+    let params = {
+      tpId: this.ticketPropertyForm.tpId,
+      priCatId: this.ticketPropertyForm.priCatId.id,
+      SecCatId: this.ticketPropertyForm.SecCatId.id,
+      typeId: this.ticketPropertyForm.typeId.id,
+      allocationAuto: this.ticketPropertyForm.allocationAuto.id,
+      esclationAuto: this.ticketPropertyForm.esclationAuto.id,
+      escTime: this.ticketPropertyForm.escTime,
+      complRemTime: this.ticketPropertyForm.complRemTime,
+      complEscTime: this.ticketPropertyForm.complEscTime,
+      isUrgent: false,
+      isActive: true,
+      requestId: reqId,
+    }
+
+    this.common.loading++;
+    this.api.post('Ticket/saveTicketProcessProperty', params).subscribe(res => {
+      this.common.loading--;
+      console.log('response:', res)
+      if (res['code'] == 1) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeAddTicketPropertyModal();
+          this.getTicketProcessProperty(this.ticketPropertyForm.tpId);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
         }
       } else {
         this.common.showError(res['msg']);
       }
     }, err => {
-      this.common.showError();
-      console.log('Error: ', err);
-    });
-  }
-  }
-
-  resetAddTicketPropertyForm(id){
-    this.ticketPropertyForm ={
-      tpId:id,
-      priCatId:{id:null,name:''}, 
-      SecCatId:{id:null,name:''}, 
-      typeId:{id:null,name:''}, 
-      allocationAuto:{id:null,name:''}, 
-      esclationAuto:{id:null,name:''}, 
-      escTime:'', 
-      complRemTime:'', 
-      complEscTime:'', 
-      isUrgent:false, 
-      isActive:true, 
-      requestId:''
-    }
+      this.common.loading--;
+      console.log('Error:', err)
+    })
   }
 
-  saveTicketPropertyList(){
-      let reqId = null;
-      if(this.ticketPropertyForm.tpId){
-        reqId = this.ticketPropertyForm.tpId;
-      }
 
-      let params ={
-        tpId:this.ticketPropertyForm.tpId,
-        priCatId:this.ticketPropertyForm.priCatId.id, 
-        SecCatId:this.ticketPropertyForm.SecCatId.id, 
-        typeId:this.ticketPropertyForm.typeId.id, 
-        allocationAuto:this.ticketPropertyForm.allocationAuto.id, 
-        esclationAuto:this.ticketPropertyForm.esclationAuto.id, 
-        escTime:this.ticketPropertyForm.escTime, 
-        complRemTime:this.ticketPropertyForm.complRemTime, 
-        complEscTime:this.ticketPropertyForm.complEscTime, 
-        isUrgent:false, 
-        isActive:true, 
-        requestId:reqId,
-      }
-
-      this.common.loading++;
-      this.api.post('Ticket/saveTicketProcessProperty',params).subscribe(res=>{
-        this.common.loading--;
-        console.log('response:',res)
-          if(res['code'] == 1){
-            if (res['data'][0].y_id > 0) {
-              this.common.showToast(res['data'][0].y_msg);
-              this.closeAddTicketPropertyModal();
-              this.getTicketProcessProperty(this.ticketPropertyForm.tpId);
-            } else {
-              this.common.showError(res['data'][0].y_msg);
-            }   
-        }else{
-          this.common.showError(res['msg']);
-        }
-      },err=>{
-        this.common.loading--;
-        console.log('Error:',err)
-      })
-  }
-  
-
-  actionPropertyIcons(property){
+  actionPropertyIcons(property) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editPropertyTicket.bind(this, property) },
     ];
     return icons;
   }
 
-  editPropertyTicket(property){
+  editPropertyTicket(property) {
     console.log(property);
-    if(property){
-    this.ticketPropertyForm.tpId = property._tpid;
-    this.ticketPropertyForm.priCatId = {id:property._pri_cat_id,name:property.primary_category};
-    this.ticketPropertyForm.SecCatId = {id:property._sec_cat_id,name:property.secondary_category}; 
-    this.ticketPropertyForm.typeId = {id:property._tpid,name:property.type};
-    if(property.allocation_auto === 0){
-      this.ticketPropertyForm.allocationAuto = {id:0,name:'Disable'}
-    }else{
-      this.ticketPropertyForm.allocationAuto = {id:1,name:'Enable'}
+    if (property) {
+      this.ticketPropertyForm.tpId = property._tpid;
+      this.ticketPropertyForm.priCatId = { id: property._pri_cat_id, name: property.primary_category };
+      this.ticketPropertyForm.SecCatId = { id: property._sec_cat_id, name: property.secondary_category };
+      this.ticketPropertyForm.typeId = { id: property._tpid, name: property.type };
+      if (property.allocation_auto === 0) {
+        this.ticketPropertyForm.allocationAuto = { id: 0, name: 'Disable' }
+      } else {
+        this.ticketPropertyForm.allocationAuto = { id: 1, name: 'Enable' }
+      }
+      if (property.esclation_auto === 0) {
+        this.ticketPropertyForm.esclationAuto = { id: 0, name: 'Disable' }
+      } else {
+        this.ticketPropertyForm.esclationAuto = { id: 1, name: 'Enable' }
+      }
+      this.ticketPropertyForm.escTime = property.esc_time;
+      this.ticketPropertyForm.complRemTime = property.compl_rem_time;
+      this.ticketPropertyForm.complEscTime = property.compl_esc_time;
+      this.ticketPropertyForm.isUrgent = property.is_urgent;
+      this.ticketPropertyForm.isActive = property.is_active;
+      this.ticketPropertyForm.requestId = property._id;
     }
-    if(property.esclation_auto === 0){
-      this.ticketPropertyForm.esclationAuto = {id:0,name:'Disable'}
-    }else{
-      this.ticketPropertyForm.esclationAuto = {id:1,name:'Enable'}
-    }
-    this.ticketPropertyForm.escTime = property.esc_time;
-    this.ticketPropertyForm.complRemTime = property.compl_rem_time;
-    this.ticketPropertyForm.complEscTime = property.compl_esc_time;
-    this.ticketPropertyForm.isUrgent = property.is_urgent;
-    this.ticketPropertyForm.isActive = property.is_active; 
-    this.ticketPropertyForm.requestId = property;
-  }
-  document.getElementById('addTicketProperty').style.display = 'block';
+    document.getElementById('addTicketProperty').style.display = 'block';
   }
   // openFieldModal(process, type) {
   //   let refData = {
