@@ -1,3 +1,37 @@
-<p>
-  ticket works!
-</p>
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-4">
+                <h5 class="heading-design">My Ticket</h5>
+            </div>
+            <div class="col-5">
+
+            </div>
+            <div class="col-3 text-right">
+                <button class="btn btn-primary btn-sm" id="addTicket" (click)="addTicket()"><i
+              class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='allocatedTkt'?'active':''" (click)="activeTab='allocatedTkt'; getTicketByType(101)">
+                    Allocated Ticket
+                </li>
+                <li [ngClass]="activeTab=='unallocatedTkt'?'active':''" (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
+                    UnAllocated Ticket
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="activeTab=='allocatedTkt'">
+            <smart-table [data]="tableAllocatedTkt.data" [settings]="tableAllocatedTkt.settings" id="tableAllocatedTkt" class="sl-smart-table">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='unallocatedTkt'">
+            <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings" id="tableUnallocatedTkt">
+            </smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>
