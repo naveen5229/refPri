@@ -328,8 +328,7 @@
                         <label>User</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="adminList" display="name" placeholder="User" name="defaultOwn" id="defaultOwn" (onSelected)="esclationMatrix.userId=$event;" [preSelected]="esclationMatrix.userId['id'] ? {name: esclationMatrix.userId['name']}:{name:''}"
-                        autocomplete="off">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="User" name="defaultOwn" id="defaultOwn" (onSelected)="esclationMatrix.userId=$event;" [preSelected]="esclationMatrix.userId['id'] ? {name: esclationMatrix.userId['name']}:{name:''}" autocomplete="off">
                         </auto-suggestion>
                     </div>
                 </div>
@@ -339,7 +338,7 @@
                     </div>
                     <div class="col-8">
                         <auto-suggestion [data]="adminList" display="name" placeholder="Senior User" name="defaultOwn" id="defaultOwn" (onSelected)="esclationMatrix.seniorUserId=$event;" [preSelected]="esclationMatrix.seniorUserId['id'] ? {name: esclationMatrix.seniorUserId['name']}:{name:''}"
-                        autocomplete="off">
+                            autocomplete="off">
                         </auto-suggestion>
                     </div>
                 </div>
@@ -390,7 +389,7 @@
 
             <div class="modal-footer">
                 <div class="row footer">
-                   <smart-table *ngIf="esclationMatrixList.length" [data]="esclationTable.data" [settings]="esclationTable.settings"></smart-table>
+                    <smart-table *ngIf="esclationMatrixList.length" [data]="esclationTable.data" [settings]="esclationTable.settings"></smart-table>
                 </div>
             </div>
         </div>

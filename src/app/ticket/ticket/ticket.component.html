@@ -22,16 +22,20 @@
                 <li [ngClass]="activeTab=='unallocatedTkt'?'active':''" (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
                     UnAllocated Ticket
                 </li>
+                <li [ngClass]="activeTab=='unreadTkt'?'active':''" (click)="activeTab='unreadTkt'; getTicketByType(102)">
+                    Unread Ticket
+                </li>
             </ul>
         </div>
 
         <div *ngIf="activeTab=='allocatedTkt'">
-            <smart-table [data]="tableAllocatedTkt.data" [settings]="tableAllocatedTkt.settings" id="tableAllocatedTkt" class="sl-smart-table">
-            </smart-table>
+            <smart-table [data]="tableAllocatedTkt.data" [settings]="tableAllocatedTkt.settings" id="tableAllocatedTkt" class="sl-smart-table"></smart-table>
         </div>
         <div *ngIf="activeTab=='unallocatedTkt'">
-            <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings" id="tableUnallocatedTkt">
-            </smart-table>
+            <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings" id="tableUnallocatedTkt"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unreadTkt'">
+            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt"></smart-table>
         </div>
     </nb-card-body>
 </nb-card>

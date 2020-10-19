@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -83,14 +84,14 @@ export class TicketProcessComponent implements OnInit {
     requestId: ''
   }
 
-  esclationMatrix ={
-    tpPropertyId:'', 
-    userId:{id:null,name:''}, 
-    seniorUserId:{id:null,name:''}, 
-    userLevel:null, 
-    fromTime:this.common.getDate(), 
-    toTime:this.common.getDate(), 
-    requestId:''
+  esclationMatrix = {
+    tpPropertyId: '',
+    userId: { id: null, name: '' },
+    seniorUserId: { id: null, name: '' },
+    userLevel: null,
+    fromTime: this.common.getDate(),
+    toTime: this.common.getDate(),
+    requestId: ''
   }
 
   tableCat = {
@@ -124,7 +125,7 @@ export class TicketProcessComponent implements OnInit {
       if (res['code'] > 0) {
         let data;
         data = res['data'] || [];
-        this.adminList = data.map(ele=> {return{id:ele.id,name:ele.name}})
+        this.adminList = data.map(ele => { return { id: ele.id, name: ele.name } })
       } else {
         this.common.showError(res['msg']);
       }
@@ -383,14 +384,6 @@ export class TicketProcessComponent implements OnInit {
     this.resetForm();
   }
 
-  openTicketFormMatrixModal(id){
-    document.getElementById('ticketFormMatrix').style.display = 'block';
-  }
-
-  closeTicketFormMatrixModal(){
-    document.getElementById('ticketFormMatrix').style.display = 'none';
-  }
-
   actionIcons(ticket) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editTicket.bind(this, ticket) },
@@ -398,7 +391,7 @@ export class TicketProcessComponent implements OnInit {
       { class: "fas fa-list-alt", action: this.openCatModal.bind(this, ticket, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, ticket, 3), title: "Type Mapping" },
       { class: "fas fa-plus-square", action: this.openTicketPropertyModal.bind(this, ticket._id), title: "Ticket Property" },
-      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixModal.bind(this, ticket._id), title: "Form Matrix" }
+      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixModal.bind(this, ticket._id, 0), title: "Form Matrix" }
     ];
     return icons;
   }
@@ -703,23 +696,23 @@ export class TicketProcessComponent implements OnInit {
     }
   }
 
-  openTicketEsclationMatrixModal(property){
+  openTicketEsclationMatrixModal(property) {
     console.log(property);
     this.resetEsclation();
     this.esclationMatrix.tpPropertyId = property._id;
     this.getPreFilledMatrix(this.esclationMatrix.tpPropertyId);
     document.getElementById('esclationMatrix').style.display = 'block';
   }
-  
-  getPreFilledMatrix(tpPropertyId){
+
+  getPreFilledMatrix(tpPropertyId) {
     this.api.get(`Ticket/getTicketEsclationMatrix?tpPropertyId=${tpPropertyId}`).subscribe(res => {
       console.log("data", res['data'])
       this.resetEsclationTable();
       if (res['code'] > 0) {
-        if(res['data']){
-        // this.setPreFilledMatrix(res['data'][0]);
-        this.esclationMatrixList = res['data'];
-        this.setesclationTable();
+        if (res['data']) {
+          // this.setPreFilledMatrix(res['data'][0]);
+          this.esclationMatrixList = res['data'];
+          this.setesclationTable();
         }
       } else {
         this.common.showError(res['msg']);
@@ -730,7 +723,7 @@ export class TicketProcessComponent implements OnInit {
     });
   }
 
-  resetEsclationTable(){
+  resetEsclationTable() {
     this.esclationTable = {
       data: {
         headings: {},
@@ -794,35 +787,35 @@ export class TicketProcessComponent implements OnInit {
   //   console.log('after update esclation',this.esclationMatrix);
   // }
 
-  closeTicketEsclationMatrixModal(){
+  closeTicketEsclationMatrixModal() {
     document.getElementById('esclationMatrix').style.display = 'none';
   }
 
-  resetEsclation(){
-    this.esclationMatrix ={
-      tpPropertyId:'', 
-      userId:{id:null,name:''}, 
-      seniorUserId:{id:null,name:''}, 
-      userLevel:null, 
-      fromTime:this.common.getDate(), 
-      toTime:this.common.getDate(), 
-      requestId:''
+  resetEsclation() {
+    this.esclationMatrix = {
+      tpPropertyId: '',
+      userId: { id: null, name: '' },
+      seniorUserId: { id: null, name: '' },
+      userLevel: null,
+      fromTime: this.common.getDate(),
+      toTime: this.common.getDate(),
+      requestId: ''
     }
   }
 
-  saveTicketEsclationMatrixModal(){
+  saveTicketEsclationMatrixModal() {
     let requestID = null;
-    if(this.esclationMatrix.requestId){
+    if (this.esclationMatrix.requestId) {
       requestID = this.esclationMatrix.requestId;
     }
-    let params={
-      tpPropertyId:this.esclationMatrix.tpPropertyId, 
-      userId:this.esclationMatrix.userId.id, 
-      seniorUserId:this.esclationMatrix.seniorUserId.id, 
-      userLevel:this.esclationMatrix.userLevel, 
-      fromTime:this.common.dateFormatter(this.esclationMatrix.fromTime), 
-      toTime:this.common.dateFormatter(this.esclationMatrix.toTime), 
-      requestId:requestID
+    let params = {
+      tpPropertyId: this.esclationMatrix.tpPropertyId,
+      userId: this.esclationMatrix.userId.id,
+      seniorUserId: this.esclationMatrix.seniorUserId.id,
+      userLevel: this.esclationMatrix.userLevel,
+      fromTime: this.common.dateFormatter(this.esclationMatrix.fromTime),
+      toTime: this.common.dateFormatter(this.esclationMatrix.toTime),
+      requestId: requestID
     }
 
     this.common.loading++;
@@ -843,6 +836,20 @@ export class TicketProcessComponent implements OnInit {
       this.common.loading--;
       console.log('Error:', err)
     })
+  }
+
+  openTicketFormMatrixModal(tpId, refType) {
+    // document.getElementById('ticketFormMatrix').style.display = 'block';
+    let refData = {
+      id: tpId,
+      type: refType
+    }
+    this.common.params = { ref: refData, formType: 11 };
+    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  closeTicketFormMatrixModal() {
+    document.getElementById('ticketFormMatrix').style.display = 'none';
   }
 
 }
