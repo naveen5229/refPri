@@ -16,6 +16,7 @@ export class TicketComponent implements OnInit {
   tpList = [];
   allocatedTkt = [];
   unallocatedTkt = [];
+  unreadTkt = [];
   tableAllocatedTkt = {
     data: {
       headings: {},
@@ -27,6 +28,16 @@ export class TicketComponent implements OnInit {
   };
 
   tableUnallocatedTkt = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  tableUnreadTkt = {
     data: {
       headings: {},
       columns: []
@@ -72,6 +83,10 @@ export class TicketComponent implements OnInit {
     });
   }
 
+  addTicket() {
+    this.common.showToast("Working");
+  }
+
   getTicketByType(type, startDate = null, endDate = null) {
     this.common.loading++;
     // if ((type == 102) && this.searchData.startDate && this.searchData.endDate) {
@@ -89,6 +104,9 @@ export class TicketComponent implements OnInit {
         } else if (type == 101) {
           this.allocatedTkt = res['data'] || [];
           this.setTableAllocatedTkt(type);
+        } else if (type == 102) {
+          this.unreadTkt = res['data'] || [];
+          this.setTableUnreadTkt(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -109,9 +127,13 @@ export class TicketComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableUnreadTkt.data = {
+      headings: {},
+      columns: []
+    };
   }
 
-  // start: leads for me
+  // start: allocatedTkt
   setTableAllocatedTkt(type) {
     this.tableAllocatedTkt.data = {
       headings: this.generateHeadingsAllocatedTkt(),
@@ -183,7 +205,7 @@ export class TicketComponent implements OnInit {
     let columns = [];
     this.unallocatedTkt.map(lead => {
       let column = {};
-      for (let key in this.generateHeadingsAllocatedTkt()) {
+      for (let key in this.generateHeadingsUnallocatedTkt()) {
         if (key.toLowerCase() == 'action') {
           column[key] = {
             value: "",
@@ -202,6 +224,51 @@ export class TicketComponent implements OnInit {
     return columns;
   }
   // end: unallocatedTkt
+  // start: UnreadTkt
+  setTableUnreadTkt(type) {
+    this.tableUnreadTkt.data = {
+      headings: this.generateHeadingsUnreadTkt(),
+      columns: this.getTableColumnsUnreadTkt(type)
+    };
+    return true;
+  }
+
+  generateHeadingsUnreadTkt() {
+    let headings = {};
+    for (var key in this.unreadTkt[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsUnreadTkt(type) {
+    let columns = [];
+    this.unreadTkt.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsUnreadTkt()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        // column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: unreadTkt
 
   actionIcons(tkt, type) {
     console.log("actionIcons:", tkt);
