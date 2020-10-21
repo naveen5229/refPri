@@ -17,7 +17,7 @@ export class AddActionComponent implements OnInit {
     rowId: null,
     name: "",
     process: { id: null, name: "" },
-    state: { id: null, name: "" },
+    states: [],
     threshold: null,
     modes: [],
     nextAction: [],
@@ -37,6 +37,7 @@ export class AddActionComponent implements OnInit {
     }
   };
   adminList = [];
+  states = [];
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -49,13 +50,29 @@ export class AddActionComponent implements OnInit {
       this.actionForm.rowId = this.common.params.actionData.rowId ? this.common.params.actionData.rowId : null;
       this.actionForm.process.id = this.common.params.actionData.process_id;
       this.actionForm.process.name = this.common.params.actionData.process_name;
-      this.actionForm.state.id = this.common.params.actionData.state_id;
-      this.actionForm.state.name = this.common.params.actionData.state_name;
+      // this.actionForm.state.id = this.common.params.actionData.state_id;
+      // this.actionForm.state.name = this.common.params.actionData.state_name;
       // this.actionForm.name = this.common.params.targetActionData.name;
       // this.actionForm.modes = [];
     };
     this.getModeList();
     this.getActionList();
+    this.getStates();
+  }
+
+  getStates() {
+    this.common.loading++;
+    let params = "processId=" + this.actionForm.process.id;
+    this.api.get('Processes/getProcessState?' + params)
+      .subscribe(res => {
+        this.common.loading--;
+        if (!res['data']) return;
+        let data = res['data'] || [];
+        this.states = data.map(x => { return { id: x._state_id, name: x.name } });
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
   closeModal(res) {
@@ -85,7 +102,7 @@ export class AddActionComponent implements OnInit {
       const params = {
         requestId: this.actionForm.rowId,
         processId: this.actionForm.process.id,
-        stateId: this.actionForm.state.id,
+        stateId: (this.actionForm.states && this.actionForm.states.length) ? JSON.stringify(this.actionForm.states) : null,
         name: this.actionForm.name,
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         threshold: this.actionForm.threshold,
@@ -206,6 +223,7 @@ export class AddActionComponent implements OnInit {
     this.actionForm.threshold = (action.threshold) ? action.threshold : null;
     this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
     this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
+    this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
     // this.actionForm.isDefault = (action._is_default) ? true : false;
     // if (action._default_owner_id > 0) {
     //   let selectedUser = this.adminList.find(x => (x.id == action._default_owner_id));
@@ -255,6 +273,7 @@ export class AddActionComponent implements OnInit {
     this.actionForm.modes = [];
     this.actionForm.nextAction = [];
     this.actionForm.threshold = null;
+    this.actionForm.states = [];
     // this.actionForm.isDefault = null;
     // this.actionForm.defaultOwner = { id: null, name: null };
   }

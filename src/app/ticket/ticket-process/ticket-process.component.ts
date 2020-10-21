@@ -81,7 +81,7 @@ export class TicketProcessComponent implements OnInit {
     complEscTime: '',
     isUrgent: false,
     isActive: true,
-    requestId: ''
+    requestId: null
   }
 
   esclationMatrix = {
@@ -609,14 +609,14 @@ export class TicketProcessComponent implements OnInit {
       complEscTime: '',
       isUrgent: false,
       isActive: true,
-      requestId: ''
+      requestId: null
     }
   }
 
   saveTicketPropertyList() {
     let reqId = null;
-    if (this.ticketPropertyForm.tpId) {
-      reqId = this.ticketPropertyForm.tpId;
+    if (this.ticketPropertyForm.requestId) {
+      reqId = this.ticketPropertyForm.requestId;
     }
 
     let params = {
