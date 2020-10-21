@@ -269,6 +269,8 @@ export class AddFieldComponent implements OnInit {
             action: null,
             icons: this.actionIcons(doc)
           };
+        }else if(key == 'param_info'){
+          column[key] = { value: this.setStringData(doc[key]), class: 'black', action: '' };
         } else {
           column[key] = { value: doc[key], class: 'black', action: '' };
         }
@@ -280,6 +282,15 @@ export class AddFieldComponent implements OnInit {
     })
 
     return columns;
+  }
+
+  setStringData(arr){
+    let string = '';
+    if(arr){
+    arr.map(ele=> {
+        string = string + ele.option + ',';
+    });}
+    return string;
   }
 
   actionIcons(row) {
