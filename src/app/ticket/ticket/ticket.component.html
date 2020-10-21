@@ -17,13 +17,13 @@
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
                 <li [ngClass]="activeTab=='allocatedTkt'?'active':''" (click)="activeTab='allocatedTkt'; getTicketByType(101)">
-                    Allocated Ticket
+                    Open
                 </li>
                 <li [ngClass]="activeTab=='unallocatedTkt'?'active':''" (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
-                    UnAllocated Ticket
+                    Claim
                 </li>
                 <li [ngClass]="activeTab=='unreadTkt'?'active':''" (click)="activeTab='unreadTkt'; getTicketByType(102)">
-                    Unread Ticket
+                    Unread
                 </li>
             </ul>
         </div>

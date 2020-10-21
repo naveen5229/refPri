@@ -81,7 +81,9 @@ export class AddFieldComponent implements OnInit {
     //   { id: 'date', name: 'Date' }
     // ];
 
-    if (!this.refType) {
+    if (this.formType == 11) {
+      this.title = "Add Ticket Form Field";
+    } else if (!this.refType) {
       this.title = "Add State Form Field";
     } else if (this.refType == 1) {
       this.title = "Add Action Form Field";
