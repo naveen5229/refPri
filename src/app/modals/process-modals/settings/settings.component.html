@@ -68,6 +68,15 @@
 
     <div class="row mt-2">
         <div class="col-4">
+            <label>Txn Delete:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="txnDelet" display="name" seperator="-" placeholder="Allow State Change" (onSelected)="transaction.isDeleted = $event" inputId="isDeleted" name="isDeleted" [preSelected]="(transaction.isDeleted.id>=0) ? {name: transaction.isDeleted.name} : {name: ''}"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
             <label>Ack to Add User:</label>
         </div>
         <div class="col-6">

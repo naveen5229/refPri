@@ -862,6 +862,24 @@ export class MyProcessComponent implements OnInit {
   }
 
   deleteTransaction(lead, type) {
+    console.log(lead,type);
+    if(type == 7){
+      if(lead._delete_txn == 1 || lead._delete_txn == 5){
+        this.deletCallBack(lead,type);
+      }else{
+          this.common.showError('Permission Denied');
+      }
+    }else if(type == 2 || type == 6){
+      if(lead._delete_txn == 5){
+        this.deletCallBack(lead,type);
+      }else{
+          this.common.showError('Permission Denied');
+      }
+    }
+  }
+
+  deletCallBack(lead,type){
+    
     let params = {
       transId: lead._transactionid
     }
