@@ -107,7 +107,8 @@ export class TicketProcessComponent implements OnInit {
   catForm = {
     tpId: null,
     requestId: null,
-    type: null
+    type: null,
+    name:null
   }
 
   adminList = [];
@@ -258,7 +259,8 @@ export class TicketProcessComponent implements OnInit {
     this.catForm = {
       tpId: null,
       requestId: null,
-      type: null
+      type: null,
+      name:null
     }
   }
 
@@ -487,11 +489,12 @@ export class TicketProcessComponent implements OnInit {
 
   editTpCat(ticket) {
     this.catForm.requestId = ticket._id;
+    this.catForm.name = ticket.name;
   }
   // end: cat list table
 
   addTpCatByType(listTarget) {
-    if (!this.ticketForm[listTarget][0].name) {
+    if (!this.catForm.name) {
       this.common.showError("Name is missing");
       return false;
     }
@@ -506,7 +509,7 @@ export class TicketProcessComponent implements OnInit {
     let params = {
       tpId: this.catForm.tpId,
       type: type,
-      name: this.ticketForm[listTarget][0].name,
+      name: this.catForm.name,
       requestId: this.catForm.requestId
     }
     this.common.loading++;
@@ -515,6 +518,7 @@ export class TicketProcessComponent implements OnInit {
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.catForm.requestId = null;
+          this.catForm.name = null;
           this.common.showToast(res['msg']);
           this.getCatListByType(listTarget);
         } else {
