@@ -81,7 +81,7 @@
                                 <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
                             <div class="col-3 text-right">
-                                <i class="fa fa-plus" *ngIf="userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
+                                <i class="fa fa-plus" *ngIf="(userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)) || tabType == 7" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
                             </div>
                         </div>
                     </td>
