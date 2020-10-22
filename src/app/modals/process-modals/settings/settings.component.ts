@@ -20,6 +20,17 @@ export class SettingsComponent implements OnInit {
   // showOtherFields: Boolean = false;
   stateId = null;
 
+  allowStateChangeValues = [
+  {id:0,name:'only admin and PO'},
+  {id:1,name:'admin, PO and Action owner'},
+  {id:2,name:'admin, po and action owner with txn complete permission'}];
+
+  txnDelet = [
+    {id:0,name:'None'},
+    {id:1,name:'Only Admin'},
+    {id:5,name:'All Users'}];
+
+
   transaction = {
     primary_Owner: { id: null, name: '' },
     default_State: { id: null, name: '' },
@@ -30,7 +41,9 @@ export class SettingsComponent implements OnInit {
     isIdentity: false,
     isEditable: false,
     isModeApplicable: false,
-    isClaimApplicable: false
+    isClaimApplicable: false,
+    isEndByActionOwn:{ id: null, name: '' },
+    isDeleted:{ id: null, name: '' }
   }
 
   constructor(public activeModal: NgbActiveModal,
@@ -95,6 +108,15 @@ export class SettingsComponent implements OnInit {
     this.transaction.primary_Owner = { id: this.PreFilledData[0]._default_po, name: this.PreFilledData[0].pri_owner };
     this.transaction.default_State = { id: this.PreFilledData[0]._default_state, name: this.PreFilledData[0].default_state };
     this.transaction.default_Action = { id: this.PreFilledData[0]._default_action, name: this.PreFilledData[0].default_action };
+    this.transaction.isDeleted = { id: this.PreFilledData[0]._delete_txn, name: this.PreFilledData[0].delete_txn };
+
+    if(this.PreFilledData[0]._to_mark_outstate == 0 || this.PreFilledData[0]._to_mark_outstate == null){
+      this.transaction.isEndByActionOwn = {id:0,name:'only admin and PO'};
+    }else if(this.PreFilledData[0]._to_mark_outstate == 1){
+      this.transaction.isEndByActionOwn = {id:1,name:'admin, PO and Action owner'};
+    }else if(this.PreFilledData[0]._to_mark_outstate == 2){
+      this.transaction.isEndByActionOwn = {id:2,name:'admin, po and action owner with txn complete permission'};
+    } 
 
     if (this.transaction.default_State.id > 0) {
       // this.showOtherFields = true;
@@ -115,6 +137,7 @@ export class SettingsComponent implements OnInit {
     this.transaction.isEditable = (this.PreFilledData[0]._txn_editable == 1) ? true : false;
     this.transaction.isModeApplicable = (this.PreFilledData[0]._is_mode_applicable) ? true : false;
     this.transaction.isClaimApplicable = (this.PreFilledData[0]._claim_txn) ? true : false;
+
   }
 
   saveProcess() {
@@ -138,6 +161,8 @@ export class SettingsComponent implements OnInit {
       isEditable: (this.transaction.isEditable) ? 1 : 0,
       isModeApplicable: (this.transaction.isModeApplicable) ? 1 : null,
       isClaimApplicable: (this.transaction.isClaimApplicable) ? 1 : null,
+      isEndByActionOwn: this.transaction.isEndByActionOwn.id,
+      isDeleted:this.transaction.isDeleted.id,
     }
     // console.log(params, 'params');
 
@@ -175,9 +200,17 @@ export class SettingsComponent implements OnInit {
       isIdentity: false,
       isEditable: false,
       isModeApplicable: false,
-      isClaimApplicable: false
+      isClaimApplicable: false,
+      isEndByActionOwn:{ id: null, name: '' },
+      isDeleted:{ id: null, name: '' }
     }
     this.stateId = null;
+  }
+
+  clearFields(){
+    this.transaction.default_State = {id:null,name:''};
+    this.transaction.default_Action = {id:null,name:''};
+    this.transaction.action_Owner = {id:null,name:''};
   }
 
   // onUnselectState(event) {

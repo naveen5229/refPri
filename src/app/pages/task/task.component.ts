@@ -322,6 +322,7 @@ export class TaskComponent implements OnInit {
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = {
       userList: this.adminList,
+      groupList: this.groupList,
       formType: formType,
       title: (formType == 1) ? "Add Broadcast" : "Apply Leave",
       btn: (formType == 1) ? "Add" : "Apply"
@@ -850,7 +851,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: ([101, 102].includes(ticket._tktype) && !ticket['_reply_demanded'])
+            action: ([101, 102].includes(ticket._tktype) && (!ticket['_reply_demanded'] || ticket['_assignee_user_id'] == this.userService._details.id))
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -1465,13 +1466,18 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == 101 || type == 103 || type == -102) {
+
       if (ticket._status == 5 || ticket._status == -1) {
-        icons.push({
-          class: "fa fa-retweet",
-          action: this.reactiveTicket.bind(this, ticket, type),
-          txt: "",
-          title: "Re-Active",
-        });
+        if ([104, 111, 112, 113, 114].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
+
+        } else {
+          icons.push({
+            class: "fa fa-retweet",
+            action: this.reactiveTicket.bind(this, ticket, type),
+            txt: "",
+            title: "Re-Active",
+          });
+        }
       } else if (ticket._reply_demanded > 0) {
         // no action for reply demanded pending
       } else if (ticket._status == 2) {
@@ -1837,6 +1843,7 @@ export class TaskComponent implements OnInit {
       subTitle: subTitle,
       userList: this.adminList,
       groupList: this.groupList,
+      departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
       size: "lg",
