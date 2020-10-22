@@ -11,12 +11,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements OnInit {
-  activeTab = 'leadsForMe';
+  activeTab = 'allocatedTkt';
   adminList = [];
   tpList = [];
   allocatedTkt = [];
   unallocatedTkt = [];
   unreadTkt = [];
+  unassignedTkt = [];
   tableAllocatedTkt = {
     data: {
       headings: {},
@@ -38,6 +39,16 @@ export class TicketComponent implements OnInit {
   };
 
   tableUnreadTkt = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  tableUnassignedTkt = {
     data: {
       headings: {},
       columns: []
@@ -107,6 +118,9 @@ export class TicketComponent implements OnInit {
         } else if (type == 102) {
           this.unreadTkt = res['data'] || [];
           this.setTableUnreadTkt(type);
+        } else if (type == 103) {
+          this.unassignedTkt = res['data'] || [];
+          this.setTableUnassignedTkt(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -128,6 +142,10 @@ export class TicketComponent implements OnInit {
       columns: []
     };
     this.tableUnreadTkt.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableUnassignedTkt.data = {
       headings: {},
       columns: []
     };
@@ -269,6 +287,51 @@ export class TicketComponent implements OnInit {
     return columns;
   }
   // end: unreadTkt
+  // start: UnassignedTkt
+  setTableUnassignedTkt(type) {
+    this.tableUnassignedTkt.data = {
+      headings: this.generateHeadingsUnassignedTkt(),
+      columns: this.getTableColumnsUnassignedTkt(type)
+    };
+    return true;
+  }
+
+  generateHeadingsUnassignedTkt() {
+    let headings = {};
+    for (var key in this.unassignedTkt[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsUnassignedTkt(type) {
+    let columns = [];
+    this.unassignedTkt.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsUnassignedTkt()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        // column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: UnassignedTkt
 
   actionIcons(tkt, type) {
     console.log("actionIcons:", tkt);

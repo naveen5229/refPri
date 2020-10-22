@@ -22,6 +22,9 @@
                 <li [ngClass]="activeTab=='unallocatedTkt'?'active':''" (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
                     Claim
                 </li>
+                <li [ngClass]="activeTab=='unassignedTkt'?'active':''" (click)="activeTab='unassignedTkt'; getTicketByType(103)">
+                    Unassigned
+                </li>
                 <li [ngClass]="activeTab=='unreadTkt'?'active':''" (click)="activeTab='unreadTkt'; getTicketByType(102)">
                     Unread
                 </li>
@@ -33,6 +36,9 @@
         </div>
         <div *ngIf="activeTab=='unallocatedTkt'">
             <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings" id="tableUnallocatedTkt"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unassignedTkt'">
+            <smart-table [data]="tableUnassignedTkt.data" [settings]="tableUnassignedTkt.settings" id="tableUnassignedTkt"></smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTkt'">
             <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt"></smart-table>
