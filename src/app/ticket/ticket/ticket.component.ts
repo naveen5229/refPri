@@ -4,6 +4,8 @@ import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormDataTableComponent } from '../../modals/process-modals/form-data-table/form-data-table.component';
+import { ReminderComponent } from '../../modals/reminder/reminder.component';
+import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -69,7 +71,7 @@ export class TicketComponent implements OnInit {
     secCat: { id: null, name: null },
     type: { id: null, name: null },
     info: null,
-    remark:null
+    remark: null
   }
   priCatList = [];
   secCatList = [];
@@ -228,6 +230,11 @@ export class TicketComponent implements OnInit {
 
   resetTicketForm() {
     this.tpPropertyList = [];
+    this.oddArray = [];
+    this.evenArray = [];
+    this.priCatList = [];
+    this.secCatList = [];
+    this.typeList = [];
     this.ticketFormFields = null;
     this.ticketForm = {
       requestId: null,
@@ -237,7 +244,7 @@ export class TicketComponent implements OnInit {
       secCat: { id: null, name: null },
       type: { id: null, name: null },
       info: null,
-      remark:null
+      remark: null
     }
   }
 
@@ -248,6 +255,7 @@ export class TicketComponent implements OnInit {
 
   closeAddTicketModal() {
     document.getElementById('addTicketModal').style.display = 'none';
+    this.resetTicketForm();
   }
 
   onSelectedTp(event) {
@@ -495,85 +503,158 @@ export class TicketComponent implements OnInit {
   }
   // end: UnassignedTkt
 
-  actionIcons(tkt, type) {
-    console.log("actionIcons:", tkt);
-    let icons = [
-      { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, tkt, type), txt: '', title: "Lead Comment" },
-      { class: "fa fa-bell", action: this.showReminderPopup.bind(this, tkt, type), txt: '', title: "Add Reminder" }
-    ];
+  actionIcons(ticket, type) {
+    console.log("actionIcons:", ticket);
+    let icons = [{ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, },];
+
+    if (ticket._unreadcount > 0) {
+      icons = [{ class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null, },];
+    } else if (ticket._unreadcount == -1) {
+      icons = [{ class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, },];
+    }
+
+    if (ticket._status == 5 || ticket._status == -1) {
+    } else {
+      if (ticket._isremind == 1) {
+        icons.push({
+          class: "fa fa-bell isRemind",
+          action: this.checkReminderSeen.bind(this, ticket, type),
+          txt: "",
+          title: null,
+        });
+      } else if (ticket._isremind == 2 && type != -8) {
+        icons.push({
+          class: "fa fa-bell reminderAdded",
+          action: this.showReminderPopup.bind(this, ticket, type),
+          txt: "",
+          title: null,
+        });
+      } else {
+        if (type != -8) {
+          icons.push({
+            class: "fa fa-bell",
+            action: this.showReminderPopup.bind(this, ticket, type),
+            txt: "",
+            title: null,
+          });
+        }
+      }
+    }
     return icons;
   }
 
-  transMessage(lead, type) {
-    this.common.showToast('Working On');
-    // console.log("transMessage:", lead);
-    // if (lead._transactionid > 0) {
-    //   let editData = {
-    //     transactionid: lead._transactionid,
-    //     lastSeenId: lead._lastreadid,
-    //     tabType: type,
-    //     priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
-    //     rowData: lead
-    //   }
-    //   this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };
-    //   const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
-    //   activeModal.result.then(data => {
-    //     this.getProcessLeadByType(type);
-    //   });
-    // } else {
-    //   this.common.showError("Invalid Lead");
-    // }
+  ticketMessage(ticket, type) {
+    console.log("type:", type);
+    let ticketEditData = {
+      ticketData: ticket,
+      ticketId: ticket._tktid,
+      statusId: ticket._status,
+      lastSeenId: ticket._lastreadid,
+      taskId: ticket._refid,
+      taskType: ticket._tktype,
+      tabType: type,
+    };
+
+    let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
+    this.common.params = {
+      ticketEditData,
+      title: "Ticket Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.adminList
+    };
+    const activeModal = this.modalService.open(TicketChatboxComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      type ? this.getTicketByType(type) : null;
+    });
   }
 
-  showReminderPopup(){
-    this.common.showToast('Working On');
+  showReminderPopup(ticket, type) {
+    this.common.params = {
+      ticketId: ticket._tktid,
+      remindertime: ticket._remindtime,
+      title: "Add Reminder",
+      btn: "Set Reminder",
+      fromPage: "ticket"
+    };
+    const activeModal = this.modalService.open(ReminderComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.getTicketByType(type);
+      }
+    });
+  }
+
+  checkReminderSeen(ticket, type) {
+    let params = {
+      ticket_id: ticket._tktid,
+    };
+    this.common.loading++;
+    this.api.post("Ticket/checkReminderSeen", params).subscribe((res) => {
+      this.common.loading--;
+      this.common.showToast(res["msg"]);
+      this.getTicketByType(type);
+    }, (err) => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    }
+    );
   }
 
   saveTicket() {
-    let selected =this.tpPropertyList.find(ele=> {
-        return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._sec_cat_id == this.ticketForm.type.id)
-      });
+    let selected = this.tpPropertyList.find(ele => {
+      return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._sec_cat_id == this.ticketForm.type.id)
+    });
 
-      if(selected){
-        this.ticketForm.tpProperty.id = selected._id;
-        this.ticketForm.tpProperty.name = selected.name;
-      }else{
-        this.ticketForm.tpProperty = {id:null,name:null}
-      }
+    if (selected) {
+      this.ticketForm.tpProperty.id = selected._id;
+      this.ticketForm.tpProperty.name = selected.name;
+    } else {
+      this.ticketForm.tpProperty = { id: null, name: null }
+    }
 
-      let params = {
-        tpPropId:this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
-        remark:this.ticketForm.remark,
-        info:JSON.stringify(this.evenArray.concat(this.oddArray)),
-        isAllocated:false,
-        requestId:(this.ticketForm.requestId>0) ? this.ticketForm.requestId : null 
-      }
+    let params = {
+      tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
+      remark: this.ticketForm.remark,
+      info: JSON.stringify(this.evenArray.concat(this.oddArray)),
+      isAllocated: false,
+      requestId: (this.ticketForm.requestId > 0) ? this.ticketForm.requestId : null
+    }
 
-      if(!params.tpPropId){
-        this.common.showError('Combination mismatch: Primary Category,Secondary Category,Type');
-        return false;
-      }
-      this.common.loading++;
-      this.api.post('Ticket/saveTicket', params).subscribe(res => {
+    if (!params.tpPropId) {
+      this.common.showError('Combination mismatch: Primary Category,Secondary Category,Type');
+      return false;
+    }
+    this.common.loading++;
+    this.api.post('Ticket/saveTicket', params).subscribe(res => {
       this.common.loading--;
       console.log('response:', res);
-          if (res['code'] == 1) {
-            if (res['data'][0].y_id > 0) {
-              this.common.showToast(res['data'][0].y_msg);
-              this.getTicketByType(101);
-            } else {
-              this.common.showError(res['data'][0].y_msg);
-            }
-          } else {
-            this.common.showError(res['msg']);
-          }
-        }, err => {
-          this.common.loading--;
-          console.log('Error:', err)
-        })
-      
-      console.log("save ticketForm:", this.ticketForm, this.tpPropertyList);
-      console.log('OddEven Array',this.oddArray,this.evenArray)
+      if (res['code'] == 1) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.getTicketByType(101);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log('Error:', err)
+    })
+
+    console.log("save ticketForm:", this.ticketForm, this.tpPropertyList);
+    console.log('OddEven Array', this.oddArray, this.evenArray)
   }
 
 
