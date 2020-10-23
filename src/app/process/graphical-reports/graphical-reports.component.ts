@@ -56,27 +56,32 @@ chartTypes = [
   {
     id:1,
     type:'pie',
-    url:"./assets/images/charts/piechart.jpg"
+   // icon:"fa-chart-pie",
+   url:"./assets/images/charts/chart-pie-solid.svg"
   },
   {
     id:2,
     type:'bar',
-    url:"./assets/images/charts/barchart.png"
+   // icon:"fa-chart-bar",    
+   url:"./assets/images/charts/chart-bar-solid.svg"
   },
   {
     id:3,
     type:'bubble',
-    url:"./assets/images/charts/bubblechart.png"
+   // icon:"fa-chart-scatter",
+    url:"./assets/images/charts/bubble.svg"
   },
   {
     id:4,
     type:'line',
-    url:"./assets/images/charts/linechart.png"
+    //icon:"fa-chart-line",
+   url:"./assets/images/charts/chart-line-solid.svg"
   },
   {
     id:5,
     type:'table',
-    url:"./assets/images/charts/table.webp"
+    //icon:"fa-table",
+    url:"./assets/images/charts/table-solid.svg"
   }
 ]
 
