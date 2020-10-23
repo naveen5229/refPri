@@ -68,7 +68,8 @@ export class TicketComponent implements OnInit {
     priCat: { id: null, name: null },
     secCat: { id: null, name: null },
     type: { id: null, name: null },
-    info: null
+    info: null,
+    remark:null
   }
   priCatList = [];
   secCatList = [];
@@ -174,6 +175,12 @@ export class TicketComponent implements OnInit {
         if (element._pri_cat_id) {
           this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
         }
+        if (element._sec_cat_id) {
+          this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
+        }
+        if (element._type_id) {
+          this.typeList.push({ id: element._type_id, name: element.type });
+        }
       });
     }
   }
@@ -229,7 +236,8 @@ export class TicketComponent implements OnInit {
       priCat: { id: null, name: null },
       secCat: { id: null, name: null },
       type: { id: null, name: null },
-      info: null
+      info: null,
+      remark:null
     }
   }
 
@@ -489,11 +497,83 @@ export class TicketComponent implements OnInit {
 
   actionIcons(tkt, type) {
     console.log("actionIcons:", tkt);
+    let icons = [
+      { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, tkt, type), txt: '', title: "Lead Comment" },
+      { class: "fa fa-bell", action: this.showReminderPopup.bind(this, tkt, type), txt: '', title: "Add Reminder" }
+    ];
+    return icons;
+  }
+
+  transMessage(lead, type) {
+    this.common.showToast('Working On');
+    // console.log("transMessage:", lead);
+    // if (lead._transactionid > 0) {
+    //   let editData = {
+    //     transactionid: lead._transactionid,
+    //     lastSeenId: lead._lastreadid,
+    //     tabType: type,
+    //     priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
+    //     rowData: lead
+    //   }
+    //   this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };
+    //   const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    //   activeModal.result.then(data => {
+    //     this.getProcessLeadByType(type);
+    //   });
+    // } else {
+    //   this.common.showError("Invalid Lead");
+    // }
+  }
+
+  showReminderPopup(){
+    this.common.showToast('Working On');
   }
 
   saveTicket() {
-    this.common.showError("Working...");
-    console.log("save ticketForm:", this.ticketForm);
+    let selected =this.tpPropertyList.find(ele=> {
+        return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._sec_cat_id == this.ticketForm.type.id)
+      });
+
+      if(selected){
+        this.ticketForm.tpProperty.id = selected._id;
+        this.ticketForm.tpProperty.name = selected.name;
+      }else{
+        this.ticketForm.tpProperty = {id:null,name:null}
+      }
+
+      let params = {
+        tpPropId:this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
+        remark:this.ticketForm.remark,
+        info:JSON.stringify(this.evenArray.concat(this.oddArray)),
+        isAllocated:false,
+        requestId:(this.ticketForm.requestId>0) ? this.ticketForm.requestId : null 
+      }
+
+      if(!params.tpPropId){
+        this.common.showError('Combination mismatch: Primary Category,Secondary Category,Type');
+        return false;
+      }
+      this.common.loading++;
+      this.api.post('Ticket/saveTicket', params).subscribe(res => {
+      this.common.loading--;
+      console.log('response:', res);
+          if (res['code'] == 1) {
+            if (res['data'][0].y_id > 0) {
+              this.common.showToast(res['data'][0].y_msg);
+              this.getTicketByType(101);
+            } else {
+              this.common.showError(res['data'][0].y_msg);
+            }
+          } else {
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log('Error:', err)
+        })
+      
+      console.log("save ticketForm:", this.ticketForm, this.tpPropertyList);
+      console.log('OddEven Array',this.oddArray,this.evenArray)
   }
 
 
