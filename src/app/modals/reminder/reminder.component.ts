@@ -82,7 +82,9 @@ export class ReminderComponent implements OnInit {
     };
     console.log('Params: ', params);
     let apiName;
-    if (this.fromPage && this.fromPage == "trans") {
+    if (this.fromPage && this.fromPage == "ticket") {
+      apiName = 'Ticket/setTicketReminderTime.json';
+    } else if (this.fromPage && this.fromPage == "trans") {
       apiName = 'Processes/setLeadReminderTime.json';
     } else if (this.fromPage && this.fromPage == "canpaign") {
       apiName = 'Campaigns/setLeadReminderTime.json';
