@@ -90,6 +90,7 @@
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <small class="pull-right">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
