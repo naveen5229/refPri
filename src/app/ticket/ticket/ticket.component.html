@@ -67,7 +67,7 @@
                         <label>Primary Category</label>
                     </div>
                     <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.priCat.id" (change)='onPriCatSelected()'>
+                        <select class="form-control" [(ngModel)]="ticketForm.priCat.id">
                             <option selected disabled>--Select--</option>
                             <option *ngFor="let p of priCatList" [value]="p.id">{{p.name}}</option>
                         </select>
@@ -78,7 +78,7 @@
                         <label>Secondary Category</label>
                     </div>
                     <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.secCat.id" (change)='onSecCatSelected()'>
+                        <select class="form-control" [(ngModel)]="ticketForm.secCat.id">
                             <option selected disabled>--Select--</option>
                             <option *ngFor="let p of secCatList" [value]="p.id">{{p.name}}</option>
                         </select>
@@ -93,6 +93,15 @@
                             <option selected disabled>--Select--</option>
                             <option *ngFor="let p of typeList" [value]="p.id">{{p.name}}</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Remark<span style="color: red;">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control" [(ngModel)]="ticketForm.remark"></textarea>
                     </div>
                 </div>
 
