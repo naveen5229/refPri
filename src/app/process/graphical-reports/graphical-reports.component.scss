@@ -61,7 +61,7 @@
     padding: 0 !important;
 }
 .sidenavleft {
-    background-color: #e4f0fe;
+    background-color: #efefef;
     max-height: calc(100vh - 125px);
     overflow: auto;
     h6 {
@@ -133,18 +133,34 @@
 .hoverChart:hover {
     cursor: pointer;
 }
+.grptab{
+    padding: 4px 0px;
+    width: 70px;
+    box-shadow: 0 4px 13px #ccc8c8;
+    border-radius: 9px!important;
+    background: #ffffff;
+    border: 1px solid #e2e2e2;
+    border-top: 3px solid #3366ff;
+    margin-bottom: 10%;
+}
 .centarize {
     text-align: center;
-    border-bottom: 1px solid #d1d9e8 !important;
+    //border-bottom: 1px solid #d1d9e8 !important;
+    display: flex;
+    justify-content: flex-start;
+    background: #efefef;
 }
 
 .disablePieClick{
     pointer-events: none;
-    -webkit-filter: blur(2px); 
-	-moz-filter: blur(2px); 
-	-o-filter: blur(2px); 
-	-ms-filter: blur(2px); 
-	filter: blur(2px); 
+    -webkit-filter: grayscale(100%); 
+	-moz-filter: grayscale(100%); 
+	-o-filter: grayscale(100%);
+	-ms-filter: grayscale(100%); 
+    filter: grayscale(100%);
+    img{
+        opacity: 0.25;
+    }
 }
 
 .tableref{
