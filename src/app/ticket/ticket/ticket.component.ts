@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormDataTableComponent } from '../../modals/process-modals/form-data-table/form-data-table.component';
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
+import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -517,6 +518,7 @@ export class TicketComponent implements OnInit {
 
     if(type == 101 || type == 102){
       icons.push({ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, });
+      icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Time" });
 
       if (ticket._unreadcount > 0) {
           icons = [{ class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null, },];
@@ -577,6 +579,24 @@ export class TicketComponent implements OnInit {
       console.log("Error: ", err);
     }
     );
+  }
+
+  addTime(ticket, type){
+    this.common.params = {
+      ticketId: ticket._tktid,
+      title: "Add Time",
+      btn: "Add Time",
+    };
+    const activeModal = this.modalService.open(AddExtraTimeComponent, {
+      size: "md",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.getTicketByType(type);
+      }
+    });
   }
 
   ticketMessage(ticket, type) {
@@ -759,4 +779,24 @@ export class TicketComponent implements OnInit {
       }
       );
     }
+
+    // ticketHistory(ticket){
+    //   let params = {
+    //     ticketId: ticket.tktId,
+    //   };
+    //   console.log('params',params);
+    //   return;
+    //   this.common.loading++;
+    //   this.api.post("Ticket/getTicketHistory", params).subscribe((res) => {
+    //     this.common.loading--;
+    //     this.common.showToast(res["msg"]);
+    //   }, (err) => {
+    //     this.common.loading--;
+    //     this.common.showError();
+    //     console.log("Error: ", err);
+    //   }
+    //   );
+    // }
+
+    
 }
