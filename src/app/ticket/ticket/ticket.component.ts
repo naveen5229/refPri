@@ -14,6 +14,7 @@ import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbo
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements OnInit {
+  loginUserId = this.userService._details.id;
   activeTab = 'allocatedTkt';
   adminList = [];
   tpList = [];
@@ -78,6 +79,11 @@ export class TicketComponent implements OnInit {
   typeList = [];
   evenArray = [];
   oddArray = [];
+  assignUserObject = {
+    tktId:null,
+    userId:null,
+    type:null
+  }
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTicketByType(101);
@@ -505,57 +511,87 @@ export class TicketComponent implements OnInit {
 
   actionIcons(ticket, type) {
     console.log("actionIcons:", ticket);
-    let icons = [{ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, },];
+    // let icons = [{ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, },];
 
-    if (ticket._unreadcount > 0) {
-      icons = [{ class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null, },];
-    } else if (ticket._unreadcount == -1) {
-      icons = [{ class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, },];
-    }
+    let icons = [];
 
-    if (ticket._status == 5 || ticket._status == -1) {
-    } else {
-      if (ticket._isremind == 1) {
-        icons.push({
-          class: "fa fa-bell isRemind",
-          action: this.checkReminderSeen.bind(this, ticket, type),
-          txt: "",
-          title: null,
-        });
-      } else if (ticket._isremind == 2 && type != -8) {
-        icons.push({
-          class: "fa fa-bell reminderAdded",
-          action: this.showReminderPopup.bind(this, ticket, type),
-          txt: "",
-          title: null,
-        });
-      } else {
-        if (type != -8) {
-          icons.push({
-            class: "fa fa-bell",
-            action: this.showReminderPopup.bind(this, ticket, type),
-            txt: "",
-            title: null,
-          });
+    if(type == 101 || type == 102){
+      icons.push({ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, });
+
+      if (ticket._unreadcount > 0) {
+          icons = [{ class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null, },];
+        } else if (ticket._unreadcount == -1) {
+          icons = [{ class: "fas fa-comments no-comment", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, },];
         }
-      }
-    }
+
+        if (ticket._status == 5 || ticket._status == -1) {
+        } else {
+          if (ticket._isremind == 1) {
+            icons.push({
+              class: "fa fa-bell isRemind",
+              action: this.checkReminderSeen.bind(this, ticket, type),
+              txt: "",
+              title: null,
+            });
+          } else if (ticket._isremind == 2 && type != -8) {
+            icons.push({
+              class: "fa fa-bell reminderAdded",
+              action: this.showReminderPopup.bind(this, ticket, type),
+              txt: "",
+              title: null,
+            });
+          } else {
+            if (type != -8) {
+              icons.push({
+                class: "fa fa-bell",
+                action: this.showReminderPopup.bind(this, ticket, type),
+                txt: "",
+                title: null,
+              });
+            }
+          }
+        }
+  }else  if (type == 100) {
+      icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
+  }else  if (type == 103) {
+    icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
+  }
     return icons;
   }
 
+  claimTicket(ticket, type){
+    let params = {
+      tktId: ticket._tktid,
+      userId:this.loginUserId
+    };
+    console.log('params',params);
+    return;
+    this.common.loading++;
+    this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
+      this.common.loading--;
+      this.common.showToast(res["msg"]);
+      this.getTicketByType(type);
+    }, (err) => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    }
+    );
+  }
+
   ticketMessage(ticket, type) {
-    console.log("type:", type);
+    console.log("type:", type,ticket);
     let ticketEditData = {
       ticketData: ticket,
-      ticketId: ticket._tktid,
+      ticketId: ticket._ticket_id,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,
-      taskId: ticket._refid,
-      taskType: ticket._tktype,
+      // taskId: ticket._refid,
+      // taskType: ticket._tktype,
       tabType: type,
     };
 
-    let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
+    let subTitle = ticket.info;
     this.common.params = {
       ticketEditData,
       title: "Ticket Comment",
@@ -682,4 +718,45 @@ export class TicketComponent implements OnInit {
     });
   }
 
+  
+
+  openAssignUserModal(ticket, type){
+    console.log(this.assignUserObject,ticket);
+    this.assignUserObject.tktId = ticket._type_id;
+    this.assignUserObject.type = type;
+    document.getElementById('assignUserModal').style.display = 'block';
+    }
+
+    closeassignUserModal(){
+      document.getElementById('assignUserModal').style.display = 'none';
+      this.resetAssignUser();
+    }
+
+    resetAssignUser(){
+      this.assignUserObject = {
+        tktId:null,
+        userId:null,
+        type:null
+      }
+    }
+
+    appointUser(){
+      let params = {
+        tktId: this.assignUserObject.tktId,
+        userId:this.assignUserObject.userId.id
+      };
+      console.log('params',params);
+      return;
+      this.common.loading++;
+      this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
+        this.common.loading--;
+        this.common.showToast(res["msg"]);
+        this.getTicketByType(this.assignUserObject.type);
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+      );
+    }
 }
