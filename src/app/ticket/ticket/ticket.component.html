@@ -155,3 +155,34 @@
     </div>
 </div>
 <!--end: addTicketModal -->
+
+<div class="modal" id="assignUserModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign User</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeassignUserModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket Process" name="tpName" id="tpName" (onSelected)="assignUserObject.userId = $event" autocomplete="off"></auto-suggestion>
+                    </div>
+                </div>
+            </div>
+            {{assignUserObject | json}}
+
+            <div class="row footer">
+                <div class="col text-right">
+                    <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm" (click)="appointUser()">Assign</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: addTicketModal -->
