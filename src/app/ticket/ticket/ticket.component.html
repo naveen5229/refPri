@@ -173,12 +173,11 @@
                         <auto-suggestion [data]="adminList" display="name" placeholder="Ticket Process" name="tpName" id="tpName" (onSelected)="assignUserObject.userId = $event" autocomplete="off"></auto-suggestion>
                     </div>
                 </div>
-            </div>
-            {{assignUserObject | json}}
 
-            <div class="row footer">
-                <div class="col text-right">
-                    <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm" (click)="appointUser()">Assign</button>
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm" (click)="appointUser()">Assign</button>
+                    </div>
                 </div>
             </div>
 
