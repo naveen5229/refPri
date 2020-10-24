@@ -57,24 +57,24 @@
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <div>
-                         <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true" title="Reply Demanded pending"></i>{{msg.added_date}}</span>
-                         <span class="comment_reply">
+                            <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true" title="Reply Demanded pending"></i>{{msg.added_date}}</span>
+                            <span class="comment_reply">
                             <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="left" (click)="messageReadInfo(msg._id)"></i>
                             <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="left" (click)="replyToComment(msg,'mine')"></i>
                         </span>
-                    </div>
+                        </div>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block" [innerHTML]="msg.parent_comment"></span>
                         <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
-                        
+
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <div>
-                        <span>{{msg.added_by +" "+msg.added_date}}</span>
-                        <span class="comment_reply">
+                            <span>{{msg.added_by +" "+msg.added_date}}</span>
+                            <span class="comment_reply">
                             <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="right" (click)="messageReadInfo(msg._id)"></i>
                             <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="right" (click)="replyToComment(msg,'other')"></i>
                         </span>
-                    </div>
+                        </div>
                         <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block" [innerHTML]="msg.parent_comment"></span>
                         <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                     </div>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
-                    <small class="pull-right">{{500 - taskMessage.length}} characters left</small>
+                    <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">

@@ -65,7 +65,6 @@
         }
         i.fa-sort-desc {
             font-size: 14px;
-           
         }
     }
     label {
@@ -335,4 +334,10 @@
     max-height: 300px;
     overflow: auto;
     display: block;
+}
+
+.limit {
+    position: absolute;
+    bottom: -18px;
+    right: 0;
 }
