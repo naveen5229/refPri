@@ -584,17 +584,17 @@ export class TaskMessageComponent implements OnInit {
   }
 
   showReminderPopup() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
-      this.common.params = { ticketId: this.ticketData._tktid, title: "Add Reminder", btn: "Set Reminder" };
-      const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-      activeModal.result.then(data => {
-        if (data.response) {
-          this.ticketData._isremind = 2;
-        }
-      });
-    } else {
-      this.common.showError("Invalid User");
-    }
+    // if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+    this.common.params = { ticketId: this.ticketData._tktid, title: "Add Reminder", btn: "Set Reminder" };
+    const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.ticketData._isremind = 2;
+      }
+    });
+    // } else {
+    //   this.common.showError("Invalid User");
+    // }
   }
 
   checkReminderSeen() {
