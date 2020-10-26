@@ -46,8 +46,8 @@ export class TicketChatboxComponent implements OnInit {
   userListByTask = [];
   adminList = [];
   newCCUserId = [];
-  taskId = null;
-  ticketType = null;
+  // taskId = null;
+  // ticketType = null;
   showAssignUserAuto = null;
   msgListOfMine = [];
   tabType = null;
@@ -83,7 +83,7 @@ export class TicketChatboxComponent implements OnInit {
   commentInfo = [];
   isMentionedUser = false;
   mentionedUserList = [];
-  isChatFeature = true;
+  // isChatFeature = true;
   departmentList = [];
   stTaskMaster = null;
 
@@ -106,8 +106,8 @@ export class TicketChatboxComponent implements OnInit {
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
       this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
-      this.taskId = this.common.params.ticketEditData.taskId;
-      this.ticketType = this.common.params.ticketEditData.taskType;
+      // this.taskId = this.common.params.ticketEditData.taskId;
+      // this.ticketType = this.common.params.ticketEditData.taskType;
       this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
       this.ticketData = this.common.params.ticketEditData.ticketData;
       if (!this.ticketData) {
@@ -126,11 +126,7 @@ export class TicketChatboxComponent implements OnInit {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
       console.log("userGroupList:", this.userGroupList);
-      if (this.ticketType == 114) {
-        this.title = "Broadcast";
-      }
       this.getAttachmentByTicket();
-
     }
 
   }
@@ -181,12 +177,6 @@ export class TicketChatboxComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104, 111, 112, 113, 114].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
-          this.ticketType = this.ticketData._tktype;
-          this.isChatFeature = this.ticketData._chat_feature;
-          if (this.ticketType == 114) {
-            this.title = "Broadcast";
-          }
         } else {
           this.common.showError("Something went wrong, Please reopen chatbox");
         }
@@ -342,8 +332,7 @@ export class TicketChatboxComponent implements OnInit {
 
   getAllUserByTask() {
     let params = {
-      ticketId: this.ticketId,
-      ticketType: this.ticketType
+      ticketId: this.ticketId
     }
     this.api.post('Ticket/getAllUserByTask', params).subscribe(res => {
       console.log("userListByTask:", res['data']);
@@ -404,7 +393,6 @@ export class TicketChatboxComponent implements OnInit {
     if (this.ticketId > 0 && CCUsers && CCUsers.length > 0) {
       // let params = {
       //   ticketId: this.ticketId,
-      //   taskId: this.ticketData._refid,
       //   ccUserId: JSON.stringify(CCUsers),
       //   ticketType: this.ticketType
       // }
@@ -450,9 +438,7 @@ export class TicketChatboxComponent implements OnInit {
     if (ccUserId > 0) {
       let params = {
         ticketId: this.ticketId,
-        taskId: this.ticketData._refid,
         ccUserId: ccUserId,
-        ticketType: this.ticketType,
         ccUserName: ccUserName,
         remark: remark
       }
@@ -496,7 +482,6 @@ export class TicketChatboxComponent implements OnInit {
       }
       let params = {
         ticketId: this.ticketId,
-        taskId: this.taskId,
         assigneeUserId: this.newAssigneeUser.id,
         status: this.statusId,
         isCCUpdate: isCCUpdate,
@@ -530,9 +515,7 @@ export class TicketChatboxComponent implements OnInit {
         ticketId: this.ticketId,
         statusId: status,
         statusOld: this.statusId,
-        remark: remark,
-        taskId: this.ticketData._refid,
-        ticketType: this.ticketData._tktype
+        remark: remark
       }
       this.api.post('Ticket/updateTicketStatus', params).subscribe(res => {
         if (res['code'] > 0) {
@@ -578,48 +561,28 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   showReminderPopup() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
-      this.common.params = { ticketId: this.ticketData._tktid, title: "Add Reminder", btn: "Set Reminder" };
-      const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
-      activeModal.result.then(data => {
-        if (data.response) {
-          this.ticketData._isremind = 2;
-        }
-      });
-    } else {
-      this.common.showError("Invalid User");
-    }
+    this.common.params = { ticketId: this.ticketId, title: "Add Reminder", btn: "Set Reminder" };
+    const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.ticketData._isremind = 2;
+      }
+    });
   }
 
   checkReminderSeen() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
-      let params = {
-        ticket_id: this.ticketData._tktid
-      };
-      this.common.loading++;
-      this.api.post('Ticket/checkTicketReminderSeen', params)
-        .subscribe(res => {
-          this.common.loading--;
-          this.common.showToast(res['msg']);
-          this.ticketData._isremind = 0;
-        }, err => {
-          this.common.loading--;
-          console.log('Error: ', err);
-        });
-    } else {
-      this.common.showError("Invalid User");
-    }
-  }
-
-  editTaskAssignDate() {
-    console.log("editTaskAssignDate:", this.ticketData);
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
-
-      this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
-
-    } else {
-      this.common.showError("Invalid User");
-    }
+    let params = {
+      ticketId: this.ticketId
+    };
+    this.common.loading++;
+    this.api.post('Ticket/checkTicketReminderSeen', params).subscribe(res => {
+        this.common.loading--;
+        this.common.showToast(res['msg']);
+        this.ticketData._isremind = 0;
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
   }
 
   handleFileSelection(event) {
