@@ -185,3 +185,65 @@
     </div>
 </div>
 <!--end: addTicketModal -->
+
+<!--start: forward ticket -->
+<div class="modal" id="forwardTicket">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Forward</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeForwardTicket()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket User" name="tpName" id="tpName" (onSelected)="forwardTicketObject.userId = $event" autocomplete="off"></auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Remark<span style="color: red;">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control" [(ngModel)]="forwardTicketObject.remark"></textarea>
+                    </div>
+                </div>
+
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm" (click)="forwardTicket(forwardTicketObject.tabType)">Forward</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: forward ticket -->
+
+<!--start: Ticket History -->
+<div class="modal" id="ticketHistory">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket History</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeTicketHistory()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-12">
+                        <smart-table [data]="tableTicketHistory.data" [settings]="tableTicketHistory.settings" id="tableTicketHIstory" class="sl-smart-table"></smart-table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: Ticket History -->
