@@ -12,7 +12,7 @@ import { UserService } from '../../../Service/user/user.service';
 export class AddExtraTimeComponent implements OnInit {
   
   btn = 'Add Time';
-  title = "Add Time";
+  title = "Add Extra Time";
   ticketId = null;
   dataForm ={
     time:null
