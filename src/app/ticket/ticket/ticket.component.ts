@@ -63,6 +63,17 @@ export class TicketComponent implements OnInit {
     }
   };
 
+  ticketHistoryList = [];
+  tableTicketHistory = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   ticketFormFields;
   tpPropertyList = [];
   ticketForm = {
@@ -84,6 +95,13 @@ export class TicketComponent implements OnInit {
     tktId:null,
     userId:null,
     type:null
+  }
+
+  forwardTicketObject = {
+    tktId:null,
+    userId:null,
+    remark:null,
+    tabType:null
   }
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
@@ -362,6 +380,12 @@ export class TicketComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
+        }else if (key == "remaining_time") {
+          column[key] = {
+            value: this.common.findRemainingTime(lead[key]),
+            class: "black",
+            action: "",
+          };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -453,6 +477,12 @@ export class TicketComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
+        }else if (key == "remaining_time") {
+          column[key] = {
+            value: this.common.findRemainingTime(lead[key]),
+            class: "black",
+            action: "",
+          };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -519,6 +549,8 @@ export class TicketComponent implements OnInit {
     if(type == 101 || type == 102){
       icons.push({ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: null, });
       icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Time" });
+      icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
+      icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (ticket._unreadcount > 0) {
           icons = [{ class: "fas fa-comments new-comment", action: this.ticketMessage.bind(this, ticket, type), txt: ticket._unreadcount, title: null, },];
@@ -563,11 +595,11 @@ export class TicketComponent implements OnInit {
 
   claimTicket(ticket, type){
     let params = {
-      tktId: ticket._tktid,
+      tktId: ticket._ticket_id,
       userId:this.loginUserId
     };
     console.log('params',params);
-    return;
+    // return;
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
       this.common.loading--;
@@ -583,7 +615,7 @@ export class TicketComponent implements OnInit {
 
   addTime(ticket, type){
     this.common.params = {
-      ticketId: ticket._tktid,
+      ticketId: ticket._ticket_allocation_id,
       title: "Add Time",
       btn: "Add Time",
     };
@@ -603,7 +635,7 @@ export class TicketComponent implements OnInit {
     console.log("type:", type,ticket);
     let ticketEditData = {
       ticketData: ticket,
-      ticketId: ticket._ticket_id,
+      ticketId: ticket._ticket_allocation_id,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,
       // taskId: ticket._refid,
@@ -631,7 +663,7 @@ export class TicketComponent implements OnInit {
 
   showReminderPopup(ticket, type) {
     this.common.params = {
-      ticketId: ticket._tktid,
+      ticketId: ticket._ticket_allocation_id,
       remindertime: ticket._remindtime,
       title: "Add Reminder",
       btn: "Set Reminder",
@@ -651,7 +683,7 @@ export class TicketComponent implements OnInit {
 
   checkReminderSeen(ticket, type) {
     let params = {
-      ticket_id: ticket._tktid,
+      ticket_id: ticket._ticket_allocation_id,
     };
     this.common.loading++;
     this.api.post("Ticket/checkReminderSeen", params).subscribe((res) => {
@@ -742,7 +774,7 @@ export class TicketComponent implements OnInit {
 
   openAssignUserModal(ticket, type){
     console.log(this.assignUserObject,ticket);
-    this.assignUserObject.tktId = ticket._type_id;
+    this.assignUserObject.tktId = ticket._ticket_id;
     this.assignUserObject.type = type;
     document.getElementById('assignUserModal').style.display = 'block';
     }
@@ -780,23 +812,122 @@ export class TicketComponent implements OnInit {
       );
     }
 
-    // ticketHistory(ticket){
-    //   let params = {
-    //     ticketId: ticket.tktId,
-    //   };
-    //   console.log('params',params);
-    //   return;
-    //   this.common.loading++;
-    //   this.api.post("Ticket/getTicketHistory", params).subscribe((res) => {
-    //     this.common.loading--;
-    //     this.common.showToast(res["msg"]);
-    //   }, (err) => {
-    //     this.common.loading--;
-    //     this.common.showError();
-    //     console.log("Error: ", err);
-    //   }
-    //   );
-    // }
+    ticketHistory(ticket,type){
+      // console.log('params',ticket);
+      // return;
+      this.common.loading++;
+      this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
+        this.common.loading--;
+        if(res['code'] > 0){
+          if(res['data']){
+            this.ticketHistoryList = res['data'];
+            this.setTableTicketHistory();
+            document.getElementById('ticketHistory').style.display = 'block';
+          }else{
+              this.common.showError('No Data')
+          }
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+      });
+    }
 
-    
+    closeTicketHistory(){
+        document.getElementById('ticketHistory').style.display = 'none';
+    }
+
+    setTableTicketHistory() {
+      this.tableTicketHistory.data = {
+        headings: this.generateHeadingsTicketHistory(),
+        columns: this.getTableColumnsTicketHistory()
+      };
+      return true;
+    }
+  
+    generateHeadingsTicketHistory() {
+      let headings = {};
+      for (var key in this.ticketHistoryList[0]) {
+        if (key.charAt(0) != "_") {
+          headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        }
+        if (key === "addtime" || key === "action_completed") {
+          headings[key]["type"] = "date";
+        }
+      }
+      return headings;
+    }
+  
+    getTableColumnsTicketHistory() {
+      let columns = [];
+      this.ticketHistoryList.map(lead => {
+        let column = {};
+        for (let key in this.generateHeadingsTicketHistory()) {
+          if (key.toLowerCase() == 'action') {
+            // column[key] = {
+            //   value: "",
+            //   isHTML: true,
+            //   action: null,
+            //   icons: this.actionIcons(lead, type)
+            // };
+          } else {
+            column[key] = { value: lead[key], class: 'black', action: '' };
+          }
+
+        }
+        columns.push(column);
+      });
+      return columns;
+    }
+
+    forwardTicket(type){
+      let params = {
+        ticketId: this.forwardTicketObject.tktId,
+        userid:this.forwardTicketObject.userId.id,
+        remark:this.forwardTicketObject.remark
+      };
+      console.log('params',params);
+      // return;
+      this.common.loading++;
+      this.api.post("Ticket/forwardTicket", params).subscribe((res) => {
+        this.common.loading--;
+        if(res['code'] > 0){
+          this.common.showToast(res["msg"]);
+          this.closeForwardTicket();
+          this.getTicketByType(type);
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+      );
+    }
+
+    openForwardTicket(ticket, type){
+      console.log(ticket);
+      this.forwardTicketObject.tktId = ticket._ticket_allocation_id;
+      this.forwardTicketObject.tabType = type;
+      console.log(this.forwardTicketObject)
+      document.getElementById('forwardTicket').style.display = 'block';
+    }
+
+    closeForwardTicket(){
+      document.getElementById('forwardTicket').style.display = 'none';
+      this.resetforwardTicket()
+    }
+
+    resetforwardTicket(){
+      this.forwardTicketObject = {
+        tktId:null,
+        userId:null,
+        remark:null,
+        tabType:null
+      }
+    }
 }

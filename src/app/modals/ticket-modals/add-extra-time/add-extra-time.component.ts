@@ -42,8 +42,8 @@ export class AddExtraTimeComponent implements OnInit {
       time:this.dataForm.time
     }
     console.log('buy time params',params);
-    this.closeModal(true);
-    return;
+    // this.closeModal(true);
+    // return;
     
     this.common.loading++;
     let apiName = 'Ticket/buyTimeForTicket'
