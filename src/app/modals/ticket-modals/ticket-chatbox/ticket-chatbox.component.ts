@@ -307,20 +307,24 @@ export class TicketChatboxComponent implements OnInit {
       this.common.loading++;
       this.api.post('Ticket/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
+        this.msgtextarea.nativeElement.focus();
         if (res['code'] > 0) {
-          this.taskMessage = "";
-          this.attachmentFile.file = null;
-          this.attachmentFile.name = null;
-          this.resetQuotedMsg();
-          if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
-            console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
-            this.updateTicketStatus(2, null);
+          if (res['data'][0].y_id > 0) {
+            this.taskMessage = "";
+            this.attachmentFile.file = null;
+            this.attachmentFile.name = null;
+            this.resetQuotedMsg();
+            if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
+              console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
+              this.updateTicketStatus(2, null);
+            }
+            this.getMessageList();
+            this.getAttachmentByTicket();
+          } else {
+            this.common.showError(res['data'][0].y_msg);
           }
-          this.getMessageList();
-          this.getAttachmentByTicket();
-          this.msgtextarea.nativeElement.focus();
         } else {
-          this.common.showError(res['msg'])
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -576,13 +580,13 @@ export class TicketChatboxComponent implements OnInit {
     };
     this.common.loading++;
     this.api.post('Ticket/checkTicketReminderSeen', params).subscribe(res => {
-        this.common.loading--;
-        this.common.showToast(res['msg']);
-        this.ticketData._isremind = 0;
-      }, err => {
-        this.common.loading--;
-        console.log('Error: ', err);
-      });
+      this.common.loading--;
+      this.common.showToast(res['msg']);
+      this.ticketData._isremind = 0;
+    }, err => {
+      this.common.loading--;
+      console.log('Error: ', err);
+    });
   }
 
   handleFileSelection(event) {
