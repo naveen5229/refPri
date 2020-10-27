@@ -2580,4 +2580,25 @@ export class TaskComponent implements OnInit {
     }
   }
 
+  starMarkOnTicket(ticket, type) {
+    let params = {
+      ticketId: ticket._tktid
+    };
+    this.common.loading++;
+    this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.getTaskByType(type);
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    }
+    );
+  }
+
 }

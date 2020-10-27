@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
-                    <small class="pull-right">{{500 - taskMessage.length}} characters left</small>
+                    <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
@@ -112,7 +112,7 @@
                     <td *ngIf="!showAssignUserAuto">
                         <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
-                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn add" title="assign to new user"
+                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)" class="btn add" title="assign to new user"
                             (click)="showAssignUserAuto=1"><i
                           class="fa fa-plus m-0"></i></button>
                     </td>
