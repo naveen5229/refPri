@@ -112,8 +112,7 @@
                     <td *ngIf="!showAssignUserAuto">
                         <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
-                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)" class="btn add" title="assign to new user"
-                            (click)="showAssignUserAuto=1"><i
+                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)" class="btn add" title="assign to new user" (click)="showAssignUserAuto=1"><i
                           class="fa fa-plus m-0"></i></button>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">
@@ -136,25 +135,25 @@
                       <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
                           aria-hidden="true"></i> {{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}
                   </td>
-              </tr>
-              <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
-                  <td>CC:</td>
-                  <td class="cc_user">
-                      <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
+              </tr> -->
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td>CC:</td>
+                    <td class="cc_user">
+                        <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
                           <i class="fa fa-minus-circle cursor-pointer" style="color: cadetblue;font-size: 16px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                           <i class="fa" style="font-size: 12px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'" [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
                           <i class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''" [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'" aria-hidden="true"></i>
                           {{ccu.cc_user}}
                       <br></span>
-                  </td>
-              </tr>
-              <tr valign="top">
-                  <td colspan="2" class="pt-2 text-center">
-                      <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
-                          [preSelected]="newCCUserId"></auto-suggestion>
-                      <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
-                  </td>
-              </tr> -->
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td colspan="2" class="pt-2 text-center">
+                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
+                            [preSelected]="newCCUserId"></auto-suggestion>
+                        <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUser()">Add CC User</button>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
