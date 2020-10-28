@@ -81,9 +81,9 @@ export class TicketComponent implements OnInit {
     requestId: null,
     tp: { id: null, name: null },
     tpProperty: { id: null, name: null },
-    priCat: { id: null, name: null },
-    secCat: { id: null, name: null },
-    type: { id: null, name: null },
+    priCat: { id: 0, name: null },
+    secCat: { id: 0, name: null },
+    type: { id: 0, name: null },
     info: null,
     remark: null
   }
@@ -247,9 +247,9 @@ export class TicketComponent implements OnInit {
       requestId: null,
       tp: { id: null, name: null },
       tpProperty: { id: null, name: null },
-      priCat: { id: null, name: null },
-      secCat: { id: null, name: null },
-      type: { id: null, name: null },
+      priCat: { id: 0, name: null },
+      secCat: { id: 0, name: null },
+      type: { id: 0, name: null },
       info: null,
       remark: null
     }
@@ -662,6 +662,8 @@ export class TicketComponent implements OnInit {
     let selected = this.tpPropertyList.find(ele => {
       return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
     });
+    
+    console.log("selected:", selected);
 
     if (selected) {
       this.ticketForm.tpProperty.id = selected._id;
