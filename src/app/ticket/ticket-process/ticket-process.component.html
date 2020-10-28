@@ -101,7 +101,7 @@
                         <label>Claim Ticket</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Claim Ticket" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.claimStatus=$event;" [preSelected]="ticketForm.claimStatus['id'] ? {name: ticketForm.claimStatus['name']}:{name:''}"
+                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Claim Ticket" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.claimStatus=$event;" [preSelected]="(ticketForm.claimStatus.id>=0) ? {name: ticketForm.claimStatus.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
@@ -277,7 +277,7 @@
                         <label>Allocation Auto</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.allocationAuto=$event;" [preSelected]="ticketPropertyForm.allocationAuto['id'] ? {name: ticketPropertyForm.allocationAuto['name']}:{name:''}"
+                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.allocationAuto=$event;" [preSelected]="(ticketPropertyForm.allocationAuto.id>=0) ? {name: ticketPropertyForm.allocationAuto.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
@@ -287,7 +287,7 @@
                         <label>Esclation Auto</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Esclation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.esclationAuto=$event;" [preSelected]="ticketPropertyForm.esclationAuto['id'] ? {name: ticketPropertyForm.esclationAuto['name']}:{name:''}"
+                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Esclation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.esclationAuto=$event;" [preSelected]="(ticketPropertyForm.esclationAuto.id>=0) ? {name: ticketPropertyForm.esclationAuto.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
