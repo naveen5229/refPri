@@ -340,10 +340,11 @@ table .fa-comments.new-comment span {
 }
 
 .comment_reply {
-    display: initial;
+    display: flex;
     float: right;
     margin-left: 5px;
     cursor: pointer;
+    align-items: flex-end;
 }
 
 
