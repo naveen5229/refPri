@@ -1,37 +1,30 @@
 <nb-card>
   <nb-card-header>
-      <div class="row">
-          <div class="col-6">
-              <h5>Activity Log Summary</h5>
-          </div>
+      <div class="row m-0">
+              <h5 class="heading-design">Activity Log Summary</h5>
       </div>
-
-   
-      <div class="row">
-          <div class="col-3">
-              <label>Start Date</label>
-              <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
-              </uj-date-time-picker>
-          </div>
-          <div class="col-3">
-              <label>End Date</label>
-              <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
-              </uj-date-time-picker>
-          </div>
-          <div class="col-3 text-left mt-4">
-              <button type="submit" id="submit" (click)="getActivityLogSummary()" class="btn btn-primary mr-2">Submit</button>
-          </div>
-          <div class="col-3 text-right mt-4">
-          <span class="exel-icon" title="CSV Export" (click)="common.getCSVFromTableId('activitySummary')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
-           </div> 
-        </div>
-
-
   </nb-card-header>
-  <nb-card-body style="min-height: 485px;">
-
-    <div  class="row form-group">
-      <div class="col-12">
+  <nb-card-body style="min-height: calc(100vh - 250px);">
+    <div class="row">
+        <div class="col-3">
+            <label>Start Date</label>
+            <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-3">
+            <label>End Date</label>
+            <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-3 text-left mt-4">
+            <button type="submit" id="submit" (click)="getActivityLogSummary()" class="btn btn-primary mr-2">Submit</button>
+        </div>
+        <div class="col-3 text-right mt-4">
+        <span class="exel-icon" title="CSV Export" (click)="common.getCSVFromTableId('activitySummary')" style="cursor: pointer;margin-left: 15px;"><i class="fas fa-file-excel"></i></span>
+         </div> 
+      </div>
+    <div  class="row form-group mt-2 m-0">
+      <div class="table-responsive">
           <table class="table table-bordered table-hover" *ngIf="filteredActivityLogSummaryList.length" id='activitySummary'>
               <thead class="thead" style="background-color: #c0b2b2">
                   <tr style="text-align:center">

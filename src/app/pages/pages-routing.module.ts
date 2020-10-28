@@ -51,6 +51,11 @@ import { MyProcessComponent } from '../process/my-process/my-process.component';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
+import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
+import { PersonalisedDashboardComponent } from '../process/personalised-dashboard/personalised-dashboard.component';
+import { GraphicalReportsComponent } from '../process/graphical-reports/graphical-reports.component';
+import { TicketComponent } from '../ticket/ticket/ticket.component';
+import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.component';
 
 const routes: Routes = [{
   path: '',
@@ -128,7 +133,7 @@ const routes: Routes = [{
     {
       path: 'module-report',
       component: ModuleReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'employee-daywise-report',
@@ -194,19 +199,19 @@ const routes: Routes = [{
     {
       path: 'task',
       component: TaskComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'user-mapping',
       component: UserMappingComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'companykyc',
       component: CompanykycComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'task-scheduled',
@@ -307,8 +312,32 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
+      path: 'process-admin',
+      component: ProcessAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'personalised-dashboard',
+      component: PersonalisedDashboardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },{
+      path: 'graphical-reports',
+      component: GraphicalReportsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
       path: 'user-groups',
       component: UserGroupsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket',
+      component: TicketComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket-process',
+      component: TicketProcessComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

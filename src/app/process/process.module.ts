@@ -8,9 +8,12 @@ import { DirectiveModule } from '../directives/directives.module';
 import { ProcessRoutingModule } from './process-routing.module';
 import { ProcessListComponent } from './process-list/process-list.component';
 import { MyProcessComponent } from './my-process/my-process.component';
-
+import { ProcessAdminComponent } from './process-admin/process-admin.component';
+import { PersonalisedDashboardComponent } from './personalised-dashboard/personalised-dashboard.component';
+import { GraphicalReportsComponent } from './graphical-reports/graphical-reports.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
-  declarations: [ProcessListComponent, MyProcessComponent],
+  declarations: [ProcessListComponent, MyProcessComponent, ProcessAdminComponent, PersonalisedDashboardComponent, GraphicalReportsComponent],
   imports: [
     CommonModule,
     ProcessRoutingModule,
@@ -19,6 +22,7 @@ import { MyProcessComponent } from './my-process/my-process.component';
     NbCardModule,
     FormsModule,
     DirectiveModule,
+    DragDropModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -11,3 +11,8 @@
         cursor: pointer;
     }
 }
+smart-table{
+    display: block;
+    height: calc(100vh - 203px);
+    overflow: auto;
+}

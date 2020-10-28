@@ -1,0 +1,307 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-4">
+        <h5 class="heading-design">Graphical Reports</h5>
+      </div>
+      <div class="col-5">
+        <span style="display: flex;">
+          <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="processList" display="name"
+            placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch"  #searchedProcess>
+          </auto-suggestion>
+          <button class="btn btn-primary btn-sm"
+            (click)="getSideBarData(searchedProcess.selectedSuggestion);savedReportSelect = {}">Search</button>
+        </span>
+      </div>
+      <div class="col-3">
+        <span style="display: flex;">
+          <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="savedReports" display="name"
+          (onSelected)="savedReportSelect = $event" [preSelected]="savedReportSelect['_id'] ? {name: savedReportSelect['name']}:{name:''}"
+            placeholder="Saved Report Preview" inputId="ProcessSearch" name="ProcessSearch">
+          </auto-suggestion>
+          <button class="btn btn-primary btn-sm" (click)="openPreviewModal()">View</button>
+        </span>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row pb-1 pt-1 centarize">
+      <div class="hoverChart ml-4 mr-4" [ngClass]="reportPreviewData.length>1?{'disablePieClick': i == 0}:'' || !reportPreviewData.length?'disablePieClick':'' " 
+        *ngFor="let image of chartTypes;let i = index" (click)="active = image.id;getChartofType(image.type);selectedChart = image.type">
+       <div class="pl-2 pr-2" [ngClass]="active==image.id?'active':''">
+        <div class="grptab">
+          <img src="{{image.url}}" width="20px">
+        </div>
+      </div>
+  
+      </div>
+    </div>
+
+    <div class="row mt-2" *ngIf="!graphBodyVisi">
+      <div class="col-12">
+        <div class="row mt-2" id="graph">
+          <div class="col-8" style="margin-left: 18%;">
+            <div class="chartbox">
+              <canvas id="Graph"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row mt-2"  id="table">
+          <div class="col-12" style="height: 369px;">
+            <smart-table [data]="tableGraph.data" [settings]="tableGraph.settings" id="tableLeadsForMe" class="sl-smart-table">
+            </smart-table>
+          </div>
+        </div>
+          <div class="row mt-4" style="text-align: center;">
+              <div class="col-6">
+                <button class="btn btn-primary" (click)="resetAssignForm();graphBodyVisi=true;editState=false">Cancel</button>
+              </div>
+              <div class="col-6">
+                <button class="btn btn-primary" (click)="editGraph()">Edit</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="row mr-0" *ngIf="graphBodyVisi">
+      <div class="col-2 sidenavleft p-0">
+        <div *ngFor="let data of sideBarData">
+          <h6>{{data.title}}</h6>
+          <ul *ngIf="data.children && data.children.length >0" class="child-ul">
+            <li class="top" *ngFor="let head of data.children;let i = index" style="font-weight:bold"
+              (click)="onHideShow(head,i)">
+              <!--(click)="head.children? head.hideMe = !head.hideMe: head.hideMe = head.hideMe"-->
+              <p class="drophead">{{head.title}} <span class="dropcaret"><i class="fas fa-sort-down"
+                    style="cursor: pointer"></i></span></p>
+              <ul *ngIf="head.isHide" id="unassign" cdkDropList [cdkDropListData]="head.children"
+                [cdkDropListConnectedTo]="['assignDataRow','assignDataColumn','filter']" class="child-ul innerdrop"
+                (cdkDropListDropped)="drop($event)" [cdkDropListEnterPredicate]="noReturnPredicate">
+                <li class="drag-list" *ngFor="let sub of head.children;let i = index" cdkDrag>
+                  {{sub.r_coltitle}}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="col-10">
+        <div class="row mt-2">
+          <div class="col-2 text-right"><span style="color: red;">*</span><label> X-Axis:</label> </div>
+          <div id="assignDataRow" cdkDropList [cdkDropListData]="assign.x" cdkDropListConnectedTo="menuList"
+            class="col-10 drag-container" (cdkDropListDropped)="drop($event)">
+            <div class="example-box fieldStyle" *ngFor="let n of assign.x;let i =index" cdkDrag [cdkDragData]="n">
+              {{n.r_coltitle}}
+              <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'x')"></i>
+              <select class="selectInsideSelected" *ngIf="n.r_coltype === 'timestamp'" [(ngModel)]="n.measure" (change)="addMeasure(i,'x',$event.target.value)">
+                <option selected disabled>--Select--</option>
+                <option>None</option>
+                <option>Date</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-2 text-right"><span style="color: red;">*</span><label>Y-Axis:</label> </div>
+          <div id="assignDataColumn" cdkDropList [cdkDropListData]="assign.y" cdkDropListConnectedTo="menuList"
+            class="col-10 drag-container" (cdkDropListDropped)="drop($event)">
+            <div class="example-box fieldStyle" *ngFor="let n of assign.y;let i =index" cdkDrag [cdkDragData]="n">
+              {{n.r_coltitle}}
+              <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'y')"></i>
+              <select class="selectInsideSelected" (change)="addMeasure(i,'y',$event.target.value)" [(ngModel)]="n.measure">
+                <!-- <option disabled selected>measure</option> -->
+                <option *ngIf="n.r_coltype === 'timestamp'">Date</option>
+                <option selected>Count</option>
+                <option *ngIf="n.r_coltype === 'number'">Average</option>
+                <option *ngIf="n.r_coltype === 'number'">Sum</option>
+                <option>distinct count</option>
+                <!-- <option *ngFor="let subMeasure of measure">{{subMeasure}}</option> -->
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-2 text-right"><label> Filters:</label> </div>
+          <div id="filter" cdkDropList [cdkDropListData]="assign.filter" cdkDropListConnectedTo="menuList"
+            class="col-10 drag-container" (cdkDropListDropped)="drop($event)">
+            <div class="example-box fieldStyle" *ngFor="let n of assign.filter;let i =index" cdkDrag [cdkDragData]="n">
+              {{n.r_coltitle}}
+              <i class="far fa-times-circle cancelButtonCss" (click)="removeField(i,'filter')"></i>
+              <i class="far fa-edit padding-left" (click)="editFilter(i)"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2" style="text-align: right;">
+          <div class="col-12">
+            <button class="btn btn-primary margin_right" (click)="openSaveModal()">Save</button>
+            <button class="btn btn-primary margin_right" (click)="getReportPreview()">Preview</button>
+            <button class="btn btn-primary" (click)="resetAssignForm()">Clear</button>
+          </div>
+        </div>
+        
+        <div class="row mt-2" id="graph">
+          <div class="col-8" style="margin-left: 18%;">
+            <div class="chartbox">
+              <canvas id="Graph"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row mt-2"  id="table" style="display: none;">
+          <div class="col-12" style="height: 369px;">
+            <smart-table [data]="tableGraph.data" [settings]="tableGraph.settings" id="tableLeadsForMe" class="sl-smart-table">
+            </smart-table>
+          </div>
+          <!-- <div class="col-2">
+            <div class="row mt-2" *ngFor="let id of tableGraph.label;let i = index">
+              <span  class="tableref"> {{i+1}} -> {{id}}</span>
+            </div>
+            </div> -->
+        </div>
+
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+
+<!-- start:filter modal  -->
+<div class="modal" id="filterModal" #filterModal>
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h5 class="modal-title">Apply Filters</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeFilterModal()">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+
+            <div class="row mt-2" id="basicFilter">
+              <div class="col-12">
+                <div class="filter-Container">
+                    <ul style="list-style-type: none;">
+                      <li>
+                        <input type="checkbox" (click)="checkUncheckAll($event)" [checked]="checked">Select All
+                      </li>
+                      <li *ngFor="let data of dropdownFilter">
+                        <input type="checkbox" [(ngModel)]="data.status" (click)="data.status = !data.status;manageCheckUncheckAll()">{{data.value}}
+                      </li>
+                    </ul>
+                    <!-- {{dropdownFilter | json}} -->
+                </div>
+              </div>
+            </div>
+            
+              <div class="row mt-2" id="rowFilter" style="display: none;">
+                  <div class="col-12">
+                      <div class="row mt-2">
+                        <div class="col-4">
+                              <label>{{filterObject['r_coltitle']}}</label>
+                        </div>
+                        <div class="col-8" >
+                              <div class="row" *ngFor="let subIndex of filterObject['filterdata'];let i = index">
+                                <div class="col-2">
+                                  <select [(ngModel)]="subIndex.r_operators" #btw>
+                                    <option *ngFor="let sign of Operators" value="{{sign.id}}">{{sign.name | uppercase}}</option>
+                                  </select>
+                                </div>
+                                <div class="col-6" *ngIf="filterObject['r_coltype'] != 'timestamp'">
+                                      <input type="text" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" >
+                                </div>
+                                <div class="col-6" *ngIf="filterObject['r_coltype'] === 'timestamp'">
+                                  <input type="date" [(ngModel)]="subIndex.r_threshold[0]['r_value'][0].value" >
+                                </div>
+                                
+                                <i class="fas fa-trash-alt" (click)="deletFilter(i)"></i>
+                              </div>
+                              <!-- {{filterObject | json}} -->
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                        <div class="col-4">
+                          <button type="submit" class="btn btn-primary" (click)="addFilter()">Add Filter</button>
+                        </div>                  
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row mt-2" style="text-align: center;">
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary" (click)="rowFilter(btnName)">{{btnName}}</button></div>
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary" (click)="storeFilter()">Save</button>
+                </div>
+              </div>
+              
+          </div>
+      </div>
+  </div>
+</div>
+<!-- end:filter modal -->
+
+<!-- start : save as -->
+<div class="modal" id="saveAs" #saveAs>
+  <div class="modal-dialog modal-md">
+      <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h5 class="modal-title">Save As</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeSaveModal()">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+              
+              <div class="row mt-2" style="text-align: center;">
+                <div class="col-12">
+                  <label>Name:</label><input type="text" [(ngModel)]="assign.reportFileName">
+                </div>                  
+              </div>
+
+              <div class="row mt-2" style="text-align: center;">
+                <div class="col-12">
+                  <button type="button" class="btn btn-success" (click)="saveGraphicReport()">Save</button>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- end : save as -->
+
+
+<!-- start : Graph Preview Modal-->
+<!-- <div class="modal" id="graphPreview" #graphPreview>
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content"> -->
+          <!-- Modal Header -->
+          <!-- <div class="modal-header">
+              <h5 class="modal-title">Preview</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closePreviewModal()">&times;</button>
+          </div> -->
+          <!-- Modal body -->
+          <!-- <div class="modal-body">
+              
+            <div class="row mt-2">
+              <div class="col-12">
+                <div class="chartbox">
+                  <canvas id="Graph"></canvas>
+                </div>
+            </div>
+          </div>
+
+          <div class="row mt-2" style="text-align: center;">
+            <div class="col-12">
+              <button type="button" class="btn btn-success" (click)="editPreviewReport()">Edit</button>
+            </div>
+          </div>
+      </div>
+  </div>
+</div> -->
+<!-- end : Graph Preview Modal -->

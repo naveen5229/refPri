@@ -24,7 +24,29 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     end: ''
   };
   reportType = null;
+  groupList = [];
+  selectedGroup = -1;
 
+  finalAttendanceList = [];
+  tableFinalAttendanceList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  leaveRequestList = [];
+  tableLeaveRequestList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
 
   constructor(public common: CommonService,
     public modalService: NgbModal,
@@ -35,6 +57,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.common.handleModalSize('class', 'modal-lg', '1300', 'px', 0);
     this.startTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth(), 1);
     this.endTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth() + 1, 0);
+    this.groupList = (this.common.params.groupList) ? this.common.params.groupList : [];
   }
 
   ngOnInit() {
@@ -45,14 +68,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   onSelectMonth() {
-    console.log("selectedDates:", this.selectedDates);
     this.startTime = new Date(this.selectedDates.start);
     this.endTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth() + 1, 0);
-    console.log("startTime:", this.startTime);
-    console.log("endTime:", this.endTime);
-    // this.endTime.setHours(23);
-    // this.endTime.setMinutes(59);
-    // this.endTime.setSeconds(59);
   }
 
 
@@ -65,9 +82,17 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let enddate = this.common.dateFormatter(this.endTime);
     const params =
       "?startDate=" + startdate +
-      "&endDate=" + enddate;
+      "&endDate=" + enddate + "&groupId=" + this.selectedGroup;
     // console.log(params);
-    let apiName = (type && type == "final") ? 'Admin/getAttendanceMonthlySummaryFinal' : 'Admin/getAttendanceMonthlySummary';
+    let apiName;
+    if (type && type == "final") {
+      apiName = 'Admin/getAttendanceMonthlySummaryFinal';
+    } else if (type && type == "leave") {
+      apiName = 'Admin/getLeaveRequestSummary';
+    } else {
+      apiName = 'Admin/getAttendanceMonthlySummary';
+    }
+    // apiName = (type && type == "final") ? 'Admin/getAttendanceMonthlySummaryFinal' : 'Admin/getAttendanceMonthlySummary';
     this.common.loading++;
     this.api.get(apiName + params)
       .subscribe(res => {
@@ -80,6 +105,10 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             this.finalAttendanceList = res['data'] || [];
             console.log("finalAttendanceList:", this.finalAttendanceList);
             (this.finalAttendanceList.length > 0) ? this.setTableFinalAttendanceList() : this.resetTableFinalAttendanceList()
+          } else if (type && type == "leave") {
+            this.leaveRequestList = res['data'] || [];
+            console.log("leaveList:", this.leaveRequestList);
+            (this.leaveRequestList.length > 0) ? this.setTableLeaveRequestList() : this.resetTableFinalAttendanceList()
           } else {
 
             this.attendanceSummaryList = res['data'] || [];
@@ -108,8 +137,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let currentTime = new Date();
     date.setHours(9);
     date.setMinutes(30);
-    // console.log("date:", date);
-    let accessUserIds = [34, 125, 120];
+    let accessUserIds = [34, 125, 204, 120];
     let accessFoUserIds = [12373];
     if (date <= this.common.getDate() && (!column.present || column.present == "") && ((this.userService._loggedInBy == 'admin' && accessUserIds.includes(this.userService._details.id)) || this.userService._loggedInBy != 'admin' && accessFoUserIds.includes(this.userService._details.id))) {
 
@@ -142,10 +170,12 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   checkHolidayTypeColor(hType) {
     let typeColor = "initial";
-    if (hType == "1") {
-      typeColor = "yellow";
+    if (hType == "2") {
+      typeColor = "red";
+    } else if (hType == "1") {
+      typeColor = "orange";
     } else if (hType == "0") {
-      typeColor = "lightyellow";
+      typeColor = "palegreen";
     }
     return typeColor;
   }
@@ -166,8 +196,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     if (shift.date && shift._userid > 0) {
       let dateTemp = new Date(this.startTime);
       dateTemp.setDate(shift.date);
-      // dateTemp.setHours(9);
-      // dateTemp.setMinutes(30);
       let dateTemp2 = this.common.dateFormatter(dateTemp, 'YYYYMMDD', false);
       let params = {
         date: dateTemp2,
@@ -260,19 +288,14 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   // start: report final
-  finalAttendanceList = [];
-  tableFinalAttendanceList = {
-    data: {
-      headings: {},
-      columns: []
-    },
-    settings: {
-      hideHeader: true
-    }
-  };
+
 
   resetTableFinalAttendanceList() {
     this.tableFinalAttendanceList.data = {
+      headings: {},
+      columns: []
+    };
+    this.tableLeaveRequestList.data = {
       headings: {},
       columns: []
     };
@@ -303,12 +326,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
       let column = {};
       for (let key in this.generateHeadingsFinalAttendanceList()) {
         if (key == 'Action' || key == 'action') {
-          // column[key] = {
-          //   value: "",
-          //   isHTML: true,
-          //   action: null,
-          //   icons: null
-          // };
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
@@ -318,6 +335,50 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     return columns;
   }
   // end: report final
+
+  setTableLeaveRequestList() {
+    this.tableLeaveRequestList.data = {
+      headings: this.generateHeadingsLeaveRequestList(),
+      columns: this.getTableColumnsLeaveRequestList()
+    };
+    return true;
+  }
+
+  generateHeadingsLeaveRequestList() {
+    let headings = {};
+    for (var key in this.leaveRequestList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    console.log("headings:", headings);
+    return headings;
+  }
+
+  getTableColumnsLeaveRequestList() {
+    let columns = [];
+    this.leaveRequestList.map(shift => {
+      let column = {};
+      for (let key in this.generateHeadingsLeaveRequestList()) {
+        if (key == 'Action' || key == 'action') {
+        } else {
+          column[key] = { value: shift[key], class: 'black', action: '' };
+        }
+      }
+      if (!shift['_task_id'] && shift['_id']) {
+        column['style'] = { 'background': 'antiquewhite' };
+      } else if (shift['_task_id'] && !shift['_id'] && shift['_status'] == 5) {
+        column['style'] = { 'background': 'pink' };
+      } else if (shift['_task_id'] && !shift['_id'] && shift['_status'] == -1) {
+        column['style'] = { 'background': 'red' };
+      } else {
+        column['style'] = { 'background': '#fff' };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: leave list
 
   exportCSV() {
     if (this.reportType == 'final') {

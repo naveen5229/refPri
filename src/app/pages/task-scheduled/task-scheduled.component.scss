@@ -25,15 +25,18 @@
 .tabs_style {
     width: 100%;
     margin: 0px;
-    border-bottom: 2px solid #26a69a;
+    // border-bottom: 2px solid #26a69a;
+    border-bottom: 2px solid #3366ff;
     margin-bottom: 10px;
     padding-left: 5px !important;
     li {
         padding: 5px 6px;
         list-style: none;
         margin-right: 5px;
-        background-color: #26a69a;
-        border: 2px solid #26a69a;
+        // background-color: #26a69a;
+        // border: 2px solid #26a69a;
+        background-color: #3366ff;
+        border: 2px solid #3366ff;
         color: #fff;
         border-bottom: 0px;
         display: inline-block;
@@ -43,7 +46,8 @@
         cursor: pointer;
         &.active {
             background-color: #fff;
-            color: #26a69a;
+            // color: #26a69a;
+            color: #3366ff;;
             position: relative;
             &::after {
                 content: "";
@@ -97,7 +101,6 @@
     .fas {
         font-size: 18px;
         cursor: pointer;
-        margin-right: 5px;
     }
     .fa-bell {
         color: gray
@@ -117,4 +120,15 @@
     th:nth-child(2) {
         width: 300px !important;
     }
+}
+smart-table{
+    display: block;
+    height: calc(100vh - 168px);
+    overflow: auto;
+}
+.sl-smart-table{
+    height: calc(100vh - 212px);
+}
+.sl3-smart-table{
+    height: calc(100vh - 242px);
 }

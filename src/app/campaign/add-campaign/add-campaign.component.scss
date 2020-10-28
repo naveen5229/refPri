@@ -226,3 +226,8 @@
 :host ::ng-deep .pri_cat {
     color: deeppink;
 }
+smart-table{
+    display: block;
+    height: calc(100vh - 126px);
+    overflow: auto;
+}

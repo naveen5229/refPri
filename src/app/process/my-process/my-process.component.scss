@@ -1,3 +1,35 @@
 :host ::ng-deep .fa-grip-horizontal {
     color: #07f8d4;
 }
+
+:host ::ng-deep .fa-handshake {
+    color: #00f;
+}
+
+:host ::ng-deep #tableOwnedByMe,
+:host ::ng-deep #tableLeadsForMe,
+:host ::ng-deep #tableLeadsByMe,
+:host ::ng-deep #tableCcLeads,
+:host ::ng-deep #tableUnreadLeads {
+    th:nth-child(5) {
+        width: 300px;
+    }
+}
+
+smart-table {
+    display: block;
+    height: calc(100vh - 168px);
+    overflow: auto;
+}
+
+.sl-smart-table {
+   height: calc(100vh - 210px);
+}
+.sl2-smart-table {
+   height: calc(100vh - 250px);
+}
+
+:host ::ng-deep .font-weight-bold {
+    font-weight: 600;
+}
+

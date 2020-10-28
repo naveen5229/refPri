@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title || 'New Task'}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" aria-label="Close" id="close" (click)="closeModal(false)">
       <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -10,14 +10,14 @@
             {{parentTaskDesc}}
         </div>
     </div>
-    <div class="row mt-2">
-        <div class="col-6">
+    <div class="row mb-2">
+        <div class="offset-3 col-3">
             <label class="form-check-inline">
             <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isProject" (click)="normalTask.projectId = null">
             StandAlone
           </label>
         </div>
-        <div class="col-6">
+        <div class="col-3">
             <label class="form-check-inline">
             <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isProject">
             Project
@@ -48,7 +48,7 @@
             <label>Subject<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
+            <input placeholder="Enter Subject" name="subject" id="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
         </div>
     </div>
 
@@ -57,7 +57,7 @@
             <label>Task Description:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Task" id="description" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
         </div>
     </div>
 
@@ -66,7 +66,7 @@
             <label>CC users:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="normalTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
         </div>
     </div>
 
@@ -75,7 +75,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
             </uj-date-time-picker>
         </div>
     </div>
@@ -108,7 +108,8 @@
 
     <div class="row mt-1">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTask()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm mr-2" id="button" (click)="saveTask()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" (click)="saveTask(1)">Save With Chat</button>
         </div>
     </div>
     <!-- start: task mapping -->
@@ -127,7 +128,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
             </uj-date-time-picker>
         </div>
     </div>
@@ -136,12 +137,12 @@
             <label>Reason:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Reason" id="reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
         </div>
     </div>
     <div class="row mt-2 ">
         <div class="col-12 text-right">
-            <button class="btn btn-primary btn-sm" (click)="updateAssignDate()">Update</button>
+            <button class="btn btn-primary btn-sm" id="updateExpDatebtn" (click)="updateAssignDate()">Update</button>
         </div>
     </div>
 </div>

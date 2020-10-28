@@ -4,6 +4,8 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NormalTask } from '../../classes/normal-task';
 import { UserService } from '../../Service/user/user.service';
+import { TaskMessageComponent } from '../task-message/task-message.component';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'ngx-task-new',
@@ -37,88 +39,91 @@ export class TaskNewComponent implements OnInit {
     dateOld: null,
     reason: null
   }
+  returnNewDate = null;
   editType = 0;
+  userGroupList = [];
+  userWithGroup = [];
+  bGConditions = [
+    {
+      key: 'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal,
     public userService: UserService) {
-    console.log("task list", this.common.params);
+    let currentLast = this.common.getDate(2);
+    currentLast.setHours(23);
+    currentLast.setMinutes(59);
+    this.normalTask.date = currentLast;
+    // console.log(aaaaaa,'date from task new component')
     if (this.common.params != null) {
-      this.userList = this.common.params.userList;
+      console.log(this.common.params.groupList, 'groupList from task-new component');
+      this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
+      this.userGroupList = this.common.params.groupList;
+      if (this.userGroupList) {
+        this.userWithGroup = this.userGroupList.concat(this.userList);
+      } else {
+        this.userWithGroup = this.userList.concat(this.userGroupList);
+      }
+      console.log(this.userWithGroup, 'user data')
       if (this.common.params.parentTaskId && !this.common.params.editType) {
         this.normalTask.parentTaskId = this.common.params.parentTaskId;
         this.parentTaskDesc = this.common.params.parentTaskDesc;
-        console.log("normalTask:", this.normalTask);
         this.getTaskMapping(this.normalTask.parentTaskId);
 
       } else if (this.common.params.parentTaskId && this.common.params.editType == 1) {
         this.title = "Update Task Assign Date";
         this.editType = this.common.params.editType;
         this.updateLastDateForm.taskId = this.common.params.parentTaskId;
-        // this.updateLastDateForm.date = new Date(this.common.params.editData.expdate);
         this.updateLastDateForm.date = new Date(this.common.params.editData._expdate);
-        this.updateLastDateForm.dateOld = this.common.params.editData.expdate;
+        this.updateLastDateForm.dateOld = this.common.params.editData._expdate;
         this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
       }
     }
     this.getProjectList()
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
   getProjectList() {
     this.api.get("AdminTask/serachProject.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.projectList = res['data'] || [];
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   closeModal(response) {
-    this.activeModal.close({ response: response });
+    this.activeModal.close({ response: response, returnNewDate: this.returnNewDate });
   }
 
   selectedNormalUser(event) {
-    // console.log(event);
     this.userId = event.id;
     this.normalTask.userName = event.name;
+    this.getUserPresence(this.userId);
   }
 
   selectedProject(event) {
-    console.log("selectedProject:", event);
     this.normalTask.projectId = event.id;
   }
 
-  changeCCUsers(event) {
-    console.log("changeCCUsers:", event);
-    if (event && event.length) {
-      this.normalTask.ccUsers = event.map(user => { return { user_id: user.id } });
-      console.log("ccUsers", this.normalTask.ccUsers);
-    } else {
-      this.normalTask.ccUsers = [];
-    }
-  }
-
-  saveTask() {
-    console.log("normalTask:", this.normalTask);
+  saveTask(isChat = null) {
+    // console.log("normalTask:", this.normalTask);
     if (this.normalTask.userName == '') {
       return this.common.showError("User Name is missing");
     }
     else if (this.normalTask.subject == '') {
       return this.common.showError("subject is missing");
     }
-    // else if (this.normalTask.task == '') {
-    //   return this.common.showError("Description is missing");
-    // }
     else if (!this.userId) {
       return this.common.showError("Please assign a user");
     }
@@ -138,6 +143,17 @@ export class TaskNewComponent implements OnInit {
       return this.common.showError("Last Date must be greater than future assign date");
     }
     else {
+      let CCUsers = [];
+      this.normalTask.ccUsers.forEach(x => {
+        if (x.groupId != null) {
+          x.groupuser.forEach(x2 => {
+            CCUsers.push({ user_id: x2._id });
+          })
+        } else {
+          CCUsers.push({ user_id: x.id });
+        }
+      });
+
       const params = {
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
@@ -145,23 +161,35 @@ export class TaskNewComponent implements OnInit {
         task: this.normalTask.task,
         isUrgent: this.normalTask.isUrgent,
         projectId: this.normalTask.projectId,
-        ccUsers: JSON.stringify(this.normalTask.ccUsers),
+        ccUsers: JSON.stringify(CCUsers),
         parentTaskId: this.normalTask.parentTaskId,
         isFuture: this.normalTask.isFuture,
         futureDate: this.common.dateFormatter(this.normalTask.futureDate)
       }
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
-        console.log(res);
         this.common.loading--;
         if (res['code'] == 1) {
-          // this.resetTask();
+          this.resetTask();
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeModal(true);
           if (res['data'][0]['y_id'] > 0) {
-            this.resetTask();
-            this.common.showToast(res['data'][0].y_msg)
-            this.closeModal(true);
+            if (isChat == 1) {
+              let ticketEditData = {
+                ticketData: null,
+                ticketId: res['data'][0]['y_tktid'],
+                statusId: 0,
+                lastSeenId: null,
+                taskId: null,
+                taskType: 101,
+                tabType: -101,
+              };
+              let subTitle = params.subject + ":<br>" + params.task;
+              this.ticketMessage(ticketEditData, subTitle);
+            }
+
           } else {
-            this.common.showError(res['data'][0].y_msg)
+            this.common.showError(res['data'][0].y_msg);
           }
         } else {
           this.common.showError(res['msg']);
@@ -184,7 +212,6 @@ export class TaskNewComponent implements OnInit {
     let params = {
       task_id: taskId,
     };
-    console.log('Params: ', params);
     this.tableTaskMapping = {
       data: {
         headings: {},
@@ -194,19 +221,17 @@ export class TaskNewComponent implements OnInit {
         hideHeader: true
       }
     };
-    this.api.post('AdminTask/getTaskMapping.json', params)
-      .subscribe(res => {
-        console.log(res);
-        if (res['code'] > 0) {
-          this.taskMapping = res['data'] || [];
-          this.setTableTaskMapping();
-        } else {
-          this.common.showError(res['msg']);
-        }
-      }, err => {
-        console.error(err);
-        this.common.showError();
-      });
+    this.api.post('AdminTask/getTaskMapping.json', params).subscribe(res => {
+      if (res['code'] > 0) {
+        this.taskMapping = res['data'] || [];
+        this.setTableTaskMapping();
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      console.error(err);
+      this.common.showError();
+    });
   }
 
   setTableTaskMapping() {
@@ -252,11 +277,9 @@ export class TaskNewComponent implements OnInit {
   updateAssignDate() {
     if (this.updateLastDateForm.date == '' || !this.updateLastDateForm.date) {
       return this.common.showError("Date is missing");
-
     } else if (this.updateLastDateForm.date < this.common.getDate()) {
       return this.common.showError("Expected date must be future date");
-    }
-    else if (this.updateLastDateForm.date > this.common.getDate(90)) {
+    } else if (this.updateLastDateForm.date > this.common.getDate(90)) {
       return this.common.showError("Expected date must be within 90 days");
     } else {
       const params = {
@@ -272,6 +295,7 @@ export class TaskNewComponent implements OnInit {
         console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
+          this.returnNewDate = params.date;
           this.resetTask();
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['msg']);
@@ -291,5 +315,54 @@ export class TaskNewComponent implements OnInit {
 
   }
   // end: update assign date
+
+  ticketMessage(ticketEditData, subTitle) {
+    this.common.params = {
+      ticketEditData,
+      title: "Ticket Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.userList,
+      groupList: this.userGroupList,
+    };
+    const activeModal = this.modalService.open(TaskMessageComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+  }
+
+  getUserPresence(empId) {
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + empId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.adduserConfirm(userPresence)
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  adduserConfirm(userPresence) {
+    if (!userPresence) {
+      this.common.params = {
+        title: 'User Presence',
+        description: '<b>The user has not started the shift for today.<br> Are you sure to add this user ?<b>'
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (!data.response) {
+          this.userId = null;
+          this.normalTask.userName = '';
+        }
+      });
+    }
+  }
 
 }

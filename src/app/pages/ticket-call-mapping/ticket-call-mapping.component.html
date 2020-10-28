@@ -1,40 +1,34 @@
 <nb-card>
     <nb-card-header>
-        <div class="row">
-            <div class="col-6">
-                <h5>Ticket Call Mapping</h5>
-            </div>
+        <div class="row m-0">
+                <h5 class="heading-design">Ticket Call Mapping</h5>
         </div>
-        <br>
-        <br>
-
-        <div class="row">
-            <div class="col-3">
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row mb-2">
+            <div class="col-2">
                 <label>Start Date</label>
                 <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
                 </uj-date-time-picker>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <label>End Date</label>
                 <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
                 </uj-date-time-picker>
             </div>
-            <div *ngIf="filterDataList.length!=0" class="col-3 mt-4">
+            <div *ngIf="filterDataList.length!=0" class="col-2 mt-4">
                 <select class="form-control" name="filteredValue" [(ngModel)]="filteredValue" (change)="filterData(filteredValue)">
         <option value="1">All</option>
         <option value="2">Rated</option>
         <option value="3">Unrated</option>
     </select>
             </div>
-            <div class="col-6 mt-4">
-                <button type="submit" id="submit" (click)="getTicketData()" class="btn btn-primary btn-sm mr-2 mt-2">Submit</button>
-                <button type="submit" (click)="callLogs()" class="btn btn-primary btn-sm mr-2 mt-2">Last Call Logs</button>
-                <button type="submit" (click)="missedCallLogs()" class="btn btn-primary btn-sm mt-2">Missed Call Logs</button>
+            <div class="col-5 mt-4">
+                <button type="submit" id="submit" (click)="getTicketData()" class="btn btn-primary btn-sm mr-2">Submit</button>
+                <button type="submit" (click)="callLogs()" class="btn btn-primary btn-sm mr-2">Last Call Logs</button>
+                <button type="submit" (click)="missedCallLogs()" class="btn btn-primary btn-sm">Missed Call Logs</button>
             </div>
-        </div>
-
-    </nb-card-header>
-    <nb-card-body style="min-height: 485px;">
+        </div>  
         <smart-table *ngIf="ticketList.length!=0" [data]="table.data" [settings]="table.settings" id="pendinglist">
         </smart-table>
         <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->

@@ -17,3 +17,39 @@
     border-radius: 3px;
     cursor: pointer;
 }
+table{
+  margin-bottom: 0rem;
+    thead{
+       display: table;
+       width: 100%;
+       table-layout: fixed;
+       th{
+        padding: 0.2rem!important;
+        background: #fff!important;
+        border: 6px solid #000000!important;
+        font-size: .80rem;
+       }
+       th:first-child{
+         width: 60px;
+       }
+    }
+  
+    tbody{
+        overflow-y: auto;
+        display: block;
+        width: 100%;
+        table-layout: fixed;
+        overflow: auto;
+        max-height: calc(100vh - 218px);
+        tr{
+          display: table;
+          table-layout: fixed;
+          width: 100%;
+          td:first-child{
+            width: 60px;
+          }
+       
+        }
+    
+    }
+  }

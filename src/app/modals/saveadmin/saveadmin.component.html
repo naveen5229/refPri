@@ -30,7 +30,7 @@
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="form-control" maxlength="10" type="number" [(ngModel)]='Fouser.mobileNo' placeholder="Mob. No.">
             </div>
         </div>
-        <div class="row mt-2" *ngIf="Fouser.id && this.user._loggedInBy == 'admin'">
+        <div class="row mt-2" *ngIf="Fouser.id && (this.user._loggedInBy == 'admin' || this.user._loggedInBy == 'customer')">
             <div class="col-lg-4">
                 <label>Status :-</label>
             </div>
@@ -93,7 +93,7 @@
             <div class="col-lg-8">
                 <div class="col-10" style="display: inline-block;padding:0;">
                     <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="location" name="location" placeholder="Location"
-                        [value]="Fouser.location" [preSelected]="(Fouser.location!='')?{location:Fouser.location}:{location:''}" [apiMethod]="'getBooster'">
+                        [value]="Fouser.location" [preSelected]="(Fouser.location!='')?{location:Fouser.location}:{location:''}" [apiMethod]="'getBooster'" [apiBase]="'B'">
                     </auto-suggestion>
                 </div>
                 <div class="col-2" style="display: inline-block;padding: 0!important;">

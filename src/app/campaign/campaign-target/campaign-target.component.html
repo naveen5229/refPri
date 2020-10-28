@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row">
             <div class="col-9">
-                <h5>Campaign Dashboard</h5>
+                <h5 class="heading-design">Campaign Dashboard</h5>
             </div>
             <div class="col-3">
                 <button class="btn btn-primary text-capitalize btn-sm mr-2" id="csv" (click)="uploadDataByCsv()">Csv </button>
@@ -11,7 +11,10 @@
                 <button class="btn btn-primary text-capitalize btn-sm" id="button" (click)="addCampaignTarget()">Add</button>
             </div>
         </div>
-        <div class="row mt-3">
+    
+    </nb-card-header>
+    <nb-card-body style="min-height: 440px;">
+        <div class="row mt-2">
             <div class="col-3">
                 <label>Campaign Name</label>
             </div>
@@ -29,7 +32,7 @@
                 <!-- <span (click)="printTable()" class="doNotPrint print-icon iconsize"><i class="fa fa-print"></i></span> -->
             </div>
         </div>
-        <div class="row mt-3" style="z-index: 999; font-size: 12px;">
+        <div class="row mt-2" style="z-index: 999; font-size: 12px;">
             <div class="col-2">
                 <label>State</label>
                 <auto-suggestion [data]="stateDataListTemp" display="name" placeholder="Select State" name="campaignStateName" inputId="campaignStateName" (onSelected)="filterParam.state=$event" [preSelected]="(filterParam.state.id)?{name:filterParam.state.name}:{name:''}"
@@ -69,10 +72,8 @@
                  <!-- <span (click)="printTable()" class="doNotPrint print-icon iconsize"><i class="fa fa-print"></i></span> -->
             </div>
         </div>
-    </nb-card-header>
-    <nb-card-body style="min-height: 485px;">
         <div class="row">
-            <div class="mt-2">
+            <div class="mt-1">
                 <smart-table *ngIf="campaignTargetData.length" [data]="table.data" [settings]="table.settings" id="tollUsage" class="table_data">
                 </smart-table>
             </div>

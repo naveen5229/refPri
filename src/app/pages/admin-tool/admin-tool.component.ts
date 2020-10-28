@@ -69,7 +69,11 @@ export class AdminToolComponent implements OnInit {
 
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        if(key == 'doj'){
+          headings[key]["type"] = "date";
+        }
       }
+      
     }
     return headings;
   }
@@ -149,6 +153,11 @@ export class AdminToolComponent implements OnInit {
     document.getElementById("adminDetailModal").style.display = "block";
     this.adminDetail.id = activeAdmin.id;
     this.adminDetail.name = activeAdmin.name;
+  }
+
+  exportCSV() {
+    // this.common.getCSVFromTableId('dailyPartnerReport');
+    this.common.getCSVFromDataArray(this.activeAdminUserList, this.table.data.headings, 'Admin')
   }
 
 }

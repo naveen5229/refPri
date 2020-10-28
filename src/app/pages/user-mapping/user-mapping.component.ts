@@ -4,6 +4,10 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AxestrackMappingComponent } from '../../modals/axestrack-mapping/axestrack-mapping.component';
 import { AddvehicleComponent } from '../../modals/addvehicle/addvehicle.component';
+import { AddpartnerComponent } from '../../modals/addpartner/addpartner.component';
+import { AddpartneruserComponent } from '../../modals/addpartneruser/addpartneruser.component';
+import { AddcompanyComponent } from '../../modals/addcompany/addcompany.component';
+import { AddfouserComponent } from '../../modals/addfouser/addfouser.component';
 
 @Component({
   selector: 'ngx-user-mapping',
@@ -80,10 +84,19 @@ export class UserMappingComponent implements OnInit {
   ngOnInit() {
   }
 
+  addFODetail(){
+    const activeModal = this.modalService.open(AddcompanyComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  addFoAdminUser() {
+     const activeModal = this.modalService.open(AddfouserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
   
 
   // Partner Mapping Start
   getPartnerMappingData(){
+    this.partnerMapping=[];
     this.common.loading++;
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
       .subscribe(res => {
@@ -157,7 +170,7 @@ export class UserMappingComponent implements OnInit {
     let icons=[];
     if(partner['ax_provider_id']=='' || partner['ax_provider_id'] == null){
      icons = [
-       { class: "fa fa-plus", action: this.partnerMap.bind(this, partner) },
+       { class: "fa fa-plus green", action: this.partnerMap.bind(this, partner) },
     ];
     return icons;
   }
@@ -258,10 +271,15 @@ export class UserMappingComponent implements OnInit {
     let icons=[];
     if(partner['ax_user_id']=='' || partner['ax_user_id'] == null){
      icons = [
-       { class: "fa fa-plus", action: this.partnerUserMap.bind(this, partner) },
+       { class: "fa fa-plus green", action: this.partnerUserMap.bind(this, partner) },
     ];
-    return icons;
+    
+  } else if(partner['ax_user_id']!='' || partner['ax_user_id']!=null){
+    icons = [
+      { class: "fa fa-minus-circle red", action: this.partnerUserUnMap.bind(this, partner) },
+   ];
   }
+  return icons;
 }
 
 partnerUserMap(partnerUser){
@@ -280,6 +298,28 @@ partnerUserMap(partnerUser){
     this.common.showError("First Map Partner!");
   }
   
+}
+
+partnerUserUnMap(partnerUser){
+  console.log(partnerUser);
+  this.common.loading++;
+    let param={
+      elPartAdminId:partnerUser.id
+    }
+    console.log("PaRAM:",param);
+    this.api.postTranstruck('AxesUserMapping/unmapPartadminuserMapping.json',param)
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+        if (res['success']){
+          this.common.showToast(res['msg']);
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
 }
 
 // Partner User Mapping End----------------------------------------------------------------------------
@@ -367,10 +407,14 @@ actionIcons2(company) {
   let icons=[];
   if(company['ax_company_id']=='' || company['ax_company_id'] == null){
    icons = [
-     { class: "fa fa-plus", action: this.companyMap.bind(this, company) },
+     { class: "fa fa-plus green", action: this.companyMap.bind(this, company) },
   ];
-  return icons;
+  } else if(company['ax_company_id']!='' || company['ax_company_id'] != null){
+  icons = [
+    { class: "fa fa-minus-circle red", action: this.companyUnMap.bind(this, company) },
+ ];
 }
+return icons;
 }
 
 companyMap(company){
@@ -386,6 +430,28 @@ companyMap(company){
   }else{
     this.common.showError('First Map Partner!');
   }
+  }
+
+  companyUnMap(company){
+    console.log(company);
+    this.common.loading++;
+      let param={
+        elCompanyId:company.id
+      }
+      console.log("PaRAM:",param);
+      this.api.postTranstruck('AxesUserMapping/unmapCompanyMapping.json',param)
+        .subscribe(res => {
+          this.common.loading--;
+          console.log("api data", res);
+          if (res['success']){
+            this.common.showToast(res['msg']);
+          }else{
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          console.log(err);
+        });
   }
 
   //Company Mapping End-----------------------------------------------------------------------
@@ -414,6 +480,8 @@ companyMap(company){
         console.log(err);
       });
   }
+
+  
 
   getElogistCompanyUser(event){
     console.log("Elogist Company:",event);
@@ -518,10 +586,15 @@ companyMap(company){
     let icons=[];
     if(companyUser['ax_user_id']=='' || companyUser['ax_user_id'] == null){
      icons = [
-       { class: "fa fa-plus", action: this.companyUserMap.bind(this, companyUser) },
+       { class: "fa fa-plus green", action: this.companyUserMap.bind(this, companyUser) },
     ];
-    return icons;
+    
+  } else if(companyUser['ax_user_id']!='' || companyUser['ax_user_id'] != null){
+    icons = [
+      { class: "fa fa-minus-circle red", action: this.companyUserUnMap.bind(this, companyUser) },
+   ];
   }
+  return icons;
   }
   
   companyUserMap(companyUser){
@@ -537,6 +610,27 @@ companyMap(company){
     }else{
       this.common.showError('First Map Company!');
     }
+    }
+    companyUserUnMap(companyUser){
+      console.log(companyUser);
+      this.common.loading++;
+        let param={
+          elCompanyUserId:companyUser.id
+        }
+        console.log("PaRAM:",param);
+        this.api.postTranstruck('AxesUserMapping/unmapCompanyUserMapping.json',param)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log("api data", res);
+            if (res['success']){
+              this.common.showToast(res['msg']);
+            }else{
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log(err);
+          });
     }
 
     // searchCompanyUserList(){
@@ -635,10 +729,14 @@ companyMap(company){
       let icons=[];
       if(vehicle['ax_veh_id']=='' || vehicle['ax_veh_id'] == null){
        icons = [
-         { class: "fa fa-plus", action: this.vehiclemappings.bind(this, vehicle) },
+         { class: "fa fa-plus green", action: this.vehiclemappings.bind(this, vehicle) },
       ];
-      return icons;
+    } else if(vehicle['ax_veh_id']!='' || vehicle['ax_veh_id'] != null){
+      icons = [
+        { class: "fa fa-minus-circle red", action: this.vehicleUnMap.bind(this, vehicle) },
+     ];
     }
+    return icons;
     }
 
     vehiclemappings(vehicle){
@@ -656,8 +754,38 @@ companyMap(company){
     }
     }
 
+    vehicleUnMap(vehicle){
+      console.log(vehicle);
+      this.common.loading++;
+        let param={
+          elVehicleId:vehicle.id
+        }
+        console.log("PaRAM:",param);
+        this.api.postTranstruck('AxesUserMapping/unmapVehicleMapping.json',param)
+          .subscribe(res => {
+            this.common.loading--;
+            console.log("api data", res);
+            if (res['success']){
+              this.common.showToast(res['msg']);
+            }else{
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log(err);
+          });
+    }
+
     addVehicle(){
     this.modalService.open(AddvehicleComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+
+    addPartner(){
+      this.modalService.open(AddpartnerComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+
+    addPartnerUser(){
+      this.modalService.open(AddpartneruserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     }
   
 

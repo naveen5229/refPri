@@ -1,4 +1,3 @@
-
 h1,
 h2,
 h3,
@@ -15,12 +14,17 @@ select,
 textarea,
 .nb-theme-corporate nb-layout .layout {
     font-family: "Poppins", sans-serif !important;
+    font-size: .8rem;
+}
+
+label {
+    margin-bottom: 0.1rem;
 }
 
 input,
 select,
 textarea {
-    padding: 6px !important;
+    padding: 5px !important;
     font-size: 12px !important;
     line-height: 16px !important;
     height: auto !important;
@@ -55,11 +59,6 @@ input::placeholder {
 
 /* width */
 
-::-webkit-scrollbar {
-    width: 12px !important;
-    background-color: #c1c1c1 !important;
-}
-
 .cdk-overlay-container {
     z-index: 99999999999999999 !important;
 }
@@ -70,11 +69,14 @@ input::placeholder {
 
 .modal-header {
     padding: 3px 15px !important;
-    background-color: #26a69a;
+    /* background-color: #26a69a; */
+    background-color: #0062cc;
+    border-bottom: none;
 }
 
 .modal-header h5 {
     color: #fff;
+    margin-bottom: 0rem !important;
 }
 
 .modal-header .close {
@@ -85,6 +87,10 @@ input::placeholder {
     margin: -10px -1rem -1rem auto;
     outline: none;
     font-size: 30px;
+}
+
+.modal-footer {
+    padding: .5rem 1rem;
 }
 
 .control-icon.nb-notifications::before {
@@ -245,7 +251,8 @@ table .fa-comments.new-comment span {
 .tabs_style {
     width: 100%;
     margin: 0px;
-    border-bottom: 2px solid #26a69a;
+    /* border-bottom: 2px solid #26a69a; */
+    border-bottom: 2px solid #3366ff;
     margin-bottom: 10px;
     padding-left: 5px !important;
 }
@@ -254,8 +261,10 @@ table .fa-comments.new-comment span {
     padding: 5px 6px;
     list-style: none;
     margin-right: 5px;
-    background-color: #26a69a;
-    border: 2px solid #26a69a;
+    /* background-color: #26a69a;
+    border: 2px solid #26a69a; */
+    background-color: #3366ff;
+    border: 2px solid #3366ff;
     color: #fff;
     border-bottom: 0px;
     display: inline-block;
@@ -267,7 +276,8 @@ table .fa-comments.new-comment span {
 
 .tabs_style li.active {
     background-color: #fff;
-    color: #26a69a;
+    /* color: #26a69a; */
+    color: #3366ff;
     position: relative;
 }
 
@@ -283,4 +293,226 @@ table .fa-comments.new-comment span {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+#chat-attachment {
+    display: none;
+}
+
+.custom-file-upload {
+    display: flex;
+    padding: 6px 12px;
+    cursor: pointer;
+    height: 100%;
+    align-items: center;
+    font-size: 18px;
+    color: #958e8e;
+}
+
+.attachment-view {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: lightgray;
+}
+
+.new_message {
+    background: lightgray !important;
+}
+.other_chat.new_message .quoted_msg{
+    background: #c2bebe;
+
+}
+.popover-body{
+    padding: 0.2rem 0.45rem !important;
+}
+.quoted_msg {
+    background: #f9f9f9;
+    margin: 3px -7px;
+    padding: 5px 10px;
+    border-left: 2px solid #1a3380;
+    font-style: italic;
+    color: #000 !important;
+}
+
+.quoted_selected {
+    background: darkgray;
+}
+
+.comment_reply {
+    display: flex;
+    float: right;
+    margin-left: 5px;
+    cursor: pointer;
+    align-items: flex-end;
+}
+
+
+/* kavita singh */
+
+.nb-theme-default h5,
+.nb-theme-default .h5 {
+    font-size: 1rem;
+}
+
+.nb-theme-default nb-card-header {
+    padding: .8rem 1.25rem .5rem 1.25rem;
+}
+
+.nb-theme-default nb-card-body {
+    padding: .5rem 1rem .5rem 1rem;
+}
+
+.nb-theme-default nb-layout .layout .layout-container .content nb-layout-footer nav {
+    padding: .75rem .25rem!important;
+}
+
+nb-layout-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/* .layout-container .content .columns{
+    margin-bottom: 45px;
+} */
+
+
+/* kavita singh */
+
+.heading-design {
+    position: relative;
+    z-index: 1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: .5s;
+    color: #00000080 !important;
+}
+
+.heading-design:hover {
+    letter-spacing: 4px;
+    transition: .5s;
+}
+
+.heading-design:before {
+    content: " ";
+    position: absolute;
+    width: 50px;
+    height: 1px;
+    background-color: #3366ff;
+    z-index: -1;
+    bottom: 5px;
+    left: 2px;
+}
+
+.heading-design:after {
+    content: " ";
+    position: absolute;
+    width: 25px;
+    height: 1px;
+    background-color: #3366ff;
+    z-index: -1;
+    bottom: 0px;
+    left: 2px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #3366ff;
+    border-color: #3366ff;
+    height: 30px;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 4px 10px 5px 10px!important;
+    font-family: Poppins, sans-serif!important;
+    font-size: .875rem!important;
+    font-weight: 500;
+}
+
+.btn-primary:hover,
+.btn-danger:hover,
+.btn-secondary:hover {
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, .12);
+}
+
+.btn-primary:active,
+.btn-primary:focus,
+.btn-danger:active,
+.btn-danger:focus,
+.btn-secondary:focus,
+.btn-secondary:active {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, .12);
+}
+
+.btn-danger,
+.btn-secondary {
+    height: 30px;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 5px 10px 5px 10px!important;
+    font-family: Poppins, sans-serif!important;
+    font-size: .875rem!important;
+    font-weight: 500;
+}
+
+.nb-theme-default nb-card-header {
+    border-bottom: 1px solid #d1d9e8!important;
+}
+
+nb-layout-header nav {
+    height: 2.7rem!important;
+}
+
+.table th,
+.table td {
+    padding: 0.2rem .5rem;
+    font-size: 12px!important;
+}
+
+.modal-header.sub-title {
+    background-color: #93acc7;
+}
+
+.modal-header.sub-title span {
+    max-height: 100px;
+    overflow: auto;    
+    font-size: 12px;
+
+}
+
+.logo:focus {
+    outline: none!important;
+}
+
+.logo span:focus {
+    outline: none!important;
+}
+
+.nb-theme-default nb-layout-header.fixed~.layout-container {
+    padding-top: 2.7rem!important;
+}
+
+.main-container-fixed {
+    top: 2.7rem!important;
+}
+
+
+/* 21aug2020 */
+
+.layout-container .content nb-layout-footer {
+    display: none!important;
+}
+
+nb-card-body {
+    min-height: calc(100vh - 100px)!important;
+}
+
+.nb-theme-default nb-card {
+    margin-bottom: 0!important;
+}
+
+.exel-icon {
+    font-size: 25px;
+    color: #217346;
 }

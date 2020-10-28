@@ -61,6 +61,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Task-Admin',
+        icon: 'file-text-outline',
+        link: '/pages/task-scheduled',
+        home: true,
+      },
+      {
         title: 'User-Mapping',
         icon: 'file-text-outline',
         link: '/pages/user-mapping',
@@ -70,12 +76,6 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Company KYC',
         icon: 'file-text-outline',
         link: '/pages/companykyc',
-        home: true,
-      },
-      {
-        title: 'Task-Admin',
-        icon: 'file-text-outline',
-        link: '/pages/task-scheduled',
         home: true,
       },
       {
@@ -320,6 +320,43 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'grid-outline',
         link: '/pages/my-process',
         home: true,
+      },
+      {
+        title: 'Process Admin',
+        icon: 'grid-outline',
+        link: '/pages/process-admin',
+        home: true,
+      },
+      {
+        title: 'Custom Dashboard',
+        icon: 'grid-outline',
+        link: '/pages/personalised-dashboard',
+        home: true,
+      },
+      {
+        title: 'Graphical Reports',
+        icon: 'grid-outline',
+        link: '/pages/graphical-reports',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "Tickets",
+    icon: 'layers-outline',
+    home: true,
+    children: [
+      {
+        title: 'Ticket Process',
+        icon: 'grid-outline',
+        link: '/pages/ticket-process',
+        home: true,
+      },
+      {
+      title: 'Ticket',
+      icon: 'grid-outline',
+      link: '/pages/ticket',
+      home: true,
       }
     ]
   }

@@ -40,6 +40,16 @@ export class TaskScheduleMasterComponent implements OnInit {
 
   adminList = [];
   departmentList = [];
+  userGroupList = [];
+  adminWithGroup = [];
+
+  bGConditions = [
+    {
+      key:'groupId',
+      class:'highlight-text',
+      isExist:true
+    }
+  ]
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -47,7 +57,9 @@ export class TaskScheduleMasterComponent implements OnInit {
     public modalService: NgbModal,
     public userService: UserService) {
 
-    this.adminList = this.common.params.adminList;
+      this.adminList = this.common.params.adminList.map(x=>{return{id:x.id,name:x.name,groupId:null,groupuser:null} });
+      this.userGroupList = this.common.params.groupList;
+      this.adminWithGroup = this.userGroupList.concat(this.adminList);
     this.departmentList = this.common.params.departmentList;
     console.log("master param:", this.common.params);
     if (this.common.params != null && this.common.params.data != null) {
@@ -105,7 +117,7 @@ export class TaskScheduleMasterComponent implements OnInit {
   }
 
   saveScheduleTask() {
-    console.log("scheduledTask:", this.scheduledTask);
+    console.log("scheduledTask:", this.scheduledTask.ccUsers);
     if (this.scheduledTask.subject == '') {
       return this.common.showError("Subject is missing");
     } else if (this.scheduledTask.primaryUser.id == '') {
@@ -117,7 +129,19 @@ export class TaskScheduleMasterComponent implements OnInit {
     else if (this.scheduledTask.reportingUser.id == '') {
       return this.common.showError("Reporting User is missing");
     } else {
-      let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
+      // let ccUsers = (this.scheduledTask.ccUsers) ? this.scheduledTask.ccUsers.map(user => { return { id: user.id } }) : null;
+
+      let CCUsers = [];
+      this.scheduledTask.ccUsers.forEach(x=> {
+        if(x.groupId!= null){
+          x.groupuser.forEach(x2=> {
+            CCUsers.push({id:x2._id});
+          })
+        }else{
+          CCUsers.push({id: x.id});
+        }
+      });
+      
       const params = {
         taskId: this.scheduledTask.taskId,
         subject: this.scheduledTask.subject,
@@ -129,7 +153,7 @@ export class TaskScheduleMasterComponent implements OnInit {
         hours: this.scheduledTask.hours,
         isActive: this.scheduledTask.isActive,
         departmentId: this.scheduledTask.department.id,
-        ccUsers: ccUsers
+        ccUsers: CCUsers
       }
       // console.log("params:", params); return false;
       this.common.loading++;

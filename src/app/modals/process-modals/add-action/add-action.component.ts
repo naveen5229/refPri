@@ -17,10 +17,12 @@ export class AddActionComponent implements OnInit {
     rowId: null,
     name: "",
     process: { id: null, name: "" },
-    state: { id: null, name: "" },
+    states: [],
     threshold: null,
     modes: [],
-    nextAction: []
+    nextAction: [],
+    // isDefault: false,
+    // defaultOwner: { id: null, name: null }
   }
   modeList = [];
   actionList = [];
@@ -34,6 +36,8 @@ export class AddActionComponent implements OnInit {
       hideHeader: true
     }
   };
+  adminList = [];
+  states = [];
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -41,17 +45,34 @@ export class AddActionComponent implements OnInit {
     this.title = this.common.params.title ? this.common.params.title : this.title;
     this.button = this.common.params.button ? this.common.params.button : this.button;
     console.log("action common:", this.common.params);
+    this.adminList = this.common.params.adminList;
     if (this.common.params && this.common.params.actionData) {
       this.actionForm.rowId = this.common.params.actionData.rowId ? this.common.params.actionData.rowId : null;
       this.actionForm.process.id = this.common.params.actionData.process_id;
       this.actionForm.process.name = this.common.params.actionData.process_name;
-      this.actionForm.state.id = this.common.params.actionData.state_id;
-      this.actionForm.state.name = this.common.params.actionData.state_name;
+      // this.actionForm.state.id = this.common.params.actionData.state_id;
+      // this.actionForm.state.name = this.common.params.actionData.state_name;
       // this.actionForm.name = this.common.params.targetActionData.name;
       // this.actionForm.modes = [];
     };
     this.getModeList();
     this.getActionList();
+    this.getStates();
+  }
+
+  getStates() {
+    this.common.loading++;
+    let params = "processId=" + this.actionForm.process.id;
+    this.api.get('Processes/getProcessState?' + params)
+      .subscribe(res => {
+        this.common.loading--;
+        if (!res['data']) return;
+        let data = res['data'] || [];
+        this.states = data.map(x => { return { id: x._state_id, name: x.name } });
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
   closeModal(res) {
@@ -76,16 +97,18 @@ export class AddActionComponent implements OnInit {
   saveProcessAction() {
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
-    }
+    } 
     else {
       const params = {
         requestId: this.actionForm.rowId,
         processId: this.actionForm.process.id,
-        stateId: this.actionForm.state.id,
+        stateId: (this.actionForm.states && this.actionForm.states.length) ? JSON.stringify(this.actionForm.states) : null,
         name: this.actionForm.name,
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         threshold: this.actionForm.threshold,
         nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
+        // isDefault: this.actionForm.isDefault,
+        // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };
       console.log("actionForm:", params);
       this.common.loading++;
@@ -93,9 +116,13 @@ export class AddActionComponent implements OnInit {
         this.common.loading--;
         console.log(res);
         if (res['code'] == 1) {
-          this.common.showToast(res['msg']);
-          this.resetData();
-          this.getActionList();
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.resetData();
+            this.getActionList();
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
           this.common.showError(res['msg']);
         }
@@ -169,7 +196,7 @@ export class AddActionComponent implements OnInit {
 
   actionIcons(action) {
     let icons = [
-      // { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
+      { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
       { class: "fas fa-edit", title: "Edit Action", action: this.editAction.bind(this, action) },
       { class: "fas fa-plus-square", title: "Add Action Form Field", action: this.openFieldModal.bind(this, action) },
     ];
@@ -196,13 +223,21 @@ export class AddActionComponent implements OnInit {
     this.actionForm.threshold = (action.threshold) ? action.threshold : null;
     this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
     this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
+    this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
+    // this.actionForm.isDefault = (action._is_default) ? true : false;
+    // if (action._default_owner_id > 0) {
+    //   let selectedUser = this.adminList.find(x => (x.id == action._default_owner_id));
+      // this.actionForm.defaultOwner.id = action._default_owner_id;
+      // this.actionForm.defaultOwner.name = (selectedUser) ? selectedUser.name : 'Inactive User';
+    // }
   }
 
   deleteAction(row) {
     let params = {
-      campTarActId: row._camptaractid,
+      processId: this.actionForm.process.id,
+      requestId: row._action_id,
     }
-    if (row._camptaractid) {
+    if (row._action_id) {
       this.common.params = {
         title: 'Delete Record',
         description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
@@ -211,15 +246,22 @@ export class AddActionComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Processes/deleteAction', params)
-            .subscribe(res => {
-              this.common.loading--;
-              this.common.showToast(res['msg']);
-              this.getActionList();
-            }, err => {
-              this.common.loading--;
-              console.log('Error: ', err);
-            });
+          this.api.post('Processes/deleteProcessAction', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['data'][0].y_msg);
+                this.getActionList();
+              } else {
+                this.common.showError(res['data'][0].y_msg);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
         }
       });
     }
@@ -231,6 +273,9 @@ export class AddActionComponent implements OnInit {
     this.actionForm.modes = [];
     this.actionForm.nextAction = [];
     this.actionForm.threshold = null;
+    this.actionForm.states = [];
+    // this.actionForm.isDefault = null;
+    // this.actionForm.defaultOwner = { id: null, name: null };
   }
 
 }

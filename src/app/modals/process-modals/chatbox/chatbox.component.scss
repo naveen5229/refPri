@@ -15,7 +15,7 @@
 }
 
 .chat_block {
-    max-height: 70vh;
+    max-height: calc(100vh - 290px);
     overflow: auto;
     background: ghostwhite;
     margin-top: 0!important;
@@ -23,7 +23,7 @@
 
 .active_chat {
     float: right;
-    text-align: right;
+    // text-align: right;
     background: #1def1d2e;
     border: 1px solid #1def1d2e;
 }
@@ -36,13 +36,17 @@
 
 .other_chat,
 .active_chat {
+    white-space: pre-wrap;
     max-width: 90%;
     margin-bottom: 1px;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 0 10px;
     span {
         display: flow-root;
         font-size: 10px;
+    }
+    label {
+        margin: 0;
     }
 }
 
@@ -186,11 +190,13 @@
         margin-right: 5px;
     }
 }
+smart-table{
+    display: block;
+    height: calc(100vh - 370px);
+    overflow: auto;
+}
 
-:host ::ng-deep #tableCampaignTargetActionData {
-    .tableFixHead {
-        height: 50vh !important;
-    }
+:host ::ng-deep #tableTransActionData {
     th:nth-child(1),
     td:nth-child(1) {
         display: none;

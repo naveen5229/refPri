@@ -86,6 +86,15 @@ export class UserMappingComponent implements OnInit {
   }
 
   saveUsers() {
+    let atleastOneAdmin = null;
+    if (this.userForm.users) {
+      atleastOneAdmin = this.userForm.users.find(x => { return x.is_admin });
+    }
+    // console.log("atleastOneAdmin", atleastOneAdmin);
+    if (!atleastOneAdmin) {
+      this.common.showError("Add atleast one admin");
+      return false;
+    }
     const params = {
       processId: this.userForm.processId,
       users: JSON.stringify(this.userForm.users),
