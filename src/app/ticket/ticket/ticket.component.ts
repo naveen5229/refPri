@@ -200,58 +200,17 @@ export class TicketComponent implements OnInit {
   findPriCat() {
     if (this.tpPropertyList && this.tpPropertyList.length > 0) {
       this.tpPropertyList.forEach(element => {
-        if (element._pri_cat_id) {
+        if (element._pri_cat_id && !this.priCatList.find(x => { return x.id == element._pri_cat_id })) {
           this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
         }
-        if (element._sec_cat_id) {
+        if (element._sec_cat_id && !this.secCatList.find(x => { return x.id == element._sec_cat_id })) {
           this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
         }
-        if (element._type_id) {
+        if (element._type_id && !this.typeList.find(x => { return x.id == element._type_id })) {
           this.typeList.push({ id: element._type_id, name: element.type });
         }
       });
     }
-  }
-
-  findSecCatByPriCat(priCatId) {
-    console.log("onPriCatSelected:", priCatId);
-    if (this.tpPropertyList && this.tpPropertyList.length > 0) {
-      let selectedLsit = this.tpPropertyList.filter(x => { return x._pri_cat_id == priCatId });
-      if (selectedLsit) {
-        console.log("findSecCatByPriCat:", selectedLsit);
-        selectedLsit.forEach(element => {
-          if (element._sec_cat_id) {
-            this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
-          }
-        });
-      }
-    }
-  }
-
-  findTypeBySecCat(secCatId) {
-    if (this.tpPropertyList && this.tpPropertyList.length > 0) {
-      let selectedLsit = this.tpPropertyList.filter(x => { return x._sec_cat_id == secCatId });
-      console.log("findTypeBySecCat:", selectedLsit);
-      if (selectedLsit) {
-        selectedLsit.forEach(element => {
-          if (element._type_id) {
-            this.typeList.push({ id: element._type_id, name: element.type });
-          }
-        });
-      }
-    }
-  }
-
-  onPriCatSelected() {
-    console.log("onPriCatSelected:", this.ticketForm.priCat);
-    this.ticketForm.secCat = { id: null, name: null };
-    this.ticketForm.type = { id: null, name: null };
-    this.findSecCatByPriCat(this.ticketForm.priCat.id);
-  }
-
-  onSecCatSelected() {
-    this.ticketForm.type = { id: null, name: null };
-    this.findTypeBySecCat(this.ticketForm.secCat.id);
   }
 
   resetTicketForm() {
@@ -275,7 +234,6 @@ export class TicketComponent implements OnInit {
   }
 
   openAddTicketModal() {
-    // this.getTicketFormField();
     document.getElementById('addTicketModal').style.display = 'block';
   }
 
@@ -288,6 +246,14 @@ export class TicketComponent implements OnInit {
     console.log("event:", event);
     this.ticketForm.tp.id = event._id;
     this.ticketForm.tp.name = event.name;
+
+    this.tpPropertyList = [];
+    this.oddArray = [];
+    this.evenArray = [];
+    this.priCatList = [];
+    this.secCatList = [];
+    this.typeList = [];
+    this.ticketFormFields = null;
     setTimeout(() => {
       this.getTicketFormField();
       this.getTicketProcessProperty();
@@ -382,11 +348,7 @@ export class TicketComponent implements OnInit {
             icons: this.actionIcons(lead, type)
           };
         } else if (key == "remaining_time") {
-          column[key] = {
-            value: this.common.findRemainingTime(lead[key]),
-            class: "black",
-            action: "",
-          };
+          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -479,11 +441,7 @@ export class TicketComponent implements OnInit {
             icons: this.actionIcons(lead, type)
           };
         } else if (key == "remaining_time") {
-          column[key] = {
-            value: this.common.findRemainingTime(lead[key]),
-            class: "black",
-            action: "",
-          };
+          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -588,8 +546,6 @@ export class TicketComponent implements OnInit {
       tktId: ticket._ticket_id,
       userId: this.loginUserId
     };
-    console.log('params', params);
-    // return;
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
       this.common.loading--;
@@ -628,8 +584,6 @@ export class TicketComponent implements OnInit {
       ticketId: ticket._ticket_id,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,
-      // taskId: ticket._refid,
-      // taskType: ticket._tktype,
       tabType: type,
     };
 
@@ -641,11 +595,7 @@ export class TicketComponent implements OnInit {
       subTitle: subTitle,
       userList: this.adminList
     };
-    const activeModal = this.modalService.open(TicketChatboxComponent, {
-      size: "lg",
-      container: "nb-layout",
-      backdrop: "static",
-    });
+    const activeModal = this.modalService.open(TicketChatboxComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
       type ? this.getTicketByType(type) : null;
     });
@@ -659,11 +609,7 @@ export class TicketComponent implements OnInit {
       btn: "Set Reminder",
       fromPage: "ticket"
     };
-    const activeModal = this.modalService.open(ReminderComponent, {
-      size: "sm",
-      container: "nb-layout",
-      backdrop: "static",
-    });
+    const activeModal = this.modalService.open(ReminderComponent, { size: "sm", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
       if (data.response) {
         this.getTicketByType(type);
@@ -689,8 +635,9 @@ export class TicketComponent implements OnInit {
   }
 
   saveTicket() {
+    console.log("ticketForm:", this.ticketForm);
     let selected = this.tpPropertyList.find(ele => {
-      return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._sec_cat_id == this.ticketForm.type.id)
+      return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
     });
 
     if (selected) {
@@ -709,7 +656,7 @@ export class TicketComponent implements OnInit {
     }
 
     if (!params.tpPropId) {
-      this.common.showError('Combination mismatch: Primary Category,Secondary Category,Type');
+      this.common.showError('Combination mismatch: Primary Category, Secondary Category, Type');
       return false;
     }
     this.common.loading++;
@@ -719,6 +666,7 @@ export class TicketComponent implements OnInit {
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
+          this.closeAddTicketModal();
           this.getTicketByType(101);
         } else {
           this.common.showError(res['data'][0].y_msg);
@@ -728,13 +676,10 @@ export class TicketComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
-
-    console.log("save ticketForm:", this.ticketForm, this.tpPropertyList);
-    console.log('OddEven Array', this.oddArray, this.evenArray)
   }
-
 
   AdditionalForm(arraytype, i) {
     let additionalData = null;
@@ -759,8 +704,6 @@ export class TicketComponent implements OnInit {
       }
     });
   }
-
-
 
   openAssignUserModal(ticket, type) {
     console.log(this.assignUserObject, ticket);
@@ -787,24 +730,24 @@ export class TicketComponent implements OnInit {
       tktId: this.assignUserObject.tktId,
       userId: this.assignUserObject.userId.id
     };
-    console.log('params', params);
-    return;
     this.common.loading++;
-    this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
+    this.api.post("Ticket/addTicketAllocation", params).subscribe(res => {
       this.common.loading--;
-      this.common.showToast(res["msg"]);
-      this.getTicketByType(this.assignUserObject.type);
-    }, (err) => {
+      if (res['code'] > 0 && res['data'][0].y_id > 0) {
+        this.closeassignUserModal();
+        this.common.showToast(res["msg"]);
+        this.getTicketByType(this.assignUserObject.type);
+      } else {
+        this.common.showToast(res["msg"]);
+      }
+    }, err => {
       this.common.loading--;
       this.common.showError();
       console.log("Error: ", err);
-    }
-    );
+    });
   }
 
   ticketHistory(ticket, type) {
-    // console.log('params',ticket);
-    // return;
     this.common.loading++;
     this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
       this.common.loading--;
@@ -863,6 +806,8 @@ export class TicketComponent implements OnInit {
           //   action: null,
           //   icons: this.actionIcons(lead, type)
           // };
+        } else if (key == "spent_time") {
+          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -880,8 +825,6 @@ export class TicketComponent implements OnInit {
       userid: this.forwardTicketObject.userId.id,
       remark: this.forwardTicketObject.remark
     };
-    console.log('params', params);
-    // return;
     this.common.loading++;
     this.api.post("Ticket/forwardTicket", params).subscribe((res) => {
       this.common.loading--;
@@ -896,8 +839,7 @@ export class TicketComponent implements OnInit {
       this.common.loading--;
       this.common.showError();
       console.log("Error: ", err);
-    }
-    );
+    });
   }
 
   openForwardTicket(ticket, type) {
