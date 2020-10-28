@@ -367,7 +367,7 @@ export class TicketChatboxComponent implements OnInit {
     });
   }
 
-  addNewCCUserToTask() {
+  addNewCCUser() {
     let accessUsers = [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid];
     if (this.userListByTask['ccUsers'].length > 0) {
       this.userListByTask['ccUsers'].forEach(element => {
@@ -395,25 +395,24 @@ export class TicketChatboxComponent implements OnInit {
     });
 
     if (this.ticketId > 0 && CCUsers && CCUsers.length > 0) {
-      // let params = {
-      //   ticketId: this.ticketId,
-      //   ccUserId: JSON.stringify(CCUsers),
-      //   ticketType: this.ticketType
-      // }
-      // this.common.loading++;
-      // this.api.post('Ticket/addNewCCUser', params).subscribe(res => {
-      //   this.common.loading--;
-      //   if (res['code'] == 1) {
-      //     this.getAllUserByTask();
-      //     this.newCCUserId = [];
-      //   } else {
-      //     this.common.showError(res['msg']);
-      //   }
-      // }, err => {
-      //   this.common.loading--;
-      //   this.common.showError();
-      //   console.log('Error: ', err);
-      // });
+      let params = {
+        ticketId: this.ticketId,
+        ccUserId: JSON.stringify(CCUsers)
+      }
+      this.common.loading++;
+      this.api.post('Ticket/addNewCCUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.getAllUserByTask();
+          this.newCCUserId = [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     } else {
       this.common.showError("Select new CC user");
     }
