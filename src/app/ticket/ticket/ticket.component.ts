@@ -23,6 +23,7 @@ export class TicketComponent implements OnInit {
   unallocatedTkt = [];
   unreadTkt = [];
   unassignedTkt = [];
+  groupList = [];
   tableAllocatedTkt = {
     data: {
       headings: {},
@@ -109,6 +110,7 @@ export class TicketComponent implements OnInit {
     this.getTicketByType(101);
     this.getAllAdmin();
     this.getTicketProcessList();
+    this.getUserGroupList();
   }
 
   ngOnInit() { }
@@ -124,6 +126,26 @@ export class TicketComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+  
+  getUserGroupList() {
+    this.api.get('UserRole/getUserGroups')
+      .subscribe(
+        (res) => {
+          console.log(" Group data", res["data"]);
+          if (res["code"] > 0) {
+            let groupList = res['data'] || [];
+            this.groupList = groupList.map((x) => {
+              return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
+            });
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          this.common.showError();
+          console.log("Error: ", err);
+        });
   }
 
   getTicketProcessList() {
@@ -578,7 +600,7 @@ export class TicketComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    console.log("type:", type, ticket);
+    console.log("type:", type, ticket,this.adminList);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._ticket_id,
@@ -593,7 +615,8 @@ export class TicketComponent implements OnInit {
       title: "Ticket Comment",
       button: "Save",
       subTitle: subTitle,
-      userList: this.adminList
+      userList: this.adminList,
+      groupList: this.groupList
     };
     const activeModal = this.modalService.open(TicketChatboxComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
