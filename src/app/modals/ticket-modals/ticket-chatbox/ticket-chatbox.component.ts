@@ -114,7 +114,7 @@ export class TicketChatboxComponent implements OnInit {
         this.getTicketDataByTktId();
       }
       this.getMessageList();
-      //this.getAllUserByTask();
+      this.getAllUserByTicket();
 
       this.lastSeenIdForView = this.lastSeenId;
       console.log(this.common.params, 'ticket data')
@@ -125,7 +125,7 @@ export class TicketChatboxComponent implements OnInit {
       } else {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
-      console.log("userGroupList:", this.userGroupList);
+      console.log("userGroupList:", this.userGroupList,this.userWithGroup);
       this.getAttachmentByTicket();
     }
 
@@ -334,11 +334,11 @@ export class TicketChatboxComponent implements OnInit {
     }
   }
 
-  getAllUserByTask() {
+  getAllUserByTicket() {
     let params = {
       ticketId: this.ticketId
     }
-    this.api.post('Ticket/getAllUserByTask', params).subscribe(res => {
+    this.api.post('Ticket/getAllUserByTicket', params).subscribe(res => {
       console.log("userListByTask:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
@@ -403,7 +403,7 @@ export class TicketChatboxComponent implements OnInit {
       this.api.post('Ticket/addNewCCUser', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByTask();
+          this.getAllUserByTicket();
           this.newCCUserId = [];
         } else {
           this.common.showError(res['msg']);
@@ -449,7 +449,7 @@ export class TicketChatboxComponent implements OnInit {
       this.api.post('Ticket/removeCCUser', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByTask();
+          this.getAllUserByTicket();
           this.getMessageList();
         } else {
           this.common.showError(res['msg']);
@@ -485,6 +485,7 @@ export class TicketChatboxComponent implements OnInit {
       }
       let params = {
         ticketId: this.ticketId,
+        ticketAllocationId:this.ticketData._ticket_allocation_id,
         assigneeUserId: this.newAssigneeUser.id,
         status: this.statusId,
         isCCUpdate: isCCUpdate,
@@ -492,11 +493,12 @@ export class TicketChatboxComponent implements OnInit {
         assigneeUserNameNew: this.newAssigneeUser.name
       }
       console.log("updateTaskAssigneeUser params:", params);
+      // return;
       this.common.loading++;
-      this.api.post('Ticket/updateAssigneeUser', params).subscribe(res => {
+      this.api.post('Ticket/updateTicketAssigneeUser', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByTask();
+          this.getAllUserByTicket();
           this.getMessageList();
           this.showAssignUserAuto = null;
         } else {
@@ -533,7 +535,7 @@ export class TicketChatboxComponent implements OnInit {
         this.common.showError();
         console.log('Error: ', err);
       });
-    }
+    }3
   }
 
   changeTicketStatusWithConfirm(status) {
