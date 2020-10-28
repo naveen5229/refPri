@@ -17,7 +17,7 @@ export class AddFieldComponent implements OnInit {
   title = "Add Field";
   refId = null;
   refType = null;
-  formType = null;
+  formType = null; //null=process, 11=ticket
   order = null;
   types = [
     { id: 'text', name: 'Text' },
@@ -74,13 +74,16 @@ export class AddFieldComponent implements OnInit {
     private modalService: NgbModal) {
     this.refId = this.common.params.ref.id;
     this.refType = this.common.params.ref.type;
+    this.formType = (this.common.params.formType) ? this.common.params.formType : null;
     // this.types = [
     //   { id: 'text', name: 'Text' },
     //   { id: 'number', name: 'Number' },
     //   { id: 'date', name: 'Date' }
     // ];
 
-    if (!this.refType) {
+    if (this.formType == 11) {
+      this.title = "Add Ticket Form Field";
+    } else if (!this.refType) {
       this.title = "Add State Form Field";
     } else if (this.refType == 1) {
       this.title = "Add Action Form Field";
@@ -172,8 +175,10 @@ export class AddFieldComponent implements OnInit {
       this.common.showError('Table Field Name or Type is missing');
       return false;
     }
+    let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
+    // console.log("apiName:", apiName); return false;
     this.common.loading++;
-    this.api.post('Processes/addProcessMatrix', params)
+    this.api.post(apiName, params)
       .subscribe(res => {
         this.common.loading--;
         console.log(res);
@@ -194,10 +199,11 @@ export class AddFieldComponent implements OnInit {
   }
 
   getFieldName() {
+    let params = "?refId=" + this.refId + "&refType=" + this.refType;
+    let apiName = (this.formType == 11) ? 'Ticket/getTicketProcessMatrix' : 'Processes/getProcessMatrix';
+    // console.log("apiName:", apiName); return false;
     this.common.loading++;
-    let params = "refId=" + this.refId + "&refType=" + this.refType;
-
-    this.api.get('Processes/getProcessMatrix?' + params)
+    this.api.get(apiName + params)
       .subscribe(res => {
         this.common.loading--;
         this.data = [];
@@ -265,17 +271,28 @@ export class AddFieldComponent implements OnInit {
             action: null,
             icons: this.actionIcons(doc)
           };
+        }else if(key == 'param_info'){
+          column[key] = { value: this.setStringData(doc[key]), class: 'black', action: '' };
         } else {
           column[key] = { value: doc[key], class: 'black', action: '' };
         }
       }
-      if(doc._col_unassigned==0){
+      if (doc._col_unassigned == 0) {
         column['style'] = { 'background': 'antiquewhite' };
       }
       columns.push(column);
     })
 
     return columns;
+  }
+
+  setStringData(arr){
+    let string = '';
+    if(arr){
+    arr.map(ele=> {
+        string = string + ele.option + ',';
+    });}
+    return string;
   }
 
   actionIcons(row) {
@@ -308,9 +325,11 @@ export class AddFieldComponent implements OnInit {
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
-          this.common.loading++;
           // this.api.post('Processes/deleteProcessMatrix', params).subscribe(res => {
-          this.api.post('Processes/addProcessMatrix', params).subscribe(res => {
+          let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
+          // console.log("apiName:", apiName); return false;
+          this.common.loading++;
+          this.api.post(apiName, params).subscribe(res => {
             this.common.loading--;
             if (res['code'] == 1) {
               if (res['data'][0].y_id > 0) {

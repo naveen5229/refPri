@@ -350,6 +350,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -402,6 +403,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -450,6 +452,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -497,6 +500,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -545,6 +549,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -591,6 +596,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -637,6 +643,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -689,6 +696,7 @@ export class MyProcessComponent implements OnInit {
         }
 
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -741,6 +749,7 @@ export class MyProcessComponent implements OnInit {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
         column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+        column['rowActions'] = { 'click': this.transMessage.bind(this, lead, type) };
       }
       columns.push(column);
     });
@@ -853,6 +862,24 @@ export class MyProcessComponent implements OnInit {
   }
 
   deleteTransaction(lead, type) {
+    console.log(lead,type);
+    if(type == 7){
+      if(lead._delete_txn == 1 || lead._delete_txn == 5){
+        this.deletCallBack(lead,type);
+      }else{
+          this.common.showError('Permission Denied');
+      }
+    }else if(type == 2 || type == 6){
+      if(lead._delete_txn == 5){
+        this.deletCallBack(lead,type);
+      }else{
+          this.common.showError('Permission Denied');
+      }
+    }
+  }
+
+  deletCallBack(lead,type){
+    
     let params = {
       transId: lead._transactionid
     }
@@ -942,7 +969,7 @@ export class MyProcessComponent implements OnInit {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
-      formTypeTemp = (type == 2 || type == 6) ? 1 : 0;
+      formTypeTemp = ([2, 6, 7].includes(type)) ? 1 : 0;
     } else {
       formTypeTemp = formType;
     }
@@ -963,7 +990,8 @@ export class MyProcessComponent implements OnInit {
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
-      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
+      isMarkTxnComplete: ((lead._to_mark_outstate == 2 && type == 1) || [2, 6, 7].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -1293,6 +1321,9 @@ export class MyProcessComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
+            if (!lead.pending_action) {
+              this.openTransAction(lead, type, 1);
+            }
             this.getProcessLeadByType(type);
           } else {
             this.common.showError(res['data'][0].y_msg);

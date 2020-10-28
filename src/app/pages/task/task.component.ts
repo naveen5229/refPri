@@ -223,7 +223,7 @@ export class TaskComponent implements OnInit {
     let activeId = document.activeElement.id;
     //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
     //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
-    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1) {
+    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
       this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
     }
 
@@ -318,9 +318,15 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  applyLeave() {
+  applyLeave(formType) {
     this.tableUnreadTaskForMeList.settings.arrow = false;
-    this.common.params = { userList: this.adminList };
+    this.common.params = {
+      userList: this.adminList,
+      groupList: this.groupList,
+      formType: formType,
+      title: (formType == 1) ? "Add Broadcast" : "Apply Leave",
+      btn: (formType == 1) ? "Add" : "Apply"
+    };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
       container: "nb-layout",
@@ -829,8 +835,8 @@ export class TaskComponent implements OnInit {
           };
         } else if (key == "subject" || key == "task_subject") {
           column[key] = {
-            value: ticket[key],
-            class: "black",
+            value: (ticket['_reply_demanded'] > 0) ? ticket[key] + " (reply demanded)" : ticket[key],
+            class: (ticket['_reply_demanded'] > 0) ? "black font-weight-bold" : "black",
             action: "",
             isTitle: true,
             title: ticket["_task_desc"],
@@ -845,7 +851,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: [101, 102].includes(ticket._tktype)
+            action: ([101, 102].includes(ticket._tktype) && (!ticket['_reply_demanded'] || ticket['_assignee_user_id'] == this.userService._details.id))
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -1425,7 +1431,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102, 104].includes(ticket._tktype)) {
+      if ([101, 102, 104, 111, 112, 113, 114].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),
@@ -1460,13 +1466,20 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == 101 || type == 103 || type == -102) {
+
       if (ticket._status == 5 || ticket._status == -1) {
-        icons.push({
-          class: "fa fa-retweet",
-          action: this.reactiveTicket.bind(this, ticket, type),
-          txt: "",
-          title: "Re-Active",
-        });
+        if ([104, 111, 112, 113, 114].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
+
+        } else {
+          icons.push({
+            class: "fa fa-retweet",
+            action: this.reactiveTicket.bind(this, ticket, type),
+            txt: "",
+            title: "Re-Active",
+          });
+        }
+      } else if (ticket._reply_demanded > 0) {
+        // no action for reply demanded pending
       } else if (ticket._status == 2) {
         icons.push({
           class: "fa fa-thumbs-up text-success",
@@ -1493,7 +1506,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if (ticket._tktype == 104) {//leave reject
+        if ([104, 111, 112, 113].includes(ticket._tktype)) {//leave reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -1544,11 +1557,7 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
-      } else if (
-        ([101, 102, 104].includes(ticket._tktype)) &&
-        ticket._cc_user_id &&
-        !ticket._cc_status
-      ) {
+      } else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
           action: this.ackTaskByCcUser.bind(this, ticket, type),
@@ -1834,6 +1843,7 @@ export class TaskComponent implements OnInit {
       subTitle: subTitle,
       userList: this.adminList,
       groupList: this.groupList,
+      departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
       size: "lg",
@@ -2097,6 +2107,7 @@ export class TaskComponent implements OnInit {
       let params = {
         ticketId: ticket._tktid,
         taskId: ticket._refid,
+        ticketType: ticket._tktype
       };
       console.log("ackTaskByCcUser:", params);
       this.common.loading++;
@@ -2516,7 +2527,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskListAll.filter((x) => {
-          return x._tktype == 104;
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
         });
       } else {
         //all
@@ -2544,7 +2555,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskByMeListAll.filter((x) => {
-          return x._tktype == 104;
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
         });
       } else {
         //all
@@ -2558,7 +2569,7 @@ export class TaskComponent implements OnInit {
       if (subTabType == 4) {
         //leave
         selectedList = this.ccTaskListAll.filter((x) => {
-          return x._tktype == 104;
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
         });
       } else {
         //all
@@ -2567,6 +2578,27 @@ export class TaskComponent implements OnInit {
       this.ccTaskList = selectedList.length > 0 ? selectedList : [];
       this.setTableCCTask(type);
     }
+  }
+
+  starMarkOnTicket(ticket, type) {
+    let params = {
+      ticketId: ticket._tktid
+    };
+    this.common.loading++;
+    this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.getTaskByType(type);
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    }
+    );
   }
 
 }

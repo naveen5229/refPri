@@ -54,6 +54,8 @@ import { UserGroupsComponent } from './user-groups/user-groups.component';
 import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
 import { PersonalisedDashboardComponent } from '../process/personalised-dashboard/personalised-dashboard.component';
 import { GraphicalReportsComponent } from '../process/graphical-reports/graphical-reports.component';
+import { TicketComponent } from '../ticket/ticket/ticket.component';
+import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.component';
 
 const routes: Routes = [{
   path: '',
@@ -326,6 +328,16 @@ const routes: Routes = [{
     {
       path: 'user-groups',
       component: UserGroupsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket',
+      component: TicketComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket-process',
+      component: TicketProcessComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

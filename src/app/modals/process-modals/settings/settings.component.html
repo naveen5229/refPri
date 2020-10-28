@@ -16,6 +16,7 @@
             <auto-suggestion [data]="userList" display='name' (onSelected)="transaction.primary_Owner = $event" seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="(transaction.primary_Owner.id>0) ? {name: transaction.primary_Owner.name} : {name: ''}">
             </auto-suggestion>
         </div>
+        <div class="col-2 clearButton"><i class="fa fa-undo" aria-hidden="true" title="Clear" (click)="transaction.primary_Owner = {id:null,name:''}"></i></div>
     </div>
 
     <div class="row mt-2">
@@ -26,6 +27,7 @@
             <auto-suggestion [data]="stateDataList" display="name" seperator="-" placeholder="Select Default State" (onSelected)="transaction.default_State = $event;transaction.default_Action = {id:null,name:''};getActionList($event)" inputId="default_state" name="default_state"
                 [preSelected]="(transaction.default_State.id>0) ? {name: transaction.default_State.name} : {name: ''}"></auto-suggestion>
         </div>
+        <div class="col-2 clearButton"><i class="fa fa-undo" aria-hidden="true" title="Clear" (click)="clearFields()"></i></div>
     </div>
 
     <div class="row mt-2" *ngIf="transaction.default_State.id>0">
@@ -35,6 +37,7 @@
         <div class="col-6">
             <auto-suggestion [data]="actionDataList" display="name" seperator="-" placeholder="Select Default Action" (onSelected)="transaction.default_Action = $event" inputId="deafult_action" name="deafult_action" [preSelected]="(transaction.default_Action.id>0) ? {name: transaction.default_Action.name} : {name: ''}"></auto-suggestion>
         </div>
+        <div class="col-2 clearButton"><i class="fa fa-undo" aria-hidden="true" title="Clear" (click)="transaction.default_Action = {id:null,name:''}"></i></div>
     </div>
 
     <div class="row mt-2" *ngIf="transaction.default_State.id>0">
@@ -50,6 +53,25 @@
                     <input type="checkbox" [checked]="transaction.self" (change)="transaction.self = !transaction.self" /> <label style="padding-left: 5px;">Self</label>
                 </div>
             </div>
+        </div>
+        <div class="col-2 clearButton"><i class="fa fa-undo" aria-hidden="true" title="Clear" (click)="transaction.action_Owner = {id:null,name:''}"></i></div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Allow state change:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="allowStateChangeValues" display="name" seperator="-" placeholder="Allow State Change" (onSelected)="transaction.isEndByActionOwn = $event" inputId="isEndByActionOwn" name="isEndByActionOwn" [preSelected]="(transaction.isEndByActionOwn.id>=0) ? {name: transaction.isEndByActionOwn.name} : {name: ''}"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Txn Delete:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="txnDelet" display="name" seperator="-" placeholder="Allow State Change" (onSelected)="transaction.isDeleted = $event" inputId="isDeleted" name="isDeleted" [preSelected]="(transaction.isDeleted.id>=0) ? {name: transaction.isDeleted.name} : {name: ''}"></auto-suggestion>
         </div>
     </div>
 

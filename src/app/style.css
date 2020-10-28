@@ -71,7 +71,7 @@ input::placeholder {
     padding: 3px 15px !important;
     /* background-color: #26a69a; */
     background-color: #0062cc;
-    ;
+    border-bottom: none;
 }
 
 .modal-header h5 {
@@ -305,6 +305,8 @@ table .fa-comments.new-comment span {
     cursor: pointer;
     height: 100%;
     align-items: center;
+    font-size: 18px;
+    color: #958e8e;
 }
 
 .attachment-view {
@@ -316,6 +318,33 @@ table .fa-comments.new-comment span {
 
 .new_message {
     background: lightgray !important;
+}
+.other_chat.new_message .quoted_msg{
+    background: #c2bebe;
+
+}
+.popover-body{
+    padding: 0.2rem 0.45rem !important;
+}
+.quoted_msg {
+    background: #f9f9f9;
+    margin: 3px -7px;
+    padding: 5px 10px;
+    border-left: 2px solid #1a3380;
+    font-style: italic;
+    color: #000 !important;
+}
+
+.quoted_selected {
+    background: darkgray;
+}
+
+.comment_reply {
+    display: flex;
+    float: right;
+    margin-left: 5px;
+    cursor: pointer;
+    align-items: flex-end;
 }
 
 
@@ -447,7 +476,9 @@ nb-layout-header nav {
 
 .modal-header.sub-title span {
     max-height: 100px;
-    overflow: auto;
+    overflow: auto;    
+    font-size: 12px;
+
 }
 
 .logo:focus {

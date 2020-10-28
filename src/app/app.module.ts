@@ -105,6 +105,8 @@ import { AddFieldTableComponent } from './modals/process-modals/add-field-table/
 import { ApplyLeaveComponent } from './modals/apply-leave/apply-leave.component';
 import { SettingsComponent } from './modals/process-modals/settings/settings.component';
 import { DocumentListingComponent } from './modals/document-listing/document-listing.component';
+import { TicketChatboxComponent } from './modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
+import { AddExtraTimeComponent } from './modals/ticket-modals/add-extra-time/add-extra-time.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -178,6 +180,8 @@ const PAGE_COMPONENTS = [
   SettingsComponent,
   ApplyLeaveComponent,
   DocumentListingComponent,
+  TicketChatboxComponent,
+  AddExtraTimeComponent
 ];
 
 @NgModule({
@@ -192,7 +196,8 @@ const PAGE_COMPONENTS = [
     AddpartneruserComponent,
     AddcompanyComponent,
     AddfouserComponent,
-    
+    ChatboxComponent,
+
 
     // SendmessageComponent,
     // GenericModelComponent,
