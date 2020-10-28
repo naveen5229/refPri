@@ -163,7 +163,7 @@
                 <h5 class="modal-title">Assign User</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeassignUserModal()">&times;</button>
             </div>
-            
+
             <div class="modal-body">
                 <div class="row form-group">
                     <div class="col-4">
@@ -194,7 +194,7 @@
                 <h5 class="modal-title">Ticket Forward</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeForwardTicket()">&times;</button>
             </div>
-            
+
             <div class="modal-body">
                 <div class="row form-group">
                     <div class="col-4">
@@ -234,13 +234,9 @@
                 <h5 class="modal-title">Ticket History</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeTicketHistory()">&times;</button>
             </div>
-            
+
             <div class="modal-body">
-                <div class="row form-group">
-                    <div class="col-12">
-                        <smart-table [data]="tableTicketHistory.data" [settings]="tableTicketHistory.settings" id="tableTicketHIstory" class="sl-smart-table"></smart-table>
-                    </div>
-                </div>
+                <smart-table [data]="tableTicketHistory.data" [settings]="tableTicketHistory.settings" id="tableTicketHIstory" class="sl-smart-table"></smart-table>
             </div>
 
         </div>
