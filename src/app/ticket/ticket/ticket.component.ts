@@ -7,6 +7,7 @@ import { FormDataTableComponent } from '../../modals/process-modals/form-data-ta
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -546,14 +547,17 @@ export class TicketComponent implements OnInit {
         }
       }
 
+      if(ticket._status == 2){
       icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
+      }
       icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
       icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (!ticket._status) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
+        icons.push({class: "fa fa-times text-danger",action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),txt: "",title: "Mark Rejected",});
+        icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
       } else if (ticket._status == 2) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
       }
     } else if (type == 100) {
       icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
@@ -561,6 +565,41 @@ export class TicketComponent implements OnInit {
       icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
     }
     return icons;
+  }
+
+  changeTicketStatusWithConfirm(ticket, type, status) {
+    console.log(status, 'status')
+    if (ticket._ticket_id) {
+      let preTitle = "Complete";
+      if (status === -1) {
+        preTitle = "Reject";
+      } else if (status == 2) {
+        preTitle = "Acknowledge";
+      } else if (ticket._status == 2) {
+        preTitle = "Completed";
+      }
+      this.common.params = {
+        title: preTitle + " Task ",
+        description:
+          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Ticket" + `<b>`,
+        isRemark: status == -1 ? true : false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, {
+        size: "sm",
+        container: "nb-layout",
+        backdrop: "static",
+        keyboard: false,
+        windowClass: "accountModalClass",
+      });
+      activeModal.result.then((data) => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          this.updateTicketStatus(ticket, type, status, data.remark);
+        }
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
   }
 
   claimTicket(ticket, type) {
@@ -891,13 +930,13 @@ export class TicketComponent implements OnInit {
     }
   }
 
-  updateTicketStatus(ticket, type, status) {
+  updateTicketStatus(ticket, type, status, remark = null) {
     if (ticket._ticket_allocation_id) {
       let params = {
         ticketId: ticket._ticket_allocation_id,
         statusId: status,
         statusOld: ticket._status,
-        remark: null
+        remark: remark,
       }
       this.common.loading++;
       this.api.post('Ticket/updateTicketStatus', params).subscribe(res => {
