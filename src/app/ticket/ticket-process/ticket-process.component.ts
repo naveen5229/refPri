@@ -669,12 +669,12 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.priCatId = { id: property._pri_cat_id, name: property.primary_category };
       this.ticketPropertyForm.SecCatId = { id: property._sec_cat_id, name: property.secondary_category };
       this.ticketPropertyForm.typeId = { id: property._type_id, name: property.type };
-      if (property.allocation_auto === 0) {
+      if (property._allocation_auto === 0) {
         this.ticketPropertyForm.allocationAuto = { id: 0, name: 'Disable' }
       } else {
         this.ticketPropertyForm.allocationAuto = { id: 1, name: 'Enable' }
       }
-      if (property.esclation_auto === 0) {
+      if (property._esclation_auto === 0) {
         this.ticketPropertyForm.esclationAuto = { id: 0, name: 'Disable' }
       } else {
         this.ticketPropertyForm.esclationAuto = { id: 1, name: 'Enable' }
