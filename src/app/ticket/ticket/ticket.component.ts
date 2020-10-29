@@ -553,6 +553,7 @@ export class TicketComponent implements OnInit {
       icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (!ticket._status) {
+        icons.push({class: "fa fa-times text-danger",action: this.updateTicketStatus.bind(this, ticket, type, -1),txt: "",title: "Mark Rejected",});
         icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
       } else if (ticket._status == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
