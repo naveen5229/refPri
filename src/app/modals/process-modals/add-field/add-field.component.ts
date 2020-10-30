@@ -352,14 +352,20 @@ export class AddFieldComponent implements OnInit {
     }
   }
 
-  addFixValue(fixvalue) {
-    if (fixvalue.length == 0) {
+  addFixValue() {
 
-    } else {
-      this.fixValues.push({
-        option: ''
-      });
+    if(this.fixValues[this.fixValues.length-1].option){
+      this.fixValues.push({option:''})
+    }else{
+      this.common.showError('Enter Value First')
     }
+    // if (fixvalue.length == 0) {
+
+    // } else {
+    //   this.fixValues.push({
+    //     option: ''
+    //   });
+    // }
   }
 
   setData(data) {
