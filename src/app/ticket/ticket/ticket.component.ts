@@ -883,7 +883,7 @@ export class TicketComponent implements OnInit {
     activeModal.result.then((data) => {
       type ? this.getTicketByType(type) : null;
     });
-  }
+  } 
 
   showReminderPopup(ticket, type) {
     this.common.params = {
