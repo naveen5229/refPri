@@ -7,6 +7,7 @@ import { FormDataTableComponent } from '../../modals/process-modals/form-data-ta
 import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -23,6 +24,7 @@ export class TicketComponent implements OnInit {
   unallocatedTkt = [];
   unreadTkt = [];
   unassignedTkt = [];
+  groupList = [];
   tableAllocatedTkt = {
     data: {
       headings: {},
@@ -80,9 +82,9 @@ export class TicketComponent implements OnInit {
     requestId: null,
     tp: { id: null, name: null },
     tpProperty: { id: null, name: null },
-    priCat: { id: null, name: null },
-    secCat: { id: null, name: null },
-    type: { id: null, name: null },
+    priCat: { id: 0, name: null },
+    secCat: { id: 0, name: null },
+    type: { id: 0, name: null },
     info: null,
     remark: null
   }
@@ -109,6 +111,7 @@ export class TicketComponent implements OnInit {
     this.getTicketByType(101);
     this.getAllAdmin();
     this.getTicketProcessList();
+    this.getUserGroupList();
   }
 
   ngOnInit() { }
@@ -124,6 +127,26 @@ export class TicketComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+  
+  getUserGroupList() {
+    this.api.get('UserRole/getUserGroups')
+      .subscribe(
+        (res) => {
+          console.log(" Group data", res["data"]);
+          if (res["code"] > 0) {
+            let groupList = res['data'] || [];
+            this.groupList = groupList.map((x) => {
+              return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
+            });
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          this.common.showError();
+          console.log("Error: ", err);
+        });
   }
 
   getTicketProcessList() {
@@ -225,9 +248,9 @@ export class TicketComponent implements OnInit {
       requestId: null,
       tp: { id: null, name: null },
       tpProperty: { id: null, name: null },
-      priCat: { id: null, name: null },
-      secCat: { id: null, name: null },
-      type: { id: null, name: null },
+      priCat: { id: 0, name: null },
+      secCat: { id: 0, name: null },
+      type: { id: 0, name: null },
       info: null,
       remark: null
     }
@@ -524,14 +547,17 @@ export class TicketComponent implements OnInit {
         }
       }
 
+      if(ticket._status == 2){
       icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
+      }
       icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
       icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (!ticket._status) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.updateTicketStatus.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
+        icons.push({class: "fa fa-times text-danger",action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),txt: "",title: "Mark Rejected",});
+        icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
       } else if (ticket._status == 2) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.updateTicketStatus.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
       }
     } else if (type == 100) {
       icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
@@ -539,6 +565,41 @@ export class TicketComponent implements OnInit {
       icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
     }
     return icons;
+  }
+
+  changeTicketStatusWithConfirm(ticket, type, status) {
+    console.log(status, 'status')
+    if (ticket._ticket_id) {
+      let preTitle = "Complete";
+      if (status === -1) {
+        preTitle = "Reject";
+      } else if (status == 2) {
+        preTitle = "Acknowledge";
+      } else if (ticket._status == 2) {
+        preTitle = "Completed";
+      }
+      this.common.params = {
+        title: preTitle + " Task ",
+        description:
+          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Ticket" + `<b>`,
+        isRemark: status == -1 ? true : false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, {
+        size: "sm",
+        container: "nb-layout",
+        backdrop: "static",
+        keyboard: false,
+        windowClass: "accountModalClass",
+      });
+      activeModal.result.then((data) => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          this.updateTicketStatus(ticket, type, status, data.remark);
+        }
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
   }
 
   claimTicket(ticket, type) {
@@ -578,7 +639,7 @@ export class TicketComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    console.log("type:", type, ticket);
+    console.log("type:", type, ticket,this.adminList);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._ticket_id,
@@ -593,7 +654,8 @@ export class TicketComponent implements OnInit {
       title: "Ticket Comment",
       button: "Save",
       subTitle: subTitle,
-      userList: this.adminList
+      userList: this.adminList,
+      groupList: this.groupList
     };
     const activeModal = this.modalService.open(TicketChatboxComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
@@ -639,6 +701,8 @@ export class TicketComponent implements OnInit {
     let selected = this.tpPropertyList.find(ele => {
       return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
     });
+    
+    console.log("selected:", selected);
 
     if (selected) {
       this.ticketForm.tpProperty.id = selected._id;
@@ -866,13 +930,13 @@ export class TicketComponent implements OnInit {
     }
   }
 
-  updateTicketStatus(ticket, type, status) {
+  updateTicketStatus(ticket, type, status, remark = null) {
     if (ticket._ticket_allocation_id) {
       let params = {
         ticketId: ticket._ticket_allocation_id,
         statusId: status,
         statusOld: ticket._status,
-        remark: null
+        remark: remark,
       }
       this.common.loading++;
       this.api.post('Ticket/updateTicketStatus', params).subscribe(res => {

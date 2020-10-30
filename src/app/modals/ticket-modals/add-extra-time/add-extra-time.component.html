@@ -9,7 +9,11 @@
       <div class="col-4">
           Time:
       </div>
-      <div class="col-8"><input type="number" placeholder="Enter Time" name="Time" id="Time" class="form-control" [(ngModel)]="dataForm.time"></div>
+      <div class="col-8">
+        <!-- <input type="number" placeholder="Enter Time" name="Time" id="Time" class="form-control" [(ngModel)]="dataForm.time"> -->
+        <uj-date-time-picker [isStart]="false" [isDate]="false" (onChanged)="dataForm.time=$event" [dateTimeValue]="dataForm.time">
+        </uj-date-time-picker>
+      </div>
   </div>
 
   <div class="row mt-1">
