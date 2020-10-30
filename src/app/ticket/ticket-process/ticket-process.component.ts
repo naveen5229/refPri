@@ -62,6 +62,7 @@ export class TicketProcessComponent implements OnInit {
     priCatList: [{ name: '' }],
     secCatList: [{ name: '' }],
     typeList: [{ name: '' }],
+    Supervisor:{id: null, name: ''},
     claimStatus: { id: 0, name: 'Disable' },
     isActive: true,
   }
@@ -172,6 +173,7 @@ export class TicketProcessComponent implements OnInit {
       priCatList: [{ name: '' }],
       secCatList: [{ name: '' }],
       typeList: [{ name: '' }],
+      Supervisor:{id: null, name: ''},
       claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
     }
@@ -271,7 +273,8 @@ export class TicketProcessComponent implements OnInit {
       typeInfo: JSON.stringify(this.ticketForm.typeList),
       claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
-      requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null
+      requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
+      supervisorId:this.ticketForm.Supervisor.id
     }
 
     if (params.name) {
@@ -545,7 +548,8 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.isActive = ticket._is_active;
       this.ticketForm.priCatList = [{ name: '' }],
         this.ticketForm.secCatList = [{ name: '' }],
-        this.ticketForm.typeList = [{ name: '' }]
+        this.ticketForm.typeList = [{ name: '' }],
+        this.ticketForm.Supervisor = {id:ticket._default_owner,name:ticket.supervisor}
     }
 
     console.log(this.ticketForm);
