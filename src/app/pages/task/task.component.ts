@@ -1592,11 +1592,6 @@ export class TaskComponent implements OnInit {
           });
         }
       }
-      if (ticket._is_star_mark) {
-        icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
-      } else {
-        icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
-      }
     } else if (type == -9) {
       if (ticket._status == 3) {
         icons.push({
@@ -1647,6 +1642,12 @@ export class TaskComponent implements OnInit {
             title: null,
           });
         }
+      }
+
+      if (ticket._is_star_mark) {
+        icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
+      } else {
+        icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
       }
     }
 
