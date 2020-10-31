@@ -143,7 +143,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/salary',
         home: true,
-      }
+      },
+      {
+        title: 'Employee Monitoring',
+        icon: 'people-outline',
+        link: '/pages/employee-monitoring',
+      },
     ]
   },
   {

@@ -107,6 +107,7 @@ import { SettingsComponent } from './modals/process-modals/settings/settings.com
 import { DocumentListingComponent } from './modals/document-listing/document-listing.component';
 import { TicketChatboxComponent } from './modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 import { AddExtraTimeComponent } from './modals/ticket-modals/add-extra-time/add-extra-time.component';
+import { RouteMapperComponent } from './modals/route-mapper/route-mapper.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -181,7 +182,8 @@ const PAGE_COMPONENTS = [
   ApplyLeaveComponent,
   DocumentListingComponent,
   TicketChatboxComponent,
-  AddExtraTimeComponent
+  AddExtraTimeComponent,
+  RouteMapperComponent,
 ];
 
 @NgModule({
