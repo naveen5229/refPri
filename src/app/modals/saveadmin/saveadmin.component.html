@@ -124,17 +124,6 @@
         <!-- start:atten medium -->
         <div class="row mt-2">
             <div class="col-12">
-                <!-- <div *ngIf="selectedItems==1" class="row" style="margin-left: 15px;">
-                    <div class="col-4"></div>
-                    <div class="col-2">
-                        <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
-                        <label class="custom-control-label" for="attenMediumNo">No</label>
-                    </div>
-                    <div class="col-2">
-                        <input id="attenMediumYes" type="radio" class="custom-control-input" [value]="'100'" [(ngModel)]="Fouser.attenMedium" name="attenMediumValue">
-                        <label class="custom-control-label" for="attenMediumYes">Restricted</label>
-                    </div>
-                </div> -->
                 <div *ngIf="selectedItems==2" class="row" style="margin-left: 15px;">
                     <div class="col-4"></div>
                     <div class="col-4">
@@ -146,17 +135,6 @@
                         <label class="custom-control-label" for="attenMediumAll">No Restricted</label>
                     </div>
                 </div>
-                <!-- <div *ngIf="selectedItems==3" class="row" style="margin-left: 15px;">
-                    <div class="col-4"></div>
-                    <div class="col-2">
-                        <input id="attenMediumNo" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'000'" name="attenMediumValue">
-                        <label class="custom-control-label" for="attenMediumNo">No</label>
-                    </div>
-                    <div class="col-2">
-                        <input id="attenMediumYes" type="radio" class="custom-control-input" [(ngModel)]="Fouser.attenMedium" [value]="'001'" name="attenMediumValue">
-                        <label class="custom-control-label" for="attenMediumYes">Restricted</label>
-                    </div>
-                </div> -->
             </div>
         </div>
         <!-- end:atten medium -->
@@ -166,7 +144,6 @@
                 <label>Notification Alert :-</label>
             </div>
             <div class="col-lg-8">
-                <!-- <input type="checkbox" [checked]="Fouser.isNotify" (change)="Fouser.isNotify = !Fouser.isNotify" /> -->
                 <select class="form-control" [(ngModel)]="Fouser.isNotify" placeholder="Select Notification">
                     <option  [value]="0">Disable</option>
                     <option  [value]="1">Notification</option>
@@ -179,7 +156,6 @@
                 <label>Comment Notification :-</label>
             </div>
             <div class="col-lg-8">
-                <!-- <input type="checkbox" [checked]="Fouser.isNotifyRing" (change)="Fouser.isNotifyRing = !Fouser.isNotifyRing" /> -->
                 <select class="form-control" [(ngModel)]="Fouser.isCommentNotify" placeholder="Select Comment Notification">
                     <option [value]="0">Disable</option>
                     <option [value]="1">Notification</option>
@@ -195,12 +171,28 @@
                 <input type="checkbox" [checked]="Fouser.isCallSync" (change)="Fouser.isCallSync = !Fouser.isCallSync" />
             </div>
         </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Location Restrict :-</label>
+            </div>
+            <div class="col-lg-8">
+                <input type="checkbox" [checked]="Fouser.locationRestrict" (change)="Fouser.locationRestrict = !Fouser.locationRestrict" />
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <label>Wifi Restrict :-</label>
+            </div>
+            <div class="col-lg-8">
+                <input type="checkbox" [checked]="Fouser.wifiRestrict" (change)="Fouser.wifiRestrict = !Fouser.wifiRestrict" />
+            </div>
+        </div>
 
     </div>
 
     <div class="row text-right mt-2">
         <div class="col-12">
-            <!-- <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()">Next</button> -->
+            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()">Next</button>
             <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="onCancel()">Cancel</button>
             <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary ml-2" (click)="saveAdmin()">{{(isOtherShow)?'Update':'Next'}}</button>
             <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="saveAdmin()">Save</button>
