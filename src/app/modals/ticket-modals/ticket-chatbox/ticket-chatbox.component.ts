@@ -33,6 +33,7 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
 export class TicketChatboxComponent implements OnInit {
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
+  messageImage = [];
   title = '';
   subTitle = null;
   ticketId = 0;
@@ -93,6 +94,7 @@ export class TicketChatboxComponent implements OnInit {
   }
   @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
   @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
+  @ViewChild('imgRenderer', { static: false }) imgRenderer: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -153,6 +155,7 @@ export class TicketChatboxComponent implements OnInit {
       }, 100);
     } catch (err) { }
   }
+
 
   closeModal(response) {
     this.activeModal.close({ response: response });
@@ -591,6 +594,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   handleFileSelection(event) {
+    console.log(event.target.files[0],'attachement')
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
@@ -610,6 +614,39 @@ export class TicketChatboxComponent implements OnInit {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  onPaste(event: any) {
+    console.log('event',event);
+    const items = event.clipboardData.items;
+    let selectedFile = {"target":{"files":[]}};
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        selectedFile.target.files.push(item.getAsFile());
+      }
+    }
+
+    this.handleFileSelection(selectedFile);
+    // console.log('blob',blob);
+    // this.common.loading++;
+    // this.common.getBase64(blob).then((res: any) => {
+    //   this.common.loading--;
+    //   let file = blob;
+    //   console.log("Type:", file, res);
+    //   var ext = file.name.split('.').pop();
+    //   let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+    //   if (formats.includes(ext.toLowerCase())) {
+    //   } else {
+    //     this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
+    //     return false;
+    //   }
+    //   this.attachmentFile.name = file.name;
+    //   this.attachmentFile.file = res;
+    //   console.log("attachmentFile:", this.attachmentFile)
+    // }, err => {
+    //   this.common.loading--;
+    //   console.error('Base Err: ', err);
+    // })
   }
 
   messageReadInfo(commentId) {
