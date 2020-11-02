@@ -716,6 +716,22 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
+  onFilePaste(event: any) {
+    // console.log('event', event);
+    const items = event.clipboardData.items;
+    let selectedFile = { "target": { "files": [] } };
+    // console.log("items:", items);
+    // if (items.length > 1) {
+    //   this.common.showError("Only select single file");
+    // }
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        selectedFile.target.files.push(item.getAsFile());
+      }
+    }
+    this.handleFileSelection(selectedFile);
+  }
+
   onSelectMenstionedUser(user) {
     this.mentionedUsers.push({ id: user.id, name: user.name });
     console.log("mentionedUsers2:", this.mentionedUsers);

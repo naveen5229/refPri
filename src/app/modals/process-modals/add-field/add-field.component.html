@@ -47,10 +47,11 @@
                         <div class="col-6 custdrop" *ngIf="isFixedValue">
                             <div class="row" *ngFor="let fixValue of fixValues; let i = index">
                                 <div class="col-8">
-                                    <input type="text" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
+                                    <input *ngIf="typeId =='text'" type="text" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
+                                    <input *ngIf="typeId =='number'" type="number" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
                                 </div>
                                 <div class="col-4">
-                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue(fixvalue.value)"></i>&nbsp;
+                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue()"></i>&nbsp;
                                     <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
                                 </div>
                             </div>

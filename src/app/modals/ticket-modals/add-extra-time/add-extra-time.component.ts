@@ -39,7 +39,7 @@ export class AddExtraTimeComponent implements OnInit {
   buyTime(){
     let params = {
       ticketId:this.ticketId,
-      time:this.dataForm.time
+      time:this.common.timeToSecond(this.dataForm.time)
     }
     console.log('buy time params',params);
     // this.closeModal(true);

@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
+import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -62,10 +63,8 @@ export class TicketProcessComponent implements OnInit {
     priCatList: [{ name: '' }],
     secCatList: [{ name: '' }],
     typeList: [{ name: '' }],
-    claimStatus: {
-      id: null,
-      name: ""
-    },
+    Supervisor: { id: null, name: '' },
+    claimStatus: { id: 0, name: 'Disable' },
     isActive: true,
   }
 
@@ -74,8 +73,8 @@ export class TicketProcessComponent implements OnInit {
     priCatId: { id: null, name: '' },
     SecCatId: { id: null, name: '' },
     typeId: { id: null, name: '' },
-    allocationAuto: { id: null, name: '' },
-    esclationAuto: { id: null, name: '' },
+    allocationAuto: { id: 0, name: 'Disable' },
+    esclationAuto: { id: 0, name: 'Disable' },
     escTime: '',
     complRemTime: '',
     complEscTime: '',
@@ -108,7 +107,7 @@ export class TicketProcessComponent implements OnInit {
     tpId: null,
     requestId: null,
     type: null,
-    name:null
+    name: null
   }
 
   adminList = [];
@@ -175,10 +174,8 @@ export class TicketProcessComponent implements OnInit {
       priCatList: [{ name: '' }],
       secCatList: [{ name: '' }],
       typeList: [{ name: '' }],
-      claimStatus: {
-        id: null,
-        name: ""
-      },
+      Supervisor: { id: null, name: '' },
+      claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
     }
   }
@@ -260,7 +257,7 @@ export class TicketProcessComponent implements OnInit {
       tpId: null,
       requestId: null,
       type: null,
-      name:null
+      name: null
     }
   }
 
@@ -277,7 +274,8 @@ export class TicketProcessComponent implements OnInit {
       typeInfo: JSON.stringify(this.ticketForm.typeList),
       claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
-      requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null
+      requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
+      supervisorId: this.ticketForm.Supervisor.id
     }
 
     if (params.name) {
@@ -543,7 +541,7 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.endTime = new Date(ticket.end_date);
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
-      if (ticket._claim_ticket === 0) {
+      if (ticket._claim_ticket == 0) {
         this.ticketForm.claimStatus = { id: 0, name: 'Disable' }
       } else {
         this.ticketForm.claimStatus = { id: 1, name: 'Enable' }
@@ -551,7 +549,8 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.isActive = ticket._is_active;
       this.ticketForm.priCatList = [{ name: '' }],
         this.ticketForm.secCatList = [{ name: '' }],
-        this.ticketForm.typeList = [{ name: '' }]
+        this.ticketForm.typeList = [{ name: '' }],
+        this.ticketForm.Supervisor = { id: ticket._default_owner, name: ticket.supervisor }
     }
 
     console.log(this.ticketForm);
@@ -606,8 +605,8 @@ export class TicketProcessComponent implements OnInit {
       priCatId: { id: null, name: '' },
       SecCatId: { id: null, name: '' },
       typeId: { id: null, name: '' },
-      allocationAuto: { id: null, name: '' },
-      esclationAuto: { id: null, name: '' },
+      allocationAuto: { id: 0, name: 'Disable' },
+      esclationAuto: { id: 0, name: 'Disable' },
       escTime: '',
       complRemTime: '',
       complEscTime: '',
@@ -633,8 +632,8 @@ export class TicketProcessComponent implements OnInit {
       escTime: this.ticketPropertyForm.escTime,
       complRemTime: this.ticketPropertyForm.complRemTime,
       complEscTime: this.ticketPropertyForm.complEscTime,
-      isUrgent: false,
-      isActive: true,
+      isUrgent: this.ticketPropertyForm.isUrgent,
+      isActive: this.ticketPropertyForm.isActive,
       requestId: reqId,
     }
 
@@ -663,7 +662,8 @@ export class TicketProcessComponent implements OnInit {
   actionPropertyIcons(property) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editPropertyTicket.bind(this, property) },
-      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" }
+      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" },
+      { class: "fas fa-user", action: this.addProcessUsers.bind(this, property), title: "Add Users" }
     ];
     return icons;
   }
@@ -674,13 +674,13 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.tpId = property._tpid;
       this.ticketPropertyForm.priCatId = { id: property._pri_cat_id, name: property.primary_category };
       this.ticketPropertyForm.SecCatId = { id: property._sec_cat_id, name: property.secondary_category };
-      this.ticketPropertyForm.typeId = { id: property._tpid, name: property.type };
-      if (property.allocation_auto === 0) {
+      this.ticketPropertyForm.typeId = { id: property._type_id, name: property.type };
+      if (property._allocation_auto === 0) {
         this.ticketPropertyForm.allocationAuto = { id: 0, name: 'Disable' }
       } else {
         this.ticketPropertyForm.allocationAuto = { id: 1, name: 'Enable' }
       }
-      if (property.esclation_auto === 0) {
+      if (property._esclation_auto === 0) {
         this.ticketPropertyForm.esclationAuto = { id: 0, name: 'Disable' }
       } else {
         this.ticketPropertyForm.esclationAuto = { id: 1, name: 'Enable' }
@@ -854,6 +854,17 @@ export class TicketProcessComponent implements OnInit {
 
   closeTicketFormMatrixModal() {
     document.getElementById('ticketFormMatrix').style.display = 'none';
+  }
+
+
+  addProcessUsers(property) {
+    this.common.params = { process_id: property._id, adminList: this.adminList, fromPage: 'ticket' };
+    const activeModal = this.modalService.open(UserMappingComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log("ticket UserMappingComponent:", data.response);
+      }
+    });
   }
 
 }

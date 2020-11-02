@@ -37,7 +37,18 @@
                         <label>Process Name<span class="text-danger">*</span></label>
                     </div>
                     <div class="col-8">
-                        <input type="text" class="form-control" name="processName" [(ngModel)]="ticketForm.name">
+                        <input type="text" class="form-control" placeholder="Process Name" name="processName" [(ngModel)]="ticketForm.name">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Supervisor</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Supervisor" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.Supervisor=$event;"
+                         [preSelected]="ticketForm.Supervisor['id'] ? {name: ticketForm.Supervisor['name']}:{name:''}"  autocomplete="off">
+            </auto-suggestion>
                     </div>
                 </div>
 
@@ -101,7 +112,7 @@
                         <label>Claim Ticket</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Claim Ticket" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.claimStatus=$event;" [preSelected]="ticketForm.claimStatus['id'] ? {name: ticketForm.claimStatus['name']}:{name:''}"
+                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Claim Ticket" name="defaultOwn" id="defaultOwn" (onSelected)="ticketForm.claimStatus=$event;" [preSelected]="(ticketForm.claimStatus.id>=0) ? {name: ticketForm.claimStatus.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
@@ -277,7 +288,7 @@
                         <label>Allocation Auto</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.allocationAuto=$event;" [preSelected]="ticketPropertyForm.allocationAuto['id'] ? {name: ticketPropertyForm.allocationAuto['name']}:{name:''}"
+                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.allocationAuto=$event;" [preSelected]="(ticketPropertyForm.allocationAuto.id>=0) ? {name: ticketPropertyForm.allocationAuto.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
@@ -287,7 +298,7 @@
                         <label>Esclation Auto</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Esclation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.esclationAuto=$event;" [preSelected]="ticketPropertyForm.esclationAuto['id'] ? {name: ticketPropertyForm.esclationAuto['name']}:{name:''}"
+                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Esclation Auto" name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.esclationAuto=$event;" [preSelected]="(ticketPropertyForm.esclationAuto.id>=0) ? {name: ticketPropertyForm.esclationAuto.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
@@ -401,7 +412,7 @@
 
                 <div class="row form-group">
                     <div class="col-4">
-                        <label>TO Time</label>
+                        <label>To Time</label>
                     </div>
                     <div class="col-8">
                         <uj-date-time-picker (onChanged)="esclationMatrix.toTime = $event" [isStart]="false" [dateTimeValue]="esclationMatrix.toTime" [isTime]="false">
