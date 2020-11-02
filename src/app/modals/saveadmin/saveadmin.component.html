@@ -192,7 +192,7 @@
 
     <div class="row text-right mt-2">
         <div class="col-12">
-            <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()">Next</button>
+            <!-- <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary mr-2" (click)="onNext()">Next</button> -->
             <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="onCancel()">Cancel</button>
             <button *ngIf='Fouser.id' value="Admin Tools" class="btn btn-primary ml-2" (click)="saveAdmin()">{{(isOtherShow)?'Update':'Next'}}</button>
             <button *ngIf='!Fouser.id' value="Admin Tools" class="btn btn-primary" (click)="saveAdmin()">Save</button>

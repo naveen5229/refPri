@@ -94,7 +94,7 @@
                     <!-- <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a> -->
                 </div>
                 <div class="col-10 pr-0">
-                    <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" (paste)="onFilePaste($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">

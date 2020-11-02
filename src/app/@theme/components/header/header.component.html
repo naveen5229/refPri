@@ -11,8 +11,8 @@
 </div>
 <h6 style="color: #00000080; margin-bottom: 0;">
     <span class="profilehead">{{userLogin | titlecase}} </span>
-    <i class="fa fa-circle mr-0" style="font-size: 8px; cursor: pointer;" [ngClass]="(userService._details && userService._details.present) ? 'text-success' : ''" [title]="(userService._details && userService._details.present) ? 'Present' : 'Absent'" aria-hidden="true"
-        (click)="getUserPresence()"></i>
+    <i class="mr-0" style="cursor: pointer;" [ngClass]="(userService._details && userService._details.present) ? 'fas fa-check-circle text-success' : 'far fa-circle'" [ngStyle]="(userService._details && userService._details.present) ? {'font-size':'13px'} : {'font-size':'10px'}"
+        [title]="(userService._details && userService._details.present) ? 'Present' : 'Absent'" aria-hidden="true" (click)="getUserPresence()"></i>
 </h6>
 
 <div class="header-container">

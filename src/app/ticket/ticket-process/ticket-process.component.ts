@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
+import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -62,7 +63,7 @@ export class TicketProcessComponent implements OnInit {
     priCatList: [{ name: '' }],
     secCatList: [{ name: '' }],
     typeList: [{ name: '' }],
-    Supervisor:{id: null, name: ''},
+    Supervisor: { id: null, name: '' },
     claimStatus: { id: 0, name: 'Disable' },
     isActive: true,
   }
@@ -106,7 +107,7 @@ export class TicketProcessComponent implements OnInit {
     tpId: null,
     requestId: null,
     type: null,
-    name:null
+    name: null
   }
 
   adminList = [];
@@ -173,7 +174,7 @@ export class TicketProcessComponent implements OnInit {
       priCatList: [{ name: '' }],
       secCatList: [{ name: '' }],
       typeList: [{ name: '' }],
-      Supervisor:{id: null, name: ''},
+      Supervisor: { id: null, name: '' },
       claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
     }
@@ -256,7 +257,7 @@ export class TicketProcessComponent implements OnInit {
       tpId: null,
       requestId: null,
       type: null,
-      name:null
+      name: null
     }
   }
 
@@ -274,7 +275,7 @@ export class TicketProcessComponent implements OnInit {
       claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
-      supervisorId:this.ticketForm.Supervisor.id
+      supervisorId: this.ticketForm.Supervisor.id
     }
 
     if (params.name) {
@@ -549,7 +550,7 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.priCatList = [{ name: '' }],
         this.ticketForm.secCatList = [{ name: '' }],
         this.ticketForm.typeList = [{ name: '' }],
-        this.ticketForm.Supervisor = {id:ticket._default_owner,name:ticket.supervisor}
+        this.ticketForm.Supervisor = { id: ticket._default_owner, name: ticket.supervisor }
     }
 
     console.log(this.ticketForm);
@@ -661,7 +662,8 @@ export class TicketProcessComponent implements OnInit {
   actionPropertyIcons(property) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editPropertyTicket.bind(this, property) },
-      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" }
+      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" },
+      { class: "fas fa-user", action: this.addProcessUsers.bind(this, property), title: "Add Users" }
     ];
     return icons;
   }
@@ -852,6 +854,17 @@ export class TicketProcessComponent implements OnInit {
 
   closeTicketFormMatrixModal() {
     document.getElementById('ticketFormMatrix').style.display = 'none';
+  }
+
+
+  addProcessUsers(property) {
+    this.common.params = { process_id: property._id, adminList: this.adminList, fromPage: 'ticket' };
+    const activeModal = this.modalService.open(UserMappingComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log("ticket UserMappingComponent:", data.response);
+      }
+    });
   }
 
 }

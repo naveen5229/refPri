@@ -129,7 +129,7 @@
 
                 <div class="row form-group">
                     <div class="col-4">
-                        <label>Remark<span style="color: red;">*</span></label>
+                        <label>Remark</label>
                     </div>
                     <div class="col-8">
                         <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control" [(ngModel)]="ticketForm.remark"></textarea>
@@ -285,7 +285,7 @@
             </div>
 
             <div class="modal-body">
-                
+
                 <!-- start:dyn field -->
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
@@ -296,7 +296,7 @@
                             </div>
 
                             <div class="col-8">
-                                <label >{{oddArray[i].r_value}}</label>
+                                <label>{{oddArray[i].r_value}}</label>
                             </div>
                         </div>
                     </div>
@@ -308,4 +308,3 @@
     </div>
 </div>
 <!--end: Detailed Info -->
-

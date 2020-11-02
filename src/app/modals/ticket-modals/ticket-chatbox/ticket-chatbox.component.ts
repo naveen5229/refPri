@@ -127,7 +127,7 @@ export class TicketChatboxComponent implements OnInit {
       } else {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
-      console.log("userGroupList:", this.userGroupList,this.userWithGroup);
+      console.log("userGroupList:", this.userGroupList, this.userWithGroup);
       this.getAttachmentByTicket();
     }
 
@@ -488,7 +488,7 @@ export class TicketChatboxComponent implements OnInit {
       }
       let params = {
         ticketId: this.ticketId,
-        ticketAllocationId:this.ticketData._ticket_allocation_id,
+        ticketAllocationId: this.ticketData._ticket_allocation_id,
         assigneeUserId: this.newAssigneeUser.id,
         status: this.statusId,
         isCCUpdate: isCCUpdate,
@@ -538,7 +538,7 @@ export class TicketChatboxComponent implements OnInit {
         this.common.showError();
         console.log('Error: ', err);
       });
-    }3
+    }
   }
 
   changeTicketStatusWithConfirm(status) {
@@ -594,7 +594,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   handleFileSelection(event) {
-    console.log(event.target.files[0],'attachement')
+    console.log(event.target.files[0], 'attachement')
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
@@ -617,36 +617,18 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   onPaste(event: any) {
-    console.log('event',event);
+    console.log('event', event);
     const items = event.clipboardData.items;
-    let selectedFile = {"target":{"files":[]}};
+    let selectedFile = { "target": { "files": [] } };
+    // if (items.length > 1) {
+    //   this.common.showError("Only select single file");
+    // }
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
         selectedFile.target.files.push(item.getAsFile());
       }
     }
-
     this.handleFileSelection(selectedFile);
-    // console.log('blob',blob);
-    // this.common.loading++;
-    // this.common.getBase64(blob).then((res: any) => {
-    //   this.common.loading--;
-    //   let file = blob;
-    //   console.log("Type:", file, res);
-    //   var ext = file.name.split('.').pop();
-    //   let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-    //   if (formats.includes(ext.toLowerCase())) {
-    //   } else {
-    //     this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
-    //     return false;
-    //   }
-    //   this.attachmentFile.name = file.name;
-    //   this.attachmentFile.file = res;
-    //   console.log("attachmentFile:", this.attachmentFile)
-    // }, err => {
-    //   this.common.loading--;
-    //   console.error('Base Err: ', err);
-    // })
   }
 
   messageReadInfo(commentId) {
