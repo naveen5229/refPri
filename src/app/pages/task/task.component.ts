@@ -1643,6 +1643,12 @@ export class TaskComponent implements OnInit {
           });
         }
       }
+
+      if (ticket._is_star_mark) {
+        icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
+      } else {
+        icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
+      }
     }
 
     return icons;
@@ -2582,7 +2588,8 @@ export class TaskComponent implements OnInit {
 
   starMarkOnTicket(ticket, type) {
     let params = {
-      ticketId: ticket._tktid
+      ticketId: ticket._tktid,
+      isChecked: (ticket._is_star_mark) ? true : false
     };
     this.common.loading++;
     this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {

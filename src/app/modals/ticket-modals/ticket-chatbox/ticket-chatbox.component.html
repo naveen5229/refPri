@@ -77,7 +77,7 @@
                     <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
                 </div>
                 <div class="col-10 pr-0">
-                    <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <textarea name="taskMessage"(paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
@@ -93,7 +93,8 @@
             </div>
             <div *ngIf="attachmentFile && attachmentFile.name" class="row">
                 <div class="col-9">
-                    {{attachmentFile.name}}
+                    <!-- {{attachmentFile.name}} -->
+                    <span><img height="50" width="50" src="{{attachmentFile.file}}" alt="{{attachmentFile.name}}"></span>
                     <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
             </div>
@@ -139,7 +140,7 @@
                 <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
                     <td>CC:</td>
                     <td class="cc_user">
-                        <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
+                        <span *ngFor="let ccu of userListByTask['ccUsers'];let i = index">
                           <i class="fa fa-minus-circle cursor-pointer" style="color: cadetblue;font-size: 16px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
                           <i class="fa" style="font-size: 12px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'" [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
                           <i class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''" [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'" aria-hidden="true"></i>
@@ -149,7 +150,7 @@
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2 text-center">
-                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
+                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser"  autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
                             [preSelected]="newCCUserId"></auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUser()">Add CC User</button>
                     </td>
