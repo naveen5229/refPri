@@ -167,7 +167,7 @@ export class TicketComponent implements OnInit {
       console.log('Error: ', err);
     });
   }
-  
+
   getUserGroupList() {
     this.api.get('UserRole/getUserGroups')
       .subscribe(
@@ -345,13 +345,13 @@ export class TicketComponent implements OnInit {
         } else if (type == 103) {
           this.unassignedTkt = res['data'] || [];
           this.setTableUnassignedTkt(type);
-        }else if (type == 105) {
+        } else if (type == 105) {
           this.completedTkt = res['data'] || [];
           this.setTablecompletedTkt(type);
-        }else if (type == 104) {
+        } else if (type == 104) {
           this.ccTkt = res['data'] || [];
           this.setTableccTkt(type);
-        }else if (type == 106) {
+        } else if (type == 106) {
           this.addedByMeTkt = res['data'] || [];
           this.setTableaddedByMeTkt(type);
         }
@@ -570,8 +570,8 @@ export class TicketComponent implements OnInit {
   }
   // end: UnassignedTkt
 
-   // start: CCTkt
-   setTableccTkt(type) {
+  // start: CCTkt
+  setTableccTkt(type) {
     this.tableCcTkt.data = {
       headings: this.generateHeadingsccTkt(),
       columns: this.getTableColumnsccTkt(type)
@@ -604,9 +604,9 @@ export class TicketComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        }else if (key == "remaining_time") {
+        } else if (key == "remaining_time") {
           column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-        }  else {
+        } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
 
@@ -652,9 +652,9 @@ export class TicketComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        }else if (key == "remaining_time") {
+        } else if (key == "remaining_time") {
           column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-        }  else {
+        } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
 
@@ -700,9 +700,9 @@ export class TicketComponent implements OnInit {
             action: null,
             icons: this.actionIcons(lead, type)
           };
-        }else if (key == "remaining_time") {
+        } else if (key == "remaining_time") {
           column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-        }  else {
+        } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
 
@@ -739,22 +739,22 @@ export class TicketComponent implements OnInit {
         }
       }
 
-      if(type == 106){
-        icons.push({ class: 'fas fa-trash-alt', action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Txn" });
-      }else if(type == 101 || type == 102){
+      if (type == 106) {
+        icons.push({ class: 'fas fa-trash-alt', action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Ticket" });
+      } else if (type == 101 || type == 102) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
-      }else if(type == 105){
-        icons.push({class: "fa fa-retweet",action: this.changeTicketStatusWithConfirm.bind(this, ticket, type,0),txt: "",title: "Re-Active", });
+      } else if (type == 105) {
+        icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
       }
 
-      if(ticket._status == 2 && (type == 101 || type == 102)){
-      icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
+      if (ticket._status == 2 && (type == 101 || type == 102)) {
+        icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
       }
-      
+
       icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (!ticket._status && (type == 101 || type == 102)) {
-        icons.push({class: "fa fa-times text-danger",action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),txt: "",title: "Mark Rejected",});
+        icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark Rejected", });
         icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
       } else if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
@@ -769,22 +769,38 @@ export class TicketComponent implements OnInit {
     return icons;
   }
 
-  deleteTicket(lead, type) {
-    this.common.showToast('Working')
-    // console.log(lead,type);
-    // if(type == 7){
-    //   if(lead._delete_txn == 1 || lead._delete_txn == 5){
-    //     this.deletCallBack(lead,type);
-    //   }else{
-    //       this.common.showError('Permission Denied');
-    //   }
-    // }else if(type == 2 || type == 6){
-    //   if(lead._delete_txn == 5){
-    //     this.deletCallBack(lead,type);
-    //   }else{
-    //       this.common.showError('Permission Denied');
-    //   }
-    // }
+  deleteTicket(ticket, type) {
+    if (ticket._ticket_id > 0) {
+      this.common.params = {
+        title: "Delete Ticket ",
+        description: '<b>Are You Sure To Delete This Ticket ?<b>',
+        isRemark: false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+      activeModal.result.then((data) => {
+        if (data.response) {
+          let params = {
+            ticketId: ticket._ticket_id
+          };
+          this.common.loading++;
+          this.api.post('Ticket/deleteTicket', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] > 0) {
+              this.common.showToast(res['msg']);
+              this.getTicketByType(type);
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            this.common.showError();
+            console.log('Error: ', err);
+          });
+        }
+      });
+    } else {
+      this.common.showError("Invalid Ticket");
+    }
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
@@ -797,22 +813,16 @@ export class TicketComponent implements OnInit {
         preTitle = "Acknowledge";
       } else if (ticket._status == 2) {
         preTitle = "Completed";
-      }else if (status == 0) {
+      } else if (status == 0) {
         preTitle = "Re-Active";
       }
       this.common.params = {
-        title: preTitle + " Task ",
+        title: preTitle + " Ticket ",
         description:
           `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Ticket" + `<b>`,
         isRemark: status == -1 ? true : false,
       };
-      const activeModal = this.modalService.open(ConfirmComponent, {
-        size: "sm",
-        container: "nb-layout",
-        backdrop: "static",
-        keyboard: false,
-        windowClass: "accountModalClass",
-      });
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
       activeModal.result.then((data) => {
         console.log("Confirm response:", data);
         if (data.response) {
@@ -861,7 +871,7 @@ export class TicketComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    console.log("type:", type, ticket,this.adminList);
+    console.log("type:", type, ticket, this.adminList);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._ticket_id,
@@ -883,7 +893,7 @@ export class TicketComponent implements OnInit {
     activeModal.result.then((data) => {
       type ? this.getTicketByType(type) : null;
     });
-  } 
+  }
 
   showReminderPopup(ticket, type) {
     this.common.params = {
@@ -923,7 +933,7 @@ export class TicketComponent implements OnInit {
     let selected = this.tpPropertyList.find(ele => {
       return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
     });
-    
+
     console.log("selected:", selected);
 
     if (selected) {
@@ -1178,7 +1188,7 @@ export class TicketComponent implements OnInit {
   }
 
   html;
-  openInfoModal(ticket, type){
+  openInfoModal(ticket, type) {
     console.log(ticket);
     // return
     this.ticketForm.tp.id = ticket._tpid;
@@ -1191,17 +1201,17 @@ export class TicketComponent implements OnInit {
     this.secCatList = [];
     this.typeList = [];
     this.ticketFormFields = null;
-    setTimeout(async() => {
+    setTimeout(async () => {
       await this.getTicketFormField();
     }, 500);
 
     this.html = document.getElementById('infoData');
-    console.log('html',this.html);
+    console.log('html', this.html);
 
     document.getElementById('infoWindow').style.display = 'block';
   }
 
-  closeInfo(){
+  closeInfo() {
     document.getElementById('infoWindow').style.display = 'none';
     this.resetTicketForm();
   }
