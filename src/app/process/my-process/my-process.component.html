@@ -6,47 +6,60 @@
             </div>
             <div class="col-5">
                 <span style="display: flex;">
-                    <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="processList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess></auto-suggestion>
-                    <button class="btn btn-primary btn-sm" (click)="openDynamicDashboard(searchedProcess.selectedSuggestion._id,searchedProcess.selectedSuggestion.name)">Search</button>
+                    <auto-suggestion class="form-controls col-9 p-0 searchselect" [data]="processList" display="name"
+                        placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch" #searchedProcess>
+                    </auto-suggestion>
+                    <button class="btn btn-primary btn-sm"
+                        (click)="openDynamicDashboard(searchedProcess.selectedSuggestion._id,searchedProcess.selectedSuggestion.name)">Search</button>
                 </span>
             </div>
             <div class="col-3 text-right">
-                <button class="btn btn-primary btn-sm mr-2" (click)="exportCSV()" title="Download Excel"><i class="fas fa-download"></i></button>
-                <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/task')" title="Go To Task"><i class="fas fa-tasks"></i></button>
+                <button class="btn btn-primary btn-sm mr-2" (click)="exportCSV()" title="Download Excel"><i
+                        class="fas fa-download"></i></button>
+                <button class="btn btn-primary btn-sm mr-2" (click)="common.gotoPage('/pages/task')"
+                    title="Go To Task"><i class="fas fa-tasks"></i></button>
                 <button class="btn btn-primary btn-sm mr-2" id="csvProcess" (click)="uploadDataByCsv()">Csv</button>
                 <button class="btn btn-primary btn-sm" id="addLead" (click)="addTransaction()"><i
-                class="fa fa-plus"></i></button>
+                        class="fa fa-plus"></i></button>
             </div>
         </div>
     </nb-card-header>
     <nb-card-body>
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='leadsForMe'?'active':''" (click)="activeTab='leadsForMe';activeSabTab1=0; getProcessLeadByType(1)">
+                <li [ngClass]="activeTab=='leadsForMe'?'active':''"
+                    (click)="activeTab='leadsForMe';activeSabTab1=0; getProcessLeadByType(1)">
                     Action For Me
                 </li>
-                <li [ngClass]="activeTab=='leadsByMe'?'active':''" (click)="activeTab='leadsByMe';activeSabTab=0; getProcessLeadByType(2)">
+                <li [ngClass]="activeTab=='leadsByMe'?'active':''"
+                    (click)="activeTab='leadsByMe';activeSabTab=0; getProcessLeadByType(2)">
                     Txn By Me
                 </li>
-                <li [ngClass]="activeTab=='ownedByMe'?'active':''" (click)="activeTab='ownedByMe'; getProcessLeadByType(6)">
+                <li [ngClass]="activeTab=='ownedByMe'?'active':''"
+                    (click)="activeTab='ownedByMe'; getProcessLeadByType(6)">
                     Owned By Me
                 </li>
-                <li [ngClass]="activeTab=='admintxn'?'active':''" (click)="activeTab='admintxn'; getProcessLeadByType(7)">
+                <li [ngClass]="activeTab=='admintxn'?'active':''"
+                    (click)="activeTab='admintxn'; getProcessLeadByType(7)">
                     Admin Txn
                 </li>
                 <li [ngClass]="activeTab=='ccLeads'?'active':''" (click)="activeTab='ccLeads'; getProcessLeadByType(3)">
                     CC Txn
                 </li>
-                <li [ngClass]="activeTab=='allCompletedLeads'?'active':''" (click)="activeTab='allCompletedLeads';resetSearchData(); getProcessLeadByType(4)">
+                <li [ngClass]="activeTab=='allCompletedLeads'?'active':''"
+                    (click)="activeTab='allCompletedLeads';resetSearchData(); getProcessLeadByType(4)">
                     Completed Txn
                 </li>
-                <li [ngClass]="activeTab=='missingOwnLeads'?'active':''" (click)="activeTab='missingOwnLeads'; getProcessLeadByType(0)">
+                <li [ngClass]="activeTab=='missingOwnLeads'?'active':''"
+                    (click)="activeTab='missingOwnLeads'; getProcessLeadByType(0)">
                     Missing Owner Txn
                 </li>
-                <li [ngClass]="activeTab=='unassignedLeads'?'active':''" (click)="activeTab='unassignedLeads'; getProcessLeadByType(-1)">
+                <li [ngClass]="activeTab=='unassignedLeads'?'active':''"
+                    (click)="activeTab='unassignedLeads'; getProcessLeadByType(-1)">
                     Unassigned Txn
                 </li>
-                <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
+                <li [ngClass]="activeTab=='unreadLeads'?'active':''"
+                    (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
                     Unread Txn
                 </li>
             </ul>
@@ -57,29 +70,35 @@
                 <li [ngClass]="!activeSabTab1?'active':''" (click)="activeSabTab1=0;  getProcessLeadByType(1)">
                     Pending
                 </li>
-                <li [ngClass]="activeSabTab1==1?'active':''" (click)="activeSabTab1=1;resetSearchData(); getProcessLeadByType(9)">
+                <li [ngClass]="activeSabTab1==1?'active':''"
+                    (click)="activeSabTab1=1;resetSearchData(); getProcessLeadByType(9)">
                     Completed
                 </li>
             </ul>
             <div *ngIf="!activeSabTab1">
-                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe" class="sl-smart-table">
+                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe"
+                    class="sl-smart-table">
                 </smart-table>
             </div>
             <div *ngIf="activeSabTab1==1">
                 <div class="row mb-2" style="z-index: 999;">
                     <div class="col-4">
-                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event"
+                            [dateTimeValue]="searchData.startDate">
                         </uj-date-time-picker>
                     </div>
                     <div class="col-4">
-                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event"
+                            [dateTimeValue]="searchData.endDate">
                         </uj-date-time-picker>
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(9)">Search</button>
+                        <button class="btn btn-primary text-capitalize" id="button"
+                            (click)="getProcessLeadByType(9)">Search</button>
                     </div>
                 </div>
-                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe" class="sl2-smart-table">
+                <smart-table [data]="tableLeadsForMe.data" [settings]="tableLeadsForMe.settings" id="tableLeadsForMe"
+                    class="sl2-smart-table">
                 </smart-table>
             </div>
         </div>
@@ -89,29 +108,35 @@
                 <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0;  getProcessLeadByType(2)">
                     Pending
                 </li>
-                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1;resetSearchData(); getProcessLeadByType(8)">
+                <li [ngClass]="activeSabTab==1?'active':''"
+                    (click)="activeSabTab=1;resetSearchData(); getProcessLeadByType(8)">
                     Completed
                 </li>
             </ul>
             <div *ngIf="!activeSabTab">
-                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe" class="sl-smart-table">
+                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe"
+                    class="sl-smart-table">
                 </smart-table>
             </div>
             <div *ngIf="activeSabTab==1">
                 <div class="row mb-2" style="z-index: 999;">
                     <div class="col-4">
-                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event"
+                            [dateTimeValue]="searchData.startDate">
                         </uj-date-time-picker>
                     </div>
                     <div class="col-4">
-                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event"
+                            [dateTimeValue]="searchData.endDate">
                         </uj-date-time-picker>
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-primary text-capitalize" id="button" (click)="getProcessLeadByType(8)">Search</button>
+                        <button class="btn btn-primary text-capitalize" id="button"
+                            (click)="getProcessLeadByType(8)">Search</button>
                     </div>
                 </div>
-                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe" class="sl2-smart-table">
+                <smart-table [data]="tableLeadsByMe.data" [settings]="tableLeadsByMe.settings" id="tableLeadsByMe"
+                    class="sl2-smart-table">
                 </smart-table>
             </div>
         </div>
@@ -123,18 +148,22 @@
         <div *ngIf="activeTab=='allCompletedLeads'">
             <div class="row mb-2" style="z-index: 999;">
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event"
+                        [dateTimeValue]="searchData.startDate">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event"
+                        [dateTimeValue]="searchData.endDate">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="searchAllCompletedLead()">Search</button>
+                    <button class="btn btn-primary text-capitalize" id="button"
+                        (click)="searchAllCompletedLead()">Search</button>
                 </div>
             </div>
-            <smart-table [data]="tableAllCompletedLeads.data" [settings]="tableAllCompletedLeads.settings" id="tableAllCompletedLeads" class="sl-smart-table">
+            <smart-table [data]="tableAllCompletedLeads.data" [settings]="tableAllCompletedLeads.settings"
+                id="tableAllCompletedLeads" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">
@@ -142,11 +171,13 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='missingOwnLeads'">
-            <smart-table [data]="tableMissingOwnLeads.data" [settings]="tableMissingOwnLeads.settings" id="tableMissingOwnLeads">
+            <smart-table [data]="tableMissingOwnLeads.data" [settings]="tableMissingOwnLeads.settings"
+                id="tableMissingOwnLeads">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unassignedLeads'">
-            <smart-table [data]="tableUnassignedLeads.data" [settings]="tableUnassignedLeads.settings" id="tableUnassignedLeads">
+            <smart-table [data]="tableUnassignedLeads.data" [settings]="tableUnassignedLeads.settings"
+                id="tableUnassignedLeads">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='ownedByMe'">
