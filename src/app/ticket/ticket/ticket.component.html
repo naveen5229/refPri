@@ -40,6 +40,11 @@
                     (click)="activeTab='addedByMeTkt'; getTicketByType(106)">
                     Added By Me
                 </li>
+
+                <li [ngClass]="activeTab=='openTikcets'?'active':''"
+                    (click)="activeTab='openTikcets'; getTicketByType(107)">
+                    All Open Tickets
+                </li>
             </ul>
         </div>
 
@@ -85,6 +90,10 @@
         <div *ngIf="activeTab=='addedByMeTkt'">
             <smart-table [data]="tableAddedByMeTkt.data" [settings]="tableAddedByMeTkt.settings" id="tableAddedByMeTkt">
             </smart-table>
+        </div>
+        <div *ngIf="activeTab=='openTikcets'">
+            <smart-table [data]="tableAllOpenTkt.data" [settings]="tableAllOpenTkt.settings" id="tableAllOpenTkt"
+                class="sl-smart-table"></smart-table>
         </div>
     </nb-card-body>
 </nb-card>

@@ -20,6 +20,11 @@ export class TicketProcessComponent implements OnInit {
     { id: 0, name: 'Disable' },
     { id: 1, name: 'Enable' }
   ];
+  ticketInputValues = [
+    { id: 0, name: 'Auto' },
+    { id: 1, name: 'Manual' },
+    { id: 2, name: 'Both' }
+  ];
   ticketData = [];
   ticketPropertyData = [];
   esclationMatrixList = [];
@@ -65,6 +70,7 @@ export class TicketProcessComponent implements OnInit {
     typeList: [{ name: '' }],
     Supervisor: { id: null, name: '' },
     claimStatus: { id: 0, name: 'Disable' },
+    ticketInput: { id: 0, name:'Auto'},
     isActive: true,
   }
 
@@ -177,6 +183,7 @@ export class TicketProcessComponent implements OnInit {
       Supervisor: { id: null, name: '' },
       claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
+      ticketInput: { id: 0, name:'Auto'},
     }
   }
 
@@ -265,8 +272,8 @@ export class TicketProcessComponent implements OnInit {
     console.log(this.ticketForm);
     let params = {
       name: this.ticketForm.name,
-      startDate: this.common.dateFormatter(this.ticketForm.startTime),
-      endDate: this.common.dateFormatter(this.ticketForm.endTime),
+      startDate: this.ticketForm.startTime ? this.common.dateFormatter(this.ticketForm.startTime) : null,
+      endDate: this.ticketForm.endTime ? this.common.dateFormatter(this.ticketForm.endTime) : null,
       priCatAlias: this.ticketForm.priCatAlias,
       secCatAlias: this.ticketForm.secCatAlias,
       priCatInfo: JSON.stringify(this.ticketForm.priCatList),
@@ -275,6 +282,7 @@ export class TicketProcessComponent implements OnInit {
       claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
+      ticketInput: this.ticketForm.ticketInput.id
       // supervisorId: this.ticketForm.Supervisor.id
     }
 
@@ -550,7 +558,7 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.priCatList = [{ name: '' }],
         this.ticketForm.secCatList = [{ name: '' }],
         this.ticketForm.typeList = [{ name: '' }],
-        this.ticketForm.Supervisor = { id: ticket._default_owner, name: ticket.supervisor }
+        this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input }
     }
 
     console.log(this.ticketForm);

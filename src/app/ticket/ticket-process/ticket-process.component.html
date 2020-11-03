@@ -137,6 +137,18 @@
                         <input type="checkbox" [(ngModel)]="ticketForm.isActive">
                     </div>
                 </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Ticket Input</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="ticketInputValues" display="name" placeholder="Ticket Input"
+                            name="ticketInput" id="ticketInput" (onSelected)="ticketForm.ticketInput=$event;"
+                            [preSelected]="(ticketForm.ticketInput.id>=0) ? {name: ticketForm.ticketInput.name}:{name:''}"
+                            autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="row footer">
