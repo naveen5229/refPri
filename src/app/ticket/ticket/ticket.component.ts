@@ -204,7 +204,10 @@ export class TicketComponent implements OnInit {
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
       // if (!res['data']) return;
-      this.tpList = res['data'] || [];
+      let tpList = res['data'] || [];
+      this.tpList = tpList.filter(ele => {
+        return (ele._is_active && ele._ticket_input > 0)
+      })
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -805,6 +808,11 @@ export class TicketComponent implements OnInit {
         icons.push({ class: 'fas fa-trash-alt', action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Ticket" });
       } else if (type == 101 || type == 102 || type == 107) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
+        if (type == 107) {
+          if ((ticket._allocated_user == -1 && ticket._status == 0) || !ticket._status) {
+            icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
+          }
+        }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
       }
