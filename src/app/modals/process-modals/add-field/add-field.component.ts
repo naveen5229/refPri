@@ -271,7 +271,7 @@ export class AddFieldComponent implements OnInit {
             action: null,
             icons: this.actionIcons(doc)
           };
-        }else if(key == 'param_info'){
+        } else if (key == 'param_info') {
           column[key] = { value: this.setStringData(doc[key]), class: 'black', action: '' };
         } else {
           column[key] = { value: doc[key], class: 'black', action: '' };
@@ -286,12 +286,13 @@ export class AddFieldComponent implements OnInit {
     return columns;
   }
 
-  setStringData(arr){
+  setStringData(arr) {
     let string = '';
-    if(arr){
-    arr.map(ele=> {
+    if (arr) {
+      arr.map(ele => {
         string = string + ele.option + ',';
-    });}
+      });
+    }
     return string;
   }
 
@@ -354,9 +355,9 @@ export class AddFieldComponent implements OnInit {
 
   addFixValue() {
 
-    if(this.fixValues[this.fixValues.length-1].option){
-      this.fixValues.push({option:''})
-    }else{
+    if (this.fixValues[this.fixValues.length - 1].option) {
+      this.fixValues.push({ option: '' })
+    } else {
       this.common.showError('Enter Value First')
     }
     // if (fixvalue.length == 0) {

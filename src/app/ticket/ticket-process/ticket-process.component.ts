@@ -275,7 +275,7 @@ export class TicketProcessComponent implements OnInit {
       claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
-      supervisorId: this.ticketForm.Supervisor.id
+      // supervisorId: this.ticketForm.Supervisor.id
     }
 
     if (params.name) {
