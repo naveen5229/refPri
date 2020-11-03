@@ -809,7 +809,7 @@ export class TicketComponent implements OnInit {
       } else if (type == 101 || type == 102 || type == 107) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
         if (type == 107) {
-          if ((ticket._allocated_user == -1 && ticket._status == 0) || !ticket._status) {
+          if ((ticket._allocated_user == -1 && ticket._status == 0) || ticket._status === null) {
             icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
           }
         }
