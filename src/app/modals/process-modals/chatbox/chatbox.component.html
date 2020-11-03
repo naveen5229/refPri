@@ -7,9 +7,11 @@
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
-        <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+        <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
+                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
         <span><i class="fa fa-eye text-dark" title="View Transaction" (click)="viewTransaction()"></i></span>
-        <span><i class="fas fa-plus-square text-primary" title="Primary Info Form" (click)="openPrimaryInfoFormData()"></i></span>
+        <span><i class="fas fa-plus-square text-primary" title="Primary Info Form"
+                (click)="openPrimaryInfoFormData()"></i></span>
     </div>
 </div>
 <div class="modal-body">
@@ -17,14 +19,15 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url"
+                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
         <div class="col-1">
             <button type="button" class="close" aria-label="Close" (click)="isAttachmentShow=false">
                 <span aria-hidden="true">&times;</span>
-              </button>
+            </button>
         </div>
     </div>
     <!-- end: view attachment -->
@@ -36,7 +39,8 @@
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_date}}</span>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat"
+                        [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <label [innerHTML]="msg.comment"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
@@ -48,23 +52,28 @@
 
             <div class="row mt-1 bottom-block">
                 <div class="col-8">
-                    <textarea name="taskMessage" maxlength="500" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control"
+                        placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
                 </div>
                 <div col-1>
                     <label class="custom-file-upload">
-                        <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)">
+                        <input type="file" class="file-control" id="chat-attachment"
+                            (change)="handleFileSelection($event)">
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
                 <div class="col-3 text-right button-box">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="saveLeadMessage()">Send
-              </button>
+                    </button>
                 </div>
             </div>
             <div *ngIf="attachmentFile && attachmentFile.name" class="row">
                 <div class="col-9">
-                    {{attachmentFile.name}}
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <!-- {{attachmentFile.name}} -->
+                    <span><img height="50" width="50" src="{{attachmentFile.file}}"
+                            alt="{{attachmentFile.name}}"></span>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
+                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
             </div>
         </div>
@@ -73,15 +82,19 @@
             <!-- start: lead users -->
             <table width="100%">
                 <tr valign="top">
-                    <td class="bg-lightblue"><b>By:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].assignby:''}}</td>
+                    <td class="bg-lightblue"><b>By:</b>
+                        {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].assignby:''}}</td>
 
                     <td *ngIf="!showAssignUserAuto" class="bg-lavender">
                         <div class="row">
                             <div class="col-9">
-                                <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
+                                <b>PO:</b>
+                                {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
                             <div class="col-3 text-right">
-                                <i class="fa fa-plus" *ngIf="(userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)) || tabType == 7" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
+                                <i class="fa fa-plus"
+                                    *ngIf="(userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)) || tabType == 7"
+                                    title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
                             </div>
                         </div>
                     </td>
@@ -91,7 +104,9 @@
                                 <b>PO:</b>
                             </div>
                             <div class="col-8">
-                                <auto-suggestion [style]="'width:80%'" (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Primary Owner" autocomplete="off" name="primaryOwner" inputId="primaryOwner">
+                                <auto-suggestion [style]="'width:80%'" (onSelected)="newAssigneeUser = $event"
+                                    [data]="adminList" display="name" seperator="-" placeholder="Search Primary Owner"
+                                    autocomplete="off" name="primaryOwner" inputId="primaryOwner">
                                 </auto-suggestion>
                             </div>
                             <div class="col-3 text-right">
@@ -101,18 +116,24 @@
                         </div>
                     </td>
                 </tr>
-                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
-                    <td colspan="2"><b>CC:</b> <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{(i>0)?',':''}} {{ccu.cc_user}}</span></td>
+                <tr valign="top" class="bg-aliceblue"
+                    *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td colspan="2"><b>CC:</b> <span
+                            *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{(i>0)?',':''}}
+                            {{ccu.cc_user}}</span></td>
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2">
                         <div class="row">
                             <div class="col-9">
-                                <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
+                                <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList"
+                                    display="name" seperator="-" placeholder="Search User" autocomplete="off"
+                                    name="ccUser" inputId="ccUser">
                                 </auto-suggestion>
                             </div>
                             <div class="col-3">
-                                <button class="btn btn-primary btn-sm" (click)="addNewCCUserToLead()">Add CC User</button>
+                                <button class="btn btn-primary btn-sm" (click)="addNewCCUserToLead()">Add CC
+                                    User</button>
                             </div>
                         </div>
                     </td>
@@ -123,16 +144,19 @@
             <!-- start: target action list -->
             <div class="tabs_style_main mt-2">
                 <ul class="tabs_style text-left">
-                    <li [ngClass]="activeTab=='actionList'?'active':''" (click)="activeTab='actionList'; getTargetActionData(null)">
+                    <li [ngClass]="activeTab=='actionList'?'active':''"
+                        (click)="activeTab='actionList'; getTargetActionData(null)">
                         Actions
                     </li>
-                    <li [ngClass]="activeTab=='stateList'?'active':''" (click)="activeTab='stateList'; getTargetActionData(1)">
+                    <li [ngClass]="activeTab=='stateList'?'active':''"
+                        (click)="activeTab='stateList'; getTargetActionData(1)">
                         States
                     </li>
                 </ul>
             </div>
             <div class="mt-2">
-                <smart-table *ngIf="transActionData.length" [data]="tableTransActionData.data" [settings]="tableTransActionData.settings" id="tableTransActionData">
+                <smart-table *ngIf="transActionData.length" [data]="tableTransActionData.data"
+                    [settings]="tableTransActionData.settings" id="tableTransActionData">
                 </smart-table>
             </div>
             <!-- end: target action list -->
@@ -145,10 +169,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" style="color:#fff;">User Logs</h5>
-                    <button type="button" class="close" data-dismiss="modal" (click)="closeLeadUserLogsModal()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="closeLeadUserLogsModal()">&times;</button>
                 </div>
                 <div class="modal-body p-0">
-                    <table *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length" class="table table-bordered table-hover">
+                    <table *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length"
+                        class="table table-bordered table-hover">
                         <thead class="thead" style="background-color: #c0b2b2">
                             <tr style="text-align:center">
                                 <th>Name</th>
@@ -173,7 +199,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" style="color:#fff;">Change Action Owner</h5>
-                    <button type="button" class="close" data-dismiss="modal" (click)="closeEditActionOwnerModal()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="closeEditActionOwnerModal()">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="row mt-2 mb-2">
@@ -181,14 +208,17 @@
                             <label>Action Owner<span class="text-danger">*</span></label>
                         </div>
                         <div class="col-8">
-                            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner" inputId="actionOwnerId" (onSelected)="actionOwnerForm.userId=($event.id);actionOwnerForm.userName=($event.name);" [preSelected]="{name:actionOwnerForm.userName}"
-                                autocomplete="off">
+                            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner"
+                                name="actionOwner" inputId="actionOwnerId"
+                                (onSelected)="actionOwnerForm.userId=($event.id);actionOwnerForm.userName=($event.name);"
+                                [preSelected]="{name:actionOwnerForm.userName}" autocomplete="off">
                             </auto-suggestion>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 text-right">
-                            <button class="btn btn-primary btn-sm" type='submit' (click)="changeActionOwner()">Submit</button>
+                            <button class="btn btn-primary btn-sm" type='submit'
+                                (click)="changeActionOwner()">Submit</button>
                         </div>
                     </div>
                 </div>

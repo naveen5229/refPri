@@ -1,37 +1,48 @@
 <div class="modal-header">
     <h5 class="m-0">{{title | titlecase}}</h5>
     <button type="button" class="close" *ngIf="isLoaded" aria-label="Close" id="close" (click)="closeModal(false)">
-    <span aria-hidden="true">&times;</span>
-  </button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
-        <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'" aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
-        <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle" title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
-        <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle" title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
+        <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
+                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+        <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle"
+                title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
+        <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle"
+                title="Mark Task as Unhold" (click)="changeTicketStatusWithConfirm(2)"></i></span>
 
-        <span *ngIf="(ticketData && ticketData._isremind == 1 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell isRemind" title="Check Reminder" (click)="checkReminderSeen()"></i></span>
-        <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell reminderAdded" title="View/Edit Reminder" (click)="showReminderPopup()"></i></span>
-        <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell" title="Add Reminder" (click)="showReminderPopup()"></i></span>
+        <span *ngIf="(ticketData && ticketData._isremind == 1 && !(statusId==-1 || statusId == 5))"><i
+                class="fa fa-bell isRemind" title="Check Reminder" (click)="checkReminderSeen()"></i></span>
+        <span *ngIf="(ticketData && ticketData._isremind == 2 && !(statusId==-1 || statusId == 5))"><i
+                class="fa fa-bell reminderAdded" title="View/Edit Reminder" (click)="showReminderPopup()"></i></span>
+        <span *ngIf="(ticketData && !ticketData._isremind && !(statusId==-1 || statusId == 5))"><i class="fa fa-bell"
+                title="Add Reminder" (click)="showReminderPopup()"></i></span>
 
-        <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5) && [101,102].includes(ticketType))" class="blue cursor-pointer" title="Change Expected Date" (click)="editTaskAssignDate()">{{ticketData.expdate}}</span>
-        <span *ngIf="stTaskMaster && ticketType == 103"><i class="fa fa-edit text-success" title="Edit Schedule task master" (click)="openSchedukedTaskMasterModal()"></i></span>
-        <span *ngIf="stTaskMaster && ticketType == 103"><i class="fa fa-calendar-alt text-dark" title="Edit Schedule task param" (click)="addScheduleTaskparam({_id:null})"></i></span>
+        <span *ngIf="(ticketData && !(statusId==-1 || statusId == 5) && [101,102].includes(ticketType))"
+            class="blue cursor-pointer" title="Change Expected Date"
+            (click)="editTaskAssignDate()">{{ticketData.expdate}}</span>
+        <span *ngIf="stTaskMaster && ticketType == 103"><i class="fa fa-edit text-success"
+                title="Edit Schedule task master" (click)="openSchedukedTaskMasterModal()"></i></span>
+        <span *ngIf="stTaskMaster && ticketType == 103"><i class="fa fa-calendar-alt text-dark"
+                title="Edit Schedule task param" (click)="addScheduleTaskparam({_id:null})"></i></span>
     </div>
 </div>
 <div class="modal-body">
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url"
+                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
         <div class="col-1">
             <button type="button" class="close" aria-label="Close" (click)="isAttachmentShow=false">
                 <span aria-hidden="true">&times;</span>
-              </button>
+            </button>
         </div>
     </div>
 
@@ -57,26 +68,40 @@
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <div>
-                            <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true" title="Reply Demanded pending"></i>{{msg.added_date}}</span>
+                            <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true"
+                                    title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                             <span class="comment_reply">
-                            <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="left" (click)="messageReadInfo(msg._id)"></i>
-                            <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="left" (click)="replyToComment(msg,'mine')"></i>
-                        </span>
+                                <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
+                                    [ngbPopover]="commentInfoPopContent" placement="left"
+                                    (click)="messageReadInfo(msg._id)"></i>
+                                <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
+                                    [ngbPopover]="replyPopContent" placement="left"
+                                    (click)="replyToComment(msg,'mine')"></i>
+                            </span>
                         </div>
-                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block" [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
+                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block"
+                            [innerHTML]="msg.parent_comment"></span>
+                        <label [innerHTML]="msg.comment"
+                            [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
 
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat"
+                        [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <div>
                             <span>{{msg.added_by +" "+msg.added_date}}</span>
                             <span class="comment_reply">
-                            <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="right" (click)="messageReadInfo(msg._id)"></i>
-                            <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="right" (click)="replyToComment(msg,'other')"></i>
-                        </span>
+                                <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
+                                    [ngbPopover]="commentInfoPopContent" placement="right"
+                                    (click)="messageReadInfo(msg._id)"></i>
+                                <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
+                                    [ngbPopover]="replyPopContent" placement="right"
+                                    (click)="replyToComment(msg,'other')"></i>
+                            </span>
                         </div>
-                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block" [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
+                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block"
+                            [innerHTML]="msg.parent_comment"></span>
+                        <label [innerHTML]="msg.comment"
+                            [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                     </div>
                 </div>
                 <div *ngIf="showLoading" class="col-12 text-center">
@@ -87,31 +112,41 @@
             <div class="row pt-1 pb-2 bottom-block">
                 <div *ngIf="parentCommentId>0 && replyType>0" class="col-12 quoted_selected">
                     <label [innerHTML]="parentComment"></label>
-                    <span class="comment_reply"><i class="fa fa-times" aria-hidden="true" (click)="resetQuotedMsg()"></i></span>
+                    <span class="comment_reply"><i class="fa fa-times" aria-hidden="true"
+                            (click)="resetQuotedMsg()"></i></span>
                 </div>
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
-                    <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                    <span *ngFor="let u of mentionedUserList;let i=index;"
+                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
                     <!-- <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a> -->
                 </div>
                 <div class="col-10 pr-0">
-                    <textarea name="taskMessage" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" (paste)="onFilePaste($event)" #msgtextarea></textarea>
+                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
+                        id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage"
+                        (input)="onMessageType($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
-                        <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)">
+                        <input type="file" class="file-control" id="chat-attachment"
+                            (change)="handleFileSelection($event)">
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
-                <div *ngIf="isChatFeature || (userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId)" class="col-1 pl-0 text-right button-box">
-                    <button class="btn send" id="button" (click)="saveTicketMessage()" title="Send"><i class="fas fa-paper-plane"></i>
-                  </button>
+                <div *ngIf="isChatFeature || (userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId)"
+                    class="col-1 pl-0 text-right button-box">
+                    <button class="btn send" id="button" (click)="saveTicketMessage()" title="Send"><i
+                            class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
             <div *ngIf="attachmentFile && attachmentFile.name" class="row">
                 <div class="col-9">
-                    {{attachmentFile.name}}
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <!-- {{attachmentFile.name}} -->
+                    <span><img height="50" width="50" src="{{attachmentFile.file}}"
+                            alt="{{attachmentFile.name}}"></span>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
+                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
             </div>
         </div>
@@ -120,66 +155,96 @@
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                            [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''"
+                            [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}
                     </td>
                 </tr>
                 <tr *ngIf="ticketType!=114" valign="top" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto">
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                            [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''"
+                            [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
-                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)" class="btn add" title="assign to new user"
-                            (click)="showAssignUserAuto=1"><i
-                            class="fa fa-plus m-0"></i></button>
+                        <button
+                            *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)"
+                            class="btn add" title="assign to new user" (click)="showAssignUserAuto=1"><i
+                                class="fa fa-plus m-0"></i></button>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">
-                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser" inputId="assigneeUser">
+                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name"
+                            seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser"
+                            inputId="assigneeUser">
                         </auto-suggestion>
                         <button class="btn add" (click)="updateTaskAssigneeUser()"><i
-                            class="fa fa-check m-0"></i></button>
+                                class="fa fa-check m-0"></i></button>
                     </td>
                 </tr>
-                <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
+                <tr valign="top" class="bg-lavenderblush"
+                    *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
                     <td>PO:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                            [ngClass]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'text-success' : 'text-danger') : ''"
+                            [title]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}
                     </td>
                 </tr>
-                <tr valign="top" class="bg-lightcyan" *ngIf="userListByTask['projectUsers'] && userListByTask['projectUsers'].length>0">
+                <tr valign="top" class="bg-lightcyan"
+                    *ngIf="userListByTask['projectUsers'] && userListByTask['projectUsers'].length>0">
                     <td>PU:</td>
                     <td>
                         <span *ngFor="let pu of userListByTask.projectUsers;let i = index">
-                            <i class="fa" style="font-size: 12px;" [ngClass]="(pu.status) ? 'fa-eye text-success' : 'fa-eye-slash'" [title]="(pu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(pu.present) ? ((pu.present==1) ? 'text-success' : 'text-danger') : ''" [title]="(pu.present) ? ((pu.present==1) ? 'Present' : 'Leave') : 'Absent'" aria-hidden="true"></i>
+                            <i class="fa" style="font-size: 12px;"
+                                [ngClass]="(pu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
+                                [title]="(pu.status) ? 'Ack' : 'Ack Pending'"></i>
+                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                                [ngClass]="(pu.present) ? ((pu.present==1) ? 'text-success' : 'text-danger') : ''"
+                                [title]="(pu.present) ? ((pu.present==1) ? 'Present' : 'Leave') : 'Absent'"
+                                aria-hidden="true"></i>
                             {{pu.project_user}}
                             <br>
                         </span>
                     </td>
                 </tr>
-                <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
+                <tr valign="top" class="bg-lavenderblush"
+                    *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
                     <td>EU:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
-                            aria-hidden="true"></i> {{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                            [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''"
+                            [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                            aria-hidden="true"></i>
+                        {{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}
                     </td>
                 </tr>
-                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                <tr valign="top" class="bg-aliceblue"
+                    *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
                     <td>{{(ticketType==114) ? 'Users' : 'CC'}}:</td>
                     <td class="cc_user">
                         <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
-                            <i class="fa fa-minus-circle cursor-pointer" style="color: cadetblue;font-size: 10px;" title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
-                            <i class="fa" style="font-size: 12px;" [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'" [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''" [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'" aria-hidden="true"></i>
+                            <i class="fa fa-minus-circle cursor-pointer" style="color: cadetblue;font-size: 10px;"
+                                title="Remove CC-user"
+                                (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
+                            <i class="fa" style="font-size: 12px;"
+                                [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
+                                [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
+                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                                [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''"
+                                [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'"
+                                aria-hidden="true"></i>
                             {{ccu.cc_user}}
-                        <br></span>
+                            <br></span>
                     </td>
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2 text-center">
-                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
-                            [preSelected]="newCCUserId"></auto-suggestion>
+                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-"
+                            placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers"
+                            name="ccUser" inputId="ccUser" autocomplete="off" isMultiSelect="true"
+                            [bGConditions]="bGConditions" [preSelected]="newCCUserId"></auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
                     </td>
                 </tr>
