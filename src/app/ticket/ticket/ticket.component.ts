@@ -147,7 +147,7 @@ export class TicketComponent implements OnInit {
   forwardTicketObject = {
     ticketAllocationId: null,
     tktId: null,
-    userId: null,
+    userId: { id: null, name: '' },
     remark: null,
     tabType: null
   }
@@ -1226,7 +1226,7 @@ export class TicketComponent implements OnInit {
     this.forwardTicketObject = {
       ticketAllocationId: null,
       tktId: null,
-      userId: null,
+      userId: { id: null, name: null },
       remark: null,
       tabType: null
     }
