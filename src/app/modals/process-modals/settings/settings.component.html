@@ -101,6 +101,18 @@
 
     <div class="row mt-2">
         <div class="col-4">
+            <label>Txn Notification:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="txnNotification" display="name" seperator="-" placeholder="Set Notification"
+                (onSelected)="transaction.txnNoti = $event" inputId="Notification" name="Notification"
+                [preSelected]="(transaction.txnNoti.id>=0) ? {name: transaction.txnNoti.name} : {name: ''}">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
             <label>Ack to Add User:</label>
         </div>
         <div class="col-6">
