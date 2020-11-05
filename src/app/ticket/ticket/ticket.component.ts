@@ -8,7 +8,7 @@ import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
-import { async } from '@angular/core/testing';
+import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -225,7 +225,7 @@ export class TicketComponent implements OnInit {
     this.api.get("Ticket/getTicketFormFieldById" + params).subscribe(res => {
       if (res['code'] > 0) {
         if (res['data']) {
-          this.ticketFormFields = res['data'] = res['data'];
+          this.ticketFormFields = res['data'];
           this.formatArray();
         }
       } else {
@@ -809,6 +809,11 @@ export class TicketComponent implements OnInit {
       } else if (type == 101 || type == 102 || type == 107) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
         if (type == 107) {
+          if (!ticket._status) {
+            icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
+          } else if (ticket._status == 2) {
+            icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+          }
           if ((ticket._allocated_user == -1 && ticket._status == 0) || ticket._status === null) {
             icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
           }
@@ -874,7 +879,7 @@ export class TicketComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
-    console.log(status, 'status')
+    console.log(ticket, 'status'); 
     if (ticket._ticket_id) {
       let preTitle = "Complete";
       if (status === -1) {
@@ -896,7 +901,11 @@ export class TicketComponent implements OnInit {
       activeModal.result.then((data) => {
         console.log("Confirm response:", data);
         if (data.response) {
-          this.updateTicketStatus(ticket, type, status, data.remark);
+          if (status==5 && ticket._close_form > 0) {
+            this.openTicketFormData(ticket, type, status);
+          }else{
+            this.updateTicketStatus(ticket, type, status, data.remark);
+          }
         }
       });
     } else {
@@ -912,7 +921,9 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
       this.common.loading--;
-      this.common.showToast(res["msg"]);
+      if (res['code'] > 0) { this.common.showToast(res["msg"]); } else {
+        this.common.showError(res['msg'])
+      }
       this.getTicketByType(type);
     }, (err) => {
       this.common.loading--;
@@ -1255,6 +1266,23 @@ export class TicketComponent implements OnInit {
         console.log('Error: ', err);
       });
     }
+  }
+
+  openTicketFormData(ticket,type,status) {
+    let title = 'Ticket Closing Form';
+    let actionData = {
+      ticketId: ticket._ticket_id,
+      refId: ticket._tpid,
+      refType: 1,
+    };
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.data, 'response');
+        this.updateTicketStatus(ticket, type, status, null);
+      }
+    });
   }
 
   openInfoModal(ticket, type) {

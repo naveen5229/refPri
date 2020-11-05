@@ -25,6 +25,11 @@ export class TicketProcessComponent implements OnInit {
     { id: 1, name: 'Manual' },
     { id: 2, name: 'Both' }
   ];
+
+  formTypeFields = [
+    { id: 0, name: 'Add Ticket Form reftype' },
+    { id: 1, name: 'On Ticket Close Form' },
+  ]
   ticketData = [];
   ticketPropertyData = [];
   esclationMatrixList = [];
@@ -70,8 +75,13 @@ export class TicketProcessComponent implements OnInit {
     typeList: [{ name: '' }],
     Supervisor: { id: null, name: '' },
     claimStatus: { id: 0, name: 'Disable' },
-    ticketInput: { id: 0, name:'Auto'},
+    ticketInput: { id: 0, name: 'Auto' },
     isActive: true,
+  }
+
+  formRefType = {
+    tpId: null,
+    formFieldRefType: { id: null, name: null },
   }
 
   ticketPropertyForm = {
@@ -119,6 +129,12 @@ export class TicketProcessComponent implements OnInit {
   adminList = [];
 
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
+    this.getAllAdmin();
+    this.getTicketList();
+    this.common.refresh = this.refresh.bind(this);
+  }
+
+  refresh() {
     this.getAllAdmin();
     this.getTicketList();
   }
@@ -183,7 +199,7 @@ export class TicketProcessComponent implements OnInit {
       Supervisor: { id: null, name: '' },
       claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
-      ticketInput: { id: 0, name:'Auto'},
+      ticketInput: { id: 0, name: 'Auto' },
     }
   }
 
@@ -399,7 +415,7 @@ export class TicketProcessComponent implements OnInit {
       { class: "fas fa-list-alt", action: this.openCatModal.bind(this, ticket, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, ticket, 3), title: "Type Mapping" },
       { class: "fas fa-plus-square", action: this.openTicketPropertyModal.bind(this, ticket._id), title: "Ticket Property" },
-      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixModal.bind(this, ticket._id, 0), title: "Form Matrix" }
+      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixTypeModal.bind(this, ticket._id), title: "Form Matrix" }
     ];
     return icons;
   }
@@ -860,10 +876,31 @@ export class TicketProcessComponent implements OnInit {
     const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
-  closeTicketFormMatrixModal() {
-    document.getElementById('ticketFormMatrix').style.display = 'none';
+  openTicketFormMatrixTypeModal(tpID) {
+    this.formRefType.tpId = tpID;
+    document.getElementById('ticketFormMatrixType').style.display = 'block';
   }
 
+  closeTicketFormMatrixTypeModal() {
+    document.getElementById('ticketFormMatrixType').style.display = 'none';
+    this.resetFormRefType();
+  }
+  resetFormRefType() {
+    this.formRefType = {
+      tpId: null,
+      formFieldRefType: { id: null, name: null }
+    }
+  }
+
+  saveTicketFormMatrixTypeModal() {
+    if (this.formRefType.formFieldRefType.id === null) {
+      this.common.showError('Select Type')
+    } else {
+      this.openTicketFormMatrixModal(this.formRefType.tpId, this.formRefType.formFieldRefType.id);
+      document.getElementById('ticketFormMatrixType').style.display = 'none';
+      this.resetFormRefType();
+    }
+  }
 
   addProcessUsers(property) {
     this.common.params = { process_id: property._id, adminList: this.adminList, fromPage: 'ticket' };
