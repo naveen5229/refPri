@@ -501,19 +501,38 @@
 </div>
 <!--end: Ticket Property Esclation Matrix -->
 
-<!--start: Ticket Form Matrix -->
-<div class="modal" id="ticketFormMatrix">
-    <div class="modal-dialog modal-xl">
+<!--start: Ticket Form Matrix Type -->
+<div class="modal" id="ticketFormMatrixType">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ticket Form Matrix</h5>
+                <h5 class="modal-title">Ticket Form Type</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeTicketFormMatrixModal()">&times;</button>
+                    (click)="closeTicketFormMatrixTypeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                Dummy
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Form Type</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="formTypeFields" display="name" placeholder="Form Field"
+                            name="formTypeFields" id="formTypeFields" [preSelected]="formRefType.formFieldRefType.id >= 0  ? {name: formRefType.formFieldRefType.name}:{name:''}"
+                            (onSelected)="formRefType.formFieldRefType=$event;" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="row footer">
+                        <div class="col text-right">
+                            <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
+                                (click)="saveTicketFormMatrixTypeModal()">Next</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<!--end: Ticket Form Matrix -->
+<!--end: Ticket Form Matrix Type -->
