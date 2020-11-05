@@ -110,6 +110,17 @@ export class TicketComponent implements OnInit {
     }
   };
 
+  allOpenTicketList = [];
+  tableAllOpenTkt = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   ticketFormFields;
   tpPropertyList = [];
   ticketForm = {
@@ -136,7 +147,7 @@ export class TicketComponent implements OnInit {
   forwardTicketObject = {
     ticketAllocationId: null,
     tktId: null,
-    userId: null,
+    userId: { id: null, name: '' },
     remark: null,
     tabType: null
   }
@@ -193,7 +204,10 @@ export class TicketComponent implements OnInit {
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
       // if (!res['data']) return;
-      this.tpList = res['data'] || [];
+      let tpList = res['data'] || [];
+      this.tpList = tpList.filter(ele => {
+        return (ele._is_active && ele._ticket_input > 0)
+      })
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -354,6 +368,9 @@ export class TicketComponent implements OnInit {
         } else if (type == 106) {
           this.addedByMeTkt = res['data'] || [];
           this.setTableaddedByMeTkt(type);
+        } else if (type == 107) {
+          this.allOpenTicketList = res['data'] || [];
+          this.setTableAllOPenTkt(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -666,6 +683,54 @@ export class TicketComponent implements OnInit {
   }
   // end: addedByMeTkt
 
+  // start: allOpenTickets
+  setTableAllOPenTkt(type) {
+    this.tableAllOpenTkt.data = {
+      headings: this.generateHeadingsallOpenTickets(),
+      columns: this.getTableColumnsallOpenTickets(type)
+    };
+    return true;
+  }
+
+  generateHeadingsallOpenTickets() {
+    let headings = {};
+    for (var key in this.allOpenTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsallOpenTickets(type) {
+    let columns = [];
+    this.allOpenTicketList.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsallOpenTickets()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        } else if (key == "remaining_time") {
+          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        // column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: allOpenTickets
+
   // start: CompletedTkt
   setTablecompletedTkt(type) {
     this.tableCompletedTkt.data = {
@@ -717,7 +782,7 @@ export class TicketComponent implements OnInit {
   actionIcons(ticket, type) {
     console.log("actionIcons:", ticket);
     let icons = [];
-    if (type == 101 || type == 102 || type == 106 || type == 104 || type == 105) {
+    if (type == 101 || type == 102 || type == 106 || type == 104 || type == 105 || type == 107) {
       icons.push({ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: 'Chat Box', });
 
       if (ticket._unreadcount > 0) {
@@ -728,9 +793,9 @@ export class TicketComponent implements OnInit {
 
       if (ticket._status == 5 || ticket._status == -1) {
       } else {
-        if (ticket._isremind == 1 && (type == 106 || type == 104 || type == 101 || type == 102)) {
+        if (ticket._isremind == 1 && (type == 106 || type == 104 || type == 101 || type == 102 || type == 107)) {
           icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: "", title: 'Reminder', });
-        } else if (ticket._isremind == 2 && type != 102) {
+        } else if (ticket._isremind == 2 && (type != 102)) {
           icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: "", title: 'Reminder', });
         } else {
           if (type != 102) {
@@ -741,8 +806,13 @@ export class TicketComponent implements OnInit {
 
       if (type == 106) {
         icons.push({ class: 'fas fa-trash-alt', action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Ticket" });
-      } else if (type == 101 || type == 102) {
+      } else if (type == 101 || type == 102 || type == 107) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
+        if (type == 107) {
+          if ((ticket._allocated_user == -1 && ticket._status == 0) || ticket._status === null) {
+            icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
+          }
+        }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
       }
@@ -1156,7 +1226,7 @@ export class TicketComponent implements OnInit {
     this.forwardTicketObject = {
       ticketAllocationId: null,
       tktId: null,
-      userId: null,
+      userId: { id: null, name: null },
       remark: null,
       tabType: null
     }
@@ -1187,7 +1257,6 @@ export class TicketComponent implements OnInit {
     }
   }
 
-  html;
   openInfoModal(ticket, type) {
     console.log(ticket);
     // return
@@ -1204,9 +1273,6 @@ export class TicketComponent implements OnInit {
     setTimeout(async () => {
       await this.getTicketFormField();
     }, 500);
-
-    this.html = document.getElementById('infoData');
-    console.log('html', this.html);
 
     document.getElementById('infoWindow').style.display = 'block';
   }
