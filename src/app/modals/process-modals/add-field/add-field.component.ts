@@ -82,7 +82,11 @@ export class AddFieldComponent implements OnInit {
     // ];
 
     if (this.formType == 11) {
-      this.title = "Add Ticket Form Field";
+      if(this.refType==1){
+        this.title = "Add Ticket closing Form Field";
+      }else{
+        this.title = "Add Ticket Form Field";
+      }
     } else if (!this.refType) {
       this.title = "Add State Form Field";
     } else if (this.refType == 1) {
@@ -93,7 +97,7 @@ export class AddFieldComponent implements OnInit {
       this.title = "Add Primary Info Form Field";
     }
     this.getFieldName();
-    if (this.refType == 2) {
+    if (!this.formType && this.refType == 2) {
       this.getGlobalFormField();
     }
   }
@@ -328,7 +332,7 @@ export class AddFieldComponent implements OnInit {
         if (data.response) {
           // this.api.post('Processes/deleteProcessMatrix', params).subscribe(res => {
           let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
-          // console.log("apiName:", apiName); return false;
+          // console.log("apiName:", apiName,params); return false;
           this.common.loading++;
           this.api.post(apiName, params).subscribe(res => {
             this.common.loading--;

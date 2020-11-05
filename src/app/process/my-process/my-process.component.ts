@@ -991,7 +991,7 @@ export class MyProcessComponent implements OnInit {
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
       isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
-      isMarkTxnComplete: ((lead._to_mark_outstate == 2 && type == 1) || [2, 6, 7].includes(type)) ? 1 : null
+      isMarkTxnComplete: ((lead._state_change == 2 && type == 1) || [2, 6, 7].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
