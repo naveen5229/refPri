@@ -136,6 +136,13 @@ export class MyProcessComponent implements OnInit {
     this.getProcessLeadByType(1);
     this.getAllAdmin();
     this.getProcessList();
+    this.common.refresh = this.refresh.bind(this);
+  }
+  
+  refresh() {
+    this.getProcessLeadByType(1);
+    this.getAllAdmin();
+    this.getProcessList();
   }
 
   ngOnInit() { }

@@ -17,6 +17,7 @@ import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-fo
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements OnInit {
+  ticketDetailTitle = 'Ticket Info';
   loginUserId = this.userService._details.id;
   activeTab = 'allocatedTkt';
   adminList = [];
@@ -223,13 +224,13 @@ export class TicketComponent implements OnInit {
     });
   }
 
-  getTicketFormField() {
+  getTicketFormField(refType) {
     if (!this.ticketForm.tp.id) {
       this.common.showError("Ticket Process is missing");
       return false;
     }
     this.ticketFormFields = null;
-    let params = "?refId=" + this.ticketForm.tp.id + "&refType=0" + "&ticketId=" + this.ticketForm.requestId;
+    let params = "?refId=" + this.ticketForm.tp.id + "&refType=" + refType + "&ticketId=" + this.ticketForm.requestId;
     this.api.get("Ticket/getTicketFormFieldById" + params).subscribe(res => {
       if (res['code'] > 0) {
         if (res['data']) {
@@ -339,7 +340,7 @@ export class TicketComponent implements OnInit {
     this.typeList = [];
     this.ticketFormFields = null;
     setTimeout(() => {
-      this.getTicketFormField();
+      this.getTicketFormField(0);
       this.getTicketProcessProperty();
     }, 500);
   }
@@ -811,6 +812,7 @@ export class TicketComponent implements OnInit {
           }
         }
       }
+      icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (type == 106) {
         icons.push({ class: 'fas fa-trash-alt', action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Ticket" });
@@ -820,34 +822,39 @@ export class TicketComponent implements OnInit {
           if (!ticket._status) {
             icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
           } else if (ticket._status == 2) {
-            icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+            icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
           }
           if ((ticket._allocated_user == -1 && ticket._status == 0) || ticket._status === null) {
             icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
           }
+        } else if (type == 102) {
+          if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
+            icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
+          }
         }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
+        if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
+          icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
+        }
       }
 
       if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
       }
 
-      icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
-
       if (!ticket._status && (type == 101 || type == 102)) {
         icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark Rejected", });
         icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
       } else if (ticket._status == 2 && (type == 101 || type == 102)) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
       }
     } else if (type == 100) {
       icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
     } else if (type == 103) {
       icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
     }
-    icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type), txt: '', title: "Ticket Info" });
+    icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type, 0), txt: '', title: "Ticket Info" });
 
     return icons;
   }
@@ -909,11 +916,7 @@ export class TicketComponent implements OnInit {
       activeModal.result.then((data) => {
         console.log("Confirm response:", data);
         if (data.response) {
-          if (status == 5 && ticket._close_form > 0) {
-            this.openTicketFormData(ticket, type, status);
-          } else {
-            this.updateTicketStatus(ticket, type, status, data.remark);
-          }
+          this.updateTicketStatus(ticket, type, status, data.remark);
         }
       });
     } else {
@@ -1307,12 +1310,14 @@ export class TicketComponent implements OnInit {
     });
   }
 
-  openInfoModal(ticket, type) {
-    console.log(ticket);
-    // return
+  openInfoModal(ticket, type, refType) {
+    if (refType == 1) {
+      this.ticketDetailTitle = 'Closing Form Detail';
+    } else {
+      this.ticketDetailTitle = 'Ticket Info';
+    }
     this.ticketForm.tp.id = ticket._tpid;
     this.ticketForm.requestId = ticket._ticket_id;
-
     this.tpPropertyList = [];
     this.oddArray = [];
     this.evenArray = [];
@@ -1321,7 +1326,7 @@ export class TicketComponent implements OnInit {
     this.typeList = [];
     this.ticketFormFields = null;
     setTimeout(async () => {
-      await this.getTicketFormField();
+      await this.getTicketFormField(refType);
     }, 500);
 
     document.getElementById('infoWindow').style.display = 'block';
