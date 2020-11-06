@@ -138,11 +138,12 @@ export class MyProcessComponent implements OnInit {
     this.getProcessList();
     this.common.refresh = this.refresh.bind(this);
   }
-  
+
   refresh() {
     this.getProcessLeadByType(1);
     this.getAllAdmin();
     this.getProcessList();
+    this.activeTab = 'leadsForMe';
   }
 
   ngOnInit() { }
@@ -869,24 +870,24 @@ export class MyProcessComponent implements OnInit {
   }
 
   deleteTransaction(lead, type) {
-    console.log(lead,type);
-    if(type == 7){
-      if(lead._delete_txn == 1 || lead._delete_txn == 5){
-        this.deletCallBack(lead,type);
-      }else{
-          this.common.showError('Permission Denied');
+    console.log(lead, type);
+    if (type == 7) {
+      if (lead._delete_txn == 1 || lead._delete_txn == 5) {
+        this.deletCallBack(lead, type);
+      } else {
+        this.common.showError('Permission Denied');
       }
-    }else if(type == 2 || type == 6){
-      if(lead._delete_txn == 5){
-        this.deletCallBack(lead,type);
-      }else{
-          this.common.showError('Permission Denied');
+    } else if (type == 2 || type == 6) {
+      if (lead._delete_txn == 5) {
+        this.deletCallBack(lead, type);
+      } else {
+        this.common.showError('Permission Denied');
       }
     }
   }
 
-  deletCallBack(lead,type){
-    
+  deletCallBack(lead, type) {
+
     let params = {
       transId: lead._transactionid
     }

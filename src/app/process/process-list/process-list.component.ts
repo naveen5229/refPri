@@ -52,9 +52,15 @@ export class ProcessListComponent implements OnInit {
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
     this.getProcessList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
+
+  refresh() {
+    this.getAllAdmin();
+    this.getProcessList();
+  }
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {

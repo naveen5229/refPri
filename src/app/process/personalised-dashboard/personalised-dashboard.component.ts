@@ -50,9 +50,14 @@ export class PersonalisedDashboardComponent implements OnInit {
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getProcessList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.getProcessList();
   }
   getProcessList() {
     this.common.loading++;
