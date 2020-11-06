@@ -879,7 +879,7 @@ export class TicketComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
-    console.log(ticket, 'status'); 
+    console.log(ticket, 'status');
     if (ticket._ticket_id) {
       let preTitle = "Complete";
       if (status === -1) {
@@ -901,9 +901,9 @@ export class TicketComponent implements OnInit {
       activeModal.result.then((data) => {
         console.log("Confirm response:", data);
         if (data.response) {
-          if (status==5 && ticket._close_form > 0) {
+          if (status == 5 && ticket._close_form > 0) {
             this.openTicketFormData(ticket, type, status);
-          }else{
+          } else {
             this.updateTicketStatus(ticket, type, status, data.remark);
           }
         }
@@ -921,7 +921,13 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
       this.common.loading--;
-      if (res['code'] > 0) { this.common.showToast(res["msg"]); } else {
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
         this.common.showError(res['msg'])
       }
       this.getTicketByType(type);
@@ -1110,10 +1116,14 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe(res => {
       this.common.loading--;
-      if (res['code'] > 0 && res['data'][0].y_id > 0) {
-        this.closeassignUserModal();
-        this.common.showToast(res["msg"]);
-        this.getTicketByType(this.assignUserObject.type);
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.closeassignUserModal();
+          this.common.showToast(res['data'][0].y_msg);
+          this.getTicketByType(this.assignUserObject.type);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
       } else {
         this.common.showToast(res["msg"]);
       }
@@ -1206,9 +1216,13 @@ export class TicketComponent implements OnInit {
     this.api.post("Ticket/forwardTicket", params).subscribe((res) => {
       this.common.loading--;
       if (res['code'] > 0) {
-        this.common.showToast(res["msg"]);
-        this.closeForwardTicket();
-        this.getTicketByType(type);
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeForwardTicket();
+          this.getTicketByType(type);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
       } else {
         this.common.showError(res['msg']);
       }
@@ -1268,7 +1282,7 @@ export class TicketComponent implements OnInit {
     }
   }
 
-  openTicketFormData(ticket,type,status) {
+  openTicketFormData(ticket, type, status) {
     let title = 'Ticket Closing Form';
     let actionData = {
       ticketId: ticket._ticket_id,
