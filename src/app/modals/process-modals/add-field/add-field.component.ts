@@ -87,6 +87,13 @@ export class AddFieldComponent implements OnInit {
       }else{
         this.title = "Add Ticket Form Field";
       }
+      this.types = [
+        { id: 'text', name: 'Text' },
+        { id: 'number', name: 'Number' },
+        { id: 'date', name: 'Date' },
+        // { id: 'table', name: 'Table' },
+        { id: 'checkbox', name: 'Checkbox' }
+      ];
     } else if (!this.refType) {
       this.title = "Add State Form Field";
     } else if (this.refType == 1) {
