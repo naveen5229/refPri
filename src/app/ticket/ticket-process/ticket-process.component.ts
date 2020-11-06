@@ -27,7 +27,7 @@ export class TicketProcessComponent implements OnInit {
   ];
 
   formTypeFields = [
-    { id: 0, name: 'Add Ticket Form reftype' },
+    { id: 0, name: 'Add Ticket Form' },
     { id: 1, name: 'On Ticket Close Form' },
   ]
   ticketData = [];
