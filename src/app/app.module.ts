@@ -107,6 +107,7 @@ import { SettingsComponent } from './modals/process-modals/settings/settings.com
 import { DocumentListingComponent } from './modals/document-listing/document-listing.component';
 import { TicketChatboxComponent } from './modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 import { AddExtraTimeComponent } from './modals/ticket-modals/add-extra-time/add-extra-time.component';
+import { TicketClosingFormComponent } from './modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -181,7 +182,8 @@ const PAGE_COMPONENTS = [
   ApplyLeaveComponent,
   DocumentListingComponent,
   TicketChatboxComponent,
-  AddExtraTimeComponent
+  AddExtraTimeComponent,
+  TicketClosingFormComponent,
 ];
 
 @NgModule({
@@ -196,7 +198,7 @@ const PAGE_COMPONENTS = [
     AddpartneruserComponent,
     AddcompanyComponent,
     AddfouserComponent,
-    ChatboxComponent,
+    ChatboxComponent
 
 
     // SendmessageComponent,
