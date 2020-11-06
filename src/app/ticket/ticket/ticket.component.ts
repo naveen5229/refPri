@@ -162,6 +162,14 @@ export class TicketComponent implements OnInit {
     this.getAllAdmin();
     this.getTicketProcessList();
     this.getUserGroupList();
+    this.common.refresh = this.refresh.bind(this);
+  }
+
+  refresh() {
+    this.getTicketByType(101);
+    this.getAllAdmin();
+    this.getTicketProcessList();
+    this.getUserGroupList();
   }
 
   ngOnInit() { }
