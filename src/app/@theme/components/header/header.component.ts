@@ -61,6 +61,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
       this.userLogin = this.userService._details.name || [];
       console.log("----------------", this.userLogin);
+      this.getUserPresence();
     }
   }
 
@@ -148,4 +149,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.common.refresh();
   }
+
+  getUserPresence() {
+    let empId = this.userService._details.id;
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + empId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.userService._details['present'] = (userPresence) ? 1 : 0;
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
 }

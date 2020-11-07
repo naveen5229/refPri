@@ -224,6 +224,19 @@ export class ChatboxComponent implements OnInit {
     })
   }
 
+  onPaste(event: any) {
+    console.log('event', event);
+    const items = event.clipboardData.items;
+    let selectedFile = { "target": { "files": [] } };
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        selectedFile.target.files.push(item.getAsFile());
+      }
+    }
+
+    this.handleFileSelection(selectedFile);
+  }
+
   getAllUserByLead() {
     let params = {
       leadId: this.ticketId

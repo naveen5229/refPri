@@ -1,8 +1,8 @@
 <div class="modal-header">
     <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-    <span aria-hidden="true">&times;</span>
-  </button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body">
     <div class="row">
@@ -15,8 +15,9 @@
                 <div class="col-3 mr-0">
                     <label>Type</label>
                     <select class="form-control" [(ngModel)]="typeId">
-                    <option *ngFor="let type of types;" [value]="type.id" class="form-control">{{type.name}}</option>
-                  </select>
+                        <option *ngFor="let type of types;" [value]="type.id" class="form-control">{{type.name}}
+                        </option>
+                    </select>
                 </div>
                 <!-- <div class="col-3 mr-0">
                     <label>Order</label>
@@ -30,7 +31,8 @@
                     <input type="checkbox" [(ngModel)]="isRequired">
                 </div>
                 <div class="col-3 pt-4">
-                    <span *ngIf="typeId =='table'" class="cursor-pointer" title="Add Table Column" (click)="openAddFieldTable()"><i class="fa fa-table" aria-hidden="true"></i></span>
+                    <span *ngIf="typeId =='table'" class="cursor-pointer" title="Add Table Column"
+                        (click)="openAddFieldTable()"><i class="fa fa-table" aria-hidden="true"></i></span>
                 </div>
             </div>
 
@@ -47,10 +49,14 @@
                         <div class="col-6 custdrop" *ngIf="isFixedValue">
                             <div class="row" *ngFor="let fixValue of fixValues; let i = index">
                                 <div class="col-8">
-                                    <input type="text" [(ngModel)]="fixValue.option" class="form-control" #fixvalue>
+                                    <input *ngIf="typeId =='text'" type="text" [(ngModel)]="fixValue.option"
+                                        class="form-control" #fixvalue>
+                                    <input *ngIf="typeId =='number'" type="number" [(ngModel)]="fixValue.option"
+                                        class="form-control" #fixvalue>
                                 </div>
                                 <div class="col-4">
-                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue(fixvalue.value)"></i>&nbsp;
+                                    <i class="fa fa-plus" *ngIf="i == fixValues.length-1"
+                                        (click)="addFixValue()"></i>&nbsp;
                                     <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
                                 </div>
                             </div>
@@ -59,16 +65,19 @@
 
                 </div>
                 <div class="col-3 text-right">
-                    <button *ngIf="fieldId" class="btn btn-danger btn-sm mr-1" name="reset" (click)="resetData()">{{btn2}}</button>
+                    <button *ngIf="fieldId" class="btn btn-danger btn-sm mr-1" name="reset"
+                        (click)="resetData()">{{btn2}}</button>
                     <button class="btn btn-primary btn-sm" name="submit" (click)="Add()">{{btn1}}</button>
 
                 </div>
             </div>
-            <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField"></smart-table>
+            <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField">
+            </smart-table>
 
             <div *ngIf="((data && data.length) || refType==2) && !formType" class="row">
                 <div class="col-12 text-right">
-                    <button class="btn btn-primary btn-sm" name="openAssignField" (click)="openAssignForm()">Assign Form</button>
+                    <button class="btn btn-primary btn-sm" name="openAssignField" (click)="openAssignForm()">Assign
+                        Form</button>
                 </div>
             </div>
 

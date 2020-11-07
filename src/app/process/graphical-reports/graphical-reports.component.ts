@@ -92,9 +92,14 @@ dropdownFilter = [];
     public api: ApiService,
     public chart: ChartService) {
       this.getProcessList();
+      this.common.refresh = this.refresh.bind(this);
      }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.getProcessList();
   }
 
   getProcessList() {

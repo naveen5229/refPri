@@ -160,7 +160,7 @@
         <div *ngIf="activeTab=='todoList'">
             <div class="row mb-1">
                 <div class="col-5">
-                    <textarea row="3" cols="15" placeholder="Enter Description" id="todoDesc" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true" style="height: 40px!important;"></textarea>
+                    <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true" style="height: 40px!important;"></textarea>
                 </div>
                 <div class="col-3" style="z-index: 999;">
                     <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
