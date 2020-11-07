@@ -1,0 +1,14 @@
+.map {
+    width: 100%;
+    height: calc(100vh - 105px) !important;
+}
+:host::ng-deep {
+    .tableFixHead {
+        table {
+            .ckbox {
+                width: 30px;
+                text-align: center;
+            }
+        }
+    }
+}
