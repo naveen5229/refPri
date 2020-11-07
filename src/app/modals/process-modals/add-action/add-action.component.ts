@@ -18,6 +18,7 @@ export class AddActionComponent implements OnInit {
     name: "",
     process: { id: null, name: "" },
     states: [],
+    nextState:[],
     threshold: null,
     modes: [],
     nextAction: [],
@@ -107,6 +108,7 @@ export class AddActionComponent implements OnInit {
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         threshold: this.actionForm.threshold,
         nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
+        nextState: (this.actionForm.nextState && this.actionForm.nextState.length) ? JSON.stringify(this.actionForm.nextState) : null,
         // isDefault: this.actionForm.isDefault,
         // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };

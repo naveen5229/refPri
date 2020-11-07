@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h5>Route Mapper</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <label>Start Date</label>
+        <uj-date-time-picker style="z-index: 999;" (onChanged)="startDate=($event)" [dateTimeValue]="startDate"
+          [isTime]="true">
+        </uj-date-time-picker>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label>End Date</label>
+        <uj-date-time-picker style="z-index: 999;" (onChanged)="endDate=($event)" [dateTimeValue]="endDate"
+          [isTime]="true">
+        </uj-date-time-picker>
+      </div>
+    </div>
+    <div class="col-4">
+      <button (click)="getLocationLogs()" class="btn2 btn btn-primary">Go</button>
+    </div>
+    <div class="col-12">
+      <!-- Map -->
+      <div id="route-maper-map"></div>
+      <!-- End Map -->
+      <div class="row" *ngIf="locations.length">
+        <!-- Play Control -->
+        <!-- Start Stop Control -->
+        <div class="col-1 pl-0">
+          <div class="player_inner">
+            <button (click)="isRouteTrakingOn ? stopRouteTracking() : startRouteTracking()">
+              <i *ngIf="isRouteTrakingOn " class="fa fa-pause"></i>
+              <i *ngIf="!isRouteTrakingOn " class="fa fa-play"></i>
+            </button>
+          </div>
+        </div>
+        <!-- End Start Stop Control -->
+        <div class="col-9 pr-0">
+          <div class="slide-bar">
+            <!-- Slider -->
+            <input (input)="setRouteRange()" type="range" min="1" max="100" name="route-range" [(ngModel)]="routeRange"
+              class="slider form-control" id="route-range">
+            <!-- End Slider -->
+          </div>
+        </div>
+        <!-- End Play Control -->
+        <!-- Speed -->
+        <div class="col-2 pl-0">
+          <div class="speed-control">
+            <select class="form-control" name="speed" [(ngModel)]="routeTrackingSpeed">
+              <option *ngFor="let speed of speeds" [value]="speed.value">{{speed.name}}</option>
+            </select>
+          </div>
+        </div>
+        <!-- End Speed -->
+      </div>
+    </div>
+  </div>
+
+</div>
