@@ -492,7 +492,7 @@
 
             <div class="modal-footer">
                 <div class="row footer">
-                    <smart-table *ngIf="esclationMatrixList.length" [data]="esclationTable.data"
+                    <smart-table *ngIf="esclationMatrixList && esclationMatrixList.length" [data]="esclationTable.data"
                         [settings]="esclationTable.settings"></smart-table>
                 </div>
             </div>
