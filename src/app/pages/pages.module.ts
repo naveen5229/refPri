@@ -49,7 +49,8 @@ import { ProcessModule } from '../process/process.module';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
-import {TicketModule} from '../ticket/ticket.module'
+import {TicketModule} from '../ticket/ticket.module';
+import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component'
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -104,7 +105,8 @@ import {TicketModule} from '../ticket/ticket.module'
     WifiLogsComponent,
     UserMappingComponent,
     CompanykycComponent,
-    UserGroupsComponent
+    UserGroupsComponent,
+    EmployeeMonitoringComponent
   ],
 })
 export class PagesModule {

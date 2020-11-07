@@ -56,6 +56,7 @@ import { PersonalisedDashboardComponent } from '../process/personalised-dashboar
 import { GraphicalReportsComponent } from '../process/graphical-reports/graphical-reports.component';
 import { TicketComponent } from '../ticket/ticket/ticket.component';
 import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.component';
+import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
 
 const routes: Routes = [{
   path: '',
@@ -320,7 +321,7 @@ const routes: Routes = [{
       path: 'personalised-dashboard',
       component: PersonalisedDashboardComponent,
       canActivate: [AuthGuard, RouteGuard]
-    },{
+    }, {
       path: 'graphical-reports',
       component: GraphicalReportsComponent,
       canActivate: [AuthGuard, RouteGuard]
@@ -338,6 +339,11 @@ const routes: Routes = [{
     {
       path: 'ticket-process',
       component: TicketProcessComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'employee-monitoring',
+      component: EmployeeMonitoringComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
