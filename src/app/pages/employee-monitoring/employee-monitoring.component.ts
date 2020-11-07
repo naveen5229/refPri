@@ -45,16 +45,24 @@ export class EmployeeMonitoringComponent implements OnInit {
     }
   };
 
+  selected = {
+    employee: null,
+    employees: [],
+    markerCluster: false
+  };
+  markerInfoWindow: any;
+  markers = [];
+  map: any;
 
   constructor(private api: ApiService, private common: CommonService, private mapService: MapService, public modalService: NgbModal) {
-    this.getReport();
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.mapService.mapIntialize("map", 10);
+    this.map = this.mapService.mapIntialize("map", 10);
+    this.getReport();
   }
 
   getReport() {
@@ -80,6 +88,7 @@ export class EmployeeMonitoringComponent implements OnInit {
           }
         });
         console.log('Reports:', this.reports);
+        this.setMarkers();
         this.setSmartTable();
       }, err => {
         this.common.loading--;
@@ -96,6 +105,12 @@ export class EmployeeMonitoringComponent implements OnInit {
 
   getSmartTableHeadings() {
     return {
+      checkbox: {
+        isCheckbox: true,
+        action: this.selectUnselectAllEmployees.bind(this),
+        value: true,
+        class: 'ckbox'
+      },
       name: { placeholder: 'Name' },
       department: { placeholder: 'Department' },
       attendance: { placeholder: 'Attendance' },
@@ -112,18 +127,97 @@ export class EmployeeMonitoringComponent implements OnInit {
       let row = {};
       for (let heading in this.getSmartTableHeadings()) {
         let action: any = null;
+        let value = report[heading];
+
         if (heading === 'name') action = this.viewRoute.bind(this, report);
-        row[heading] = { value: report[heading], action }
+
+        row[heading] = { value, action };
+
+        if (heading === 'checkbox') row[heading] = {
+          isCheckbox: true,
+          action: this.selectOrUnselectEmployee.bind(this, report),
+          value: this.selected.employees.indexOf(report.userId) !== -1 ? true : false
+        };
+
       }
       return row;
     });
   }
+
+  setMarkers() {
+    if (!this.markerInfoWindow)
+      this.markerInfoWindow = new google.maps.InfoWindow({ content: '' });
+
+    this.markers.map(marker => marker.setMap(null));
+    let reports = this.reports.filter(report => report.lat);
+    this.markers = this.mapService.createMarkers(reports, false, false)
+      .map((marker, index) => {
+        let report = reports[index];
+        marker.setTitle(report.name);
+        this.setMarkerEvents(marker, report);
+        return { id: report.userId, marker: marker };
+      });
+
+    this.selected.employees = reports.map(report => report.userId);
+  }
+
+  setMarkerEvents(marker, report) {
+    marker.addListener('click', () => {
+      this.markerInfoWindow.setContent(this.generateMarkerInfoWindowContent(report))
+      this.markerInfoWindow.open(this.map, marker);
+    });
+  }
+
+  generateMarkerInfoWindowContent(report: report) {
+    let str = `<div style="color:#000">${JSON.stringify(report)}`;
+    return str;
+  };
 
   viewRoute(report) {
     this.common.params = report;
     this.modalService.open(RouteMapperComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     this.common.handleModalSize('class', 'modal-lg', '1200');
 
+  }
+
+  selectUnselectAllEmployees(status: boolean) {
+    // this.selected.employees = [];
+    // if (this.selected.status && status) {
+    //   this.filteredVehicles.forEach(vehicle => this.selected.vehicles.push(vehicle._vid));
+    //   this.table.data.columns.map(column => column.checkbox.value = true);
+    // } else if (status) {
+    //   this.vehicles.forEach(vehicle => this.selected.vehicles.push(vehicle._vid));
+    //   this.table.data.columns.map(column => column.checkbox.value = true);
+    //   console.log("Data123:", this.table.data)
+    // } else {
+    //   this.table.data.columns.map(column => column.checkbox.value = false);
+    // }
+    // this.handleMarkerVisibility();
+  }
+
+  selectOrUnselectEmployee(report) {
+    let index = this.selected.employees.indexOf(report.userId);
+    if (index !== -1) {
+      this.selected.employees.splice(index, 1);
+    } else {
+      this.selected.employees.push(report.userId);
+    }
+
+    if (this.selected.employees.length === this.reports.length) {
+      this.table.data.headings['checkbox'].value = true
+    } else {
+      this.table.data.headings['checkbox'].value = false
+    }
+
+    this.handleMarkerVisibility();
+
+  }
+
+  handleMarkerVisibility() {
+    this.markers.forEach(marker => {
+      if (this.selected.employees.indexOf(marker.id) !== -1) marker.marker.setMap(this.map)
+      else marker.marker.setMap(null);
+    });
   }
 
 }

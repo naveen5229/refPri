@@ -136,6 +136,7 @@ export class MapService {
     this.mapLoadDiv = this.map.getDiv();
     this.bounds = new google.maps.LatLngBounds();
     this.isMapLoaded = true;
+    return this.map;
   }
 
   createLatLng(lat, lng) {
