@@ -7,17 +7,31 @@
 <div class="modal-body">
     <!-- <div class="container"> -->
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <label><b>Process: </b></label>
+        </div>
+        <div class="col-6">
             <label>{{ actionForm.process.name}}</label>
         </div>
-        <div class="col-8">
+    </div>
+
+    <div class="row">
+        <div class="col-6">
             <div class="row">
                 <div class="col-4"><label><b>State: </b></label>
                     <!-- <label>{{ actionForm.state.name}} </label> -->
                 </div>
                 <div class="col-8">
                     <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select State" (onSelected)="actionForm.states = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.states"></auto-suggestion></div>
+                </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-4"><label><b>Next State: </b></label>
+                    <!-- <label>{{ actionForm.state.name}} </label> -->
+                </div>
+                <div class="col-8">
+                    <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Next State" (onSelected)="actionForm.nextState = $event" inputId="nextStateId" name="nextState" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextState"></auto-suggestion></div>
                 </div>
         </div>
     </div>
