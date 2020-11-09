@@ -1,22 +1,21 @@
 <nb-card>
-  <nb-card-header>
-    <div class="row m-0">
-      <h5 class="heading-design">Employee Monitoring</h5>
-    </div>
-  </nb-card-header>
-  <nb-card-body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-8">
-          <smart-table [data]="table.data" [settings]="table.settings">
-          </smart-table>
+    <nb-card-header>
+        <div class="row m-0">
+            <h5 class="heading-design">Employee Monitoring</h5>
         </div>
-        <div class="col-4">
-          <div class="map-container">
-            <div class="map" id="map"></div>
-          </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div class="row">
+                <div class="col-8 p-0">
+                    <smart-table [data]="table.data" [settings]="table.settings" id="employeeMonitoring"></smart-table>
+                </div>
+                <div class="col-4 pr-1">
+                    <div class="map-container">
+                        <div class="map" id="map"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </nb-card-body>
+    </nb-card-body>
 </nb-card>
