@@ -238,7 +238,9 @@ export class AddActionComponent implements OnInit {
     this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
     this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
     this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
-    this.actionForm.autoStateChange = action.autoStateChange;
+    this.actionForm.nextState = (action._next_state && action._next_state.length) ? action._next_state.map(x => { return { id: x._id, name: x.name } }) : [];
+    this.actionForm.autoStateChange = action.auto_state_change;
+
     this.button = 'Update';
     // this.actionForm.isDefault = (action._is_default) ? true : false;
     // if (action._default_owner_id > 0) {
@@ -290,6 +292,7 @@ export class AddActionComponent implements OnInit {
     this.actionForm.nextAction = [];
     this.actionForm.threshold = null;
     this.actionForm.states = [];
+    this.actionForm.nextState = [];
     this.actionForm.autoStateChange = null;
     // this.actionForm.isDefault = null;
     // this.actionForm.defaultOwner = { id: null, name: null };
