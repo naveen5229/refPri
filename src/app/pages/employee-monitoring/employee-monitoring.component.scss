@@ -16,7 +16,7 @@
 
 smart-table {
     display: block;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 100px);
     overflow: auto;
 }
 
@@ -27,4 +27,8 @@ smart-table {
     th:nth-last-child(2) {
         width: 75px !important;
     }
+}
+
+.height-none {
+    height: 0;
 }
