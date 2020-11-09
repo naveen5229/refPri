@@ -61,7 +61,7 @@ export class EmployeeMonitoringComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.map = this.mapService.mapIntialize("map", 10);
+    this.map = this.mapService.mapIntialize("map", 8, 26.9124336, 75.78727090000007);
     this.getReport();
   }
 
@@ -115,7 +115,7 @@ export class EmployeeMonitoringComponent implements OnInit {
       department: { placeholder: 'Department' },
       attendance: { placeholder: 'Attendance' },
       mobile: { placeholder: 'Mobile' },
-      lastFetch: { placeholder: 'Last Fetch' },
+      lastFetch: { placeholder: 'Last Fetch', type: "date" },
       loc: { placeholder: 'Location' },
       net: { placeholder: 'Internet' },
       wifi: { placeholder: 'Wifi' }
@@ -169,7 +169,15 @@ export class EmployeeMonitoringComponent implements OnInit {
   }
 
   generateMarkerInfoWindowContent(report: report) {
-    let str = `<div style="color:#000">${JSON.stringify(report)}`;
+    let str = "<span style='color:blue'>Info</span><br>" +
+      "<span><b>Name: </b>" + report.name + "</span><br>" +
+      "<span><b>Department: </b>" + report.department + "</span><br>" +
+      "<span><b>Attendance: </b>" + report.attendance + "</span><br>" +
+      "<span><b>Mobile: </b>" + report.mobile + "</span><br>" +
+      "<span><b>Last Fetch: </b>" + report.lastFetch + "</span><br>" +
+      "<span><b>Location: </b>" + report.loc + "</span><br>" +
+      "<span><b>Internet: </b>" + report.net + "</span><br>" +
+      "<span><b>Wifi: </b>" + report.wifi + "</span>";
     return str;
   };
 
