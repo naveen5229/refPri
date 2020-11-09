@@ -1,16 +1,23 @@
 <nb-card>
     <nb-card-header>
         <div class="row m-0">
-            <h5 class="heading-design">Employee Monitoring</h5>
+            <div class="col-10">
+                <h5 class="heading-design">Employee Monitoring</h5>
+            </div>
+            <div class="col-2 text-right">
+                <select (change)="onViewChange($event.target.value)">
+                    <option *ngFor="let v of viewOptions" [value]="v.id">{{v.name}}</option>
+                </select>
+            </div>
         </div>
     </nb-card-header>
     <nb-card-body>
         <div>
             <div class="row">
-                <div class="col-8 p-0">
+                <div class="p-0" [ngClass]="viewClass.table">
                     <smart-table [data]="table.data" [settings]="table.settings" id="employeeMonitoring"></smart-table>
                 </div>
-                <div class="col-4 pr-1">
+                <div class="pr-1" [ngClass]="viewClass.map">
                     <div class="map-container">
                         <div class="map" id="map"></div>
                     </div>
