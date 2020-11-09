@@ -21,7 +21,7 @@ export class SettingsComponent implements OnInit {
   stateId = null;
 
   allowStateChangeValues = [
-    { id: 4, name: 'auto' },
+    // { id: 4, name: 'auto' },
     { id: 3, name: 'only admin' },
     { id: 0, name: 'PO and admin' },
     { id: 1, name: 'admin, PO and action owner' },
