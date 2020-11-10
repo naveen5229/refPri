@@ -86,7 +86,6 @@ export class AddActionComponent implements OnInit {
       this.closeModal(false);
     } else if (this.button === 'Update') {
       this.resetData();
-      this.button = 'Add';
     }
   }
 
@@ -239,7 +238,7 @@ export class AddActionComponent implements OnInit {
     this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
     this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
     this.actionForm.nextState = (action._next_state && action._next_state.length) ? action._next_state.map(x => { return { id: x._id, name: x.name } }) : [];
-    this.actionForm.autoStateChange = action.auto_state_change;
+    this.actionForm.autoStateChange = action._auto_state_change;
 
     this.button = 'Update';
     // this.actionForm.isDefault = (action._is_default) ? true : false;
@@ -294,6 +293,7 @@ export class AddActionComponent implements OnInit {
     this.actionForm.states = [];
     this.actionForm.nextState = [];
     this.actionForm.autoStateChange = null;
+    this.button = 'Add';
     // this.actionForm.isDefault = null;
     // this.actionForm.defaultOwner = { id: null, name: null };
   }
