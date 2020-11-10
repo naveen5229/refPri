@@ -10,22 +10,22 @@ import { UserService } from '../../../Service/user/user.service';
   styleUrls: ['./add-extra-time.component.scss']
 })
 export class AddExtraTimeComponent implements OnInit {
-  
+
   btn = 'Add Time';
   title = "Add Extra Time";
   ticketId = null;
-  dataForm ={
-    time:null
+  dataForm = {
+    time: null
   }
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
-    public common: CommonService, public userService: UserService) { 
-      if (this.common.params != null) {
-        this.title = this.common.params.title;
-        this.btn = this.common.params.btn;
-        this.ticketId = this.common.params.ticketId;
-      }
+    public common: CommonService, public userService: UserService) {
+    if (this.common.params != null) {
+      this.title = this.common.params.title;
+      this.btn = this.common.params.btn;
+      this.ticketId = this.common.params.ticketId;
     }
+  }
 
   ngOnInit() {
   }
@@ -36,15 +36,15 @@ export class AddExtraTimeComponent implements OnInit {
     });
   }
 
-  buyTime(){
+  buyTime() {
     let params = {
-      ticketId:this.ticketId,
-      time:this.dataForm.time
+      ticketId: this.ticketId,
+      time: this.common.timeToSecond(this.dataForm.time)
     }
-    console.log('buy time params',params);
+    console.log('buy time params', params);
     // this.closeModal(true);
     // return;
-    
+
     this.common.loading++;
     let apiName = 'Ticket/buyTimeForTicket'
     this.api.post(apiName, params)

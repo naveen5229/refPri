@@ -16,7 +16,7 @@
                 <!-- # END -->
                 <!-- Headings -->
                 <th style="padding:5px;" *ngFor="let heading of objectKeys(headings);" [ngClass]="headings[heading].class">
-                    <div *ngIf="!headings[heading].isHTML">
+                    <div *ngIf="!headings[heading].isHTML && !headings[heading].isCheckbox">
                         <!-- Searchable -->
                         <div *ngIf="!headings[heading].hideSearch" class="filter-container">
                             <!-- Search INPUT -->
@@ -40,6 +40,12 @@
                     <!-- heading as HTML -->
                     <div *ngIf="headings[heading].isHTML" [innerHTML]="headings[heading].html"></div>
                     <!-- heading as HTML END -->
+
+                    <!-- heading as Checkbox -->
+                    <div *ngIf="headings[heading].isCheckbox">
+                        <input type="checkbox" (change)="headings[heading].action(headings[heading].value)"
+                            [(ngModel)]="headings[heading].value">
+                    </div>
                 </th>
                 <!-- Headings END -->
                 <th class="action-box" *ngIf="edit.row !== -1">Action</th>
@@ -80,7 +86,7 @@
 
                     <!-- Checkbox -->
                     <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && column[heading].isCheckbox">
-                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)" [checked]="column[heading].value">
+                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)" [(ngModel)]="column[heading].value">
                     </div>
                     <!-- CheckBox END -->
 

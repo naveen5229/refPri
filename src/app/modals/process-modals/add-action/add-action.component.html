@@ -1,24 +1,57 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-  <span aria-hidden="true">&times;</span>
-</button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body">
     <!-- <div class="container"> -->
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <label><b>Process: </b></label>
+        </div>
+        <div class="col-6">
             <label>{{ actionForm.process.name}}</label>
         </div>
-        <div class="col-8">
+    </div>
+
+    <div class="row">
+        <div class="col-4">
             <div class="row">
                 <div class="col-4"><label><b>State: </b></label>
                     <!-- <label>{{ actionForm.state.name}} </label> -->
                 </div>
                 <div class="col-8">
-                    <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select State" (onSelected)="actionForm.states = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.states"></auto-suggestion></div>
+                    <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select State"
+                        (onSelected)="actionForm.states = $event" inputId="nextActionId" name="nextAction"
+                        isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.states"></auto-suggestion>
                 </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col-4"><label><b>Next State: </b></label>
+                    <!-- <label>{{ actionForm.state.name}} </label> -->
+                </div>
+                <div class="col-8">
+                    <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Next State"
+                        (onSelected)="actionForm.nextState = $event" inputId="nextStateId" name="nextState"
+                        isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextState"></auto-suggestion>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col-4"><label><b>Auto: </b></label>
+                    <!-- <label>{{ actionForm.state.name}} </label> -->
+                </div>
+                <div class="col-8">
+                    <input type="checkbox" *ngIf="actionForm.nextState.length == 1"
+                        [(ngModel)]="actionForm.autoStateChange">
+                    <input type="checkbox" *ngIf="actionForm.nextState.length > 1 || actionForm.nextState.length < 1"
+                        disabled>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -29,15 +62,20 @@
         </div>
         <div class="col-2 pr-0">
             <label>Threshold</label>
-            <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)" [(ngModel)]="actionForm.threshold">
+            <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)"
+                [(ngModel)]="actionForm.threshold">
         </div>
         <div class="col-4 pr-0">
             <label>Next Action</label>
-            <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action" (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
+            <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action"
+                (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction"
+                isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
         </div>
         <div class="col-4 pr-0">
             <label>Modes</label>
-            <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId" autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true" (onSelected)="actionForm.modes = $event">
+            <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId"
+                autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true"
+                (onSelected)="actionForm.modes = $event">
             </auto-suggestion>
         </div>
     </div>
@@ -58,7 +96,7 @@
             </span>
         </div> -->
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2 mt-4" type="button" (click)="closeModal(false)">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2 mt-4" type="button" (click)="switchButton()">Cancel</button>
             <button class="btn btn-primary btn-sm mt-4" type='submit' (click)="saveProcessAction()">{{button}}</button>
         </div>
     </div>
@@ -68,4 +106,3 @@
         </div>
     </div>
 </div>
-

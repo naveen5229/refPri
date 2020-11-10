@@ -10,11 +10,11 @@ export class ApiService {
   // I_URL: string = 'http://localhost/itrm_webservices/';//komal local
   // I_URL: string = 'http://192.168.1.124/itrm_webservices/';//komal local
 
-  I_URL: string = 'http://dev.elogist.in/itrm_webservices/';
+  I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'http://dev.elogist.in/booster_webservices/';
   T_URL: string = 'http://dev.elogist.in/transtrucknew/';
 
-  // I_URL: string = 'http://elogist.in/itrm_webservices/';
+  // I_URL: string = 'https://elogist.in/itrm_webservices/';
   // B_URL: string = 'http://elogist.in/booster_webservices/';
   // T_URL: string = 'http://elogist.in/transtrucknew/';
 

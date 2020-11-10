@@ -1,18 +1,20 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-    <span aria-hidden="true">&times;</span>
-</button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body">
     <div class="row">
         <div *ngIf="!showHours">
             <div class="text-center">
-                <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true; onChangeHour()" class="btn-date">{{date.name}}</span>
+                <span *ngFor="let date of dates" (click)="reminder.date = date.date; showHours = true; onChangeHour()"
+                    class="btn-date">{{date.name}}</span>
             </div>
             <div class="input-group">
                 <label>Date</label>
-                <uj-date-time-picker [isStart]="true" [isTime]="true" (onChanged)="onChangeDate($event)" [dateTimeValue]="dateTime">
+                <uj-date-time-picker [isStart]="true" [isTime]="true" (onChanged)="onChangeDate($event)"
+                    [dateTimeValue]="dateTime">
                 </uj-date-time-picker>
             </div>
         </div>
@@ -31,24 +33,32 @@
     <div class="custom-modal">
         <div class="custom-modal-header" id="modal_title">
             <span *ngIf="showHours" (click)="showHours = false;" class="back-btn">
-              <ion-icon name="ios-arrow-back"></ion-icon>
-              <span>Back</span>
+                <ion-icon name="ios-arrow-back"></ion-icon>
+                <span>Back</span>
             </span>
             Reminder Time
         </div>
         <div class="custom-modal-content">
             <div *ngIf="showHours">
                 <div text-center>
-                    <span *ngFor="let hour of hours[0]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-1" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                    <span *ngFor="let hour of hours[0]"
+                        (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-1"
+                        [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
                 </div>
                 <div text-center>
-                    <span *ngFor="let hour of hours[1]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-2" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                    <span *ngFor="let hour of hours[1]"
+                        (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-2"
+                        [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
                 </div>
                 <div text-center>
-                    <span *ngFor="let hour of hours[2]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-3" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                    <span *ngFor="let hour of hours[2]"
+                        (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-3"
+                        [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
                 </div>
                 <div text-center>
-                    <span *ngFor="let hour of hours[3]" (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-4" [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
+                    <span *ngFor="let hour of hours[3]"
+                        (click)="reminder.time = hour; showHours = false; onChangeHour()" class="btn-hour hour-row-4"
+                        [ngClass]="reminder.time == hour ? 'active-hr' : ''">{{hour}}</span>
                 </div>
             </div>
         </div>

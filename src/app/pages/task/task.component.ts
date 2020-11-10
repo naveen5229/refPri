@@ -111,6 +111,7 @@ export class TaskComponent implements OnInit {
     desc: "",
     date: this.common.getDate(),
     isUrgent: false,
+    requestId: null
   };
 
   taskTodoList = [];
@@ -1643,6 +1644,12 @@ export class TaskComponent implements OnInit {
           });
         }
       }
+
+      if (ticket._is_star_mark) {
+        icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
+      } else {
+        icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
+      }
     }
 
     return icons;
@@ -1830,6 +1837,7 @@ export class TaskComponent implements OnInit {
         ticket._tktype == 101 || ticket._tktype == 102 ? ticket._refid : null,
       taskType: ticket._tktype,
       tabType: type,
+      isChecked: ticket._is_star_mark
     };
 
     let subTitle =
@@ -1935,7 +1943,6 @@ export class TaskComponent implements OnInit {
     };
     this.api.get("AdminTask/getTodoTaskList.json").subscribe(
       (res) => {
-        console.log(res);
         if (res["code"] > 0) {
           this.taskTodoList = res["data"] || [];
           this.setTableTaskTodoList();
@@ -1979,7 +1986,7 @@ export class TaskComponent implements OnInit {
     this.taskTodoList.map((task) => {
       let column = {};
       for (let key in this.generateHeadingsTaskTodoList()) {
-        if (key == "Completed" || key == "completed") {
+        if (key.toLowerCase() == "completed") {
           column[key] = {
             value: task[key],
             action: this.updateTodoTask.bind(this, task),
@@ -2050,41 +2057,38 @@ export class TaskComponent implements OnInit {
       return this.common.showError("Description is missing");
     } else {
       const params = {
-        date: this.taskTodoForm.date
-          ? this.common.dateFormatter(this.taskTodoForm.date)
-          : null,
+        date: this.taskTodoForm.date ? this.common.dateFormatter(this.taskTodoForm.date) : null,
         desc: this.taskTodoForm.desc,
         isUrgent: this.taskTodoForm.isUrgent,
         taskTodoId: this.taskTodoForm.taskTodoId,
+        requestId: (this.taskTodoForm.requestId > 0) ? this.taskTodoForm.requestId : null
       };
       console.log("todo params:", params);
       this.common.loading++;
-      this.api.post("AdminTask/addTodoTask", params).subscribe(
-        (res) => {
-          console.log(res);
-          this.common.loading--;
-          if (res["code"] > 0) {
-            if (res["data"][0]["y_id"] > 0) {
-              this.common.showToast(res["msg"]);
-              this.getTodoTaskList();
-              this.taskTodoForm = {
-                taskTodoId: null,
-                desc: "",
-                date: this.common.getDate(),
-                isUrgent: false,
-              };
-            } else {
-              this.common.showError(res["msg"]);
-            }
+      this.api.post("AdminTask/addTodoTask", params).subscribe(res => {
+        this.common.loading--;
+        if (res["code"] > 0) {
+          if (res["data"][0]["y_id"] > 0) {
+            this.common.showToast(res["msg"]);
+            this.getTodoTaskList();
+            this.taskTodoForm = {
+              taskTodoId: null,
+              desc: "",
+              date: this.common.getDate(),
+              isUrgent: false,
+              requestId: null
+            };
           } else {
             this.common.showError(res["msg"]);
           }
-        },
-        (err) => {
-          this.common.loading--;
-          this.common.showError();
-          console.log("Error: ", err);
+        } else {
+          this.common.showError(res["msg"]);
         }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+      }
       );
     }
   }
@@ -2582,7 +2586,8 @@ export class TaskComponent implements OnInit {
 
   starMarkOnTicket(ticket, type) {
     let params = {
-      ticketId: ticket._tktid
+      ticketId: ticket._tktid,
+      isChecked: (ticket._is_star_mark) ? true : false
     };
     this.common.loading++;
     this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {

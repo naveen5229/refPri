@@ -33,6 +33,7 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
 export class TicketChatboxComponent implements OnInit {
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
+  messageImage = [];
   title = '';
   subTitle = null;
   ticketId = 0;
@@ -93,6 +94,7 @@ export class TicketChatboxComponent implements OnInit {
   }
   @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
   @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
+  @ViewChild('imgRenderer', { static: false }) imgRenderer: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -114,7 +116,7 @@ export class TicketChatboxComponent implements OnInit {
         this.getTicketDataByTktId();
       }
       this.getMessageList();
-      //this.getAllUserByTask();
+      this.getAllUserByTicket();
 
       this.lastSeenIdForView = this.lastSeenId;
       console.log(this.common.params, 'ticket data')
@@ -125,7 +127,7 @@ export class TicketChatboxComponent implements OnInit {
       } else {
         this.userWithGroup = this.adminList.concat(this.userGroupList);
       }
-      console.log("userGroupList:", this.userGroupList);
+      console.log("userGroupList:", this.userGroupList, this.userWithGroup);
       this.getAttachmentByTicket();
     }
 
@@ -153,6 +155,7 @@ export class TicketChatboxComponent implements OnInit {
       }, 100);
     } catch (err) { }
   }
+
 
   closeModal(response) {
     this.activeModal.close({ response: response });
@@ -334,11 +337,11 @@ export class TicketChatboxComponent implements OnInit {
     }
   }
 
-  getAllUserByTask() {
+  getAllUserByTicket() {
     let params = {
       ticketId: this.ticketId
     }
-    this.api.post('Ticket/getAllUserByTask', params).subscribe(res => {
+    this.api.post('Ticket/getAllUserByTicket', params).subscribe(res => {
       console.log("userListByTask:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
@@ -367,7 +370,7 @@ export class TicketChatboxComponent implements OnInit {
     });
   }
 
-  addNewCCUserToTask() {
+  addNewCCUser() {
     let accessUsers = [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid];
     if (this.userListByTask['ccUsers'].length > 0) {
       this.userListByTask['ccUsers'].forEach(element => {
@@ -395,25 +398,24 @@ export class TicketChatboxComponent implements OnInit {
     });
 
     if (this.ticketId > 0 && CCUsers && CCUsers.length > 0) {
-      // let params = {
-      //   ticketId: this.ticketId,
-      //   ccUserId: JSON.stringify(CCUsers),
-      //   ticketType: this.ticketType
-      // }
-      // this.common.loading++;
-      // this.api.post('Ticket/addNewCCUser', params).subscribe(res => {
-      //   this.common.loading--;
-      //   if (res['code'] == 1) {
-      //     this.getAllUserByTask();
-      //     this.newCCUserId = [];
-      //   } else {
-      //     this.common.showError(res['msg']);
-      //   }
-      // }, err => {
-      //   this.common.loading--;
-      //   this.common.showError();
-      //   console.log('Error: ', err);
-      // });
+      let params = {
+        ticketId: this.ticketId,
+        ccUserId: JSON.stringify(CCUsers)
+      }
+      this.common.loading++;
+      this.api.post('Ticket/addNewCCUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.getAllUserByTicket();
+          this.newCCUserId = [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     } else {
       this.common.showError("Select new CC user");
     }
@@ -450,7 +452,7 @@ export class TicketChatboxComponent implements OnInit {
       this.api.post('Ticket/removeCCUser', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByTask();
+          this.getAllUserByTicket();
           this.getMessageList();
         } else {
           this.common.showError(res['msg']);
@@ -486,6 +488,7 @@ export class TicketChatboxComponent implements OnInit {
       }
       let params = {
         ticketId: this.ticketId,
+        ticketAllocationId: this.ticketData._ticket_allocation_id,
         assigneeUserId: this.newAssigneeUser.id,
         status: this.statusId,
         isCCUpdate: isCCUpdate,
@@ -493,11 +496,12 @@ export class TicketChatboxComponent implements OnInit {
         assigneeUserNameNew: this.newAssigneeUser.name
       }
       console.log("updateTaskAssigneeUser params:", params);
+      // return;
       this.common.loading++;
-      this.api.post('Ticket/updateAssigneeUser', params).subscribe(res => {
+      this.api.post('Ticket/updateTicketAssigneeUser', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByTask();
+          this.getAllUserByTicket();
           this.getMessageList();
           this.showAssignUserAuto = null;
         } else {
@@ -590,6 +594,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   handleFileSelection(event) {
+    console.log(event.target.files[0], 'attachement')
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
@@ -609,6 +614,21 @@ export class TicketChatboxComponent implements OnInit {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  onPaste(event: any) {
+    console.log('event', event);
+    const items = event.clipboardData.items;
+    let selectedFile = { "target": { "files": [] } };
+    // if (items.length > 1) {
+    //   this.common.showError("Only select single file");
+    // }
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        selectedFile.target.files.push(item.getAsFile());
+      }
+    }
+    this.handleFileSelection(selectedFile);
   }
 
   messageReadInfo(commentId) {
