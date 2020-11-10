@@ -1,0 +1,34 @@
+.map {
+    width: 100%;
+    height: calc(100vh - 105px) !important;
+}
+
+:host::ng-deep {
+    .tableFixHead {
+        table {
+            .ckbox {
+                width: 30px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+smart-table {
+    display: block;
+    height: calc(100vh - 100px);
+    overflow: auto;
+}
+
+:host ::ng-deep #employeeMonitoring {
+    th:last-child {
+        width: 50px !important;
+    }
+    th:nth-last-child(2) {
+        width: 75px !important;
+    }
+}
+
+.height-none {
+    height: 0;
+}

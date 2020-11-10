@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -27,7 +28,7 @@ export class TicketProcessComponent implements OnInit {
   ];
 
   formTypeFields = [
-    { id: 0, name: 'Add Ticket Form reftype' },
+    { id: 0, name: 'Add Ticket Form' },
     { id: 1, name: 'On Ticket Close Form' },
   ]
   ticketData = [];
@@ -725,7 +726,8 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openTicketEsclationMatrixModal(property) {
-    console.log(property);
+    console.log(property,this.esclationMatrixList,this.esclationTable);
+    this.esclationMatrixList = [];
     this.resetEsclation();
     this.esclationMatrix.tpPropertyId = property._id;
     this.getPreFilledMatrix(this.esclationMatrix.tpPropertyId);
@@ -791,7 +793,7 @@ export class TicketProcessComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            icons: this.actionPropertyIcons(esclation)
+            icons: this.esclationIcons(esclation)
           };
         } else {
           column[key] = { value: esclation[key], class: 'black', action: '' };
@@ -910,6 +912,47 @@ export class TicketProcessComponent implements OnInit {
         console.log("ticket UserMappingComponent:", data.response);
       }
     });
+  }
+
+  esclationIcons(property) {
+    let icons = [
+      { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, property) },
+    ];
+    return icons;
+  }
+
+  deleteAction(row) {
+    let params = {
+      id: row._id,
+    }
+    if (row._id) {
+      this.common.params = {
+        title: 'Delete Record',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Ticket/deleteTicketEsclationMatrix', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['data'][0].y_msg);
+                this.getPreFilledMatrix(this.esclationMatrix.tpPropertyId);
+              } else {
+                this.common.showError(res['data'][0].y_msg);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    }
   }
 
 }

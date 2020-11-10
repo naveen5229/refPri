@@ -1837,6 +1837,7 @@ export class TaskComponent implements OnInit {
         ticket._tktype == 101 || ticket._tktype == 102 ? ticket._refid : null,
       taskType: ticket._tktype,
       tabType: type,
+      isChecked: ticket._is_star_mark
     };
 
     let subTitle =

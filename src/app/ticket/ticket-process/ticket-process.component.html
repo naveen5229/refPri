@@ -492,7 +492,7 @@
 
             <div class="modal-footer">
                 <div class="row footer">
-                    <smart-table *ngIf="esclationMatrixList.length" [data]="esclationTable.data"
+                    <smart-table *ngIf="esclationMatrixList && esclationMatrixList.length" [data]="esclationTable.data"
                         [settings]="esclationTable.settings"></smart-table>
                 </div>
             </div>
@@ -516,7 +516,7 @@
                         <label>Form Type</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="formTypeFields" display="name" placeholder="Form Field"
+                        <auto-suggestion [data]="formTypeFields" display="name" placeholder="Form Type"
                             name="formTypeFields" id="formTypeFields" [preSelected]="formRefType.formFieldRefType.id >= 0  ? {name: formRefType.formFieldRefType.name}:{name:''}"
                             (onSelected)="formRefType.formFieldRefType=$event;" autocomplete="off">
                         </auto-suggestion>
