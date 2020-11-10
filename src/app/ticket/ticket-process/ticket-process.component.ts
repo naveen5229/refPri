@@ -4,6 +4,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -20,6 +21,16 @@ export class TicketProcessComponent implements OnInit {
     { id: 0, name: 'Disable' },
     { id: 1, name: 'Enable' }
   ];
+  ticketInputValues = [
+    { id: 0, name: 'Auto' },
+    { id: 1, name: 'Manual' },
+    { id: 2, name: 'Both' }
+  ];
+
+  formTypeFields = [
+    { id: 0, name: 'Add Ticket Form' },
+    { id: 1, name: 'On Ticket Close Form' },
+  ]
   ticketData = [];
   ticketPropertyData = [];
   esclationMatrixList = [];
@@ -65,7 +76,13 @@ export class TicketProcessComponent implements OnInit {
     typeList: [{ name: '' }],
     Supervisor: { id: null, name: '' },
     claimStatus: { id: 0, name: 'Disable' },
+    ticketInput: { id: 0, name: 'Auto' },
     isActive: true,
+  }
+
+  formRefType = {
+    tpId: null,
+    formFieldRefType: { id: null, name: null },
   }
 
   ticketPropertyForm = {
@@ -113,6 +130,12 @@ export class TicketProcessComponent implements OnInit {
   adminList = [];
 
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
+    this.getAllAdmin();
+    this.getTicketList();
+    this.common.refresh = this.refresh.bind(this);
+  }
+
+  refresh() {
     this.getAllAdmin();
     this.getTicketList();
   }
@@ -177,6 +200,7 @@ export class TicketProcessComponent implements OnInit {
       Supervisor: { id: null, name: '' },
       claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
+      ticketInput: { id: 0, name: 'Auto' },
     }
   }
 
@@ -265,8 +289,8 @@ export class TicketProcessComponent implements OnInit {
     console.log(this.ticketForm);
     let params = {
       name: this.ticketForm.name,
-      startDate: this.common.dateFormatter(this.ticketForm.startTime),
-      endDate: this.common.dateFormatter(this.ticketForm.endTime),
+      startDate: this.ticketForm.startTime ? this.common.dateFormatter(this.ticketForm.startTime) : null,
+      endDate: this.ticketForm.endTime ? this.common.dateFormatter(this.ticketForm.endTime) : null,
       priCatAlias: this.ticketForm.priCatAlias,
       secCatAlias: this.ticketForm.secCatAlias,
       priCatInfo: JSON.stringify(this.ticketForm.priCatList),
@@ -275,7 +299,8 @@ export class TicketProcessComponent implements OnInit {
       claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
-      supervisorId: this.ticketForm.Supervisor.id
+      ticketInput: this.ticketForm.ticketInput.id
+      // supervisorId: this.ticketForm.Supervisor.id
     }
 
     if (params.name) {
@@ -391,7 +416,7 @@ export class TicketProcessComponent implements OnInit {
       { class: "fas fa-list-alt", action: this.openCatModal.bind(this, ticket, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, ticket, 3), title: "Type Mapping" },
       { class: "fas fa-plus-square", action: this.openTicketPropertyModal.bind(this, ticket._id), title: "Ticket Property" },
-      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixModal.bind(this, ticket._id, 0), title: "Form Matrix" }
+      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixTypeModal.bind(this, ticket._id), title: "Form Matrix" }
     ];
     return icons;
   }
@@ -550,7 +575,7 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.priCatList = [{ name: '' }],
         this.ticketForm.secCatList = [{ name: '' }],
         this.ticketForm.typeList = [{ name: '' }],
-        this.ticketForm.Supervisor = { id: ticket._default_owner, name: ticket.supervisor }
+        this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input }
     }
 
     console.log(this.ticketForm);
@@ -701,7 +726,8 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openTicketEsclationMatrixModal(property) {
-    console.log(property);
+    console.log(property,this.esclationMatrixList,this.esclationTable);
+    this.esclationMatrixList = [];
     this.resetEsclation();
     this.esclationMatrix.tpPropertyId = property._id;
     this.getPreFilledMatrix(this.esclationMatrix.tpPropertyId);
@@ -767,7 +793,7 @@ export class TicketProcessComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            icons: this.actionPropertyIcons(esclation)
+            icons: this.esclationIcons(esclation)
           };
         } else {
           column[key] = { value: esclation[key], class: 'black', action: '' };
@@ -852,10 +878,31 @@ export class TicketProcessComponent implements OnInit {
     const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
-  closeTicketFormMatrixModal() {
-    document.getElementById('ticketFormMatrix').style.display = 'none';
+  openTicketFormMatrixTypeModal(tpID) {
+    this.formRefType.tpId = tpID;
+    document.getElementById('ticketFormMatrixType').style.display = 'block';
   }
 
+  closeTicketFormMatrixTypeModal() {
+    document.getElementById('ticketFormMatrixType').style.display = 'none';
+    this.resetFormRefType();
+  }
+  resetFormRefType() {
+    this.formRefType = {
+      tpId: null,
+      formFieldRefType: { id: null, name: null }
+    }
+  }
+
+  saveTicketFormMatrixTypeModal() {
+    if (this.formRefType.formFieldRefType.id === null) {
+      this.common.showError('Select Type')
+    } else {
+      this.openTicketFormMatrixModal(this.formRefType.tpId, this.formRefType.formFieldRefType.id);
+      document.getElementById('ticketFormMatrixType').style.display = 'none';
+      this.resetFormRefType();
+    }
+  }
 
   addProcessUsers(property) {
     this.common.params = { process_id: property._id, adminList: this.adminList, fromPage: 'ticket' };
@@ -865,6 +912,47 @@ export class TicketProcessComponent implements OnInit {
         console.log("ticket UserMappingComponent:", data.response);
       }
     });
+  }
+
+  esclationIcons(property) {
+    let icons = [
+      { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, property) },
+    ];
+    return icons;
+  }
+
+  deleteAction(row) {
+    let params = {
+      id: row._id,
+    }
+    if (row._id) {
+      this.common.params = {
+        title: 'Delete Record',
+        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.common.loading++;
+          this.api.post('Ticket/deleteTicketEsclationMatrix', params).subscribe(res => {
+            this.common.loading--;
+            if (res['code'] == 1) {
+              if (res['data'][0].y_id > 0) {
+                this.common.showToast(res['data'][0].y_msg);
+                this.getPreFilledMatrix(this.esclationMatrix.tpPropertyId);
+              } else {
+                this.common.showError(res['data'][0].y_msg);
+              }
+            } else {
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            console.log('Error: ', err);
+          });
+        }
+      });
+    }
   }
 
 }

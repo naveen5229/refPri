@@ -8,7 +8,7 @@ import { ReminderComponent } from '../../modals/reminder/reminder.component';
 import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
 import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
-import { async } from '@angular/core/testing';
+import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -17,6 +17,7 @@ import { async } from '@angular/core/testing';
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements OnInit {
+  ticketDetailTitle = 'Ticket Info';
   loginUserId = this.userService._details.id;
   activeTab = 'allocatedTkt';
   adminList = [];
@@ -110,6 +111,17 @@ export class TicketComponent implements OnInit {
     }
   };
 
+  allOpenTicketList = [];
+  tableAllOpenTkt = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
   ticketFormFields;
   tpPropertyList = [];
   ticketForm = {
@@ -136,7 +148,7 @@ export class TicketComponent implements OnInit {
   forwardTicketObject = {
     ticketAllocationId: null,
     tktId: null,
-    userId: null,
+    userId: { id: null, name: '' },
     remark: null,
     tabType: null
   }
@@ -151,6 +163,15 @@ export class TicketComponent implements OnInit {
     this.getAllAdmin();
     this.getTicketProcessList();
     this.getUserGroupList();
+    this.common.refresh = this.refresh.bind(this);
+  }
+
+  refresh() {
+    this.getTicketByType(101);
+    this.getAllAdmin();
+    this.getTicketProcessList();
+    this.getUserGroupList();
+    this.activeTab = 'allocatedTkt';
   }
 
   ngOnInit() { }
@@ -193,7 +214,10 @@ export class TicketComponent implements OnInit {
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
       // if (!res['data']) return;
-      this.tpList = res['data'] || [];
+      let tpList = res['data'] || [];
+      this.tpList = tpList.filter(ele => {
+        return (ele._is_active && ele._ticket_input > 0)
+      })
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -201,17 +225,17 @@ export class TicketComponent implements OnInit {
     });
   }
 
-  getTicketFormField() {
+  getTicketFormField(refType) {
     if (!this.ticketForm.tp.id) {
       this.common.showError("Ticket Process is missing");
       return false;
     }
     this.ticketFormFields = null;
-    let params = "?refId=" + this.ticketForm.tp.id + "&refType=0" + "&ticketId=" + this.ticketForm.requestId;
+    let params = "?refId=" + this.ticketForm.tp.id + "&refType=" + refType + "&ticketId=" + this.ticketForm.requestId;
     this.api.get("Ticket/getTicketFormFieldById" + params).subscribe(res => {
       if (res['code'] > 0) {
         if (res['data']) {
-          this.ticketFormFields = res['data'] = res['data'];
+          this.ticketFormFields = res['data'];
           this.formatArray();
         }
       } else {
@@ -317,7 +341,7 @@ export class TicketComponent implements OnInit {
     this.typeList = [];
     this.ticketFormFields = null;
     setTimeout(() => {
-      this.getTicketFormField();
+      this.getTicketFormField(0);
       this.getTicketProcessProperty();
     }, 500);
   }
@@ -354,6 +378,9 @@ export class TicketComponent implements OnInit {
         } else if (type == 106) {
           this.addedByMeTkt = res['data'] || [];
           this.setTableaddedByMeTkt(type);
+        } else if (type == 107) {
+          this.allOpenTicketList = res['data'] || [];
+          this.setTableAllOPenTkt(type);
         }
       } else {
         this.common.showError(res['msg']);
@@ -666,6 +693,54 @@ export class TicketComponent implements OnInit {
   }
   // end: addedByMeTkt
 
+  // start: allOpenTickets
+  setTableAllOPenTkt(type) {
+    this.tableAllOpenTkt.data = {
+      headings: this.generateHeadingsallOpenTickets(),
+      columns: this.getTableColumnsallOpenTickets(type)
+    };
+    return true;
+  }
+
+  generateHeadingsallOpenTickets() {
+    let headings = {};
+    for (var key in this.allOpenTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsallOpenTickets(type) {
+    let columns = [];
+    this.allOpenTicketList.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsallOpenTickets()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(lead, type)
+          };
+        } else if (key == "remaining_time") {
+          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        // column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: allOpenTickets
+
   // start: CompletedTkt
   setTablecompletedTkt(type) {
     this.tableCompletedTkt.data = {
@@ -717,7 +792,7 @@ export class TicketComponent implements OnInit {
   actionIcons(ticket, type) {
     console.log("actionIcons:", ticket);
     let icons = [];
-    if (type == 101 || type == 102 || type == 106 || type == 104 || type == 105) {
+    if (type == 101 || type == 102 || type == 106 || type == 104 || type == 105 || type == 107) {
       icons.push({ class: "fas fa-comments", action: this.ticketMessage.bind(this, ticket, type), txt: "", title: 'Chat Box', });
 
       if (ticket._unreadcount > 0) {
@@ -728,9 +803,9 @@ export class TicketComponent implements OnInit {
 
       if (ticket._status == 5 || ticket._status == -1) {
       } else {
-        if (ticket._isremind == 1 && (type == 106 || type == 104 || type == 101 || type == 102)) {
+        if (ticket._isremind == 1 && (type == 106 || type == 104 || type == 101 || type == 102 || type == 107)) {
           icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, ticket, type), txt: "", title: 'Reminder', });
-        } else if (ticket._isremind == 2 && type != 102) {
+        } else if (ticket._isremind == 2 && (type != 102)) {
           icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, ticket, type), txt: "", title: 'Reminder', });
         } else {
           if (type != 102) {
@@ -738,33 +813,49 @@ export class TicketComponent implements OnInit {
           }
         }
       }
+      icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
       if (type == 106) {
         icons.push({ class: 'fas fa-trash-alt', action: this.deleteTicket.bind(this, ticket, type), txt: '', title: "Delete Ticket" });
-      } else if (type == 101 || type == 102) {
+      } else if (type == 101 || type == 102 || type == 107) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
+        if (type == 107) {
+          if (ticket._allocated_user == this.loginUserId && !ticket._status) {
+            icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
+          } else if (ticket._allocated_user == this.loginUserId && ticket._status == 2) {
+            icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+          }
+          if ((ticket._allocated_user == -1 && ticket._status == 0) || ticket._status === null) {
+            icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
+          }
+        } else if (type == 102) {
+          if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
+            icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
+          }
+        }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
+        if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
+          icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
+        }
       }
 
       if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
       }
 
-      icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
-
       if (!ticket._status && (type == 101 || type == 102)) {
         icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark Rejected", });
         icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
       } else if (ticket._status == 2 && (type == 101 || type == 102)) {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
       }
     } else if (type == 100) {
       icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
     } else if (type == 103) {
       icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
     }
-    icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type), txt: '', title: "Ticket Info" });
+    icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type, 0), txt: '', title: "Ticket Info" });
 
     return icons;
   }
@@ -804,7 +895,7 @@ export class TicketComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
-    console.log(status, 'status')
+    console.log(ticket, 'status');
     if (ticket._ticket_id) {
       let preTitle = "Complete";
       if (status === -1) {
@@ -842,7 +933,15 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe((res) => {
       this.common.loading--;
-      this.common.showToast(res["msg"]);
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg'])
+      }
       this.getTicketByType(type);
     }, (err) => {
       this.common.loading--;
@@ -1029,10 +1128,14 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/addTicketAllocation", params).subscribe(res => {
       this.common.loading--;
-      if (res['code'] > 0 && res['data'][0].y_id > 0) {
-        this.closeassignUserModal();
-        this.common.showToast(res["msg"]);
-        this.getTicketByType(this.assignUserObject.type);
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.closeassignUserModal();
+          this.common.showToast(res['data'][0].y_msg);
+          this.getTicketByType(this.assignUserObject.type);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
       } else {
         this.common.showToast(res["msg"]);
       }
@@ -1125,9 +1228,13 @@ export class TicketComponent implements OnInit {
     this.api.post("Ticket/forwardTicket", params).subscribe((res) => {
       this.common.loading--;
       if (res['code'] > 0) {
-        this.common.showToast(res["msg"]);
-        this.closeForwardTicket();
-        this.getTicketByType(type);
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeForwardTicket();
+          this.getTicketByType(type);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
       } else {
         this.common.showError(res['msg']);
       }
@@ -1156,7 +1263,7 @@ export class TicketComponent implements OnInit {
     this.forwardTicketObject = {
       ticketAllocationId: null,
       tktId: null,
-      userId: null,
+      userId: { id: null, name: null },
       remark: null,
       tabType: null
     }
@@ -1187,13 +1294,31 @@ export class TicketComponent implements OnInit {
     }
   }
 
-  html;
-  openInfoModal(ticket, type) {
-    console.log(ticket);
-    // return
+  openTicketFormData(ticket, type, status) {
+    let title = 'Ticket Closing Form';
+    let actionData = {
+      ticketId: ticket._ticket_id,
+      refId: ticket._tpid,
+      refType: 1,
+    };
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.data, 'response');
+        this.updateTicketStatus(ticket, type, status, null);
+      }
+    });
+  }
+
+  openInfoModal(ticket, type, refType) {
+    if (refType == 1) {
+      this.ticketDetailTitle = 'Closing Form Detail';
+    } else {
+      this.ticketDetailTitle = 'Ticket Info';
+    }
     this.ticketForm.tp.id = ticket._tpid;
     this.ticketForm.requestId = ticket._ticket_id;
-
     this.tpPropertyList = [];
     this.oddArray = [];
     this.evenArray = [];
@@ -1202,11 +1327,8 @@ export class TicketComponent implements OnInit {
     this.typeList = [];
     this.ticketFormFields = null;
     setTimeout(async () => {
-      await this.getTicketFormField();
+      await this.getTicketFormField(refType);
     }, 500);
-
-    this.html = document.getElementById('infoData');
-    console.log('html', this.html);
 
     document.getElementById('infoWindow').style.display = 'block';
   }

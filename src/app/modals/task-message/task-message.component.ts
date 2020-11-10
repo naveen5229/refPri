@@ -90,6 +90,7 @@ export class TaskMessageComponent implements OnInit {
   isChatFeature = true;
   departmentList = [];
   stTaskMaster = null;
+  isChecked = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -114,6 +115,7 @@ export class TaskMessageComponent implements OnInit {
       this.ticketType = this.common.params.ticketEditData.taskType;
       this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
       this.ticketData = this.common.params.ticketEditData.ticketData;
+      this.isChecked = this.common.params.ticketEditData.isChecked;
       if (!this.ticketData || this.ticketType == 114) {
         this.getTicketDataByTktId();
       } else if (this.tabType == -8 && this.ticketType == 103 || this.ticketData._tktype == 103) {
@@ -657,6 +659,19 @@ export class TaskMessageComponent implements OnInit {
     })
   }
 
+  onPaste(event: any) {
+    console.log('event', event);
+    const items = event.clipboardData.items;
+    let selectedFile = { "target": { "files": [] } };
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        selectedFile.target.files.push(item.getAsFile());
+      }
+    }
+
+    this.handleFileSelection(selectedFile);
+  }
+
   messageReadInfo(commentId) {
     this.commentInfo = [];
     let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
@@ -716,22 +731,6 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
-  onFilePaste(event: any) {
-    // console.log('event', event);
-    const items = event.clipboardData.items;
-    let selectedFile = { "target": { "files": [] } };
-    // console.log("items:", items);
-    // if (items.length > 1) {
-    //   this.common.showError("Only select single file");
-    // }
-    for (const item of items) {
-      if (item.type.indexOf('image') === 0) {
-        selectedFile.target.files.push(item.getAsFile());
-      }
-    }
-    this.handleFileSelection(selectedFile);
-  }
-
   onSelectMenstionedUser(user) {
     this.mentionedUsers.push({ id: user.id, name: user.name });
     console.log("mentionedUsers2:", this.mentionedUsers);
@@ -783,5 +782,35 @@ export class TaskMessageComponent implements OnInit {
     };
     const activeModal = this.modalService.open(TaskScheduleNewComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
   }
+
+  starMarkOnTicket() {
+    let params = {
+      ticketId: this.ticketId,
+      isChecked: this.isChecked == 1 ? true : false,
+    };
+    this.common.loading++;
+    this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        // this.getTaskByType(type);
+        if (this.isChecked == 1) {
+          this.isChecked = 0;
+        } else {
+          this.isChecked = 1;
+        }
+        this.getMessageList();
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    }
+    );
+  }
+
+
 
 }
