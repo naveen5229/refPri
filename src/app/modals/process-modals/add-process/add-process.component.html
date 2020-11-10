@@ -64,6 +64,24 @@
             </auto-suggestion>
         </div>
     </div>
+    <div class="row form-group">
+        <div class="col-4">
+            <label>Active</label>
+        </div>
+        <div class="col-8">
+            <input type="checkbox" name="Active" id="Active" [(ngModel)]="processForm.active">
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <label>Attachment</label>
+        </div>
+        <div class="col-8">
+            <input type="file" class="file-control col-8" id="Attachment"
+                (change)="handleFileSelection($event)">
+        </div>
+    </div>
 </div>
 
 <div class="modal-footer">

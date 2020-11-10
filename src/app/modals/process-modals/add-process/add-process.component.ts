@@ -21,7 +21,9 @@ export class AddProcessComponent implements OnInit {
     defaultOwn: {
       id: null,
       name: ""
-    }
+    },
+    active:false,
+    attachmentFile:{ name: null, file: null },
   };
   adminList = [];
 
@@ -41,7 +43,9 @@ export class AddProcessComponent implements OnInit {
         defaultOwn: {
           id: (this.common.params.editData._default_po) ? this.common.params.editData._default_po : null,
           name: (this.common.params.editData._default_po) ? this.common.params.editData.default_po : "",
-        }
+        },
+        active:common.params.editData._is_active,
+        attachmentFile:{ name: null, file: null },
       };
     }
   }
@@ -54,7 +58,6 @@ export class AddProcessComponent implements OnInit {
   }
 
   saveProcess() {
-    console.log("processForm:", this.processForm);
     if (!this.processForm.name) {
       this.common.showError("Please Select Process Name");
       return false;
@@ -75,8 +78,13 @@ export class AddProcessComponent implements OnInit {
       endDate: this.processForm.endTime ? this.common.dateFormatter(this.processForm.endTime) : null,
       priCatAlias: this.processForm.priCatAlias,
       secCatAlias: this.processForm.secCatAlias,
-      defaultOwnId: this.processForm.defaultOwn.id
+      defaultOwnId: this.processForm.defaultOwn.id,
+      isActive: this.processForm.active,
+      attachmentName:this.processForm.attachmentFile.name,
+      attachment:this.processForm.attachmentFile.file
     }
+
+    // return;
 
     this.common.loading++;
     this.api.post("Processes/addProcess", params).subscribe(res => {
@@ -98,4 +106,23 @@ export class AddProcessComponent implements OnInit {
     });
   }
 
+
+  handleFileSelection(event) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0]).then((res: any) => {
+      this.common.loading--;
+      let file = event.target.files[0];
+      var ext = file.name.split('.').pop();
+      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+      } else {
+        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        return false;
+      }
+      this.processForm.attachmentFile = { name: file.name, file: res };
+    }, err => {
+      this.common.loading--;
+      console.error('Base Err: ', err);
+    })
+  }
 }
