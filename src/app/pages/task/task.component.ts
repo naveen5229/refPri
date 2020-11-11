@@ -458,7 +458,12 @@ export class TaskComponent implements OnInit {
         priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
         rowData: lead
       }
-      this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };
+      this.common.params = {
+        editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process',
+        userList: this.adminList,
+        groupList: this.groupList,
+        departmentList: this.departmentList
+      };
       const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         this.getProcessLeadByType(type);
