@@ -57,6 +57,8 @@ import { GraphicalReportsComponent } from '../process/graphical-reports/graphica
 import { TicketComponent } from '../ticket/ticket/ticket.component';
 import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.component';
 import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
+import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
+import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 
 const routes: Routes = [{
   path: '',
@@ -344,6 +346,16 @@ const routes: Routes = [{
     {
       path: 'employee-monitoring',
       component: EmployeeMonitoringComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path:'on-site-images',
+      component:OnSiteImagesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path:'on-site-images-summary',
+      component:OnSiteImagesSummaryComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
