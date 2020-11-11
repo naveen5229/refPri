@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
@@ -66,6 +66,28 @@ export class ChatboxComponent implements OnInit {
     userName: null,
     oldOwnerName: null
   }
+  userGroupList = [];
+  userWithGroup = [];
+  bGConditions = [
+    {
+      key: 'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
+
+  parentCommentId = null;
+  mentionedUsers = [];
+  replyStatus = null;
+  parentComment = null;
+  replyType = null;
+  isReplyOnDemand = false;
+  commentInfo = [];
+  isMentionedUser = false;
+  mentionedUserList = [];
+
+  @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
+  @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -79,9 +101,17 @@ export class ChatboxComponent implements OnInit {
       this.lastSeenId = this.common.params.editData.lastSeenId;
       this.priOwnId = this.common.params.editData.priOwnId;
       this.ticketData = this.common.params.editData.rowData;
+      this.adminList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
+      this.userGroupList = this.common.params.groupList;
+      if (this.userGroupList) {
+        this.userWithGroup = this.userGroupList.concat(this.adminList);
+      } else {
+        this.userWithGroup = this.adminList.concat(this.userGroupList);
+      }
+      console.log("userGroupList:", this.userGroupList);
       this.getLeadMessage();
       this.getAllUserByLead();
-      this.getAllAdmin();
+      // this.getAllAdmin();
       this.getTargetActionData();
       this.getAttachmentByLead();
     }
@@ -174,13 +204,18 @@ export class ChatboxComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
         attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        parentId: (this.replyType > 0) ? this.parentCommentId : null,
+        users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
+        replyStatus: (this.replyType > 0) ? this.replyStatus : null,
+        requestId: null
       }
       this.api.post('Processes/saveLeadMessage', params).subscribe(res => {
         this.common.loading--;
@@ -710,6 +745,99 @@ export class ChatboxComponent implements OnInit {
       this.common.showError("Action owner is missing");
     }
 
+  }
+  setReplyWithType(type) {
+    this.replyType = type;
+    if (type == 1) {
+      this.replyStatus = -1;
+    } else if (type == 2) {
+      this.replyStatus = 0;
+    } else if (type == 3) {
+      this.replyStatus = 5;
+    } else {
+      this.replyStatus = null;
+      this.replyType = null;
+      this.messageReadInfo(this.parentCommentId);
+    }
+    this.msgtextarea.nativeElement.focus();
+  }
+
+  replyToComment(msg, userType) {
+    this.replyType = null;
+    this.parentCommentId = msg._id;
+    this.parentComment = msg.comment;
+    this.replyStatus = -1;
+    this.isReplyOnDemand = (userType == 'other' && msg.reply_demanded && !msg.is_send) ? true : false;
+  }
+
+  resetQuotedMsg() {
+    this.replyType = null;
+    this.parentCommentId = null;
+    this.replyStatus = null;
+    this.parentComment = null;
+    this.mentionedUsers = [];
+    this.isReplyOnDemand = false;
+  }
+
+  messageReadInfo(commentId) {
+    this.commentInfo = [];
+    let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
+    // if (this.ticketId < this.lastMsgId) {
+    this.api.get('Processes/getMessageReadInfo' + params).subscribe(res => {
+      if (res['code'] > 0) {
+        this.commentInfo = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+    // }
+  }
+
+  onMessageType(e) {
+    let value = e.data;
+    // console.log("target value:", e.target.value);
+    // console.log("target value22:", value);
+    let accessUsers = [];
+    if (this.userListByTask['leadUsers'][0]._pri_own_id != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['leadUsers'][0]._pri_own_id, name: this.userListByTask['leadUsers'][0].primary_owner });
+    }
+    if (this.userListByTask['leadUsers'][0]._aduserid != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['leadUsers'][0]._aduserid, name: this.userListByTask['leadUsers'][0].assignby });
+    }
+    if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+      this.userListByTask['ccUsers'].forEach(element => {
+        if (element._cc_user_id != this.loginUserId) {
+          accessUsers.push({ id: element._cc_user_id, name: element.cc_user });
+        }
+      });
+    }
+    if (e && value && value == "@") {
+      // console.log("onMessageType");
+      this.isMentionedUser = true;
+      this.mentionedUserList = accessUsers;//this.adminList;
+      setTimeout(() => {
+        this.userlistInput.toArray()[0].nativeElement.focus();
+      }, 100);
+    } else if (e && value && value == " ") {
+      // console.log("onMessageType2");
+      this.isMentionedUser = false;
+    } else if (this.isMentionedUser) {
+      let splieted = this.taskMessage.split('@');
+      let searchableTxt = splieted[splieted.length - 1];
+      this.mentionedUserList = accessUsers.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) }); //this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+    }
+  }
+
+  onSelectMenstionedUser(user) {
+    this.mentionedUsers.push({ id: user.id, name: user.name });
+    // console.log("mentionedUsers2:", this.mentionedUsers);
+    let splieted = this.taskMessage.split('@');
+    splieted.pop();
+    this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.msgtextarea.nativeElement.focus();
   }
 
 }
