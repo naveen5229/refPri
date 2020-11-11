@@ -200,7 +200,7 @@ const PAGE_COMPONENTS = [
     AddpartneruserComponent,
     AddcompanyComponent,
     AddfouserComponent,
-    ChatboxComponent
+    ChatboxComponent,
 
 
     // SendmessageComponent,

@@ -50,7 +50,9 @@ import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
 import {TicketModule} from '../ticket/ticket.module';
-import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component'
+import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
+import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
+import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -106,7 +108,9 @@ import { EmployeeMonitoringComponent } from './employee-monitoring/employee-moni
     UserMappingComponent,
     CompanykycComponent,
     UserGroupsComponent,
-    EmployeeMonitoringComponent
+    EmployeeMonitoringComponent,
+    OnSiteImagesComponent,
+    OnSiteImagesSummaryComponent
   ],
 })
 export class PagesModule {
