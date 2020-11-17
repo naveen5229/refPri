@@ -103,7 +103,7 @@ export class OnSiteImagesComponent implements OnInit {
 
   getTableColumns() {
     let columns = [];
-    this.adminReportList.map(shift => {
+    this.adminReportList.map(adminReport => {
       let column = {};
       for (let key in this.generateHeadings()) {
         if (key == 'Action' || key == 'action') {
@@ -111,10 +111,12 @@ export class OnSiteImagesComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(shift)
+            icons: this.actionIcons(adminReport)
           };
+        } else if (key == 'attached_document') {
+          column[key] = { value: adminReport[key], class: 'blue', action: this.goToImage.bind(this, adminReport[key]) };
         } else {
-          column[key] = { value: shift[key], class: 'black', action: '' };
+          column[key] = { value: adminReport[key], class: 'black', action: '' };
         }
       }
       columns.push(column);
@@ -124,9 +126,25 @@ export class OnSiteImagesComponent implements OnInit {
 
   }
 
-  actionIcons(shift) {
-
+  goToImage(img) {
+    window.open(img);
   }
 
+  actionIcons(adminReport) {
+    let icons = [];
+    icons.push({ class: !adminReport._refid ? "fa fa-paperclip gray" : "fa fa-paperclip", action: this.openDataModal.bind(this, adminReport), txt: "", title: 'report', });
+    return icons;
+  }
+  openDataModal(adminReport) {
+    console.log("OnSiteImagesComponent -> openReportModal -> adminReport", adminReport);
+    if(adminReport._action_name && adminReport._identity && adminReport._process){
+      
+    }
+    this.common.showToast('working');
+  }
+
+  closeDataModal(){
+    document.getElementById('dataWindow').style.display = 'none';
+  }
 
 }
