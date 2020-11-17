@@ -19,8 +19,7 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url"
-                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
@@ -33,16 +32,52 @@
     <!-- end: view attachment -->
     <div class="row">
         <div class="col-6">
+            <ng-template #replyPopContent>
+                <ul class="replyPopContent">
+                    <li (click)="setReplyWithType(3)" *ngIf="isReplyOnDemand">Answer</li>
+                    <li (click)="setReplyWithType(1)">Reply</li>
+                </ul>
+            </ng-template>
+            <ng-template #commentInfoPopContent>
+                <span><b>Read Receipts</b></span>
+                <ul *ngIf="commentInfo && commentInfo.length" class="replyPopContent">
+                    <li *ngFor="let in of commentInfo">{{in.username}}</li>
+                </ul>
+                <ul *ngIf="!commentInfo || !commentInfo.length" class="replyPopContent">
+                    <li>No Data Found</li>
+                </ul>
+            </ng-template>
             <div class="row mt-1 chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        <label [innerHTML]="msg.comment"></label>
-                        <span>{{msg.added_date}}</span>
+                        <!-- <label [innerHTML]="msg.comment"></label>
+                        <span>{{msg.added_date}}</span> -->
+                        <div>
+                            <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true" title="Reply Demanded pending"></i>{{msg.added_date}}</span>
+                            <span class="comment_reply">
+                                <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info" [ngbPopover]="commentInfoPopContent" placement="left" (click)="messageReadInfo(msg._id)"></i>
+                                <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent" placement="left" (click)="replyToComment(msg,'mine')"></i>
+                            </span>
+                        </div>
+                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block" [innerHTML]="msg.parent_comment"></span>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat"
-                        [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                        <label [innerHTML]="msg.comment"></label>
-                        <span>{{msg.added_by +" "+msg.added_date}}</span>
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
+                        <!-- <label [innerHTML]="msg.comment"></label>
+                        <span>{{msg.added_by +" "+msg.added_date}}</span> -->
+                        <div>
+                            <span>{{msg.added_by +" "+msg.added_date}}</span>
+                            <span class="comment_reply">
+                                <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
+                                    [ngbPopover]="commentInfoPopContent" placement="right"
+                                    (click)="messageReadInfo(msg._id)"></i>
+                                <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
+                                    [ngbPopover]="replyPopContent" placement="right"
+                                    (click)="replyToComment(msg,'other')"></i>
+                            </span>
+                        </div>
+                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block" [innerHTML]="msg.parent_comment"></span>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                     </div>
                 </div>
                 <div *ngIf="showLoading" class="col-12 text-center">
@@ -51,9 +86,20 @@
             </div>
 
             <div class="row mt-1 bottom-block">
-                <div class="col-8">
-                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control"
-                        placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                <!-- <div class="col-8">
+                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                </div> -->
+                <div *ngIf="parentCommentId>0 && replyType>0" class="col-12 quoted_selected">
+                    <label [innerHTML]="parentComment"></label>
+                    <span class="comment_reply"><i class="fa fa-times" aria-hidden="true"
+                            (click)="resetQuotedMsg()"></i></span>
+                </div>
+                <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
+                    <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                </div>
+                <div class="col-9 pr-0">
+                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div col-1>
                     <label class="custom-file-upload">
@@ -62,9 +108,10 @@
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
-                <div class="col-3 text-right button-box">
-                    <button class="btn btn-primary text-capitalize" id="button" (click)="saveLeadMessage()">Send
-                    </button>
+                <div class="col-2 text-right button-box">
+                    <!-- <button class="btn btn-primary text-capitalize" id="button" (click)="saveLeadMessage()">Send
+                    </button> -->
+                    <button class="btn send" id="button" (click)="saveLeadMessage()" title="Send"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
             <div *ngIf="attachmentFile && attachmentFile.name" class="row">
@@ -72,8 +119,7 @@
                     <!-- {{attachmentFile.name}} -->
                     <span><img height="50" width="50" src="{{attachmentFile.file}}"
                             alt="{{attachmentFile.name}}"></span>
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
-                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
             </div>
         </div>
@@ -82,19 +128,16 @@
             <!-- start: lead users -->
             <table width="100%">
                 <tr valign="top">
-                    <td class="bg-lightblue"><b>By:</b>
-                        {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].assignby:''}}</td>
+                    <td class="bg-lightblue"><b>By:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].assignby:''}}
+                    </td>
 
                     <td *ngIf="!showAssignUserAuto" class="bg-lavender">
                         <div class="row">
                             <div class="col-9">
-                                <b>PO:</b>
-                                {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
+                                <b>PO:</b> {{(userListByTask['leadUsers'])?userListByTask['leadUsers'][0].primary_owner:''}}
                             </div>
                             <div class="col-3 text-right">
-                                <i class="fa fa-plus"
-                                    *ngIf="(userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)) || tabType == 7"
-                                    title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
+                                <i class="fa fa-plus" *ngIf="(userListByTask['leadUsers'] && (userListByTask['leadUsers'][0]._pri_own_id == loginUserId || userListByTask['leadUsers'][0]._aduserid == loginUserId)) || tabType == 7" title="assign new Primary Owner" (click)="showAssignUserAuto=1"></i>
                             </div>
                         </div>
                     </td>
@@ -104,9 +147,7 @@
                                 <b>PO:</b>
                             </div>
                             <div class="col-8">
-                                <auto-suggestion [style]="'width:80%'" (onSelected)="newAssigneeUser = $event"
-                                    [data]="adminList" display="name" seperator="-" placeholder="Search Primary Owner"
-                                    autocomplete="off" name="primaryOwner" inputId="primaryOwner">
+                                <auto-suggestion [style]="'width:80%'" (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Primary Owner" autocomplete="off" name="primaryOwner" inputId="primaryOwner">
                                 </auto-suggestion>
                             </div>
                             <div class="col-3 text-right">
@@ -116,19 +157,15 @@
                         </div>
                     </td>
                 </tr>
-                <tr valign="top" class="bg-aliceblue"
-                    *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
-                    <td colspan="2"><b>CC:</b> <span
-                            *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{(i>0)?',':''}}
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                    <td colspan="2"><b>CC:</b> <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">{{(i>0)?',':''}}
                             {{ccu.cc_user}}</span></td>
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2">
                         <div class="row">
                             <div class="col-9">
-                                <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList"
-                                    display="name" seperator="-" placeholder="Search User" autocomplete="off"
-                                    name="ccUser" inputId="ccUser">
+                                <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList" display="name" seperator="-" placeholder="Search User" autocomplete="off" name="ccUser" inputId="ccUser">
                                 </auto-suggestion>
                             </div>
                             <div class="col-3">
@@ -144,19 +181,16 @@
             <!-- start: target action list -->
             <div class="tabs_style_main mt-2">
                 <ul class="tabs_style text-left">
-                    <li [ngClass]="activeTab=='actionList'?'active':''"
-                        (click)="activeTab='actionList'; getTargetActionData(null)">
+                    <li [ngClass]="activeTab=='actionList'?'active':''" (click)="activeTab='actionList'; getTargetActionData(null)">
                         Actions
                     </li>
-                    <li [ngClass]="activeTab=='stateList'?'active':''"
-                        (click)="activeTab='stateList'; getTargetActionData(1)">
+                    <li [ngClass]="activeTab=='stateList'?'active':''" (click)="activeTab='stateList'; getTargetActionData(1)">
                         States
                     </li>
                 </ul>
             </div>
             <div class="mt-2">
-                <smart-table *ngIf="transActionData.length" [data]="tableTransActionData.data"
-                    [settings]="tableTransActionData.settings" id="tableTransActionData">
+                <smart-table *ngIf="transActionData.length" [data]="tableTransActionData.data" [settings]="tableTransActionData.settings" id="tableTransActionData">
                 </smart-table>
             </div>
             <!-- end: target action list -->
@@ -169,12 +203,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" style="color:#fff;">User Logs</h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                        (click)="closeLeadUserLogsModal()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeLeadUserLogsModal()">&times;</button>
                 </div>
                 <div class="modal-body p-0">
-                    <table *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length"
-                        class="table table-bordered table-hover">
+                    <table *ngIf="userListByTask['userLogs'] && userListByTask['userLogs'].length" class="table table-bordered table-hover">
                         <thead class="thead" style="background-color: #c0b2b2">
                             <tr style="text-align:center">
                                 <th>Name</th>
@@ -199,8 +231,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" style="color:#fff;">Change Action Owner</h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                        (click)="closeEditActionOwnerModal()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeEditActionOwnerModal()">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="row mt-2 mb-2">
@@ -208,17 +239,14 @@
                             <label>Action Owner<span class="text-danger">*</span></label>
                         </div>
                         <div class="col-8">
-                            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner"
-                                name="actionOwner" inputId="actionOwnerId"
-                                (onSelected)="actionOwnerForm.userId=($event.id);actionOwnerForm.userName=($event.name);"
-                                [preSelected]="{name:actionOwnerForm.userName}" autocomplete="off">
+                            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner" inputId="actionOwnerId" (onSelected)="actionOwnerForm.userId=($event.id);actionOwnerForm.userName=($event.name);" [preSelected]="{name:actionOwnerForm.userName}"
+                                autocomplete="off">
                             </auto-suggestion>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 text-right">
-                            <button class="btn btn-primary btn-sm" type='submit'
-                                (click)="changeActionOwner()">Submit</button>
+                            <button class="btn btn-primary btn-sm" type='submit' (click)="changeActionOwner()">Submit</button>
                         </div>
                     </div>
                 </div>
