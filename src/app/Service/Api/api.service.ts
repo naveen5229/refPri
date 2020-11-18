@@ -7,13 +7,8 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-<<<<<<< HEAD
-  // I_URL: string = 'http://localhost/itrm_webservices/';//komal local
-  // I_URL: string = 'http://13.232.190.178//itrm_webservices/';//komal local
-=======
   // I_URL: string = 'http://localhost/itrm_webservices/';
   // I_URL: string = 'http://13.232.190.178/itrm_webservices/';
->>>>>>> b58b5efa1c324495f3453dd90941276b4187b8fd
 
   I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'http://dev.elogist.in/booster_webservices/';

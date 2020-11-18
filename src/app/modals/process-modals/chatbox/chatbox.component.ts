@@ -8,11 +8,30 @@ import { ReminderComponent } from '../../reminder/reminder.component';
 import { AddTransactionActionComponent } from '../add-transaction-action/add-transaction-action.component';
 import { FormDataComponent } from '../form-data/form-data.component';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 @Component({
   selector: 'ngx-chatbox',
   templateUrl: './chatbox.component.html',
-  styleUrls: ['./chatbox.component.scss']
+  styleUrls: ['./chatbox.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        height: '*',
+        opacity: 1,
+      })),
+      state('closed', style({
+        height: '0',
+        opacity: 0
+      })),
+      transition('open => closed', [
+        animate('0.35s')
+      ]),
+      transition('closed => open', [
+        animate('0.35s')
+      ]),
+    ]),
+  ]
 })
 export class ChatboxComponent implements OnInit {
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
@@ -125,12 +144,14 @@ export class ChatboxComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   scrollToBottom(): void {
     try {
-      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      setTimeout(() => {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      }, 100);
     } catch (err) { }
   }
 
@@ -175,6 +196,7 @@ export class ChatboxComponent implements OnInit {
       this.showLoading = false;
       if (res['code'] == 1) {
         this.messageList = res['data'] || [];
+        this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
@@ -223,8 +245,10 @@ export class ChatboxComponent implements OnInit {
           this.taskMessage = "";
           this.attachmentFile.file = null;
           this.attachmentFile.name = null;
+          this.resetQuotedMsg();
           this.getLeadMessage();
           this.getAttachmentByLead();
+          this.msgtextarea.nativeElement.focus();
         } else {
           this.common.showError(res['msg'])
         }
