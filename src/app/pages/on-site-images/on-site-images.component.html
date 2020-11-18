@@ -57,6 +57,11 @@
                     <button type="button" class="close" data-dismiss="modal" (click)="closeTransActionListModal()">&times;</button>
                 </div>
                 <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button class="btn btn-primary btn-sm" id="addLead" (click)="addTransaction()"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
                     <smart-table [data]="tableTransActionList.data" [settings]="tableTransActionList.settings" id="tableTransActionList" class="sl-smart-table"></smart-table>
                 </div>
             </div>

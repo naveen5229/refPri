@@ -14,6 +14,7 @@ export class OnSiteImagesComponent implements OnInit {
   startDate = this.common.getDate(-2);
   endDate = this.common.getDate();
   today = new Date();
+  selectedOnSiteImageId = null;
 
   table = {
     data: {
@@ -27,6 +28,16 @@ export class OnSiteImagesComponent implements OnInit {
 
   transActionList = null;
   tableTransActionList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  txnByMe = [];
+  tableTxnByMe = {
     data: {
       headings: {},
       columns: []
@@ -108,16 +119,14 @@ export class OnSiteImagesComponent implements OnInit {
             icons: this.actionIcons(adminReport)
           };
         } else if (key == 'attached_document') {
-          column[key] = { value: adminReport[key], class: 'blue', action: this.goToImage.bind(this, adminReport[key]) };
+          column[key] = { value: adminReport[key], class: 'blue', action: this.goToImage.bind(this, adminReport['_url']) };
         } else {
           column[key] = { value: adminReport[key], class: 'black', action: '' };
         }
       }
       columns.push(column);
     });
-    console.log(columns);
     return columns;
-
   }
 
   goToImage(img) {
@@ -126,42 +135,51 @@ export class OnSiteImagesComponent implements OnInit {
 
   actionIcons(adminReport) {
     let icons = [
-      { class: !adminReport._refid ? "fa fa-paperclip gray" : "fa fa-paperclip", action: this.openDataModal.bind(this, adminReport), txt: "", title: 'report', },
-      { class: "fas fa-sitemap", action: this.openTransActionListModal.bind(this, adminReport), txt: "", title: 'Txn Action', }
+      // { class: !adminReport._refid ? "fa fa-paperclip gray" : "fa fa-paperclip", action: this.openDataModal.bind(this, adminReport), txt: "", title: 'report', },
+      { class: adminReport._refid > 0 ? "fas fa-sitemap blue" : "fas fa-sitemap", action: adminReport._refid > 0 ? null : this.openTransActionListModal.bind(this, adminReport), txt: "", title: 'Txn Action', }
     ];
-    // icons.push({ class: !adminReport._refid ? "fa fa-paperclip gray" : "fa fa-paperclip", action: this.openDataModal.bind(this, adminReport), txt: "", title: 'report', });
     return icons;
   }
-  openDataModal(adminReport) {
-    console.log("OnSiteImagesComponent -> openReportModal -> adminReport", adminReport);
-    if (adminReport._action_name && adminReport._identity && adminReport._process) {
+  // openDataModal(adminReport) {
+  //   console.log("OnSiteImagesComponent -> openReportModal -> adminReport", adminReport);
+  //   if (adminReport._action_name && adminReport._identity && adminReport._process) {
 
-    }
-    this.common.showToast('working');
-  }
+  //   }
+  //   this.common.showToast('working');
+  // }
 
-  closeDataModal() {
-    document.getElementById('dataWindow').style.display = 'none';
-  }
-
+  // closeDataModal() {
+  //   document.getElementById('dataWindow').style.display = 'none';
+  // }
   openTransActionListModal(adminReport) {
-    this.getProcessLeadByType();
-    document.getElementById('transActionList').style.display = 'block';
+    this.selectedOnSiteImageId = adminReport._id;
+    if (this.selectedOnSiteImageId > 0) {
+      this.getProcessLeadByType(1);
+      document.getElementById('transActionList').style.display = 'block';
+    } else {
+      console.log("Invalid Request");
+    }
   }
 
   closeTransActionListModal() {
+    this.selectedOnSiteImageId = null;
     document.getElementById('transActionList').style.display = 'none';
   }
 
-  getProcessLeadByType() {
-    let type = 1, startDate = null, endDate = null;
+  getProcessLeadByType(type) {
+    let startDate = null, endDate = null;
     this.common.loading++;
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
       if (res['code'] == 1) {
-        this.transActionList = res['data'] || [];
-        this.setTableTransActionList();
+        if (type == 1) {
+          this.transActionList = res['data'] || [];
+          this.setTableTransActionList(type);
+        } else if (type == 2) { //by me pending
+          this.txnByMe = res['data'] || [];
+          this.setTableTxnByMe(type);
+        }
       } else {
         this.common.showError(res['msg']);
       }
@@ -173,7 +191,7 @@ export class OnSiteImagesComponent implements OnInit {
   }
 
   // start: TransActionList
-  setTableTransActionList() {
+  setTableTransActionList(type) {
     this.tableTransActionList.data = {
       headings: this.generateHeadingsTransActionList(),
       columns: this.getTableColumnsTransActionList()
@@ -219,9 +237,59 @@ export class OnSiteImagesComponent implements OnInit {
   }
   // end: TransActionList
 
+  // start: leads by me
+  setTableTxnByMe(type) {
+    this.tableTxnByMe.data = {
+      headings: this.generateHeadingsLeadsByMe(),
+      columns: this.getTableColumnsLeadsByMe(type)
+    };
+    return true;
+  }
+
+  generateHeadingsLeadsByMe() {
+    let headings = {};
+    for (var key in this.txnByMe[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_expdate" || key === 'state_expdate') {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsLeadsByMe(type) {
+    let columns = [];
+    this.txnByMe.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsLeadsByMe()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(lead, type)
+          };
+        } else if (key == 'state_expdate' && new Date(lead[key]) < this.common.getDate()) {
+          column[key] = { value: lead[key], class: 'black font-weight-bold', action: '' };
+        }
+        else if (key == 'mobile_no') {
+          column[key] = { value: lead[key], class: lead['_contact_count'] > 1 ? 'font-weight-bold' : '', action: '' };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+        column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: leads by me
+
   actionIconsForTransAction(lead) {
     let icons = [
-      { class: "fa fa-plus", action: this.mapOnSiteImageWithTransAction.bind(this, lead), txt: "", title: 'Map with on-site-image', },
+      { class: "fa fa-plus", action: this.mapOnSiteImageWithTransAction.bind(this, lead), txt: "", title: 'Map with on-site-image', }
     ];
     return icons;
   }
@@ -237,6 +305,7 @@ export class OnSiteImagesComponent implements OnInit {
       this.common.loading--;
       if (res['code'] == 1) {
         this.common.showToast(res['msg']);
+        this.getProcessLeadByType(1);
       } else {
         this.common.showError(res['msg']);
       }
@@ -245,6 +314,10 @@ export class OnSiteImagesComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  addTransaction() {
+    this.common.showError("working...");
   }
 
 }
