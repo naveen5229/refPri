@@ -9,6 +9,7 @@ import { TaskNewComponent } from '../task-new/task-new.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { TaskScheduleMasterComponent } from '../task-schedule-master/task-schedule-master.component';
 import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
+import { FileHandle } from '../../directives/dndDirective/dnd.directive';
 
 @Component({
   selector: 'ngx-task-message',
@@ -35,6 +36,7 @@ import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new
 })
 export class TaskMessageComponent implements OnInit {
   // this page in from 3 pages change carefully
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
@@ -91,6 +93,7 @@ export class TaskMessageComponent implements OnInit {
   departmentList = [];
   stTaskMaster = null;
   isChecked = null;
+  fileType = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -644,6 +647,7 @@ export class TaskMessageComponent implements OnInit {
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
       } else {
@@ -659,6 +663,19 @@ export class TaskMessageComponent implements OnInit {
     })
   }
 
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+      this.fileType = icon;
+  }
+
+
   onPaste(event: any) {
     console.log('event', event);
     const items = event.clipboardData.items;
@@ -669,6 +686,14 @@ export class TaskMessageComponent implements OnInit {
       }
     }
 
+    this.handleFileSelection(selectedFile);
+  }
+
+  filesDropped(files: FileHandle[]) {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
     this.handleFileSelection(selectedFile);
   }
 

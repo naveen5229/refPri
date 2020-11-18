@@ -9,6 +9,7 @@ import { AddTransactionActionComponent } from '../add-transaction-action/add-tra
 import { FormDataComponent } from '../form-data/form-data.component';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { FileHandle } from '../../../directives/dndDirective/dnd.directive';
 
 @Component({
   selector: 'ngx-chatbox',
@@ -34,6 +35,7 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
   ]
 })
 export class ChatboxComponent implements OnInit {
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
@@ -107,6 +109,7 @@ export class ChatboxComponent implements OnInit {
 
   @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
   @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
+  fileType = null;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -263,10 +266,12 @@ export class ChatboxComponent implements OnInit {
   handleFileSelection(event) {
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
+      console.log("ChatboxComponent -> handleFileSelection -> event.target.files[0]", event.target.files[0])
       this.common.loading--;
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
@@ -283,6 +288,18 @@ export class ChatboxComponent implements OnInit {
     })
   }
 
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    this.fileType = icon;
+  }
+
   onPaste(event: any) {
     console.log('event', event);
     const items = event.clipboardData.items;
@@ -292,7 +309,17 @@ export class ChatboxComponent implements OnInit {
         selectedFile.target.files.push(item.getAsFile());
       }
     }
+    console.log("ChatboxComponent -> onPaste -> selectedFile", selectedFile)
 
+    this.handleFileSelection(selectedFile);
+  }
+
+
+  filesDropped(files: FileHandle[]) {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
     this.handleFileSelection(selectedFile);
   }
 
