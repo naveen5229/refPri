@@ -26,10 +26,14 @@ export class OnSiteImagesSummaryComponent implements OnInit {
   };
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
-    this.getAdminReports()
+    this.getAdminReports();
+    this.common.refresh = this.refresh.bind(this);
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  refresh() {
+    this.getAdminReports();
   }
 
   getAdminReports() {
