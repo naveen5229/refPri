@@ -59,7 +59,7 @@
                 <div class="modal-body p-0">
                     <div class="row">
                         <div class="col-12 text-right">
-                            <button class="btn btn-primary btn-sm" id="addLead" (click)="addTransaction()"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-primary btn-sm" id="addLead" (click)="openAddTransactionModal()"><i class="fa fa-plus"></i></button>
                         </div>
                     </div>
                     <smart-table [data]="tableTransActionList.data" [settings]="tableTransActionList.settings" id="tableTransActionList" class="sl-smart-table"></smart-table>
@@ -68,5 +68,26 @@
         </div>
     </div>
     <!--end: transActionList modal -->
+
+    <!--start: addTransaction modal -->
+    <div class="modal mt-3 ml-3" id="addTransactionModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Transaction List</h5>
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeAddTransactionModal()">&times;</button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button class="btn btn-primary btn-sm" id="addLead" (click)="addTransaction()"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <smart-table [data]="tableTxnByMe.data" [settings]="tableTxnByMe.settings" id="tableTxnByMe" class="sl-smart-table"></smart-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end: addTransaction modal -->
 
 </nb-card>
