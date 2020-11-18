@@ -6,6 +6,7 @@ import { UserService } from '../../../Service/user/user.service';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { ReminderComponent } from '../../reminder/reminder.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { FileHandle } from '../../../directives/dndDirective/dnd.directive';
 
 @Component({
   selector: 'ngx-chatbox',
@@ -31,6 +32,7 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
   ]
 })
 export class TicketChatboxComponent implements OnInit {
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   messageImage = [];
@@ -87,6 +89,7 @@ export class TicketChatboxComponent implements OnInit {
   // isChatFeature = true;
   departmentList = [];
   stTaskMaster = null;
+  fileType = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -601,6 +604,7 @@ export class TicketChatboxComponent implements OnInit {
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
       } else {
@@ -616,6 +620,18 @@ export class TicketChatboxComponent implements OnInit {
     })
   }
 
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    this.fileType = icon;
+  }
+
   onPaste(event: any) {
     console.log('event', event);
     const items = event.clipboardData.items;
@@ -628,6 +644,14 @@ export class TicketChatboxComponent implements OnInit {
         selectedFile.target.files.push(item.getAsFile());
       }
     }
+    this.handleFileSelection(selectedFile);
+  }
+
+  filesDropped(files: FileHandle[]): void {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
     this.handleFileSelection(selectedFile);
   }
 

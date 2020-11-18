@@ -7,8 +7,8 @@
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
-        <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'"
-            aria-hidden="true" [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
+        <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
+                [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
                 aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle"
@@ -124,8 +124,8 @@
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
-                        id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage"
-                        (input)="onMessageType($event)" #msgtextarea></textarea>
+                        id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd
+                        (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
@@ -145,8 +145,13 @@
             <div *ngIf="attachmentFile && attachmentFile.name" class="row">
                 <div class="col-9">
                     <!-- {{attachmentFile.name}} -->
-                    <span><img height="50" width="50" src="{{attachmentFile.file}}"
-                            alt="{{attachmentFile.name}}"></span>
+                    <!-- <span><img height="50" width="50" src="{{attachmentFile.file}}"
+                            alt="{{attachmentFile.name}}"></span> -->
+                    <span>
+                        <img height="25" width="25" src="{{attachmentFile.file}}" *ngIf="!fileType">
+                        <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
+                        <span>{{attachmentFile.name}}</span>
+                    </span>
                     <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
                         (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
