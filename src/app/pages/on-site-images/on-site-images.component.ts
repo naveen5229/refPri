@@ -71,7 +71,6 @@ export class OnSiteImagesComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -89,7 +88,6 @@ export class OnSiteImagesComponent implements OnInit {
       this.common.loading--;
       if (!res['data']) return;
       this.processList = res['data'];
-
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -108,8 +106,8 @@ export class OnSiteImagesComponent implements OnInit {
       }
     };
 
-    let startDate = this.common.dateFormatter(this.startDate);
-    let endDate = this.common.dateFormatter(this.endDate);
+    let startDate = (this.startDate) ? this.common.dateFormatter(this.startDate) : null;
+    let endDate = (this.endDate) ? this.common.dateFormatter(this.endDate) : null;
     const params = `?startDate=${startDate}&endDate=${endDate}`;
     // return;
     this.common.loading++;
@@ -189,9 +187,8 @@ export class OnSiteImagesComponent implements OnInit {
     if (this.selectedOnSiteImageId > 0) {
       this.getProcessLeadByType(10);
       document.getElementById('transActionList').style.display = 'block';
-      // document.getElementById('transActionList').modal({ show: true, backdrop: false, keyboard: false });
     } else {
-      console.log("Invalid Request");
+      this.common.showError("Invalid Request");
     }
   }
 
@@ -403,7 +400,6 @@ export class OnSiteImagesComponent implements OnInit {
   }
 
   openTransAction(lead, type, formType = null) {
-    console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = ([2, 6, 7].includes(type)) ? 1 : 0;
@@ -434,7 +430,7 @@ export class OnSiteImagesComponent implements OnInit {
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log("res data:", data, lead);
+      // console.log("res data:", data, lead);
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
         if (data.nextFormType == 1) {
@@ -454,13 +450,13 @@ export class OnSiteImagesComponent implements OnInit {
           }
         }
       } else {
+        this.closeAddTransactionModal();
         this.getProcessLeadByType(type);
       }
     });
   }
 
   openTransFormData(lead, type, formType = null) {
-    console.log("openTransAction");
     let title = 'Action Form';
     let refId = 0;
     let refType = 0;
@@ -486,12 +482,13 @@ export class OnSiteImagesComponent implements OnInit {
     this.common.params = { actionData, title: title, button: "Save" };
     const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log("formData:", formType);
+      // console.log("formData:", formType);
       if (formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (formType == 1) {
         this.openTransAction(lead, type, 2);
       } else {
+        this.closeAddTransactionModal();
         this.getProcessLeadByType(type);
       }
     });
