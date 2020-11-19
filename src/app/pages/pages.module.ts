@@ -49,6 +49,10 @@ import { ProcessModule } from '../process/process.module';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
+import {TicketModule} from '../ticket/ticket.module';
+import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
+import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
+import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -59,7 +63,8 @@ import { UserGroupsComponent } from './user-groups/user-groups.component';
     DirectiveModule,
     DashboardModule,
     CampaignModule,
-    ProcessModule
+    ProcessModule,
+    TicketModule
   ],
   declarations: [
     PagesComponent,
@@ -102,7 +107,10 @@ import { UserGroupsComponent } from './user-groups/user-groups.component';
     WifiLogsComponent,
     UserMappingComponent,
     CompanykycComponent,
-    UserGroupsComponent
+    UserGroupsComponent,
+    EmployeeMonitoringComponent,
+    OnSiteImagesComponent,
+    OnSiteImagesSummaryComponent
   ],
 })
 export class PagesModule {

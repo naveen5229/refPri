@@ -206,6 +206,18 @@ export class CommonService {
     }
   }
 
+  timeToSecond(date) {
+    let d = new Date(date);
+    let hours = d.getHours() < 9 ? "0" + d.getHours() : d.getHours();
+    let minutes = d.getMinutes() < 9 ? "0" + d.getMinutes() : d.getMinutes();
+    let seconds = d.getSeconds() < 9 ? "0" + d.getSeconds() : d.getSeconds();
+
+    var hms = hours + ":" + minutes + ":" + seconds;
+    var a = hms.split(':');
+    return (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+
+  }
+
   timeFormatter(date) {
     let d = new Date(date);
     let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
@@ -649,7 +661,7 @@ export class CommonService {
       bg_color = this.taskBgColor.complete;
     } else if (status == 3) {
       bg_color = this.taskBgColor.hold;
-    } 
+    }
     return bg_color;
   }
 

@@ -202,6 +202,7 @@ export class CsvUploadComponent implements OnInit {
         });
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

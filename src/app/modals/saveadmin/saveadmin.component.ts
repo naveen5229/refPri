@@ -13,7 +13,6 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
   styleUrls: ['./saveadmin.component.scss']
 })
 export class SaveadminComponent implements OnInit {
-
   rowId = null;
   isOtherShow = false;
   isUpdate = false;
@@ -45,7 +44,9 @@ export class SaveadminComponent implements OnInit {
     dol: null,
     isNotify: 0,
     isCommentNotify: 0,
-    isCallSync: false
+    isCallSync: false,
+    locationRestrict: false,
+    wifiRestrict: false
   };
   keepGoing = true;
   searchString = ''
@@ -90,7 +91,7 @@ export class SaveadminComponent implements OnInit {
     public renderer: Renderer,
     private sanitizer: DomSanitizer
   ) {
-    console.log(this.user);
+    // console.log(this.user);
     this.Fouser.doj = this.common.getDate(); // for new
     this.getDepartments();
     if (this.common.params && this.common.params.title == 'Edit Admin') {
@@ -115,6 +116,8 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.isNotify = (this.activeAdminDetails['_is_notify']) ? this.activeAdminDetails['_is_notify'] : 0;
       this.Fouser.isCommentNotify = (this.activeAdminDetails['_is_comment_notify']) ? this.activeAdminDetails['_is_comment_notify'] : 0;
       this.Fouser.isCallSync = (this.activeAdminDetails['_is_call_sync']) ? true : false;
+      this.Fouser.locationRestrict = (this.activeAdminDetails['_location_restrict']) ? true : false;
+      this.Fouser.wifiRestrict = (this.activeAdminDetails['_wifi_restrict']) ? true : false;
       if (this.activeAdminDetails['_atten_medium'] == '100') {
         this.selectedItems = 1;
       } else if (this.activeAdminDetails['_atten_medium'] == '010' || this.activeAdminDetails['_atten_medium'] == '020') {
@@ -126,64 +129,7 @@ export class SaveadminComponent implements OnInit {
     this.common.params = {};
   }
 
-  ngOnInit() {
-  }
-
-  // onItemSelect(item: any) {
-  //   const selected = this.dropdownList.map(e => {
-  //     if (e.id == item.id) {
-  //       e.value = '1';
-  //     }
-  //   });
-  //   let collective = [];
-  //   this.dropdownList.forEach(e => {
-  //     collective.push(e.value);
-  //   });
-  //   this.Fouser.attenMedium = collective.join('');
-  //   console.log(this.Fouser.attenMedium);
-  // }
-
-  // onItemDeSelect(item: any) {
-  //   const selected = this.dropdownList.map(e => {
-  //     if (e.id == item.id) {
-  //       e.value = '0';
-  //     }
-  //   });
-  //   let collective = [];
-  //   this.dropdownList.forEach(e => {
-  //     collective.push(e.value);
-  //   });
-  //   this.Fouser.attenMedium = collective.join('');
-  //   console.log(this.Fouser.attenMedium);
-  // }
-
-  // onSelectAll(items: any) {
-  //   items.forEach(e => {
-  //     this.dropdownList.map(i => {
-  //       if (i.id == e.id) {
-  //         i.value = '1';
-  //       }
-  //     })
-  //   });
-  //   let collective = [];
-  //   this.dropdownList.forEach(e => {
-  //     collective.push(e.value);
-  //   });
-  //   this.Fouser.attenMedium = collective.join('');
-  //   console.log(this.Fouser.attenMedium);
-  // }
-  // onDeSelectAll(items: any) {
-  //   this.dropdownList.map(i => {
-  //     i.value = '0';
-  //   });
-  //   let collective = [];
-  //   this.dropdownList.forEach(e => {
-  //     collective.push(e.value);
-  //   });
-  //   this.Fouser.attenMedium = collective.join('');
-  //   console.log(this.Fouser.attenMedium);
-  // }
-
+  ngOnInit() { }
 
   closeModal(response) {
     this.activeModal.close(response);
@@ -191,15 +137,14 @@ export class SaveadminComponent implements OnInit {
 
   getDepartments() {
     this.common.loading++;
-    this.api.get("Admin/getDepartmentList")
-      .subscribe(res => {
-        this.common.loading--;
-        this.departments = res['data'] || [];
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log(err);
-      });
+    this.api.get("Admin/getDepartmentList").subscribe(res => {
+      this.common.loading--;
+      this.departments = res['data'] || [];
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
   }
 
   selectedDepartment(selectedDepartment) {
@@ -223,20 +168,16 @@ export class SaveadminComponent implements OnInit {
       name: this.Fouser.name,
       mobileno: this.Fouser.mobileNo,
       // foid: this.Fouser.Foid,
-
     };
     this.common.loading++;
     let response;
-    this.api.post('FoAdmin/addUsers', params)
-      .subscribe(res => {
-        this.common.loading--;
-
-        console.log('Res:', res['data']);
-        this.activeModal.close();
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
+    this.api.post('FoAdmin/addUsers', params).subscribe(res => {
+      this.common.loading--;
+      this.activeModal.close();
+    }, err => {
+      this.common.loading--;
+      console.log(err);
+    });
   }
   selectFoUser(value) {
     console.log("selectFoUser:", value);
@@ -265,6 +206,8 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.isNotify = (value._is_notify) ? value._is_notify : 0;
     this.Fouser.isCommentNotify = (value._is_comment_notify) ? value._is_comment_notify : 0;
     this.Fouser.isCallSync = (value._is_call_sync) ? true : false;
+    this.Fouser.locationRestrict = (value._location_restrict) ? true : false;
+    this.Fouser.wifiRestrict = (value._wifi_restrict) ? true : false;
 
     // this.selectedItems = (value._atten_medium) ? (value._atten_medium).split("") : null;
     if (value._atten_medium == '100') {
@@ -274,13 +217,12 @@ export class SaveadminComponent implements OnInit {
     } else if (value._atten_medium == '001') {
       this.selectedItems = 3;
     }
-    console.log("selectedItems:", this.selectedItems);
+    console.log("selectedItems:", this.selectedItems, this.Fouser);
 
   }
 
   saveAdmin() {
     // console.log("Fouser:", this.Fouser);
-
     if (this.user._loggedInBy == 'admin') {
       let params = {
         id: (this.Fouser.id > 0) ? this.Fouser.id : null,
@@ -298,6 +240,8 @@ export class SaveadminComponent implements OnInit {
         isNotify: this.Fouser.isNotify,
         isCommentNotify: this.Fouser.isCommentNotify,
         isCallSync: this.Fouser.isCallSync,
+        locationRestrict: this.Fouser.locationRestrict,
+        wifiRestrict: this.Fouser.wifiRestrict
 
       }
       console.log("params:", params);
@@ -325,6 +269,7 @@ export class SaveadminComponent implements OnInit {
               } else {
                 if (!this.isOtherShow && !this.Fouser.id) {
                   this.Fouser.id = this.data[0]['y_id'];
+                  this.Fouser.isActive = 'true';
                 }
                 this.common.showToast(this.data[0]['y_msg']);
                 this.isOtherShow = !this.isOtherShow;
@@ -358,7 +303,9 @@ export class SaveadminComponent implements OnInit {
         foAdminId: null,
         multipleAccounts: null,
         rowId: null,
-        isActive:null,
+        isActive: null,
+        locationRestrict: null,
+        wifiRestrict: null
       };
       let apiName = "AddFouser/addCompanyUsers.json";
       let apiType = "postTranstruck";
@@ -376,6 +323,8 @@ export class SaveadminComponent implements OnInit {
         params['isNotify'] = this.Fouser.isNotify;
         params['isCommentNotify'] = this.Fouser.isCommentNotify;
         params['isCallSync'] = this.Fouser.isCallSync;
+        params['locationRestrict'] = this.Fouser.locationRestrict;
+        params['wifiRestrict'] = this.Fouser.wifiRestrict;
         apiName = "FoAdmin/saveFoAdminInfo";
         apiType = "post";
 
@@ -398,32 +347,31 @@ export class SaveadminComponent implements OnInit {
       }
       else {
         this.common.loading++;
-        this.api[apiType](apiName, params)
-          .subscribe(res => {
-            this.common.loading--;
-            this.data = res['data'];
-            if (res['code'] == 1) {
-              if (this.data[0]['y_id'] <= 0) {
-                this.common.showError(this.data[0]['y_msg']);
+        this.api[apiType](apiName, params).subscribe(res => {
+          this.common.loading--;
+          this.data = res['data'];
+          if (res['code'] == 1) {
+            if (this.data[0]['y_id'] <= 0) {
+              this.common.showError(this.data[0]['y_msg']);
 
-              } else {
-                this.common.showToast(this.data[0]['y_msg']);
-                if (!this.isOtherShow) {
-                  this.Fouser.id = this.data[0]['y_id'];
-                }
-                this.isOtherShow = !this.isOtherShow;
-                if (!this.isOtherShow) {
-                  this.closeModal(true);
-                }
-              }
             } else {
-              this.common.showError(res['msg']);
+              this.common.showToast(this.data[0]['y_msg']);
+              if (!this.isOtherShow) {
+                this.Fouser.id = this.data[0]['y_id'];
+              }
+              this.isOtherShow = !this.isOtherShow;
+              if (!this.isOtherShow) {
+                this.closeModal(true);
+              }
             }
-          }, err => {
-            this.common.loading--;
-            console.error(err);
-            this.common.showError();
-          });
+          } else {
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          console.error(err);
+          this.common.showError();
+        });
       }
 
     }
@@ -432,128 +380,6 @@ export class SaveadminComponent implements OnInit {
   onNext() {
     this.isOtherShow = true;
   }
-
-  // updateAdmin() { //not used
-  //   if (this.user._loggedInBy == 'admin') {
-  //     let param = {
-  //       id: this.Fouser.id,
-  //       name: this.Fouser.name,
-  //       mobile: this.Fouser.mobileNo,
-  //       departmentId: this.Fouser.department.id,
-  //       reportingManagerId: this.Fouser.reportingManager.id,
-  //       isActive: Boolean(JSON.parse(this.Fouser.isActive)),
-  //       doj: (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null,
-  //       dol: (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null,
-  //       baseLat: this.Fouser.baseLat,
-  //       baseLong: this.Fouser.baseLong,
-  //       allowRadius: this.Fouser.allowRadius,
-  //       attenMedium: this.Fouser.attenMedium
-  //     }
-  //     console.log(param);
-  //     if (this.Fouser.name == null) {
-  //       this.common.showError('Enter Name');
-  //     } else if (this.Fouser.mobileNo == null) {
-  //       this.common.showError('Enter Mobile Number');
-  //     }
-  //     //  else if (this.Fouser.department.id == null) {
-  //     //   this.common.showError('Select Department');
-  //     // } else if (!this.Fouser.doj) {
-  //     //   return this.common.showError("Date of joining is missing");
-  //     // } else if (this.Fouser.doj > this.common.getDate()) {
-  //     //   return this.common.showError("Date of joining must not be future date");
-  //     // } else if (this.Fouser.dol && this.Fouser.dol < this.Fouser.doj) {
-  //     //   return this.common.showError("Date of leaving must be greater than date of joining");
-  //     // }
-  //     else {
-  //       this.common.loading++;
-  //       this.api.post('Admin/save', param)
-  //         .subscribe(res => {
-  //           this.common.loading--;
-  //           console.log(res)
-  //           this.data = res['data']
-  //           if (this.data[0]['y_id'] <= 0) {
-  //             this.common.showError(this.data[0]['y_msg']);
-  //           } else {
-  //             this.common.showToast(this.data[0]['y_msg']);
-  //             this.onCancel();
-  //             this.isOtherShow = !this.isOtherShow;
-  //             if (!this.isOtherShow) {
-  //               this.closeModal(true);
-  //             }
-  //           }
-
-  //           console.log("pa", this.data)
-  //         }, err => {
-  //           this.common.loading--;
-  //           console.error(err);
-  //           this.common.showError();
-  //         });
-  //     }
-  //   } else if (this.user._loggedInBy == 'customer') {
-
-  //     let params;
-  //     let apiName = (this.isOtherShow) ? "FoAdmin/saveFoAdminInfo" : "FoAdmin/addUsers";
-  //     let apiType = (this.isOtherShow) ? "postBooster" : "post";
-  //     if (this.isOtherShow) {
-  //       params.foadminuserId = this.Fouser.name;
-  //       params.departmentId = this.Fouser.department.id;
-  //       params.reportingManagerId = this.Fouser.reportingManager.id;
-  //       params.doj = (this.Fouser.doj) ? this.common.dateFormatter(this.Fouser.doj) : null;
-  //       params.dol = (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null;
-  //       params.baseLat = this.Fouser.baseLat;
-  //       params.baseLong = this.Fouser.baseLong;
-  //       params.allowRadius = this.Fouser.allowRadius;
-  //       params.attenMedium = this.Fouser.attenMedium;
-
-  //       apiName = "FoAdmin/saveFoAdminInfo";
-  //       apiType = "postBooster";
-
-  //     } else {
-  //       params.name = this.Fouser.name;
-  //       params.mobileno = this.Fouser.mobileNo;
-  //       params.foid = this.user._details.foid;
-  //       params.foAdminId = this.Fouser.id;
-  //       params.multipleAccounts = -1;
-  //       params.rowId = this.Fouser.id;
-  //       params.isActive = Boolean(JSON.parse(this.Fouser.isActive));
-
-  //     }
-  //     console.log("apiName:", apiName);
-  //     console.log("apiType:", apiType);
-  //     console.log("params:", params); return false;
-  //     if (!this.isOtherShow && this.Fouser.name == null) {
-  //       this.common.showError('Enter Name');
-  //     } else if (!this.isOtherShow && this.Fouser.mobileNo == null) {
-  //       this.common.showError('Enter Mobile Number');
-  //     }
-  //     else {
-  //       this.common.loading++;
-
-  //       this.api[apiType](apiName, params)
-  //         .subscribe(res => {
-  //           this.common.loading--;
-  //           console.log(res)
-  //           this.data = res['data']
-  //           if (this.data[0]['y_id'] <= 0) {
-  //             this.common.showError(this.data[0]['y_msg']);
-  //           } else {
-  //             this.common.showToast(this.data[0]['y_msg']);
-  //             this.onCancel();
-  //             this.isOtherShow = !this.isOtherShow;
-  //             if (!this.isOtherShow) {
-  //               this.closeModal(true);
-  //             }
-  //           }
-  //           console.log("pa", this.data)
-  //         }, err => {
-  //           this.common.loading--;
-  //           console.error(err);
-  //           this.common.showError();
-  //         });
-  //     }
-  //   }
-
-  // }
 
   onCancel() {
     this.Fouser.id = null;
@@ -573,6 +399,8 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.allowRadius = null;
     this.Fouser.attenMedium = null;
     this.Fouser.location = null;
+    this.Fouser.locationRestrict = false;
+    this.Fouser.wifiRestrict = false;
     this.Fouser.department = {
       id: null,
       name: ''
@@ -598,10 +426,8 @@ export class SaveadminComponent implements OnInit {
   takeAction(res) {
     setTimeout(() => {
       console.log("Here", this.keepGoing, this.searchString.length, this.searchString);
-
       if (this.keepGoing && this.searchString.length) {
         this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation' };
-
         const activeModal = this.modalService.open(LocationSelectionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
         this.keepGoing = false;
         activeModal.result.then(res => {

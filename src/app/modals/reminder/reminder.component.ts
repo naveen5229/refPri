@@ -8,13 +8,14 @@ import { CommonService } from '../../Service/common/common.service';
   templateUrl: './reminder.component.html',
   styleUrls: ['./reminder.component.scss']
 })
-export class ReminderComponent implements OnInit {
+export class ReminderComponent implements OnInit { //carefully change use on multiple pages
   btn = 'Set Reminder';
   title = "Reminder";
   ticketId = null;
   reminder = {
     date: '',
-    time: '16'
+    time: '16',
+    minutes: 0
   };
   dates = [{
     name: 'Today',
@@ -47,6 +48,12 @@ export class ReminderComponent implements OnInit {
       this.ticketId = this.common.params.ticketId;
       this.fromPage = this.common.params.fromPage;
       this.dateTime = (this.common.params.remindertime) ? new Date(this.common.params.remindertime) : null;
+      if (this.common.params.remindertime) {
+        this.reminder.date = this.common.dateFormatter(this.dateTime, "DDMMYYYY", false);
+        let tempTime = this.common.timeFormatter(this.dateTime);
+        this.reminder.time = tempTime.split(":")[0];
+        this.reminder.minutes = Number(tempTime.split(":")[1]);
+      }
     }
   }
 
@@ -61,6 +68,11 @@ export class ReminderComponent implements OnInit {
 
   // start:
   async saveReminder() {
+    const params = {
+      ticket_id: this.ticketId,
+      remindtime: this.common.dateFormatter(this.reminder.date).split(' ')[0] + ' ' + (this.reminder.time < '10' ? '0' + this.reminder.time : this.reminder.time) + ":" + (this.reminder.minutes < 10 ? '0' + this.reminder.minutes : this.reminder.minutes)
+    };
+    console.log('Params: ', params);
     if (!this.reminder.date) {
       this.common.showError('Select A Date!');
       return;
@@ -76,13 +88,11 @@ export class ReminderComponent implements OnInit {
       return;
     }
 
-    const params = {
-      ticket_id: this.ticketId,
-      remindtime: this.common.dateFormatter(this.reminder.date).split(' ')[0] + ' ' + (this.reminder.time < '10' ? '0' + this.reminder.time : this.reminder.time) + ':00'
-    };
-    console.log('Params: ', params);
+    // return false;
     let apiName;
-    if (this.fromPage && this.fromPage == "trans") {
+    if (this.fromPage && this.fromPage == "ticket") {
+      apiName = 'Ticket/setTicketReminderTime.json';
+    } else if (this.fromPage && this.fromPage == "trans") {
       apiName = 'Processes/setLeadReminderTime.json';
     } else if (this.fromPage && this.fromPage == "canpaign") {
       apiName = 'Campaigns/setLeadReminderTime.json';
@@ -90,28 +100,28 @@ export class ReminderComponent implements OnInit {
       apiName = 'AdminTask/setReminderTime.json';
     }
     this.common.loading++;
-    this.api.post(apiName, params)
-      .subscribe(res => {
-        console.log(res);
-        this.common.loading--;
-        if (res['code'] > 0) {
-          this.closeModal(true);
-          this.common.showToast(res['msg']);
-        } else {
-          this.common.showError(res['msg']);
-        }
-      }, err => {
-        console.error(err);
-        this.common.showError();
-        this.common.loading--;
-      });
+    this.api.post(apiName, params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.closeModal(true);
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      console.error(err);
+      this.common.showError();
+      this.common.loading--;
+    });
   }
 
   onChangeDate(event) {
     if (event) {
+      this.dateTime = event;
       this.reminder.date = this.common.dateFormatter(event, "DDMMYYYY", false);
       let tempTime = this.common.timeFormatter(event);
       this.reminder.time = tempTime.split(":")[0];
+      this.reminder.minutes = Number(tempTime.split(":")[1]);
       console.log("on change reminder:", this.reminder);
     }
   }
@@ -120,6 +130,7 @@ export class ReminderComponent implements OnInit {
     console.log("temp:", temp);
     let tempDate = new Date(temp);
     this.dateTime = tempDate;
+    this.reminder.minutes = 0;
     console.log("tempDate:", tempDate);
   }
   // end: 

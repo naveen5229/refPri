@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5>Process User mapping</h5>
+    <h5>{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
   <span aria-hidden="true">&times;</span>
 </button>
@@ -16,7 +16,7 @@
     </div>
     <div *ngIf="userForm.users && userForm.users.length>0" class="row mt-2">
         <div class="col-4">
-            <label>Mark as Admin:</label>
+            <label>Mark as {{(fromPage == "ticket") ? 'Supervisor' : 'Admin'}}:</label>
         </div>
         <div *ngFor="let u of userForm.users;" class="col-12">
             <label>

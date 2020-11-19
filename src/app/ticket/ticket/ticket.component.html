@@ -1,0 +1,362 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-9">
+                <h5 class="heading-design">My Ticket</h5>
+            </div>
+            <div class="col-3 text-right">
+                <button class="btn btn-primary btn-sm" id="addTicket" (click)="openAddTicketModal()"><i
+                        class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='allocatedTkt'?'active':''"
+                    (click)="activeTab='allocatedTkt'; getTicketByType(101)">
+                    Open
+                </li>
+                <li [ngClass]="activeTab=='unallocatedTkt'?'active':''"
+                    (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
+                    Claim
+                </li>
+                <li [ngClass]="activeTab=='unassignedTkt'?'active':''"
+                    (click)="activeTab='unassignedTkt'; getTicketByType(103)">
+                    Unassigned
+                </li>
+                <li [ngClass]="activeTab=='unreadTkt'?'active':''"
+                    (click)="activeTab='unreadTkt'; getTicketByType(102)">
+                    Unread
+                </li>
+                <li [ngClass]="activeTab=='completedTkt'?'active':''"
+                    (click)="activeTab='completedTkt';getTicketByType(105) ">
+                    Completed
+                </li>
+                <li [ngClass]="activeTab=='ccTkt'?'active':''" (click)="activeTab='ccTkt'; getTicketByType(104)">
+                    CC
+                </li>
+                <li [ngClass]="activeTab=='addedByMeTkt'?'active':''"
+                    (click)="activeTab='addedByMeTkt'; getTicketByType(106)">
+                    Added By Me
+                </li>
+
+                <li [ngClass]="activeTab=='openTikcets'?'active':''"
+                    (click)="activeTab='openTikcets'; getTicketByType(107)">
+                    All Open Tickets
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="activeTab=='allocatedTkt'">
+            <smart-table [data]="tableAllocatedTkt.data" [settings]="tableAllocatedTkt.settings" id="tableAllocatedTkt"
+                class="sl-smart-table"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unallocatedTkt'">
+            <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings"
+                id="tableUnallocatedTkt"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unassignedTkt'">
+            <smart-table [data]="tableUnassignedTkt.data" [settings]="tableUnassignedTkt.settings"
+                id="tableUnassignedTkt"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unreadTkt'">
+            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='completedTkt'">
+            <div class="row mb-2" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event"
+                        [dateTimeValue]="searchData.startDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event"
+                        [dateTimeValue]="searchData.endDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" id="button"
+                        (click)="getTicketByType(105)">Search</button>
+                </div>
+            </div>
+            <smart-table [data]="tableCompletedTkt.data" [settings]="tableCompletedTkt.settings" id="tablecompletedTkt">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ccTkt'">
+            <smart-table [data]="tableCcTkt.data" [settings]="tableCcTkt.settings" id="tableCcTkt"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='addedByMeTkt'">
+            <smart-table [data]="tableAddedByMeTkt.data" [settings]="tableAddedByMeTkt.settings" id="tableAddedByMeTkt">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='openTikcets'">
+            <smart-table [data]="tableAllOpenTkt.data" [settings]="tableAllOpenTkt.settings" id="tableAllOpenTkt"
+                class="sl-smart-table"></smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+
+
+<!--start: addTicketModal -->
+<div class="modal" id="addTicketModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="closeAddTicketModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Ticket Process</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="tpList" display="name" placeholder="Ticket Process" name="tpName"
+                            id="tpName" (onSelected)="onSelectedTp($event)"
+                            [preSelected]="ticketForm.tp.id ? {name: ticketForm.tp.name}:{name:''}" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Primary Category</label>
+                    </div>
+                    <div class="col-8">
+                        <select class="form-control" [(ngModel)]="ticketForm.priCat.id">
+                            <option selected disabled>--Select--</option>
+                            <option *ngFor="let p of priCatList" [value]="p.id">{{p.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Secondary Category</label>
+                    </div>
+                    <div class="col-8">
+                        <select class="form-control" [(ngModel)]="ticketForm.secCat.id">
+                            <option selected disabled>--Select--</option>
+                            <option *ngFor="let p of secCatList" [value]="p.id">{{p.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Type</label>
+                    </div>
+                    <div class="col-8">
+                        <select class="form-control" [(ngModel)]="ticketForm.type.id">
+                            <option selected disabled>--Select--</option>
+                            <option *ngFor="let p of typeList" [value]="p.id">{{p.name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Remark</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control"
+                            [(ngModel)]="ticketForm.remark"></textarea>
+                    </div>
+                </div>
+
+                <!-- start:dyn field -->
+                <div *ngFor="let dd of oddArray ; let i = index; " class="row">
+
+                    <div class="col-12" style="margin-bottom: 1rem;">
+                        <div *ngIf="oddArray[i].r_coltitle" class="row">
+                            <div class="col-4">
+                                <label>{{oddArray[i].r_coltitle}}<span style="color: red"
+                                        *ngIf="oddArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
+                                    *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
+                                <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value
+                                    *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
+                                <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
+                                    [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
+                                    [isTime]="false">
+                                </uj-date-time-picker>
+
+                                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
+                                    *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+
+                                <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i
+                                        class="fa fa-table" aria-hidden="true"></i></span>
+
+                                <!-- dynamic dropdown -->
+                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12"
+                                    *ngIf="oddArray[i].r_fixedvalues">
+                                    <option [value]="fixValue.option"
+                                        *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                                        {{fixValue.option}}</option>
+                                </select>
+
+                                <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="oddArray[i].r_url">
+                                        <a target="_blank" [href]="oddArray[i].r_url"
+                                            [download]="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i"
+                                        (change)="handleFileSelection($event,i)">
+                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end: dyn field -->
+
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm"
+                            (click)="saveTicket()">Save</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: addTicketModal -->
+
+<div class="modal" id="assignUserModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign User</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="closeassignUserModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket Process" name="tpName"
+                            id="tpName" (onSelected)="assignUserObject.userId = $event" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm"
+                            (click)="appointUser()">Assign</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: addTicketModal -->
+
+<!--start: forward ticket -->
+<div class="modal" id="forwardTicket">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Forward</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeForwardTicket()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket User" name="tpName"
+                            id="tpName" (onSelected)="forwardTicketObject.userId = $event"
+                            [preSelected]="forwardTicketObject.userId.id ? {name: forwardTicketObject.userId.name}:{name:''}" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Remark<span style="color: red;">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control"
+                            [(ngModel)]="forwardTicketObject.remark"></textarea>
+                    </div>
+                </div>
+
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm"
+                            (click)="forwardTicket(forwardTicketObject.tabType)">Forward</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: forward ticket -->
+
+<!--start: Ticket History -->
+<div class="modal" id="ticketHistory">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket History</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeTicketHistory()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <smart-table [data]="tableTicketHistory.data" [settings]="tableTicketHistory.settings"
+                    id="tableTicketHIstory" class="sl-smart-table"></smart-table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: Ticket History -->
+
+<!--start: Detailed Info -->
+<div class="modal" id="infoWindow">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ticketDetailTitle}}</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeInfo()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- start:dyn field -->
+                <div *ngFor="let dd of oddArray ; let i = index; " class="row">
+
+                    <div class="col-12" style="margin-bottom: 1rem;">
+                        <div *ngIf="oddArray[i].r_coltitle" class="row">
+                            <div class="col-4">
+                                <label style="font-weight: bold;">{{oddArray[i].r_coltitle}}<span style="color: red"
+                                        *ngIf="oddArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <label>{{oddArray[i].r_value}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end: dyn field -->
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: Detailed Info -->

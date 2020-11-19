@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h5>{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+  <div class="row">
+      <div class="col-4">
+          Time:
+      </div>
+      <div class="col-8">
+        <!-- <input type="number" placeholder="Enter Time" name="Time" id="Time" class="form-control" [(ngModel)]="dataForm.time"> -->
+        <uj-date-time-picker [isStart]="false" [isDate]="false" (onChanged)="dataForm.time=$event" [dateTimeValue]="dataForm.time">
+        </uj-date-time-picker>
+      </div>
+  </div>
+
+  <div class="row mt-1">
+      <div class="col-12 text-right">
+          <button class="btn btn-primary text-capitalize" id="button" (click)="buyTime()">{{btn}}</button>
+      </div>
+  </div>
+</div>

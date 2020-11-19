@@ -85,6 +85,7 @@ export class AddTransactionComponent implements OnInit {
       this.transForm.identity = this.common.params.rowData.identity;
       this.transForm.priOwn.id = this.common.params.rowData.priOwnId;
       this.isDisabled = (this.common.params.rowData.isDisabled) ? true : false;
+      this.transForm.isAutoIdentity = (this.common.params.rowData._default_identity) ? 1 : 0;
       this.onSelectProcess();
     }
   }
@@ -230,7 +231,12 @@ export class AddTransactionComponent implements OnInit {
               priOwnId: (params.priOwnId > 0) ? params.priOwnId : null,
               rowData: { _transactionid: res['data'][0].y_id, _processid: params.processId, _processname: params.processName, identity: params.identity, _pri_own_id: (params.priOwnId > 0) ? params.priOwnId : null }
             }
-            this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: params.identity, fromPage: 'process' };
+            this.common.params = {
+              editData, title: "Transaction Comment", button: "Save", subTitle: params.identity, fromPage: 'process',
+              userList: this.adminList,
+              groupList: null,
+              departmentList: null
+            };
             const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
 
           }

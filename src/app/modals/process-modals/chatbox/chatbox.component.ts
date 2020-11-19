@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
@@ -8,13 +8,34 @@ import { ReminderComponent } from '../../reminder/reminder.component';
 import { AddTransactionActionComponent } from '../add-transaction-action/add-transaction-action.component';
 import { FormDataComponent } from '../form-data/form-data.component';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
+import { trigger, transition, style, animate, state } from '@angular/animations';
+import { FileHandle } from '../../../directives/dndDirective/dnd.directive';
 
 @Component({
   selector: 'ngx-chatbox',
   templateUrl: './chatbox.component.html',
-  styleUrls: ['./chatbox.component.scss']
+  styleUrls: ['./chatbox.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        height: '*',
+        opacity: 1,
+      })),
+      state('closed', style({
+        height: '0',
+        opacity: 0
+      })),
+      transition('open => closed', [
+        animate('0.35s')
+      ]),
+      transition('closed => open', [
+        animate('0.35s')
+      ]),
+    ]),
+  ]
 })
 export class ChatboxComponent implements OnInit {
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
@@ -66,6 +87,29 @@ export class ChatboxComponent implements OnInit {
     userName: null,
     oldOwnerName: null
   }
+  userGroupList = [];
+  userWithGroup = [];
+  bGConditions = [
+    {
+      key: 'groupId',
+      class: 'highlight-blue',
+      isExist: true
+    }
+  ];
+
+  parentCommentId = null;
+  mentionedUsers = [];
+  replyStatus = null;
+  parentComment = null;
+  replyType = null;
+  isReplyOnDemand = false;
+  commentInfo = [];
+  isMentionedUser = false;
+  mentionedUserList = [];
+
+  @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
+  @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
+  fileType = null;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -79,9 +123,17 @@ export class ChatboxComponent implements OnInit {
       this.lastSeenId = this.common.params.editData.lastSeenId;
       this.priOwnId = this.common.params.editData.priOwnId;
       this.ticketData = this.common.params.editData.rowData;
+      this.adminList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
+      this.userGroupList = this.common.params.groupList;
+      if (this.userGroupList) {
+        this.userWithGroup = this.userGroupList.concat(this.adminList);
+      } else {
+        this.userWithGroup = this.adminList.concat(this.userGroupList);
+      }
+      console.log("userGroupList:", this.userGroupList);
       this.getLeadMessage();
       this.getAllUserByLead();
-      this.getAllAdmin();
+      // this.getAllAdmin();
       this.getTargetActionData();
       this.getAttachmentByLead();
     }
@@ -95,12 +147,14 @@ export class ChatboxComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   scrollToBottom(): void {
     try {
-      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      setTimeout(() => {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      }, 100);
     } catch (err) { }
   }
 
@@ -145,6 +199,7 @@ export class ChatboxComponent implements OnInit {
       this.showLoading = false;
       if (res['code'] == 1) {
         this.messageList = res['data'] || [];
+        this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
@@ -174,13 +229,18 @@ export class ChatboxComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
         message: this.taskMessage,
         attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null
+        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        parentId: (this.replyType > 0) ? this.parentCommentId : null,
+        users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
+        replyStatus: (this.replyType > 0) ? this.replyStatus : null,
+        requestId: null
       }
       this.api.post('Processes/saveLeadMessage', params).subscribe(res => {
         this.common.loading--;
@@ -188,8 +248,10 @@ export class ChatboxComponent implements OnInit {
           this.taskMessage = "";
           this.attachmentFile.file = null;
           this.attachmentFile.name = null;
+          this.resetQuotedMsg();
           this.getLeadMessage();
           this.getAttachmentByLead();
+          this.msgtextarea.nativeElement.focus();
         } else {
           this.common.showError(res['msg'])
         }
@@ -204,10 +266,12 @@ export class ChatboxComponent implements OnInit {
   handleFileSelection(event) {
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
+      console.log("ChatboxComponent -> handleFileSelection -> event.target.files[0]", event.target.files[0])
       this.common.loading--;
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
@@ -222,6 +286,41 @@ export class ChatboxComponent implements OnInit {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    this.fileType = icon;
+  }
+
+  onPaste(event: any) {
+    console.log('event', event);
+    const items = event.clipboardData.items;
+    let selectedFile = { "target": { "files": [] } };
+    for (const item of items) {
+      if (item.type.indexOf('image') === 0) {
+        selectedFile.target.files.push(item.getAsFile());
+      }
+    }
+    console.log("ChatboxComponent -> onPaste -> selectedFile", selectedFile)
+
+    this.handleFileSelection(selectedFile);
+  }
+
+
+  filesDropped(files: FileHandle[]) {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
+    this.handleFileSelection(selectedFile);
   }
 
   getAllUserByLead() {
@@ -285,11 +384,15 @@ export class ChatboxComponent implements OnInit {
       this.api.post('Processes/updateLeadPrimaryOwner', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.getAllUserByLead();
-          this.getLeadMessage();
-          this.showAssignUserAuto = null;
+          if (res['data'][0].y_id > 0) {
+            this.getAllUserByLead();
+            this.getLeadMessage();
+            this.showAssignUserAuto = null;
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -375,6 +478,9 @@ export class ChatboxComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime" || key === "completion_time" || key === 'action_target_time') {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -408,7 +514,7 @@ export class ChatboxComponent implements OnInit {
     let formType = (type == 1) ? 1 : 2;
     let icons = [];
 
-    
+
     if (!type && !lead.completion_time) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
     }
@@ -417,7 +523,7 @@ export class ChatboxComponent implements OnInit {
     }
     if (lead._action_form == 1 || lead._state_form == 1) {
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
-    }else if (lead._action_form == 2 || lead._state_form == 2) {
+    } else if (lead._action_form == 2 || lead._state_form == 2) {
       icons.push({ class: "fas fa-plus-square text-success", action: this.openTransFormData.bind(this, lead, type, formType, false), txt: '', title: "Action Form" })
     }
     console.log("icons:", icons);
@@ -690,6 +796,99 @@ export class ChatboxComponent implements OnInit {
       this.common.showError("Action owner is missing");
     }
 
+  }
+  setReplyWithType(type) {
+    this.replyType = type;
+    if (type == 1) {
+      this.replyStatus = -1;
+    } else if (type == 2) {
+      this.replyStatus = 0;
+    } else if (type == 3) {
+      this.replyStatus = 5;
+    } else {
+      this.replyStatus = null;
+      this.replyType = null;
+      this.messageReadInfo(this.parentCommentId);
+    }
+    this.msgtextarea.nativeElement.focus();
+  }
+
+  replyToComment(msg, userType) {
+    this.replyType = null;
+    this.parentCommentId = msg._id;
+    this.parentComment = msg.comment;
+    this.replyStatus = -1;
+    this.isReplyOnDemand = (userType == 'other' && msg.reply_demanded && !msg.is_send) ? true : false;
+  }
+
+  resetQuotedMsg() {
+    this.replyType = null;
+    this.parentCommentId = null;
+    this.replyStatus = null;
+    this.parentComment = null;
+    this.mentionedUsers = [];
+    this.isReplyOnDemand = false;
+  }
+
+  messageReadInfo(commentId) {
+    this.commentInfo = [];
+    let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
+    // if (this.ticketId < this.lastMsgId) {
+    this.api.get('Processes/getMessageReadInfo' + params).subscribe(res => {
+      if (res['code'] > 0) {
+        this.commentInfo = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+    // }
+  }
+
+  onMessageType(e) {
+    let value = e.data;
+    // console.log("target value:", e.target.value);
+    // console.log("target value22:", value);
+    let accessUsers = [];
+    if (this.userListByTask['leadUsers'][0]._pri_own_id != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['leadUsers'][0]._pri_own_id, name: this.userListByTask['leadUsers'][0].primary_owner });
+    }
+    if (this.userListByTask['leadUsers'][0]._aduserid != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['leadUsers'][0]._aduserid, name: this.userListByTask['leadUsers'][0].assignby });
+    }
+    if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+      this.userListByTask['ccUsers'].forEach(element => {
+        if (element._cc_user_id != this.loginUserId) {
+          accessUsers.push({ id: element._cc_user_id, name: element.cc_user });
+        }
+      });
+    }
+    if (e && value && value == "@") {
+      // console.log("onMessageType");
+      this.isMentionedUser = true;
+      this.mentionedUserList = accessUsers;//this.adminList;
+      setTimeout(() => {
+        this.userlistInput.toArray()[0].nativeElement.focus();
+      }, 100);
+    } else if (e && value && value == " ") {
+      // console.log("onMessageType2");
+      this.isMentionedUser = false;
+    } else if (this.isMentionedUser) {
+      let splieted = this.taskMessage.split('@');
+      let searchableTxt = splieted[splieted.length - 1];
+      this.mentionedUserList = accessUsers.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) }); //this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+    }
+  }
+
+  onSelectMenstionedUser(user) {
+    this.mentionedUsers.push({ id: user.id, name: user.name });
+    // console.log("mentionedUsers2:", this.mentionedUsers);
+    let splieted = this.taskMessage.split('@');
+    splieted.pop();
+    this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.msgtextarea.nativeElement.focus();
   }
 
 }

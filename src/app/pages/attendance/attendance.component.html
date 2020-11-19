@@ -1,17 +1,23 @@
 <nb-card>
-    <nb-card-header >
+    <nb-card-header>
         <div class="row m-0">
-                <h5 class="heading-design">Attendance</h5>
+            <h5 class="heading-design">Attendance</h5>
         </div>
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <div class="col-2">
+            <div class="col-1">
                 <label>Select Date</label>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
                 </uj-date-time-picker>
+            </div>
+            <div class="col-2">
+                <select [(ngModel)]="selectedGroup">
+                    <option value="-1">All</option>
+                    <option *ngFor="let g of groupList" [value]="g._id">{{g.name}}</option>
+                </select>
             </div>
 
             <div class="col-2">
@@ -20,6 +26,9 @@
 
             <div class="col-4 text-right">
                 <button id="summary" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2 btn-sm">Attendance Monthly Summary</button>
+            </div>
+            <div class="col-1 text-right">
+                <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
             </div>
 
         </div>

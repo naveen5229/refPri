@@ -23,6 +23,16 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/admin-tool',
         home: true,
+      },{
+        title: 'On-Site-Images',
+        icon: 'people-outline',
+        link: '/pages/on-site-images',
+        home: true,
+      },{
+        title: 'On-Site-Images-Summary',
+        icon: 'people-outline',
+        link: '/pages/on-site-images-summary',
+        home: true,
       },
       {
         title: 'User Groups',
@@ -61,6 +71,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Task-Admin',
+        icon: 'file-text-outline',
+        link: '/pages/task-scheduled',
+        home: true,
+      },
+      {
         title: 'User-Mapping',
         icon: 'file-text-outline',
         link: '/pages/user-mapping',
@@ -70,12 +86,6 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Company KYC',
         icon: 'file-text-outline',
         link: '/pages/companykyc',
-        home: true,
-      },
-      {
-        title: 'Task-Admin',
-        icon: 'file-text-outline',
-        link: '/pages/task-scheduled',
         home: true,
       },
       {
@@ -143,7 +153,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/salary',
         home: true,
-      }
+      },
+      {
+        title: 'Employee Monitoring',
+        icon: 'people-outline',
+        link: '/pages/employee-monitoring',
+      },
     ]
   },
   {
@@ -332,6 +347,31 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'grid-outline',
         link: '/pages/personalised-dashboard',
         home: true,
+      },
+      {
+        title: 'Graphical Reports',
+        icon: 'grid-outline',
+        link: '/pages/graphical-reports',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "Tickets",
+    icon: 'layers-outline',
+    home: true,
+    children: [
+      {
+        title: 'Ticket Process',
+        icon: 'grid-outline',
+        link: '/pages/ticket-process',
+        home: true,
+      },
+      {
+      title: 'Ticket',
+      icon: 'grid-outline',
+      link: '/pages/ticket',
+      home: true,
       }
     ]
   }
