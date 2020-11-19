@@ -162,7 +162,7 @@ export class OnSiteImagesComponent implements OnInit {
             action: null,
             icons: this.actionIcons(adminReport)
           };
-        } else if (key == 'attached_document') {
+        } else if (key == 'image') {
           column[key] = { value: adminReport[key], class: 'blue', action: this.goToImage.bind(this, adminReport['_url']) };
         } else {
           column[key] = { value: adminReport[key], class: 'black', action: '' };
@@ -187,7 +187,7 @@ export class OnSiteImagesComponent implements OnInit {
   openTransActionListModal(adminReport) {
     this.selectedOnSiteImageId = adminReport._id;
     if (this.selectedOnSiteImageId > 0) {
-      this.getProcessLeadByType(1);
+      this.getProcessLeadByType(10);
       document.getElementById('transActionList').style.display = 'block';
       // document.getElementById('transActionList').modal({ show: true, backdrop: false, keyboard: false });
     } else {
@@ -203,7 +203,7 @@ export class OnSiteImagesComponent implements OnInit {
 
   getProcessLeadByType(type) {
     let startDate = null, endDate = null;
-    if (type == 1) {
+    if (type == 10) {
       this.tableTransActionList.data = {
         headings: {},
         columns: []
@@ -219,7 +219,7 @@ export class OnSiteImagesComponent implements OnInit {
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
       if (res['code'] == 1) {
-        if (type == 1) {
+        if (type == 10) {
           this.transActionList = res['data'] || [];
           this.setTableTransActionList(type);
         } else if (type == 2) { //by me pending
@@ -335,7 +335,7 @@ export class OnSiteImagesComponent implements OnInit {
 
   actionIconsForTransAction(lead, type) {
     let icons = [];
-    if (type == 1) {
+    if (type == 10) {
       icons = [
         { class: "fa fa-plus", action: this.mapOnSiteImageWithTransAction.bind(this, lead), txt: "", title: 'Map with on-site-image', }
       ];
@@ -384,7 +384,7 @@ export class OnSiteImagesComponent implements OnInit {
 
   closeAddTransactionModal() {
     document.getElementById('addTransactionModal').style.display = 'none';
-    this.getProcessLeadByType(1);
+    this.getProcessLeadByType(10);
   }
 
   openAddTransactionModal() {
@@ -416,7 +416,7 @@ export class OnSiteImagesComponent implements OnInit {
       processName: lead._processname,
       identity: lead.identity,
       formType: formTypeTemp,
-      requestId: (type == 1) ? lead._transaction_actionid : null,
+      requestId: (type == 10) ? lead._transaction_actionid : null,
       actionId: (lead._action_id > 0) ? lead._action_id : null,
       actionName: (lead._action_id > 0) ? lead._action_name : '',
       stateId: (lead._state_id > 0) ? lead._state_id : null,
@@ -428,7 +428,7 @@ export class OnSiteImagesComponent implements OnInit {
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
       isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
-      isMarkTxnComplete: ((lead._state_change == 2 && type == 1) || [2, 6, 7].includes(type)) ? 1 : null
+      isMarkTxnComplete: ((lead._state_change == 2 && type == 10) || [2, 6, 7].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
