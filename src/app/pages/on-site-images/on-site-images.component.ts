@@ -18,7 +18,7 @@ export class OnSiteImagesComponent implements OnInit {
   startDate = this.common.getDate(-2);
   endDate = this.common.getDate();
   today = new Date();
-  selectedOnSiteImageId = null;
+  selectedOnSiteImage = { id: null, data: null };
   adminList = [];
   processList = [];
 
@@ -66,7 +66,7 @@ export class OnSiteImagesComponent implements OnInit {
     this.getAdminReportsByUser();
     this.getAllAdmin();
     this.getProcessList();
-    this.selectedOnSiteImageId = null;
+    this.selectedOnSiteImage = { id: null, data: null };
   }
 
   getAllAdmin() {
@@ -177,15 +177,19 @@ export class OnSiteImagesComponent implements OnInit {
 
   actionIcons(adminReport) {
     let icons = [
-      { class: adminReport._refid > 0 ? "fas fa-sitemap" : "fas fa-sitemap blue", action: adminReport._refid > 0 ? null : this.openTransActionListModal.bind(this, adminReport), txt: "", title: 'Map with Txn Action', }
+      { class: adminReport._refid > 0 ? "fas fa-sitemap blue" : "fas fa-sitemap", action: adminReport._refid > 0 ? this.renoveLinkedAction.bind(this, adminReport) : this.openTransActionListModal.bind(this, adminReport), txt: "", title: 'Map with Txn Action', }
     ];
     return icons;
   }
 
   openTransActionListModal(adminReport) {
-    this.selectedOnSiteImageId = adminReport._id;
-    if (this.selectedOnSiteImageId > 0) {
-      this.getProcessLeadByType(10);
+    this.selectedOnSiteImage.id = adminReport._id;
+    this.selectedOnSiteImage.data = adminReport;
+    if (this.selectedOnSiteImage.id > 0) {
+      console.log("selectedOnSiteImage:", this.selectedOnSiteImage);
+      if (!this.selectedOnSiteImage.data || !this.selectedOnSiteImage.data._refid) {
+        this.getProcessLeadByType(10);
+      }
       document.getElementById('transActionList').style.display = 'block';
     } else {
       this.common.showError("Invalid Request");
@@ -193,7 +197,7 @@ export class OnSiteImagesComponent implements OnInit {
   }
 
   closeTransActionListModal() {
-    this.selectedOnSiteImageId = null;
+    this.selectedOnSiteImage = { id: null, data: null };
     document.getElementById('transActionList').style.display = 'none';
     this.getAdminReportsByUser();
   }
@@ -348,11 +352,10 @@ export class OnSiteImagesComponent implements OnInit {
     }
     return icons;
   }
-
   mapOnSiteImageWithTransAction(lead) {
     let params = {
       transActionId: lead._transaction_actionid,
-      onSiteImageId: this.selectedOnSiteImageId
+      onSiteImageId: this.selectedOnSiteImage.id
     }
     this.common.params = {
       title: 'Map On-Site_image with txn action',
@@ -363,6 +366,37 @@ export class OnSiteImagesComponent implements OnInit {
       if (data.response) {
         this.common.loading++;
         this.api.post("Processes/mapOnSiteImageWithTransAction", params).subscribe(res => {
+          this.common.loading--;
+          if (res['code'] == 1) {
+            this.common.showToast(res['msg']);
+            this.closeTransActionListModal();
+          } else {
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          this.common.showError();
+          console.log('Error: ', err);
+        });
+      }
+    });
+  }
+
+  renoveLinkedAction(adminReport) {
+    this.selectedOnSiteImage.id = adminReport._id;
+    this.selectedOnSiteImage.data = adminReport;
+    let params = {
+      onSiteImageId: this.selectedOnSiteImage.id
+    }
+    this.common.params = {
+      title: 'UnMap On-Site_image with txn action',
+      description: '<b>Are you sure to unmap ?<b>',
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.common.loading++;
+        this.api.post("Processes/unmapOnSiteImageWithTransAction", params).subscribe(res => {
           this.common.loading--;
           if (res['code'] == 1) {
             this.common.showToast(res['msg']);

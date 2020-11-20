@@ -311,11 +311,25 @@ export class TaskMessageComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let formatedMsg = this.taskMessage;
+      let splitedMsg = this.taskMessage.split(" ");
+      if (splitedMsg && formatedMsg.match('www.')) {
+        splitedMsg.forEach((element, index) => {
+          if (element.match('www.')) {
+            let fullURL = (element.match('http')) ? element : "http://" + element;
+            let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
+            splitedMsg[index] = href_temp;
+          }
+        });
+        formatedMsg = splitedMsg.join(" ");
+      }
+      // console.log("formatedMsg:", formatedMsg);
+      // return false;
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage,
+        message: formatedMsg,//this.taskMessage,
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
@@ -672,7 +686,7 @@ export class TaskMessageComponent implements OnInit {
       case 'csv': icon = 'fas fa-file-csv'; break;
       default: icon = null;
     }
-      this.fileType = icon;
+    this.fileType = icon;
   }
 
 
