@@ -306,6 +306,7 @@ export class ChatboxComponent implements OnInit {
     let selectedFile = { "target": { "files": [] } };
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
+        event.preventDefault();
         selectedFile.target.files.push(item.getAsFile());
       }
     }
