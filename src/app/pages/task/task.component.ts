@@ -1991,7 +1991,14 @@ export class TaskComponent implements OnInit {
     this.taskTodoList.map((task) => {
       let column = {};
       for (let key in this.generateHeadingsTaskTodoList()) {
-        if (key.toLowerCase() == "completed") {
+        if (key.toLowerCase() == "action") {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsToDo(task)
+          };
+        } else if (key.toLowerCase() == "completed") {
           column[key] = {
             value: task[key],
             action: this.updateTodoTask.bind(this, task),
@@ -2024,13 +2031,29 @@ export class TaskComponent implements OnInit {
 
   actionIconsToDo(task) {
     let icons = [
-      {
-        class: "fa fa-edit",
-        action: this.updateTodoTask.bind(this, task),
-        txt: "",
-      },
+      { class: "fa fa-edit", action: this.editTodoTask.bind(this, task), txt: "", },
     ];
     return icons;
+  }
+
+  resetTaskTodoForm() {
+    this.taskTodoForm = {
+      taskTodoId: null,
+      desc: "",
+      date: this.common.getDate(),
+      isUrgent: false,
+      requestId: null
+    };
+  }
+
+  editTodoTask(task) {
+    this.taskTodoForm = {
+      taskTodoId: null,
+      desc: task.task_desc,
+      date: new Date(task.due_date),
+      isUrgent: (task.high_priority) ? true : false,
+      requestId: task._id
+    };
   }
 
   updateTodoTask(task) {
@@ -2076,13 +2099,7 @@ export class TaskComponent implements OnInit {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
             this.getTodoTaskList();
-            this.taskTodoForm = {
-              taskTodoId: null,
-              desc: "",
-              date: this.common.getDate(),
-              isUrgent: false,
-              requestId: null
-            };
+            this.resetTaskTodoForm();
           } else {
             this.common.showError(res["msg"]);
           }
