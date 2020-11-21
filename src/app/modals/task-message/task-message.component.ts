@@ -311,17 +311,9 @@ export class TaskMessageComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
-      let formatedMsg = this.taskMessage;
-      let splitedMsg = this.taskMessage.split(" ");
-      if (splitedMsg && formatedMsg.match('www.')) {
-        splitedMsg.forEach((element, index) => {
-          if (element.match('www.')) {
-            let fullURL = (element.match('http')) ? element : "http://" + element;
-            let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
-            splitedMsg[index] = href_temp;
-          }
-        });
-        formatedMsg = splitedMsg.join(" ");
+      let formatedMsg = this.taskMessage.trim();
+      if (formatedMsg && formatedMsg.match('www.')) {
+        formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
       // console.log("formatedMsg:", formatedMsg);
       // return false;

@@ -179,6 +179,9 @@ export class OnSiteImagesComponent implements OnInit {
     let icons = [
       { class: adminReport._refid > 0 ? "fas fa-sitemap blue" : "fas fa-sitemap", action: adminReport._refid > 0 ? this.renoveLinkedAction.bind(this, adminReport) : this.openTransActionListModal.bind(this, adminReport), txt: "", title: 'Map with Txn Action', }
     ];
+    if (!adminReport._refid) {
+      icons.push({ class: "fas fa-trash-alt", action: this.removeOnSiteImage.bind(this, adminReport), txt: "", title: 'Remove on-site-image', })
+    }
     return icons;
   }
 
@@ -337,9 +340,11 @@ export class OnSiteImagesComponent implements OnInit {
   actionIconsForTransAction(lead, type) {
     let icons = [];
     if (type == 10) {
-      icons = [
-        { class: "fa fa-plus", action: this.mapOnSiteImageWithTransAction.bind(this, lead), txt: "", title: 'Map with on-site-image', }
-      ];
+      if (lead._status == 5) {
+        icons.push({ class: "fa fa-plus", action: this.mapOnSiteImageWithTransAction.bind(this, lead), txt: "", title: 'Map with on-site-image', });
+      } else {
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Map and Mark Completed" });
+      }
     } else if (type == 2) {
       if (lead._state_type == 2) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: null, txt: '', title: "Mark Completed from my-process page" });
@@ -413,6 +418,38 @@ export class OnSiteImagesComponent implements OnInit {
     });
   }
 
+  removeOnSiteImage(adminReport) {
+    this.selectedOnSiteImage.id = adminReport._id;
+    this.selectedOnSiteImage.data = adminReport;
+    let params = {
+      id: this.selectedOnSiteImage.id,
+      status: -99
+    }
+    this.common.params = {
+      title: 'Remove On-Site_image',
+      description: '<b>Are you sure to remove ?<b>',
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.common.loading++;
+        this.api.post("Admin/updateOnSiteImageStatus", params).subscribe(res => {
+          this.common.loading--;
+          if (res['code'] == 1) {
+            this.common.showToast(res['msg']);
+            this.closeTransActionListModal();
+          } else {
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          this.common.showError();
+          console.log('Error: ', err);
+        });
+      }
+    });
+  }
+
   closeAddTransactionModal() {
     document.getElementById('addTransactionModal').style.display = 'none';
     this.getProcessLeadByType(10);
@@ -458,7 +495,8 @@ export class OnSiteImagesComponent implements OnInit {
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
       isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
-      isMarkTxnComplete: ((lead._state_change == 2 && type == 10) || [2, 6, 7].includes(type)) ? 1 : null
+      isMarkTxnComplete: ((lead._state_change == 2 && type == 10) || [2, 6, 7].includes(type)) ? 1 : null,
+      onSiteImageId: (this.selectedOnSiteImage.id > 0) ? this.selectedOnSiteImage.id : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
