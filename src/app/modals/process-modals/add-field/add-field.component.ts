@@ -405,8 +405,8 @@ export class AddFieldComponent implements OnInit {
         this.childArray[index]['_used_in'] = ele._used_in ? ele._used_in : null;
       });
     }
-    this.fixValues = data._param_info ? data._param_info : this.fixValues;
-    this.isFixedValue = (data._param_info && data._param_info.length) ? true : false;
+    this.fixValues = data.param_info ? data.param_info : this.fixValues;
+    this.isFixedValue = (data.param_info && data.param_info.length) ? true : false;
     this.isRequired = data.is_required;
     this.fieldId = data._matrixid;
     this.btn1 = "Update";
