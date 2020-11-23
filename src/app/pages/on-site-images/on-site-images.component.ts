@@ -404,8 +404,12 @@ export class OnSiteImagesComponent implements OnInit {
         this.api.post("Processes/unmapOnSiteImageWithTransAction", params).subscribe(res => {
           this.common.loading--;
           if (res['code'] == 1) {
-            this.common.showToast(res['msg']);
-            this.closeTransActionListModal();
+            if (res['data'][0].y_id > 0) {
+              this.common.showToast(res['data'][0].y_msg);
+              this.closeTransActionListModal();
+            } else {
+              this.common.showError(res['data'][0].y_msg);
+            }
           } else {
             this.common.showError(res['msg']);
           }
