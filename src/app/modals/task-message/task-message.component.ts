@@ -94,6 +94,9 @@ export class TaskMessageComponent implements OnInit {
   stTaskMaster = null;
   isChecked = null;
   fileType = null;
+  taskType = null;
+  scheChatId = null;
+  messageHistoryList = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -110,6 +113,11 @@ export class TaskMessageComponent implements OnInit {
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
       this.departmentList = this.common.params.departmentList;
+
+      // history fields
+      this.taskType = this.common.params.ticketEditData.ticketData.ticket_type;
+      this.scheChatId = this.common.params.ticketEditData.ticketData._refid;
+      // history Fields
 
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
@@ -843,6 +851,28 @@ export class TaskMessageComponent implements OnInit {
     );
   }
 
+  getHistory() {
+    // this.showLoading = true;
+    let params = `schTaskId=${this.scheChatId}`
+    this.api.get('AdminTask/getScheduledTaskAllMessage?'+params).subscribe(res => {
+      this.showLoading = false;
+      console.log("messageList:", res['data']);
+      if (res['success']) {
+        this.messageHistoryList = res['data'] || [];
+      } else {
+        this.common.showError(res['data']);
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+    document.getElementById('chatHistory').style.display = 'block';
+  }
+
+  closeHistoryChat() {
+    document.getElementById('chatHistory').style.display = 'none';
+  }
 
 
 }
