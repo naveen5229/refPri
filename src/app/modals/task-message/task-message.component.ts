@@ -38,6 +38,7 @@ export class TaskMessageComponent implements OnInit {
   // this page in from 3 pages change carefully
   files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
+  @ViewChild('chat_History_block', { static: false }) private myScrollHistoryContainer: ElementRef;
   taskMessage = "";
   title = '';
   subTitle = null;
@@ -173,6 +174,14 @@ export class TaskMessageComponent implements OnInit {
     try {
       setTimeout(() => {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      }, 100);
+    } catch (err) { }
+  }
+  
+  scrollHistoryChat(){
+    try {
+      setTimeout(() => {
+        this.myScrollHistoryContainer.nativeElement.scrollTop = this.myScrollHistoryContainer.nativeElement.scrollHeight;
       }, 100);
     } catch (err) { }
   }
@@ -859,6 +868,7 @@ export class TaskMessageComponent implements OnInit {
       console.log("messageList:", res['data']);
       if (res['success']) {
         this.messageHistoryList = res['data'] || [];
+        this.scrollHistoryChat();
       } else {
         this.common.showError(res['data']);
       }
