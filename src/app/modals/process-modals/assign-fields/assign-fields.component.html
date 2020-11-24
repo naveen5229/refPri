@@ -41,7 +41,7 @@
                                         [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
                                         (click)="markImportant(item)"></i>
                                 </div>
-                                <div *ngIf="item">
+                                <div *ngIf="item"> 
                                     <input type="checkbox" [(ngModel)]="item.r_required"> is required
                                 </div>
                             </div>
