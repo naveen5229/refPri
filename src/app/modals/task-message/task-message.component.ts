@@ -169,8 +169,8 @@ export class TaskMessageComponent implements OnInit {
       }, 100);
     } catch (err) { }
   }
-  
-  scrollHistoryChat(){
+
+  scrollHistoryChat() {
     try {
       setTimeout(() => {
         this.myScrollHistoryContainer.nativeElement.scrollTop = this.myScrollHistoryContainer.nativeElement.scrollHeight;
@@ -321,7 +321,7 @@ export class TaskMessageComponent implements OnInit {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
-      if (formatedMsg && formatedMsg.match('www.')) {
+      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.match('.com') || formatedMsg.match('.in'))) {
         formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
       // console.log("formatedMsg:", formatedMsg);
