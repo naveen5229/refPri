@@ -34,14 +34,14 @@
                                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                                     <div>{{item.r_blockname}}</div>
                                 </div>
-                                <div *ngIf="item">
+                                <div *ngIf="item && (item.param_type != 'attachment' && item.param_type != 'table')">
                                     <i class="fa fa-star cursorOnStar"
                                         [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
                                         aria-hidden="true"
                                         [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
                                         (click)="markImportant(item)"></i>
                                 </div>
-                                <div *ngIf="item">
+                                <div *ngIf="item"> 
                                     <input type="checkbox" [(ngModel)]="item.r_required"> is required
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                                     <div>{{item.r_blockname}}</div>
                                 </div>
-                                <div *ngIf="item">
+                                <div *ngIf="item && (item.param_type != 'attachment' && item.param_type != 'table')">
                                     <i class="fa fa-star cursorOnStar"
                                         [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
                                         aria-hidden="true"

@@ -194,9 +194,9 @@
                     <td colspan="2" class="pt-2">
                         <div class="row">
                             <div class="col-9">
-                                <auto-suggestion (onSelected)="newCCUserId = $event.id" [data]="adminList"
+                                <auto-suggestion (onSelected)="newCCUserId = $event" [data]="adminList"
                                     display="name" seperator="-" placeholder="Search User" autocomplete="off"
-                                    name="ccUser" inputId="ccUser">
+                                    isMultiSelect="true" name="ccUser" [preSelected]="newCCUserId" inputId="ccUser">
                                 </auto-suggestion>
                             </div>
                             <div class="col-3">
