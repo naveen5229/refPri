@@ -757,7 +757,7 @@ export class CommonService {
   getFormatedString(str, match) { //match="wwww."
     let splitedMsg = str.split(" ");
     splitedMsg.forEach((element, index) => {
-      if (match == "www." && element.match(match)) {
+      if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.match('.com') || element.match('.in'))) {
         let fullURL = (element.match('http')) ? element : "http://" + element;
         let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
         splitedMsg[index] = href_temp;
