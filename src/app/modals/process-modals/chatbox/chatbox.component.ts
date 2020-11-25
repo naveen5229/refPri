@@ -50,7 +50,7 @@ export class ChatboxComponent implements OnInit {
   lastSeenIdForView = 0; //only for view
   userListByTask = [];
   adminList = [];
-  newCCUserId = null;
+  newCCUserId = [];
   // taskId = null;
   ticketType = null;
   showAssignUserAuto = null;
@@ -343,16 +343,20 @@ export class ChatboxComponent implements OnInit {
   }
 
   addNewCCUserToLead() {
-    if (this.ticketId > 0 && this.newCCUserId > 0) {
+    if (this.ticketId > 0 && this.newCCUserId.length > 0) {
+      let ccUsers =[];
+      this.newCCUserId.map(ele => {
+        ccUsers.push({user_id: ele.id })
+      })
       let params = {
         leadId: this.ticketId,
-        ccUserId: this.newCCUserId
+        ccUserId: JSON.stringify(ccUsers)
       }
       this.common.loading++;
       this.api.post('Processes/addNewCCUserToLead', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.newCCUserId = null;
+          this.newCCUserId = [];
           this.getAllUserByLead();
         } else {
           this.common.showError(res['data']);
