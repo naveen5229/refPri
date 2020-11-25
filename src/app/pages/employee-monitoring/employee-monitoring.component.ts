@@ -53,6 +53,11 @@ export class EmployeeMonitoringComponent implements OnInit {
   markerInfoWindow: any;
   markers = [];
   map: any;
+  viewOptions = [
+    { id: 1, name: 'Both' },
+    { id: 2, name: 'List' },
+    { id: 3, name: 'Map' }
+  ]
 
   constructor(private api: ApiService, private common: CommonService, private mapService: MapService, public modalService: NgbModal) {
   }
@@ -61,8 +66,32 @@ export class EmployeeMonitoringComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.map = this.mapService.mapIntialize("map", 10);
+    this.map = this.mapService.mapIntialize("map", 8, 26.9124336, 75.78727090000007);
     this.getReport();
+  }
+
+  viewClass = {
+    table: 'col-8',
+    map: 'col-4'
+  }
+  onViewChange(viewId) {
+    console.log("viewId:", viewId);
+    if (viewId == 1) {
+      this.viewClass = {
+        table: 'col-8',
+        map: 'col-4'
+      }
+    } else if (viewId == 2) {
+      this.viewClass = {
+        table: 'col-12',
+        map: 'col-0 height-none'
+      }
+    } else if (viewId == 3) {
+      this.viewClass = {
+        table: 'col-0 height-none',
+        map: 'col-12'
+      }
+    }
   }
 
   getReport() {
@@ -115,7 +144,7 @@ export class EmployeeMonitoringComponent implements OnInit {
       department: { placeholder: 'Department' },
       attendance: { placeholder: 'Attendance' },
       mobile: { placeholder: 'Mobile' },
-      lastFetch: { placeholder: 'Last Fetch' },
+      lastFetch: { placeholder: 'Last Fetch', type: "date" },
       loc: { placeholder: 'Location' },
       net: { placeholder: 'Internet' },
       wifi: { placeholder: 'Wifi' }
@@ -138,6 +167,10 @@ export class EmployeeMonitoringComponent implements OnInit {
           action: this.selectOrUnselectEmployee.bind(this, report),
           value: this.selected.employees.indexOf(report.userId) !== -1 ? true : false
         };
+
+        if (!report.userId) {
+          row["style"] = { background: this.common.taskBgColor.hold };
+        }
 
       }
       return row;
@@ -169,7 +202,15 @@ export class EmployeeMonitoringComponent implements OnInit {
   }
 
   generateMarkerInfoWindowContent(report: report) {
-    let str = `<div style="color:#000">${JSON.stringify(report)}`;
+    let str = "<span style='color:blue'>Info</span><br>" +
+      "<span><b>Name: </b>" + report.name + "</span><br>" +
+      "<span><b>Department: </b>" + report.department + "</span><br>" +
+      "<span><b>Attendance: </b>" + report.attendance + "</span><br>" +
+      "<span><b>Mobile: </b>" + report.mobile + "</span><br>" +
+      "<span><b>Last Fetch: </b>" + report.lastFetch + "</span><br>" +
+      "<span><b>Location: </b>" + report.loc + "</span><br>" +
+      "<span><b>Internet: </b>" + report.net + "</span><br>" +
+      "<span><b>Wifi: </b>" + report.wifi + "</span>";
     return str;
   };
 
@@ -181,18 +222,14 @@ export class EmployeeMonitoringComponent implements OnInit {
   }
 
   selectUnselectAllEmployees(status: boolean) {
-    // this.selected.employees = [];
-    // if (this.selected.status && status) {
-    //   this.filteredVehicles.forEach(vehicle => this.selected.vehicles.push(vehicle._vid));
-    //   this.table.data.columns.map(column => column.checkbox.value = true);
-    // } else if (status) {
-    //   this.vehicles.forEach(vehicle => this.selected.vehicles.push(vehicle._vid));
-    //   this.table.data.columns.map(column => column.checkbox.value = true);
-    //   console.log("Data123:", this.table.data)
-    // } else {
-    //   this.table.data.columns.map(column => column.checkbox.value = false);
-    // }
-    // this.handleMarkerVisibility();
+    this.selected.employees = [];
+    if (status) {
+      this.selected.employees = this.reports.map(report => report.userId);
+      this.table.data.columns.map(column => column.checkbox.value = true);
+    } else {
+      this.table.data.columns.map(column => column.checkbox.value = false);
+    }
+    this.handleMarkerVisibility();
   }
 
   selectOrUnselectEmployee(report) {

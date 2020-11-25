@@ -9,6 +9,7 @@ import { TaskNewComponent } from '../task-new/task-new.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { TaskScheduleMasterComponent } from '../task-schedule-master/task-schedule-master.component';
 import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
+import { FileHandle } from '../../directives/dndDirective/dnd.directive';
 
 @Component({
   selector: 'ngx-task-message',
@@ -35,7 +36,9 @@ import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new
 })
 export class TaskMessageComponent implements OnInit {
   // this page in from 3 pages change carefully
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
+  @ViewChild('chat_History_block', { static: false }) private myScrollHistoryContainer: ElementRef;
   taskMessage = "";
   title = '';
   subTitle = null;
@@ -91,6 +94,8 @@ export class TaskMessageComponent implements OnInit {
   departmentList = [];
   stTaskMaster = null;
   isChecked = null;
+  fileType = null;
+  messageHistoryList = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -107,7 +112,6 @@ export class TaskMessageComponent implements OnInit {
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
       this.departmentList = this.common.params.departmentList;
-
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
       this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
@@ -162,6 +166,14 @@ export class TaskMessageComponent implements OnInit {
     try {
       setTimeout(() => {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      }, 100);
+    } catch (err) { }
+  }
+
+  scrollHistoryChat() {
+    try {
+      setTimeout(() => {
+        this.myScrollHistoryContainer.nativeElement.scrollTop = this.myScrollHistoryContainer.nativeElement.scrollHeight;
       }, 100);
     } catch (err) { }
   }
@@ -308,11 +320,17 @@ export class TaskMessageComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let formatedMsg = this.taskMessage.trim();
+      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.match('.com') || formatedMsg.match('.in'))) {
+        formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
+      }
+      // console.log("formatedMsg:", formatedMsg);
+      // return false;
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage,
+        message: formatedMsg,//this.taskMessage,
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
@@ -644,6 +662,7 @@ export class TaskMessageComponent implements OnInit {
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
       } else {
@@ -659,16 +678,38 @@ export class TaskMessageComponent implements OnInit {
     })
   }
 
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    this.fileType = icon;
+  }
+
+
   onPaste(event: any) {
     console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
+        event.preventDefault();
         selectedFile.target.files.push(item.getAsFile());
       }
     }
 
+    this.handleFileSelection(selectedFile);
+  }
+
+  filesDropped(files: FileHandle[]) {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
     this.handleFileSelection(selectedFile);
   }
 
@@ -811,6 +852,28 @@ export class TaskMessageComponent implements OnInit {
     );
   }
 
+  getHistory() {
+    // this.showLoading = true;
+    let params = `schTaskId=${this.ticketData._refid}`;
+    this.api.get('AdminTask/getScheduledTaskAllMessage?' + params).subscribe(res => {
+      this.showLoading = false;
+      if (res['code'] == 1) {
+        this.messageHistoryList = res['data'] || [];
+        this.scrollHistoryChat();
+      } else {
+        this.common.showError(res['data']);
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+    document.getElementById('chatHistory').style.display = 'block';
+  }
+
+  closeHistoryChat() {
+    document.getElementById('chatHistory').style.display = 'none';
+  }
 
 
 }

@@ -39,17 +39,6 @@ export class AppComponent implements OnInit {
       .subscribe(res => {
         console.log('res:', res);
         this.user._pages = res['data'].filter(page => { return page._userid; });
-
-        this.user._pages.push({
-          group_name: "Admin",
-          isSelected: true,
-          route: "/pages/employee-monitoring",
-          title: "Employee Monitoring",
-          type: "Dashboard",
-          _page_id: 10,
-          _userid: 1,
-        });
-
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");
       }, err => {

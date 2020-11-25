@@ -56,7 +56,7 @@
         color: #676767;
         i {
             color: #3366ff;
-            font-size: 10px;
+            font-size: 8px;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
                 display: contents;
@@ -340,4 +340,11 @@
     position: absolute;
     bottom: -18px;
     right: 0;
+}
+
+.history{
+    text-align: center;
+}
+.history:hover{
+    cursor: pointer;
 }

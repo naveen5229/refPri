@@ -23,6 +23,16 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/admin-tool',
         home: true,
+      },{
+        title: 'On-Site-Images',
+        icon: 'people-outline',
+        link: '/pages/on-site-images',
+        home: true,
+      },{
+        title: 'On-Site-Images-Summary',
+        icon: 'people-outline',
+        link: '/pages/on-site-images-summary',
+        home: true,
       },
       {
         title: 'User Groups',

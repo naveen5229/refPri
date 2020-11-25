@@ -28,7 +28,8 @@ export class AddTransactionActionComponent implements OnInit {
     transId: null,
     isCompleted: false,
     formType: 0, //0=action,1=state,2=next-action
-    isModeApplicable: 0
+    isModeApplicable: 0,
+    onSiteImageId: null
   }
   stateDataList = [];
   nextStateDataList = [];
@@ -65,6 +66,7 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.remark = (this.common.params.actionData.remark) ? this.common.params.actionData.remark : null;
       this.transAction.isModeApplicable = (this.common.params.actionData.isModeApplicable) ? this.common.params.actionData.isModeApplicable : 0;
       this.isMarkTxnComplete = (this.common.params.actionData.isMarkTxnComplete) ? this.common.params.actionData.isMarkTxnComplete : null;
+      this.transAction.onSiteImageId = (this.common.params.actionData.onSiteImageId) ? this.common.params.actionData.onSiteImageId : null;
       console.log("isMarkTxnComplete:", this.isMarkTxnComplete);
       if (this.common.params.actionData.actionOwnerId > 0) {
         let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
@@ -208,7 +210,8 @@ export class AddTransactionActionComponent implements OnInit {
         modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
         actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
         isNextAction: null,
-        isCompleted: (this.transAction.isCompleted) ? true : false
+        isCompleted: (this.transAction.isCompleted) ? true : false,
+        onSiteImageId: (this.transAction.onSiteImageId > 0) ? this.transAction.onSiteImageId : null
       };
       console.log("saveTransAction:", params);
       this.common.loading++;
@@ -332,6 +335,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.transAction.remark = "";
     this.transAction.targetTime = new Date();
     this.transAction.isCompleted = false;
+    this.transAction.onSiteImageId = null;
     this.standards = [];
   }
 

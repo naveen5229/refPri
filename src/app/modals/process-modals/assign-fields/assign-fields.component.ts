@@ -179,5 +179,10 @@ export class AssignFieldsComponent implements OnInit {
 
     return [...selected, ...this.unassign];
   }
+
+  markImportant(item){
+  console.log("AssignFieldsComponent -> markImportant -> item", item)
+    item.r_isdashboard_info = !item.r_isdashboard_info;
+  }
 }
 

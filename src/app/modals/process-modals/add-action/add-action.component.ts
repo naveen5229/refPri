@@ -18,10 +18,11 @@ export class AddActionComponent implements OnInit {
     name: "",
     process: { id: null, name: "" },
     states: [],
-    nextState:[],
+    nextState: [],
     threshold: null,
     modes: [],
     nextAction: [],
+    autoStateChange: null
     // isDefault: false,
     // defaultOwner: { id: null, name: null }
   }
@@ -80,6 +81,14 @@ export class AddActionComponent implements OnInit {
     this.activeModal.close({ response: false });
   }
 
+  switchButton() {
+    if (this.button === 'Add') {
+      this.closeModal(false);
+    } else if (this.button === 'Update') {
+      this.resetData();
+    }
+  }
+
   ngOnInit() { }
 
   getModeList() {
@@ -96,9 +105,10 @@ export class AddActionComponent implements OnInit {
   }
 
   saveProcessAction() {
+    let autoStateChange = (this.actionForm.nextState.length == 1) ? this.actionForm.autoStateChange : null;
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
-    } 
+    }
     else {
       const params = {
         requestId: this.actionForm.rowId,
@@ -109,6 +119,7 @@ export class AddActionComponent implements OnInit {
         threshold: this.actionForm.threshold,
         nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
         nextState: (this.actionForm.nextState && this.actionForm.nextState.length) ? JSON.stringify(this.actionForm.nextState) : null,
+        autoStateChange: autoStateChange,
         // isDefault: this.actionForm.isDefault,
         // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };
@@ -226,11 +237,15 @@ export class AddActionComponent implements OnInit {
     this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
     this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
     this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
+    this.actionForm.nextState = (action._next_state && action._next_state.length) ? action._next_state.map(x => { return { id: x._id, name: x.name } }) : [];
+    this.actionForm.autoStateChange = action._auto_state_change;
+
+    this.button = 'Update';
     // this.actionForm.isDefault = (action._is_default) ? true : false;
     // if (action._default_owner_id > 0) {
     //   let selectedUser = this.adminList.find(x => (x.id == action._default_owner_id));
-      // this.actionForm.defaultOwner.id = action._default_owner_id;
-      // this.actionForm.defaultOwner.name = (selectedUser) ? selectedUser.name : 'Inactive User';
+    // this.actionForm.defaultOwner.id = action._default_owner_id;
+    // this.actionForm.defaultOwner.name = (selectedUser) ? selectedUser.name : 'Inactive User';
     // }
   }
 
@@ -276,6 +291,9 @@ export class AddActionComponent implements OnInit {
     this.actionForm.nextAction = [];
     this.actionForm.threshold = null;
     this.actionForm.states = [];
+    this.actionForm.nextState = [];
+    this.actionForm.autoStateChange = null;
+    this.button = 'Add';
     // this.actionForm.isDefault = null;
     // this.actionForm.defaultOwner = { id: null, name: null };
   }

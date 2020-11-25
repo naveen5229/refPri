@@ -173,6 +173,7 @@
                 </div>
                 <div class="col-2">
                     <button class="btn btn-primary btn-sm" id="savetodotask" (click)="saveTaskTodo()" title="Save ToDo">save</button>
+                    <button *ngIf="taskTodoForm.requestId>0" class="btn btn-primary btn-sm ml-2" id="resettodotask" (click)="resetTaskTodoForm()" title="Reset">Reset</button>
                 </div>
             </div>
             <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList" class="sl-smart-table">
