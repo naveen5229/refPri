@@ -869,13 +869,14 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openTicketFormMatrixModal(tpId, refType) {
+    console.log("🚀 ~ file: ticket-process.component.ts ~ line 872 ~ TicketProcessComponent ~ openTicketFormMatrixModal ~ refType", refType)
     // document.getElementById('ticketFormMatrix').style.display = 'block';
     let refData = {
       id: tpId,
       type: refType
     }
     this.common.params = { ref: refData, formType: 11 };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(AddFieldComponent, { size: (refType == 0) ? 'xl' : 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   openTicketFormMatrixTypeModal(tpID) {

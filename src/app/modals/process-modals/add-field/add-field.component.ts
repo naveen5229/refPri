@@ -105,7 +105,9 @@ export class AddFieldComponent implements OnInit {
     }
     this.getFieldName();
     if (!this.formType && this.refType == 2) {
-      this.getGlobalFormField();
+      this.getGlobalFormField('Processes/getGlobalFormField');
+    }else if(this.formType == 11 && this.refType == 0){
+      this.getGlobalFormField('Ticket/getGlobalFormField');
     }
   }
 
@@ -129,11 +131,11 @@ export class AddFieldComponent implements OnInit {
     this.activeModal.close({ response: res });
   }
 
-  getGlobalFormField() {
+  getGlobalFormField(api) {
     this.globalFiledList = [];
     let params = "?refId=" + this.refId + "&refType=" + this.refType;
     this.common.loading++;
-    this.api.get('Processes/getGlobalFormField' + params).subscribe(res => {
+    this.api.get(api + params).subscribe(res => {
       this.common.loading--;
       console.log("getGlobalFormField", res);
       if (res['code'] == 1) {
@@ -432,7 +434,7 @@ export class AddFieldComponent implements OnInit {
       id: this.refId,
       type: this.refType
     }
-    this.common.params = { ref: ref };
+    this.common.params = { ref: ref , formType:this.formType};
     const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
