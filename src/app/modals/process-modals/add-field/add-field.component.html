@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div [ngClass]="(refType==2) ? 'col-10' : 'col-12' ">
+        <div [ngClass]="(refType == 2 && !formType) || (refType == 0 && formType == 11) ? 'col-10' : 'col-12' ">
             <div class="row mb-2">
                 <div class="col-3 mr-0">
                     <label>Field Name</label>
@@ -74,7 +74,8 @@
             <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField">
             </smart-table>
 
-            <div *ngIf="((data && data.length) || refType==2) && !formType" class="row">
+            <div *ngIf="((data && data.length) || (refType == 2 && !formType) || (refType == 0 && formType == 11))"
+                class="row">
                 <div class="col-12 text-right">
                     <button class="btn btn-primary btn-sm" name="openAssignField" (click)="openAssignForm()">Assign
                         Form</button>
@@ -82,7 +83,7 @@
             </div>
 
         </div>
-        <div *ngIf="refType==2" class="col-2" style="border-left:1px solid black;">
+        <div *ngIf="(refType == 2 && !formType) || (refType == 0 && formType == 11)" class="col-2" style="border-left:1px solid black;">
             <label><b>Global Fields</b></label>
             <table class="table border">
                 <tr *ngFor="let g of globalFiledList;let i=index">
