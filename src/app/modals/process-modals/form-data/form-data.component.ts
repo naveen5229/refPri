@@ -17,6 +17,7 @@ export class FormDataComponent implements OnInit {
   refId = null;
   refType = null;
   transId = null;
+  buttonType = false;
 
   Details = [{
     detail_type: 1,
@@ -33,6 +34,7 @@ export class FormDataComponent implements OnInit {
     public api: ApiService) {
     console.log("id", this.common.params);
     this.title = this.common.params.title ? this.common.params.title : 'Form Data';
+    this.buttonType = common.params.buttonType;
     if (this.common.params && this.common.params.actionData) {
       this.transId = this.common.params.actionData.transId;
       this.refId = this.common.params.actionData.refId;
@@ -54,11 +56,11 @@ export class FormDataComponent implements OnInit {
 
   ngOnInit() { }
 
-  dismiss(res) {
-    this.activeModal.close({ response: res });
+  dismiss(res,saveType?) {
+    this.activeModal.close({ response: res,saveType:saveType });
   }
 
-  saveFromDetail() {
+  saveFromDetail(saveType) {
     this.Details = this.evenArray.concat(this.oddArray);
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -84,7 +86,7 @@ export class FormDataComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            this.dismiss(true);
+            this.dismiss(true,saveType);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }

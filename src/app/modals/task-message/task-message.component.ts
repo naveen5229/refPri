@@ -339,10 +339,11 @@ export class TaskMessageComponent implements OnInit {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
-      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.match('.com') || formatedMsg.match('.in'))) {
+      console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
+      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.com') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.in'))) {
         formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
-      // console.log("formatedMsg:", formatedMsg);
+      console.log("formatedMsg:", formatedMsg);
       // return false;
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       let params = {

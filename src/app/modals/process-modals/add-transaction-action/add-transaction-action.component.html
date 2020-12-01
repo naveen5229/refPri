@@ -1,5 +1,6 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
+    <!-- <span><i class="fa fa-plus" aria-hidden="true"></i></span> -->
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false,null)">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -42,7 +43,9 @@
             <label>Mode<span *ngIf="transAction.isModeApplicable" class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="modeList" display="name" placeholder="Select Mode" name="modeName" inputId="modeId" (onSelected)="transAction.mode=($event);" [preSelected]="{name:transAction.mode.name}" autocomplete="off">
+            <auto-suggestion [data]="modeList" display="name" placeholder="Select Mode" name="modeName" inputId="modeId"
+                (onSelected)="transAction.mode=($event);" [preSelected]="{name:transAction.mode.name}"
+                autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
@@ -51,7 +54,8 @@
             <label>Remark</label>
         </div>
         <div class="col-8">
-            <textarea maxlength="1000" name="remark" cols="5" rows="5" class="form-control" [(ngModel)]="transAction.remark"></textarea>
+            <textarea maxlength="1000" name="remark" cols="5" rows="5" class="form-control"
+                [(ngModel)]="transAction.remark"></textarea>
         </div>
     </div>
     <div class="row mb-2">
@@ -59,13 +63,14 @@
             <label>Mark Completed</label>
         </div>
         <div class="col-8">
-            <input type="checkbox" [checked]="transAction.isCompleted" (change)="transAction.isCompleted = !transAction.isCompleted" />
+            <input type="checkbox" [checked]="transAction.isCompleted"
+                (change)="transAction.isCompleted = !transAction.isCompleted" />
         </div>
     </div>
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,nunll)">Cancel</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,null)">Cancel</button>
             <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransAction()">{{button}}</button>
         </div>
     </div>
@@ -94,7 +99,9 @@
             <label>Action Owner</label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner" inputId="actionOwnerId" (onSelected)="transAction.actionOwner=($event);" [preSelected]="{name:transAction.actionOwner.name}" autocomplete="off">
+            <auto-suggestion [data]="adminList" display="name" placeholder="Select Action Owner" name="actionOwner"
+                inputId="actionOwnerId" (onSelected)="transAction.actionOwner=($event);"
+                [preSelected]="{name:transAction.actionOwner.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
@@ -103,8 +110,10 @@
             <label>Next Action<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="actionDataList" display="name" placeholder="Select Next Action" name="nextactionName" inputId="nextActionId" (onSelected)="transAction.nextAction=($event);onSelectNextAction($event)" [preSelected]="{name:transAction.nextAction.name}"
-                autocomplete="off">
+            <auto-suggestion [data]="actionDataList" display="name" placeholder="Select Next Action"
+                name="nextactionName" inputId="nextActionId"
+                (onSelected)="transAction.nextAction=($event);onSelectNextAction($event)"
+                [preSelected]="{name:transAction.nextAction.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>
@@ -113,7 +122,8 @@
             <label>Target Time<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <uj-date-time-picker [mind]="currentDate" (onChanged)="transAction.targetTime = $event" [dateTimeValue]="transAction.targetTime" [isTime]="true">
+            <uj-date-time-picker [mind]="currentDate" (onChanged)="transAction.targetTime = $event"
+                [dateTimeValue]="transAction.targetTime" [isTime]="true">
             </uj-date-time-picker>
         </div>
     </div>
@@ -150,8 +160,10 @@
             <label>Next State : <span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="Select State" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;getNextActionList();" [preSelected]="{name:transAction.nextState.name}"
-                autocomplete="off">
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="Select State" name="nextStateName"
+                inputId="nextStateId"
+                (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;getNextActionList();"
+                [preSelected]="{name:transAction.nextState.name}" autocomplete="off">
             </auto-suggestion>
         </div>
     </div>

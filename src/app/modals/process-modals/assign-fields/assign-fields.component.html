@@ -8,6 +8,12 @@
     <div class="clearfix">
         <div *ngIf="fields.length>0">
             <div class="row mt-2">
+                <div class="col-12">
+                    <p style="font-size: 15px;"><span style="color:red">*</span>Use global field "contact name" and "mobile number" to add
+                        in contact into the contact list and to show on the dashboard of the ticket.</p>
+                </div>
+            </div>
+            <div class="row mt-2">
                 <div class="col-4">
                     <div class="drag-container">
                         <h2 style="text-align: center;font-size: 19px;">Unassigned</h2>
@@ -41,7 +47,7 @@
                                         [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
                                         (click)="markImportant(item)"></i>
                                 </div>
-                                <div *ngIf="item"> 
+                                <div *ngIf="item">
                                     <input type="checkbox" [(ngModel)]="item.r_required"> is required
                                 </div>
                             </div>
