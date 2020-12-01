@@ -195,63 +195,73 @@ export class AddTransactionActionComponent implements OnInit {
     });
   }
 
-  saveTransAction() {
-    // if (this.transAction.formType == 0) {
+  confirmSaveTransAction(fieldsVisi) {
 
-    //   let actionData = {
-    //     processId: this.transAction.process.id,
-    //     processName: this.transAction.process.name,
-    //     transId: this.transAction.transId,  
-    //     refId: this.transAction.action.id,
-    //     refType: 1,
-    //     formType: 2,
-    //   };
+    if (this.transAction.formType == 0) {
 
-    //   this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true };
-    //   const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    //   activeModal.result.then(data => {
-    //     if (data.saveType == 2) {
-          if (!this.transAction.state.id || !this.transAction.action.id) {
-            this.common.showError('Please Fill All Mandatory Field');
-          }
-          else {
-            const params = {
-              requestId: this.transAction.requestId,
-              transId: this.transAction.transId,
-              stateId: this.transAction.state.id,
-              actionId: this.transAction.action.id,
-              nexActId: null,
-              nextActTarTime: null,
-              remark: this.transAction.remark,
-              modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
-              actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
-              isNextAction: null,
-              isCompleted: (this.transAction.isCompleted) ? true : false,
-              onSiteImageId: (this.transAction.onSiteImageId > 0) ? this.transAction.onSiteImageId : null
-            };
-            console.log("saveTransAction:", params);
-            this.common.loading++;
-            this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
-              this.common.loading--;
-              if (res['code'] == 1) {
-                if (res['data'][0].y_id > 0) {
-                  this.common.showToast(res['data'][0].y_msg);
-                  this.resetData();
-                  this.closeModal(true, 2);
-                } else {
-                  this.common.showError(res['data'][0].y_msg);
-                }
-              } else {
-                this.common.showError(res['msg']);
-              }
-            }, err => {
-              this.common.loading--;
-              console.log(err);
-            });
-          }
-        // }
-      // });
+      let actionData = {
+        processId: this.transAction.process.id,
+        processName: this.transAction.process.name,
+        transId: this.transAction.transId,
+        refId: this.transAction.action.id,
+        refType: 1,
+        formType: 2,
+      };
+
+      this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true,fieldsVisi:fieldsVisi };
+      const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.saveType == 2) {
+          this.saveTransAction();
+        }
+      });
+    } else {
+      this.saveTransAction();
     }
+  }
+
+  saveTransAction() {
+    if (!this.transAction.state.id || !this.transAction.action.id) {
+      this.common.showError('Please Fill All Mandatory Field');
+    }
+    else {
+      const params = {
+        requestId: this.transAction.requestId,
+        transId: this.transAction.transId,
+        stateId: this.transAction.state.id,
+        actionId: this.transAction.action.id,
+        nexActId: null,
+        nextActTarTime: null,
+        remark: this.transAction.remark,
+        modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
+        actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
+        isNextAction: null,
+        isCompleted: (this.transAction.isCompleted) ? true : false,
+        onSiteImageId: (this.transAction.onSiteImageId > 0) ? this.transAction.onSiteImageId : null
+      };
+      console.log("saveTransAction:", params);
+      this.common.loading++;
+      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.resetData();
+            this.closeModal(true, 2);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+    }
+    // }
+    // });
+  }
   // }
 
   saveTransNextAction() {
