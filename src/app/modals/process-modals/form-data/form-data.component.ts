@@ -26,6 +26,7 @@ export class FormDataComponent implements OnInit {
     param_remarks: null,
   }];
   isDisabled = false;
+  fieldsVisi = false;
 
 
   constructor(public activeModal: NgbActiveModal,
@@ -34,7 +35,8 @@ export class FormDataComponent implements OnInit {
     public api: ApiService) {
     console.log("id", this.common.params);
     this.title = this.common.params.title ? this.common.params.title : 'Form Data';
-    this.buttonType = common.params.buttonType;
+    this.buttonType = this.common.params.buttonType ? this.common.params.buttonType : false;
+    this.fieldsVisi = this.common.params.fieldsVisi ? this.common.params.fieldsVisi : false;
     if (this.common.params && this.common.params.actionData) {
       this.transId = this.common.params.actionData.transId;
       this.refId = this.common.params.actionData.refId;
@@ -56,8 +58,8 @@ export class FormDataComponent implements OnInit {
 
   ngOnInit() { }
 
-  dismiss(res,saveType?) {
-    this.activeModal.close({ response: res,saveType:saveType });
+  dismiss(res, saveType?) {
+    this.activeModal.close({ response: res, saveType: saveType });
   }
 
   saveFromDetail(saveType) {
@@ -65,7 +67,7 @@ export class FormDataComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'],null,false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
       }
 
       return copyDetails;
@@ -86,7 +88,7 @@ export class FormDataComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            this.dismiss(true,saveType);
+            this.dismiss(true, saveType);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
