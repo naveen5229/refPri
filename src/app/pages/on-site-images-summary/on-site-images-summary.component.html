@@ -10,14 +10,27 @@
   </nb-card-header>
   <nb-card-body>
     <div class="row">
-      <div class="col-6">
+      <div class="col-4">
         <div class="row">
           <div class="col-4">
-            <label>Select Date</label>
+            <label>Start Date</label>
           </div>
           <div class="col-8">
-            <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date"
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="startDate=($event)" [dateTimeValue]="startDate"
               [isTime]="false" [maxd]="today">
+            </uj-date-time-picker>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="row">
+          <div class="col-4">
+            <label>End Date</label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="endDate=($event)" [dateTimeValue]="endDate"
+              [isTime]="false">
             </uj-date-time-picker>
           </div>
         </div>
