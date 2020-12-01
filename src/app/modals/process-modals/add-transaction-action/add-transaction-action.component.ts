@@ -196,9 +196,8 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   confirmSaveTransAction(fieldsVisi) {
-
-    if (this.transAction.formType == 0) {
-
+    // if (this.transAction.formType == 0) {
+    if (this.isFormHere == 1) {
       let actionData = {
         processId: this.transAction.process.id,
         processName: this.transAction.process.name,
@@ -208,7 +207,7 @@ export class AddTransactionActionComponent implements OnInit {
         formType: 2,
       };
 
-      this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true,fieldsVisi:fieldsVisi };
+      this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true, fieldsVisi: fieldsVisi };
       const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         if (data.saveType == 2) {
