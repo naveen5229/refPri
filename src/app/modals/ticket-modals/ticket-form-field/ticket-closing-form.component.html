@@ -1,42 +1,45 @@
 <div class="modal-header">
-  <h5>{{title}}</h5>
-  <button type="button" class="close" aria-label="Close" (click)="dismiss(false)">
+    <h5>{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss(false)">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
 
-  <!-- start:dyn field -->
-  <div *ngFor="let dd of oddArray ; let i = index; " class="row">
+    <!-- start:dyn field -->
+    <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
-    <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
-      <div *ngIf="oddArray[i].r_coltitle" class="row">
-        <div class="col-4">
-          <label>{{oddArray[i].r_coltitle}}<span style="color: red" *ngIf="oddArray[i].r_required">*</span></label>
-        </div>
+        <<<<<<< HEAD <div class="col-12" style="margin-bottom: 1rem;">
+            <div *ngIf="oddArray[i].r_coltitle" class="row">
+                <div class="col-4">
+                    <label>{{oddArray[i].r_coltitle}}<span style="color: red" *ngIf="oddArray[i].r_required">*</span></label>
+                </div>
+                =======
+                <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
+                    <div *ngIf="oddArray[i].r_coltitle" class="row">
+                        <div class="col-4">
+                            <label>{{oddArray[i].r_coltitle}}<span style="color: red" *ngIf="oddArray[i].r_required">*</span></label>
+                        </div>
+                        >>>>>>> naveen
 
-        <div class="col-8">
-          <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
-            *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
-          <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value
-            *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
-          <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value"
-            *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
-          </uj-date-time-picker>
+                        <div class="col-8">
+                            <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
+                            <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
+                            <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
+                            </uj-date-time-picker>
 
-          <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
-            *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
 
-          <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table"
+                            <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table"
               aria-hidden="true"></i></span>
 
-          <!-- dynamic dropdown -->
-          <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues">
+                            <!-- dynamic dropdown -->
+                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues">
             <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
               {{fixValue.option}}</option>
           </select>
 
-          <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                            <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
             <span *ngIf="oddArray[i].r_url">
               <a target="_blank" [href]="oddArray[i].r_url"
                 [download]="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
@@ -45,58 +48,53 @@
                         (change)="handleFileSelection($event,i)"> -->
             <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
           </label>
-        </div>
-      </div>
-    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
-      <span *ngIf="evenArray[i].r_coltitle" class="row">
+            <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <span *ngIf="evenArray[i].r_coltitle" class="row">
         <div class="col-4">
           <label>{{evenArray[i].r_colalias}} <span style="color: red" *ngIf="evenArray[i].r_required">*</span></label>
-        </div>
+            </div>
 
-        <div class="col-8">
-          <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
-            *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
-          <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
-            *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
-          <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value"
-            *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
-          </uj-date-time-picker>
-          <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"
-            *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+            <div class="col-8">
+                <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
+                <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
+                <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
+                </uj-date-time-picker>
+                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
 
-          <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
+                <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
               aria-hidden="true"></i></span>
 
-          <!-- dynamic data array -->
-          <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues">
+                <!-- dynamic data array -->
+                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues">
             <option [value]="fixValue.option" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
               {{fixValue.option}}</option>
           </select>
 
-          <!-- attachment -->
-          <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
-            <span *ngIf="evenArray[i].r_url">
+                <!-- attachment -->
+                <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
+                    <span *ngIf="evenArray[i].r_url">
               <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url"
                 [download]="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
             </span>
-            <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i"
+                    <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i"
                       (change)="handleFileSelection($event,i)"> -->
-            <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-            <!-- <button type="button" class="btn btn-primary btn-sm col-4"
+                    <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                    <!-- <button type="button" class="btn btn-primary btn-sm col-4"
                       (click)="uploadattachFile('evenArray',i)">Upload</button> -->
-          </div>
-        </div>
-      </span>
+                </div>
+            </div>
+            </span>
     </div>
 
-  </div>
+</div>
 
-  <div class="col-12 text-right">
-    <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm"
-      (click)="saveFromDetail()">Save</button>
-  </div>
-  <!-- end: dyn field -->
+<div class="col-12 text-right">
+    <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm" (click)="saveFromDetail()">Save</button>
+</div>
+<!-- end: dyn field -->
 </div>
