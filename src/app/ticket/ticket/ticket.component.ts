@@ -1088,8 +1088,8 @@ export class TicketComponent implements OnInit {
     // }
 
     let params = {
-      priCatId:this.categoryIds.priCat, 
-      secCatId:this.categoryIds.secCat, 
+      priCatId: this.categoryIds.priCat,
+      secCatId: this.categoryIds.secCat,
       typeId: this.categoryIds.type,
       // tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
       tpId: this.ticketForm.tp.id ? this.ticketForm.tp.id : null,
@@ -1113,6 +1113,7 @@ export class TicketComponent implements OnInit {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
           this.closeAddTicketModal();
+          this.activeTab = 'allocatedTkt';
           this.getTicketByType(101);
         } else {
           this.common.showError(res['data'][0].y_msg);
@@ -1181,9 +1182,9 @@ export class TicketComponent implements OnInit {
       this.common.loading--;
       if (res['code'] > 0) {
         if (res['data'][0].y_id > 0) {
-          this.closeassignUserModal();
           this.common.showToast(res['data'][0].y_msg);
           this.getTicketByType(this.assignUserObject.type);
+          this.closeassignUserModal();
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
