@@ -767,6 +767,17 @@ export class CommonService {
     return formatedMsg;
   }
 
+  checkMentionedUser(userList, str) {
+    let mentionUserList = [];
+    userList.forEach((element, index) => {
+      if (str.match(element.name)) {
+        // console.log("element:", element);
+        mentionUserList.push(element);
+      }
+    });
+    return (mentionUserList.length > 0) ? mentionUserList : null;
+  }
+
 }
 
 

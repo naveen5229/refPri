@@ -13,14 +13,21 @@
 :host ::ng-deep .fa-handshake {
     color: #00f;
 }
-.smart-table{
+
+.smart-table {
     display: block;
     height: calc(100vh - 124px);
     overflow: auto;
 }
-.ksr-smrt{
+
+.ksr-smrt {
     height: calc(100vh - 420px);
 }
 
-
-
+.modal-body {
+    height: 80vh;
+    overflow-y: auto;
+    .form-group {
+        margin-bottom: 10px;
+    }
+}

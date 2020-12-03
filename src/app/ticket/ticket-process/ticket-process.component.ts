@@ -97,6 +97,9 @@ export class TicketProcessComponent implements OnInit {
     complEscTime: '',
     isUrgent: false,
     isActive: true,
+    callRequired: false,
+    callingBenchmark: null,
+    completionBenchmark: null,
     requestId: null
   }
 
@@ -559,7 +562,7 @@ export class TicketProcessComponent implements OnInit {
 
   editTicket(ticket) {
     if (ticket) {
-      console.log(ticket);
+      // console.log(ticket);
       this.ticketForm.id = ticket._id;
       this.ticketForm.name = ticket.name;
       this.ticketForm.startTime = new Date(ticket.start_date);
@@ -567,15 +570,18 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
       if (ticket._claim_ticket == 0) {
-        this.ticketForm.claimStatus = { id: 0, name: 'Disable' }
+        this.ticketForm.claimStatus = { id: 0, name: 'Disable' };
       } else {
-        this.ticketForm.claimStatus = { id: 1, name: 'Enable' }
+        this.ticketForm.claimStatus = { id: 1, name: 'Enable' };
       }
       this.ticketForm.isActive = ticket._is_active;
-      this.ticketForm.priCatList = [{ name: '' }],
-        this.ticketForm.secCatList = [{ name: '' }],
-        this.ticketForm.typeList = [{ name: '' }],
-        this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input }
+      this.ticketForm.priCatList = [{ name: '' }];
+      this.ticketForm.secCatList = [{ name: '' }];
+      this.ticketForm.typeList = [{ name: '' }];
+      this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input };
+      this.ticketPropertyForm.callRequired = ticket.is_call_required;
+      this.ticketPropertyForm.callingBenchmark = ticket.calling_benchmark;
+      this.ticketPropertyForm.completionBenchmark = ticket.completion_benchmark;
     }
 
     console.log(this.ticketForm);
@@ -637,6 +643,9 @@ export class TicketProcessComponent implements OnInit {
       complEscTime: '',
       isUrgent: false,
       isActive: true,
+      callRequired: false,
+      callingBenchmark: null,
+      completionBenchmark: null,
       requestId: null
     }
   }
@@ -659,13 +668,15 @@ export class TicketProcessComponent implements OnInit {
       complEscTime: this.ticketPropertyForm.complEscTime,
       isUrgent: this.ticketPropertyForm.isUrgent,
       isActive: this.ticketPropertyForm.isActive,
+      callRequired: this.ticketPropertyForm.callRequired,
+      callingBenchmark: this.ticketPropertyForm.callingBenchmark,
+      completionBenchmark: this.ticketPropertyForm.completionBenchmark,
       requestId: reqId,
     }
 
     this.common.loading++;
     this.api.post('Ticket/saveTicketProcessProperty', params).subscribe(res => {
       this.common.loading--;
-      console.log('response:', res)
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
@@ -726,7 +737,7 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openTicketEsclationMatrixModal(property) {
-    console.log(property,this.esclationMatrixList,this.esclationTable);
+    console.log(property, this.esclationMatrixList, this.esclationTable);
     this.esclationMatrixList = [];
     this.resetEsclation();
     this.esclationMatrix.tpPropertyId = property._id;
