@@ -28,9 +28,13 @@ export class AdminToolComponent implements OnInit {
     public modalService: NgbModal,
   ) {
     this.getActiveAdminList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  refresh(){
+    this.getActiveAdminList();
   }
 
   adminTools() {
@@ -39,18 +43,13 @@ export class AdminToolComponent implements OnInit {
 
   getActiveAdminList() {
     this.common.loading++;
-    this.api.get('Admin/getAllAdmin')
-      .subscribe(res => {
+    this.api.get('Admin/getAllAdmin').subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
         this.activeAdminUserList = res['data'] || [];
-        console.log(this.activeAdminUserList);
-
         this.activeAdminUserList.length ? this.setTable() : this.resetTable();
-
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -62,11 +61,8 @@ export class AdminToolComponent implements OnInit {
     };
   }
   generateHeadings() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.activeAdminUserList[0]) {
-      // console.log(key.charAt(0));
-
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
         if(key == 'doj'){
@@ -149,7 +145,6 @@ export class AdminToolComponent implements OnInit {
   }
 
   editAdminInfo(activeAdmin) {
-    console.log("editAdminInfo:", activeAdmin);
     document.getElementById("adminDetailModal").style.display = "block";
     this.adminDetail.id = activeAdmin.id;
     this.adminDetail.name = activeAdmin.name;

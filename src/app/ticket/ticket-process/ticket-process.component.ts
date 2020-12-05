@@ -687,8 +687,8 @@ export class TicketProcessComponent implements OnInit {
   actionPropertyIcons(property) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editPropertyTicket.bind(this, property) },
-      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" },
-      { class: "fas fa-user", action: this.addProcessUsers.bind(this, property), title: "Add Users" }
+      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "User Matrix" },
+      { class: "fas fa-user", action: this.addProcessUsers.bind(this, property), title: "Admin User Mapping" }
     ];
     return icons;
   }
