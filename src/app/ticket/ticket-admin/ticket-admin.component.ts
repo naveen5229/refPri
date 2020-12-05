@@ -21,26 +21,69 @@ export class TicketAdminComponent implements OnInit {
       hideHeader: true
     }
   };
+  processWiseTicketList = [];
+  processWiseTicketTable = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  userWiseTicketList = [];
+  userWiseTicketTable = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  searchTask = {
+    startDate: <any>this.common.getDate(-2),
+    endDate: <any>this.common.getDate(),
+  };
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
-    this.getAdminTicket(1);
+    this.getAdminTicket(999);
     this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
 
   refresh() {
+    this.searchTask = {
+      startDate: <any>this.common.getDate(-2),
+      endDate: <any>this.common.getDate(),
+    };
     this.activeTab = "current";
-    this.getAdminTicket(1);
+    this.getAdminTicket(999);
   }
 
   getAdminTicket(type) {
+    let startDate,endDate = null;
+    if(type===0 || type===1) {
+      startDate = (this.searchTask.startDate) ? this.common.dateFormatter(this.searchTask.startDate) : null;
+      endDate = (this.searchTask.endDate) ? this.common.dateFormatter(this.searchTask.endDate) : null;
+    }
+    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate;
     this.common.loading++;
-    this.api.get("Ticket/getTicketCurrentSummary").subscribe(res => {
+    this.api.get("Ticket/getTicketSummaryByType"+params).subscribe(res => {
       this.common.loading--;
       this.resetSmartTableData();
-      this.currentTicketList = res['data'] || [];
-      this.setTableCurrent(type);
+      if(type==999){
+        this.currentTicketList = res['data'] || [];
+        this.setTableCurrent(type);
+      }else if(type===0){
+        this.processWiseTicketList = res['data'] || [];
+        this.setTableProcessWise(type);
+      }else if(type===1){
+        this.userWiseTicketList = res['data'] || [];
+        this.setTableUserWise(type);
+      }
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -50,6 +93,14 @@ export class TicketAdminComponent implements OnInit {
 
   resetSmartTableData() {
     this.currentTicketTable.data = {
+      headings: {},
+      columns: []
+    };
+    this.processWiseTicketTable.data = {
+      headings: {},
+      columns: []
+    };
+    this.userWiseTicketTable.data = {
       headings: {},
       columns: []
     };
@@ -97,5 +148,94 @@ export class TicketAdminComponent implements OnInit {
     });
     return columns;
   }
+
+  // start: processwise
+  setTableProcessWise(type) {
+    this.processWiseTicketTable.data = {
+      headings: this.generateHeadingsProcessWiseTicket(),
+      columns: this.getTableColumnsProcessWiseTicket(type)
+    };
+    return true;
+  }
+  generateHeadingsProcessWiseTicket() {
+    let headings = {};
+    for (var key in this.processWiseTicketList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if (key == 'expdate' || key == 'addtime') {
+          headings[key]["type"] = "date";
+        }
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsProcessWiseTicket(type) {
+    let columns = [];
+    this.processWiseTicketList.map(ticket => {
+      let column = {};
+      for (let key in this.generateHeadingsProcessWiseTicket()) {
+        if (key == 'Action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(ticket, type)
+          };
+        } else {
+          column[key] = { value: ticket[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: processwise
+// start: processwise
+setTableUserWise(type) {
+  this.userWiseTicketTable.data = {
+    headings: this.generateHeadingsUserWiseTicket(),
+    columns: this.getTableColumnsUserWiseTicket(type)
+  };
+  return true;
+}
+generateHeadingsUserWiseTicket() {
+  let headings = {};
+  for (var key in this.userWiseTicketList[0]) {
+    if (key.charAt(0) != "_") {
+      headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      if (key == 'expdate' || key == 'addtime') {
+        headings[key]["type"] = "date";
+      }
+    }
+  }
+  return headings;
+}
+
+getTableColumnsUserWiseTicket(type) {
+  let columns = [];
+  this.userWiseTicketList.map(ticket => {
+    let column = {};
+    for (let key in this.generateHeadingsUserWiseTicket()) {
+      if (key == 'Action') {
+        column[key] = {
+          value: "",
+          isHTML: true,
+          action: null,
+          // icons: this.actionIcons(ticket, type)
+        };
+      } else {
+        column[key] = { value: ticket[key], class: 'black', action: '' };
+      }
+
+      column['style'] = { 'background': this.common.taskStatusBg(ticket._status) };
+    }
+    columns.push(column);
+  });
+  return columns;
+}
+// end: processwise
 
 }
