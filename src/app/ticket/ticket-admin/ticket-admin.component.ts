@@ -3,6 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../Service/user/user.service';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-ticket-admin',
@@ -131,13 +132,19 @@ export class TicketAdminComponent implements OnInit {
     this.currentTicketList.map(ticket => {
       let column = {};
       for (let key in this.generateHeadingsCurrentTicket()) {
-        if (key == 'Action') {
+        if (key.toLowerCase() == 'action') {
           column[key] = {
             value: "",
             isHTML: true,
             action: null,
             // icons: this.actionIcons(ticket, type)
           };
+        } else if(key.toLowerCase()=='ltn') {
+          column[key] = { value: ticket[key], class: 'blue', action: (ticket[key]>0) ? this.callDetails.bind(this, ticket,0) : null };
+        } else if(key.toLowerCase()=='uncalled') {
+          column[key] = { value: ticket[key], class: 'blue', action: (ticket[key]>0) ?  this.callDetails.bind(this, ticket,1) : null };
+        } else if(key.toLowerCase()=='tot. call dur. (hh:mm)') {
+          column[key] = { value: ticket[key], class: 'blue', action: this.callDetails.bind(this, ticket,2) };
         } else {
           column[key] = { value: ticket[key], class: 'black', action: '' };
         }
@@ -175,7 +182,7 @@ export class TicketAdminComponent implements OnInit {
     this.processWiseTicketList.map(ticket => {
       let column = {};
       for (let key in this.generateHeadingsProcessWiseTicket()) {
-        if (key == 'Action') {
+        if (key.toLowerCase() == 'action') {
           column[key] = {
             value: "",
             isHTML: true,
@@ -219,7 +226,7 @@ getTableColumnsUserWiseTicket(type) {
   this.userWiseTicketList.map(ticket => {
     let column = {};
     for (let key in this.generateHeadingsUserWiseTicket()) {
-      if (key == 'Action') {
+      if (key.toLowerCase() == 'action') {
         column[key] = {
           value: "",
           isHTML: true,
@@ -237,5 +244,21 @@ getTableColumnsUserWiseTicket(type) {
   return columns;
 }
 // end: processwise
+
+callDetails(ticket,type) {
+  let dataparams = {
+    view: {
+      api: 'Ticket/getTicketSummaryById',
+      param: {
+        userId: ticket['_aduserid'],
+        type: type
+      }
+    },
+    title: "Call Log Details "+'(' + ticket['employee_name'] + ')'
+  }
+  // this.common.handleModalSize('class', 'modal-lg', '1100');
+  this.common.params = { data: dataparams };
+  const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+}
 
 }

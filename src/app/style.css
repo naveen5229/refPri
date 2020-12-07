@@ -521,3 +521,6 @@ nb-card-body {
 .user-active {
     background: yellow;
 }
+.hr_full{
+    margin: 0 -15px;
+}
