@@ -755,16 +755,31 @@ export class CommonService {
   }
 
   getFormatedString(str, match) { //match="wwww."
-    let splitedMsg = str.split(" ");
-    splitedMsg.forEach((element, index) => {
-      if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
-        let fullURL = (element.match('http')) ? element : "http://" + element;
-        let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
-        splitedMsg[index] = href_temp;
+    let splitedMsg2 = str.split(" ");
+    splitedMsg2.forEach((element2, index2) => {
+      let splitedMsg = element2.split("\n");
+      splitedMsg.forEach((element, index) => {
+        if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
+          let fullURL = (element.match('http')) ? element : "http://" + element;
+          let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
+          splitedMsg[index] = href_temp;
+        }
+      });
+      splitedMsg2[index2] = splitedMsg.join("\n");
+    });
+    let formatedMsg = splitedMsg2.join(" ");
+    return formatedMsg;
+  }
+
+  checkMentionedUser(userList, str) {
+    let mentionUserList = [];
+    userList.forEach((element, index) => {
+      if (str.match(element.name)) {
+        // console.log("element:", element);
+        mentionUserList.push(element);
       }
     });
-    let formatedMsg = splitedMsg.join(" ");
-    return formatedMsg;
+    return (mentionUserList.length > 0) ? mentionUserList : null;
   }
 
 }

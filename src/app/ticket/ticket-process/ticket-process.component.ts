@@ -97,6 +97,9 @@ export class TicketProcessComponent implements OnInit {
     complEscTime: '',
     isUrgent: false,
     isActive: true,
+    callRequired: false,
+    callingBenchmark: null,
+    completionBenchmark: null,
     requestId: null
   }
 
@@ -144,7 +147,6 @@ export class TicketProcessComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         let data;
         data = res['data'] || [];
@@ -160,10 +162,8 @@ export class TicketProcessComponent implements OnInit {
 
   getTicketList() {
     this.common.loading++;
-    this.api.get('Ticket/getTicketProcessList')
-      .subscribe(res => {
+    this.api.get('Ticket/getTicketProcessList').subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (!res['data']) return;
         this.ticketData = res['data'];
         this.ticketData.length ? this.setTable() : this.resetTable();
@@ -307,7 +307,6 @@ export class TicketProcessComponent implements OnInit {
       this.common.loading++;
       this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
         this.common.loading--;
-        console.log('response:', res)
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
@@ -341,7 +340,7 @@ export class TicketProcessComponent implements OnInit {
         this.ticketPropertyData = res['data'];
         this.setTicketPropertyTable();
         // this.openTicketPropertyModal();
-        console.log(res['data']);
+        // console.log(res['data']);
       }
     }, err => {
       this.common.loading--;
@@ -559,7 +558,7 @@ export class TicketProcessComponent implements OnInit {
 
   editTicket(ticket) {
     if (ticket) {
-      console.log(ticket);
+      // console.log(ticket);
       this.ticketForm.id = ticket._id;
       this.ticketForm.name = ticket.name;
       this.ticketForm.startTime = new Date(ticket.start_date);
@@ -567,19 +566,16 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
       if (ticket._claim_ticket == 0) {
-        this.ticketForm.claimStatus = { id: 0, name: 'Disable' }
+        this.ticketForm.claimStatus = { id: 0, name: 'Disable' };
       } else {
-        this.ticketForm.claimStatus = { id: 1, name: 'Enable' }
+        this.ticketForm.claimStatus = { id: 1, name: 'Enable' };
       }
       this.ticketForm.isActive = ticket._is_active;
-      this.ticketForm.priCatList = [{ name: '' }],
-        this.ticketForm.secCatList = [{ name: '' }],
-        this.ticketForm.typeList = [{ name: '' }],
-        this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input }
+      this.ticketForm.priCatList = [{ name: '' }];
+      this.ticketForm.secCatList = [{ name: '' }];
+      this.ticketForm.typeList = [{ name: '' }];
+      this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input };
     }
-
-    console.log(this.ticketForm);
-
     document.getElementById('addTicket').style.display = 'block';
   }
 
@@ -601,7 +597,6 @@ export class TicketProcessComponent implements OnInit {
     const num = 3;
     for (let i = 1; i <= num; i++) {
       this.api.get(`Ticket/getTicketProcessCatByType?tpId=${id}&type=${i}`).subscribe(res => {
-        console.log("data", res['data'])
         if (res['code'] > 0) {
           let data;
           if (i === 1) {
@@ -637,6 +632,9 @@ export class TicketProcessComponent implements OnInit {
       complEscTime: '',
       isUrgent: false,
       isActive: true,
+      callRequired: false,
+      callingBenchmark: null,
+      completionBenchmark: null,
       requestId: null
     }
   }
@@ -659,13 +657,15 @@ export class TicketProcessComponent implements OnInit {
       complEscTime: this.ticketPropertyForm.complEscTime,
       isUrgent: this.ticketPropertyForm.isUrgent,
       isActive: this.ticketPropertyForm.isActive,
+      callRequired: this.ticketPropertyForm.callRequired,
+      callingBenchmark: this.ticketPropertyForm.callingBenchmark,
+      completionBenchmark: this.ticketPropertyForm.completionBenchmark,
       requestId: reqId,
     }
 
     this.common.loading++;
     this.api.post('Ticket/saveTicketProcessProperty', params).subscribe(res => {
       this.common.loading--;
-      console.log('response:', res)
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
@@ -687,14 +687,13 @@ export class TicketProcessComponent implements OnInit {
   actionPropertyIcons(property) {
     let icons = [
       { class: "far fa-edit", title: "Edit", action: this.editPropertyTicket.bind(this, property) },
-      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "Ticket Property" },
-      { class: "fas fa-user", action: this.addProcessUsers.bind(this, property), title: "Add Users" }
+      { class: "fas fa-plus-square", action: this.openTicketEsclationMatrixModal.bind(this, property), title: "User Matrix" },
+      { class: "fas fa-user", action: this.addProcessUsers.bind(this, property), title: "Admin User Mapping" }
     ];
     return icons;
   }
 
   editPropertyTicket(property) {
-    console.log(property);
     if (property) {
       this.ticketPropertyForm.tpId = property._tpid;
       this.ticketPropertyForm.priCatId = { id: property._pri_cat_id, name: property.primary_category };
@@ -716,6 +715,9 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.isUrgent = property.is_urgent;
       this.ticketPropertyForm.isActive = property.is_active;
       this.ticketPropertyForm.requestId = property._id;
+      this.ticketPropertyForm.callRequired = property.is_call_required;
+      this.ticketPropertyForm.callingBenchmark = property.calling_benchmark;
+      this.ticketPropertyForm.completionBenchmark = property.completion_benchmark;
     }
     document.getElementById('addTicketProperty').style.display = 'block';
     if (!this.ticketPropertyForm.tpId) {
@@ -726,7 +728,7 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openTicketEsclationMatrixModal(property) {
-    console.log(property,this.esclationMatrixList,this.esclationTable);
+    // console.log(property, this.esclationMatrixList, this.esclationTable);
     this.esclationMatrixList = [];
     this.resetEsclation();
     this.esclationMatrix.tpPropertyId = property._id;
@@ -736,7 +738,6 @@ export class TicketProcessComponent implements OnInit {
 
   getPreFilledMatrix(tpPropertyId) {
     this.api.get(`Ticket/getTicketEsclationMatrix?tpPropertyId=${tpPropertyId}`).subscribe(res => {
-      console.log("data", res['data'])
       this.resetEsclationTable();
       if (res['code'] > 0) {
         if (res['data']) {
@@ -851,7 +852,6 @@ export class TicketProcessComponent implements OnInit {
     this.common.loading++;
     this.api.post('Ticket/saveTicketEsclationMatrix', params).subscribe(res => {
       this.common.loading--;
-      console.log('response:', res)
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
@@ -869,7 +869,7 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openTicketFormMatrixModal(tpId, refType) {
-    console.log("🚀 ~ file: ticket-process.component.ts ~ line 872 ~ TicketProcessComponent ~ openTicketFormMatrixModal ~ refType", refType)
+    // console.log("🚀 ~ file: ticket-process.component.ts ~ line 872 ~ TicketProcessComponent ~ openTicketFormMatrixModal ~ refType", refType)
     // document.getElementById('ticketFormMatrix').style.display = 'block';
     let refData = {
       id: tpId,

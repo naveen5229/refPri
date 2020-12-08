@@ -1357,8 +1357,12 @@ export class TicketComponent implements OnInit {
     const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        console.log(data.data, 'response');
-        this.updateTicketStatus(ticket, type, status, null);
+        console.log(data, 'response');
+        if(data.isContinue){
+          this.updateTicketStatus(ticket, type, status, null);
+        }else{
+          this.changeTicketStatusWithConfirm(ticket, type, status)
+        }
       }
     });
   }
