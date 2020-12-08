@@ -351,3 +351,11 @@
 .user-active{
     background: yellow;
 }
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 14px;
+    border: 1px solid black;
+}

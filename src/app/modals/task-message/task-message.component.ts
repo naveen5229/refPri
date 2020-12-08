@@ -10,6 +10,8 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
 import { TaskScheduleMasterComponent } from '../task-schedule-master/task-schedule-master.component';
 import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
 import { FileHandle } from '../../directives/dndDirective/dnd.directive';
+import * as _ from 'lodash';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'ngx-task-message',
@@ -45,6 +47,7 @@ export class TaskMessageComponent implements OnInit {
   ticketId = 0;
   statusId = 0;
   messageList = [];
+  messageListShow = [];
   showLoading = true;
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
@@ -70,6 +73,7 @@ export class TaskMessageComponent implements OnInit {
   };
   attachmentList = [];
   isAttachmentShow = false;
+  isSearchShow = false;
 
   userGroupList = [];
   userWithGroup = [];
@@ -97,6 +101,7 @@ export class TaskMessageComponent implements OnInit {
   fileType = null;
   messageHistoryList = null;
   mentionUserIndex: number = 0;
+  query_conversation = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -106,7 +111,7 @@ export class TaskMessageComponent implements OnInit {
   @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
-    public common: CommonService, public userService: UserService) {
+    public common: CommonService, public userService: UserService, private sanitizer: DomSanitizer) {
     console.log("common params:", this.common.params);
     if (this.common.params != null) {
       this.title = this.common.params.title;
@@ -248,7 +253,8 @@ export class TaskMessageComponent implements OnInit {
       this.showLoading = false;
       console.log("messageList:", res['data']);
       if (res['success']) {
-        this.messageList = res['data'] || [];
+        this.messageList = _.clone(res['data'] || []);
+        this.messageListShow = _.clone(res['data'] || []);
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
@@ -897,5 +903,123 @@ export class TaskMessageComponent implements OnInit {
     document.getElementById('chatHistory').style.display = 'none';
   }
 
+  search() {
+    this.isSearchShow = !this.isSearchShow;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      document.getElementById('searchChat').focus();
+    }, 0);
+  }
 
+  searchedIndex = [];
+  focusOn = null;
+  searchChat(value) {
+    let messageList = _.clone(this.messageList);
+    console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ value", value,messageList)
+    this.selectedIndex = 0;
+    let final = "";
+    let caseSensitive = false;
+    let splitFlag = null;
+    let matchFlag = null
+    if (!caseSensitive) {
+      splitFlag = "i";
+      matchFlag = "gi";
+    } else {
+      splitFlag = "";
+      matchFlag = "g";
+    }
+    let searchPattern = new RegExp(value, splitFlag);
+    let matchpattern = new RegExp(value, matchFlag);
+
+    for (let i = messageList.length - 1; i >= 0; i--) {
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
+      let msg = messageList[i].comment;
+      console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg)
+      if (msg.toLowerCase().match(value.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+        this.searchedIndex.push(i);
+        this.focusOn = i;
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 924 ~ TaskMessageComponent ~ searchChat ~ searchedIndex", this.searchedIndex)
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 906 ~ TaskMessageComponent ~ searchChat ~ msg", msg, i, value);
+        let separatedText = msg.split(searchPattern);
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 909 ~ TaskMessageComponent ~ searchChat ~ separatedText", separatedText)
+        let separatedSearchedText = msg.match(matchpattern);
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 911 ~ TaskMessageComponent ~ searchChat ~ separatedSearchedText", separatedSearchedText)
+        // this.messageList[i].comment=`<span class="text-focus-highlight">${separatedSearchedText}</span>`;
+        if (
+          separatedSearchedText != null &&
+          separatedSearchedText.length > 0
+        ) {
+          for (let j = 0; j < separatedText.length; j++) {
+            if (j <= separatedSearchedText.length - 1) {
+              final +=
+                separatedText[j] +
+                `<span class="text-highlight" id="focusOn-${i}">` +
+                separatedSearchedText[j] +
+                `</span>`;
+              // ${this.focusOn == j?' text-focus-highlight':
+            } else {
+              final += separatedText[j];
+            }
+          }
+        }
+        // this.scrollToChat(i);
+        messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+        this.messageListShow = messageList;
+        final = '';
+        console.log('final', final, i);
+        setTimeout(() => {
+          this.focusOnSelectedIndex();
+        }, 500);
+        // break;
+      }
+    }
+  }
+
+  // scrollToChat(i) {
+  //   try {
+  //     setTimeout(() => {
+  //       this.myScrollContainer.nativeElement.scrollTop = i;
+  //     }, 100);
+  //   } catch (err) { }
+  // }
+
+  onchangeIndex(type) {
+    console.log('selectedIndex:',this.selectedIndex)
+    // if(this.selectedIndex==0 || this.selectedIndex==this.searchedIndex.length-1){
+    //   this.common.showError("error");
+    //   if(this.selectedIndex<0){
+    //     this.selectedIndex=0;
+    //   }
+    //   if(this.selectedIndex==this.searchedIndex.length){
+    //     this.selectedIndex=this.searchedIndex.length-1;
+    //   }
+    //   return false;
+    // }
+    if (type == "plus") {
+      if(this.selectedIndex==this.searchedIndex.length-1){
+        this.common.showError("error");
+        return;
+      }
+        this.selectedIndex++;
+    } else {
+      if(this.selectedIndex==0){
+        this.common.showError("error");
+        return;
+      }
+        this.selectedIndex--;
+    }
+    this.focusOnSelectedIndex();
+  }
+
+  selectedIndex = 0;
+  focusOnSelectedIndex() {
+    let focusOn = this.searchedIndex[this.selectedIndex];
+    let earlierIndex = focusOn;
+    console.log("focusOn:", focusOn);
+    // document.getElementById('chat_block').classList.remove('text-focus-highlight');
+    for(let i=0; i<this.searchedIndex.length;i++){
+      document.getElementById("focusOn-" + this.searchedIndex[i]).classList.remove('text-focus-highlight');
+    }
+    document.getElementById("focusOn-" + focusOn).classList.add('text-focus-highlight');
+    // this.scrollToChat(focusOn);
+  }
 }
