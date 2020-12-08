@@ -253,8 +253,8 @@ export class TaskMessageComponent implements OnInit {
       this.showLoading = false;
       console.log("messageList:", res['data']);
       if (res['success']) {
-        this.messageList = _.clone(res['data'] || []);
-        this.messageListShow = _.clone(res['data'] || []);
+        this.messageList = res['data'] || [];
+        this.messageListShow = JSON.parse(JSON.stringify(this.messageList));
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
@@ -911,9 +911,10 @@ export class TaskMessageComponent implements OnInit {
   }
 
   searchedIndex = [];
-  focusOn = null;
+  selectedIndex = 0;
   searchChat(value) {
-    let messageList = _.clone(this.messageList);
+    this.searchedIndex = [];
+    let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
     console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ value", value,messageList)
     this.selectedIndex = 0;
     let final = "";
@@ -933,17 +934,11 @@ export class TaskMessageComponent implements OnInit {
     for (let i = messageList.length - 1; i >= 0; i--) {
       // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
       let msg = messageList[i].comment;
-      console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg)
-      if (msg.toLowerCase().match(value.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+      console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg,value)
+      if ((msg.toLowerCase()).match(value.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
         this.searchedIndex.push(i);
-        this.focusOn = i;
-        // console.log("🚀 ~ file: task-message.component.ts ~ line 924 ~ TaskMessageComponent ~ searchChat ~ searchedIndex", this.searchedIndex)
-        // console.log("🚀 ~ file: task-message.component.ts ~ line 906 ~ TaskMessageComponent ~ searchChat ~ msg", msg, i, value);
         let separatedText = msg.split(searchPattern);
-        // console.log("🚀 ~ file: task-message.component.ts ~ line 909 ~ TaskMessageComponent ~ searchChat ~ separatedText", separatedText)
         let separatedSearchedText = msg.match(matchpattern);
-        // console.log("🚀 ~ file: task-message.component.ts ~ line 911 ~ TaskMessageComponent ~ searchChat ~ separatedSearchedText", separatedSearchedText)
-        // this.messageList[i].comment=`<span class="text-focus-highlight">${separatedSearchedText}</span>`;
         if (
           separatedSearchedText != null &&
           separatedSearchedText.length > 0
@@ -955,17 +950,14 @@ export class TaskMessageComponent implements OnInit {
                 `<span class="text-highlight" id="focusOn-${i}">` +
                 separatedSearchedText[j] +
                 `</span>`;
-              // ${this.focusOn == j?' text-focus-highlight':
             } else {
               final += separatedText[j];
             }
           }
         }
-        // this.scrollToChat(i);
         messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
-        this.messageListShow = messageList;
+        this.messageList = messageList;
         final = '';
-        console.log('final', final, i);
         setTimeout(() => {
           this.focusOnSelectedIndex();
         }, 500);
@@ -1010,14 +1002,15 @@ export class TaskMessageComponent implements OnInit {
     this.focusOnSelectedIndex();
   }
 
-  selectedIndex = 0;
   focusOnSelectedIndex() {
     let focusOn = this.searchedIndex[this.selectedIndex];
     let earlierIndex = focusOn;
     console.log("focusOn:", focusOn);
     // document.getElementById('chat_block').classList.remove('text-focus-highlight');
     for(let i=0; i<this.searchedIndex.length;i++){
-      document.getElementById("focusOn-" + this.searchedIndex[i]).classList.remove('text-focus-highlight');
+      let removeClass = document.getElementById("focusOn-" + this.searchedIndex[i])
+      if(removeClass)
+      removeClass.classList.remove('text-focus-highlight');
     }
     document.getElementById("focusOn-" + focusOn).classList.add('text-focus-highlight');
     // this.scrollToChat(focusOn);

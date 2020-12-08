@@ -29,6 +29,7 @@ export class TicketProcessComponent implements OnInit {
 
   formTypeFields = [
     { id: 0, name: 'Add Ticket Form' },
+    { id: 2, name: 'Primary Info Form' },
     { id: 1, name: 'On Ticket Close Form' },
   ]
   ticketData = [];
@@ -163,16 +164,16 @@ export class TicketProcessComponent implements OnInit {
   getTicketList() {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
-        this.common.loading--;
-        if (!res['data']) return;
-        this.ticketData = res['data'];
-        this.ticketData.length ? this.setTable() : this.resetTable();
+      this.common.loading--;
+      if (!res['data']) return;
+      this.ticketData = res['data'];
+      this.ticketData.length ? this.setTable() : this.resetTable();
 
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log(err);
-      });
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
   }
 
   addTicket() {

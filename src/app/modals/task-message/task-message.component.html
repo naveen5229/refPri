@@ -8,8 +8,8 @@
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
         <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
-        <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
-                (click)="search();isAttachmentShow=false"></i></span>
+        <!-- <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
+                (click)="search();isAttachmentShow=false"></i></span> -->
         <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
                 [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="row mt-1 chat_block" id="chat_block" #chat_block>
-                <div class="col-12" *ngFor="let msg of messageListShow;let i=index;">
+                <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <div>
                             <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true"
