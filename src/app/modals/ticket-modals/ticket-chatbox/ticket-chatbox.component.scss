@@ -50,17 +50,20 @@
     padding: 0 10px;
     span {
         //display: flow-root;
-        display: block;
+        // display: block;
         font-size: 10px;
         color: #676767;
         i {
             color: #3366ff;
-            font-size: 14px;
+            font-size: 8px;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
                 display: contents;
                 font-size: 10px;
             }
+        }
+        i.fa-sort-desc {
+            font-size: 14px;
         }
     }
     label {

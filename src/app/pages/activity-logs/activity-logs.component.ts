@@ -35,11 +35,16 @@ export class ActivityLogsComponent implements OnInit {
     public api: ApiService,
     public modalService: NgbModal,
     ) { 
+      this.common.refresh = this.refresh.bind(this);
       this.getActivityLogsist();
       this.getDepartments();
     }
 
-  ngOnInit() {
+  ngOnInit() {}
+  
+  refresh() {
+    this.getActivityLogsist();
+    this.getDepartments();
   }
 
   getDepartments() {

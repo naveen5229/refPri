@@ -265,7 +265,7 @@ export class ChatboxComponent implements OnInit {
         formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
-      if (mentionedUsers.length > 0) {
+      if (mentionedUsers && mentionedUsers.length > 0) {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
       console.log("mentionedUsers:", mentionedUsers);

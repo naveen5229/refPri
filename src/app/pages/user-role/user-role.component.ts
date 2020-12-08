@@ -20,13 +20,20 @@ export class UserRoleComponent implements OnInit {
   pageList = [];
   userListByPageId = [];
 
-  constructor(public common: CommonService,
-    public api: ApiService, public user: UserService) {
+  constructor(public common: CommonService,public api: ApiService, public user: UserService) {
+    this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
     this.getPageData();
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  refreshPage(){
+    this.getAllAdmin();
+    this.getPageData();
+    this.refresh();
+    this.activeTab = 'roleByUser';
+    this.adminId = null;
   }
 
   refresh() {
