@@ -88,8 +88,8 @@
                                 </select>
 
                                 <!-- attachment -->
-                                <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
-                                    <span *ngIf="oddArray[i].r_url">
+                                <label class="custom-file-upload input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="oddArray[i].r_url" class="small">
                                         <a target="_blank" [href]="oddArray[i].r_url" [download] ="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
                                     </span>
                                     <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">

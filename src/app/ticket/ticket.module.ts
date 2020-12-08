@@ -7,9 +7,10 @@ import { DirectiveModule } from '../directives/directives.module';
 
 import { TicketComponent } from './ticket/ticket.component';
 import { TicketProcessComponent } from './ticket-process/ticket-process.component';
+import { TicketAdminComponent } from './ticket-admin/ticket-admin.component';
 
 @NgModule({
-  declarations: [TicketComponent, TicketProcessComponent],
+  declarations: [TicketComponent, TicketProcessComponent, TicketAdminComponent],
   imports: [
     CommonModule,
     ThemeModule,

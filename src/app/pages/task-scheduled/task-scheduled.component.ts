@@ -125,9 +125,20 @@ export class TaskScheduledComponent implements OnInit {
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
+
+  refresh() {
+    this.activeTab = "";
+    this.activeTabNormal = '';
+    this.activeTabScheduled = '';
+    this.getAllAdmin();
+    this.getDepartmentList();
+    this.getUserGroupList();
+  }
+
   resetSearchTask() {
     this.searchTask = {
       startDate: <any>this.common.getDate(-2),

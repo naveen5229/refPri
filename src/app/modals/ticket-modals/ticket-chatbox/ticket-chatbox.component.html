@@ -15,8 +15,7 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url"
-                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
@@ -54,15 +53,12 @@
                             <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent"
                                 placement="left" (click)="replyToComment(msg,'mine')"></i>
                         </span>
-                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg"
-                            [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment"
-                            [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
+                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                         <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true"
                                 title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                     </div>
-                    <div *ngIf="loginUserId != msg._userid" class="other_chat"
-                        [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
+                    <div *ngIf="loginUserId != msg._userid" class="other_chat" [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
                         <span class="comment_reply">
                             <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
                                 [ngbPopover]="commentInfoPopContent" placement="right"
@@ -70,10 +66,8 @@
                             <i class="fa fa-sort-desc" aria-hidden="true" title="Reply" [ngbPopover]="replyPopContent"
                                 placement="right" (click)="replyToComment(msg,'other')"></i>
                         </span>
-                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg"
-                            [innerHTML]="msg.parent_comment"></span>
-                        <label [innerHTML]="msg.comment"
-                            [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
+                        <span *ngIf="msg.parent_comment_id>0" class="quoted_msg" [innerHTML]="msg.parent_comment"></span>
+                        <label [innerHTML]="msg.comment" [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                         <span>{{msg.added_by +" "+msg.added_date}}</span>
                     </div>
                 </div>
@@ -89,13 +83,10 @@
                             (click)="resetQuotedMsg()"></i></span>
                 </div>
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
-                    <span *ngFor="let u of mentionedUserList;let i=index;"
-                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                    <span *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" [class]="mentionUserIndex === i ? 'user-active': ''" #userlistInput>{{u.name}}</span>
                 </div>
                 <div class="col-10 pr-0">
-                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
-                        id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd
-                        (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
@@ -122,8 +113,7 @@
                         <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
                         <span>{{attachmentFile.name}}</span>
                     </span>
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
-                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel" (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
             </div>
         </div>
@@ -132,28 +122,20 @@
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
-                            [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''"
-                            [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}
                     </td>
                 </tr>
                 <tr valign="top" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto">
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
-                            [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''"
-                            [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
-                        <button
-                            *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)"
-                            class="btn add" title="assign to new user" (click)="showAssignUserAuto=1"><i
+                        <button *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)" class="btn add" title="assign to new user" (click)="showAssignUserAuto=1"><i
                                 class="fa fa-plus m-0"></i></button>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">
-                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name"
-                            seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser"
-                            inputId="assigneeUser">
+                        <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name" seperator="-" placeholder="Search Assignee User" autocomplete="off" name="assigneeUser" inputId="assigneeUser">
                         </auto-suggestion>
                         <button class="btn add" (click)="updateTaskAssigneeUser()"><i
                                 class="fa fa-check m-0"></i></button>
@@ -173,8 +155,7 @@
                           aria-hidden="true"></i> {{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}
                   </td>
               </tr> -->
-                <tr valign="top" class="bg-aliceblue"
-                    *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
+                <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
                     <td>CC:</td>
                     <td class="cc_user">
                         <span *ngFor="let ccu of userListByTask['ccUsers'];let i = index">
@@ -194,10 +175,7 @@
                 </tr>
                 <tr valign="top">
                     <td colspan="2" class="pt-2 text-center">
-                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-"
-                            placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers"
-                            name="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions"
-                            [preSelected]="newCCUserId"></auto-suggestion>
+                        <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" autocomplete="off" isMultiSelect="true" [bGConditions]="bGConditions" [preSelected]="newCCUserId"></auto-suggestion>
                         <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUser()">Add CC User</button>
                     </td>
                 </tr>
