@@ -98,7 +98,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   closeModal(res, nextFormType = null) {
-    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: this.isFormHere, state: this.transAction.state });
+    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: (!this.transAction.formType) ? 0 : this.isFormHere, state: this.transAction.state });
   }
 
   ngOnInit() { }

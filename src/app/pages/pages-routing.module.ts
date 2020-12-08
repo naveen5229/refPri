@@ -59,6 +59,7 @@ import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.
 import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
 import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
+import { TicketAdminComponent } from '../ticket/ticket-admin/ticket-admin.component';
 
 const routes: Routes = [{
   path: '',
@@ -344,18 +345,23 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
+      path: 'ticket-admin',
+      component: TicketAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
       path: 'employee-monitoring',
       component: EmployeeMonitoringComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {
-      path:'on-site-images',
-      component:OnSiteImagesComponent,
+      path: 'on-site-images',
+      component: OnSiteImagesComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {
-      path:'on-site-images-summary',
-      component:OnSiteImagesSummaryComponent,
+      path: 'on-site-images-summary',
+      component: OnSiteImagesSummaryComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

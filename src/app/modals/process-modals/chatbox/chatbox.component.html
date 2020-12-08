@@ -107,7 +107,8 @@
                 </div>
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
                     <span *ngFor="let u of mentionedUserList;let i=index;"
-                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput
+                        [class]="mentionUserIndex === i ? 'user-active': ''">{{u.name}}</span>
                 </div>
                 <div class="col-9 pr-0">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"

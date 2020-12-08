@@ -90,6 +90,7 @@ export class TicketChatboxComponent implements OnInit {
   departmentList = [];
   stTaskMaster = null;
   fileType = null;
+  mentionUserIndex: number = 0;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -165,8 +166,26 @@ export class TicketChatboxComponent implements OnInit {
   }
   keyHandler(event) {
     const key = event.key.toLowerCase();
-    let activeId = document.activeElement.id;
-    console.log('row data', key);
+    // let activeId = document.activeElement.id;
+    if (this.isMentionedUser) {
+      if (key === 'arrowdown') {
+        event.preventDefault();
+        this.mentionUserIndex++;
+        if (this.mentionedUserList.length === this.mentionUserIndex) {
+          this.mentionUserIndex = 0;
+        }
+      } else if (key === 'arrowup') {
+        event.preventDefault();
+        this.mentionUserIndex--;
+        if (this.mentionUserIndex < 0) {
+          this.mentionUserIndex = this.mentionedUserList.length - 1;
+        }
+      } else if (key === 'enter') {
+        event.preventDefault();
+        this.onSelectMenstionedUser(this.mentionedUserList[this.mentionUserIndex]);
+        this.isMentionedUser = false;
+      }
+    }
     if (key == 'escape') {
       this.closeModal(false);
     }
@@ -296,11 +315,21 @@ export class TicketChatboxComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let formatedMsg = this.taskMessage.trim();
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
+      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.com') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.in'))) {
+        formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
+      }
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
+      if (mentionedUsers.length > 0) {
+        mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
+      }
+      // console.log("mentionedUsers:", mentionedUsers);
+      // return false;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage,
+        message: formatedMsg,//this.taskMessage,
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
@@ -712,6 +741,9 @@ export class TicketChatboxComponent implements OnInit {
       let splieted = this.taskMessage.split('@');
       let searchableTxt = splieted[splieted.length - 1];
       this.mentionedUserList = accessUsers.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) }); //this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+      if (this.mentionUserIndex >= this.mentionedUserList.length) {
+        this.mentionUserIndex = 0;
+      }
     }
   }
 

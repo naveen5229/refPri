@@ -85,7 +85,6 @@
 </nb-card>
 
 
-
 <!--start: addTicketModal -->
 <div class="modal" id="addTicketModal">
     <div class="modal-dialog modal-lg">
@@ -95,7 +94,7 @@
                 <button type="button" class="close" data-dismiss="modal" (click)="closeAddTicketModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="row form-group" [ngClass]="evenArray.length > 0 || oddArray.length > 0 ? 'paddingBTW' : ''">
+                <div class="row form-group">
                     <div class="col-4">
                         <label>Ticket Process</label>
                     </div>
@@ -105,51 +104,10 @@
                     </div>
                 </div>
 
-                <!-- <div class="row form-group" *ngIf="priCatList && priCatList.length > 0">
-                    <div class="col-4">
-                        <label>Primary Category</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.priCat.id">
-                            <option selected disabled>--Select--</option>
-                            <option *ngFor="let p of priCatList" [value]="p.id">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div> -->
-                <!-- <div class="row form-group" *ngIf="secCatList && secCatList.length > 0">
-                    <div class="col-4">
-                        <label>Secondary Category</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.secCat.id">
-                            <option selected disabled>--Select--</option>
-                            <option *ngFor="let p of secCatList" [value]="p.id">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div> -->
-                <!-- <div class="row form-group" *ngIf="typeList && typeList.length > 0">
-                    <div class="col-4">
-                        <label>Type</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.type.id">
-                            <option selected disabled>--Select--</option>
-                            <option *ngFor="let p of typeList" [value]="p.id">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div> -->
-
-                <!-- <div class="row form-group">
-                    <div class="col-4">
-                        <label>Remark</label>
-                    </div>
-                    <div class="col-8">
-                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control"
-                            [(ngModel)]="ticketForm.remark"></textarea>
-                    </div>
-                </div> -->
-
                 <!-- start:dyn field -->
+                <div *ngIf="oddArray.length" class="hr_full">
+                    <hr>
+                </div>
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
                     <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
@@ -293,7 +251,7 @@
 </div>
 </div>
 <!--end: addTicketModal -->
-
+<!--end: assignUserModal -->
 <div class="modal" id="assignUserModal">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -323,7 +281,7 @@
         </div>
     </div>
 </div>
-<!--end: addTicketModal -->
+<!--end: assignUserModal -->
 
 <!--start: forward ticket -->
 <div class="modal" id="forwardTicket">
@@ -411,7 +369,7 @@
                         </div>
                     </div>
 
-                    <div [class]="openingFormInfo.length > 0 ? 'col-6' : 'col-12'" style="border-left: 1px solid black;">
+                    <div *ngIf="closingFormInfo.length>0" [class]="openingFormInfo.length > 0 ? 'col-6' : 'col-12'" style="border-left: 1px solid black;">
                         <div class="row form_view_header"><label>Closing Form</label></div>
                         <div *ngFor="let closing of closingFormInfo" class="row" style="margin-bottom: 1rem;">
                             <div class="col-4">
