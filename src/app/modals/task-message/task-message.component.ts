@@ -345,13 +345,17 @@ export class TaskMessageComponent implements OnInit {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
-      console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
       if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.com') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.in'))) {
         formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
-      console.log("formatedMsg:", formatedMsg);
-      // return false;
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
+      if (mentionedUsers && mentionedUsers.length > 0) {
+        mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
+      }
+      // console.log("formatedMsg:", formatedMsg);
+      // console.log("mentionedUsers:", mentionedUsers);
+      // return false;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,

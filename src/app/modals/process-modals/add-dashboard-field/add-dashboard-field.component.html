@@ -19,14 +19,11 @@
         <div class="col-3">
             <label>Type<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
-              <option value="1" class="form-control">State</option>
-              <option value="2" class="form-control">Action</option>
-              <option value="3" class="form-control">Transaction Form</option>
-              <option value="4" class="form-control">Primary Info Form</option>
+                <option *ngFor="let o of typeList;" [value]="o.id" class="form-control">{{o.name}}</option>
             </select>
         </div>
         <div class="col-3">
-            <div *ngIf="!(form.type==3 || form.type==4)">
+            <div *ngIf="!((form.type==3 || form.type==4)) && !fromPage">
                 <label>Select State/Action<span class="text-danger">*</span></label>
                 <select class="form-control" [(ngModel)]="form.refId" (change)="onSelectRefId()">
                     <option *ngFor="let s of stateOrActionList;" [value]="s.id" class="form-control">{{s.name}}</option>
