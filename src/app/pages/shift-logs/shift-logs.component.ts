@@ -28,9 +28,14 @@ export class ShiftLogsComponent implements OnInit {
   };
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
+    this.common.refresh = this.refresh.bind(this);
     this.getShiftLogs();
   }
   ngOnInit() { }
+  
+  refresh() {
+    this.getShiftLogs();
+  }
 
   getShiftLogs() {
     this.table = {

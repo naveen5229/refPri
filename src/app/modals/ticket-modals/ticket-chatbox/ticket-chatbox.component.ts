@@ -205,7 +205,6 @@ export class TicketChatboxComponent implements OnInit {
         } else {
           this.common.showError("Something went wrong, Please reopen chatbox");
         }
-        console.log("getTicketMessage", ticketData);
       } else {
         this.common.showError(res['msg'])
       }
@@ -223,24 +222,23 @@ export class TicketChatboxComponent implements OnInit {
     }
     this.api.post('Ticket/getTicketMessage', params).subscribe(res => {
       this.showLoading = false;
-      console.log("messageList:", res['data']);
-      if (res['success']) {
+      if (res['code']==1) {
         this.messageList = res['data'] || [];
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
-          console.log("msgListOfOther:", msgListOfOther);
-          console.log("msgListOfMine:", this.msgListOfMine.length);
+          // console.log("msgListOfOther:", msgListOfOther);
+          // console.log("msgListOfMine:", this.msgListOfMine.length);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
             if (this.lastMsgId != lastMsgIdTemp) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageRead();
             }
-            console.log("lastMsgIdTemp:", lastMsgIdTemp);
+            // console.log("lastMsgIdTemp:", lastMsgIdTemp);
           }
-          console.log("lastMsgId:", this.lastMsgId);
+          // console.log("lastMsgId:", this.lastMsgId);
         }
       } else {
         this.common.showError(res['data'])
@@ -260,13 +258,10 @@ export class TicketChatboxComponent implements OnInit {
     console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
     if (this.lastSeenId < this.lastMsgId) {
       this.api.post('Ticket/readLastMessage', params).subscribe(res => {
-        console.log("messageList:", res['data']);
         if (res['code'] > 0) {
-
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
           }, 5000);
-
         } else {
           this.common.showError(res['msg'])
         }
@@ -321,7 +316,7 @@ export class TicketChatboxComponent implements OnInit {
         formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
-      if (mentionedUsers.length > 0) {
+      if (mentionedUsers && mentionedUsers.length > 0) {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
       // console.log("mentionedUsers:", mentionedUsers);
@@ -337,7 +332,7 @@ export class TicketChatboxComponent implements OnInit {
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
-      console.log("params:", params);
+      // console.log("params:", params);
       // return false;
       this.common.loading++;
       this.api.post('Ticket/saveTicketMessage', params).subscribe(res => {
@@ -350,7 +345,7 @@ export class TicketChatboxComponent implements OnInit {
             this.attachmentFile.name = null;
             this.resetQuotedMsg();
             if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
-              console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
+              // console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
               this.updateTicketStatus(2, null);
             }
             this.getMessageList();
@@ -374,7 +369,6 @@ export class TicketChatboxComponent implements OnInit {
       ticketId: this.ticketId
     }
     this.api.post('Ticket/getAllUserByTicket', params).subscribe(res => {
-      console.log("userListByTask:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
@@ -462,7 +456,6 @@ export class TicketChatboxComponent implements OnInit {
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        console.log("Confirm response:", data);
         if (data.response) {
           this.removeCCUser(ccUserId, ccUserName, data.remark);
         }
@@ -505,11 +498,8 @@ export class TicketChatboxComponent implements OnInit {
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
         isCCUpdate = 1;
         if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
-          console.log("ccuser check");
           let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
-          console.log("ccuser check2", findCC);
           if (findCC) {
-            console.log("ccuser check3");
             isCCUpdate = 0;
           }
         }
@@ -527,7 +517,7 @@ export class TicketChatboxComponent implements OnInit {
         assigneeUserNameOld: this.userListByTask['taskUsers'][0].assignto,
         assigneeUserNameNew: this.newAssigneeUser.name
       }
-      console.log("updateTaskAssigneeUser params:", params);
+      // console.log("updateTaskAssigneeUser params:", params);
       // return;
       this.common.loading++;
       this.api.post('Ticket/updateTicketAssigneeUser', params).subscribe(res => {
@@ -574,7 +564,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(status) {
-    console.log("ticketData:", this.ticketData);
+    // console.log("ticketData:", this.ticketData);
     if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
       let preTitle = "Complete";
       if (status == 3) {
@@ -589,7 +579,7 @@ export class TicketChatboxComponent implements OnInit {
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        console.log("Confirm response:", data);
+        // console.log("Confirm response:", data);
         if (data.response) {
           this.updateTicketStatus(status, data.remark);
         }
@@ -626,7 +616,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   handleFileSelection(event) {
-    console.log(event.target.files[0], 'attachement')
+    // console.log(event.target.files[0], 'attachement')
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
@@ -662,7 +652,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   onPaste(event: any) {
-    console.log('event', event);
+    // console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
     // if (items.length > 1) {
@@ -678,7 +668,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   filesDropped(files: FileHandle[]): void {
-    console.log("ChatboxComponent -> filesDropped -> files", files)
+    // console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
     selectedFile.target.files.push(this.files[0].file);
@@ -687,25 +677,23 @@ export class TicketChatboxComponent implements OnInit {
 
   messageReadInfo(commentId) {
     this.commentInfo = [];
-    let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
-    if (this.ticketId < this.lastMsgId) {
-      this.api.get('Ticket/getMessageReadInfo' + params).subscribe(res => {
-        if (res['code'] > 0) {
-          this.commentInfo = res['data'] || [];
-        } else {
-          this.common.showError(res['msg']);
-        }
-      }, err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-    }
+    let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId
+    this.api.get('Ticket/getMessageReadInfo' + params).subscribe(res => {
+      if (res['code'] > 0) {
+        this.commentInfo = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   onMessageType(e) {
     let value = e.data;
-    console.log("target value:", e.target.value);
-    console.log("target value22:", value);
+    // console.log("target value:", e.target.value);
+    // console.log("target value22:", value);
     let accessUsers = [];
     if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
       accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
@@ -728,14 +716,14 @@ export class TicketChatboxComponent implements OnInit {
       });
     }
     if (e && value && value == "@") {
-      console.log("onMessageType");
+      // console.log("onMessageType");
       this.isMentionedUser = true;
       this.mentionedUserList = accessUsers;//this.adminList;
       setTimeout(() => {
         this.userlistInput.toArray()[0].nativeElement.focus();
       }, 100);
     } else if (e && value && value == " ") {
-      console.log("onMessageType2");
+      // console.log("onMessageType2");
       this.isMentionedUser = false;
     } else if (this.isMentionedUser) {
       let splieted = this.taskMessage.split('@');
@@ -748,7 +736,10 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
-    this.mentionedUsers.push({ id: user.id, name: user.name });
+    if(!this.mentionedUsers.find(x=>x.id==user.id)){
+      this.mentionedUsers.push({ id: user.id, name: user.name });
+    }
+    // this.mentionedUsers.push({ id: user.id, name: user.name });
     console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();

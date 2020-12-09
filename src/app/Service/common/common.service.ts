@@ -760,8 +760,31 @@ export class CommonService {
       let splitedMsg = element2.split("\n");
       splitedMsg.forEach((element, index) => {
         if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
-          let fullURL = (element.match('http')) ? element : "http://" + element;
-          let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
+          // let fullURL = (element.match('http')) ? element : "http://" + element;
+          // let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
+          let indexHTTP = element.indexOf("http://");
+          let indexHTTPS = element.indexOf("https://");
+          let indexWWW = element.indexOf("www.");
+          let str1 = "";
+          let str2 = element;
+          if(indexHTTP !== -1){
+            if(indexHTTP>0){
+              str1 = element.substr(0,indexHTTP);
+              str2 = element.substr(indexHTTP);
+            }
+          }else if(indexHTTPS !== -1){
+            if(indexHTTPS>0){
+              str1 = element.substr(0,indexHTTPS);
+              str2 = element.substr(indexHTTPS);
+            }
+          }else if(indexWWW !== -1){
+            if(indexWWW>0){
+              str1 = element.substr(0,indexWWW);
+              str2 = element.substr(indexWWW);
+            }
+          }
+          let fullURL = (str2.match('http')) ? str2 : "http://" + str2;
+          let href_temp = str1+'<a target="_blank" href=' + fullURL + '>' + str2 + '</a>';
           splitedMsg[index] = href_temp;
         }
       });
