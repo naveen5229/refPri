@@ -67,7 +67,7 @@
                 <div class="col-3 text-right">
                     <button *ngIf="fieldId" class="btn btn-danger btn-sm mr-1" name="reset"
                         (click)="resetData()">{{btn2}}</button>
-                    <button class="btn btn-primary btn-sm" name="submit" (click)="formType == 11 ? Add() : confirmAdd()">{{btn1}}</button>
+                    <button class="btn btn-primary btn-sm" name="submit" (click)="formType == 11 && (refType != 2 && refType !=1) ? Add() : confirmAdd()">{{btn1}}</button>
 
                 </div>
             </div>

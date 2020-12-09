@@ -165,6 +165,7 @@ export class TicketComponent implements OnInit {
 
   openingFormInfo = [];
   closingFormInfo = [];
+  primaryFormInfo = [];
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTicketByType(101);
@@ -247,6 +248,8 @@ export class TicketComponent implements OnInit {
           if (this.activeTab == 'completedTkt') {
             if (refType == 1) {
               this.closingFormInfo = this.ticketFormFields;
+            }else if(refType == 2){
+              this.primaryFormInfo = this.ticketFormFields;
             } else {
               this.openingFormInfo = this.ticketFormFields;
             }
@@ -895,6 +898,9 @@ export class TicketComponent implements OnInit {
       } else if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
       }
+
+      icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
+      
     } else if (type == 100) {
       icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
     } else if (type == 103) {
@@ -903,6 +909,27 @@ export class TicketComponent implements OnInit {
     icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type, 0), txt: '', title: "Ticket Info" });
 
     return icons;
+  }
+
+  updatePrimaryInfo(ticket,type){
+    let title = 'Primary Info Fields';
+    let actionData = {
+      ticketId: ticket._ticket_id,
+      refId: ticket._tpid,
+      refType: 2,
+    };
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data, 'response');
+        // if(data.isContinue){
+        //   this.updateTicketStatus(ticket, type, status, null);
+        // }else{
+        //   this.changeTicketStatusWithConfirm(ticket, type, status)
+        // }
+      }
+    });
   }
 
   deleteTicket(ticket, type) {
@@ -1389,6 +1416,7 @@ export class TicketComponent implements OnInit {
     if (this.activeTab == 'completedTkt') {
       setTimeout(async () => {
         await this.getTicketFormField(1);
+        await this.getTicketFormField(2);
       }, 500);
     }
 

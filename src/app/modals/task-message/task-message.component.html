@@ -8,10 +8,13 @@
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
         <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
+        <!-- <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
+                (click)="search();isAttachmentShow=false"></i></span> -->
         <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
                 [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
-                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+                aria-hidden="true" title="View Attachment"
+                (click)="isAttachmentShow=!isAttachmentShow;isSearchShow=false"></i></span>
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle"
                 title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
         <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle"
@@ -49,6 +52,27 @@
         </div>
     </div>
 
+    <div *ngIf="isSearchShow" [@openClose]="isSearchShow" class="row attachment-view" style="width: 75%;">
+        <div class="col-11">
+            <div class="row">
+                <div class="col-8">
+                    <input id="searchChat" type="search" (change)="searchChat($event.target.value)"
+                        class="file-control" style="width: 100%;margin: 5px;">
+                </div>
+                <div class="col-4" style="padding: 5px;">
+                    <span>0/{{searchedIndex.length}}</span>
+                    <span class="ml-2" (click)="onchangeIndex('minus')"><i class="fas fa-arrow-circle-down"></i></span>
+                    <span class="ml-2" (click)="onchangeIndex('plus')"><i class="fas fa-arrow-circle-up"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            <button type="button" class="close" aria-label="Close" (click)="isSearchShow=false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-9">
 
@@ -77,7 +101,7 @@
                     <hr>
                 </div>
             </div>
-            <div class="row mt-1 chat_block" #chat_block>
+            <div class="row mt-1 chat_block" id="chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <div>
