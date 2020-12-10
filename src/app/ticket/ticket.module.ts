@@ -8,9 +8,10 @@ import { DirectiveModule } from '../directives/directives.module';
 import { TicketComponent } from './ticket/ticket.component';
 import { TicketProcessComponent } from './ticket-process/ticket-process.component';
 import { TicketAdminComponent } from './ticket-admin/ticket-admin.component';
+import { CustomDashboardComponent } from './custom-dashboard/custom-dashboard.component';
 
 @NgModule({
-  declarations: [TicketComponent, TicketProcessComponent, TicketAdminComponent],
+  declarations: [TicketComponent, TicketProcessComponent, TicketAdminComponent, CustomDashboardComponent],
   imports: [
     CommonModule,
     ThemeModule,

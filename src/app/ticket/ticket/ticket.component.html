@@ -129,9 +129,9 @@
 
                     <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'"
                         style="margin-bottom: 1rem;">
-                        <div *ngIf="oddArray[i].r_coltitle" class="row">
+                        <div *ngIf="oddArray[i].r_colalias" class="row">
                             <div class="col-4">
-                                <label>{{oddArray[i].r_coltitle}}<span style="color: red"
+                                <label>{{oddArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="oddArray[i].r_required">*</span></label>
                             </div>
 
@@ -145,13 +145,6 @@
                                     [isTime]="false">
                                 </uj-date-time-picker>
 
-                                <!-- <auto-suggestion
-                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'"
-                                    [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn"
-                                    id="priOwn"
-                                    (onSelected)="oddArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
-                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
-                                </auto-suggestion> -->
                                 <auto-suggestion
                                     *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'"
                                     [data]="priCatList" display="name"
@@ -175,13 +168,6 @@
                                     (onSelected)="oddArray[i].r_value=($event.name);categoryIds.type=($event.id);"
                                     [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
-                                <!-- <auto-suggestion
-                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'"
-                                    url="CampaignSuggestion/getLocation" display="location" placeholder="Location"
-                                    name="location" id="location"
-                                    (onSelected)="oddArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
-                                </auto-suggestion> -->
 
                                 <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
                                     *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
@@ -211,7 +197,7 @@
                     </div>
 
                     <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
-                        <span *ngIf="evenArray[i].r_coltitle" class="row">
+                        <span *ngIf="evenArray[i].r_colalias" class="row">
                             <div class="col-4">
                                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
                                         *ngIf="evenArray[i].r_required">*</span></label>
@@ -227,13 +213,6 @@
                                     [isTime]="false">
                                 </uj-date-time-picker>
 
-                                <!-- <auto-suggestion
-                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'"
-                                    [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn"
-                                    id="priOwn"
-                                    (onSelected)="evenArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
-                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
-                                </auto-suggestion> -->
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
                                     [data]="priCatList" display="name" placeholder="Select Primary Category"
@@ -255,14 +234,6 @@
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.type=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
-                                <!-- <auto-suggestion
-                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'"
-                                    url="CampaignSuggestion/getLocation" display="location" placeholder="Location"
-                                    name="location" id="location"
-                                    (onSelected)="evenArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
-                                </auto-suggestion> -->
-
 
                                 <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"
                                     *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
@@ -426,7 +397,7 @@
                         <div class="row form_view_header"><label>Opening Form</label></div>
                         <div *ngFor="let opening of openingFormInfo" class="row" style="margin-bottom: 1rem;">
                             <div class="col-4">
-                                <label>{{opening.r_coltitle}}<span *ngIf="opening.r_required"
+                                <label>{{opening.r_colalias}}<span *ngIf="opening.r_required"
                                         style="color: red;">*</span></label>
                             </div>
 
@@ -475,9 +446,9 @@
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
                     <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
-                        <div *ngIf="oddArray[i].r_coltitle" class="row">
+                        <div *ngIf="oddArray[i].r_colalias" class="row">
                             <div class="col-4">
-                                <label style="font-weight: bold;">{{oddArray[i].r_coltitle}}<span style="color: red"
+                                <label style="font-weight: bold;">{{oddArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="oddArray[i].r_required">*</span></label>
                             </div>
 
@@ -488,9 +459,9 @@
                     </div>
 
                     <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
-                        <div *ngIf="evenArray[i].r_coltitle" class="row">
+                        <div *ngIf="evenArray[i].r_colalias" class="row">
                             <div class="col-4">
-                                <label style="font-weight: bold;">{{evenArray[i].r_coltitle}}<span style="color: red"
+                                <label style="font-weight: bold;">{{evenArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="evenArray[i].r_required">*</span></label>
                             </div>
 

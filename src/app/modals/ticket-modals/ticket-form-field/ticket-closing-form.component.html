@@ -83,7 +83,7 @@
     </div>
 
 </div>
-<div class="row">
+<div class="row" *ngIf="oddArray && oddArray.length>0 && !isDisabled">
   <div class="col-12 text-right">
       <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm" (click)="saveFromDetail(false)">Save</button>
       <button *ngIf="refType==1" class="btn btn-primary btn-sm ml-2" form="worklog-form" type='submit' id="saveContinueTicketForm" (click)="saveFromDetail(true)">Save & Continue</button>

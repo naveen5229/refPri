@@ -56,9 +56,9 @@ export class AddDashboardFieldComponent implements OnInit {
     if(this.fromPage==1){
       this.typeList=[
         {id:-1,name:"All"},
-        {id:1,name:"Ticket Fields"},
-        {id:2,name:"Closing Form Fields"},
-        {id:3,name:"Primary Info Form Fields"}
+        {id:1,name:"Ticket"},
+        {id:2,name:"Closing Form"},
+        {id:3,name:"Primary Info Form"}
       ];
     }
   }

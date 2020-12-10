@@ -288,7 +288,6 @@ export class TicketProcessComponent implements OnInit {
   }
 
   saveTicketProcess() {
-    console.log(this.ticketForm);
     let params = {
       name: this.ticketForm.name,
       startDate: this.ticketForm.startTime ? this.common.dateFormatter(this.ticketForm.startTime) : null,
@@ -305,7 +304,10 @@ export class TicketProcessComponent implements OnInit {
       // supervisorId: this.ticketForm.Supervisor.id
     }
 
-    if (params.name) {
+    if (!params.name) {
+      this.common.showError('Please enter Process Name');
+      return false;
+    }
       this.common.loading++;
       this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
         this.common.loading--;
@@ -325,10 +327,7 @@ export class TicketProcessComponent implements OnInit {
       }, err => {
         this.common.loading--;
         console.log('Error:', err)
-      })
-    } else {
-      this.common.showError('Please enter File Name')
-    }
+      });
   }
 
   getTicketProcessProperty(id) {
@@ -565,7 +564,7 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.id = ticket._id;
       this.ticketForm.name = ticket.name;
       this.ticketForm.startTime = new Date(ticket.start_date);
-      this.ticketForm.endTime = new Date(ticket.end_date);
+      this.ticketForm.endTime = (ticket.end_date) ? new Date(ticket.end_date) : null;
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
       if (ticket._claim_ticket == 0) {

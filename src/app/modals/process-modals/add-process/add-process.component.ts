@@ -40,7 +40,7 @@ export class AddProcessComponent implements OnInit {
         id: this.common.params.editData._id,
         name: this.common.params.editData.name,
         startTime: (this.common.params.editData.start_date) ? new Date(this.common.params.editData.start_date) : this.common.getDate(),
-        endTime: (this.common.params.editData.start_date) ? new Date(this.common.params.editData.end_date) : this.common.getDate(2),
+        endTime: (this.common.params.editData.end_date) ? new Date(this.common.params.editData.end_date) : null,
         priCatAlias: (this.common.params.editData.pri_category_alias) ? this.common.params.editData.pri_category_alias : "",
         secCatAlias: (this.common.params.editData.sec_category_alias) ? this.common.params.editData.sec_category_alias : "",
         defaultOwn: {
@@ -76,8 +76,8 @@ export class AddProcessComponent implements OnInit {
       this.common.showError("Please Select Process Name");
       return false;
     }
-    if (!this.processForm.endTime || !this.processForm.startTime) {
-      this.common.showError("Start Date Or End Date is missing");
+    if (!this.processForm.startTime) {
+      this.common.showError("Start Date is missing");
       return false;
     }
     if (this.processForm.endTime && this.processForm.endTime < this.processForm.startTime) {
@@ -97,9 +97,7 @@ export class AddProcessComponent implements OnInit {
       attachmentName: this.processForm.attachmentFile.name,
       attachment: this.processForm.attachmentFile.file
     }
-
     // return;
-
     this.common.loading++;
     this.api.post("Processes/addProcess", params).subscribe(res => {
       this.common.loading--;
@@ -119,7 +117,6 @@ export class AddProcessComponent implements OnInit {
       console.log(err);
     });
   }
-
 
   handleFileSelection(event) {
     this.common.loading++;

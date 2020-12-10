@@ -378,6 +378,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'person-done-outline',
         link: '/pages/ticket-admin',
         home: true,
+      },
+      {
+        title: 'Custom-Dashboard',
+        icon: 'grid-outline',
+        link: '/pages/custom-dashboard',
+        home: true,
       }
     ]
   }
