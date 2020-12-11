@@ -743,7 +743,7 @@ export class TicketChatboxComponent implements OnInit {
     console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();
-    this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
   }
 

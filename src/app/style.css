@@ -524,3 +524,6 @@ nb-card-body {
 .hr_full{
     margin: 0 -15px;
 }
+.modal-overflow{
+    overflow-y: auto;
+}

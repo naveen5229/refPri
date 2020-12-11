@@ -100,7 +100,7 @@
 
 
 <!--start: addTicketModal -->
-<div class="modal" id="addTicketModal">
+<div class="modal modal-overflow" id="addTicketModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -120,7 +120,6 @@
                         </auto-suggestion>
                     </div>
                 </div>
-
                 <!-- start:dyn field -->
                 <div *ngIf="oddArray.length" class="hr_full">
                     <hr>
@@ -266,15 +265,13 @@
                         </span>
                     </div>
                 </div>
-                <!-- end: dyn field -->
-
-                <div class="row footer">
+                <!-- end: dyn field -->   
+                <div class="row footer mt-2">
                     <div class="col text-right">
                         <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm"
                             (click)="saveTicket()">Save</button>
                     </div>
-                </div>
-
+                </div>           
             </div>
         </div>
     </div>
@@ -381,7 +378,7 @@
 <!--end: Ticket History -->
 
 <!--start: Detailed Info -->
-<div class="modal" id="infoWindow">
+<div class="modal modal-overflow" id="infoWindow">
     <div
         [class]="(primaryFormInfo.length > 0 && closingFormInfo.length > 0 && openingFormInfo.length > 0) ? 'modal-dialog modal-xl' : 'modal-dialog modal-lg'">
         <div class="modal-content">
