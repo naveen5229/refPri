@@ -91,6 +91,7 @@
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <!-- <div contenteditable="true" name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" ngxDnd (files)="filesDropped($event)" (input)="taskMessage=$event.target.textContent;onMessageType($event)" [textContent]="taskMessage" #msgtextarea></div> [textContent]="model" (input)="model=$event.target.textContent" -->
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">

@@ -7,6 +7,7 @@ import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 import { Router } from '@angular/router';
+import { ApiService } from '../../Service/Api/api.service';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -29,7 +30,7 @@ export class CommonService {
   constructor(private toastrService: NbToastrService,
     // private http: Http,
     private datePipe: DatePipe,
-    public router: Router) { }
+    public router: Router, public api: ApiService) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -803,6 +804,42 @@ export class CommonService {
       }
     });
     return (mentionUserList.length > 0) ? mentionUserList : null;
+  }
+
+  getFile(url,name){
+    let params = {
+      url: url,
+      name: name
+    };
+    this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
+      if(res['code']==1){
+        let b64encodedString = res['data'];
+        var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+        saveAs(blob, name);
+      }else{
+        this.showError(res['data']);
+      }
+    }, err => {
+      this.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  public base64ToBlob(b64Data, contentType='', sliceSize=512) {
+    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        let byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        let byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, {type: contentType});
   }
 
 }
