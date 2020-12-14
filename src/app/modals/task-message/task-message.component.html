@@ -41,10 +41,8 @@
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
                 <li *ngFor="let a of attachmentList; let i =index">
-                    <a target="_blank" [href]="a.url"
-                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a>
-                        <!-- <span (click)="common.getFile(a.url,a.name)"
-                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</span> -->
+                    <!-- <a target="_blank" [href]="a.url"alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
+                    <span class="blue cursor-pointer" (click)="common.getFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
                 </li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>

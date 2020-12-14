@@ -70,7 +70,7 @@ export class AddDashboardFieldComponent implements OnInit {
   }
 
   getDynFieldList() {
-    let apiName = "Processes/getProcessDynamicFieldList?processId=" + this.form.process.id;
+    let apiName = "Processes/getSavedDynamicDashboardFieldList?processId=" + this.form.process.id;
     if(this.fromPage==1){
       apiName = "Ticket/getSavedDynamicDashboardFieldList?tpId=" + this.form.process.id;
     }
@@ -221,9 +221,12 @@ export class AddDashboardFieldComponent implements OnInit {
     });
   }
 
+  allFileds = [];
   getFieldList() {
     let params = "?refId=" + this.form.refId + "&refType=" + this.form.refType;
     let apiName = "Processes/getProcessFormField";
+    // let params = "?processId=" + this.form.process.id;
+    // let apiName = "Processes/getProcessDynamicFieldList";
     if(this.fromPage==1){
       params = "?refId=" + this.form.refId + "&refType=" + this.form.refType + "&tpId=" + this.form.process.id;
       apiName = "Ticket/getTicketProcessDynamicFieldList";
@@ -235,6 +238,7 @@ export class AddDashboardFieldComponent implements OnInit {
       this.common.loading--;
       let fieldData = res['data'] || [];
       this.fieldDataList = fieldData.map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected } });
+      this.allFileds = fieldData;
     }, err => {
       this.common.loading--;
       console.log(err);

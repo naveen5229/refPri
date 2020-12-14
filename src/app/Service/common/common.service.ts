@@ -813,9 +813,10 @@ export class CommonService {
     };
     this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
       if(res['code']==1){
-        let b64encodedString = res['data'];
+        let b64encodedString = res['data']['base64'];
+        let fileName = res['data']['name'];
         var blob = this.base64ToBlob(b64encodedString, 'text/plain');
-        saveAs(blob, name);
+        saveAs(blob, fileName);
       }else{
         this.showError(res['data']);
       }
@@ -840,6 +841,25 @@ export class CommonService {
         byteArrays.push(byteArray);
     }
     return new Blob(byteArrays, {type: contentType});
+  }
+
+  fileLinkHandler(selector) {
+    let ele = document.getElementById(selector);
+    let links = ele.querySelectorAll('a');
+    for (let i = 0; i < links.length; i++) {
+      links[i].onclick = (eve: any) => {
+        let url = eve.target.href;
+        let name = eve.target.innerText;
+        console.log('Name:', name);
+        if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
+          eve.preventDefault();
+          this.getFile(url,name);
+          console.log('--------------------ITS FILE--------------------');
+        }
+        // console.log('url:', url)
+        // console.log('eve', eve);
+      }
+    }
   }
 
 }

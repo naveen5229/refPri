@@ -251,29 +251,28 @@ export class TaskMessageComponent implements OnInit {
     }
     this.api.post('AdminTask/getTicketMessage', params).subscribe(res => {
       this.showLoading = false;
-      console.log("messageList:", res['data']);
-      if (res['success']) {
+      if (res['code']==1) {
         this.messageList = res['data'] || [];
         this.messageListShow = JSON.parse(JSON.stringify(this.messageList));
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
-          console.log("msgListOfOther:", msgListOfOther);
-          console.log("msgListOfMine:", this.msgListOfMine.length);
+          // console.log("msgListOfOther:", msgListOfOther);
+          // console.log("msgListOfMine:", this.msgListOfMine.length);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
             if (this.lastMsgId != lastMsgIdTemp) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageRead();
             }
-            console.log("lastMsgIdTemp:", lastMsgIdTemp);
+            // console.log("lastMsgIdTemp:", lastMsgIdTemp);
           }
-          console.log("lastMsgId:", this.lastMsgId);
-          setTimeout(() => {
-            this.messageLinkHandler();
-          }, 500);
+          // console.log("lastMsgId:", this.lastMsgId);
         }
+        setTimeout(() => {
+          this.common.fileLinkHandler('chat_block');
+        }, 500);
       } else {
         this.common.showError(res['data'])
       }
@@ -284,40 +283,18 @@ export class TaskMessageComponent implements OnInit {
     });
   }
 
-  messageLinkHandler() {
-    let ele = document.getElementById('chat_block');
-    let links = ele.querySelectorAll('a');
-    for (let i = 0; i < links.length; i++) {
-      links[i].onclick = (eve: any) => {
-        let url = eve.target.href;
-        let name = eve.target.innerText;
-        console.log('Name:', name);
-        if (url.includes('.amazonaws.com')) {
-          eve.preventDefault();
-          this.common.getFile(url,name);
-          console.log('--------------------ITS FILE--------------------')
-        }
-        console.log('url:', url)
-        console.log('eve', eve);
-      }
-    }
-  }
-
   lastMessageRead() {
     let params = {
       ticketId: this.ticketId,
       comment_id: this.lastMsgId
     }
-    console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
+    // console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
     if (this.lastSeenId < this.lastMsgId) {
       this.api.post('AdminTask/readLastMessage', params).subscribe(res => {
-        console.log("messageList:", res['data']);
         if (res['code'] > 0) {
-
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
           }, 5000);
-
         } else {
           this.common.showError(res['msg'])
         }
@@ -389,7 +366,7 @@ export class TaskMessageComponent implements OnInit {
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
-      console.log("params:", params);
+      // console.log("params:", params);
       // return false;
       this.common.loading++;
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
@@ -423,7 +400,6 @@ export class TaskMessageComponent implements OnInit {
       ticketType: this.ticketType
     }
     this.api.post('AdminTask/getAllUserByTask', params).subscribe(res => {
-      console.log("userListByTask:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
@@ -513,7 +489,6 @@ export class TaskMessageComponent implements OnInit {
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        console.log("Confirm response:", data);
         if (data.response) {
           this.removeCCUser(ccUserId, ccUserName, data.remark);
         }
@@ -558,11 +533,8 @@ export class TaskMessageComponent implements OnInit {
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
         isCCUpdate = 1;
         if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
-          console.log("ccuser check");
           let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
-          console.log("ccuser check2", findCC);
           if (findCC) {
-            console.log("ccuser check3");
             isCCUpdate = 0;
           }
         }
@@ -580,7 +552,7 @@ export class TaskMessageComponent implements OnInit {
         assigneeUserNameOld: this.userListByTask['taskUsers'][0].assignto,
         assigneeUserNameNew: this.newAssigneeUser.name
       }
-      console.log("updateTaskAssigneeUser params:", params);
+      // console.log("updateTaskAssigneeUser params:", params);
       this.common.loading++;
       this.api.post('AdminTask/updateTaskAssigneeUser', params).subscribe(res => {
         this.common.loading--;
@@ -643,19 +615,16 @@ export class TaskMessageComponent implements OnInit {
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        console.log("Confirm response:", data);
         if (data.response) {
           this.updateTicketStatus(status, data.remark);
         }
       });
-
     } else {
       this.common.showError("Invalid User");
     }
   }
 
   showReminderPopup() {
-    // if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
     this.common.params = { ticketId: this.ticketData._tktid, title: "Add Reminder", btn: "Set Reminder" };
     const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
@@ -663,9 +632,6 @@ export class TaskMessageComponent implements OnInit {
         this.ticketData._isremind = 2;
       }
     });
-    // } else {
-    //   this.common.showError("Invalid User");
-    // }
   }
 
   checkReminderSeen() {
@@ -674,8 +640,7 @@ export class TaskMessageComponent implements OnInit {
         ticket_id: this.ticketData._tktid
       };
       this.common.loading++;
-      this.api.post('AdminTask/checkReminderSeen', params)
-        .subscribe(res => {
+      this.api.post('AdminTask/checkReminderSeen', params).subscribe(res => {
           this.common.loading--;
           this.common.showToast(res['msg']);
           this.ticketData._isremind = 0;
@@ -689,9 +654,8 @@ export class TaskMessageComponent implements OnInit {
   }
 
   editTaskAssignDate() {
-    console.log("editTaskAssignDate:", this.ticketData);
+    // console.log("editTaskAssignDate:", this.ticketData);
     if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
-
       this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
@@ -711,7 +675,6 @@ export class TaskMessageComponent implements OnInit {
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
       let file = event.target.files[0];
-      console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
       this.formatIcon(ext);
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
@@ -722,7 +685,6 @@ export class TaskMessageComponent implements OnInit {
       }
       this.attachmentFile.name = file.name;
       this.attachmentFile.file = res;
-      console.log("attachmentFile:", this.attachmentFile)
     }, err => {
       this.common.loading--;
       console.error('Base Err: ', err);
@@ -741,9 +703,8 @@ export class TaskMessageComponent implements OnInit {
     this.fileType = icon;
   }
 
-
   onPaste(event: any) {
-    console.log('event', event);
+    // console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
     for (const item of items) {
@@ -752,12 +713,11 @@ export class TaskMessageComponent implements OnInit {
         selectedFile.target.files.push(item.getAsFile());
       }
     }
-
     this.handleFileSelection(selectedFile);
   }
 
   filesDropped(files: FileHandle[]) {
-    console.log("ChatboxComponent -> filesDropped -> files", files)
+    // console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
     selectedFile.target.files.push(this.files[0].file);
@@ -783,8 +743,6 @@ export class TaskMessageComponent implements OnInit {
 
   onMessageType(e) {
     let value = e.data;
-    console.log("target value:", e.target.value);
-    console.log("target value22:", value);
     let accessUsers = [];
     if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
       accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
@@ -807,14 +765,14 @@ export class TaskMessageComponent implements OnInit {
       });
     }
     if (e && value && value == "@") {
-      console.log("onMessageType");
+      // console.log("onMessageType");
       this.isMentionedUser = true;
       this.mentionedUserList = accessUsers;//this.adminList;
       setTimeout(() => {
         this.userlistInput.toArray()[0].nativeElement.focus();
       }, 100);
     } else if (e && value && value == " ") {
-      console.log("onMessageType2");
+      // console.log("onMessageType2");
       this.isMentionedUser = false;
     } else if (this.isMentionedUser) {
       let splieted = this.taskMessage.split('@');
@@ -828,7 +786,7 @@ export class TaskMessageComponent implements OnInit {
 
   onSelectMenstionedUser(user) {
     this.mentionedUsers.push({ id: user.id, name: user.name });
-    console.log("mentionedUsers2:", this.mentionedUsers);
+    // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();
     this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
@@ -841,7 +799,6 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading--;
       if (res['code'] == 1) {
         this.stTaskMaster = (res['data']) ? res['data'][0] : null;
-        console.log("getTicketMessage", this.stTaskMaster);
       } else {
         this.common.showError(res['msg']);
       }
@@ -887,7 +844,6 @@ export class TaskMessageComponent implements OnInit {
     this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {
       this.common.loading--;
       if (res['code'] > 0) {
-        // this.getTaskByType(type);
         if (this.isChecked == 1) {
           this.isChecked = 0;
         } else {
@@ -902,8 +858,7 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading--;
       this.common.showError();
       console.log("Error: ", err);
-    }
-    );
+    });
   }
 
   getHistory() {
