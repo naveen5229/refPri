@@ -88,14 +88,15 @@
                                 </select>
 
                                 <!-- attachment -->
-                                <label class="custom-file-upload input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
-                                    <span *ngIf="oddArray[i].r_url" class="small">
-                                        <a target="_blank" [href]="oddArray[i].r_url" [download] ="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
+                                <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <!-- <a target="_blank" [href]="oddArray[i].r_url" [download] ="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a> -->
+                                        <span class="blue cursor-pointer" (click)="common.getFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                                     </span>
                                     <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
                                     <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
                                     <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
-                                </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,9 +143,10 @@
 
                         <!-- attachment -->
                         <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
-                            <span *ngIf="evenArray[i].r_url">
-                                        <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
-                                    </span>
+                            <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                <!-- <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url" [download] ="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a> -->
+                                <span class="blue cursor-pointer" (click)="common.getFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                            </span>
                             <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
                             <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
                             <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>

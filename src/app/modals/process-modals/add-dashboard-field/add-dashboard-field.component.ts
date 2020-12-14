@@ -39,6 +39,8 @@ export class AddDashboardFieldComponent implements OnInit {
     {id:2,name:"Action"},
     {id:3,name:"Transaction Form"},
     {id:4,name:"Primary Info Form"}
+    // {id:1,name:"Transaction Fields"},
+    // {id:2,name:"Form Fields"},
   ];
   fromPage=null; //null=process,1=ticket
 
@@ -55,11 +57,14 @@ export class AddDashboardFieldComponent implements OnInit {
     }
     if(this.fromPage==1){
       this.typeList=[
-        {id:-1,name:"All"},
+        // {id:-1,name:"All"},
         {id:1,name:"Ticket"},
         {id:2,name:"Closing Form"},
         {id:3,name:"Primary Info Form"}
       ];
+      this.form.refType = -1;
+      this.form.refId = this.form.process.id;
+      this.getFieldList();
     }
   }
 
@@ -226,7 +231,7 @@ export class AddDashboardFieldComponent implements OnInit {
     let params = "?refId=" + this.form.refId + "&refType=" + this.form.refType;
     let apiName = "Processes/getProcessFormField";
     // let params = "?processId=" + this.form.process.id;
-    // let apiName = "Processes/getProcessDynamicFieldList";
+    // let apiName = "Processes/getAllReportFieldsForNav";
     if(this.fromPage==1){
       params = "?refId=" + this.form.refId + "&refType=" + this.form.refType + "&tpId=" + this.form.process.id;
       apiName = "Ticket/getTicketProcessDynamicFieldList";
@@ -237,8 +242,11 @@ export class AddDashboardFieldComponent implements OnInit {
     this.api.get(apiName + params).subscribe(res => {
       this.common.loading--;
       let fieldData = res['data'] || [];
-      this.fieldDataList = fieldData.map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected } });
+      if(this.fromPage==1){
       this.allFileds = fieldData;
+      }else{
+      this.fieldDataList = fieldData.map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected } });   
+      }
     }, err => {
       this.common.loading--;
       console.log(err);
@@ -265,12 +273,12 @@ export class AddDashboardFieldComponent implements OnInit {
     if (this.form.type == -1) {
       this.form.refType = -1;
       this.form.refId = this.form.process.id;
-      this.getFieldList();
+      this.setSelectedTypeField();
     } else if (this.form.type == 1) {
       this.form.refType = 0;
       if(this.fromPage==1){
         this.form.refId = this.form.process.id;
-        this.getFieldList();
+        this.setSelectedTypeField();
       }else{
         this.getStateList();
       }
@@ -278,18 +286,28 @@ export class AddDashboardFieldComponent implements OnInit {
       this.form.refType = 1;
       if(this.fromPage==1){
         this.form.refId = this.form.process.id;
-        this.getFieldList();
+        this.setSelectedTypeField();
       }else{
         this.getActionList();
       }
     } else if (this.form.type == 3) {
       this.form.refType = 2;
       this.form.refId = this.form.process.id;
-      this.getFieldList();
+      if(this.fromPage==1){
+        this.form.refId = this.form.process.id;
+        this.setSelectedTypeField();
+      }else{
+        this.getFieldList();
+      }
     } else if (this.form.type == 4) {
       this.form.refType = 3;
       this.form.refId = this.form.process.id;
-      this.getFieldList();
+      if(this.fromPage==1){
+        this.form.refId = this.form.process.id;
+        this.setSelectedTypeField();
+      }else{
+        this.getFieldList();
+      }
     }
   }
 
@@ -345,6 +363,20 @@ export class AddDashboardFieldComponent implements OnInit {
       this.common.showError();
       console.log('Err:', err);
     });
+  }
+
+  setSelectedTypeField(){
+    console.log("allFileds:",this.allFileds);
+    let allFileds = this.allFileds;
+    let selectedFields = [];
+    this.fieldDataList = [];
+    if(allFileds && allFileds.length>0){
+      selectedFields = allFileds.find(x=>{ return x.reftype == this.form.refType});
+    }
+    if(selectedFields && selectedFields['children'].length>0){
+      this.fieldDataList = selectedFields['children'].map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected } });
+    }
+    console.log("selectedFields:",selectedFields);
   }
 
 }
