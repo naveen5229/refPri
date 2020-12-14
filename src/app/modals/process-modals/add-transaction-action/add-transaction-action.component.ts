@@ -3,6 +3,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { FormDataComponent } from '../form-data/form-data.component';
 
 @Component({
   selector: 'ngx-add-transaction-action',
@@ -28,7 +29,8 @@ export class AddTransactionActionComponent implements OnInit {
     transId: null,
     isCompleted: false,
     formType: 0, //0=action,1=state,2=next-action
-    isModeApplicable: 0
+    isModeApplicable: 0,
+    onSiteImageId: null
   }
   stateDataList = [];
   nextStateDataList = [];
@@ -65,6 +67,7 @@ export class AddTransactionActionComponent implements OnInit {
       this.transAction.remark = (this.common.params.actionData.remark) ? this.common.params.actionData.remark : null;
       this.transAction.isModeApplicable = (this.common.params.actionData.isModeApplicable) ? this.common.params.actionData.isModeApplicable : 0;
       this.isMarkTxnComplete = (this.common.params.actionData.isMarkTxnComplete) ? this.common.params.actionData.isMarkTxnComplete : null;
+      this.transAction.onSiteImageId = (this.common.params.actionData.onSiteImageId) ? this.common.params.actionData.onSiteImageId : null;
       console.log("isMarkTxnComplete:", this.isMarkTxnComplete);
       if (this.common.params.actionData.actionOwnerId > 0) {
         let actionOwner = this.adminList.find(x => x.id == this.common.params.actionData.actionOwnerId);
@@ -95,7 +98,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   closeModal(res, nextFormType = null) {
-    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: this.isFormHere, state: this.transAction.state });
+    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: (!this.transAction.formType) ? 0 : this.isFormHere, state: this.transAction.state });
   }
 
   ngOnInit() { }
@@ -192,6 +195,30 @@ export class AddTransactionActionComponent implements OnInit {
     });
   }
 
+  confirmSaveTransAction(fieldsVisi) {
+    // if (this.transAction.formType == 0) {
+    if (this.isFormHere == 1) {
+      let actionData = {
+        processId: this.transAction.process.id,
+        processName: this.transAction.process.name,
+        transId: this.transAction.transId,
+        refId: this.transAction.action.id,
+        refType: 1,
+        formType: 2,
+      };
+
+      this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true, fieldsVisi: fieldsVisi };
+      const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.saveType == 2) {
+          this.saveTransAction();
+        }
+      });
+    } else {
+      this.saveTransAction();
+    }
+  }
+
   saveTransAction() {
     if (!this.transAction.state.id || !this.transAction.action.id) {
       this.common.showError('Please Fill All Mandatory Field');
@@ -208,7 +235,8 @@ export class AddTransactionActionComponent implements OnInit {
         modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
         actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
         isNextAction: null,
-        isCompleted: (this.transAction.isCompleted) ? true : false
+        isCompleted: (this.transAction.isCompleted) ? true : false,
+        onSiteImageId: (this.transAction.onSiteImageId > 0) ? this.transAction.onSiteImageId : null
       };
       console.log("saveTransAction:", params);
       this.common.loading++;
@@ -230,7 +258,10 @@ export class AddTransactionActionComponent implements OnInit {
         console.log(err);
       });
     }
+    // }
+    // });
   }
+  // }
 
   saveTransNextAction() {
     console.log("saveTransNextAction:", this.transAction);
@@ -332,6 +363,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.transAction.remark = "";
     this.transAction.targetTime = new Date();
     this.transAction.isCompleted = false;
+    this.transAction.onSiteImageId = null;
     this.standards = [];
   }
 

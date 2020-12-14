@@ -7,10 +7,14 @@
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
-        <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'"
-            aria-hidden="true" [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
+        <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
+        <!-- <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
+                (click)="search();isAttachmentShow=false"></i></span> -->
+        <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
+                [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
-                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+                aria-hidden="true" title="View Attachment"
+                (click)="isAttachmentShow=!isAttachmentShow;isSearchShow=false"></i></span>
         <span *ngIf="statusId==2 && [101,102].includes(ticketType)"><i class="fa fa-pause-circle"
                 title="Mark Task as Hold" (click)="changeTicketStatusWithConfirm(3)"></i></span>
         <span *ngIf="statusId==3 && [101,102].includes(ticketType)"><i class="fa fa-play-circle"
@@ -48,6 +52,27 @@
         </div>
     </div>
 
+    <div *ngIf="isSearchShow" [@openClose]="isSearchShow" class="row attachment-view" style="width: 75%;">
+        <div class="col-11">
+            <div class="row">
+                <div class="col-8">
+                    <input id="searchChat" type="search" (change)="searchChat($event.target.value)"
+                        class="file-control" style="width: 100%;margin: 5px;">
+                </div>
+                <div class="col-4" style="padding: 5px;">
+                    <span>0/{{searchedIndex.length}}</span>
+                    <span class="ml-2" (click)="onchangeIndex('minus')"><i class="fas fa-arrow-circle-down"></i></span>
+                    <span class="ml-2" (click)="onchangeIndex('plus')"><i class="fas fa-arrow-circle-up"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            <button type="button" class="close" aria-label="Close" (click)="isSearchShow=false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-9">
 
@@ -66,7 +91,17 @@
                     <li>No Data Found</li>
                 </ul>
             </ng-template>
-            <div class="row mt-1 chat_block" #chat_block>
+
+            <div class="row mt-1" style="background: ghostwhite;" *ngIf="ticketType == 103">
+                <div class="col-5">
+                    <hr>
+                </div>
+                <div class="col-2 history" (click)="getHistory()">History</div>
+                <div class="col-5">
+                    <hr>
+                </div>
+            </div>
+            <div class="row mt-1 chat_block" id="chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <div>
@@ -119,13 +154,14 @@
                 </div>
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
                     <span *ngFor="let u of mentionedUserList;let i=index;"
-                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput
+                        [class]="mentionUserIndex === i ? 'user-active': ''">{{u.name}}</span>
                     <!-- <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a> -->
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
-                        id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage"
-                        (input)="onMessageType($event)" #msgtextarea></textarea>
+                        id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd
+                        (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
@@ -145,8 +181,13 @@
             <div *ngIf="attachmentFile && attachmentFile.name" class="row">
                 <div class="col-9">
                     <!-- {{attachmentFile.name}} -->
-                    <span><img height="50" width="50" src="{{attachmentFile.file}}"
-                            alt="{{attachmentFile.name}}"></span>
+                    <!-- <span><img height="50" width="50" src="{{attachmentFile.file}}"
+                            alt="{{attachmentFile.name}}"></span> -->
+                    <span>
+                        <img height="25" width="25" src="{{attachmentFile.file}}" *ngIf="!fileType">
+                        <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
+                        <span>{{attachmentFile.name}}</span>
+                    </span>
                     <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
                         (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
                 </div>
@@ -255,3 +296,63 @@
     </div>
 
 </div>
+
+
+<!--start: History Chatbox -->
+<div class="modal" id="chatHistory">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">History</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeHistoryChat()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row mt-1 chat_block" #chat_History_block>
+                    <div class="col-12" *ngFor="let msg of messageHistoryList;let i=index;">
+                        <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
+                            <div>
+                                <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true"
+                                        title="Reply Demanded pending"></i>{{msg.added_date}}</span>
+                                <span class="comment_reply">
+                                    <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
+                                        [ngbPopover]="commentInfoPopContent" placement="left"
+                                        (click)="messageReadInfo(msg._id)"></i>
+                                    <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
+                                        [ngbPopover]="replyPopContent" placement="left"
+                                        (click)="replyToComment(msg,'mine')"></i>
+                                </span>
+                            </div>
+                            <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block"
+                                [innerHTML]="msg.parent_comment"></span>
+                            <label [innerHTML]="msg.comment"
+                                [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
+
+                        </div>
+                        <div *ngIf="loginUserId != msg._userid" class="other_chat"
+                            [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
+                            <div>
+                                <span>{{msg.added_by +" "+msg.added_date}}</span>
+                                <span class="comment_reply">
+                                    <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
+                                        [ngbPopover]="commentInfoPopContent" placement="right"
+                                        (click)="messageReadInfo(msg._id)"></i>
+                                    <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
+                                        [ngbPopover]="replyPopContent" placement="right"
+                                        (click)="replyToComment(msg,'other')"></i>
+                                </span>
+                            </div>
+                            <span *ngIf="msg.parent_comment_id>0" class="quoted_msg d-block"
+                                [innerHTML]="msg.parent_comment"></span>
+                            <label [innerHTML]="msg.comment"
+                                [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
+                        </div>
+                    </div>
+                    <div *ngIf="showLoading" class="col-12 text-center">
+                        <div class="spinner-border"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end: History Chatbox -->

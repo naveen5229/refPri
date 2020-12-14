@@ -27,13 +27,15 @@ export class InstallerComponent implements OnInit {
     }
   };
 
-  constructor(public modalService: NgbModal,
-    public common: CommonService,
-    public api: ApiService) {
+  constructor(public modalService: NgbModal,public common: CommonService,public api: ApiService) {
+    this.common.refresh = this.refresh.bind(this);
     this.getInstallerList();
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+  
+  refresh() {
+    this.getInstallerList();
   }
 
   showInstallerModal(mode = null) {

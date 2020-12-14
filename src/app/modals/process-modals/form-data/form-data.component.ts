@@ -17,6 +17,7 @@ export class FormDataComponent implements OnInit {
   refId = null;
   refType = null;
   transId = null;
+  buttonType = false;
 
   Details = [{
     detail_type: 1,
@@ -25,6 +26,7 @@ export class FormDataComponent implements OnInit {
     param_remarks: null,
   }];
   isDisabled = false;
+  fieldsVisi = false;
 
 
   constructor(public activeModal: NgbActiveModal,
@@ -33,6 +35,8 @@ export class FormDataComponent implements OnInit {
     public api: ApiService) {
     console.log("id", this.common.params);
     this.title = this.common.params.title ? this.common.params.title : 'Form Data';
+    this.buttonType = this.common.params.buttonType ? this.common.params.buttonType : false;
+    this.fieldsVisi = this.common.params.fieldsVisi ? this.common.params.fieldsVisi : false;
     if (this.common.params && this.common.params.actionData) {
       this.transId = this.common.params.actionData.transId;
       this.refId = this.common.params.actionData.refId;
@@ -54,16 +58,16 @@ export class FormDataComponent implements OnInit {
 
   ngOnInit() { }
 
-  dismiss(res) {
-    this.activeModal.close({ response: res });
+  dismiss(res, saveType?) {
+    this.activeModal.close({ response: res, saveType: saveType });
   }
 
-  saveFromDetail() {
+  saveFromDetail(saveType) {
     this.Details = this.evenArray.concat(this.oddArray);
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'],null,false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
       }
 
       return copyDetails;
@@ -84,7 +88,7 @@ export class FormDataComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            this.dismiss(true);
+            this.dismiss(true, saveType);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }

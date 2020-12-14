@@ -10,6 +10,8 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
   styleUrls: ['./task-schedule-new.component.scss']
 })
 export class TaskScheduleNewComponent implements OnInit {
+  currentDate = new Date();
+  dateInt = new Date();
   scheduledTask = {
     taskId: null,
     logicType: 1,
@@ -80,10 +82,23 @@ export class TaskScheduleNewComponent implements OnInit {
     //   return this.common.showError("Hour is missing")
     // }
     else {
+
+      let scheduleParams = null;
+      if (this.scheduledTask.logicType == 4) {
+        let dd = this.dateInt.getDate();
+        console.log("TaskScheduleNewComponent -> saveTaskParam -> dd", dd)
+        let mm = this.dateInt.getMonth() + 1;
+        console.log("TaskScheduleNewComponent -> saveTaskParam -> mm", mm)
+        scheduleParams = (mm * 100) + dd;
+        console.log("TaskScheduleNewComponent -> saveTaskParam -> scheduleParams", scheduleParams)
+      } else {
+        scheduleParams = this.scheduledTask.scheduleParam;
+      }
+
       const params = {
         taskId: this.scheduledTask.taskId,
         logicType: this.scheduledTask.logicType,
-        scheduleParam: this.scheduledTask.scheduleParam,
+        scheduleParam: scheduleParams,
         // days: this.scheduledTask.days,
         // hours: this.scheduledTask.hours
       }
@@ -166,6 +181,7 @@ export class TaskScheduleNewComponent implements OnInit {
     this.scheduledTaskParamList.map(task => {
       let column = {};
       for (let key in this.generateHeadingsAckScheduledTask()) {
+        console.log("TaskScheduleNewComponent -> getTableColumnsAckScheduledTask -> key", key,task['logic'])
         if (key == 'Action') {
           column[key] = {
             value: "",
@@ -173,6 +189,8 @@ export class TaskScheduleNewComponent implements OnInit {
             action: null,
             icons: this.actionIcons(task)
           };
+        }else if(key == 'sch_param'){
+          column[key] = { value: (task['logic'] === 'Annually') ? this.convertTodate(task[key]) : task[key], class: 'black', action: '' };
         } else {
           column[key] = { value: (key == 'time_left') ? this.common.findRemainingTime(task[key]) : task[key], class: 'black', action: '' };
         }
@@ -184,6 +202,14 @@ export class TaskScheduleNewComponent implements OnInit {
     return columns;
   }
   // end ack scheduled task
+  convertTodate(task){
+    let dd = task%100;
+    let mm = task/100;
+    let date = new Date();
+    date.setDate(dd);
+    date.setMonth(mm-1);
+    return this.common.dateFormatter1(date);
+  }
 
   actionIcons(task) {
     let icons = [

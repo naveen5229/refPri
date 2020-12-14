@@ -22,10 +22,13 @@ export class AddProcessComponent implements OnInit {
       id: null,
       name: ""
     },
-    active:false,
-    attachmentFile:{ name: null, file: null },
+    active: false,
+    attachmentFile: { name: null, file: null },
   };
   adminList = [];
+  fileType = null;
+  fileTypeDisplay = null;
+  attachmentDataToDisplay = { name: null, url: null };
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -44,16 +47,27 @@ export class AddProcessComponent implements OnInit {
           id: (this.common.params.editData._default_po) ? this.common.params.editData._default_po : null,
           name: (this.common.params.editData._default_po) ? this.common.params.editData.default_po : "",
         },
-        active:common.params.editData._is_active,
-        attachmentFile:{ name: null, file: null },
+        active: common.params.editData._is_active,
+        attachmentFile: { name: null, file: null },
       };
+
+
+      if (this.common.params.editData.manual && this.common.params.editData._doc_url) {
+        this.attachmentDataToDisplay = { name: this.common.params.editData.manual, url: this.common.params.editData._doc_url };
+        if (this.attachmentDataToDisplay.name) {
+          var ext = this.attachmentDataToDisplay.name.split('.').pop();
+          this.formatIcon(ext, 'fileTypeDisplay');
+        }
+      }
     }
+
   }
 
   ngOnInit() {
   }
 
   closeModal(res) {
+    this.attachmentDataToDisplay = { name: null, url: null };
     this.activeModal.close({ response: res });
   }
 
@@ -80,8 +94,8 @@ export class AddProcessComponent implements OnInit {
       secCatAlias: this.processForm.secCatAlias,
       defaultOwnId: this.processForm.defaultOwn.id,
       isActive: this.processForm.active,
-      attachmentName:this.processForm.attachmentFile.name,
-      attachment:this.processForm.attachmentFile.file
+      attachmentName: this.processForm.attachmentFile.name,
+      attachment: this.processForm.attachmentFile.file
     }
 
     // return;
@@ -113,6 +127,7 @@ export class AddProcessComponent implements OnInit {
       this.common.loading--;
       let file = event.target.files[0];
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext, 'fileType')
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext)) {
       } else {
@@ -124,5 +139,21 @@ export class AddProcessComponent implements OnInit {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  formatIcon(ext, targetName) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    if (targetName === 'fileType') {
+      this.fileType = icon;
+    } else if (targetName === 'fileTypeDisplay') {
+      this.fileTypeDisplay = icon;
+    }
   }
 }

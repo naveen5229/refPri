@@ -25,9 +25,14 @@ export class HolidaysComponent implements OnInit {
   allHolidayList = [];
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
+    this.common.refresh = this.refresh.bind(this);
     this.getHolidayCalendar();
   }
   ngOnInit() { }
+
+  refresh() {
+    this.getHolidayCalendar();
+  }
 
   getHolidayCalendar() {
     this.resetTable();

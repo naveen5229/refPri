@@ -134,7 +134,7 @@ export class AddTransactionComponent implements OnInit {
       additionalData = this.evenArray[i]._param_child;
     }
     console.log(additionalData, 'final data');
-    this.common.params = { additionalform: (additionalData && additionalData.length > 0) ? additionalData : null };
+    this.common.params = { additionalform: (additionalData && additionalData.length > 0) ? additionalData : null, isDisabled:this.isDisabled };
     const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -231,7 +231,12 @@ export class AddTransactionComponent implements OnInit {
               priOwnId: (params.priOwnId > 0) ? params.priOwnId : null,
               rowData: { _transactionid: res['data'][0].y_id, _processid: params.processId, _processname: params.processName, identity: params.identity, _pri_own_id: (params.priOwnId > 0) ? params.priOwnId : null }
             }
-            this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: params.identity, fromPage: 'process' };
+            this.common.params = {
+              editData, title: "Transaction Comment", button: "Save", subTitle: params.identity, fromPage: 'process',
+              userList: this.adminList,
+              groupList: null,
+              departmentList: null
+            };
             const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
 
           }

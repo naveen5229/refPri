@@ -458,7 +458,12 @@ export class TaskComponent implements OnInit {
         priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
         rowData: lead
       }
-      this.common.params = { editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process' };
+      this.common.params = {
+        editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process',
+        userList: this.adminList,
+        groupList: this.groupList,
+        departmentList: this.departmentList
+      };
       const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
         this.getProcessLeadByType(type);
@@ -1936,12 +1941,18 @@ export class TaskComponent implements OnInit {
   }
 
   // start :todo list
-  getTodoTaskList() {
+  getTodoTaskList(type) {
     this.tableTaskTodoList.data = {
       headings: {},
       columns: [],
     };
-    this.api.get("AdminTask/getTodoTaskList.json").subscribe(
+    let startDate = null, endDate = null;
+    if (type == 1 && this.searchTask.startDate && this.searchTask.endDate) {
+      startDate = this.common.dateFormatter(this.searchTask.startDate);
+      endDate = this.common.dateFormatter(this.searchTask.endDate);
+    }
+    let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
+    this.api.get("AdminTask/getTodoTaskList.json" + params).subscribe(
       (res) => {
         if (res["code"] > 0) {
           this.taskTodoList = res["data"] || [];
@@ -1986,7 +1997,14 @@ export class TaskComponent implements OnInit {
     this.taskTodoList.map((task) => {
       let column = {};
       for (let key in this.generateHeadingsTaskTodoList()) {
-        if (key.toLowerCase() == "completed") {
+        if (key.toLowerCase() == "action") {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsToDo(task)
+          };
+        } else if (key.toLowerCase() == "completed") {
           column[key] = {
             value: task[key],
             action: this.updateTodoTask.bind(this, task),
@@ -2019,13 +2037,29 @@ export class TaskComponent implements OnInit {
 
   actionIconsToDo(task) {
     let icons = [
-      {
-        class: "fa fa-edit",
-        action: this.updateTodoTask.bind(this, task),
-        txt: "",
-      },
+      { class: "fa fa-edit", action: this.editTodoTask.bind(this, task), txt: "", },
     ];
     return icons;
+  }
+
+  resetTaskTodoForm() {
+    this.taskTodoForm = {
+      taskTodoId: null,
+      desc: "",
+      date: this.common.getDate(),
+      isUrgent: false,
+      requestId: null
+    };
+  }
+
+  editTodoTask(task) {
+    this.taskTodoForm = {
+      taskTodoId: null,
+      desc: task.task_desc,
+      date: new Date(task.due_date),
+      isUrgent: (task.high_priority) ? true : false,
+      requestId: task._id
+    };
   }
 
   updateTodoTask(task) {
@@ -2039,7 +2073,7 @@ export class TaskComponent implements OnInit {
         (res) => {
           this.common.loading--;
           this.common.showToast(res["msg"]);
-          this.getTodoTaskList();
+          this.getTodoTaskList(0);
         },
         (err) => {
           this.common.loading--;
@@ -2070,14 +2104,8 @@ export class TaskComponent implements OnInit {
         if (res["code"] > 0) {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
-            this.getTodoTaskList();
-            this.taskTodoForm = {
-              taskTodoId: null,
-              desc: "",
-              date: this.common.getDate(),
-              isUrgent: false,
-              requestId: null
-            };
+            this.getTodoTaskList(0);
+            this.resetTaskTodoForm();
           } else {
             this.common.showError(res["msg"]);
           }

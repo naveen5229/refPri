@@ -99,7 +99,6 @@
 </nb-card>
 
 
-
 <!--start: addTicketModal -->
 <div class="modal" id="addTicketModal">
     <div class="modal-dialog modal-lg">
@@ -122,54 +121,14 @@
                     </div>
                 </div>
 
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Primary Category</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.priCat.id">
-                            <option selected disabled>--Select--</option>
-                            <option *ngFor="let p of priCatList" [value]="p.id">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Secondary Category</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.secCat.id">
-                            <option selected disabled>--Select--</option>
-                            <option *ngFor="let p of secCatList" [value]="p.id">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Type</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control" [(ngModel)]="ticketForm.type.id">
-                            <option selected disabled>--Select--</option>
-                            <option *ngFor="let p of typeList" [value]="p.id">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Remark</label>
-                    </div>
-                    <div class="col-8">
-                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control"
-                            [(ngModel)]="ticketForm.remark"></textarea>
-                    </div>
-                </div>
-
                 <!-- start:dyn field -->
+                <div *ngIf="oddArray.length" class="hr_full">
+                    <hr>
+                </div>
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
-                    <div class="col-12" style="margin-bottom: 1rem;">
+                    <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'"
+                        style="margin-bottom: 1rem;">
                         <div *ngIf="oddArray[i].r_coltitle" class="row">
                             <div class="col-4">
                                 <label>{{oddArray[i].r_coltitle}}<span style="color: red"
@@ -185,6 +144,44 @@
                                     [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
                                     [isTime]="false">
                                 </uj-date-time-picker>
+
+                                <!-- <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'"
+                                    [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn"
+                                    id="priOwn"
+                                    (onSelected)="oddArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion> -->
+                                <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'"
+                                    [data]="priCatList" display="name"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Primary Category'"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="oddArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'"
+                                    [data]="secCatList" display="name"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Secondary Category'"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="oddArray[i].r_value=($event.name);categoryIds.secCat=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'"
+                                    [data]="typeList" display="name" placeholder="Select Type" name="processType"
+                                    id="processType"
+                                    (onSelected)="oddArray[i].r_value=($event.name);categoryIds.type=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <!-- <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'"
+                                    url="CampaignSuggestion/getLocation" display="location" placeholder="Location"
+                                    name="location" id="location"
+                                    (onSelected)="oddArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion> -->
 
                                 <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
                                     *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
@@ -205,12 +202,97 @@
                                         <a target="_blank" [href]="oddArray[i].r_url"
                                             [download]="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
                                     </span>
-                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i"
-                                        (change)="handleFileSelection($event,i)">
+                                    <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i"
+                                        (change)="handleFileSelection($event,i)"> -->
                                     <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
                                 </label>
                             </div>
                         </div>
+                    </div>
+
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
+                        <span *ngIf="evenArray[i].r_coltitle" class="row">
+                            <div class="col-4">
+                                <label>{{evenArray[i].r_colalias}} <span style="color: red"
+                                        *ngIf="evenArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
+                                    *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
+                                <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
+                                    *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
+                                <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
+                                    [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'"
+                                    [isTime]="false">
+                                </uj-date-time-picker>
+
+                                <!-- <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'"
+                                    [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn"
+                                    id="priOwn"
+                                    (onSelected)="evenArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion> -->
+                                <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
+                                    [data]="priCatList" display="name" placeholder="Select Primary Category"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="evenArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'"
+                                    [data]="secCatList" display="name" placeholder="Select Secondary Category"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="evenArray[i].r_value=($event.name);categoryIds.secCat=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'"
+                                    [data]="typeList" display="name" placeholder="Select Type" name="processType"
+                                    id="processType"
+                                    (onSelected)="evenArray[i].r_value=($event.name);categoryIds.type=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <!-- <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'"
+                                    url="CampaignSuggestion/getLocation" display="location" placeholder="Location"
+                                    name="location" id="location"
+                                    (onSelected)="evenArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion> -->
+
+
+                                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"
+                                    *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+
+                                <span *ngIf="evenArray[i].r_coltype == 'table'"
+                                    (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
+                                        aria-hidden="true"></i></span>
+
+                                <!-- dynamic data array -->
+                                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
+                                    *ngIf="evenArray[i].r_fixedvalues">
+                                    <option [value]="fixValue.option"
+                                        *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+                                        {{fixValue.option}}</option>
+                                </select>
+
+                                <!-- attachment -->
+                                <!-- <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="evenArray[i].r_url">
+                                        <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url"
+                                            [download]="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
+                                    </span> -->
+                                <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i"
+                                        (change)="handleFileSelection($event,i)"> -->
+                                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
+                                <!-- <button type="button" class="btn btn-primary btn-sm col-4"
+                                        (click)="uploadattachFile('evenArray',i)">Upload</button> -->
+                                <!-- </div> -->
+                            </div>
+                        </span>
                     </div>
                 </div>
                 <!-- end: dyn field -->
@@ -227,7 +309,7 @@
     </div>
 </div>
 <!--end: addTicketModal -->
-
+<!--end: assignUserModal -->
 <div class="modal" id="assignUserModal">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -243,8 +325,8 @@
                         <label>User</label>
                     </div>
                     <div class="col-8">
-                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket Process" name="tpName"
-                            id="tpName" (onSelected)="assignUserObject.userId = $event" autocomplete="off">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="User" name="tpName" id="tpName"
+                            (onSelected)="assignUserObject.userId = $event" autocomplete="off">
                         </auto-suggestion>
                     </div>
                 </div>
@@ -260,7 +342,7 @@
         </div>
     </div>
 </div>
-<!--end: addTicketModal -->
+<!--end: assignUserModal -->
 
 <!--start: forward ticket -->
 <div class="modal" id="forwardTicket">
@@ -279,7 +361,8 @@
                     <div class="col-8">
                         <auto-suggestion [data]="adminList" display="name" placeholder="Ticket User" name="tpName"
                             id="tpName" (onSelected)="forwardTicketObject.userId = $event"
-                            [preSelected]="forwardTicketObject.userId.id ? {name: forwardTicketObject.userId.name}:{name:''}" autocomplete="off">
+                            [preSelected]="forwardTicketObject.userId.id ? {name: forwardTicketObject.userId.name}:{name:''}"
+                            autocomplete="off">
                         </auto-suggestion>
                     </div>
                 </div>
@@ -328,19 +411,70 @@
 
 <!--start: Detailed Info -->
 <div class="modal" id="infoWindow">
-    <div class="modal-dialog modal-md">
+    <div
+        [class]="(primaryFormInfo.length > 0 && closingFormInfo.length > 0 && openingFormInfo.length > 0) ? 'modal-dialog modal-xl' : 'modal-dialog modal-lg'">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ticketDetailTitle}}</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeInfo()">&times;</button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="activeTab=='completedTkt'">
 
+                <div class="row">
+                    <div [class]="(primaryFormInfo.length > 0 && closingFormInfo.length > 0) ? 'col-4' : 'col-6'">
+                        <div class="row form_view_header"><label>Opening Form</label></div>
+                        <div *ngFor="let opening of openingFormInfo" class="row" style="margin-bottom: 1rem;">
+                            <div class="col-4">
+                                <label>{{opening.r_coltitle}}<span *ngIf="opening.r_required"
+                                        style="color: red;">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="primaryFormInfo.length>0"
+                        [class]="(openingFormInfo.length > 0 && closingFormInfo.length > 0) ? 'col-4' : 'col-6'"
+                        style="border-left: 1px solid black;">
+                        <div class="row form_view_header"><label>Primary Form</label></div>
+                        <div *ngFor="let primary of primaryFormInfo" class="row" style="margin-bottom: 1rem;">
+                            <div class="col-4">
+                                <label>{{primary.r_coltitle}}<span *ngIf="primary.r_required"
+                                        style="color: red;">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="closingFormInfo.length>0"
+                        [class]="(openingFormInfo.length > 0 && primaryFormInfo.length > 0) ? 'col-4' : 'col-6'"
+                        style="border-left: 1px solid black;">
+                        <div class="row form_view_header"><label>Closing Form</label></div>
+                        <div *ngFor="let closing of closingFormInfo" class="row" style="margin-bottom: 1rem;">
+                            <div class="col-4">
+                                <label>{{closing.r_coltitle}}<span *ngIf="closing.r_required"
+                                        style="color: red;">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body" *ngIf="activeTab!='completedTkt'">
                 <!-- start:dyn field -->
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
-                    <div class="col-12" style="margin-bottom: 1rem;">
+                    <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
                         <div *ngIf="oddArray[i].r_coltitle" class="row">
                             <div class="col-4">
                                 <label style="font-weight: bold;">{{oddArray[i].r_coltitle}}<span style="color: red"
@@ -348,7 +482,20 @@
                             </div>
 
                             <div class="col-8">
-                                <label>{{oddArray[i].r_value}}</label>
+                                <input type="text" class="form-control" [(ngModel)]="oddArray[i].r_value" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
+                        <div *ngIf="evenArray[i].r_coltitle" class="row">
+                            <div class="col-4">
+                                <label style="font-weight: bold;">{{evenArray[i].r_coltitle}}<span style="color: red"
+                                        *ngIf="evenArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]="evenArray[i].r_value" readonly>
                             </div>
                         </div>
                     </div>

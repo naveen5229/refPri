@@ -9,6 +9,9 @@ import { TaskNewComponent } from '../task-new/task-new.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { TaskScheduleMasterComponent } from '../task-schedule-master/task-schedule-master.component';
 import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new.component';
+import { FileHandle } from '../../directives/dndDirective/dnd.directive';
+import * as _ from 'lodash';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'ngx-task-message',
@@ -35,13 +38,16 @@ import { TaskScheduleNewComponent } from '../task-schedule-new/task-schedule-new
 })
 export class TaskMessageComponent implements OnInit {
   // this page in from 3 pages change carefully
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
+  @ViewChild('chat_History_block', { static: false }) private myScrollHistoryContainer: ElementRef;
   taskMessage = "";
   title = '';
   subTitle = null;
   ticketId = 0;
   statusId = 0;
   messageList = [];
+  messageListShow = [];
   showLoading = true;
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
@@ -67,6 +73,7 @@ export class TaskMessageComponent implements OnInit {
   };
   attachmentList = [];
   isAttachmentShow = false;
+  isSearchShow = false;
 
   userGroupList = [];
   userWithGroup = [];
@@ -91,6 +98,10 @@ export class TaskMessageComponent implements OnInit {
   departmentList = [];
   stTaskMaster = null;
   isChecked = null;
+  fileType = null;
+  messageHistoryList = null;
+  mentionUserIndex: number = 0;
+  query_conversation = null;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -100,14 +111,13 @@ export class TaskMessageComponent implements OnInit {
   @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
-    public common: CommonService, public userService: UserService) {
+    public common: CommonService, public userService: UserService, private sanitizer: DomSanitizer) {
     console.log("common params:", this.common.params);
     if (this.common.params != null) {
       this.title = this.common.params.title;
       this.subTitle = (this.common.params.subTitle) ? this.common.params.subTitle : null;
       this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
       this.departmentList = this.common.params.departmentList;
-
       this.ticketId = this.common.params.ticketEditData.ticketId;
       this.statusId = this.common.params.ticketEditData.statusId;
       this.lastSeenId = this.common.params.ticketEditData.lastSeenId;
@@ -152,8 +162,8 @@ export class TaskMessageComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.isLoaded = true;
     setTimeout(() => {
+      this.isLoaded = true;
       this.taskMessage = '';
     }, 30);
   }
@@ -166,13 +176,38 @@ export class TaskMessageComponent implements OnInit {
     } catch (err) { }
   }
 
+  scrollHistoryChat() {
+    try {
+      setTimeout(() => {
+        this.myScrollHistoryContainer.nativeElement.scrollTop = this.myScrollHistoryContainer.nativeElement.scrollHeight;
+      }, 100);
+    } catch (err) { }
+  }
+
   closeModal(response) {
     this.activeModal.close({ response: response });
   }
   keyHandler(event) {
     const key = event.key.toLowerCase();
-    let activeId = document.activeElement.id;
-    console.log('row data', key);
+    if (this.isMentionedUser) {
+      if (key === 'arrowdown') {
+        event.preventDefault();
+        this.mentionUserIndex++;
+        if (this.mentionedUserList.length === this.mentionUserIndex) {
+          this.mentionUserIndex = 0;
+        }
+      } else if (key === 'arrowup') {
+        event.preventDefault();
+        this.mentionUserIndex--;
+        if (this.mentionUserIndex < 0) {
+          this.mentionUserIndex = this.mentionedUserList.length - 1;
+        }
+      } else if (key === 'enter') {
+        event.preventDefault();
+        this.onSelectMenstionedUser(this.mentionedUserList[this.mentionUserIndex]);
+        this.isMentionedUser = false;
+      }
+    }
     if (key == 'escape') {
       this.closeModal(false);
     }
@@ -219,6 +254,7 @@ export class TaskMessageComponent implements OnInit {
       console.log("messageList:", res['data']);
       if (res['success']) {
         this.messageList = res['data'] || [];
+        this.messageListShow = JSON.parse(JSON.stringify(this.messageList));
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
@@ -308,11 +344,18 @@ export class TaskMessageComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let formatedMsg = this.taskMessage.trim();
+      console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
+      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.com') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.in'))) {
+        formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
+      }
+      console.log("formatedMsg:", formatedMsg);
+      // return false;
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage,
+        message: formatedMsg,//this.taskMessage,
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
@@ -644,6 +687,7 @@ export class TaskMessageComponent implements OnInit {
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
       } else {
@@ -659,16 +703,38 @@ export class TaskMessageComponent implements OnInit {
     })
   }
 
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    this.fileType = icon;
+  }
+
+
   onPaste(event: any) {
     console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
+        event.preventDefault();
         selectedFile.target.files.push(item.getAsFile());
       }
     }
 
+    this.handleFileSelection(selectedFile);
+  }
+
+  filesDropped(files: FileHandle[]) {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
     this.handleFileSelection(selectedFile);
   }
 
@@ -728,6 +794,9 @@ export class TaskMessageComponent implements OnInit {
       let splieted = this.taskMessage.split('@');
       let searchableTxt = splieted[splieted.length - 1];
       this.mentionedUserList = accessUsers.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) }); //this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+      if (this.mentionUserIndex >= this.mentionedUserList.length) {
+        this.mentionUserIndex = 0;
+      }
     }
   }
 
@@ -811,6 +880,139 @@ export class TaskMessageComponent implements OnInit {
     );
   }
 
+  getHistory() {
+    // this.showLoading = true;
+    let params = `schTaskId=${this.ticketData._refid}`;
+    this.api.get('AdminTask/getScheduledTaskAllMessage?' + params).subscribe(res => {
+      this.showLoading = false;
+      if (res['code'] == 1) {
+        this.messageHistoryList = res['data'] || [];
+        this.scrollHistoryChat();
+      } else {
+        this.common.showError(res['data']);
+      }
+    }, err => {
+      this.showLoading = false;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+    document.getElementById('chatHistory').style.display = 'block';
+  }
 
+  closeHistoryChat() {
+    document.getElementById('chatHistory').style.display = 'none';
+  }
 
+  search() {
+    this.isSearchShow = !this.isSearchShow;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      document.getElementById('searchChat').focus();
+    }, 0);
+  }
+
+  searchedIndex = [];
+  selectedIndex = 0;
+  searchChat(value) {
+    this.searchedIndex = [];
+    let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
+    console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ value", value,messageList)
+    this.selectedIndex = 0;
+    let final = "";
+    let caseSensitive = false;
+    let splitFlag = null;
+    let matchFlag = null
+    if (!caseSensitive) {
+      splitFlag = "i";
+      matchFlag = "gi";
+    } else {
+      splitFlag = "";
+      matchFlag = "g";
+    }
+    let searchPattern = new RegExp(value, splitFlag);
+    let matchpattern = new RegExp(value, matchFlag);
+
+    for (let i = messageList.length - 1; i >= 0; i--) {
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
+      let msg = messageList[i].comment;
+      console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg,value)
+      if ((msg.toLowerCase()).match(value.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+        this.searchedIndex.push(i);
+        let separatedText = msg.split(searchPattern);
+        let separatedSearchedText = msg.match(matchpattern);
+        if (
+          separatedSearchedText != null &&
+          separatedSearchedText.length > 0
+        ) {
+          for (let j = 0; j < separatedText.length; j++) {
+            if (j <= separatedSearchedText.length - 1) {
+              final +=
+                separatedText[j] +
+                `<span class="text-highlight" id="focusOn-${i}">` +
+                separatedSearchedText[j] +
+                `</span>`;
+            } else {
+              final += separatedText[j];
+            }
+          }
+        }
+        messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+        this.messageList = messageList;
+        final = '';
+        setTimeout(() => {
+          this.focusOnSelectedIndex();
+        }, 500);
+        // break;
+      }
+    }
+  }
+
+  // scrollToChat(i) {
+  //   try {
+  //     setTimeout(() => {
+  //       this.myScrollContainer.nativeElement.scrollTop = i;
+  //     }, 100);
+  //   } catch (err) { }
+  // }
+
+  onchangeIndex(type) {
+    console.log('selectedIndex:',this.selectedIndex)
+    // if(this.selectedIndex==0 || this.selectedIndex==this.searchedIndex.length-1){
+    //   this.common.showError("error");
+    //   if(this.selectedIndex<0){
+    //     this.selectedIndex=0;
+    //   }
+    //   if(this.selectedIndex==this.searchedIndex.length){
+    //     this.selectedIndex=this.searchedIndex.length-1;
+    //   }
+    //   return false;
+    // }
+    if (type == "plus") {
+      if(this.selectedIndex==this.searchedIndex.length-1){
+        this.common.showError("error");
+        return;
+      }
+        this.selectedIndex++;
+    } else {
+      if(this.selectedIndex==0){
+        this.common.showError("error");
+        return;
+      }
+        this.selectedIndex--;
+    }
+    this.focusOnSelectedIndex();
+  }
+
+  focusOnSelectedIndex() {
+    let focusOn = this.searchedIndex[this.selectedIndex];
+    let earlierIndex = focusOn;
+    console.log("focusOn:", focusOn);
+    // document.getElementById('chat_block').classList.remove('text-focus-highlight');
+    for(let i=0; i<this.searchedIndex.length;i++){
+      let removeClass = document.getElementById("focusOn-" + this.searchedIndex[i])
+      if(removeClass)
+      removeClass.classList.remove('text-focus-highlight');
+    }
+    document.getElementById("focusOn-" + focusOn).classList.add('text-focus-highlight');
+    // this.scrollToChat(focusOn);
+  }
 }
