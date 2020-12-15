@@ -16,23 +16,29 @@
             <input type="number" min="0" [(ngModel)]="form.order" class="form-control" placeholder="order">
         </div>
         <div class="col-3">
-            <label>Type<span class="text-danger">*</span></label>
+            <label>Field Types<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
                 <option *ngFor="let o of typeList;" [value]="o.id" class="form-control">{{o.name}}</option>
             </select>
         </div>
         <div class="col-3" *ngIf="!fromPage">
-            <div *ngIf="!((form.type==3 || form.type==4)) && !fromPage">
+            <!-- <div *ngIf="!((form.type==3 || form.type==4)) && !fromPage">
                 <label>Select State/Action<span class="text-danger">*</span></label>
                 <select class="form-control" [(ngModel)]="form.refId" (change)="onSelectRefId()">
                     <option *ngFor="let s of stateOrActionList;" [value]="s.id" class="form-control">{{s.name}}</option>
                 </select>
-            </div>
+            </div> -->
+            <label>Reference Type<span class="text-danger">*</span></label>
+            <select class="form-control" #selectList (change)="setSubType(selectList.value)">
+                <option value="null" disabled>Select a Value</option>
+                <option *ngFor="let s of stateOrActionList;" value="{{ s | json }}" class="form-control">{{s.title}}</option>
+            </select>
         </div>
         <div class="col-3">
             <label>Select Field<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.infoId" (change)="onSelectField()">
-              <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
+                <option value="null" disabled>Select a Value</option>
+                <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
             </select>
         </div>
         <div class="col-3 text-right mt-4" *ngIf="fromPage==1">

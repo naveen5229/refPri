@@ -35,12 +35,12 @@ export class AddDashboardFieldComponent implements OnInit {
     }
   };
   typeList=[
-    {id:1,name:"State"},
-    {id:2,name:"Action"},
-    {id:3,name:"Transaction Form"},
-    {id:4,name:"Primary Info Form"}
-    // {id:1,name:"Transaction Fields"},
-    // {id:2,name:"Form Fields"},
+    // {id:1,name:"State"},
+    // {id:2,name:"Action"},
+    // {id:3,name:"Transaction Form"},
+    // {id:4,name:"Primary Info Form"}
+    {id:1,name:"Transaction Fields"},
+    {id:2,name:"Form Fields"},
   ];
   fromPage=null; //null=process,1=ticket
 
@@ -64,8 +64,9 @@ export class AddDashboardFieldComponent implements OnInit {
       ];
       this.form.refType = -1;
       this.form.refId = this.form.process.id;
-      this.getFieldList();
+      // this.getFieldList();
     }
+    this.getFieldList();
   }
 
   ngOnInit() { }
@@ -228,10 +229,10 @@ export class AddDashboardFieldComponent implements OnInit {
 
   allFileds = [];
   getFieldList() {
-    let params = "?refId=" + this.form.refId + "&refType=" + this.form.refType;
-    let apiName = "Processes/getProcessFormField";
-    // let params = "?processId=" + this.form.process.id;
-    // let apiName = "Processes/getAllReportFieldsForNav";
+    // let params = "?refId=" + this.form.refId + "&refType=" + this.form.refType;
+    // let apiName = "Processes/getProcessFormField";
+    let params = "?processId=" + this.form.process.id;
+    let apiName = "Processes/getAllReportFieldsForNav";
     if(this.fromPage==1){
       params = "?refId=" + this.form.refId + "&refType=" + this.form.refType + "&tpId=" + this.form.process.id;
       apiName = "Ticket/getTicketProcessDynamicFieldList";
@@ -242,11 +243,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.api.get(apiName + params).subscribe(res => {
       this.common.loading--;
       let fieldData = res['data'] || [];
-      if(this.fromPage==1){
       this.allFileds = fieldData;
-      }else{
-      this.fieldDataList = fieldData.map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected } });   
-      }
     }, err => {
       this.common.loading--;
       console.log(err);
@@ -268,34 +265,37 @@ export class AddDashboardFieldComponent implements OnInit {
   onSelectType() {
     this.form.refId = null;
     this.form.refType = null;
+    this.form.infoId = null;
     this.stateOrActionList = [];
     this.fieldDataList = [];
     if (this.form.type == -1) {
       this.form.refType = -1;
       this.form.refId = this.form.process.id;
-      this.setSelectedTypeField();
+      this.setSelectedTypeField(this.form.refType);
     } else if (this.form.type == 1) {
       this.form.refType = 0;
       if(this.fromPage==1){
         this.form.refId = this.form.process.id;
-        this.setSelectedTypeField();
+        this.setSelectedTypeField(this.form.refType);
       }else{
-        this.getStateList();
+        // this.getStateList();
+        this.setSelectedTypeField('Transaction Fields');
       }
     } else if (this.form.type == 2) {
       this.form.refType = 1;
       if(this.fromPage==1){
         this.form.refId = this.form.process.id;
-        this.setSelectedTypeField();
+        this.setSelectedTypeField(this.form.refType);
       }else{
-        this.getActionList();
+        // this.getActionList();
+        this.setSelectedTypeField('Form Fields');
       }
     } else if (this.form.type == 3) {
       this.form.refType = 2;
       this.form.refId = this.form.process.id;
       if(this.fromPage==1){
         this.form.refId = this.form.process.id;
-        this.setSelectedTypeField();
+        this.setSelectedTypeField(this.form.refType);
       }else{
         this.getFieldList();
       }
@@ -304,7 +304,7 @@ export class AddDashboardFieldComponent implements OnInit {
       this.form.refId = this.form.process.id;
       if(this.fromPage==1){
         this.form.refId = this.form.process.id;
-        this.setSelectedTypeField();
+        this.setSelectedTypeField(this.form.refType);
       }else{
         this.getFieldList();
       }
@@ -320,7 +320,9 @@ export class AddDashboardFieldComponent implements OnInit {
     if (this.form.infoId) {
       let selected = this.fieldDataList.find(x => { return x.id == this.form.infoId });
       if (selected) {
-        this.form.info = { r_colid: selected.r_colid, r_isdynamic: selected.r_isdynamic, r_selected: selected.r_selected, r_colorder: (this.form.order) ? this.form.order : null };
+        this.form.refId = selected.refid;
+        this.form.refType = selected.reftype;
+        this.form.info = { r_colid: selected.r_colid, r_isdynamic: selected.r_isdynamic, r_selected: selected.r_selected,r_ismasterfield: selected.r_ismasterfield,reftype: selected.reftype,refid: selected.refid, r_colorder: (this.form.order) ? this.form.order : null };
       } else {
         this.form.info = null;
       }
@@ -365,18 +367,34 @@ export class AddDashboardFieldComponent implements OnInit {
     });
   }
 
-  setSelectedTypeField(){
-    console.log("allFileds:",this.allFileds);
+  setSelectedTypeField(refType){
+    // console.log("allFileds:",this.allFileds);
     let allFileds = this.allFileds;
     let selectedFields = [];
     this.fieldDataList = [];
+    this.stateOrActionList = [];
     if(allFileds && allFileds.length>0){
-      selectedFields = allFileds.find(x=>{ return x.reftype == this.form.refType});
+      selectedFields = allFileds.find(x=>{ return x.reftype == refType});
     }
     if(selectedFields && selectedFields['children'].length>0){
-      this.fieldDataList = selectedFields['children'].map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected } });
+      if(this.fromPage==1){
+        this.fieldDataList = selectedFields['children'].map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected,r_ismasterfield: x.r_ismasterfield,reftype:x.reftype,refid:x.refid } });
+      }else{
+        this.stateOrActionList = allFileds.filter(x=>{ return x.reftype == refType});;
+        // console.log("stateOrActionList:",this.stateOrActionList);
+      }
     }
-    console.log("selectedFields:",selectedFields);
+    // console.log("selectedFields:",selectedFields);
+  }
+
+  setSubType(list){
+    list = JSON.parse(list);
+    this.fieldDataList = [];
+    this.form.infoId = null;
+    let selectedFields = JSON.parse(list['children']);
+    if(list && selectedFields && selectedFields.length>0){
+      this.fieldDataList = selectedFields.map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected,r_ismasterfield: x.r_ismasterfield,reftype:x.reftype,refid:x.refid } });
+    }
   }
 
 }
