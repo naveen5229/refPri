@@ -316,6 +316,10 @@ table .fa-comments.new-comment span {
     background: lightgray;
 }
 
+.search-style{
+    background: lightgray;
+}
+
 .new_message {
     background: lightgray !important;
 }
