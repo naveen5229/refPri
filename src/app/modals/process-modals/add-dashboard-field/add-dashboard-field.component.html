@@ -29,16 +29,16 @@
                 </select>
             </div> -->
             <label>Reference Type<span class="text-danger">*</span></label>
-            <select class="form-control" #selectList (change)="setSubType(selectList.value)">
+            <select class="form-control" [(ngModel)]="form.stateActionId" #selectList (change)="setSubType(selectList.value)">
                 <option value="null" disabled>Select a Value</option>
                 <option *ngFor="let s of stateOrActionList;" value="{{ s | json }}" class="form-control">{{s.title}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Select Field<span class="text-danger">*</span></label>
-            <select class="form-control" [(ngModel)]="form.infoId" (change)="onSelectField()">
+            <select class="form-control" [(ngModel)]="form.infoId" (change)="onSelectField(selectField.value)" #selectField>
                 <option value="null" disabled>Select a Value</option>
-                <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
+                <option *ngFor="let s of fieldDataList;" value="{{ s | json }}" class="form-control">{{s.name}}</option>
             </select>
         </div>
         <div class="col-3 text-right mt-4" *ngIf="fromPage==1">

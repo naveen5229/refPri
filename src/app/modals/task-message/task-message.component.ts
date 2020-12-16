@@ -897,64 +897,76 @@ export class TaskMessageComponent implements OnInit {
   selectedIndex = 0;
   searchCount = 0;
   searchChat(value) {
-    this.searchTerm = value;
-    if (this.searchTerm) {
-      if (this.searchTerm.indexOf(' ') == 0) {
-        return;
-      }
-      this.searchedIndex = [];
-      let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
-      console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", this.searchTerm, messageList)
-      this.selectedIndex = 0;
-      let final = "";
-      let caseSensitive = false;
-      let splitFlag = null;
-      let matchFlag = null
-      if (!caseSensitive) {
-        splitFlag = "i";
-        matchFlag = "gi";
-      } else {
-        splitFlag = "";
-        matchFlag = "g";
-      }
-      let searchPattern = new RegExp(this.searchTerm, splitFlag);
-      let matchpattern = new RegExp(this.searchTerm, matchFlag);
+    // this.searchTerm = value;
+    // if (this.searchTerm) {
+    //   if (this.searchTerm.indexOf(' ') == 0) {
+    //     return;
+    //   }
+    //   this.searchedIndex = [];
+    //   let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
+    //   console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", this.searchTerm, messageList)
+    //   this.selectedIndex = 0;
+    //   let final = "";
+    //   let caseSensitive = false;
+    //   let splitFlag = null;
+    //   let matchFlag = null
+    //   if (!caseSensitive) {
+    //     splitFlag = "i";
+    //     matchFlag = "gi";
+    //   } else {
+    //     splitFlag = "";
+    //     matchFlag = "g";
+    //   }
+    //   let searchPattern = new RegExp(this.searchTerm, splitFlag);
+    //   let matchpattern = new RegExp(this.searchTerm, matchFlag);
 
-      for (let i = messageList.length - 1; i >= 0; i--) {
-        // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
-        let msg = messageList[i].comment;
-        console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, this.searchTerm)
-        if ((msg.toLowerCase()).match(this.searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
-          this.searchedIndex.push(i);
-          this.searchCount = this.searchedIndex.length;
-          let separatedText = msg.split(searchPattern);
-          let separatedSearchedText = msg.match(matchpattern);
-          if (
-            separatedSearchedText != null &&
-            separatedSearchedText.length > 0
-          ) {
-            for (let j = 0; j < separatedText.length; j++) {
-              if (j <= separatedSearchedText.length - 1) {
-                final +=
-                  separatedText[j] +
-                  `<span class="text-highlight" id="focusOn-${i}">` +
-                  separatedSearchedText[j] +
-                  `</span>`;
-              } else {
-                final += separatedText[j];
-              }
-            }
-          }
-          messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
-          this.messageList = messageList;
-          final = '';
-          setTimeout(() => {
-            this.focusOnSelectedIndex();
-          }, 500);
-          // break;
-        }
-      }
-    }
+    //   for (let i = messageList.length - 1; i >= 0; i--) {
+    //     // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
+    //     let msg = messageList[i].comment;
+    //     console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, this.searchTerm)
+    //     if ((msg.toLowerCase()).match(this.searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+    //       this.searchedIndex.push(i);
+    //       this.searchCount = this.searchedIndex.length;
+    //       let separatedText = msg.split(searchPattern);
+    //       let separatedSearchedText = msg.match(matchpattern);
+    //       if (
+    //         separatedSearchedText != null &&
+    //         separatedSearchedText.length > 0
+    //       ) {
+    //         for (let j = 0; j < separatedText.length; j++) {
+    //           if (j <= separatedSearchedText.length - 1) {
+    //             final +=
+    //               separatedText[j] +
+    //               `<span class="text-highlight" id="focusOn-${i}">` +
+    //               separatedSearchedText[j] +
+    //               `</span>`;
+    //           } else {
+    //             final += separatedText[j];
+    //           }
+    //         }
+    //       }
+    //       messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+    //       this.messageList = messageList;
+    //       final = '';
+    //       setTimeout(() => {
+    //         this.focusOnSelectedIndex();
+    //       }, 500);
+    //       // break;
+    //     }
+    //   }
+    // }
+    setTimeout(() => {
+      let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+      this.common.searchString(value,messageList).then((res)=>{
+        console.log("res:",res);
+        this.searchedIndex = res.searchedIndex;
+        this.searchCount = this.searchedIndex.length;
+        this.messageList = res.messageList;
+        setTimeout(() => {
+          this.searchCount>0 ? this.focusOnSelectedIndex() : null;
+        }, 500);
+      });
+    }, 500);
   }
 
   scrollToChat(focusOn) {

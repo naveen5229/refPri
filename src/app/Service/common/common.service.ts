@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 import { Router } from '@angular/router';
 import { ApiService } from '../../Service/Api/api.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -28,9 +29,7 @@ export class CommonService {
     hold: "antiquewhite",
   }
   constructor(private toastrService: NbToastrService,
-    // private http: Http,
-    private datePipe: DatePipe,
-    public router: Router, public api: ApiService) { }
+    private datePipe: DatePipe,public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -860,6 +859,69 @@ export class CommonService {
         // console.log('eve', eve);
       }
     }
+  }
+
+  async searchString(value,messageList) {
+    let searchTerm = value.trim();
+    let searchedIndex = [];
+    // let searchCount = 0;
+    if (searchTerm && searchTerm!="") {
+      if (searchTerm.indexOf(' ') == 0) {
+        return;
+      }
+      // let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+      console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", searchTerm, messageList)
+      let selectedIndex = 0;
+      let final = "";
+      let caseSensitive = false;
+      let splitFlag = null;
+      let matchFlag = null
+      if (!caseSensitive) {
+        splitFlag = "i";
+        matchFlag = "gi";
+      } else {
+        splitFlag = "";
+        matchFlag = "g";
+      }
+      let searchPattern = new RegExp(searchTerm, splitFlag);
+      let matchpattern = new RegExp(searchTerm, matchFlag);
+
+      for (let i = messageList.length - 1; i >= 0; i--) {
+        let msg = messageList[i].comment;
+        console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, searchTerm)
+        if ((msg.toLowerCase()).match(searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+          searchedIndex.push(i);
+          // searchCount = searchedIndex.length;
+          let separatedText = msg.split(searchPattern);
+          let separatedSearchedText = msg.match(matchpattern);
+          if (
+            separatedSearchedText != null &&
+            separatedSearchedText.length > 0
+          ) {
+            for (let j = 0; j < separatedText.length; j++) {
+              if (j <= separatedSearchedText.length - 1) {
+                final +=
+                  separatedText[j] +
+                  `<span class="text-highlight" id="focusOn-${i}">` +
+                  separatedSearchedText[j] +
+                  `</span>`;
+              } else {
+                final += separatedText[j];
+              }
+            }
+          }
+          messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+          messageList = messageList;
+          final = '';
+        }
+      }
+    }
+    let result = {
+      value: searchTerm,
+      messageList: messageList,
+      searchedIndex: searchedIndex
+    }
+    return result;
   }
 
 }

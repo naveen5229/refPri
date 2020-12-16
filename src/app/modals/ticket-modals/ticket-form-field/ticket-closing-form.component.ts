@@ -49,6 +49,7 @@ export class TicketClosingFormComponent implements OnInit {
         this.formatArray();
       }
     }, err => {
+      this.common.showError();
       this.common.loading--;
       console.error('Api Error:', err);
     });
