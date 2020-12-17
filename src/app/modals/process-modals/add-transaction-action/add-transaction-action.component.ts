@@ -3,6 +3,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { FormDataComponent } from '../form-data/form-data.component';
 
 @Component({
   selector: 'ngx-add-transaction-action',
@@ -97,7 +98,7 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   closeModal(res, nextFormType = null) {
-    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: this.isFormHere, state: this.transAction.state });
+    this.activeModal.close({ response: res, nextFormType: nextFormType, isFormHere: (!this.transAction.formType) ? 0 : this.isFormHere, state: this.transAction.state });
   }
 
   ngOnInit() { }
@@ -194,6 +195,30 @@ export class AddTransactionActionComponent implements OnInit {
     });
   }
 
+  confirmSaveTransAction(fieldsVisi) {
+    // if (this.transAction.formType == 0) {
+    if (this.isFormHere == 1) {
+      let actionData = {
+        processId: this.transAction.process.id,
+        processName: this.transAction.process.name,
+        transId: this.transAction.transId,
+        refId: this.transAction.action.id,
+        refType: 1,
+        formType: 2,
+      };
+
+      this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true, fieldsVisi: fieldsVisi };
+      const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.saveType == 2) {
+          this.saveTransAction();
+        }
+      });
+    } else {
+      this.saveTransAction();
+    }
+  }
+
   saveTransAction() {
     if (!this.transAction.state.id || !this.transAction.action.id) {
       this.common.showError('Please Fill All Mandatory Field');
@@ -233,7 +258,10 @@ export class AddTransactionActionComponent implements OnInit {
         console.log(err);
       });
     }
+    // }
+    // });
   }
+  // }
 
   saveTransNextAction() {
     console.log("saveTransNextAction:", this.transAction);

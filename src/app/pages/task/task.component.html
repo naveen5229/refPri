@@ -62,7 +62,7 @@
                 <li [ngClass]="activeTab=='futureTaskByMe'?'active':''" (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
                     Future Task
                 </li>
-                <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList'; getTodoTaskList()">
+                <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList';activeSabTab = 0;resetSearchTask(); getTodoTaskList(0)">
                     ToDo List
                 </li>
                 <li [ngClass]="activeTab=='scheduleMaster'?'active':''" (click)="activeTab='scheduleMaster'; getScheduledTask()">
@@ -174,6 +174,27 @@
                 <div class="col-2">
                     <button class="btn btn-primary btn-sm" id="savetodotask" (click)="saveTaskTodo()" title="Save ToDo">save</button>
                     <button *ngIf="taskTodoForm.requestId>0" class="btn btn-primary btn-sm ml-2" id="resettodotask" (click)="resetTaskTodoForm()" title="Reset">Reset</button>
+                </div>
+            </div>
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; getTodoTaskList(0)">
+                    Pending
+                </li>
+                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; getTodoTaskList(1)">
+                    Completed
+                </li>
+            </ul>
+            <div *ngIf="activeSabTab==1" class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" (click)="getTodoTaskList(1)">Search</button>
                 </div>
             </div>
             <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList" class="sl-smart-table">

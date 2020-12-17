@@ -26,18 +26,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.analytics.trackPageViews();
-    setInterval(function () {
-      console.log("navigator online:", navigator.onLine);
-      if (navigator.onLine) {
-        // if (!this.isNetConnected) {
-        //   window.location.reload();
-        // }
-        document.getElementById("noNetwork").style.display = "none";
-      } else {
-        this.isNetConnected = false;
-        document.getElementById("noNetwork").style.display = "block";
-      }
-    }, 10000);
   }
 
   getUserPagesList() {

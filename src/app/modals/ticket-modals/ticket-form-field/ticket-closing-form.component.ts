@@ -20,6 +20,7 @@ export class TicketClosingFormComponent implements OnInit {
   ticketId = null;
   requestId =null;
   info = null;
+  isDisabled = false;
 
   constructor(public activeModal: NgbActiveModal,public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) { 
     this.title = this.common.params.title ? this.common.params.title : 'Ticket Closing Form';
@@ -77,11 +78,11 @@ export class TicketClosingFormComponent implements OnInit {
     console.log("oddArray", this.oddArray);
   }
 
-  dismiss(res) {
-    this.activeModal.close({ response: res });
+  dismiss(res,isContinue) {
+    this.activeModal.close({ response: res,isContinue:isContinue });
   }
 
-  saveFromDetail() {
+  saveFromDetail(isContinue) {
      let detailsTemp = this.evenArray.concat(this.oddArray);
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -108,7 +109,7 @@ export class TicketClosingFormComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             // this.common.showToast(res['data'][0].y_msg);
-            this.dismiss(true);
+            this.dismiss(true,isContinue);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }

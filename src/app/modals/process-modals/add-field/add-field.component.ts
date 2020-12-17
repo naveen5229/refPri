@@ -82,9 +82,9 @@ export class AddFieldComponent implements OnInit {
     // ];
 
     if (this.formType == 11) {
-      if(this.refType==1){
+      if (this.refType == 1) {
         this.title = "Add Ticket closing Form Field";
-      }else{
+      } else {
         this.title = "Add Ticket Form Field";
       }
       this.types = [
@@ -105,7 +105,9 @@ export class AddFieldComponent implements OnInit {
     }
     this.getFieldName();
     if (!this.formType && this.refType == 2) {
-      this.getGlobalFormField();
+      this.getGlobalFormField('Processes/getGlobalFormField');
+    } else if (this.formType == 11 && this.refType == 0) {
+      this.getGlobalFormField('Ticket/getGlobalFormField');
     }
   }
 
@@ -129,11 +131,11 @@ export class AddFieldComponent implements OnInit {
     this.activeModal.close({ response: res });
   }
 
-  getGlobalFormField() {
+  getGlobalFormField(api) {
     this.globalFiledList = [];
     let params = "?refId=" + this.refId + "&refType=" + this.refType;
     this.common.loading++;
-    this.api.get('Processes/getGlobalFormField' + params).subscribe(res => {
+    this.api.get(api + params).subscribe(res => {
       this.common.loading--;
       console.log("getGlobalFormField", res);
       if (res['code'] == 1) {
@@ -149,6 +151,29 @@ export class AddFieldComponent implements OnInit {
   }
 
   Add() {
+    if (((this.name.toLowerCase()).match(/mobile/) || (this.name.toLowerCase()).match(/contact/)) && this.typeId.match(/number/)) {
+      this.common.params = {
+        title: 'Field Duplicacy',
+        description: `<b>&nbsp;` + 'Please use Global Fields to add contact name or contact number.' +
+         `<br>` + `Otherwise, it may occur problem in analytics.` +
+         `<br>`+ `Continue Anyway`+ `<b>` + `.`,
+        btn1: `Continue`,
+        btn2: `Remove`
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.confirmAdd();
+        } else {
+          this.resetData();
+        }
+      });
+    } else {
+      this.confirmAdd();
+    }
+  }
+
+  confirmAdd() {
     let childArray = (this.childArray && this.childArray.length > 0) ? this.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
     let tmpJson = {
       param: this.name,
@@ -432,7 +457,7 @@ export class AddFieldComponent implements OnInit {
       id: this.refId,
       type: this.refType
     }
-    this.common.params = { ref: ref };
+    this.common.params = { ref: ref, formType: this.formType };
     const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {

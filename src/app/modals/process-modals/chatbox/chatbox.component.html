@@ -19,8 +19,10 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url"
-                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index">
+                    <!-- <a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
+                    <span class="blue cursor-pointer" (click)="common.getFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
+                </li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
@@ -48,7 +50,7 @@
                     <li>No Data Found</li>
                 </ul>
             </ng-template>
-            <div class="row mt-1 chat_block" #chat_block>
+            <div class="row mt-1 chat_block" #chat_block id="chat_block">
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <!-- <label [innerHTML]="msg.comment"></label>
@@ -96,7 +98,7 @@
                 </div>
             </div>
 
-            <div class="row mt-1 bottom-block">
+            <div class="row pt-1 pb-2 bottom-block">
                 <!-- <div class="col-8">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
                 </div> -->
@@ -107,22 +109,23 @@
                 </div>
                 <div *ngIf="isMentionedUser" class="col-12 mentioned_user p-0">
                     <span *ngFor="let u of mentionedUserList;let i=index;"
-                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</span>
+                        (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput
+                        [class]="mentionUserIndex === i ? 'user-active': ''">{{u.name}}</span>
                 </div>
-                <div class="col-9 pr-0">
+                <div class="col-10 pr-0">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
                         id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd
                         (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
-                <div col-1>
+                <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
                         <input type="file" class="file-control" id="chat-attachment"
                             (change)="handleFileSelection($event)">
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
-                <div class="col-2 text-right button-box">
+                <div class="col-1 pl-0 text-right button-box">
                     <!-- <button class="btn btn-primary text-capitalize" id="button" (click)="saveLeadMessage()">Send
                     </button> -->
                     <button class="btn send" id="button" (click)="saveLeadMessage()" title="Send"><i

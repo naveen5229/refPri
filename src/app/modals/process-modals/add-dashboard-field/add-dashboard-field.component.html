@@ -6,9 +6,8 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-4">
-            <label><b>Process Name:</b></label>
-            <label>{{form.process.name}}</label>
+        <div class="col-12">
+            <label><b>Process Name: </b>{{form.process.name}}</label>
         </div>
     </div>
     <div class="row mb-2">
@@ -17,30 +16,37 @@
             <input type="number" min="0" [(ngModel)]="form.order" class="form-control" placeholder="order">
         </div>
         <div class="col-3">
-            <label>Type<span class="text-danger">*</span></label>
+            <label>Field Types<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
-              <option value="1" class="form-control">State</option>
-              <option value="2" class="form-control">Action</option>
-              <option value="3" class="form-control">Transaction Form</option>
-              <option value="4" class="form-control">Primary Info Form</option>
+                <option *ngFor="let o of typeList;" [value]="o.id" class="form-control">{{o.name}}</option>
             </select>
         </div>
-        <div class="col-3">
-            <div *ngIf="!(form.type==3 || form.type==4)">
+        <div class="col-3" *ngIf="!fromPage">
+            <!-- <div *ngIf="!((form.type==3 || form.type==4)) && !fromPage">
                 <label>Select State/Action<span class="text-danger">*</span></label>
                 <select class="form-control" [(ngModel)]="form.refId" (change)="onSelectRefId()">
                     <option *ngFor="let s of stateOrActionList;" [value]="s.id" class="form-control">{{s.name}}</option>
                 </select>
-            </div>
+            </div> -->
+            <label>Reference Type<span class="text-danger">*</span></label>
+            <select class="form-control" #selectList (change)="setSubType(selectList.value)">
+                <option value="null" disabled>Select a Value</option>
+                <option *ngFor="let s of stateOrActionList;" value="{{ s | json }}" class="form-control">{{s.title}}</option>
+            </select>
         </div>
         <div class="col-3">
             <label>Select Field<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.infoId" (change)="onSelectField()">
-              <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
+                <option value="null" disabled>Select a Value</option>
+                <option *ngFor="let s of fieldDataList;" [value]="s.id" class="form-control">{{s.name}}</option>
             </select>
         </div>
+        <div class="col-3 text-right mt-4" *ngIf="fromPage==1">
+            <button class="btn btn-primary btn-sm" name="submit" (click)="AddField()">{{btn1}}</button>
+            <button *ngIf="form.requestId" class="btn btn-danger btn-sm ml-2" name="reset" (click)="resetData()">{{btn2}}</button>
+        </div>
     </div>
-    <div class="row mb-2">
+    <div class="row mb-2" *ngIf="!fromPage">
         <div class="col-12 text-right">
             <button class="btn btn-primary btn-sm" name="submit" (click)="AddField()">{{btn1}}</button>
             <button *ngIf="form.requestId" class="btn btn-danger btn-sm ml-2" name="reset" (click)="resetData()">{{btn2}}</button>

@@ -9,6 +9,7 @@ import { FormDataComponent } from '../../modals/process-modals/form-data/form-da
 import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { DocumentListingComponent } from '../../modals/document-listing/document-listing.component';
 
 @Component({
   selector: 'ngx-personalised-dashboard',
@@ -233,6 +234,7 @@ export class PersonalisedDashboardComponent implements OnInit {
     }
 
     if (type == 2) {//for me
+      icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
@@ -249,6 +251,7 @@ export class PersonalisedDashboardComponent implements OnInit {
       else {
         icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       }
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
 
     }
     return icons;
@@ -283,7 +286,7 @@ export class PersonalisedDashboardComponent implements OnInit {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
-      formTypeTemp = (type == 2 || type == 6) ? 1 : 0;
+      formTypeTemp = (type == 1 || type == 6) ? 1 : 0;
     } else {
       formTypeTemp = formType;
     }
@@ -304,7 +307,8 @@ export class PersonalisedDashboardComponent implements OnInit {
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
-      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
+      isMarkTxnComplete: ((lead._state_change == 2 && type == 1) || [1].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -504,6 +508,11 @@ export class PersonalisedDashboardComponent implements OnInit {
     } else {
       this.common.showError("Transaction ID Not Available");
     }
+  }
+  
+  openDocList(lead) {
+    this.common.params = { transId: lead._transactionid }
+    const activeModal = this.modalService.open(DocumentListingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

@@ -69,6 +69,8 @@
     }
     label {
         margin: 0;
+        max-width:100%;
+        overflow-x: auto;
     }
 }
 
@@ -350,4 +352,12 @@
 }
 .user-active{
     background: yellow;
+}
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 14px;
+    border: 1px solid black;
 }

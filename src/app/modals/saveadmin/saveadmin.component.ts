@@ -356,7 +356,7 @@ export class SaveadminComponent implements OnInit {
 
             } else {
               this.common.showToast(this.data[0]['y_msg']);
-              if (!this.isOtherShow) {
+              if (!this.isOtherShow && this.Fouser.id!>0) {
                 this.Fouser.id = this.data[0]['y_id'];
               }
               this.isOtherShow = !this.isOtherShow;

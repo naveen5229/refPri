@@ -19,7 +19,7 @@ import { DndDirective } from './dndDirective/dnd.directive';
         MonthPickerComponent,
         SmartTableComponent,
         ImageViewerComponent,
-        DndDirective
+        DndDirective,
     ],
     declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective,],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

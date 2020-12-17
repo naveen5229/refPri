@@ -7,6 +7,12 @@
 <div class="modal-body">
     <div class="clearfix">
         <div *ngIf="fields.length>0">
+            <div class="row mt-2" *ngIf="refType==0">
+                <div class="col-12">
+                    <p style="font-size: 15px;"><span style="color:red">*</span>Use global field "contact name" and "mobile number" to add
+                        in contact into the contact list and to show on the dashboard of the ticket.</p>
+                </div>
+            </div>
             <div class="row mt-2">
                 <div class="col-4">
                     <div class="drag-container">
@@ -34,14 +40,14 @@
                                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                                     <div>{{item.r_blockname}}</div>
                                 </div>
-                                <div *ngIf="item && (item.param_type != 'attachment' && item.param_type != 'table')">
+                                <div *ngIf="item && refType==0 && (item.param_type != 'attachment' && item.param_type != 'table')">
                                     <i class="fa fa-star cursorOnStar"
                                         [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
                                         aria-hidden="true"
                                         [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
                                         (click)="markImportant(item)"></i>
                                 </div>
-                                <div *ngIf="item"> 
+                                <div *ngIf="item">
                                     <input type="checkbox" [(ngModel)]="item.r_required"> is required
                                 </div>
                             </div>
@@ -58,7 +64,7 @@
                                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                                     <div>{{item.r_blockname}}</div>
                                 </div>
-                                <div *ngIf="item && (item.param_type != 'attachment' && item.param_type != 'table')">
+                                <div *ngIf="item && refType==0 && (item.param_type != 'attachment' && item.param_type != 'table')">
                                     <i class="fa fa-star cursorOnStar"
                                         [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
                                         aria-hidden="true"
