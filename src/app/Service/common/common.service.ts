@@ -864,14 +864,11 @@ export class CommonService {
   async searchString(value,messageList) {
     let searchTerm = value.trim();
     let searchedIndex = [];
-    // let searchCount = 0;
     if (searchTerm && searchTerm!="") {
       if (searchTerm.indexOf(' ') == 0) {
         return;
       }
-      // let messageList = JSON.parse(JSON.stringify(this.messageListShow));
-      console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", searchTerm, messageList)
-      let selectedIndex = 0;
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", searchTerm, messageList)
       let final = "";
       let caseSensitive = false;
       let splitFlag = null;
@@ -888,10 +885,9 @@ export class CommonService {
 
       for (let i = messageList.length - 1; i >= 0; i--) {
         let msg = messageList[i].comment;
-        console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, searchTerm)
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, searchTerm)
         if ((msg.toLowerCase()).match(searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
           searchedIndex.push(i);
-          // searchCount = searchedIndex.length;
           let separatedText = msg.split(searchPattern);
           let separatedSearchedText = msg.match(matchpattern);
           if (

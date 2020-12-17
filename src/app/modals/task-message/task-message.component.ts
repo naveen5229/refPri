@@ -102,7 +102,11 @@ export class TaskMessageComponent implements OnInit {
   messageHistoryList = null;
   mentionUserIndex: number = 0;
   query_conversation = null;
-  searchTerm = null;
+  // searchTerm = null;
+  
+  searchedIndex = [];
+  selectedIndex = 0;
+  searchCount = 0;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -893,9 +897,6 @@ export class TaskMessageComponent implements OnInit {
     }, 0);
   }
 
-  searchedIndex = [];
-  selectedIndex = 0;
-  searchCount = 0;
   searchChat(value) {
     // this.searchTerm = value;
     // if (this.searchTerm) {
@@ -955,7 +956,7 @@ export class TaskMessageComponent implements OnInit {
     //     }
     //   }
     // }
-    setTimeout(() => {
+    // setTimeout(() => {
       let messageList = JSON.parse(JSON.stringify(this.messageListShow));
       this.common.searchString(value,messageList).then((res)=>{
         console.log("res:",res);
@@ -966,7 +967,7 @@ export class TaskMessageComponent implements OnInit {
           this.searchCount>0 ? this.focusOnSelectedIndex() : null;
         }, 500);
       });
-    }, 500);
+    // }, 500);
   }
 
   scrollToChat(focusOn) {
@@ -978,19 +979,17 @@ export class TaskMessageComponent implements OnInit {
   }
 
   onchangeIndex(type) {
-    console.log('selectedIndex:', this.selectedIndex);
+    console.log('selectedIndex:', this.selectedIndex,this.searchedIndex.length);
     if (this.searchedIndex.length > 0) {
       if (type == "plus") {
         if (this.selectedIndex == this.searchedIndex.length - 1) {
-          // this.common.showError("error");
-          return;
+          return false;
         }
         this.selectedIndex++;
         this.searchCount--;
       } else {
         if (this.selectedIndex == 0) {
-          // this.common.showError("error");
-          return;
+          return false;
         }
         this.selectedIndex--;
         this.searchCount++;
@@ -1008,7 +1007,9 @@ export class TaskMessageComponent implements OnInit {
       if (removeClass)
         removeClass.classList.remove('text-focus-highlight');
     }
-    document.getElementById("focusOn-" + focusOn).classList.add('text-focus-highlight');
+    let addClass = document.getElementById("focusOn-" + focusOn);
+    if(addClass)
+      addClass.classList.add('text-focus-highlight');
     this.scrollToChat(focusOn);
   }
 
@@ -1016,6 +1017,6 @@ export class TaskMessageComponent implements OnInit {
     this.messageList = JSON.parse(JSON.stringify(this.messageListShow));
     this.searchedIndex = [];
     this.searchCount = 0;
-    this.searchTerm = null;
+    // this.searchTerm = null;
   }
 }

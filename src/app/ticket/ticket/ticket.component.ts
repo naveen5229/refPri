@@ -9,6 +9,7 @@ import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbo
 import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -1225,75 +1226,89 @@ export class TicketComponent implements OnInit {
     });
   }
 
+  // ticketHistory(ticket, type) {
+  //   this.common.loading++;
+  //   this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
+  //     this.common.loading--;
+  //     if (res['code'] > 0) {
+  //       if (res['data']) {
+  //         this.ticketHistoryList = res['data'];
+  //         this.setTableTicketHistory();
+  //         document.getElementById('ticketHistory').style.display = 'block';
+  //       } else {
+  //         this.common.showError('No Data')
+  //       }
+  //     } else {
+  //       this.common.showError(res['msg']);
+  //     }
+  //   }, (err) => {
+  //     this.common.loading--;
+  //     this.common.showError();
+  //     console.log("Error: ", err);
+  //   });
+  // }
+
+  // closeTicketHistory() {
+  //   document.getElementById('ticketHistory').style.display = 'none';
+  // }
+
+  // setTableTicketHistory() {
+  //   this.tableTicketHistory.data = {
+  //     headings: this.generateHeadingsTicketHistory(),
+  //     columns: this.getTableColumnsTicketHistory()
+  //   };
+  //   return true;
+  // }
+
+  // generateHeadingsTicketHistory() {
+  //   let headings = {};
+  //   for (var key in this.ticketHistoryList[0]) {
+  //     if (key.charAt(0) != "_") {
+  //       headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+  //     }
+  //     if (key === "addtime" || key === "action_completed") {
+  //       headings[key]["type"] = "date";
+  //     }
+  //   }
+  //   return headings;
+  // }
+
+  // getTableColumnsTicketHistory() {
+  //   let columns = [];
+  //   this.ticketHistoryList.map(lead => {
+  //     let column = {};
+  //     for (let key in this.generateHeadingsTicketHistory()) {
+  //       if (key.toLowerCase() == 'action') {
+  //         // column[key] = {
+  //         //   value: "",
+  //         //   isHTML: true,
+  //         //   action: null,
+  //         //   icons: this.actionIcons(lead, type)
+  //         // };
+  //       } else if (key == "spent_time") {
+  //         column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
+  //       } else {
+  //         column[key] = { value: lead[key], class: 'black', action: '' };
+  //       }
+
+  //     }
+  //     columns.push(column);
+  //   });
+  //   return columns;
+  // }
+
   ticketHistory(ticket, type) {
-    this.common.loading++;
-    this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
-      this.common.loading--;
-      if (res['code'] > 0) {
-        if (res['data']) {
-          this.ticketHistoryList = res['data'];
-          this.setTableTicketHistory();
-          document.getElementById('ticketHistory').style.display = 'block';
-        } else {
-          this.common.showError('No Data')
+    let dataparams = {
+      view: {
+        api: 'Ticket/getTicketHistory',
+        param: {
+          tktId: ticket._ticket_id
         }
-      } else {
-        this.common.showError(res['msg']);
-      }
-    }, (err) => {
-      this.common.loading--;
-      this.common.showError();
-      console.log("Error: ", err);
-    });
-  }
-
-  closeTicketHistory() {
-    document.getElementById('ticketHistory').style.display = 'none';
-  }
-
-  setTableTicketHistory() {
-    this.tableTicketHistory.data = {
-      headings: this.generateHeadingsTicketHistory(),
-      columns: this.getTableColumnsTicketHistory()
-    };
-    return true;
-  }
-
-  generateHeadingsTicketHistory() {
-    let headings = {};
-    for (var key in this.ticketHistoryList[0]) {
-      if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-      }
-      if (key === "addtime" || key === "action_completed") {
-        headings[key]["type"] = "date";
-      }
+      },
+      title: "Ticket History"
     }
-    return headings;
-  }
-
-  getTableColumnsTicketHistory() {
-    let columns = [];
-    this.ticketHistoryList.map(lead => {
-      let column = {};
-      for (let key in this.generateHeadingsTicketHistory()) {
-        if (key.toLowerCase() == 'action') {
-          // column[key] = {
-          //   value: "",
-          //   isHTML: true,
-          //   action: null,
-          //   icons: this.actionIcons(lead, type)
-          // };
-        } else if (key == "spent_time") {
-          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-        } else {
-          column[key] = { value: lead[key], class: 'black', action: '' };
-        }
-
-      }
-      columns.push(column);
-    });
-    return columns;
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   forwardTicket(type) {

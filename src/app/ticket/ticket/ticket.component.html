@@ -162,7 +162,8 @@
                                 </auto-suggestion>
                                 <auto-suggestion
                                     *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'"
-                                    [data]="typeList" display="name" placeholder="Select Type" name="processType"
+                                    [data]="typeList" display="name" name="processType"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Type'"
                                     id="processType"
                                     (onSelected)="oddArray[i].r_value=($event.name);categoryIds.type=($event.id);"
                                     [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
@@ -214,21 +215,21 @@
 
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
-                                    [data]="priCatList" display="name" placeholder="Select Primary Category"
+                                    [data]="priCatList" display="name" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Primary Category'"
                                     name="secCat" id="secCat"
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'"
-                                    [data]="secCatList" display="name" placeholder="Select Secondary Category"
+                                    [data]="secCatList" display="name" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Secondary Category'"
                                     name="secCat" id="secCat"
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.secCat=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'"
-                                    [data]="typeList" display="name" placeholder="Select Type" name="processType"
+                                    [data]="typeList" display="name" name="processType" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Type'"
                                     id="processType"
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.type=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">

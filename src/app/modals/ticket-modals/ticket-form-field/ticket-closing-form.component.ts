@@ -29,7 +29,7 @@ export class TicketClosingFormComponent implements OnInit {
       this.ticketId = this.common.params.actionData.ticketId;
       this.refId = this.common.params.actionData.refId;
       this.refType = this.common.params.actionData.refType;
-      // this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
+      this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
 
       this.getTicketFormField();
     }

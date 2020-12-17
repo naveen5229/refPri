@@ -36,6 +36,14 @@ export class CustomDashboardComponent implements OnInit {
     endDate: <any>this.common.getDate()
   }
 
+  forwardTicketObject = {
+    ticketAllocationId: null,
+    tktId: null,
+    userId: { id: null, name: '' },
+    remark: null,
+    tabType: null
+  }
+
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAllAdmin();
     this.getTicketProcessList();
@@ -376,12 +384,13 @@ export class CustomDashboardComponent implements OnInit {
     );
   }
 
-  openTicketFormData(ticket, type, status,refType) {
+  openTicketFormData(ticket, type, status,refType,isDisabled) {
     let title = (refType==2) ? 'Primary Info Fields' : 'Ticket Closing Form';
     let actionData = {
       ticketId: ticket._ticket_id,
       refId: ticket._tpid,
       refType: refType,
+      isDisabled: (isDisabled) ? true : false
     };
     this.common.params = { actionData, title: title, button: "Save" };
     const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
@@ -398,12 +407,59 @@ export class CustomDashboardComponent implements OnInit {
     });
   }
 
-  openForwardTicket(ticket, type) {
-    this.common.showError("working...");
+  openInfoModal(ticket, type, refType) {
+    this.openTicketFormData(ticket, type, null,refType,true)
   }
 
-  openInfoModal(ticket, type, refType) {
-    this.common.showError("working...");
+  forwardTicket(type) {
+    let params = {
+      ticketAllocationId: this.forwardTicketObject.ticketAllocationId,
+      ticketId: this.forwardTicketObject.tktId,
+      userid: this.forwardTicketObject.userId.id,
+      remark: this.forwardTicketObject.remark
+    };
+    this.common.loading++;
+    this.api.post("Ticket/forwardTicket", params).subscribe((res) => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeForwardTicket();
+          this.getTicketByType(type);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, (err) => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    });
+  }
+
+  openForwardTicket(ticket, type) {
+    this.forwardTicketObject.ticketAllocationId = ticket._ticket_allocation_id;
+    this.forwardTicketObject.tktId = ticket._ticket_id;
+    this.forwardTicketObject.tabType = type;
+    console.log("forwardTicketObject:",this.forwardTicketObject)
+    document.getElementById('forwardTicket').style.display = 'block';
+  }
+
+  closeForwardTicket() {
+    document.getElementById('forwardTicket').style.display = 'none';
+    this.resetforwardTicket()
+  }
+
+  resetforwardTicket() {
+    this.forwardTicketObject = {
+      ticketAllocationId: null,
+      tktId: null,
+      userId: { id: null, name: null },
+      remark: null,
+      tabType: null
+    }
   }
 
 }
