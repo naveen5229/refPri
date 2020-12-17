@@ -22,7 +22,8 @@ export class AddActionComponent implements OnInit {
     threshold: null,
     modes: [],
     nextAction: [],
-    autoStateChange: null
+    autoStateChange: null,
+    userMapping:[]
     // isDefault: false,
     // defaultOwner: { id: null, name: null }
   }
@@ -106,6 +107,14 @@ export class AddActionComponent implements OnInit {
 
   saveProcessAction() {
     let autoStateChange = (this.actionForm.nextState.length == 1) ? this.actionForm.autoStateChange : null;
+    
+    let userMapped =[];
+    if(this.actionForm.userMapping && this.actionForm.userMapping.length > 0){
+      userMapped = this.actionForm.userMapping.map(data => {
+        return {id:data.id,name:data.name}
+      });
+    }
+
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
     }
@@ -120,6 +129,7 @@ export class AddActionComponent implements OnInit {
         nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
         nextState: (this.actionForm.nextState && this.actionForm.nextState.length) ? JSON.stringify(this.actionForm.nextState) : null,
         autoStateChange: autoStateChange,
+        users:(userMapped && userMapped.length) ? JSON.stringify(userMapped) : null
         // isDefault: this.actionForm.isDefault,
         // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };
@@ -292,6 +302,7 @@ export class AddActionComponent implements OnInit {
     this.actionForm.threshold = null;
     this.actionForm.states = [];
     this.actionForm.nextState = [];
+    this.actionForm.userMapping = [];
     this.actionForm.autoStateChange = null;
     this.button = 'Add';
     // this.actionForm.isDefault = null;
