@@ -864,7 +864,7 @@ export class CommonService {
   async searchString(value,messageList) {
     let searchTerm = value.trim();
     let searchedIndex = [];
-    if (searchTerm && searchTerm!="") {
+    if (searchTerm && searchTerm!="" && searchTerm!=".") {
       if (searchTerm.indexOf(' ') == 0) {
         return;
       }

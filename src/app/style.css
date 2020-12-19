@@ -531,3 +531,6 @@ nb-card-body {
 .modal-overflow{
     overflow-y: auto;
 }
+.spinner-div{
+    min-height:40px;
+}
