@@ -305,7 +305,7 @@
                         <label>Esclation Time for user Ack</label>
                     </div>
                     <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.escTime">
+                        <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.escTime">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -313,7 +313,7 @@
                         <label>Complete Remaining Time</label>
                     </div>
                     <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.complRemTime">
+                        <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.complRemTime">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -403,7 +403,7 @@
                         <label>User Level</label>
                     </div>
                     <div class="col-8">
-                        <select [(ngModel)]="esclationMatrix.userLevel">
+                        <select class="form-control w-50" [(ngModel)]="esclationMatrix.userLevel">
                             <option selected disabled>--Select--</option>
                             <option>1</option>
                             <option>2</option>

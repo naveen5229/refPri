@@ -14,6 +14,14 @@
     padding-top: 0;
 }
 
+.search-control{
+display: flex;
+align-items: center;
+justify-content: flex-start;    
+}
+
+
+
 .chat_block {
     // min-height: 56vh;
     max-height: 56vh;
@@ -40,6 +48,8 @@
     background-color: #fff;
     // border: 1px solid lightgray;
     box-shadow: 0 1px 3px #c2c2c2;
+    position: relative;
+ 
 }
 
 .other_chat,
@@ -48,7 +58,14 @@
     max-width: 82%;
     margin-bottom: 5px;
     border-radius: 5px;
-    padding: 0 10px;
+    padding: 3px 10px;
+    padding-right: 20px;
+    max-width: 70%;
+
+a{
+    word-break: break-word; 
+}
+
     span {
         //display: flow-root;
         // display: block;
@@ -72,6 +89,12 @@
         max-width:100%;
         overflow-x: auto;
     }
+}
+
+.chat-header{
+display: flex;
+align-items: center;
+justify-content: space-between;    
 }
 
 .bottom-block {
