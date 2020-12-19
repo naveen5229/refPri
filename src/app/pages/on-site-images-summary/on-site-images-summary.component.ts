@@ -12,7 +12,8 @@ import { CommonService } from '../../Service/common/common.service';
 })
 export class OnSiteImagesSummaryComponent implements OnInit {
   adminReportList: any;
-  date = new Date();
+  startDate = this.common.getDate(-2);
+  endDate = this.common.getDate();
   today = new Date();
 
   table = {
@@ -26,10 +27,14 @@ export class OnSiteImagesSummaryComponent implements OnInit {
   };
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
-    this.getAdminReports()
+    this.getAdminReports();
+    this.common.refresh = this.refresh.bind(this);
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  refresh() {
+    this.getAdminReports();
   }
 
   getAdminReports() {
@@ -43,8 +48,9 @@ export class OnSiteImagesSummaryComponent implements OnInit {
       }
     };
 
-    let date = this.common.dateFormatter(this.date);
-    const params = `?date=${date}`;
+    let startDate = this.common.dateFormatter(this.startDate);
+    let endDate = this.common.dateFormatter(this.endDate);
+    const params = `?startDate=${startDate}&endDate=${endDate}`;
     console.log(params);
     // return;
     this.common.loading++;

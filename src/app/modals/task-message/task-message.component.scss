@@ -69,6 +69,8 @@
     }
     label {
         margin: 0;
+        max-width:100%;
+        overflow-x: auto;
     }
 }
 
@@ -340,4 +342,22 @@
     position: absolute;
     bottom: -18px;
     right: 0;
+}
+
+.history{
+    text-align: center;
+}
+.history:hover{
+    cursor: pointer;
+}
+.user-active{
+    background: yellow;
+}
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 12px;
+    border: 1px solid black;
 }

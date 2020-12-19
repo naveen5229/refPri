@@ -9,6 +9,7 @@ import { TicketChatboxComponent } from '../../modals/ticket-modals/ticket-chatbo
 import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time/add-extra-time.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -134,6 +135,11 @@ export class TicketComponent implements OnInit {
     info: null,
     remark: null
   }
+  categoryIds = {
+    priCat: null,
+    secCat: null,
+    type: null,
+  }
   priCatList = [];
   secCatList = [];
   typeList = [];
@@ -157,6 +163,10 @@ export class TicketComponent implements OnInit {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate()
   }
+
+  openingFormInfo = [];
+  closingFormInfo = [];
+  primaryFormInfo = [];
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTicketByType(101);
@@ -236,6 +246,15 @@ export class TicketComponent implements OnInit {
       if (res['code'] > 0) {
         if (res['data']) {
           this.ticketFormFields = res['data'];
+          if (this.activeTab == 'completedTkt') {
+            if (refType == 1) {
+              this.closingFormInfo = this.ticketFormFields;
+            }else if(refType == 2){
+              this.primaryFormInfo = this.ticketFormFields;
+            } else {
+              this.openingFormInfo = this.ticketFormFields;
+            }
+          }
           this.formatArray();
         }
       } else {
@@ -252,7 +271,7 @@ export class TicketComponent implements OnInit {
     this.api.get('Ticket/getTicketProcessProperty?tpId=' + this.ticketForm.tp.id).subscribe(res => {
       this.common.loading--;
       this.tpPropertyList = res['data'] || [];
-      this.findPriCat();
+      // this.findPriCat();
     }, err => {
       this.common.loading--;
       console.log(err);
@@ -283,21 +302,21 @@ export class TicketComponent implements OnInit {
     console.log("oddArray", this.oddArray);
   }
 
-  findPriCat() {
-    if (this.tpPropertyList && this.tpPropertyList.length > 0) {
-      this.tpPropertyList.forEach(element => {
-        if (element._pri_cat_id && !this.priCatList.find(x => { return x.id == element._pri_cat_id })) {
-          this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
-        }
-        if (element._sec_cat_id && !this.secCatList.find(x => { return x.id == element._sec_cat_id })) {
-          this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
-        }
-        if (element._type_id && !this.typeList.find(x => { return x.id == element._type_id })) {
-          this.typeList.push({ id: element._type_id, name: element.type });
-        }
-      });
-    }
-  }
+  // findPriCat() {
+  //   if (this.tpPropertyList && this.tpPropertyList.length > 0) {
+  //     this.tpPropertyList.forEach(element => {
+  //       if (element._pri_cat_id && !this.priCatList.find(x => { return x.id == element._pri_cat_id })) {
+  //         this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
+  //       }
+  //       if (element._sec_cat_id && !this.secCatList.find(x => { return x.id == element._sec_cat_id })) {
+  //         this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
+  //       }
+  //       if (element._type_id && !this.typeList.find(x => { return x.id == element._type_id })) {
+  //         this.typeList.push({ id: element._type_id, name: element.type });
+  //       }
+  //     });
+  //   }
+  // }
 
   resetTicketForm() {
     this.tpPropertyList = [];
@@ -344,6 +363,36 @@ export class TicketComponent implements OnInit {
       this.getTicketFormField(0);
       this.getTicketProcessProperty();
     }, 500);
+
+    for (let i = 1; i <= 3; i++) {
+      this.getCatListByType(event._id, i)
+    }
+
+  }
+
+  getCatListByType(process_id, type) {
+    this.priCatList = [];
+    this.secCatList = [];
+    this.typeList = [];
+    let param = `tpId=${process_id}&type=${type}`
+    this.common.loading++;
+    this.api.get("Ticket/getTicketProcessCatByType?" + param).subscribe(res => {
+      this.common.loading--;
+      if (type == 1) {
+        let priCatList = res['data'];
+        this.priCatList = priCatList.map(x => { return { id: x._id, name: x.name } });
+      } else if (type == 2) {
+        let secCatList = res['data'];
+        this.secCatList = secCatList.map(x => { return { id: x._id, name: x.name } });
+      } else {
+        let typeList = res['data'];
+        this.typeList = typeList.map(x => { return { id: x._id, name: x.name } });
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getTicketByType(type, startDate = null, endDate = null) {
@@ -835,9 +884,9 @@ export class TicketComponent implements OnInit {
         }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
-        if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
-          icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
-        }
+        // if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
+        //   icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
+        // }
       }
 
       if (ticket._status == 2 && (type == 101 || type == 102)) {
@@ -850,6 +899,9 @@ export class TicketComponent implements OnInit {
       } else if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
       }
+
+      icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
+      
     } else if (type == 100) {
       icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
     } else if (type == 103) {
@@ -858,6 +910,27 @@ export class TicketComponent implements OnInit {
     icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type, 0), txt: '', title: "Ticket Info" });
 
     return icons;
+  }
+
+  updatePrimaryInfo(ticket,type){
+    let title = 'Primary Info Fields';
+    let actionData = {
+      ticketId: ticket._ticket_id,
+      refId: ticket._tpid,
+      refType: 2,
+    };
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data, 'response');
+        // if(data.isContinue){
+        //   this.updateTicketStatus(ticket, type, status, null);
+        // }else{
+        //   this.changeTicketStatusWithConfirm(ticket, type, status)
+        // }
+      }
+    });
   }
 
   deleteTicket(ticket, type) {
@@ -1029,31 +1102,37 @@ export class TicketComponent implements OnInit {
 
   saveTicket() {
     console.log("ticketForm:", this.ticketForm);
-    let selected = this.tpPropertyList.find(ele => {
-      return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
-    });
+    // let selected = this.tpPropertyList.find(ele => {
+    //   return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
+    // });
 
-    console.log("selected:", selected);
+    // console.log("selected:", selected);
 
-    if (selected) {
-      this.ticketForm.tpProperty.id = selected._id;
-      this.ticketForm.tpProperty.name = selected.name;
-    } else {
-      this.ticketForm.tpProperty = { id: null, name: null }
-    }
+    // if (selected) {
+    //   this.ticketForm.tpProperty.id = selected._id;
+    //   this.ticketForm.tpProperty.name = selected.name;
+    // } else {
+    //   this.ticketForm.tpProperty = { id: null, name: null }
+    // }
 
     let params = {
-      tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
-      remark: this.ticketForm.remark,
+      priCatId: this.categoryIds.priCat,
+      secCatId: this.categoryIds.secCat,
+      typeId: this.categoryIds.type,
+      // tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
+      tpId: this.ticketForm.tp.id ? this.ticketForm.tp.id : null,
+      // remark: this.ticketForm.remark,
       info: JSON.stringify(this.evenArray.concat(this.oddArray)),
       isAllocated: false,
       requestId: (this.ticketForm.requestId > 0) ? this.ticketForm.requestId : null
     }
 
-    if (!params.tpPropId) {
-      this.common.showError('Combination mismatch: Primary Category, Secondary Category, Type');
-      return false;
-    }
+    // if (!params.tpPropId) {
+    //   this.common.showError('Combination mismatch: Primary Category, Secondary Category, Type');
+    //   return false;
+    // }
+
+    // return;
     this.common.loading++;
     this.api.post('Ticket/saveTicket', params).subscribe(res => {
       this.common.loading--;
@@ -1062,6 +1141,7 @@ export class TicketComponent implements OnInit {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
           this.closeAddTicketModal();
+          this.activeTab = 'allocatedTkt';
           this.getTicketByType(101);
         } else {
           this.common.showError(res['data'][0].y_msg);
@@ -1130,9 +1210,9 @@ export class TicketComponent implements OnInit {
       this.common.loading--;
       if (res['code'] > 0) {
         if (res['data'][0].y_id > 0) {
-          this.closeassignUserModal();
           this.common.showToast(res['data'][0].y_msg);
           this.getTicketByType(this.assignUserObject.type);
+          this.closeassignUserModal();
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
@@ -1146,75 +1226,89 @@ export class TicketComponent implements OnInit {
     });
   }
 
+  // ticketHistory(ticket, type) {
+  //   this.common.loading++;
+  //   this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
+  //     this.common.loading--;
+  //     if (res['code'] > 0) {
+  //       if (res['data']) {
+  //         this.ticketHistoryList = res['data'];
+  //         this.setTableTicketHistory();
+  //         document.getElementById('ticketHistory').style.display = 'block';
+  //       } else {
+  //         this.common.showError('No Data')
+  //       }
+  //     } else {
+  //       this.common.showError(res['msg']);
+  //     }
+  //   }, (err) => {
+  //     this.common.loading--;
+  //     this.common.showError();
+  //     console.log("Error: ", err);
+  //   });
+  // }
+
+  // closeTicketHistory() {
+  //   document.getElementById('ticketHistory').style.display = 'none';
+  // }
+
+  // setTableTicketHistory() {
+  //   this.tableTicketHistory.data = {
+  //     headings: this.generateHeadingsTicketHistory(),
+  //     columns: this.getTableColumnsTicketHistory()
+  //   };
+  //   return true;
+  // }
+
+  // generateHeadingsTicketHistory() {
+  //   let headings = {};
+  //   for (var key in this.ticketHistoryList[0]) {
+  //     if (key.charAt(0) != "_") {
+  //       headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+  //     }
+  //     if (key === "addtime" || key === "action_completed") {
+  //       headings[key]["type"] = "date";
+  //     }
+  //   }
+  //   return headings;
+  // }
+
+  // getTableColumnsTicketHistory() {
+  //   let columns = [];
+  //   this.ticketHistoryList.map(lead => {
+  //     let column = {};
+  //     for (let key in this.generateHeadingsTicketHistory()) {
+  //       if (key.toLowerCase() == 'action') {
+  //         // column[key] = {
+  //         //   value: "",
+  //         //   isHTML: true,
+  //         //   action: null,
+  //         //   icons: this.actionIcons(lead, type)
+  //         // };
+  //       } else if (key == "spent_time") {
+  //         column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
+  //       } else {
+  //         column[key] = { value: lead[key], class: 'black', action: '' };
+  //       }
+
+  //     }
+  //     columns.push(column);
+  //   });
+  //   return columns;
+  // }
+
   ticketHistory(ticket, type) {
-    this.common.loading++;
-    this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
-      this.common.loading--;
-      if (res['code'] > 0) {
-        if (res['data']) {
-          this.ticketHistoryList = res['data'];
-          this.setTableTicketHistory();
-          document.getElementById('ticketHistory').style.display = 'block';
-        } else {
-          this.common.showError('No Data')
+    let dataparams = {
+      view: {
+        api: 'Ticket/getTicketHistory',
+        param: {
+          tktId: ticket._ticket_id
         }
-      } else {
-        this.common.showError(res['msg']);
-      }
-    }, (err) => {
-      this.common.loading--;
-      this.common.showError();
-      console.log("Error: ", err);
-    });
-  }
-
-  closeTicketHistory() {
-    document.getElementById('ticketHistory').style.display = 'none';
-  }
-
-  setTableTicketHistory() {
-    this.tableTicketHistory.data = {
-      headings: this.generateHeadingsTicketHistory(),
-      columns: this.getTableColumnsTicketHistory()
-    };
-    return true;
-  }
-
-  generateHeadingsTicketHistory() {
-    let headings = {};
-    for (var key in this.ticketHistoryList[0]) {
-      if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-      }
-      if (key === "addtime" || key === "action_completed") {
-        headings[key]["type"] = "date";
-      }
+      },
+      title: "Ticket History"
     }
-    return headings;
-  }
-
-  getTableColumnsTicketHistory() {
-    let columns = [];
-    this.ticketHistoryList.map(lead => {
-      let column = {};
-      for (let key in this.generateHeadingsTicketHistory()) {
-        if (key.toLowerCase() == 'action') {
-          // column[key] = {
-          //   value: "",
-          //   isHTML: true,
-          //   action: null,
-          //   icons: this.actionIcons(lead, type)
-          // };
-        } else if (key == "spent_time") {
-          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-        } else {
-          column[key] = { value: lead[key], class: 'black', action: '' };
-        }
-
-      }
-      columns.push(column);
-    });
-    return columns;
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   forwardTicket(type) {
@@ -1305,8 +1399,12 @@ export class TicketComponent implements OnInit {
     const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        console.log(data.data, 'response');
-        this.updateTicketStatus(ticket, type, status, null);
+        console.log(data, 'response');
+        if(data.isContinue){
+          this.updateTicketStatus(ticket, type, status, null);
+        }else{
+          this.changeTicketStatusWithConfirm(ticket, type, status)
+        }
       }
     });
   }
@@ -1329,6 +1427,13 @@ export class TicketComponent implements OnInit {
     setTimeout(async () => {
       await this.getTicketFormField(refType);
     }, 500);
+
+    if (this.activeTab == 'completedTkt') {
+      setTimeout(async () => {
+        await this.getTicketFormField(1);
+        await this.getTicketFormField(2);
+      }, 500);
+    }
 
     document.getElementById('infoWindow').style.display = 'block';
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList,HostListener } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
@@ -9,6 +9,7 @@ import { AddTransactionActionComponent } from '../add-transaction-action/add-tra
 import { FormDataComponent } from '../form-data/form-data.component';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { FileHandle } from '../../../directives/dndDirective/dnd.directive';
 
 @Component({
   selector: 'ngx-chatbox',
@@ -34,6 +35,7 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
   ]
 })
 export class ChatboxComponent implements OnInit {
+  files: FileHandle[] = [];
   @ViewChild('chat_block', { static: false }) private myScrollContainer: ElementRef;
   taskMessage = "";
   title = '';
@@ -48,7 +50,7 @@ export class ChatboxComponent implements OnInit {
   lastSeenIdForView = 0; //only for view
   userListByTask = [];
   adminList = [];
-  newCCUserId = null;
+  newCCUserId = [];
   // taskId = null;
   ticketType = null;
   showAssignUserAuto = null;
@@ -104,9 +106,14 @@ export class ChatboxComponent implements OnInit {
   commentInfo = [];
   isMentionedUser = false;
   mentionedUserList = [];
-
+  mentionUserIndex: number = 0;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
   @ViewChildren('userlistInput') userlistInput: QueryList<ElementRef>;
   @ViewChild('msgtextarea', { static: false }) private msgtextarea: ElementRef;
+  fileType = null;
 
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public userService: UserService) {
@@ -159,6 +166,33 @@ export class ChatboxComponent implements OnInit {
     this.activeModal.close({ response: response });
   }
 
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    if (this.isMentionedUser) {
+      if (key === 'arrowdown') {
+        event.preventDefault();
+        this.mentionUserIndex++;
+        if (this.mentionedUserList.length === this.mentionUserIndex) {
+          this.mentionUserIndex = 0;
+        }
+      } else if (key === 'arrowup') {
+        event.preventDefault();
+        this.mentionUserIndex--;
+        if (this.mentionUserIndex < 0) {
+          this.mentionUserIndex = this.mentionedUserList.length - 1;
+        }
+      } else if (key === 'enter') {
+        event.preventDefault();
+        this.onSelectMenstionedUser(this.mentionedUserList[this.mentionUserIndex]);
+        this.isMentionedUser = false;
+      }
+    }
+    if (key == 'escape') {
+      this.closeModal(false);
+    }
+
+  }
+
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       if (res['code'] > 0) {
@@ -200,18 +234,21 @@ export class ChatboxComponent implements OnInit {
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
-          console.log("msgListOfOther:", msgListOfOther);
-          console.log("msgListOfMine:", this.msgListOfMine.length);
+          // console.log("msgListOfOther:", msgListOfOther);
+          // console.log("msgListOfMine:", this.msgListOfMine.length);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
             if (this.lastMsgId != lastMsgIdTemp) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageReadoflead();
             }
-            console.log("lastMsgIdTemp:", lastMsgIdTemp);
+            // console.log("lastMsgIdTemp:", lastMsgIdTemp);
           }
-          console.log("lastMsgId:", this.lastMsgId);
+          // console.log("lastMsgId:", this.lastMsgId);
         }
+        setTimeout(() => {
+          this.common.fileLinkHandler('chat_block');
+        }, 500);
       } else {
         this.common.showError(res['data'])
       }
@@ -226,12 +263,22 @@ export class ChatboxComponent implements OnInit {
     if (this.taskMessage == "" && !this.attachmentFile.file) {
       return this.common.showError("Message is missing");
     } else {
+      let formatedMsg = this.taskMessage.trim();
+      if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.com') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.in'))) {
+        formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
+      }
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
+      if (mentionedUsers && mentionedUsers.length > 0) {
+        mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
+      }
+      // console.log("mentionedUsers:", mentionedUsers);
+      // console.log("formatedMsg:",formatedMsg);
+      // return false;
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: this.taskMessage,
+        message: formatedMsg,//this.taskMessage,
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
@@ -263,10 +310,12 @@ export class ChatboxComponent implements OnInit {
   handleFileSelection(event) {
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
+      // console.log("ChatboxComponent -> handleFileSelection -> event.target.files[0]", event.target.files[0])
       this.common.loading--;
       let file = event.target.files[0];
-      console.log("Type:", file, res);
+      // console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
+      this.formatIcon(ext);
       // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext.toLowerCase())) {
@@ -276,11 +325,23 @@ export class ChatboxComponent implements OnInit {
       }
       this.attachmentFile.name = file.name;
       this.attachmentFile.file = res;
-      console.log("attachmentFile:", this.attachmentFile)
+      // console.log("attachmentFile:", this.attachmentFile)
     }, err => {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  formatIcon(ext) {
+    let icon = null;
+    switch (ext) {
+      case 'xlxs' || 'xls': icon = 'fa fa-file-excel-o'; break;
+      case 'docx' || 'doc': icon = 'fa fa-file'; break;
+      case 'pdf': icon = 'fa fa-file-pdf-o'; break;
+      case 'csv': icon = 'fas fa-file-csv'; break;
+      default: icon = null;
+    }
+    this.fileType = icon;
   }
 
   onPaste(event: any) {
@@ -289,10 +350,19 @@ export class ChatboxComponent implements OnInit {
     let selectedFile = { "target": { "files": [] } };
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
+        event.preventDefault();
         selectedFile.target.files.push(item.getAsFile());
       }
     }
+    // console.log("ChatboxComponent -> onPaste -> selectedFile", selectedFile)
+    this.handleFileSelection(selectedFile);
+  }
 
+  filesDropped(files: FileHandle[]) {
+    // console.log("ChatboxComponent -> filesDropped -> files", files)
+    this.files = files;
+    let selectedFile = { "target": { "files": [] } };
+    selectedFile.target.files.push(this.files[0].file);
     this.handleFileSelection(selectedFile);
   }
 
@@ -301,7 +371,6 @@ export class ChatboxComponent implements OnInit {
       leadId: this.ticketId
     }
     this.api.post('Processes/getAllUserByLead', params).subscribe(res => {
-      console.log("getAllUserByLead:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
@@ -315,16 +384,20 @@ export class ChatboxComponent implements OnInit {
   }
 
   addNewCCUserToLead() {
-    if (this.ticketId > 0 && this.newCCUserId > 0) {
+    if (this.ticketId > 0 && this.newCCUserId.length > 0) {
+      let ccUsers =[];
+      this.newCCUserId.map(ele => {
+        ccUsers.push({user_id: ele.id })
+      })
       let params = {
         leadId: this.ticketId,
-        ccUserId: this.newCCUserId
+        ccUserId: JSON.stringify(ccUsers)
       }
       this.common.loading++;
       this.api.post('Processes/addNewCCUserToLead', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.newCCUserId = null;
+          this.newCCUserId = [];
           this.getAllUserByLead();
         } else {
           this.common.showError(res['data']);
@@ -382,15 +455,12 @@ export class ChatboxComponent implements OnInit {
       ticketId: this.ticketId,
       comment_id: this.lastMsgId
     }
-    console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
     if (this.lastSeenId < this.lastMsgId) {
       this.api.post('Processes/readLastMessage', params).subscribe(res => {
-        // console.log("messageList:", res['data']);
         if (res['code'] > 0) {
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
           }, 5000);
-
         } else {
           this.common.showError(res['msg'])
         }
@@ -407,7 +477,6 @@ export class ChatboxComponent implements OnInit {
   }
 
   showLeadUserLogsModal() {
-    // console.log('userLogs:', this.userListByTask['userLogs']);
     document.getElementById("userLogsModal").style.display = "block";
   }
   // end: campaign msg
@@ -486,8 +555,6 @@ export class ChatboxComponent implements OnInit {
   actionIcons(lead, type) {
     let formType = (type == 1) ? 1 : 2;
     let icons = [];
-
-
     if (!type && !lead.completion_time) {
       icons.push({ class: 'fas fa-trash-alt ml-2', action: this.deleteLeadAction.bind(this, lead), txt: '', title: "Delete Action" });
     }
@@ -590,7 +657,6 @@ export class ChatboxComponent implements OnInit {
       this.common.showError("Permission Denied");
       return false;
     }
-    // console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = 1;
@@ -624,7 +690,6 @@ export class ChatboxComponent implements OnInit {
           } else {
             this.openTransAction(lead, type, 2);
           }
-
         } else if (data.nextFormType == 2) {
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType, true);
@@ -639,7 +704,6 @@ export class ChatboxComponent implements OnInit {
   }
 
   openTransFormData(lead, type, formType = null, isNextForm = false) {
-    // console.log("openTransAction");
     let title = 'Action Form';
     let refId = 0;
     let refType = 0;
@@ -688,7 +752,6 @@ export class ChatboxComponent implements OnInit {
       refType: 3,
       formType: null,
     };
-
     this.common.params = { actionData, title: title, button: "Save" };
     const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
@@ -703,10 +766,8 @@ export class ChatboxComponent implements OnInit {
       priOwnId: lead._pri_own_id,
       isDisabled: true
     }
-
     this.common.params = { rowData, processList: null, adminList: null, title: "View Transaction ", button: "Update" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-
   }
 
   closeEditActionOwnerModal() {
@@ -718,7 +779,6 @@ export class ChatboxComponent implements OnInit {
       this.common.showError("Primary Owner/Action Owner have access to change");
       return false;
     }
-    // console.log('openEditActionOwnerModal:', row);
     this.actionOwnerForm.transId = this.ticketData._transactionid;
     this.actionOwnerForm.actionId = row._trans_action_id;
     this.actionOwnerForm.oldOwnerName = row.action_owner;
@@ -734,7 +794,6 @@ export class ChatboxComponent implements OnInit {
   }
 
   changeActionOwner() {
-    // console.log("changeActionOwner:", this.actionOwnerForm);
     if (this.actionOwnerForm.userId > 0) {
       let params = {
         transId: this.actionOwnerForm.transId,
@@ -743,10 +802,8 @@ export class ChatboxComponent implements OnInit {
         actionOwnerName: this.actionOwnerForm.userName,
         actionOwnerNameOld: this.actionOwnerForm.oldOwnerName,
       }
-
       this.common.loading++;
-      this.api.post('Processes/changeTransactionActionOwner', params)
-        .subscribe(res => {
+      this.api.post('Processes/changeTransactionActionOwner', params).subscribe(res => {
           this.common.loading--;
           if (res['code'] == 1) {
             if (res['data'][0].y_id > 0) {
@@ -764,12 +821,11 @@ export class ChatboxComponent implements OnInit {
           this.common.loading--;
           console.log('Error: ', err);
         });
-
     } else {
       this.common.showError("Action owner is missing");
     }
-
   }
+
   setReplyWithType(type) {
     this.replyType = type;
     if (type == 1) {
@@ -806,7 +862,6 @@ export class ChatboxComponent implements OnInit {
   messageReadInfo(commentId) {
     this.commentInfo = [];
     let params = "?ticketId=" + this.ticketId + "&commentId=" + commentId;
-    // if (this.ticketId < this.lastMsgId) {
     this.api.get('Processes/getMessageReadInfo' + params).subscribe(res => {
       if (res['code'] > 0) {
         this.commentInfo = res['data'] || [];
@@ -817,7 +872,6 @@ export class ChatboxComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
-    // }
   }
 
   onMessageType(e) {
@@ -852,6 +906,9 @@ export class ChatboxComponent implements OnInit {
       let splieted = this.taskMessage.split('@');
       let searchableTxt = splieted[splieted.length - 1];
       this.mentionedUserList = accessUsers.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) }); //this.adminList.filter(x => { return (x.name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+      if (this.mentionUserIndex >= this.mentionedUserList.length) {
+        this.mentionUserIndex = 0;
+      }
     }
   }
 
@@ -860,7 +917,7 @@ export class ChatboxComponent implements OnInit {
     // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();
-    this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
   }
 

@@ -9,6 +9,8 @@ import { FormDataComponent } from '../../modals/process-modals/form-data/form-da
 import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { DocumentListingComponent } from '../../modals/document-listing/document-listing.component';
+import { ReminderComponent } from '../../modals/reminder/reminder.component';
 
 @Component({
   selector: 'ngx-personalised-dashboard',
@@ -50,15 +52,32 @@ export class PersonalisedDashboardComponent implements OnInit {
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getProcessList();
+    this.getAllAdmin();
     this.common.refresh = this.refresh.bind(this);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   refresh() {
     this.getProcessList();
+    this.getAllAdmin();
+    this.activeTab = null;
   }
+
+  getAllAdmin() {
+    this.api.get("Admin/getAllAdmin.json").subscribe(res => {
+      console.log("data", res['data'])
+      if (res['code'] > 0) {
+        this.adminList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
   getProcessList() {
     this.common.loading++;
     this.api.get('Processes/getProcessList').subscribe(res => {
@@ -233,6 +252,7 @@ export class PersonalisedDashboardComponent implements OnInit {
     }
 
     if (type == 2) {//for me
+      icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
@@ -249,7 +269,18 @@ export class PersonalisedDashboardComponent implements OnInit {
       else {
         icons.push({ class: "fa fa-handshake", action: this.openTransAction.bind(this, lead, type, 2), txt: '', title: "Add Next Action" });
       }
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
 
+    }
+    if (type == 4 || lead._status == 5 || lead._status == -1) {
+    } else {
+      if (lead._isremind == 1) {
+        icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeen.bind(this, lead, type), txt: '', title: "Check Reminder" });
+      } else if (lead._isremind == 2 && type != 5) {
+        icons.push({ class: "fa fa-bell reminderAdded", action: this.showReminderPopup.bind(this, lead, type), txt: '', title: "Edit Reminder" });
+      } else if (type != 5) {
+        icons.push({ class: "fa fa-bell", action: this.showReminderPopup.bind(this, lead, type), txt: '', title: "Add Reminder" });
+      }
     }
     return icons;
   }
@@ -279,11 +310,37 @@ export class PersonalisedDashboardComponent implements OnInit {
     }
   }
 
+  showReminderPopup(lead, type) {
+    this.common.params = { ticketId: lead._transactionid, title: "Add Reminder", btn: "Set Reminder", fromPage: "trans" };
+    const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getProcessLeadByType(type);
+      }
+    });
+  }
+
+  checkReminderSeen(lead, type) {
+    let params = {
+      ticketId: lead._transactionid
+    };
+    this.common.loading++;
+    this.api.post('Processes/checkLeadReminderSeen', params).subscribe(res => {
+      this.common.loading--;
+      this.common.showToast(res['msg']);
+      this.getProcessLeadByType(type);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
   openTransAction(lead, type, formType = null) {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
-      formTypeTemp = (type == 2 || type == 6) ? 1 : 0;
+      formTypeTemp = (type == 1 || type == 6) ? 1 : 0;
     } else {
       formTypeTemp = formType;
     }
@@ -304,7 +361,8 @@ export class PersonalisedDashboardComponent implements OnInit {
       remark: (lead._remark) ? lead._remark : null,
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
-      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0
+      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
+      isMarkTxnComplete: ((lead._state_change == 2 && type == 1) || [1].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
     this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
@@ -504,6 +562,11 @@ export class PersonalisedDashboardComponent implements OnInit {
     } else {
       this.common.showError("Transaction ID Not Available");
     }
+  }
+  
+  openDocList(lead) {
+    this.common.params = { transId: lead._transactionid }
+    const activeModal = this.modalService.open(DocumentListingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

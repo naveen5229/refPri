@@ -7,6 +7,7 @@ import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { MonthPickerComponent } from './month-picker/month-picker.component';
 import { SmartTableComponent } from './smart-table/smart-table.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { DndDirective } from './dndDirective/dnd.directive';
 
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, DateInputsModule],
@@ -17,9 +18,10 @@ import { ImageViewerComponent } from './image-viewer/image-viewer.component';
         DateTimePickerComponent,
         MonthPickerComponent,
         SmartTableComponent,
-        ImageViewerComponent
+        ImageViewerComponent,
+        DndDirective,
     ],
-    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent],
+    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective,],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [],
 })

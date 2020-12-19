@@ -55,7 +55,7 @@
         color: #676767;
         i {
             color: #3366ff;
-            font-size: 10px;
+            font-size: 8px;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
                 display: contents;
@@ -68,10 +68,13 @@
     }
     label {
         margin: 0;
+        max-width:100%;
+        overflow-x: auto;
     }
 }
 
 .bottom-block {
+    background: ghostwhite;
     .button-box {
         display: inline-grid;
     }
@@ -284,6 +287,10 @@ smart-table {
     box-shadow: none;
     opacity: 1;
     transform: scale(0.7);
+}
+.send:focus {
+    outline: 0;
+    box-shadow: none;
 }
 
 .chatmsg {

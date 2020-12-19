@@ -1,5 +1,6 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
+    <span *ngIf="!transAction.formType && isFormHere == 1" class="m-1 ml-2"><i class="fa fa-plus" aria-hidden="true" (click)="confirmSaveTransAction(true)"></i></span>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false,null)">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -65,8 +66,8 @@
 
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,nunll)">Cancel</button>
-            <button class="btn btn-primary btn-sm" type='submit' (click)="saveTransAction()">{{button}}</button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" (click)="closeModal(false,null)">Cancel</button>
+            <button class="btn btn-primary btn-sm" type='submit' (click)="confirmSaveTransAction(false)">{{button}}</button>
         </div>
     </div>
 </div>
