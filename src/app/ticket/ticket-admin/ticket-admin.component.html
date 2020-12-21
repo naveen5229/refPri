@@ -10,7 +10,7 @@
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
                 <li [ngClass]="activeTab=='current'?'active':''" (click)="activeTab='current'; getAdminTicket(999)">
-                    Current Ticket
+                    Today's Ticket
                 </li>
                 <li [ngClass]="activeTab=='processWise'?'active':''" (click)="activeTab='processWise'; getAdminTicket(0)">
                     Process Wise Ticket

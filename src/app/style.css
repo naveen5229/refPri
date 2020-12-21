@@ -316,6 +316,10 @@ table .fa-comments.new-comment span {
     background: lightgray;
 }
 
+.search-style{
+    background: lightgray;
+}
+
 .new_message {
     background: lightgray !important;
 }
@@ -523,4 +527,10 @@ nb-card-body {
 }
 .hr_full{
     margin: 0 -15px;
+}
+.modal-overflow{
+    overflow-y: auto;
+}
+.spinner-div{
+    min-height:40px;
 }

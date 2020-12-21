@@ -102,6 +102,11 @@ export class TaskMessageComponent implements OnInit {
   messageHistoryList = null;
   mentionUserIndex: number = 0;
   query_conversation = null;
+  // searchTerm = null;
+  
+  searchedIndex = [];
+  selectedIndex = 0;
+  searchCount = 0;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -251,26 +256,28 @@ export class TaskMessageComponent implements OnInit {
     }
     this.api.post('AdminTask/getTicketMessage', params).subscribe(res => {
       this.showLoading = false;
-      console.log("messageList:", res['data']);
-      if (res['success']) {
+      if (res['code'] == 1) {
         this.messageList = res['data'] || [];
         this.messageListShow = JSON.parse(JSON.stringify(this.messageList));
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
-          console.log("msgListOfOther:", msgListOfOther);
-          console.log("msgListOfMine:", this.msgListOfMine.length);
+          // console.log("msgListOfOther:", msgListOfOther);
+          // console.log("msgListOfMine:", this.msgListOfMine.length);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
             if (this.lastMsgId != lastMsgIdTemp) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageRead();
             }
-            console.log("lastMsgIdTemp:", lastMsgIdTemp);
+            // console.log("lastMsgIdTemp:", lastMsgIdTemp);
           }
-          console.log("lastMsgId:", this.lastMsgId);
+          // console.log("lastMsgId:", this.lastMsgId);
         }
+        setTimeout(() => {
+          this.common.fileLinkHandler('chat_block');
+        }, 500);
       } else {
         this.common.showError(res['data'])
       }
@@ -286,16 +293,13 @@ export class TaskMessageComponent implements OnInit {
       ticketId: this.ticketId,
       comment_id: this.lastMsgId
     }
-    console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
+    // console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
     if (this.lastSeenId < this.lastMsgId) {
       this.api.post('AdminTask/readLastMessage', params).subscribe(res => {
-        console.log("messageList:", res['data']);
         if (res['code'] > 0) {
-
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
           }, 5000);
-
         } else {
           this.common.showError(res['msg'])
         }
@@ -320,6 +324,7 @@ export class TaskMessageComponent implements OnInit {
       this.replyType = null;
       this.messageReadInfo(this.parentCommentId);
     }
+    this.reduceFocusHandler();
     this.msgtextarea.nativeElement.focus();
   }
 
@@ -345,13 +350,17 @@ export class TaskMessageComponent implements OnInit {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
-      console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 342 ~ TaskMessageComponent ~ saveTicketMessage ~ formatedMsg", formatedMsg)
       if (formatedMsg && (formatedMsg.match('www.') || formatedMsg.match('http://') || formatedMsg.match('https://') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.com') || formatedMsg.substr(formatedMsg.indexOf('.')).match('.in'))) {
         formatedMsg = this.common.getFormatedString(formatedMsg, "www.");
       }
-      console.log("formatedMsg:", formatedMsg);
-      // return false;
       let mentionedUsers = (this.mentionedUsers && this.mentionedUsers.length > 0) ? this.mentionedUsers.map(x => { return { user_id: x.id, name: x.name } }) : null;
+      if (mentionedUsers && mentionedUsers.length > 0) {
+        mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
+      }
+      // console.log("formatedMsg:", formatedMsg);
+      // console.log("mentionedUsers:", mentionedUsers);
+      // return false;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
@@ -363,7 +372,7 @@ export class TaskMessageComponent implements OnInit {
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
-      console.log("params:", params);
+      // console.log("params:", params);
       // return false;
       this.common.loading++;
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
@@ -397,7 +406,6 @@ export class TaskMessageComponent implements OnInit {
       ticketType: this.ticketType
     }
     this.api.post('AdminTask/getAllUserByTask', params).subscribe(res => {
-      console.log("userListByTask:", res['data']);
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
@@ -487,7 +495,6 @@ export class TaskMessageComponent implements OnInit {
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        console.log("Confirm response:", data);
         if (data.response) {
           this.removeCCUser(ccUserId, ccUserName, data.remark);
         }
@@ -532,11 +539,8 @@ export class TaskMessageComponent implements OnInit {
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
         isCCUpdate = 1;
         if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
-          console.log("ccuser check");
           let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
-          console.log("ccuser check2", findCC);
           if (findCC) {
-            console.log("ccuser check3");
             isCCUpdate = 0;
           }
         }
@@ -554,7 +558,7 @@ export class TaskMessageComponent implements OnInit {
         assigneeUserNameOld: this.userListByTask['taskUsers'][0].assignto,
         assigneeUserNameNew: this.newAssigneeUser.name
       }
-      console.log("updateTaskAssigneeUser params:", params);
+      // console.log("updateTaskAssigneeUser params:", params);
       this.common.loading++;
       this.api.post('AdminTask/updateTaskAssigneeUser', params).subscribe(res => {
         this.common.loading--;
@@ -617,19 +621,16 @@ export class TaskMessageComponent implements OnInit {
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        console.log("Confirm response:", data);
         if (data.response) {
           this.updateTicketStatus(status, data.remark);
         }
       });
-
     } else {
       this.common.showError("Invalid User");
     }
   }
 
   showReminderPopup() {
-    // if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
     this.common.params = { ticketId: this.ticketData._tktid, title: "Add Reminder", btn: "Set Reminder" };
     const activeModal = this.modalService.open(ReminderComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
@@ -637,9 +638,6 @@ export class TaskMessageComponent implements OnInit {
         this.ticketData._isremind = 2;
       }
     });
-    // } else {
-    //   this.common.showError("Invalid User");
-    // }
   }
 
   checkReminderSeen() {
@@ -648,24 +646,22 @@ export class TaskMessageComponent implements OnInit {
         ticket_id: this.ticketData._tktid
       };
       this.common.loading++;
-      this.api.post('AdminTask/checkReminderSeen', params)
-        .subscribe(res => {
-          this.common.loading--;
-          this.common.showToast(res['msg']);
-          this.ticketData._isremind = 0;
-        }, err => {
-          this.common.loading--;
-          console.log('Error: ', err);
-        });
+      this.api.post('AdminTask/checkReminderSeen', params).subscribe(res => {
+        this.common.loading--;
+        this.common.showToast(res['msg']);
+        this.ticketData._isremind = 0;
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
     } else {
       this.common.showError("Invalid User");
     }
   }
 
   editTaskAssignDate() {
-    console.log("editTaskAssignDate:", this.ticketData);
+    // console.log("editTaskAssignDate:", this.ticketData);
     if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
-
       this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
@@ -685,7 +681,6 @@ export class TaskMessageComponent implements OnInit {
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
       let file = event.target.files[0];
-      console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
       this.formatIcon(ext);
       let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
@@ -696,7 +691,6 @@ export class TaskMessageComponent implements OnInit {
       }
       this.attachmentFile.name = file.name;
       this.attachmentFile.file = res;
-      console.log("attachmentFile:", this.attachmentFile)
     }, err => {
       this.common.loading--;
       console.error('Base Err: ', err);
@@ -715,9 +709,8 @@ export class TaskMessageComponent implements OnInit {
     this.fileType = icon;
   }
 
-
   onPaste(event: any) {
-    console.log('event', event);
+    // console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
     for (const item of items) {
@@ -726,12 +719,11 @@ export class TaskMessageComponent implements OnInit {
         selectedFile.target.files.push(item.getAsFile());
       }
     }
-
     this.handleFileSelection(selectedFile);
   }
 
   filesDropped(files: FileHandle[]) {
-    console.log("ChatboxComponent -> filesDropped -> files", files)
+    // console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
     selectedFile.target.files.push(this.files[0].file);
@@ -757,8 +749,6 @@ export class TaskMessageComponent implements OnInit {
 
   onMessageType(e) {
     let value = e.data;
-    console.log("target value:", e.target.value);
-    console.log("target value22:", value);
     let accessUsers = [];
     if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
       accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
@@ -781,14 +771,14 @@ export class TaskMessageComponent implements OnInit {
       });
     }
     if (e && value && value == "@") {
-      console.log("onMessageType");
+      // console.log("onMessageType");
       this.isMentionedUser = true;
       this.mentionedUserList = accessUsers;//this.adminList;
       setTimeout(() => {
         this.userlistInput.toArray()[0].nativeElement.focus();
       }, 100);
     } else if (e && value && value == " ") {
-      console.log("onMessageType2");
+      // console.log("onMessageType2");
       this.isMentionedUser = false;
     } else if (this.isMentionedUser) {
       let splieted = this.taskMessage.split('@');
@@ -802,10 +792,10 @@ export class TaskMessageComponent implements OnInit {
 
   onSelectMenstionedUser(user) {
     this.mentionedUsers.push({ id: user.id, name: user.name });
-    console.log("mentionedUsers2:", this.mentionedUsers);
+    // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();
-    this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
   }
 
@@ -815,7 +805,6 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading--;
       if (res['code'] == 1) {
         this.stTaskMaster = (res['data']) ? res['data'][0] : null;
-        console.log("getTicketMessage", this.stTaskMaster);
       } else {
         this.common.showError(res['msg']);
       }
@@ -861,7 +850,6 @@ export class TaskMessageComponent implements OnInit {
     this.api.post("AdminTask/starMarkOnTicket", params).subscribe(res => {
       this.common.loading--;
       if (res['code'] > 0) {
-        // this.getTaskByType(type);
         if (this.isChecked == 1) {
           this.isChecked = 0;
         } else {
@@ -876,8 +864,7 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading--;
       this.common.showError();
       console.log("Error: ", err);
-    }
-    );
+    });
   }
 
   getHistory() {
@@ -910,109 +897,126 @@ export class TaskMessageComponent implements OnInit {
     }, 0);
   }
 
-  searchedIndex = [];
-  selectedIndex = 0;
   searchChat(value) {
-    this.searchedIndex = [];
-    let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
-    console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ value", value,messageList)
-    this.selectedIndex = 0;
-    let final = "";
-    let caseSensitive = false;
-    let splitFlag = null;
-    let matchFlag = null
-    if (!caseSensitive) {
-      splitFlag = "i";
-      matchFlag = "gi";
-    } else {
-      splitFlag = "";
-      matchFlag = "g";
-    }
-    let searchPattern = new RegExp(value, splitFlag);
-    let matchpattern = new RegExp(value, matchFlag);
+    // this.searchTerm = value;
+    // if (this.searchTerm) {
+    //   if (this.searchTerm.indexOf(' ') == 0) {
+    //     return;
+    //   }
+    //   this.searchedIndex = [];
+    //   let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
+    //   console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", this.searchTerm, messageList)
+    //   this.selectedIndex = 0;
+    //   let final = "";
+    //   let caseSensitive = false;
+    //   let splitFlag = null;
+    //   let matchFlag = null
+    //   if (!caseSensitive) {
+    //     splitFlag = "i";
+    //     matchFlag = "gi";
+    //   } else {
+    //     splitFlag = "";
+    //     matchFlag = "g";
+    //   }
+    //   let searchPattern = new RegExp(this.searchTerm, splitFlag);
+    //   let matchpattern = new RegExp(this.searchTerm, matchFlag);
 
-    for (let i = messageList.length - 1; i >= 0; i--) {
-      // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
-      let msg = messageList[i].comment;
-      console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg,value)
-      if ((msg.toLowerCase()).match(value.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
-        this.searchedIndex.push(i);
-        let separatedText = msg.split(searchPattern);
-        let separatedSearchedText = msg.match(matchpattern);
-        if (
-          separatedSearchedText != null &&
-          separatedSearchedText.length > 0
-        ) {
-          for (let j = 0; j < separatedText.length; j++) {
-            if (j <= separatedSearchedText.length - 1) {
-              final +=
-                separatedText[j] +
-                `<span class="text-highlight" id="focusOn-${i}">` +
-                separatedSearchedText[j] +
-                `</span>`;
-            } else {
-              final += separatedText[j];
-            }
-          }
-        }
-        messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
-        this.messageList = messageList;
-        final = '';
+    //   for (let i = messageList.length - 1; i >= 0; i--) {
+    //     // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
+    //     let msg = messageList[i].comment;
+    //     console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, this.searchTerm)
+    //     if ((msg.toLowerCase()).match(this.searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+    //       this.searchedIndex.push(i);
+    //       this.searchCount = this.searchedIndex.length;
+    //       let separatedText = msg.split(searchPattern);
+    //       let separatedSearchedText = msg.match(matchpattern);
+    //       if (
+    //         separatedSearchedText != null &&
+    //         separatedSearchedText.length > 0
+    //       ) {
+    //         for (let j = 0; j < separatedText.length; j++) {
+    //           if (j <= separatedSearchedText.length - 1) {
+    //             final +=
+    //               separatedText[j] +
+    //               `<span class="text-highlight" id="focusOn-${i}">` +
+    //               separatedSearchedText[j] +
+    //               `</span>`;
+    //           } else {
+    //             final += separatedText[j];
+    //           }
+    //         }
+    //       }
+    //       messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+    //       this.messageList = messageList;
+    //       final = '';
+    //       setTimeout(() => {
+    //         this.focusOnSelectedIndex();
+    //       }, 500);
+    //       // break;
+    //     }
+    //   }
+    // }
+    // setTimeout(() => {
+      let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+      this.common.searchString(value,messageList).then((res)=>{
+        console.log("res:",res);
+        this.searchedIndex = res.searchedIndex;
+        this.searchCount = this.searchedIndex.length;
+        this.messageList = res.messageList;
         setTimeout(() => {
-          this.focusOnSelectedIndex();
+          this.searchCount>0 ? this.focusOnSelectedIndex() : null;
         }, 500);
-        // break;
-      }
-    }
+      });
+    // }, 500);
   }
 
-  // scrollToChat(i) {
-  //   try {
-  //     setTimeout(() => {
-  //       this.myScrollContainer.nativeElement.scrollTop = i;
-  //     }, 100);
-  //   } catch (err) { }
-  // }
+  scrollToChat(focusOn) {
+    try {
+      setTimeout(() => {
+        document.getElementById("focusOn-" + focusOn).scrollIntoView();
+      }, 100);
+    } catch (err) { }
+  }
 
   onchangeIndex(type) {
-    console.log('selectedIndex:',this.selectedIndex)
-    // if(this.selectedIndex==0 || this.selectedIndex==this.searchedIndex.length-1){
-    //   this.common.showError("error");
-    //   if(this.selectedIndex<0){
-    //     this.selectedIndex=0;
-    //   }
-    //   if(this.selectedIndex==this.searchedIndex.length){
-    //     this.selectedIndex=this.searchedIndex.length-1;
-    //   }
-    //   return false;
-    // }
-    if (type == "plus") {
-      if(this.selectedIndex==this.searchedIndex.length-1){
-        this.common.showError("error");
-        return;
-      }
+    console.log('selectedIndex:', this.selectedIndex,this.searchedIndex.length);
+    if (this.searchedIndex.length > 0) {
+      if (type == "plus") {
+        if (this.selectedIndex == this.searchedIndex.length - 1) {
+          return false;
+        }
         this.selectedIndex++;
-    } else {
-      if(this.selectedIndex==0){
-        this.common.showError("error");
-        return;
-      }
+        this.searchCount--;
+      } else {
+        if (this.selectedIndex == 0) {
+          return false;
+        }
         this.selectedIndex--;
+        this.searchCount++;
+      }
+      this.focusOnSelectedIndex();
     }
-    this.focusOnSelectedIndex();
   }
 
   focusOnSelectedIndex() {
     let focusOn = this.searchedIndex[this.selectedIndex];
-    let earlierIndex = focusOn;
     console.log("focusOn:", focusOn);
     // document.getElementById('chat_block').classList.remove('text-focus-highlight');
-    for(let i=0; i<this.searchedIndex.length;i++){
+    for (let i = 0; i < this.searchedIndex.length; i++) {
       let removeClass = document.getElementById("focusOn-" + this.searchedIndex[i])
-      if(removeClass)
-      removeClass.classList.remove('text-focus-highlight');
+      if (removeClass)
+        removeClass.classList.remove('text-focus-highlight');
     }
-    document.getElementById("focusOn-" + focusOn).classList.add('text-focus-highlight');
-    // this.scrollToChat(focusOn);
+    let addClass = document.getElementById("focusOn-" + focusOn);
+    if(addClass)
+      addClass.classList.add('text-focus-highlight');
+    this.scrollToChat(focusOn);
+  }
+
+  reduceFocusHandler() {
+    this.messageList = JSON.parse(JSON.stringify(this.messageListShow));
+    this.searchedIndex = [];
+    this.searchCount = 0;
+    // this.searchTerm = null;
   }
 }

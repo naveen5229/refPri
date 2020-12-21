@@ -25,12 +25,10 @@
 <div class="modal" id="addTicket">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <!-- Modal Header -->
             <div class="modal-header">
                 <h5 class="modal-title">Add Ticket Process</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeaddticketModal()">&times;</button>
             </div>
-            <!-- Modal body -->
             <div class="modal-body">
                 <div class="row form-group">
                     <div class="col-4">
@@ -40,19 +38,6 @@
                         <input type="text" class="form-control" placeholder="Process Name" name="processName" [(ngModel)]="ticketForm.name">
                     </div>
                 </div>
-
-                <!-- <div class="row form-group">
-                    <div class="col-4">
-                        <label>Supervisor</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="adminList" display="name" placeholder="Supervisor" name="defaultOwn"
-                            id="defaultOwn" (onSelected)="ticketForm.Supervisor=$event;"
-                            [preSelected]="ticketForm.Supervisor['id'] ? {name: ticketForm.Supervisor['name']}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div> -->
 
                 <div class="row form-group">
                     <div class="col-4">
@@ -69,7 +54,7 @@
                         <label>End Date</label>
                     </div>
                     <div class="col-8">
-                        <uj-date-time-picker (onChanged)="ticketForm.endTime = $event" [isStart]="false" [dateTimeValue]="ticketForm.endTime" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="ticketForm.endTime = $event" [isStart]="false" [dateTimeValue]="(ticketForm.endTime) ? ticketForm.endTime : null" [isTime]="false">
                         </uj-date-time-picker>
                     </div>
                 </div>

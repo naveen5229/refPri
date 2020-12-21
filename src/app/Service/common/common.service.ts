@@ -7,6 +7,8 @@ import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 import { Router } from '@angular/router';
+import { ApiService } from '../../Service/Api/api.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -27,9 +29,7 @@ export class CommonService {
     hold: "antiquewhite",
   }
   constructor(private toastrService: NbToastrService,
-    // private http: Http,
-    private datePipe: DatePipe,
-    public router: Router) { }
+    private datePipe: DatePipe,public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -803,6 +803,121 @@ export class CommonService {
       }
     });
     return (mentionUserList.length > 0) ? mentionUserList : null;
+  }
+
+  getFile(url,name){
+    let params = {
+      url: url,
+      name: name
+    };
+    this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
+      if(res['code']==1){
+        let b64encodedString = res['data']['base64'];
+        let fileName = res['data']['name'];
+        var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+        saveAs(blob, fileName);
+      }else{
+        this.showError(res['data']);
+      }
+    }, err => {
+      this.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  public base64ToBlob(b64Data, contentType='', sliceSize=512) {
+    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        let byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        let byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, {type: contentType});
+  }
+
+  fileLinkHandler(selector) {
+    let ele = document.getElementById(selector);
+    let links = ele.querySelectorAll('a');
+    for (let i = 0; i < links.length; i++) {
+      links[i].onclick = (eve: any) => {
+        let url = eve.target.href;
+        let name = eve.target.innerText;
+        console.log('Name:', name);
+        if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
+          eve.preventDefault();
+          this.getFile(url,name);
+          console.log('--------------------ITS FILE--------------------');
+        }
+        // console.log('url:', url)
+        // console.log('eve', eve);
+      }
+    }
+  }
+
+  async searchString(value,messageList) {
+    let searchTerm = value.trim();
+    let searchedIndex = [];
+    if (searchTerm && searchTerm!="" && searchTerm!=".") {
+      if (searchTerm.indexOf(' ') == 0) {
+        return;
+      }
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", searchTerm, messageList)
+      let final = "";
+      let caseSensitive = false;
+      let splitFlag = null;
+      let matchFlag = null
+      if (!caseSensitive) {
+        splitFlag = "i";
+        matchFlag = "gi";
+      } else {
+        splitFlag = "";
+        matchFlag = "g";
+      }
+      let searchPattern = new RegExp(searchTerm, splitFlag);
+      let matchpattern = new RegExp(searchTerm, matchFlag);
+
+      for (let i = messageList.length - 1; i >= 0; i--) {
+        let msg = messageList[i].comment;
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, searchTerm)
+        if ((msg.toLowerCase()).match(searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+          searchedIndex.push(i);
+          let separatedText = msg.split(searchPattern);
+          let separatedSearchedText = msg.match(matchpattern);
+          if (
+            separatedSearchedText != null &&
+            separatedSearchedText.length > 0
+          ) {
+            for (let j = 0; j < separatedText.length; j++) {
+              if (j <= separatedSearchedText.length - 1) {
+                final +=
+                  separatedText[j] +
+                  `<span class="text-highlight" id="focusOn-${i}">` +
+                  separatedSearchedText[j] +
+                  `</span>`;
+              } else {
+                final += separatedText[j];
+              }
+            }
+          }
+          messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+          messageList = messageList;
+          final = '';
+        }
+      }
+    }
+    let result = {
+      value: searchTerm,
+      messageList: messageList,
+      searchedIndex: searchedIndex
+    }
+    return result;
   }
 
 }

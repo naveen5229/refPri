@@ -74,7 +74,6 @@ export class DocumentListingComponent implements OnInit {
       this.attachmentList.map(lead => {
         let column = {};
         for (let key in this.generateHeadingsDoc()) {
-          console.log(key,'key ')
           if (key.toLowerCase() == 'action') {
             column[key] = {
               value: "",
@@ -82,22 +81,23 @@ export class DocumentListingComponent implements OnInit {
               action: null,
               // icons: this.actionIcons(lead, type)
             };
-            
           }
           else if(key == 'name'){ 
-            column[key] = {isHTML: true, value: lead['_doc_url'] ? `<a href="${lead['_doc_url']}" target="_blank">${lead[key] || lead['_doc_url']}</a>` : lead[key] || lead['_doc_url'], class: 'black', action: '',}
-          }
-          else {
+            // column[key] = {isHTML: true, value: lead['_doc_url'] ? `<a href="${lead['_doc_url']}" target="_blank">${lead[key] || lead['_doc_url']}</a>` : lead[key] || lead['_doc_url'], class: 'black', action: '',}
+            column[key] = {isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: this.getFiles.bind(this,lead['_doc_url'],lead[key]),}
+          }else {
             column[key] = { value: lead[key], class: 'black', action: '' };
           }
-          
         }
         columns.push(column);
       });
       return columns;
     }
     // end: Documents
-  
+
+  getFiles(url,name){
+    this.common.getFile(url,name)
+  }
 
   closeModal(response) {
     this.activeModal.close({response:response});

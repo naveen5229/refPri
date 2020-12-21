@@ -60,6 +60,7 @@ import { EmployeeMonitoringComponent } from './employee-monitoring/employee-moni
 import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 import { TicketAdminComponent } from '../ticket/ticket-admin/ticket-admin.component';
+import { CustomDashboardComponent } from '../ticket/custom-dashboard/custom-dashboard.component';
 
 const routes: Routes = [{
   path: '',
@@ -347,6 +348,11 @@ const routes: Routes = [{
     {
       path: 'ticket-admin',
       component: TicketAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'custom-dashboard',
+      component: CustomDashboardComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {

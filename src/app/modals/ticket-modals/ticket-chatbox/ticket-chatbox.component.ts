@@ -240,6 +240,9 @@ export class TicketChatboxComponent implements OnInit {
           }
           // console.log("lastMsgId:", this.lastMsgId);
         }
+        setTimeout(() => {
+          this.common.fileLinkHandler('chat_block');
+        }, 500);
       } else {
         this.common.showError(res['data'])
       }
@@ -255,7 +258,6 @@ export class TicketChatboxComponent implements OnInit {
       ticketId: this.ticketId,
       comment_id: this.lastMsgId
     }
-    console.log("lastSeenId-lastMsgId:", this.lastSeenId, this.lastMsgId);
     if (this.lastSeenId < this.lastMsgId) {
       this.api.post('Ticket/readLastMessage', params).subscribe(res => {
         if (res['code'] > 0) {
@@ -692,8 +694,6 @@ export class TicketChatboxComponent implements OnInit {
 
   onMessageType(e) {
     let value = e.data;
-    // console.log("target value:", e.target.value);
-    // console.log("target value22:", value);
     let accessUsers = [];
     if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
       accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
@@ -743,7 +743,7 @@ export class TicketChatboxComponent implements OnInit {
     console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();
-    this.taskMessage = splieted.join('@') + '@' + user.name;
+    this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
   }
 

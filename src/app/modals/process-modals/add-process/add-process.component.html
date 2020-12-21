@@ -27,7 +27,8 @@
             <span>
                 <img height="25" width="25" src="{{attachmentDataToDisplay.url}}" *ngIf="!fileTypeDisplay">
                 <i class="{{fileTypeDisplay}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
-                <span><a href="{{attachmentDataToDisplay.url}}" target="blank" download>{{attachmentDataToDisplay.name}}</a></span>
+                <!-- <span><a href="{{attachmentDataToDisplay.url}}" target="blank" download>{{attachmentDataToDisplay.name}}</a></span> -->
+                <span class="blue cursor-pointer" (click)="common.getFile(attachmentDataToDisplay.url,attachmentDataToDisplay.name)">{{attachmentDataToDisplay.name}}</span>
             </span>
         </div>
     </div>
@@ -58,7 +59,7 @@
         </div>
         <div class="col-8">
             <uj-date-time-picker (onChanged)="processForm.endTime = $event" [isStart]="false"
-                [dateTimeValue]="processForm.endTime" [isTime]="false">
+                [dateTimeValue]="(processForm.endTime) ? processForm.endTime : null" [isTime]="false">
             </uj-date-time-picker>
         </div>
     </div>

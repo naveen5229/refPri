@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../../modals/process-modals/add-field/add-field.component';
 import { UserMappingComponent } from '../../modals/process-modals/user-mapping/user-mapping.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { AddDashboardFieldComponent } from '../../modals/process-modals/add-dashboard-field/add-dashboard-field.component';
 
 @Component({
   selector: 'ngx-ticket-process',
@@ -287,7 +288,6 @@ export class TicketProcessComponent implements OnInit {
   }
 
   saveTicketProcess() {
-    console.log(this.ticketForm);
     let params = {
       name: this.ticketForm.name,
       startDate: this.ticketForm.startTime ? this.common.dateFormatter(this.ticketForm.startTime) : null,
@@ -304,7 +304,10 @@ export class TicketProcessComponent implements OnInit {
       // supervisorId: this.ticketForm.Supervisor.id
     }
 
-    if (params.name) {
+    if (!params.name) {
+      this.common.showError('Please enter Process Name');
+      return false;
+    }
       this.common.loading++;
       this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
         this.common.loading--;
@@ -324,10 +327,7 @@ export class TicketProcessComponent implements OnInit {
       }, err => {
         this.common.loading--;
         console.log('Error:', err)
-      })
-    } else {
-      this.common.showError('Please enter File Name')
-    }
+      });
   }
 
   getTicketProcessProperty(id) {
@@ -416,7 +416,8 @@ export class TicketProcessComponent implements OnInit {
       { class: "fas fa-list-alt", action: this.openCatModal.bind(this, ticket, 2), title: "Secondary Category Mapping" },
       { class: "fas fa-list-alt process_type", action: this.openCatModal.bind(this, ticket, 3), title: "Type Mapping" },
       { class: "fas fa-plus-square", action: this.openTicketPropertyModal.bind(this, ticket._id), title: "Ticket Property" },
-      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixTypeModal.bind(this, ticket._id), title: "Form Matrix" }
+      { class: "fas fa-plus-square text-primary", action: this.openTicketFormMatrixTypeModal.bind(this, ticket._id), title: "Form Matrix" },
+      { class: "fas fa-bars text-primary", action: this.openDashboardFieldModal.bind(this, ticket), title: "Add Dashboard Field" }
     ];
     return icons;
   }
@@ -563,7 +564,7 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.id = ticket._id;
       this.ticketForm.name = ticket.name;
       this.ticketForm.startTime = new Date(ticket.start_date);
-      this.ticketForm.endTime = new Date(ticket.end_date);
+      this.ticketForm.endTime = (ticket.end_date) ? new Date(ticket.end_date) : null;
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
       if (ticket._claim_ticket == 0) {
@@ -955,6 +956,11 @@ export class TicketProcessComponent implements OnInit {
         }
       });
     }
+  }
+
+  openDashboardFieldModal(process) {
+    this.common.params = { processId: process._id, processName: process.name,fromPage:1 };
+    const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
 }

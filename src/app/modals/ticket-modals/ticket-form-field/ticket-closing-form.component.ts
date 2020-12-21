@@ -20,6 +20,7 @@ export class TicketClosingFormComponent implements OnInit {
   ticketId = null;
   requestId =null;
   info = null;
+  isDisabled = false;
 
   constructor(public activeModal: NgbActiveModal,public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) { 
     this.title = this.common.params.title ? this.common.params.title : 'Ticket Closing Form';
@@ -28,7 +29,7 @@ export class TicketClosingFormComponent implements OnInit {
       this.ticketId = this.common.params.actionData.ticketId;
       this.refId = this.common.params.actionData.refId;
       this.refType = this.common.params.actionData.refType;
-      // this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
+      this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
 
       this.getTicketFormField();
     }
@@ -48,6 +49,7 @@ export class TicketClosingFormComponent implements OnInit {
         this.formatArray();
       }
     }, err => {
+      this.common.showError();
       this.common.loading--;
       console.error('Api Error:', err);
     });

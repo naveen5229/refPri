@@ -5,11 +5,11 @@
     </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-    <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
+    <span [innerHtml]="subTitle" style="white-space: pre-wrap;" class="col-9 p-0"></span>
     <div class="action-icon">
         <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
-        <!-- <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
-                (click)="search();isAttachmentShow=false"></i></span> -->
+        <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
+                (click)="search();isAttachmentShow=false"></i></span>
         <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
                 [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
@@ -40,34 +40,16 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url"
-                        alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index">
+                    <!-- <a target="_blank" [href]="a.url"alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
+                    <span class="blue cursor-pointer"
+                        (click)="common.getFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
+                </li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
         <div class="col-1">
             <button type="button" class="close" aria-label="Close" (click)="isAttachmentShow=false">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
-
-    <div *ngIf="isSearchShow" [@openClose]="isSearchShow" class="row attachment-view" style="width: 75%;">
-        <div class="col-11">
-            <div class="row">
-                <div class="col-8">
-                    <input id="searchChat" type="search" (change)="searchChat($event.target.value)"
-                        class="file-control" style="width: 100%;margin: 5px;">
-                </div>
-                <div class="col-4" style="padding: 5px;">
-                    <span>0/{{searchedIndex.length}}</span>
-                    <span class="ml-2" (click)="onchangeIndex('minus')"><i class="fas fa-arrow-circle-down"></i></span>
-                    <span class="ml-2" (click)="onchangeIndex('plus')"><i class="fas fa-arrow-circle-up"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-1">
-            <button type="button" class="close" aria-label="Close" (click)="isSearchShow=false">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -101,6 +83,32 @@
                     <hr>
                 </div>
             </div>
+
+
+            <div *ngIf="isSearchShow" [@openClose]="isSearchShow" class="row search-style">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-8">
+                            <input id="searchChat" type="search" value="{{searchTerm}}"
+                                (change)="searchChat($event.target.value)" class="file-control"
+                                style="width: 100%;margin: 5px;">
+                        </div>
+                        <div class="col-4" style="padding: 5px;">
+                            <span>{{searchCount}}/{{searchedIndex.length}}</span>
+                            <span class="ml-2" (click)="onchangeIndex('minus')"><i
+                                    class="fas fa-arrow-circle-down"></i></span>
+                            <span class="ml-2" (click)="onchangeIndex('plus')"><i
+                                    class="fas fa-arrow-circle-up"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="close" aria-label="Close" (click)="isSearchShow=false;reduceFocusHandler()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="row mt-1 chat_block" id="chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
@@ -141,7 +149,7 @@
                             [ngClass]="(msg.reply_demanded && !msg.is_send)? 'reply_demand':''"></label>
                     </div>
                 </div>
-                <div *ngIf="showLoading" class="col-12 text-center">
+                <div *ngIf="showLoading" class="col-12 text-center spinner-div">
                     <div class="spinner-border"></div>
                 </div>
             </div>

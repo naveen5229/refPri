@@ -15,7 +15,10 @@
     <div *ngIf="isAttachmentShow" [@openClose]="isAttachmentShow" class="row attachment-view">
         <div class="col-11">
             <ul *ngIf="attachmentList && attachmentList.length>0">
-                <li *ngFor="let a of attachmentList; let i =index"><a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a></li>
+                <li *ngFor="let a of attachmentList; let i =index">
+                    <!-- <a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
+                    <span class="blue cursor-pointer" (click)="common.getFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
+                </li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
         </div>
@@ -43,7 +46,7 @@
                     <li>No Data Found</li>
                 </ul>
             </ng-template>
-            <div class="row mt-1 chat_block" #chat_block>
+            <div class="row mt-1 chat_block" #chat_block id="chat_block">
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
                         <div>
@@ -91,6 +94,7 @@
                 </div>
                 <div class="col-10 pr-0">
                     <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd (files)="filesDropped($event)" (input)="onMessageType($event)" #msgtextarea></textarea>
+                    <!-- <div contenteditable="true" name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg" id="msgtext" placeholder="Type a message" ngxDnd (files)="filesDropped($event)" (input)="taskMessage=$event.target.textContent;onMessageType($event)" [textContent]="taskMessage" #msgtextarea></div> [textContent]="model" (input)="model=$event.target.textContent" -->
                     <small class="limit">{{500 - taskMessage.length}} characters left</small>
                 </div>
                 <div class="col-1 pl-0 pr-0">
