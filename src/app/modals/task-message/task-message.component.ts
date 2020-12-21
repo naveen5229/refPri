@@ -973,7 +973,8 @@ export class TaskMessageComponent implements OnInit {
   scrollToChat(focusOn) {
     try {
       setTimeout(() => {
-        document.getElementById("focusOn-" + focusOn).scrollIntoView();
+        let scrollIntoView = document.getElementById("focusOn-" + focusOn);
+        (scrollIntoView) ? scrollIntoView.scrollIntoView() : null;
       }, 100);
     } catch (err) { }
   }
