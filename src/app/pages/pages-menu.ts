@@ -33,6 +33,11 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/on-site-images-summary',
         home: true,
+      },{
+        title: 'Entity Details',
+        icon: 'people-outline',
+        link:'/pages/entity-details',
+        home:true
       },
       {
         title: 'User Groups',

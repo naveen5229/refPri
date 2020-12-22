@@ -1,0 +1,120 @@
+<div class="modal-header">
+  <h5>{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <div class="row mt-2">
+    <div class="col-6" style="text-align: end;">
+      <input type="radio" id="acType" value=0 [(ngModel)]="mappingForm.acType" (change)="getTypeData(mappingForm.acType)"><label class="ml-2"><b>On Complete
+        </b></label>
+    </div>
+    <div class="col-6">
+      <input type="radio" id="acType" value=1 [(ngModel)]="mappingForm.acType" (change)="getTypeData(mappingForm.acType)"><label class="ml-2"><b>On Revert
+        </b></label>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-4">
+      <label><b>State </b></label>
+    </div>
+    <div class="col-8">
+      <auto-suggestion display="name" [data]="states" seperator="-" placeholder="Select State"
+        (onSelected)="mappingForm.states = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true"
+        autocomplete="off" [preSelected]="mappingForm.states"></auto-suggestion>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-4">
+          <label><b>Next State </b></label>
+        </div>
+        <div class="col-8">
+          <auto-suggestion display="name" [data]="states" seperator="-" placeholder="Next State"
+            (onSelected)="mappingForm.nextState = $event;getNextActionList()" inputId="nextStateId" name="nextState" isMultiSelect="true"
+            autocomplete="off" [preSelected]="mappingForm.nextState">
+          </auto-suggestion>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row mt-2" *ngIf="mappingForm.nextState.length>0">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-4"><label><b>Auto State Change: </b></label>
+          <!-- <label>{{ actionForm.state.name}} </label> -->
+        </div>
+        <div class="col-8">
+          <input type="checkbox" *ngIf="mappingForm.nextState.length == 1" [(ngModel)]="mappingForm.autoStateChange">
+          <input type="checkbox" *ngIf="mappingForm.nextState.length > 1 || mappingForm.nextState.length < 1" disabled>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-4">
+          <label><b>Next Action</b></label>
+        </div>
+        <div class="col-8">
+          <auto-suggestion display="name" [data]="nextActionList" seperator="-" placeholder="Select Next Action"
+            (onSelected)="mappingForm.nextAction = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true"
+            autocomplete="off" [preSelected]="mappingForm.nextAction"></auto-suggestion>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="row mt-2" *ngIf="mappingForm.nextAction.length>0">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-4"><label><b>Auto Action Change: </b></label>
+          <!-- <label>{{ actionForm.state.name}} </label> -->
+        </div>
+        <div class="col-8">
+          <input type="checkbox" [(ngModel)]="mappingForm.autoActionChange">
+          <!-- *ngIf="mappingForm.nextState.length == 1" -->
+          <!-- <input type="checkbox" *ngIf="mappingForm.nextState.length > 1 || mappingForm.nextState.length < 1" disabled> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-4">
+      <label><b>Prerequisite Action</b></label>
+    </div>
+    <div class="col-8">
+      <auto-suggestion display="name" [data]="PrerequisiteActionList" placeholder="Select Modes" name="modes" isMultiSelect="true"
+        inputId="modesId" autocomplete="off" isMultiSelect="true" [preSelected]="mappingForm.prerequisite"
+        (onSelected)="mappingForm.prerequisite = $event">
+      </auto-suggestion>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 text-right">
+      <!-- <button class="btn btn-danger btn-sm mr-2 mt-4" type="button" (click)="closeModal(false)">Cancel</button> -->
+      <button class="btn btn-primary btn-sm mt-4" type='submit' (click)="save()">{{button}}</button>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal-footer">
+  <div class="row footer">
+    <smart-table *ngIf="stateActionMatrixList && stateActionMatrixList.length" [data]="stateActionTable.data" [settings]="stateActionTable.settings" class="ksr-smrt"></smart-table>
+  </div>
+</div> -->

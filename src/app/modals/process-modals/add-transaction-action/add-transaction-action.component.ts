@@ -11,6 +11,7 @@ import { FormDataComponent } from '../form-data/form-data.component';
   styleUrls: ['./add-transaction-action.component.scss']
 })
 export class AddTransactionActionComponent implements OnInit {
+  isCompleteVisi = true;
   currentDate = this.common.getDate();
   title = "";
   button = "Add";
@@ -48,6 +49,7 @@ export class AddTransactionActionComponent implements OnInit {
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
     console.log("params:", this.common.params);
+    this.isCompleteVisi = this.common.params.isComplete;
     this.button = this.common.params.button ? this.common.params.button : 'Add';
     this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
     // let threashold = new Date();
@@ -220,6 +222,15 @@ export class AddTransactionActionComponent implements OnInit {
   }
 
   saveTransAction() {
+    let isCompleted = null;
+    if (this.isCompleteVisi) {
+      isCompleted = (this.transAction.isCompleted) ? 1 : 0;
+    } else {
+      isCompleted = -1;
+    }
+    
+    console.log('condition Print', isCompleted);
+
     if (!this.transAction.state.id || !this.transAction.action.id) {
       this.common.showError('Please Fill All Mandatory Field');
     }
@@ -235,10 +246,11 @@ export class AddTransactionActionComponent implements OnInit {
         modeId: (this.transAction.mode.id > 0) ? this.transAction.mode.id : null,
         actionOwnerId: (this.transAction.actionOwner.id > 0) ? this.transAction.actionOwner.id : null,
         isNextAction: null,
-        isCompleted: (this.transAction.isCompleted) ? true : false,
+        isCompleted: isCompleted,
         onSiteImageId: (this.transAction.onSiteImageId > 0) ? this.transAction.onSiteImageId : null
       };
       console.log("saveTransAction:", params);
+      // return;
       this.common.loading++;
       this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
         this.common.loading--;

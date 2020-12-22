@@ -15,68 +15,76 @@
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row mt-2">
         <div class="col-4">
-            <div class="row">
-                <div class="col-4"><label><b>State: </b></label>
-                    <!-- <label>{{ actionForm.state.name}} </label> -->
-                </div>
-                <div class="col-8">
-                    <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select State"
-                        (onSelected)="actionForm.states = $event" inputId="nextActionId" name="nextAction"
-                        isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.states"></auto-suggestion>
-                </div>
-            </div>
+            <label><b>State </b></label>
+            <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select State"
+                (onSelected)="actionForm.states = $event" inputId="nextActionId" name="nextAction" isMultiSelect="true"
+                autocomplete="off" [preSelected]="actionForm.states"></auto-suggestion>
         </div>
-        <div class="col-4">
-            <div class="row">
-                <div class="col-4"><label><b>Next State: </b></label>
-                    <!-- <label>{{ actionForm.state.name}} </label> -->
-                </div>
-                <div class="col-8">
-                    <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Next State"
-                        (onSelected)="actionForm.nextState = $event" inputId="nextStateId" name="nextState"
-                        isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextState"></auto-suggestion>
-                </div>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="row">
-                <div class="col-4"><label><b>Auto: </b></label>
-                    <!-- <label>{{ actionForm.state.name}} </label> -->
-                </div>
-                <div class="col-8">
-                    <input type="checkbox" *ngIf="actionForm.nextState.length == 1"
-                        [(ngModel)]="actionForm.autoStateChange">
-                    <input type="checkbox" *ngIf="actionForm.nextState.length > 1 || actionForm.nextState.length < 1"
-                        disabled>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-2 pr-0">
-            <label>name<span class="text-danger">*</span></label>
+        <div class="col-4">
+            <label><b>Next State </b></label>
+            <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Next State"
+                (onSelected)="actionForm.nextState = $event" inputId="nextStateId" name="nextState" isMultiSelect="true"
+                autocomplete="off" [preSelected]="actionForm.nextState">
+            </auto-suggestion>
+        </div>
+
+        <div class="col-4">
+            <label><b>User </b></label>
+            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="User Mapping"
+                (onSelected)="actionForm.userMapping = $event" inputId="UserMapping" name="UserMapping" isMultiSelect="true"
+                autocomplete="off" [preSelected]="actionForm.userMapping">
+            </auto-suggestion>
+        </div>
+
+    </div> -->
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label><b>Action Name</b><span class="text-danger">*</span></label>
             <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
         </div>
-        <div class="col-2 pr-0">
-            <label>Threshold</label>
+        <div class="col-4">
+            <label><b>Threshold</b></label>
             <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)"
                 [(ngModel)]="actionForm.threshold">
         </div>
-        <div class="col-4 pr-0">
-            <label>Next Action</label>
+        <!-- <div class="col-4">
+            <label><b>Next Action</b></label>
             <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action"
                 (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction"
                 isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
-        </div>
-        <div class="col-4 pr-0">
-            <label>Modes</label>
+        </div> -->
+        <div class="col-4">
+            <label><b>Modes</b></label>
             <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId"
                 autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true"
                 (onSelected)="actionForm.modes = $event">
             </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <!-- <div class="col-4">
+            <div class="row">
+                <div class="col-6"><label><b>Claim: </b></label>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" [(ngModel)]="actionForm.claim">
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-4">
+            <div class="row">
+                <div class="col-6"><label><b>Is Repeatable: </b></label>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" [(ngModel)]="actionForm.isRepeatable">
+                </div>
+            </div>
         </div>
     </div>
 
