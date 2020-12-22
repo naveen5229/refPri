@@ -1,0 +1,11 @@
+
+
+
+@mixin btn ($size,$classname){
+padding: $padding-xs $padding-xl;
+ @if $classname == 'btn-success'{
+  background-color:$bg-primary;   
+ }   
+ 
+ 
+}

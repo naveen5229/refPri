@@ -1,10 +1,15 @@
+@import '../app/@theme/scss/main.scss';
+
 h1,
 h2,
 h3,
 h4,
 h5 {
   font-family: "Open Sans", sans-serif !important;
+  // background-color:$bg-cosmic;
+  
 }
+
 
 p,
 a,
@@ -279,6 +284,7 @@ table .fa-comments.new-comment span {
   /* color: #26a69a; */
   color: #3366ff;
   position: relative;
+  top: 1px;
 }
 
 .tabs_style li.active::after {
@@ -556,5 +562,26 @@ nb-card-body {
 
 .spinner-div {
   min-height: 40px;
+}
+
+
+
+/*  manish jangid  */
+
+.modal-header .custom-file-upload{
+color: #ffffff;
+}
+
+.bs-popover-right-top{
+top: 7px !important;
+
+}
+
+.btn-date{
+cursor: pointer;  
+}
+
+.btn-hour{
+ cursor: pointer; 
 }
 
