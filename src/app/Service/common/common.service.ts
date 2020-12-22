@@ -920,6 +920,31 @@ export class CommonService {
     return result;
   }
 
+  async handleFileSelection(event, format) {
+    let result = { name: null, file: null };
+    this.loading++;
+    await this.getBase64(event.target.files[0]).then((res: any) => {
+      this.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      let formats = (format && format.length) ? format :  ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+        result.name = file.name;
+        result.file =  res;
+      } else {
+        this.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        return false;
+      }
+      // console.log("attachmentFile:", file);
+    }, err => {
+      this.loading--;
+      this.showError(err);
+      console.error('Base Err: ', err);
+    })
+    return result;
+  }
+
 }
 
 
