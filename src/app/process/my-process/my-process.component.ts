@@ -785,8 +785,12 @@ export class MyProcessComponent implements OnInit {
 
     if (type == 1) {//for me
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
-      icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
+      icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type, null, true), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
+
+      if (lead._revert_action > 0) {
+        icons.push({ class: "fa fa-thumbs-down text-primary", action: this.openTransAction.bind(this, lead, type, null , false), txt: '', title: "Inverse" });
+      }
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
       if (lead._claim_txn) {
@@ -845,6 +849,11 @@ export class MyProcessComponent implements OnInit {
       }
     }
     return icons;
+  }
+
+  revert(lead) {
+  console.log("🚀 ~ file: my-process.component.ts ~ line 855 ~ MyProcessComponent ~ revert ~ lead", lead)
+
   }
 
   editTransaction(lead, type) { //used in multi pages same func
@@ -973,7 +982,7 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
-  openTransAction(lead, type, formType = null) {
+  openTransAction(lead, type, formType = null, isComplete:Boolean=null) {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
@@ -1002,7 +1011,7 @@ export class MyProcessComponent implements OnInit {
       isMarkTxnComplete: ((lead._state_change == 2 && type == 1) || [2, 6, 7].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
-    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
+    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add", isComplete: isComplete };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log("res data:", data, lead);
@@ -1319,8 +1328,12 @@ export class MyProcessComponent implements OnInit {
   }
 
   updateLeadPrimaryOwner(lead, type) {
-    if (lead._transactionid > 0) {
-      let params = {
+    console.log("🚀 ~ file: my-process.component.ts ~ line 1330 ~ MyProcessComponent ~ updateLeadPrimaryOwner ~ lead", lead)
+    let apiBase = '';
+    let params = {};
+    if (lead.assigned_to == null) {
+      apiBase = "Processes/updateLeadPrimaryOwner";
+      params = {
         leadId: lead._transactionid,
         assigneeUserId: this.userService._details.id,
         isCCUpdate: 0,
@@ -1328,8 +1341,22 @@ export class MyProcessComponent implements OnInit {
         assigneeUserNameNew: this.userService._details.name,
         isClaim: 1
       }
+    } else {
+      apiBase = "Processes/changeTransactionActionOwner";
+      params = {
+        transId: lead._transactionid,
+        transActionId: lead._trans_action_id,
+        actionOwnerId: this.userService._details.id,
+        actionOwnerName: this.userService._details.name,
+        actionOwnerNameOld: null,
+      }
+    }
+
+    console.log('here final data',params, apiBase)
+    // return;
+    if (lead._transactionid > 0) {
       this.common.loading++;
-      this.api.post('Processes/updateLeadPrimaryOwner', params).subscribe(res => {
+      this.api.post(apiBase, params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {

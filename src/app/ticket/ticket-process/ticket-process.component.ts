@@ -931,7 +931,7 @@ export class TicketProcessComponent implements OnInit {
     if (row._id) {
       this.common.params = {
         title: 'Delete Record',
-        description: `<b>&nbsp;` + 'Are Sure To Delete This Record' + `<b>`,
+        description: `<b>&nbsp;` + 'Are you Sure To Delete This Record' + `<b>`,
       }
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {

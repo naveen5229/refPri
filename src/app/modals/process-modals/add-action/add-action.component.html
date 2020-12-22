@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="row mt-2">
+    <!-- <div class="row mt-2">
         <div class="col-4">
             <label><b>State </b></label>
             <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select State"
@@ -39,24 +39,24 @@
             </auto-suggestion>
         </div>
 
-    </div>
+    </div> -->
 
     <div class="row mt-2">
-        <div class="col-2">
-            <label><b>name</b><span class="text-danger">*</span></label>
+        <div class="col-4">
+            <label><b>Action Name</b><span class="text-danger">*</span></label>
             <input class="form-control" type="text" placeholder="Name" [(ngModel)]="actionForm.name">
         </div>
-        <div class="col-2">
+        <div class="col-4">
             <label><b>Threshold</b></label>
             <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)"
                 [(ngModel)]="actionForm.threshold">
         </div>
-        <div class="col-4">
+        <!-- <div class="col-4">
             <label><b>Next Action</b></label>
             <auto-suggestion [data]="nextActionList" display="name" seperator="-" placeholder="Select Next Action"
                 (onSelected)="actionForm.nextAction = $event" inputId="nextActionId" name="nextAction"
                 isMultiSelect="true" autocomplete="off" [preSelected]="actionForm.nextAction"></auto-suggestion>
-        </div>
+        </div> -->
         <div class="col-4">
             <label><b>Modes</b></label>
             <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId"
@@ -67,16 +67,22 @@
     </div>
 
     <div class="row mt-2">
-        <div class="col-3">
+        <!-- <div class="col-4">
             <div class="row">
-                <div class="col-4"><label><b>Auto: </b></label>
-                    <!-- <label>{{ actionForm.state.name}} </label> -->
+                <div class="col-6"><label><b>Claim: </b></label>
                 </div>
-                <div class="col-8">
-                    <input type="checkbox" *ngIf="actionForm.nextState.length == 1"
-                        [(ngModel)]="actionForm.autoStateChange">
-                    <input type="checkbox" *ngIf="actionForm.nextState.length > 1 || actionForm.nextState.length < 1"
-                        disabled>
+                <div class="col-6">
+                    <input type="checkbox" [(ngModel)]="actionForm.claim">
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-4">
+            <div class="row">
+                <div class="col-6"><label><b>Is Repeatable: </b></label>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" [(ngModel)]="actionForm.isRepeatable">
                 </div>
             </div>
         </div>

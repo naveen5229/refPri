@@ -4,6 +4,9 @@ import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { AddFieldComponent } from '../add-field/add-field.component';
+import { stateActionMapping } from '../../state-action-mapping/state-action-mapping';
+import { UserEsclationComponent } from '../user-esclation/user-esclation.component';
+import { AddProcessPropertyComponent } from '../add-process-property/add-process-property.component';
 
 @Component({
   selector: 'ngx-add-action',
@@ -16,14 +19,18 @@ export class AddActionComponent implements OnInit {
   actionForm = {
     rowId: null,
     name: "",
-    process: { id: null, name: "" },
-    states: [],
-    nextState: [],
     threshold: null,
     modes: [],
-    nextAction: [],
-    autoStateChange: null,
-    userMapping:[]
+    isRepeatable: null,
+    process: { id: null, name: "" },
+
+    // states: [],
+    // nextState: [],
+    // claim:null,
+
+    // nextAction: [],
+    // autoStateChange: null,
+    // userMapping:[]
     // isDefault: false,
     // defaultOwner: { id: null, name: null }
   }
@@ -106,14 +113,14 @@ export class AddActionComponent implements OnInit {
   }
 
   saveProcessAction() {
-    let autoStateChange = (this.actionForm.nextState.length == 1) ? this.actionForm.autoStateChange : null;
-    
-    let userMapped =[];
-    if(this.actionForm.userMapping && this.actionForm.userMapping.length > 0){
-      userMapped = this.actionForm.userMapping.map(data => {
-        return {id:data.id,name:data.name}
-      });
-    }
+    // let autoStateChange = (this.actionForm.nextState.length == 1) ? this.actionForm.autoStateChange : null;
+
+    // let userMapped =[];
+    // if(this.actionForm.userMapping && this.actionForm.userMapping.length > 0){
+    //   userMapped = this.actionForm.userMapping.map(data => {
+    //     return {id:data.id,name:data.name}
+    //   });
+    // }
 
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
@@ -122,14 +129,16 @@ export class AddActionComponent implements OnInit {
       const params = {
         requestId: this.actionForm.rowId,
         processId: this.actionForm.process.id,
-        stateId: (this.actionForm.states && this.actionForm.states.length) ? JSON.stringify(this.actionForm.states) : null,
+        // stateId: (this.actionForm.states && this.actionForm.states.length) ? JSON.stringify(this.actionForm.states) : null,
         name: this.actionForm.name,
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         threshold: this.actionForm.threshold,
-        nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
-        nextState: (this.actionForm.nextState && this.actionForm.nextState.length) ? JSON.stringify(this.actionForm.nextState) : null,
-        autoStateChange: autoStateChange,
-        users:(userMapped && userMapped.length) ? JSON.stringify(userMapped) : null
+        // claim: this.actionForm.claim,
+        isRepeatable: this.actionForm.isRepeatable
+        // nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
+        // nextState: (this.actionForm.nextState && this.actionForm.nextState.length) ? JSON.stringify(this.actionForm.nextState) : null,
+        // autoStateChange: autoStateChange,
+        // users:(userMapped && userMapped.length) ? JSON.stringify(userMapped) : null
         // isDefault: this.actionForm.isDefault,
         // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };
@@ -222,6 +231,9 @@ export class AddActionComponent implements OnInit {
       { class: 'fas fa-trash-alt', title: "Delete Action", action: this.deleteAction.bind(this, action) },
       { class: "fas fa-edit", title: "Edit Action", action: this.editAction.bind(this, action) },
       { class: "fas fa-plus-square", title: "Add Action Form Field", action: this.openFieldModal.bind(this, action) },
+      { class: "fas fa-plus-square text-primary", title: "State Action Mapping", action: this.stateActionMapping.bind(this, action) },
+      { class: "fas fa-user", title: "User Mapping", action: this.userMapping.bind(this, action) },
+      { class: "fas fa-cog", action: this.opensettingModal.bind(this, action), title: "Add Process Property" }
     ];
     return icons;
   }
@@ -245,10 +257,12 @@ export class AddActionComponent implements OnInit {
     this.actionForm.name = action.name;
     this.actionForm.threshold = (action.threshold) ? action.threshold : null;
     this.actionForm.modes = (action._modeid && action._modeid.length) ? action._modeid.map(x => { return { id: x._modeid, name: x.name } }) : [];
-    this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
-    this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
-    this.actionForm.nextState = (action._next_state && action._next_state.length) ? action._next_state.map(x => { return { id: x._id, name: x.name } }) : [];
-    this.actionForm.autoStateChange = action._auto_state_change;
+    // this.actionForm.nextAction = (action._next_action && action._next_action.length) ? action._next_action.map(x => { return { id: x._id, name: x.name } }) : [];
+    // this.actionForm.states = (action._state && action._state.length) ? action._state.map(x => { return { id: x._id, name: x.name } }) : [];
+    // this.actionForm.nextState = (action._next_state && action._next_state.length) ? action._next_state.map(x => { return { id: x._id, name: x.name } }) : [];
+    // this.actionForm.autoStateChange = action._auto_state_change;
+    // this.actionForm.claim = action._claim;
+    this.actionForm.isRepeatable = action._is_repeatable;
 
     this.button = 'Update';
     // this.actionForm.isDefault = (action._is_default) ? true : false;
@@ -298,15 +312,66 @@ export class AddActionComponent implements OnInit {
     this.actionForm.rowId = null;
     this.actionForm.name = "";
     this.actionForm.modes = [];
-    this.actionForm.nextAction = [];
+    // this.actionForm.nextAction = [];
     this.actionForm.threshold = null;
-    this.actionForm.states = [];
-    this.actionForm.nextState = [];
-    this.actionForm.userMapping = [];
-    this.actionForm.autoStateChange = null;
+    this.actionForm.isRepeatable = null;
+    // this.actionForm.claim = null;
+    // this.actionForm.states = [];
+    // this.actionForm.nextState = [];
+    // this.actionForm.userMapping = [];
+    // this.actionForm.autoStateChange = null;
     this.button = 'Add';
     // this.actionForm.isDefault = null;
     // this.actionForm.defaultOwner = { id: null, name: null };
   }
 
+  stateActionMapping(action) {
+    console.log("🚀 ~ file: add-action.component.ts ~ line 318 ~ AddActionComponent ~ stateActionMapping ~ action", action, this.states)
+    let refData = {
+      id: action._action_id,
+      processId: this.actionForm.process.id,
+      type: 1,
+      title: 'State/Action Mapping',
+    }
+    this.common.params = { ref: refData, states: this.states, PrerequisiteActionList: this.nextActionList };
+    const activeModal = this.modalService.open(stateActionMapping, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
+  }
+
+  userMapping(action) {
+    console.log("🚀 ~ file: add-action.component.ts ~ line 332 ~ AddActionComponent ~ userMapping ~ action", action, this.actionForm.process.id)
+    let refData = {
+      id: action._action_id,
+      processId: this.actionForm.process.id,
+      type: 1,
+      title: 'Process User Matrix',
+    }
+    this.common.params = { ref: refData, adminList: this.adminList };
+    const activeModal = this.modalService.open(UserEsclationComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
+  }
+
+  opensettingModal(action) {
+    console.log("🚀 ~ file: add-action.component.ts ~ line 358 ~ AddActionComponent ~ opensettingModal ~ action", action)
+    let refData = {
+      id: action._action_id,
+      type: 1,
+      title: 'Process User Matrix',
+    }
+    this.common.params = { ref: refData, };
+    const activeModal = this.modalService.open(AddProcessPropertyComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data.response);
+      }
+    });
+  }
 }
