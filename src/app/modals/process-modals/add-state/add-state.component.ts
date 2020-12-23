@@ -14,6 +14,7 @@ import { AddActionComponent } from '../add-action/add-action.component';
 export class AddStateComponent implements OnInit {
   states = [];
   nextStates = [];
+  userTag = { id: null, name: null }
   // nextState = null;
   typeId = null;
   stateName = null;
@@ -21,6 +22,7 @@ export class AddStateComponent implements OnInit {
   processName = null;
   requestId = null;
   threshold = null;
+  adminList = null;
   // isDefault = false;
 
   data = [];
@@ -45,6 +47,10 @@ export class AddStateComponent implements OnInit {
     private modalService: NgbModal) {
     this.processId = this.common.params.process.id;
     this.processName = this.common.params.process.name;
+    const adminList = [...this.common.params.adminList];
+    this.adminList = adminList.map(admin => {
+      return { id: admin.id, name: admin.name }
+    })
     this.getStates();
   }
 
@@ -64,15 +70,17 @@ export class AddStateComponent implements OnInit {
       nextStates: (this.nextStates && this.nextStates.length) ? JSON.stringify(this.nextStates) : null,
       requestId: this.requestId,
       threshold: this.threshold,
+      stateOwnerId: this.userTag.id
       // isDefault: this.isDefault,
     }
     // console.log("params", params);
+    // return
     this.common.loading++;
     this.api.post('Processes/addProcessState', params)
       .subscribe(res => {
         this.common.loading--;
         // console.log(res);
-        if(res['code']==1){
+        if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
             this.resetData();
@@ -80,7 +88,7 @@ export class AddStateComponent implements OnInit {
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
-        }else{
+        } else {
           this.common.showError(res['msg']);
         }
       }, err => {
@@ -244,6 +252,7 @@ export class AddStateComponent implements OnInit {
     this.processId = this.processId;
     this.requestId = data._state_id;
     this.threshold = (data._threshold) ? data._threshold : null;
+    this.userTag = { id: data._state_owner_id, name: data.state_owner }
     // this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
@@ -256,6 +265,7 @@ export class AddStateComponent implements OnInit {
     // this.nextState = null;
     this.requestId = null;
     this.threshold = null;
+    this.userTag = { id: null, name: null }
     // this.isDefault = false;
     this.btn1 = "Add";
   }
