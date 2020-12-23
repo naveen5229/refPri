@@ -235,7 +235,7 @@ export class stateActionMapping implements OnInit {
       prerequisite: [],
       autoStateChange: false,
       autoActionChange: false,
-      acType: null,
+      acType: '0',
       reqId: null
     }
   }
