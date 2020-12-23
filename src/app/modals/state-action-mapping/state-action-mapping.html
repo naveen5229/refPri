@@ -98,8 +98,8 @@
       <label><b>Prerequisite Action</b></label>
     </div>
     <div class="col-8">
-      <auto-suggestion display="name" [data]="PrerequisiteActionList" placeholder="Select Modes" name="modes" isMultiSelect="true"
-        inputId="modesId" autocomplete="off" isMultiSelect="true" [preSelected]="mappingForm.prerequisite"
+      <auto-suggestion display="name" [data]="PrerequisiteActionList" placeholder="Select Prerequisite" name="Prerequisite" isMultiSelect="true"
+        inputId="prerequisite" autocomplete="off" isMultiSelect="true" [preSelected]="mappingForm.prerequisite"
         (onSelected)="mappingForm.prerequisite = $event">
       </auto-suggestion>
     </div>

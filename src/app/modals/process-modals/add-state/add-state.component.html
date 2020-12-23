@@ -6,11 +6,11 @@
 </div>
 <div class="modal-body">
     <div class="row mb-2">
-        <div class="col-3 pr-0">
+        <div class="col-4 pr-0">
             <label>State Name<span class="text-danger">*</span></label>
             <input type="text" name="statename" [(ngModel)]="stateName" placeholder="Enter Name" class="form-control" autocomplete="off">
         </div>
-        <div class="col-2 pr-0">
+        <div class="col-4 pr-0">
             <label>Type<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="typeId">
             <option value="1" class="form-control">IN</option>
@@ -18,15 +18,21 @@
             <option value="3" class="form-control">Intermediate</option>
           </select>
         </div>
-        <div class="col-3 pr-0">
+        <div class="col-4">
             <label>Threshold</label>
             <input type="number" class="form-control" min="0" name="threshold" placeholder="Threshold (Hours)" [(ngModel)]="threshold">
         </div>
-        <div class="col-4">
+    </div>
+    <div class="row mb-2">
+        <div class="col-4 pr-0">
             <label>Next State</label>
             <auto-suggestion [data]="states" display="name" seperator="-" placeholder="Select Next State" (onSelected)="nextStates = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off" [preSelected]="nextStates"></auto-suggestion>
         </div>
 
+        <div class="col-4 pr-0">
+            <label>State Owner</label>
+            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select state owner" (onSelected)="userTag = $event" inputId="stateOwner" name="stateOwner" autocomplete="off" [preSelected]="(userTag.id>0) ? {name: userTag.name} : {name: ''}"></auto-suggestion>
+        </div>
     </div>
     <div class="row mb-2">
         <!-- <div class="col-2 pt-2">

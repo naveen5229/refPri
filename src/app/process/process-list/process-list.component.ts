@@ -191,7 +191,7 @@ export class ProcessListComponent implements OnInit {
       id: process._id,
       name: process.name
     }
-    this.common.params = { process: param };
+    this.common.params = { process: param, adminList:this.adminList };
     const activeModal = this.modalService.open(AddStateComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {

@@ -92,16 +92,16 @@ export class stateActionMapping implements OnInit {
       const finalData = FilterData.filter(data => {
         return data._ac_type == type;
       })
-      console.log("🚀 ~ file: state-action-mapping.ts ~ line 94 ~ stateActionMapping ~ getTypeData ~ finalData", finalData)
+      console.log("🚀 ~ file: state-action-mapping.ts ~ line 94 ~ stateActionMapping ~ getTypeData ~ finalData", finalData,finalData[0]['_state_id'])
       this.mappingForm = {
         processId: this.mappingForm.processId,
         actionId: finalData[0]['_action_id'],
-        states: finalData[0]['_state_id'],
-        nextState: finalData[0]['_next_state_id'],
-        nextAction: finalData[0]['_next_actionid'],
-        prerequisite: finalData[0]['_prerequisite_actionid'],
-        autoStateChange: finalData[0]['auto_state_change'],
-        autoActionChange: finalData[0]['auto_action_change'],
+        states: finalData[0]['_state_id'][0] == null ? [] : finalData[0]['_state_id'],
+        nextState: finalData[0]['_next_state_id'][0] == null ? [] : finalData[0]['_next_state_id'],
+        nextAction: finalData[0]['_next_actionid'][0] == null ? [] : finalData[0]['_next_actionid'],
+        prerequisite: finalData[0]['_prerequisite_actionid'][0] == null ? [] : finalData[0]['_prerequisite_actionid'],
+        autoStateChange: finalData[0]['auto_state_change'] != null ? finalData[0]['auto_state_change'] : false,
+        autoActionChange: finalData[0]['auto_action_change'] != null ? finalData[0]['auto_action_change'] : false,
         acType: JSON.stringify(finalData[0]['_ac_type']),
         reqId: finalData[0]['_action_id']
       }
