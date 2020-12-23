@@ -366,11 +366,12 @@ export class AddActionComponent implements OnInit {
       type: 1,
       title: 'Process User Matrix',
     }
-    this.common.params = { ref: refData, };
+    this.common.params = { ref: refData,prefilled: action};
     const activeModal = this.modalService.open(AddProcessPropertyComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data.response);
+        this.getActionList();
       }
     });
   }

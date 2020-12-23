@@ -34,6 +34,26 @@ export class AddProcessPropertyComponent implements OnInit {
   }
   constructor(public activeModal: NgbActiveModal,public api: ApiService, public common: CommonService, public modalService: NgbModal) { 
     this.processPropertyForm.actionId = this.common.params.ref.id;
+    const prefilledData = this.common.params.prefilled;
+    console.log("🚀 ~ file: add-process-property.component.ts ~ line 38 ~ AddProcessPropertyComponent ~ constructor ~ prefilledData", prefilledData)
+    this.processPropertyForm = {
+      actionId: prefilledData._action_id,
+      priCatId: { id: null, name: '' },
+      SecCatId: { id: null, name: '' },
+      typeId: { id: null, name: '' },
+      allocationAuto: { id: prefilledData._allocation_auto, name: '' },
+      esclationAuto: { id: prefilledData._escalation_auto, name: '' },
+      escTime: prefilledData.esc_time_ack,
+      complRemTime: prefilledData.comp_rem_time,
+      complEscTime: prefilledData.esc_time_comp,
+      isUrgent: prefilledData.is_urgent,
+      isActive: true,
+      callRequired: prefilledData._is_call_required,
+      claim: prefilledData.claim,
+      callingBenchmark: prefilledData.calling_benchmark,
+      completionBenchmark: prefilledData.completion_benchmark,
+      requestId: prefilledData._action_id
+    }
   }
 
   ngOnInit() {
@@ -70,6 +90,7 @@ export class AddProcessPropertyComponent implements OnInit {
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
+          this.close(true)
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
