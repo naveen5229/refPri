@@ -70,6 +70,7 @@ export class AddProcessPropertyComponent implements OnInit {
       if (res['code'] == 1) {
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
+          this.close(true)
         } else {
           this.common.showError(res['data'][0].y_msg);
         }

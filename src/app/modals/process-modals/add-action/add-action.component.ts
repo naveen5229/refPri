@@ -371,6 +371,7 @@ export class AddActionComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data.response);
+        this.getActionList();
       }
     });
   }
