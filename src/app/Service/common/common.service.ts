@@ -759,9 +759,21 @@ export class CommonService {
     splitedMsg2.forEach((element2, index2) => {
       let splitedMsg = element2.split("\n");
       splitedMsg.forEach((element, index) => {
-        if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
-          // let fullURL = (element.match('http')) ? element : "http://" + element;
-          // let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
+        let linkFound = false;
+        if(match == "www." && (element.match(match) || element.match('http://') || element.match('https://'))){
+          linkFound = true;
+        }else{
+          let totalSize = element.length;
+          let inIndex = element.indexOf('.in');
+          let comIndex = element.indexOf('.com');
+          let inFound = (inIndex>-1 && ((totalSize - inIndex) ==3)) ? true : false;
+          let comFound = (comIndex>-1 && ((totalSize - comIndex) ==4)) ? true : false;
+          if(inFound || comFound){
+            linkFound = true;
+          }
+        }
+        // if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
+        if(match == "www." && linkFound){
           let indexHTTP = element.indexOf("http://");
           let indexHTTPS = element.indexOf("https://");
           let indexWWW = element.indexOf("www.");
