@@ -766,8 +766,8 @@ export class CommonService {
           let totalSize = element.length;
           let inIndex = element.indexOf('.in');
           let comIndex = element.indexOf('.com');
-          let inFound = (inIndex>-1 && ((totalSize - inIndex) ==3)) ? true : false;
-          let comFound = (comIndex>-1 && ((totalSize - comIndex) ==4)) ? true : false;
+          let inFound = (inIndex>0 && ((totalSize - inIndex) ==3)) ? true : false;
+          let comFound = (comIndex>0 && ((totalSize - comIndex) ==4)) ? true : false;
           if(inFound || comFound){
             linkFound = true;
           }
