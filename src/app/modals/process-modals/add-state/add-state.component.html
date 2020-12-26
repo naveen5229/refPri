@@ -33,19 +33,10 @@
             <label>State Owner</label>
             <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select state owner" (onSelected)="userTag = $event" inputId="stateOwner" name="stateOwner" autocomplete="off" [preSelected]="(userTag.id>0) ? {name: userTag.name} : {name: ''}"></auto-suggestion>
         </div>
-    </div>
-    <div class="row mb-2">
-        <!-- <div class="col-2 pt-2">
-            <label>Is Default</label>
-         </div>
-        <div class="col-1 pt-2">
-            <input type="checkbox" [checked]="isDefault" (change)="isDefault = !isDefault" />
-        </div> -->
-        <div class="col-12 text-right">
-            <button class="btn btn-primary btn-sm mt-2" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
-            <button *ngIf="requestId" class="btn btn-danger btn-sm mt-2 ml-2" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
+        <div class="col-4 text-right">
+            <button class="btn btn-primary btn-sm mt-4" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
+            <button *ngIf="requestId" class="btn btn-danger btn-sm ml-2 mt-4" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
         </div>
     </div>
-    <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField">
-    </smart-table>
+    <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField"></smart-table>
 </div>
