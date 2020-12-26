@@ -74,6 +74,7 @@ export class ChatboxComponent implements OnInit {
   };
   activeTab = 'actionList';
   priOwnId = null;
+  stateOwnerId = null;
   attachmentFile = {
     name: null,
     file: null
@@ -126,6 +127,7 @@ export class ChatboxComponent implements OnInit {
       this.tabType = (this.common.params.editData.tabType) ? this.common.params.editData.tabType : null;
       this.lastSeenId = this.common.params.editData.lastSeenId;
       this.priOwnId = this.common.params.editData.priOwnId;
+      this.stateOwnerId = this.common.params.editData.stateOwnerId;
       this.ticketData = this.common.params.editData.rowData;
       this.adminList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
       this.userGroupList = this.common.params.groupList;
@@ -775,7 +777,8 @@ export class ChatboxComponent implements OnInit {
   }
 
   openEditActionOwnerModal(row) {
-    if (![this.priOwnId, row._action_owner].includes(this.loginUserId)) {
+    // console.log(`[${this.priOwnId}, ${row._action_owner}, ${this.stateOwnerId}] includes ${this.loginUserId}`);
+    if (![this.priOwnId, row._action_owner, this.stateOwnerId].includes(this.loginUserId)) {
       this.common.showError("Primary Owner/Action Owner have access to change");
       return false;
     }

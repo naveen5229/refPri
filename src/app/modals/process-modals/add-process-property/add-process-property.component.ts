@@ -41,18 +41,18 @@ export class AddProcessPropertyComponent implements OnInit {
       priCatId: { id: null, name: '' },
       SecCatId: { id: null, name: '' },
       typeId: { id: null, name: '' },
-      allocationAuto: { id: prefilledData._allocation_auto, name: '' },
-      esclationAuto: { id: prefilledData._escalation_auto, name: '' },
-      escTime: prefilledData.esc_time_ack,
-      complRemTime: prefilledData.comp_rem_time,
-      complEscTime: prefilledData.esc_time_comp,
-      isUrgent: prefilledData.is_urgent,
-      isActive: true,
+      allocationAuto: { id: prefilledData._allocation_auto, name: prefilledData._allocation_auto_name },
+      esclationAuto: { id: prefilledData._escalation_auto, name: prefilledData._esclation_auto_name },
+      escTime: prefilledData._esc_time_ack,
+      complRemTime: prefilledData._comp_rem_time,
+      complEscTime: prefilledData._esc_time_comp,
+      isUrgent: prefilledData._is_urgent,
+      isActive: prefilledData._is_active,
       callRequired: prefilledData._is_call_required,
-      claim: prefilledData.claim,
-      callingBenchmark: prefilledData.calling_benchmark,
-      completionBenchmark: prefilledData.completion_benchmark,
-      requestId: prefilledData._action_id
+      claim: prefilledData._claim,
+      callingBenchmark: prefilledData._calling_benchmark,
+      completionBenchmark: prefilledData._completion_benchmark,
+      requestId: prefilledData._property_id
     }
   }
 

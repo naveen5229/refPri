@@ -297,7 +297,7 @@ export class AddTransactionActionComponent implements OnInit {
       };
       console.log("saveTransNextAction:", params);
       this.common.loading++;
-      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+      this.api.post("Processes/addTransactionAction", params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
