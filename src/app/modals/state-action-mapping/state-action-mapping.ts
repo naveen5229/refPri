@@ -186,7 +186,7 @@ export class stateActionMapping implements OnInit {
   }
 
   closeModal(res) {
-    this.activeModal.close({ response: false });
+    this.activeModal.close({ response: res });
   }
 
   save() {
@@ -213,6 +213,7 @@ export class stateActionMapping implements OnInit {
           this.common.showToast(res['data'][0].y_msg);
           this.getPreFilledMatrix(this.mappingForm.actionId);
           this.resetMappingForm();
+          this.closeModal(true);
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
