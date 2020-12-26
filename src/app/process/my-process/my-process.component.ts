@@ -789,7 +789,7 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
 
       if (lead._revert_action > 0) {
-        icons.push({ class: "fa fa-thumbs-down text-primary", action: this.openTransAction.bind(this, lead, type, null , false), txt: '', title: "Inverse" });
+        icons.push({ class: "fa fa-thumbs-down text-primary", action: this.openTransAction.bind(this, lead, type, null, false), txt: '', title: "Inverse" });
       }
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
@@ -852,7 +852,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   revert(lead) {
-  console.log("🚀 ~ file: my-process.component.ts ~ line 855 ~ MyProcessComponent ~ revert ~ lead", lead)
+    console.log("🚀 ~ file: my-process.component.ts ~ line 855 ~ MyProcessComponent ~ revert ~ lead", lead)
 
   }
 
@@ -982,8 +982,8 @@ export class MyProcessComponent implements OnInit {
     });
   }
 
-  openTransAction(lead, type, formType = null, isComplete:Boolean=null) {
-    console.log("openTransAction");
+  openTransAction(lead, type, formType = null, isComplete: Boolean = null) {
+    console.log("openTransAction", lead);
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = ([2, 6, 7].includes(type)) ? 1 : 0;
@@ -1182,7 +1182,8 @@ export class MyProcessComponent implements OnInit {
         lastSeenId: lead._lastreadid,
         tabType: type,
         priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
-        rowData: lead
+        rowData: lead,
+        stateOwnerId: lead._state_owner_id
       }
       this.common.params = {
         editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process',
@@ -1349,10 +1350,11 @@ export class MyProcessComponent implements OnInit {
         actionOwnerId: this.userService._details.id,
         actionOwnerName: this.userService._details.name,
         actionOwnerNameOld: null,
+        isClaim: 1
       }
     }
 
-    console.log('here final data',params, apiBase)
+    console.log('here final data', params, apiBase)
     // return;
     if (lead._transactionid > 0) {
       this.common.loading++;

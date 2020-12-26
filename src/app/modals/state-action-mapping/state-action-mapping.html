@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="row mt-2">
+  <div class="row mt-2" *ngIf="mappingForm.acType === '0'">
     <div class="col-4">
       <label><b>State </b></label>
     </div>
@@ -93,7 +93,7 @@
     </div>
   </div>
 
-  <div class="row mt-2">
+  <div class="row mt-2" *ngIf="mappingForm.acType === '0'">
     <div class="col-4">
       <label><b>Prerequisite Action</b></label>
     </div>

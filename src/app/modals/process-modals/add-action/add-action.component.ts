@@ -262,7 +262,7 @@ export class AddActionComponent implements OnInit {
     // this.actionForm.nextState = (action._next_state && action._next_state.length) ? action._next_state.map(x => { return { id: x._id, name: x.name } }) : [];
     // this.actionForm.autoStateChange = action._auto_state_change;
     // this.actionForm.claim = action._claim;
-    this.actionForm.isRepeatable = action._is_repeatable;
+    this.actionForm.isRepeatable = action.is_repeatable;
 
     this.button = 'Update';
     // this.actionForm.isDefault = (action._is_default) ? true : false;
@@ -338,6 +338,7 @@ export class AddActionComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data.response);
+        this.getActionList();
       }
     });
   }
