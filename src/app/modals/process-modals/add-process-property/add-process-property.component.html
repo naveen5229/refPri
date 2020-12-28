@@ -13,7 +13,8 @@
     </div>
     <div class="col-8">
       <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto" name="defaultOwn"
-        id="defaultOwn" (onSelected)="processPropertyForm.allocationAuto=$event;"
+        id="defaultOwn"
+        (onSelected)="processPropertyForm.allocationAuto=$event;(processPropertyForm.allocationAuto.id>0) ? processPropertyForm.claim=false : ''"
         [preSelected]="(processPropertyForm.allocationAuto.id>=0) ? {name: processPropertyForm.allocationAuto.name}:{name:''}"
         autocomplete="off">
       </auto-suggestion>
@@ -85,7 +86,8 @@
       <label>Claim</label>
     </div>
     <div class="col-8">
-      <input type="checkbox" [(ngModel)]="processPropertyForm.claim">
+      <input type="checkbox" [(ngModel)]="processPropertyForm.claim"
+        [disabled]="processPropertyForm.allocationAuto.id==1">
     </div>
   </div>
 
@@ -111,8 +113,7 @@
 <div class="modal-footer">
   <div class="row footer">
     <div class="col ">
-      <button class="btn btn-danger btn-sm" type="button" id="cancel "
-        (click)="close(false)">Cancel</button>
+      <button class="btn btn-danger btn-sm" type="button" id="cancel " (click)="close(false)">Cancel</button>
     </div>
     <div class="col text-right">
       <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"

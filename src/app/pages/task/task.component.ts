@@ -1868,6 +1868,12 @@ export class TaskComponent implements OnInit {
       console.log('reszponse 2nd', activeModal, type);
       type ? this.getTaskByType(type) : null;
       this.tableUnreadTaskForMeList.settings.arrow = true;
+      // if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) { } else
+       if (ticket._cc_user_id && !ticket._cc_status) {
+        this.ackTaskByCcUser(ticket, type);
+      } else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+        this.ackTaskByProjectUser(ticket, type);
+      }
     });
   }
 

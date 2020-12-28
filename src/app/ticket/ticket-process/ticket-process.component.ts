@@ -77,7 +77,6 @@ export class TicketProcessComponent implements OnInit {
     secCatList: [{ name: '' }],
     typeList: [{ name: '' }],
     Supervisor: { id: null, name: '' },
-    claimStatus: { id: 0, name: 'Disable' },
     ticketInput: { id: 0, name: 'Auto' },
     isActive: true,
   }
@@ -94,6 +93,7 @@ export class TicketProcessComponent implements OnInit {
     typeId: { id: null, name: '' },
     allocationAuto: { id: 0, name: 'Disable' },
     esclationAuto: { id: 0, name: 'Disable' },
+    claimStatus: false,
     escTime: '',
     complRemTime: '',
     complEscTime: '',
@@ -200,7 +200,6 @@ export class TicketProcessComponent implements OnInit {
       secCatList: [{ name: '' }],
       typeList: [{ name: '' }],
       Supervisor: { id: null, name: '' },
-      claimStatus: { id: 0, name: 'Disable' },
       isActive: true,
       ticketInput: { id: 0, name: 'Auto' },
     }
@@ -297,37 +296,35 @@ export class TicketProcessComponent implements OnInit {
       priCatInfo: JSON.stringify(this.ticketForm.priCatList),
       secCatInfo: JSON.stringify(this.ticketForm.secCatList),
       typeInfo: JSON.stringify(this.ticketForm.typeList),
-      claimTicket: this.ticketForm.claimStatus.id,
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
       ticketInput: this.ticketForm.ticketInput.id
       // supervisorId: this.ticketForm.Supervisor.id
     }
-
     if (!params.name) {
       this.common.showError('Please enter Process Name');
       return false;
     }
-      this.common.loading++;
-      this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
-        this.common.loading--;
-        if (res['code'] == 1) {
-          if (res['data'][0].y_id > 0) {
-            this.common.showToast(res['data'][0].y_msg);
-            this.ticketForm.id = res['data'][0].y_id;
-            this.ticketPropertyForm.tpId = res['data'][0].y_id;
-            this.closeaddticketModal();
-            this.openTicketPropertyModal(this.ticketForm.id);
-          } else {
-            this.common.showError(res['data'][0].y_msg);
-          }
+    this.common.loading++;
+    this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.ticketForm.id = res['data'][0].y_id;
+          this.ticketPropertyForm.tpId = res['data'][0].y_id;
+          this.closeaddticketModal();
+          this.openTicketPropertyModal(this.ticketForm.id);
         } else {
-          this.common.showError(res['msg']);
+          this.common.showError(res['data'][0].y_msg);
         }
-      }, err => {
-        this.common.loading--;
-        console.log('Error:', err)
-      });
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      console.log('Error:', err)
+    });
   }
 
   getTicketProcessProperty(id) {
@@ -567,11 +564,6 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.endTime = (ticket.end_date) ? new Date(ticket.end_date) : null;
       this.ticketForm.priCatAlias = ticket.pri_category_alias;
       this.ticketForm.secCatAlias = ticket.sec_category_alias;
-      if (ticket._claim_ticket == 0) {
-        this.ticketForm.claimStatus = { id: 0, name: 'Disable' };
-      } else {
-        this.ticketForm.claimStatus = { id: 1, name: 'Enable' };
-      }
       this.ticketForm.isActive = ticket._is_active;
       this.ticketForm.priCatList = [{ name: '' }];
       this.ticketForm.secCatList = [{ name: '' }];
@@ -629,6 +621,7 @@ export class TicketProcessComponent implements OnInit {
       typeId: { id: null, name: '' },
       allocationAuto: { id: 0, name: 'Disable' },
       esclationAuto: { id: 0, name: 'Disable' },
+      claimStatus: false,
       escTime: '',
       complRemTime: '',
       complEscTime: '',
@@ -654,6 +647,7 @@ export class TicketProcessComponent implements OnInit {
       typeId: this.ticketPropertyForm.typeId.id,
       allocationAuto: this.ticketPropertyForm.allocationAuto.id,
       esclationAuto: this.ticketPropertyForm.esclationAuto.id,
+      claim: this.ticketPropertyForm.claimStatus ? 1 : 0,
       escTime: this.ticketPropertyForm.escTime,
       complRemTime: this.ticketPropertyForm.complRemTime,
       complEscTime: this.ticketPropertyForm.complEscTime,
@@ -701,16 +695,9 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.priCatId = { id: property._pri_cat_id, name: property.primary_category };
       this.ticketPropertyForm.SecCatId = { id: property._sec_cat_id, name: property.secondary_category };
       this.ticketPropertyForm.typeId = { id: property._type_id, name: property.type };
-      if (property._allocation_auto === 0) {
-        this.ticketPropertyForm.allocationAuto = { id: 0, name: 'Disable' }
-      } else {
-        this.ticketPropertyForm.allocationAuto = { id: 1, name: 'Enable' }
-      }
-      if (property._esclation_auto === 0) {
-        this.ticketPropertyForm.esclationAuto = { id: 0, name: 'Disable' }
-      } else {
-        this.ticketPropertyForm.esclationAuto = { id: 1, name: 'Enable' }
-      }
+      this.ticketPropertyForm.allocationAuto = { id: property._allocation_auto, name: property.allocation_auto };
+      this.ticketPropertyForm.esclationAuto = { id: property._esclation_auto, name: property.esclation_auto };
+      this.ticketPropertyForm.claimStatus = property._claim_ticket == 0 ? false : true;
       this.ticketPropertyForm.escTime = property.esc_time;
       this.ticketPropertyForm.complRemTime = property.compl_rem_time;
       this.ticketPropertyForm.complEscTime = property.compl_esc_time;
@@ -959,7 +946,7 @@ export class TicketProcessComponent implements OnInit {
   }
 
   openDashboardFieldModal(process) {
-    this.common.params = { processId: process._id, processName: process.name,fromPage:1 };
+    this.common.params = { processId: process._id, processName: process.name, fromPage: 1 };
     const activeModal = this.modalService.open(AddDashboardFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
