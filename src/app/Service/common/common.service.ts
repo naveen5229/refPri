@@ -9,6 +9,8 @@ import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 import { Router } from '@angular/router';
 import { ApiService } from '../../Service/Api/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImageViewComponent } from '../../modals/image-view/image-view.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -28,7 +30,7 @@ export class CommonService {
     reject: "red",
     hold: "antiquewhite",
   }
-  constructor(private toastrService: NbToastrService,
+  constructor(private toastrService: NbToastrService,public modalService: NgbModal,
     private datePipe: DatePipe,public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
   showError(msg?, err?) {
@@ -864,7 +866,14 @@ export class CommonService {
         console.log('Name:', name);
         if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
           eve.preventDefault();
-          this.getFile(url,name);
+          var ext = url.split('.').pop();
+          let formats = ["jpeg", "jpg", "png", 'pdf'];
+          if (formats.includes(ext.toLowerCase())) {
+            let images = [{name:name,image:url}];
+            this.openImageView(images);
+          }else{
+            this.getFile(url,name);
+          }
           console.log('--------------------ITS FILE--------------------');
         }
         // console.log('url:', url)
@@ -955,6 +964,12 @@ export class CommonService {
       console.error('Base Err: ', err);
     })
     return result;
+  }
+
+  openImageView(images) {
+    console.log("openImageView", images);
+    const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.componentInstance.imageList = { images, title: 'Image' };
   }
 
 }

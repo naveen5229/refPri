@@ -468,5 +468,10 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     return this.idContainer + '-iframe'
   }
 
+  hideFullscreen(){
+    if(this.viewerFullscreen){
+      this.viewerFullscreen.hide();
+    }
+  }
 
 }

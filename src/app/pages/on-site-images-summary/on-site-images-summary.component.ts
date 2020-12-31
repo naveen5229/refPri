@@ -142,8 +142,9 @@ export class OnSiteImagesSummaryComponent implements OnInit {
         image: data.url,
       }
     });
-    this.common.params = { images, title: 'Image' };
+    // this.common.params = { images, title: 'Image' };
     const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.componentInstance.imageList = { images, title: 'Image' };
   }
 
 

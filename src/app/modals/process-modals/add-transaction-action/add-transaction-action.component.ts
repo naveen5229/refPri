@@ -207,6 +207,7 @@ export class AddTransactionActionComponent implements OnInit {
         refId: this.transAction.action.id,
         refType: 1,
         formType: 2,
+        isDisabled: fieldsVisi
       };
 
       this.common.params = { actionData, title: 'Action Form', button: "Save", buttonType: true, fieldsVisi: fieldsVisi };
