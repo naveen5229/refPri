@@ -135,7 +135,7 @@ export class OnSiteImagesSummaryComponent implements OnInit {
   openImageView(shift) {
     console.log("OnSiteImagesSummaryComponent -> openImageView -> shift", shift)
     // return;
-    let images = [];
+    let images = null;
     images = shift._img.map(data => {
       return {
         name: data.doc_name,

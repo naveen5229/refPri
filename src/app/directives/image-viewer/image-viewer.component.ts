@@ -10,8 +10,8 @@ import {
   SimpleChanges
 } from '@angular/core';
 
-import ImageViewer from 'iv-viewer';
-import { FullScreenViewer } from 'iv-viewer';
+// import ImageViewer from 'iv-viewer';
+import { ImageViewer,FullScreenViewer } from 'iv-viewer';
 
 
 @Component({

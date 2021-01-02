@@ -970,6 +970,12 @@ export class CommonService {
     console.log("openImageView", images);
     const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.componentInstance.imageList = { images, title: 'Image' };
+    activeModal.componentInstance.isDownload = true;
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.getFile(images[0]['image'],images[0]['name']);
+      }
+    });
   }
 
 }

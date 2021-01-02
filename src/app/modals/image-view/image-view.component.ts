@@ -13,12 +13,14 @@ export class ImageViewComponent implements OnInit {
   refType = null;
   docType = null;
   title = '';
-  images = [];
+  images = null;
   refdata = [];
   activeImage = '';
   params = "";
   index = 0 ;
   imageList;
+  fullscreen = false;
+  isDownload = false;
   constructor(public api: ApiService,private activeModal: NgbActiveModal) {
       
      
@@ -69,8 +71,8 @@ export class ImageViewComponent implements OnInit {
       });
   }
 
-  closeModal() {
-    this.activeModal.close();
+  closeModal(response) {
+    this.activeModal.close({response:response});
   }
 
   nextMove(){
