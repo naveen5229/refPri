@@ -133,7 +133,7 @@ export class GenericModelComponent implements OnInit {
                 continue;
             }
             this.headings.push(key);
-            let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
+            let headerObj = { title: key, placeholder: this.common.formatTitle(key) };
             this.table.data.headings[key] = headerObj;
           }
         }

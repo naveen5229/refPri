@@ -13,7 +13,8 @@ import { ConfirmComponent } from '../confirm/confirm.component';
   styleUrls: ['./attendance-monthly-summary.component.scss']
 })
 export class AttendanceMonthlySummaryComponent implements OnInit {
-
+  currentDate = new Date();
+  weekdate = { startDate: this.common.getDate(-6), endDate: this.common.getDate() }
   endTime = new Date();
   startTime = new Date();
   attendanceSummaryList = [];
@@ -39,6 +40,16 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   };
   leaveRequestList = [];
   tableLeaveRequestList = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  weeklyList = [];
+  tableWeeklyList = {
     data: {
       headings: {},
       columns: []
@@ -80,15 +91,32 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.resetTableFinalAttendanceList();
     let startdate = this.common.dateFormatter(this.startTime);
     let enddate = this.common.dateFormatter(this.endTime);
-    const params =
-      "?startDate=" + startdate +
-      "&endDate=" + enddate + "&groupId=" + this.selectedGroup;
+    let params;
+    if (type == 'weekly') {
+      let startWeekDate;
+      let endWeekDate;
+      if (!this.weekdate.startDate && !this.weekdate.endDate) {
+        startWeekDate = null; endWeekDate = null
+      } else {
+        startWeekDate = this.common.dateFormatter(this.weekdate.startDate);
+        endWeekDate = this.common.dateFormatter(this.weekdate.endDate);
+      }
+      params =
+        "?startDate=" + startWeekDate +
+        "&endDate=" + endWeekDate + "&groupId=" + this.selectedGroup;
+    } else {
+      params =
+        "?startDate=" + startdate +
+        "&endDate=" + enddate + "&groupId=" + this.selectedGroup;
+    }
     // console.log(params);
     let apiName;
     if (type && type == "final") {
       apiName = 'Admin/getAttendanceMonthlySummaryFinal';
     } else if (type && type == "leave") {
       apiName = 'Admin/getLeaveRequestSummary';
+    } else if (type && type == 'weekly') {
+      apiName = 'Admin/getAttendanceWeeklySummary';
     } else {
       apiName = 'Admin/getAttendanceMonthlySummary';
     }
@@ -109,6 +137,10 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             this.leaveRequestList = res['data'] || [];
             console.log("leaveList:", this.leaveRequestList);
             (this.leaveRequestList.length > 0) ? this.setTableLeaveRequestList() : this.resetTableFinalAttendanceList()
+          } else if (type && type == "weekly") {
+            this.weeklyList = res['data'] || [];
+            console.log("leaveList:", this.weeklyList);
+            (this.weeklyList.length > 0) ? this.setTableWeeklyList() : this.resetTableFinalAttendanceList()
           } else {
 
             this.attendanceSummaryList = res['data'] || [];
@@ -299,6 +331,10 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
       headings: {},
       columns: []
     };
+    this.tableWeeklyList.data = {
+      headings: {},
+      columns: []
+    }
   }
 
   setTableFinalAttendanceList() {
@@ -388,4 +424,48 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     }
   }
 
+  // start: weekly list
+  setTableWeeklyList() {
+    this.tableWeeklyList.data = {
+      headings: this.generateHeadingsWeeklyList(),
+      columns: this.getTableColumnsWeeklyListList()
+    };
+    return true;
+  }
+
+  generateHeadingsWeeklyList() {
+    let headings = {};
+    for (var key in this.weeklyList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+    }
+    console.log("headings:", headings);
+    return headings;
+  }
+
+  getTableColumnsWeeklyListList() {
+    let columns = [];
+    this.weeklyList.map(shift => {
+      let column = {};
+      for (let key in this.generateHeadingsWeeklyList()) {
+        if (key == 'Action' || key == 'action') {
+        } else {
+          column[key] = { value: shift[key], class: 'black', action: '' };
+        }
+      }
+      if (!shift['_task_id'] && shift['_id']) {
+        column['style'] = { 'background': 'antiquewhite' };
+      } else if (shift['_task_id'] && !shift['_id'] && shift['_status'] == 5) {
+        column['style'] = { 'background': 'pink' };
+      } else if (shift['_task_id'] && !shift['_id'] && shift['_status'] == -1) {
+        column['style'] = { 'background': 'red' };
+      } else {
+        column['style'] = { 'background': '#fff' };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end: weekly list
 }

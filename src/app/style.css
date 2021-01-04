@@ -316,16 +316,22 @@ table .fa-comments.new-comment span {
     background: lightgray;
 }
 
+.search-style{
+    background: lightgray;
+}
+
 .new_message {
     background: lightgray !important;
 }
-.other_chat.new_message .quoted_msg{
-    background: #c2bebe;
 
+.other_chat.new_message .quoted_msg {
+    background: #c2bebe;
 }
-.popover-body{
+
+.popover-body {
     padding: 0.2rem 0.45rem !important;
 }
+
 .quoted_msg {
     background: #f9f9f9;
     margin: 3px -7px;
@@ -476,9 +482,8 @@ nb-layout-header nav {
 
 .modal-header.sub-title span {
     max-height: 100px;
-    overflow: auto;    
+    overflow: auto;
     font-size: 12px;
-
 }
 
 .logo:focus {
@@ -515,4 +520,17 @@ nb-card-body {
 .exel-icon {
     font-size: 25px;
     color: #217346;
+}
+
+.user-active {
+    background: yellow;
+}
+.hr_full{
+    margin: 0 -15px;
+}
+.modal-overflow{
+    overflow-y: auto;
+}
+.spinner-div{
+    min-height:40px;
 }

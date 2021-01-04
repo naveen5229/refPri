@@ -12,8 +12,10 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class FormDataTableComponent implements OnInit {
   additionalFields = [];
   tableHeader = null;
+  isDisabled = false;
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.additionalFields = this.common.params.additionalform;
+    this.isDisabled = common.params.isDisabled;
     console.log("additionalFields:", this.additionalFields);
     if (this.additionalFields && this.additionalFields.length > 0) {
       this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));

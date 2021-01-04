@@ -55,7 +55,7 @@
         color: #676767;
         i {
             color: #3366ff;
-            font-size: 10px;
+            font-size: 8px;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
                 display: contents;
@@ -68,10 +68,13 @@
     }
     label {
         margin: 0;
+        max-width:100%;
+        overflow-x: auto;
     }
 }
 
 .bottom-block {
+    background: ghostwhite;
     .button-box {
         display: inline-grid;
     }
@@ -285,6 +288,10 @@ smart-table {
     opacity: 1;
     transform: scale(0.7);
 }
+.send:focus {
+    outline: 0;
+    box-shadow: none;
+}
 
 .chatmsg {
     height: auto !important;
@@ -307,4 +314,14 @@ smart-table {
     position: absolute;
     bottom: -18px;
     right: 0;
+}
+
+
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 12px;
+    border: 1px solid black;
 }

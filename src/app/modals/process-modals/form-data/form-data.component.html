@@ -14,25 +14,44 @@
                     <div *ngIf="oddArray[i].r_coltitle" class="row">
                         <div class="col-4">
                             <label>{{oddArray[i].r_coltitle}}<span style="color: red"
-                                *ngIf="oddArray[i].r_required">*</span></label>
+                                    *ngIf="oddArray[i].r_required">*</span></label>
                         </div>
 
                         <div class="col-8">
-                            <input type="text" class="form-control" style="width: 95%;" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
-                            <input type="number" class="form-control" style="width: 95%;" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
-                            <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
+                            <input type="text" class="form-control" style="width: 95%;" [(ngModel)]=oddArray[i].r_value
+                                *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "
+                                [readonly]="isDisabled">
+                            <input type="number" class="form-control" style="width: 95%;"
+                                [(ngModel)]=oddArray[i].r_value
+                                *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues "
+                                [readonly]="isDisabled">
+                            <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
+                                [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
+                                [isTime]="false" >
                             </uj-date-time-picker>
 
                             <!-- <input type="checkbox" class="form-control" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues"> -->
-                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
+                                *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues"
+                                [readonly]="isDisabled">
 
-                            <span *ngIf="oddArray[i].r_coltype == 'table'" class="cursor-pointer" title="Open Table" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                            <span *ngIf="oddArray[i].r_coltype == 'table'" class="cursor-pointer" title="Open Table"
+                                (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table"
+                                    aria-hidden="true"></i></span>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues">
-                            <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
-                                {{fixValue.option}}</option>
-                        </select>
+                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12"
+                                *ngIf="oddArray[i].r_fixedvalues" [disabled]="isDisabled">
+                                <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                                    {{fixValue.option}}</option>
+                            </select>
+                            <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                    <span class="blue cursor-pointer" (click)="common.getFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                </span>
+                                <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
+                                <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                            </div>
                         </div>
 
                     </div>
@@ -42,25 +61,43 @@
                     <div *ngIf="evenArray[i].r_coltitle" class="row">
                         <div class="col-4">
                             <label>{{evenArray[i].r_coltitle}} <span style="color: red"
-                                *ngIf="evenArray[i].r_required">*</span></label>
+                                    *ngIf="evenArray[i].r_required">*</span></label>
                         </div>
 
                         <div class="col-8">
-                            <input type="text" class="form-control" style="width: 95%;" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
-                            <input type="number" class="form-control" style="width: 95%;" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
-                            <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
+                            <input type="text" class="form-control" style="width: 95%;" [(ngModel)]=evenArray[i].r_value
+                                *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"
+                                [readonly]="isDisabled">
+                            <input type="number" class="form-control" style="width: 95%;"
+                                [(ngModel)]=evenArray[i].r_value
+                                *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues"
+                                [readonly]="isDisabled">
+                            <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
+                                [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'"
+                                [isTime]="false">
                             </uj-date-time-picker>
 
-                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+                            <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"
+                                *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues"
+                                [readonly]="isDisabled">
 
-                            <span *ngIf="evenArray[i].r_coltype == 'table'" class="cursor-pointer" title="Open Table" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                            <span *ngIf="evenArray[i].r_coltype == 'table'" class="cursor-pointer" title="Open Table"
+                                (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
+                                    aria-hidden="true"></i></span>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues">
-                                    <option [value]="fixValue.option"
-                                        *ngFor="let fixValue of evenArray[i].r_fixedvalues">
-                                        {{fixValue.option}}</option>
-                                </select>
+                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
+                                *ngIf="evenArray[i].r_fixedvalues" [disabled]="isDisabled">
+                                <option [value]="fixValue.option" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+                                    {{fixValue.option}}</option>
+                            </select>
+                            <div class="input-group p-0" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                    <span class="blue cursor-pointer" (click)="common.evenArray(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                </span>
+                                <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,9 +105,16 @@
 
             <div class="col-12">
                 <div class="row" style="margin-top: 1rem;">
-                    <div class="col-10"></div>
-                    <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-sm" (click)="saveFromDetail()">Submit</button>
+                    <div class="col-4"></div>
+                    <div class="col-8" *ngIf="!isDisabled">
+                        <div class="row" style="float: right;">
+                            <button type="button" *ngIf="buttonType" class="btn btn-danger btn-sm mr-2 buttonSpacing"
+                                (click)="dismiss(false)">Cancel</button>
+                            <button type="button" class="btn btn-primary btn-sm buttonSpacing"
+                                (click)="saveFromDetail(1)">Save</button>
+                            <button type="button" *ngIf="buttonType" class="btn btn-primary btn-sm"
+                                (click)="saveFromDetail(2)">Save & Continue</button>
+                        </div>
                     </div>
                 </div>
             </div>
