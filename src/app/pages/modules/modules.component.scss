@@ -22,6 +22,7 @@
 
 table {
   margin-bottom: 0rem;
+  @include fixed-table;
   tbody {
     max-height: calc(100vh - 218px);
     tr {

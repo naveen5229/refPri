@@ -73,6 +73,7 @@
   }
 }
 table{
+  @include fixed-table;
   margin-bottom: 0rem;
   thead{
      th{

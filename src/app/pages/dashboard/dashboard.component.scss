@@ -18,8 +18,9 @@
 
 table {
   margin-bottom: 0rem;
-
+  @include fixed-table;
   thead {
+
     th{
       border:6px solid $color-500!important;
       padding: .2rem!important;
@@ -33,6 +34,7 @@ table {
   tbody {
     max-height: calc(100vh - 178px);
     tr {
+
       td:first-child {
         width: 60px;
       }

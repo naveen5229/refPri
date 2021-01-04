@@ -14,9 +14,9 @@
     }
 
     thead {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
+      // display: table;
+      // width: 100%;
+      // table-layout: fixed;
 
       th {
         .ng-star-inserted {
@@ -29,20 +29,20 @@
       }
     }
 
-    tbody {
-      overflow-y: auto;
-      display: block;
-      width: 100%;
-      table-layout: fixed;
-      overflow: auto;
+    // tbody {
+    //   overflow-y: auto;
+    //   display: block;
+    //   width: 100%;
+    //   table-layout: fixed;
+    //   overflow: auto;
 
-      tr {
-        display: table;
-        table-layout: fixed;
-        width: 100%;
-      }
+    //   tr {
+    //     display: table;
+    //     table-layout: fixed;
+    //     width: 100%;
+    //   }
 
-    }
+    // }
 
   }
 
@@ -101,13 +101,14 @@
   .table-bordered td,
   .table-bordered th {
     border: 1px solid $color-700;
+    border-bottom:0;
   }
 
   .table-bordered {
     thead {
       th {
         border-top: 0;
-        border-bottom: 1px solid $color-700;
+        border-bottom: 2px solid $color-700;
       }
 
       th:first-child {
@@ -1011,7 +1012,7 @@ tbody tr:nth-child(even) {
 }
 
 .customPage {
-  border: 1px solid $coor-6800;
+  border: 1px solid $color-6800;
   color: $color-5200;
 }
 

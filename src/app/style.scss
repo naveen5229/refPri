@@ -21,9 +21,9 @@ $light: '.nb-theme-light';
 }
 
 @mixin th-bordered {
-  border:6px solid $color-500!important;
-  padding: .2rem!important;
-  background: #fff!important  
+  border: 6px solid $color-500 !important;
+  padding: .2rem !important;
+  background: #fff !important
 }
 
 
@@ -73,7 +73,7 @@ $light: '.nb-theme-light';
 @mixin tablist {
   padding: 5px 6px;
   list-style: none;
-  margin-right:$margin-xs;
+  margin-right: $margin-xs;
   color: $color-400;
   border-bottom: 0px;
   display: inline-block;
@@ -115,6 +115,31 @@ $light: '.nb-theme-light';
   border-top: 1px solid $color-700;
 }
 
+@mixin fixed-table {
+  thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  tbody {
+    overflow-y: auto;
+    display: block;
+    width: 100%;
+    table-layout: fixed;
+    overflow: auto;
+
+    tr {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+    }
+
+  }
+
+
+}
+
 
 @mixin trash-alt {
   color: $color-800;
@@ -128,7 +153,7 @@ $light: '.nb-theme-light';
     font-size: 11px;
     left: -10px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px  rgba($color-500, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($color-500, 0.5);
     box-shadow: 5px 2px 8px rgba($color-500, 0.5);
     font-family: Roboto;
     z-index: 9999;
@@ -142,7 +167,7 @@ $light: '.nb-theme-light';
     left: 0px;
     background-color: $color-800;
     border-radius: 3px;
-    padding:$padding-xs $padding-md;
+    padding: $padding-xs $padding-md;
     color: $color-400;
     width: 100%;
   }
@@ -162,7 +187,7 @@ $light: '.nb-theme-light';
 }
 
 @mixin fa-edit {
-  color:$color-1800;
+  color: $color-1800;
   font-size: $font-md-lg;
 
   span {
@@ -173,8 +198,8 @@ $light: '.nb-theme-light';
     font-size: 11px;
     left: -12px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba($color-500,0.5);
-    box-shadow: 5px 2px 8px rgba($color-500,0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
     font-family: Roboto;
     z-index: 9999;
   }
