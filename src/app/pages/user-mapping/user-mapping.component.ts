@@ -96,6 +96,7 @@ export class UserMappingComponent implements OnInit {
 
   // Partner Mapping Start
   getPartnerMappingData(){
+   
     this.partnerMapping=[];
     this.common.loading++;
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
@@ -112,9 +113,14 @@ export class UserMappingComponent implements OnInit {
   }
 
   resetTable() {
-    this.table.data = {
-      headings: {},
-      columns: []
+    this.table = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
 
@@ -212,9 +218,14 @@ export class UserMappingComponent implements OnInit {
   }
 
   resetTable1(){
-    this.table1.data = {
-      headings: {},
-      columns: []
+    this.table1 = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
 
@@ -348,9 +359,14 @@ getElogistCompany(event){
 }
 
 resetTable2(){
-  this.table2.data = {
-    headings: {},
-    columns: []
+  this.table2 = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
   };
 }
 
@@ -527,9 +543,14 @@ companyMap(company){
   }
   
   resetTable3(){
-    this.table3.data = {
-      headings: {},
-      columns: []
+    this.table3 = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
   
@@ -670,9 +691,14 @@ companyMap(company){
     }
 
     resetTable4(){
-      this.table4.data = {
-        headings: {},
-        columns: []
+      this.table4 = {
+        data: {
+          headings: {},
+          columns: [],
+        },
+        settings: {
+          hideHeader: true
+        }
       };
     }
     

@@ -8,19 +8,19 @@
          <div class="row">
           <div class="tabs_style_main w-100">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='partnerMapping'?'active':''" (click)="activeTab='partnerMapping'; getPartnerMappingData()">
+                <li [ngClass]="activeTab=='partnerMapping'?'active':''" (click)="activeTab='partnerMapping';resetTable(); getPartnerMappingData()">
                     Partner Mapping
                 </li>
-                <li [ngClass]="activeTab=='partnerUserMapping'?'active':''" (click)="activeTab='partnerUserMapping';">
+                <li [ngClass]="activeTab=='partnerUserMapping'?'active':''" (click)="activeTab='partnerUserMapping';resetTable1()">
                     Partner User Mapping
                 </li>
-                <li [ngClass]="activeTab=='companyMapping'?'active':''" (click)="activeTab='companyMapping';">
+                <li [ngClass]="activeTab=='companyMapping'?'active':''" (click)="activeTab='companyMapping';resetTable2()">
                     Company Mapping
                 </li>
-                <li [ngClass]="activeTab=='companyUserMapping'?'active':''" (click)="activeTab='companyUserMapping';">
+                <li [ngClass]="activeTab=='companyUserMapping'?'active':''" (click)="activeTab='companyUserMapping';resetTable3()">
                     Company User Mapping
                 </li>
-                <li [ngClass]="activeTab=='vehicleMapping'?'active':''" (click)="activeTab='vehicleMapping';">
+                <li [ngClass]="activeTab=='vehicleMapping'?'active':''" (click)="activeTab='vehicleMapping';resetTable4()">
                   Vehicle Mapping
               </li>
             </ul>

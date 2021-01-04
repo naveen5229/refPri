@@ -15,7 +15,7 @@
         <div class="col-4">
             <div class="form-group">
                 <label>Company Id</label>
-                <auto-suggestion (onSelected)="selectFoUser($event)" url="Suggestion/getFoUsersList" apiMethod="postBooster" [apiBase]="'B'" display="name" id="name" placeholder="Company User" [preSelected]="{name:Foid}"></auto-suggestion>
+                <auto-suggestion (onSelected)="selectFoUser($event)" url="Suggestion/getFoUsersList" apiMethod="postBooster" [apiBase]="'B'" [display]="['name','id']" seperator="-"  id="name" placeholder="Company User" [preSelected]="{name:Foid}"></auto-suggestion>
             </div>
         </div>
 
