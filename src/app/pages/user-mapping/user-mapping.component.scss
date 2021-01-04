@@ -15,3 +15,8 @@ smart-table{
     height: calc(100vh - 202px);
     overflow: auto;
 }
+:host ::ng-deep .blue{
+    color:blue!important;
+    font-weight:bold!important;
+}
+

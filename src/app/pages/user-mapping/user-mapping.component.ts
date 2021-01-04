@@ -8,6 +8,7 @@ import { AddpartnerComponent } from '../../modals/addpartner/addpartner.componen
 import { AddpartneruserComponent } from '../../modals/addpartneruser/addpartneruser.component';
 import { AddcompanyComponent } from '../../modals/addcompany/addcompany.component';
 import { AddfouserComponent } from '../../modals/addfouser/addfouser.component';
+import { MobileNoComponent } from '../../modals/mobile-no/mobile-no.component';
 
 @Component({
   selector: 'ngx-user-mapping',
@@ -163,7 +164,9 @@ export class UserMappingComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else {
+        }else if(key =='mobileno'){
+            column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -269,7 +272,9 @@ export class UserMappingComponent implements OnInit {
             action: null,
             icons: this.actionIcons1(campaign)
           };
-        } else {
+        }else if(key =='mobileno'){
+          column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -410,7 +415,9 @@ getTableColumns2() {
           action: null,
           icons: this.actionIcons2(campaign)
         };
-      } else {
+      }else if(key =='mobileno'){
+        column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+      }else {
         column[key] = { value: campaign[key], class: 'black', action: '' };
       }
     }
@@ -594,7 +601,9 @@ companyMap(company){
             action: null,
             icons: this.actionIcons3(campaign)
           };
-        } else {
+        } else if(key =='mobileno'){
+          column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -813,6 +822,15 @@ companyMap(company){
     addPartnerUser(){
       this.modalService.open(AddpartneruserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     }
+
+    showMobileNo(mobileno){
+      this.common.params=mobileno;
+      console.log("mobile no",this.common.params);
+      const activeModal = this.modalService.open(MobileNoComponent, {
+        size: "sm",
+        container: "nb-layout"
+      });
+   }
   
 
 }
