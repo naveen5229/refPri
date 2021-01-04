@@ -61,7 +61,8 @@ import { OnSiteImagesComponent } from './on-site-images/on-site-images.component
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 import { TicketAdminComponent } from '../ticket/ticket-admin/ticket-admin.component';
 import { CustomDashboardComponent } from '../ticket/custom-dashboard/custom-dashboard.component';
-import { EntityDeatilsComponent } from '../pages/entity-deatils/entity-deatils.component'
+import { EntityDeatilsComponent } from '../pages/entity-deatils/entity-deatils.component';
+import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 
 const routes: Routes = [{
   path: '',
@@ -374,6 +375,11 @@ const routes: Routes = [{
     {
       path: 'entity-details',
       component: EntityDeatilsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-wise-expenses',
+      component: UserWiseExpensesComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

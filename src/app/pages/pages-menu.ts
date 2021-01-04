@@ -29,15 +29,20 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/on-site-images',
         home: true,
       }, {
+        title: 'User-Wise-Expenses',
+        icon: 'people-outline',
+        link: '/pages/user-wise-expenses',
+        home: true,
+      }, {
         title: 'On-Site-Images-Summary',
         icon: 'people-outline',
         link: '/pages/on-site-images-summary',
         home: true,
-      },{
+      }, {
         title: 'Entity Details',
         icon: 'people-outline',
-        link:'/pages/entity-details',
-        home:true
+        link: '/pages/entity-details',
+        home: true
       },
       {
         title: 'User Groups',

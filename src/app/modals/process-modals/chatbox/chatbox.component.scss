@@ -315,3 +315,13 @@ smart-table {
     bottom: -18px;
     right: 0;
 }
+
+
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 12px;
+    border: 1px solid black;
+}
