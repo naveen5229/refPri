@@ -330,7 +330,7 @@ table .fa-comments.new-comment span {
       /* color: #26a69a; */
       color: $color-100;
       position: relative;
-      top: 1px;
+      // top: 1px;
 
       &::after {
         content: "";
