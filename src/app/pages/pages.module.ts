@@ -53,6 +53,7 @@ import {TicketModule} from '../ticket/ticket.module';
 import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
 import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
+import { CustomeronboardingComponent } from './customeronboarding/customeronboarding.component';
 import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 import { UserExpensesComponent } from './user-expenses/user-expenses.component';
@@ -114,6 +115,7 @@ import { UserExpensesComponent } from './user-expenses/user-expenses.component';
     EmployeeMonitoringComponent,
     OnSiteImagesComponent,
     OnSiteImagesSummaryComponent,
+    CustomeronboardingComponent,
     EntityDeatilsComponent,
     UserWiseExpensesComponent,
     UserExpensesComponent

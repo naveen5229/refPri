@@ -114,6 +114,7 @@ import { stateActionMapping } from './modals/state-action-mapping/state-action-m
 import { UserEsclationComponent } from './modals/process-modals/user-esclation/user-esclation.component';
 import { AddProcessPropertyComponent } from './modals/process-modals/add-process-property/add-process-property.component';
 import { CalulateTravelDistanceComponent } from './modals/calulate-travel-distance/calulate-travel-distance.component';
+import { MobileNoComponent } from './modals/mobile-no/mobile-no.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -195,7 +196,8 @@ const PAGE_COMPONENTS = [
   stateActionMapping,
   UserEsclationComponent,
   AddProcessPropertyComponent,
-  CalulateTravelDistanceComponent
+  CalulateTravelDistanceComponent,
+  MobileNoComponent
 ];
 
 @NgModule({
@@ -214,6 +216,7 @@ const PAGE_COMPONENTS = [
     stateActionMapping,
     UserEsclationComponent,
     AddProcessPropertyComponent,
+    MobileNoComponent,
 
 
     // SendmessageComponent,

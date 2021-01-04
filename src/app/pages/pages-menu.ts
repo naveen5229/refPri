@@ -98,6 +98,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Customer-On-Boarding',
+        icon: 'file-text-outline',
+        link: '/pages/customeronboarding',
+        home: true,
+      },
+      {
         title: 'Company KYC',
         icon: 'file-text-outline',
         link: '/pages/companykyc',

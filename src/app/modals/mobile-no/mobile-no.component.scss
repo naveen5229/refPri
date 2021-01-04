@@ -1,0 +1,13 @@
+:host ::ng-deep .modal-header .close {
+    background: transparent;
+    color: #fff !important;
+    opacity: 1;
+    padding: 12px 20px !important;
+    margin: -10px -1rem -1rem auto;
+    outline: none;
+    font-size: 30px;
+    position: relative;
+    top: -6px;
+    left: 5px;
+}
+
