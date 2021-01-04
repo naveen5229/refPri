@@ -1,5 +1,6 @@
+@import '../../style';
 :host::ng-deep{
         .highlight-text{
-            color: blue;
+            color: $color-900;
         }
 }

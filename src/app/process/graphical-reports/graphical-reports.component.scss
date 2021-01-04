@@ -1,13 +1,15 @@
+@import '../../style';
+
 .drag-container {
     max-width: 100%;
     min-height: 30px;
     display: inline-block;
     vertical-align: top;
     z-index: 0;
-    border: 1px solid #d0d0d0;
-    padding: 5px;
-    border-radius: 3px;
-    border-radius: 3px;
+    border: 1px solid $color-5500;
+    padding: $padding-xs;
+    border-radius: $radious-xxs;
+    border-radius: $radious-xxs;
 }
 
 .filter-Container {
@@ -16,23 +18,23 @@
     display: inline-block;
     vertical-align: top;
     z-index: 0;
-    border: 1px solid #d0d0d0;
-    padding: 5px;
-    border-radius: 3px;
-    border-radius: 3px;
+    border: 1px solid $color-5500;
+    padding: $padding-xs;
+    border-radius: $radious-xxs;
+    border-radius: $radious-xxs;
     overflow: auto;
 }
 
 .child-ul {
     list-style-type: none;
-    padding: 0 5px;
+    padding: 0 $padding-xs;
 }
 
 .fieldStyle {
     background-color: #d1dada;
-    color: #000;
+    color: $color-500;
     display: inline-block;
-    border-radius: 30px;
+    border-radius: $radious-xl;
     padding: 2px 12px 5px 10px;
     position: relative;
     margin: 0 0 0 4px;
@@ -42,7 +44,7 @@
     margin-top: 1px;
 }
 .cancelButtonCss {
-    color: red;
+    color: $color-800;
     cursor: pointer;
 }
 .margin_right {
@@ -65,23 +67,23 @@
     max-height: calc(100vh - 125px);
     overflow: auto;
     h6 {
-        color: #ffffff;
+        color: $color-400;
         font-size: 0.8rem;
-        background: #3366ff;
+        background: $color-100;
         padding: 0 10px;
     }
     .drophead {
         font-size: 0.7rem;
-        border: 1px solid #d0d0d0;
+        border: 1px solid $color-5500;
         padding: 0px 5px;
         margin-bottom: 0.2rem;
-        background: #fff;
+        background: $color-400;
         position: relative;
         .dropcaret {
             position: absolute;
             right: 5px;
             top: -1px;
-            color: #7f7f7f;
+            color: $color-3200;
         }
     }
 
@@ -90,20 +92,23 @@
     }
 
     .innerdrop {
-        background: #fff;
-        padding: 5px 5px 0 5px;
-        margin-bottom: 10px;
+        background: $color-400;
+        padding: $padding-xs $padding-xs 0 $padding-xs;
+        padding: $padding-xs $padding-xs 0 $padding-xs;
+        margin-bottom: $margin-md;
         margin-top: -4px;
-        border: 1px solid #dedede;
+        border: 1px solid $color-6400;
         max-height: 130px;
         overflow: auto;
+        
         li {
             font-family: "Poppins", sans-serif !important;
             font-size: 0.68rem;
-            border-bottom: 1px solid #dedede;
+            border-bottom: 1px solid $color-6400;
             padding-left: 5px;
             position: relative;
         }
+
         li:before {
             content: "";
             position: absolute;
@@ -128,7 +133,7 @@
     }
 }
 .active {
-    border-bottom: 2px solid #000000;
+    border-bottom: 2px solid $color-500;
 }
 .hoverChart:hover {
     cursor: pointer;
@@ -138,9 +143,9 @@
     width: 70px;
     box-shadow: 0 4px 13px #ccc8c8;
     border-radius: 9px!important;
-    background: #ffffff;
+    background: $color-400;
     border: 1px solid #e2e2e2;
-    border-top: 3px solid #3366ff;
+    border-top: 3px solid $color-100;
     margin-bottom: 10%;
 }
 .centarize {
@@ -164,7 +169,7 @@
 }
 
 .tableref{
-    background: black;
+    background: $color-500;
     padding: 4px;
     border-radius: 20px;
     color: white;

@@ -1,9 +1,11 @@
+
+@import '../../style';
 :host ::ng-deep .fa-grip-horizontal {
-    color: #07f8d4;
+    color:$color-2700
 }
 
 :host ::ng-deep .fa-handshake {
-    color: #00f;
+    color: $color-2800;
 }
 
 :host ::ng-deep #tableOwnedByMe,
@@ -17,9 +19,7 @@
 }
 
 smart-table {
-    display: block;
     height: calc(100vh - 168px);
-    overflow: auto;
 }
 
 .sl-smart-table {
@@ -30,6 +30,6 @@ smart-table {
 }
 
 :host ::ng-deep .font-weight-bold {
-    font-weight: 600;
+    font-weight: $bold;
 }
 

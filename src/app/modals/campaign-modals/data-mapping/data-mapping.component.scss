@@ -1,5 +1,7 @@
+@import '../../../style.scss';
+
 .page-container {
-  color: darkblue;
+  color: $color-1400;
   font-weight: bold;
   text-transform: capitalize;
   display: contents;

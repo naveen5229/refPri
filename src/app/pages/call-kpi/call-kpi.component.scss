@@ -1,22 +1,24 @@
+@import '../../style.scss';
+
 ::ng-deep .blue{
     width: 200px;
-    color: blue;
+    color: $color-900;
 }
 ::ng-deep .red{
-    color: red,
+    color:$color-800,
     ;
 }
 ::ng-deep .brown{
-    color: brown;
+    color:$color-3900;
 }
 ::ng-deep .magenta{
-    color: magenta;
+    color: $color-4000;
 }
 ::ng-deep .green{
-    color: green;
+    color: $color-1800;
 }
 ::ng-deep .purple{
-    color: purple;
+    color: $color-4100;
 }
 :host ::ng-deep{
     th:nth-child(2){
@@ -24,9 +26,7 @@
     }
 }
 smart-table{
-    display: block;
     height: calc(100vh - 186px);
-    overflow: auto;
 }
 .chartbox{
     height: calc(100vh - 186px);

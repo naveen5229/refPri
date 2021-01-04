@@ -1,9 +1,11 @@
+@import '../../style';
+
 input[type=checkbox] {
-    margin: 0px 10px;
+    margin: 0px $margin-md;
 }
 .class1{
-    color: red;
+    color: $color-800
 }
 .class2 {
-    color: green;
+    color: $color-1800;
 }

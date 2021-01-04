@@ -1,0 +1,61 @@
+@mixin card-xss {
+  &-header {}
+
+  &-body {}
+
+  &-footer {}
+}
+
+
+@mixin card-xs {
+    &-header {}
+
+    &-body {}
+  
+    &-footer {}    
+
+}
+
+@mixin card-sm {
+    &-header {}
+
+    &-body {}
+  
+    &-footer {}
+
+}
+
+@mixin card-md {
+    &-header {}
+
+    &-body {}
+  
+    &-footer {}    
+}
+
+@mixin card-lg {
+    &-header {}
+
+    &-body {}
+  
+    &-footer {}
+
+}
+
+@mixin card-xl {
+    &-header {}
+
+    &-body {}
+  
+    &-footer {}
+
+}
+
+@mixin card-xxl {
+    &-header {}
+
+    &-body {}
+  
+    &-footer {}
+
+}

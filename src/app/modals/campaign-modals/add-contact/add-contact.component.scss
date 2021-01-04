@@ -1,3 +1,5 @@
+@import '../../../style.scss';
+
 .col-md-3,
 .col-md-2 {
   padding: 0px;
@@ -12,18 +14,18 @@
 }
 
 :host ::ng-deep .fa-trash-alt {
-  color: red;
-  font-size: 18px;
+  color: $color-800;
+  font-size: $font-md-lg
   span {
     position: absolute;
     display: none;
     padding: 10px 27px;
-    font-weight: normal;
-    font-size: 11px;
+    font-weight: $normal;
+    font-size:$font-sm-xl;
     left: -10px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 5px 2px 8px  rgba($color-500, 0.5);
+    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -33,10 +35,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: red;
-    border-radius: 3px;
-    padding: 5px 10px;
-    color: #fff;
+    background-color: $color-800;
+    border-radius:$radious-xxs;
+    padding: $padding-xs $padding-md;
+    color: $color-400;
     width: 100%;
   }
   span::after {
@@ -45,7 +47,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid red;
+    border-top: 5px solid $color-800;
     position: absolute;
     bottom: -5px;
     right: 24px;
@@ -55,6 +57,6 @@
   display: block;
 }
 .require {
-  font-size: 20px;
-  color: red;
+  font-size:$font-md-xl;
+  color: $color-800;
 }

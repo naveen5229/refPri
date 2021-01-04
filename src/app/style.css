@@ -1,0 +1,536 @@
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "Open Sans", sans-serif !important;
+}
+
+p,
+a,
+label,
+input,
+select,
+textarea,
+.nb-theme-corporate nb-layout .layout {
+    font-family: "Poppins", sans-serif !important;
+    font-size: .8rem;
+}
+
+label {
+    margin-bottom: 0.1rem;
+}
+
+input,
+select,
+textarea {
+    padding: 5px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    height: auto !important;
+}
+
+input::placeholder {
+    font-size: 12px !important;
+    line-height: 20px !important;
+}
+
+.tooltip {
+    opacity: 1 !important;
+}
+
+.nb-theme-corporate nb-sidebar {
+    width: 15rem;
+    z-index: 1000 !important;
+}
+
+.nb-theme-corporate nb-sidebar.expanded {
+    width: 15rem;
+}
+
+.menu-sidebar .main-container {
+    width: 15rem !important;
+}
+
+.compacted .main-container {
+    width: auto !important;
+}
+
+
+/* width */
+
+.cdk-overlay-container {
+    z-index: 99999999999999999 !important;
+}
+
+.nb-theme-default nb-layout .layout .layout-container .content .columns nb-layout-column {
+    padding: 0;
+}
+
+.modal-header {
+    padding: 3px 15px !important;
+    /* background-color: #26a69a; */
+    background-color: #0062cc;
+    border-bottom: none;
+}
+
+.modal-header h5 {
+    color: #fff;
+    margin-bottom: 0rem !important;
+}
+
+.modal-header .close {
+    background: transparent;
+    color: #fff !important;
+    opacity: 1;
+    padding: 8px 20px;
+    margin: -10px -1rem -1rem auto;
+    outline: none;
+    font-size: 30px;
+}
+
+.modal-footer {
+    padding: .5rem 1rem;
+}
+
+.control-icon.nb-notifications::before {
+    content: "\f0f3";
+    display: block;
+    font-family: "FontAwesome";
+    font-size: 22px;
+    margin-top: 5px;
+}
+
+.fas.fa-file-invoice:before,
+.fas.fa-weight-hanging::before,
+.fas.fa-file-invoice-dollar:before,
+.fas.fa-ticket-alt:before,
+.fas.fa-money-check-alt:before,
+.fas.fa-clipboard-check::before,
+.fas.fa-receipt::before,
+.fas.fa-coins::before,
+.fas.fa-user-cog::before,
+.fas.fa-gas-pump::before,
+.fas.fa-warehouse::before,
+.fas.fa-traffic-light::before,
+.fas.fa-city::before,
+.fas.fa-route::before,
+.fas.fa-file-signature::before,
+.fas.fa-sync-alt::before,
+.fas.fa-map-marked-alt::before,
+.fas.fa-comment-dots::before,
+.fas.fa-address-card::before,
+.fas.fa-file-alt::before,
+.fas.fa-map-marked-alt::before,
+.fas.fa-map-pin::before,
+.fas.fa-info-circle::before,
+.fas.fa-tools::before,
+.fas.fa-badge-check::before,
+.fas.fa-map-marked::before,
+.fas.fa-truck-pickup::before,
+.fas.fa-tachometer-alt::before,
+.fas.fa-chess-king::before,
+.fas.fa-briefcase::before,
+.fas.fa-car-battery::before {
+    font-family: inherit;
+}
+
+.bg-lightblue {
+    background: lightblue;
+}
+
+.bg-lavender {
+    background: lavender;
+}
+
+.bg-lavenderblush {
+    background: lavenderblush;
+}
+
+.bg-lightcyan {
+    background: lightcyan;
+}
+
+.bg-aliceblue {
+    background: aliceblue;
+}
+
+.pac-container {
+    z-index: 2147483647 !important;
+}
+
+.blue {
+    color: #0606e3;
+}
+
+table .fa,
+table .fas,
+table .far {
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+table .fa-edit {
+    color: green;
+}
+
+table .fa-trash {
+    color: red;
+}
+
+table .fa-trash-alt {
+    color: red;
+}
+
+table .fa-times {
+    color: red;
+}
+
+table .fa-user-plus {
+    color: blue;
+}
+
+table .fa-check {
+    color: darkblue;
+}
+
+table .fa-eye {
+    color: #7b0579;
+}
+
+table .fa-thumbs-up {
+    color: green;
+}
+
+.fa-bell {
+    color: gray;
+}
+
+.fa-bell.isRemind {
+    color: red;
+}
+
+.fa-bell.reminderAdded {
+    color: #ffba12;
+}
+
+.fa-pause-circle {
+    color: #ffba12;
+}
+
+.fa-play-circle {
+    color: #ffba12;
+}
+
+table .fa-comments {
+    color: limegreen;
+}
+
+table .fa-comments.no-comment {
+    color: gray;
+}
+
+table .fa-comments.new-comment span {
+    min-width: 13px;
+    min-height: 13px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: 1px;
+    padding: 1px;
+    font-size: 8px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 11px;
+    background: transparent;
+}
+
+.tabs_style {
+    width: 100%;
+    margin: 0px;
+    /* border-bottom: 2px solid #26a69a; */
+    border-bottom: 2px solid #3366ff;
+    margin-bottom: 10px;
+    padding-left: 5px !important;
+}
+
+.tabs_style li {
+    padding: 5px 6px;
+    list-style: none;
+    margin-right: 5px;
+    /* background-color: #26a69a;
+    border: 2px solid #26a69a; */
+    background-color: #3366ff;
+    border: 2px solid #3366ff;
+    color: #fff;
+    border-bottom: 0px;
+    display: inline-block;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.tabs_style li.active {
+    background-color: #fff;
+    /* color: #26a69a; */
+    color: #3366ff;
+    position: relative;
+}
+
+.tabs_style li.active::after {
+    content: "";
+    display: block;
+    background-color: #fff;
+    height: 10px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+#chat-attachment {
+    display: none;
+}
+
+.custom-file-upload {
+    display: flex;
+    padding: 6px 12px;
+    cursor: pointer;
+    height: 100%;
+    align-items: center;
+    font-size: 18px;
+    color: #958e8e;
+}
+
+.attachment-view {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: lightgray;
+}
+
+.search-style{
+    background: lightgray;
+}
+
+.new_message {
+    background: lightgray !important;
+}
+
+.other_chat.new_message .quoted_msg {
+    background: #c2bebe;
+}
+
+.popover-body {
+    padding: 0.2rem 0.45rem !important;
+}
+
+.quoted_msg {
+    background: #f9f9f9;
+    margin: 3px -7px;
+    padding: 5px 10px;
+    border-left: 2px solid #1a3380;
+    font-style: italic;
+    color: #000 !important;
+}
+
+.quoted_selected {
+    background: darkgray;
+}
+
+.comment_reply {
+    display: flex;
+    float: right;
+    margin-left: 5px;
+    cursor: pointer;
+    align-items: flex-end;
+}
+
+
+/* kavita singh */
+
+.nb-theme-default h5,
+.nb-theme-default .h5 {
+    font-size: 1rem;
+}
+
+.nb-theme-default nb-card-header {
+    padding: .8rem 1.25rem .5rem 1.25rem;
+}
+
+.nb-theme-default nb-card-body {
+    padding: .5rem 1rem .5rem 1rem;
+}
+
+.nb-theme-default nb-layout .layout .layout-container .content nb-layout-footer nav {
+    padding: .75rem .25rem!important;
+}
+
+nb-layout-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/* .layout-container .content .columns{
+    margin-bottom: 45px;
+} */
+
+
+/* kavita singh */
+
+.heading-design {
+    position: relative;
+    z-index: 1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: .5s;
+    color: #00000080 !important;
+}
+
+.heading-design:hover {
+    letter-spacing: 4px;
+    transition: .5s;
+}
+
+.heading-design:before {
+    content: " ";
+    position: absolute;
+    width: 50px;
+    height: 1px;
+    background-color: #3366ff;
+    z-index: -1;
+    bottom: 5px;
+    left: 2px;
+}
+
+.heading-design:after {
+    content: " ";
+    position: absolute;
+    width: 25px;
+    height: 1px;
+    background-color: #3366ff;
+    z-index: -1;
+    bottom: 0px;
+    left: 2px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #3366ff;
+    border-color: #3366ff;
+    height: 30px;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 4px 10px 5px 10px!important;
+    font-family: Poppins, sans-serif!important;
+    font-size: .875rem!important;
+    font-weight: 500;
+}
+
+.btn-primary:hover,
+.btn-danger:hover,
+.btn-secondary:hover {
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, .12);
+}
+
+.btn-primary:active,
+.btn-primary:focus,
+.btn-danger:active,
+.btn-danger:focus,
+.btn-secondary:focus,
+.btn-secondary:active {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, .12);
+}
+
+.btn-danger,
+.btn-secondary {
+    height: 30px;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 5px 10px 5px 10px!important;
+    font-family: Poppins, sans-serif!important;
+    font-size: .875rem!important;
+    font-weight: 500;
+}
+
+.nb-theme-default nb-card-header {
+    border-bottom: 1px solid #d1d9e8!important;
+}
+
+nb-layout-header nav {
+    height: 2.7rem!important;
+}
+
+.table th,
+.table td {
+    padding: 0.2rem .5rem;
+    font-size: 12px!important;
+}
+
+.modal-header.sub-title {
+    background-color: #93acc7;
+}
+
+.modal-header.sub-title span {
+    max-height: 100px;
+    overflow: auto;
+    font-size: 12px;
+}
+
+.logo:focus {
+    outline: none!important;
+}
+
+.logo span:focus {
+    outline: none!important;
+}
+
+.nb-theme-default nb-layout-header.fixed~.layout-container {
+    padding-top: 2.7rem!important;
+}
+
+.main-container-fixed {
+    top: 2.7rem!important;
+}
+
+
+/* 21aug2020 */
+
+.layout-container .content nb-layout-footer {
+    display: none!important;
+}
+
+nb-card-body {
+    min-height: calc(100vh - 100px)!important;
+}
+
+.nb-theme-default nb-card {
+    margin-bottom: 0!important;
+}
+
+.exel-icon {
+    font-size: 25px;
+    color: #217346;
+}
+
+.user-active {
+    background: yellow;
+}
+.hr_full{
+    margin: 0 -15px;
+}
+.modal-overflow{
+    overflow-y: auto;
+}
+.spinner-div{
+    min-height:40px;
+}

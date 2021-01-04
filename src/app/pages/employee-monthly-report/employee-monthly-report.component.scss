@@ -1,43 +1,30 @@
+@import '../../style.scss';
 
-   table{
-    margin-bottom: 0rem;
-    thead{
-       display: table;
-       width: 100%;
-       table-layout: fixed;
-   
-       th{
-        padding: 0.2rem!important;
-        background: #fff!important;
-        border: 6px solid #000000!important;
-        font-size: .80rem;
-        vertical-align: top;
-       }
-       th:first-child{
-         width: 60px;
-       }
+table {
+  margin-bottom: 0rem;
+
+  thead {
+    th {
+      vertical-align: top;
+      @include th-bordered;
     }
-  
-    tbody{
-        overflow-y: auto;
-        display: block;
-        width: 100%;
-        table-layout: fixed;
-        overflow: auto;
-        max-height: calc(100vh - 210px);
-        tr{
-          display: table;
-          table-layout: fixed;
-          width: 100%;
-          td{
-            padding: 0.5rem;
-            vertical-align: top;
-            border-top: 1px solid #dee2e6;
-          }
-          td:first-child{
-            width: 60px;
-          }     
-        }
-    
-    }
+
   }
+
+  tbody {
+    max-height: calc(100vh - 210px);
+
+    tr {
+      td {
+        padding: 0.5rem;
+        vertical-align: top;
+        border-top: 1px solid $color-700;
+      }
+
+      td:first-child {
+        width: 60px;
+      }
+    }
+
+  }
+}

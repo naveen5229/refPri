@@ -1,12 +1,14 @@
+@import '../../style';
+
 .radio-type {
   padding-bottom: 10px;
-  font-size: 14px;
+  font-size: $font-md-sm;
   input {
     margin: 0px;
-    margin-right: 5px;
+    margin-right: $margin-xs;
     vertical-align: middle;
     width: 20px;
     height: 20px !important;
-    margin-left: 8px;
+    margin-left:$margin-sm;
   }
 }

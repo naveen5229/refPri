@@ -1,17 +1,18 @@
+@import '../../style.scss';
+
 :host ::ng-deep .container{
    min-height:calc(100vh - 235px)!important;
 }
 
 :host ::ng-deep .red{
-    color:red;
+    color:$color-800;
 }
 
 :host ::ng-deep .green{
-    color:green;
+    color:$color-1800;
     //height: calc(100vh - 185px)!important;
 }
+
 smart-table{
-    display: block;
     height: calc(100vh - 202px);
-    overflow: auto;
 }
