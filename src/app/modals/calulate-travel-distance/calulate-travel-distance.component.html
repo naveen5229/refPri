@@ -1,0 +1,79 @@
+<div class="modal-header">
+  <h5>Travel Distance</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <div class="container pl-0 pr-0">
+      <div class="row mr-0 ml-0">
+          <div class="col-4">
+              <div >
+              <div class="row left-Cols">
+                  <div class="form-group">
+                      <label>Select User</label>
+                      <auto-suggestion (onSelected)="selectInstaller($event)" [data]="adminList"
+                          display="name" placeholder="Select Installer" inputId="selectInstaller"
+                          name="selectInstaller" [preSelected]="(admin.id>0)?{name:admin.name}:{name:''}">
+                      </auto-suggestion>
+                  </div>
+              </div>
+
+              <div class="row left-Cols">
+                  <div class="form-group">
+                      <label>Start Date</label>
+                      <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate"
+                          [isTime]="true">
+                      </uj-date-time-picker>
+                  </div>
+              </div>
+
+              <div class="row left-Cols">
+                  <div class="form-group">
+                      <label>End Date</label>
+                      <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="true"
+                          [isStart]="false">
+                      </uj-date-time-picker>
+                  </div>
+              </div>
+
+              <div class="row left-Cols form-group">
+                  <button class="btn btn-primary btn-sm mt-4" id="button" (click)="getTravelDistance()">Submit</button>
+              </div>
+
+              <div class="row left-Cols" style="margin-top: 6rem;">
+                  <table class="table table-bordered table-hover" *ngIf="final.length">
+                      <thead class="thead" style="background-color: #c0b2b2">
+                          <tr>
+                              <th colspan="3" style="text-align: center; background-color: cadetblue;">Travel Details
+                              </th>
+                          </tr>
+                          <tr style="text-align:center">
+                              <th>Start Date</th>
+                              <th>End Date</th>
+                              <th>Kms</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr style="text-align:center">
+                              <td>{{final[0].startDate}} </td>
+                              <td>{{final[0].endDate}}</td>
+                              <td>{{final[0].km}}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          </div>
+
+          <div class="col-8 pr-0">
+              <button class="btn btn-primary btn-sm" id="button" (click)="viewRoute()">View Route</button>
+              <button class="btn btn-primary btn-sm pl-2" (click)="switchLatLngHandler()">{{SwitchButton}}</button>
+              <div class="row">
+                  <div #map id="map" style="margin: 1rem;"> </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

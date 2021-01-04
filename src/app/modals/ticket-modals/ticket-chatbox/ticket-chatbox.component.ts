@@ -41,6 +41,7 @@ export class TicketChatboxComponent implements OnInit {
   ticketId = 0;
   statusId = 0;
   messageList = [];
+  messageListShow = [];
   showLoading = true;
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
@@ -91,6 +92,11 @@ export class TicketChatboxComponent implements OnInit {
   stTaskMaster = null;
   fileType = null;
   mentionUserIndex: number = 0;
+  
+  isSearchShow = false;
+  searchedIndex = [];
+  selectedIndex = 0;
+  searchCount = 0;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -224,6 +230,7 @@ export class TicketChatboxComponent implements OnInit {
       this.showLoading = false;
       if (res['code']==1) {
         this.messageList = res['data'] || [];
+        this.messageListShow = JSON.parse(JSON.stringify(this.messageList));
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
@@ -747,4 +754,74 @@ export class TicketChatboxComponent implements OnInit {
     this.msgtextarea.nativeElement.focus();
   }
 
+  
+  search() {
+    this.isSearchShow = !this.isSearchShow;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      document.getElementById('searchChat').focus();
+    }, 0);
+  }
+
+  
+  searchChat(value) {
+      let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+      this.common.searchString(value,messageList).then((res)=>{
+        console.log("res:",res);
+        this.searchedIndex = res.searchedIndex;
+        this.searchCount = this.searchedIndex.length;
+        this.messageList = res.messageList;
+        setTimeout(() => {
+          this.searchCount>0 ? this.focusOnSelectedIndex() : null;
+        }, 500);
+      });
+  }
+
+  scrollToChat(focusOn) {
+    try {
+      setTimeout(() => {
+        let scrollIntoView = document.getElementById("focusOn-" + focusOn);
+        (scrollIntoView) ? scrollIntoView.scrollIntoView() : null;
+      }, 100);
+    } catch (err) { }
+  }
+
+  onchangeIndex(type) {
+    console.log('selectedIndex:', this.selectedIndex,this.searchedIndex.length);
+    if (this.searchedIndex.length > 0) {
+      if (type == "plus") {
+        if (this.selectedIndex == this.searchedIndex.length - 1) {
+          return false;
+        }
+        this.selectedIndex++;
+        this.searchCount--;
+      } else {
+        if (this.selectedIndex == 0) {
+          return false;
+        }
+        this.selectedIndex--;
+        this.searchCount++;
+      }
+      this.focusOnSelectedIndex();
+    }
+  }
+
+  focusOnSelectedIndex() {
+    let focusOn = this.searchedIndex[this.selectedIndex];
+    console.log("focusOn:", focusOn);
+    for (let i = 0; i < this.searchedIndex.length; i++) {
+      let removeClass = document.getElementById("focusOn-" + this.searchedIndex[i])
+      if (removeClass)
+        removeClass.classList.remove('text-focus-highlight');
+    }
+    let addClass = document.getElementById("focusOn-" + focusOn);
+    if(addClass)
+      addClass.classList.add('text-focus-highlight');
+    this.scrollToChat(focusOn);
+  }
+
+  reduceFocusHandler() {
+    this.messageList = JSON.parse(JSON.stringify(this.messageListShow));
+    this.searchedIndex = [];
+    this.searchCount = 0;
+  }
 }

@@ -1,0 +1,58 @@
+
+.mylabel{
+    word-break: break-all;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+.w-70{
+    width: 70%;
+}
+
+table{
+    margin-bottom: 0;
+    thead{
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+            th{
+                width: 10%;
+            }
+    }
+   
+    tbody{
+        overflow-y: auto;
+        display: block;
+        width: 100%;
+        table-layout: fixed;
+        overflow: auto;
+        max-height: calc(100vh - 240px);
+       
+        tr{
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            td{
+                width: 10%;
+            }
+         
+        }
+     
+    } 
+}
+
+.imageLink{
+    color: blue;
+    text-decoration: underline;
+}
+
+.imageLink:hover{
+    cursor: pointer;
+}
+
+.require{
+    color: red;
+}
+
+.taR{
+    text-align: right;
+}

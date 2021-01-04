@@ -194,6 +194,7 @@ export class TaskMessageComponent implements OnInit {
   }
   keyHandler(event) {
     const key = event.key.toLowerCase();
+    console.log(key)
     if (this.isMentionedUser) {
       if (key === 'arrowdown') {
         event.preventDefault();
@@ -215,6 +216,9 @@ export class TaskMessageComponent implements OnInit {
     }
     if (key == 'escape') {
       this.closeModal(false);
+    }
+    if(key =='backspace'){
+      console.log(this.taskMessage.split('@'));
     }
 
   }
@@ -358,8 +362,15 @@ export class TaskMessageComponent implements OnInit {
       if (mentionedUsers && mentionedUsers.length > 0) {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
+      
+      const duplicatedGroup = _.groupBy(mentionedUsers,data => {return data.user_id});
+      let finalMentionedUsers = [];
+      Object.keys(duplicatedGroup).map(id =>{
+        console.log('id',id,duplicatedGroup[id][0])
+        finalMentionedUsers.push(duplicatedGroup[id][0]);
+      })
       // console.log("formatedMsg:", formatedMsg);
-      // console.log("mentionedUsers:", mentionedUsers);
+      // console.log("mentionedUsers:", finalMentionedUsers);
       // return false;
       let params = {
         ticketId: this.ticketId,
@@ -368,7 +379,7 @@ export class TaskMessageComponent implements OnInit {
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
-        users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
+        users: (finalMentionedUsers && finalMentionedUsers.length > 0) ? JSON.stringify(finalMentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
@@ -791,12 +802,18 @@ export class TaskMessageComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
+    // if(this.taskMessage.length > 0){
+    //   this.taskMessage = this.taskMessage + ' ';
+    // }
     this.mentionedUsers.push({ id: user.id, name: user.name });
     // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
+    console.log(splieted);
     splieted.pop();
+    console.log(splieted,splieted.join('@'));
     this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
+    console.log('mentioned users', this.mentionedUsers,this.taskMessage)
   }
 
   getScheduledMasterByTaskId() {
@@ -973,7 +990,8 @@ export class TaskMessageComponent implements OnInit {
   scrollToChat(focusOn) {
     try {
       setTimeout(() => {
-        document.getElementById("focusOn-" + focusOn).scrollIntoView();
+        let scrollIntoView = document.getElementById("focusOn-" + focusOn);
+        (scrollIntoView) ? scrollIntoView.scrollIntoView() : null;
       }, 100);
     } catch (err) { }
   }

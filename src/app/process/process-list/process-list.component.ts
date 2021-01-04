@@ -191,7 +191,7 @@ export class ProcessListComponent implements OnInit {
       id: process._id,
       name: process.name
     }
-    this.common.params = { process: param };
+    this.common.params = { process: param, adminList:this.adminList };
     const activeModal = this.modalService.open(AddStateComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -208,7 +208,7 @@ export class ProcessListComponent implements OnInit {
       state_name: null
     }
     this.common.params = { actionData: param, adminList: this.adminList };
-    const activeModal = this.modalService.open(AddActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(AddActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         console.log("addProcessAction:", data.response);
