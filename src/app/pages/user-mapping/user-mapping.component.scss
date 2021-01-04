@@ -16,3 +16,13 @@
 smart-table{
     height: calc(100vh - 202px);
 }
+
+.tabs_style li.active
+{
+    position: relative; 
+}
+
+.tabs_style li.active::after {
+    left: 0px;
+
+}

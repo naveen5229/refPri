@@ -35,6 +35,7 @@
 
 .tabs_style {
     @include tab-style;
+    margin: 0 0 7px;
     li {
      
         @include tablist;
@@ -42,7 +43,7 @@
             background-color: $color-400;
             color: $color-100;
             position: relative;
-            top: 1px;
+            // top: 1px;
             &::after {
                 content: "";
                 display: block;
