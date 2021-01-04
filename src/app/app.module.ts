@@ -113,6 +113,7 @@ import { ImageViewComponent } from './modals/image-view/image-view.component';
 import { stateActionMapping } from './modals/state-action-mapping/state-action-mapping';
 import { UserEsclationComponent } from './modals/process-modals/user-esclation/user-esclation.component';
 import { AddProcessPropertyComponent } from './modals/process-modals/add-process-property/add-process-property.component';
+import { CalulateTravelDistanceComponent } from './modals/calulate-travel-distance/calulate-travel-distance.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -193,7 +194,8 @@ const PAGE_COMPONENTS = [
   ImageViewComponent,
   stateActionMapping,
   UserEsclationComponent,
-  AddProcessPropertyComponent
+  AddProcessPropertyComponent,
+  CalulateTravelDistanceComponent
 ];
 
 @NgModule({

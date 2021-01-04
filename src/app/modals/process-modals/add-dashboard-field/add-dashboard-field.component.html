@@ -12,10 +12,6 @@
     </div>
     <div class="row mb-2">
         <div class="col-3">
-            <label>Order</label>
-            <input type="number" min="0" [(ngModel)]="form.order" class="form-control" placeholder="order">
-        </div>
-        <div class="col-3">
             <label>Field Types<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
                 <option *ngFor="let o of typeList;" [value]="o.id" class="form-control">{{o.name}}</option>
@@ -40,6 +36,10 @@
                 <option value="null" disabled>Select a Value</option>
                 <option *ngFor="let s of fieldDataList;" value="{{ s | json }}" class="form-control">{{s.name}}</option>
             </select>
+        </div>
+        <div class="col-3">
+            <label>Order</label>
+            <input type="number" min="0" [(ngModel)]="form.order" class="form-control" placeholder="order">
         </div>
         <div class="col-3 text-right mt-4" *ngIf="fromPage==1">
             <button class="btn btn-primary btn-sm" name="submit" (click)="AddField()">{{btn1}}</button>
