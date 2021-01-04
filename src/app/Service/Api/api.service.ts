@@ -7,10 +7,10 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class ApiService {
-  I_URL: string = 'http://13.232.190.178/itrm_webservices/';
+  // I_URL: string = 'http://13.232.190.178/itrm_webservices/';
   // I_URL: string = 'http://13.232.190.178/itrm_webservices/';
 
-  // I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
+  I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'http://dev.elogist.in/booster_webservices/';
   T_URL: string = 'http://dev.elogist.in/transtrucknew/';
 

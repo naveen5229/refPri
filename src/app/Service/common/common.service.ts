@@ -819,6 +819,18 @@ export class CommonService {
     return (mentionUserList.length > 0) ? mentionUserList : null;
   }
 
+  checkFile(url,name){
+    var ext = url.split('.').pop();
+    let formats = ["jpeg", "jpg", "png", 'pdf'];
+    console.log("ext:",ext);
+    if (formats.includes(ext.toLowerCase())) {
+      let images = [{name:name,image:url}];
+      this.openImageView(images);
+    }else{
+      this.getFile(url,name);
+    }
+  }
+
   getFile(url,name){
     let params = {
       url: url,
@@ -866,14 +878,7 @@ export class CommonService {
         console.log('Name:', name);
         if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
           eve.preventDefault();
-          var ext = url.split('.').pop();
-          let formats = ["jpeg", "jpg", "png", 'pdf'];
-          if (formats.includes(ext.toLowerCase())) {
-            let images = [{name:name,image:url}];
-            this.openImageView(images);
-          }else{
-            this.getFile(url,name);
-          }
+          this.checkFile(url,name);
           console.log('--------------------ITS FILE--------------------');
         }
         // console.log('url:', url)

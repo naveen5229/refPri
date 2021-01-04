@@ -28,7 +28,7 @@
                 <img height="25" width="25" src="{{attachmentDataToDisplay.url}}" *ngIf="!fileTypeDisplay">
                 <i class="{{fileTypeDisplay}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
                 <!-- <span><a href="{{attachmentDataToDisplay.url}}" target="blank" download>{{attachmentDataToDisplay.name}}</a></span> -->
-                <span class="blue cursor-pointer" (click)="common.getFile(attachmentDataToDisplay.url,attachmentDataToDisplay.name)">{{attachmentDataToDisplay.name}}</span>
+                <span class="blue cursor-pointer" (click)="common.checkFile(attachmentDataToDisplay.url,attachmentDataToDisplay.name)">{{attachmentDataToDisplay.name}}</span>
             </span>
         </div>
     </div>
