@@ -1,12 +1,14 @@
+@import '../../../style';
+
 .add {
-    font-size: 14px;
-    color: #fff;
+   font-size:$font-md-sm;
+    color: $color-400;
     background: linear-gradient(-135deg, #1de9b6 0, #1dc4e9 100%);
     width: 28px;
     float: right;
     padding: 8px 0px;
     text-align: center;
-    border-radius: 3px;
+    border-radius: $radious-xxs;
 }
 
 .drag-container {
@@ -19,36 +21,33 @@
 }
 
 .drag-list {
-    border: solid 1px #ccc;
+    border: solid 1px $color-4800;
     min-height: 60px;
-    background: white;
-    border-radius: 4px;
+    background: $color-400;
+    border-radius: $radious-sm/2;
     overflow: hidden;
     display: block;
 }
 
 .drag-box {
-    padding-left: 6px;
-    padding-right: 6px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    border-bottom: solid 1px #ccc;
-    color: rgba(0, 0, 0, 0.87);
+    padding:6px;
+    border-bottom: solid 1px $color-4800;
+    color: rgba($color-500, 0.87);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     // box-sizing: border-box;
     cursor: grab;
-    background: white;
-    font-size: 14px;
+    background: $color-400;
+   font-size:$font-md-sm;
     max-height: 100%;
 }
 
 .cdk-drag-preview {
     box-sizing: border-box;
-    border-radius: 4px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    border-radius: $radious-sm/2;
+    box-shadow: 0 5px 5px -3px rgba($color-500, 0.2), 0 8px 10px 1px rgba($color-500, 0.14), 0 3px 14px 2px rgba($color-500, 0.12);
     z-index: 100000 !important;
 }
 

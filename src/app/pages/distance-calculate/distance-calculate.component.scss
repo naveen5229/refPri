@@ -1,6 +1,7 @@
+@import '../../style.scss';
 .fill-elt {
-    padding: 3px;
-    font-size: 14px;
+    padding: $padding-xxs;
+    font-size: $font-md-sm;
 }
 
 .map {
@@ -15,17 +16,20 @@ table {
 }
 
 th {
-    background-color: black!important;
-    border: 1px solid #dddddd!important;
+
+    background-color: $color-500 !important;
+    border: 1px solid $color-1000!important;
     text-align: center!important;
-    padding: 8px!important;
-    color: #fff!important;
-    font-size: 12px!important;
+    padding: $padding-sm!important;
+    color: $color-400!important;
+    font-size: $font-sm-xxl!important;
 }
 
 td {
-    border: 1px solid #dddddd;
+    border: 1px solid $color-1000;
     text-align: center;
-    padding: 8px;
-    color: #000;
+    padding: $padding-sm;
+    color: $color-500;
+
+
 }

@@ -1,5 +1,6 @@
+@import '../../style.scss';
 .rejectBtn {
     background: none;
-    border: 1px solid red;
-    color: red;
+    border: 1px solid $color-800;
+    color: $color-800;
 }

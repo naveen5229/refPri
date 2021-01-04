@@ -173,18 +173,14 @@
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
-                            [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''"
-                            [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}
                     </td>
                 </tr>
-                <tr valign="top" class="bg-lavender">
+                <tr valign="middle" class="bg-lavender">
                     <td>To:</td>
-                    <td *ngIf="!showAssignUserAuto">
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
-                            [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''"
-                            [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                    <td *ngIf="!showAssignUserAuto" class="d-flex align-items-center">
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
                         <button
                             *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)"
@@ -203,14 +199,14 @@
                 <!-- <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
                   <td>PO:</td>
                   <td>
-                      <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'Present' : 'Leave') : 'Absent'"
+                      <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'Present' : 'Leave') : 'Absent'"
                           aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}
                   </td>
               </tr>
               <tr valign="top" class="bg-lavenderblush" *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
                   <td>EU:</td>
                   <td>
-                      <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                      <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
                           aria-hidden="true"></i> {{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].rep_user:''}}
                   </td>
               </tr> -->
@@ -225,7 +221,7 @@
                             <i class="fa" style="font-size: 12px;"
                                 [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
                                 [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                            <i class="fa fa-circle mr-1" style="font-size: 8px;"
                                 [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''"
                                 [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'"
                                 aria-hidden="true"></i>

@@ -1,0 +1,232 @@
+@import "bourbon";
+
+//   theme styles
+
+@import '../app/@theme/scss/main.scss';
+$defalut:'.nb-theme-default';
+$cosmic:'.nb-theme-cosmic';
+$light: '.nb-theme-light';
+@import '../../src/app/@theme/scss/themes/default/default.scss';
+
+
+// body{
+//   @include padding(null 1rem);  
+// }
+
+
+@mixin smart-table($margin) {
+  display: block;
+  height: calc(100vh - #{$margin});
+  overflow: auto;
+}
+
+@mixin th-bordered {
+  border: 6px solid $color-500 !important;
+  padding: .2rem !important;
+  background: #fff !important
+}
+
+
+@mixin table-fixed {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+@mixin thead-fixed {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+@mixin tbody-fixed($margin) {
+  overflow-y: auto;
+  display: block;
+  width: 100%;
+  table-layout: fixed;
+  overflow: auto;
+  max-height: calc(100vh - #{$margin});
+
+}
+
+@mixin tr-fixed {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+@mixin td {
+  padding: 0.5rem;
+  vertical-align: top;
+  border-top: 1px solid $color-700;
+}
+
+
+//  tab style 
+@mixin tab-style {
+  width: 100%;
+  margin: 0px;
+  margin-bottom: 10px;
+  padding-left: 5px !important;
+}
+
+@mixin tablist {
+  padding: 5px 6px;
+  list-style: none;
+  margin-right: $margin-xs;
+  color: $color-400;
+  border-bottom: 0px;
+  display: inline-block;
+  border-radius: $radious-xs $radious-xs 0px 0px;
+  font-size: $font-sm-xxl;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+@mixin tablist-pseudo {
+  content: "";
+  display: block;
+  background-color: $color-400;
+  height: 10px;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+}
+
+@mixin tablist-active {
+  background-color: $color-400;
+  color: $color-100;
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    background-color: $color-400;
+    height: 10px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+  }
+}
+
+@mixin td {
+  padding: 0.5rem;
+  vertical-align: top;
+  border-top: 1px solid $color-700;
+}
+
+@mixin fixed-table {
+  thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  tbody {
+    overflow-y: auto;
+    display: block;
+    width: 100%;
+    table-layout: fixed;
+    overflow: auto;
+
+    tr {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+    }
+
+  }
+
+
+}
+
+
+@mixin trash-alt {
+  color: $color-800;
+  font-size: 18px;
+
+  span {
+    position: absolute;
+    display: none;
+    padding: 10px 27px;
+    font-weight: normal;
+    font-size: 11px;
+    left: -10px;
+    top: -28px;
+    -webkit-box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    font-family: Roboto;
+    z-index: 9999;
+  }
+
+  span::before {
+    content: "Delete";
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: $color-800;
+    border-radius: 3px;
+    padding: $padding-xs $padding-md;
+    color: $color-400;
+    width: 100%;
+  }
+
+  span::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid $color-800;
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+  }
+
+}
+
+@mixin fa-edit {
+  color: $color-1800;
+  font-size: $font-md-lg;
+
+  span {
+    position: absolute;
+    display: none;
+    padding: 10px 24px;
+    font-weight: normal;
+    font-size: 11px;
+    left: -12px;
+    top: -28px;
+    -webkit-box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    font-family: Roboto;
+    z-index: 9999;
+  }
+
+  span::before {
+    content: "Edit";
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: $color-1800;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: $color-400;
+    width: 100%;
+  }
+
+  span::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid $color-1800;
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+  }
+
+}

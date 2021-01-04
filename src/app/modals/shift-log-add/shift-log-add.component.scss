@@ -1,3 +1,5 @@
+
+@import '../../style.scss';
 :host ::ng-deep {
     .fa,
     .fas {
@@ -6,10 +8,10 @@
         margin-right: 5px;
     }
     .fa-edit {
-        color: green;
+        color:$color-1800;
     }
     .fa-trash-alt {
-        color: red;
+        color: $color-800;
     }
 }
 

@@ -1,31 +1,33 @@
+@import '../../style.scss';
+
 .tabs_style {
   width: 100%;
   margin: 0px;
- // border-bottom: 2px solid #26a69a;
-  margin-bottom: 10px;
-  padding-left: 5px !important;
+ // border-bottom: 2px solid $color-5300;
+  margin-bottom: $margin-md;
+  padding-left: $padding-xs !important;
   li {
     padding: 5px 6px;
     list-style: none;
-    margin-right: 5px;
-    // background-color: #26a69a;
-    // border: 2px solid #26a69a;
-    color: #fff;
+    margin-right: $margin-xs;
+    // background-color: $color-5300;
+    // border: 2px solid $color-5300;
+    color:$color-400;
     border-bottom: 0px;
     display: inline-block;
-    border-radius: 5px 5px 0px 0px;
-    font-size: 12px;
-    font-weight: normal;
+    border-radius: $radious-xs 5px 0px 0px;
+    font-size:$font-sm-xxl;
+    font-weight:$normal;
     cursor: pointer;
     &.active {
-      background-color: #fff;
-      //color: #26a69a;
-      color: #3366ff;
+      background-color:$color-400;
+      //color: $color-5300;
+      color: $color-100;
       position: relative;
       &::after {
         content: "";
         display: block;
-        background-color: #fff;
+        background-color:$color-400;
         height: 10px;
         width: 100%;
         position: absolute;
@@ -36,18 +38,18 @@
 }
 
 :host ::ng-deep .fa-trash-alt {
-  color: red;
-  font-size: 18px;
+  color: $color-800;
+  font-size:$font-md-lg;
   span {
     position: absolute;
     display: none;
     padding: 10px 27px;
-    font-weight: normal;
-    font-size: 11px;
+    font-weight:$normal;
+    font-size:$font-sm-xl;
     left: 0px;
     top: -32px;
-    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($color-500,0.5);
+    box-shadow: 5px 2px 8px rgba($color-500,0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -57,10 +59,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: red;
-    border-radius: 3px;
-    padding: 5px 10px;
-    color: #fff;
+    background-color: $color-800;
+    border-radius: $radious-xxs;;
+    padding: $padding-xs $padding-md;
+    color:$color-400;
     width: 100%;
   }
   span::after {
@@ -69,7 +71,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid red;
+    border-top: 5px solid $color-800;
     position: absolute;
     bottom: -5px;
     right: 24px;
@@ -83,7 +85,5 @@
   height: 300px;
 }
 smart-table{
-  display: block;
- height: calc(100vh - 206px);
-  overflow: auto;
+  height: calc(100vh - 206px);
 }

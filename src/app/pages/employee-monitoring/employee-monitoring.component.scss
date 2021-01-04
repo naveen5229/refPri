@@ -1,3 +1,4 @@
+@import '../../style.scss';
 .map {
     width: 100%;
     height: calc(100vh - 105px) !important;
@@ -15,9 +16,7 @@
 }
 
 smart-table {
-    display: block;
     height: calc(100vh - 100px);
-    overflow: auto;
 }
 
 :host ::ng-deep #employeeMonitoring {

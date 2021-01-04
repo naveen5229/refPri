@@ -1,67 +1,69 @@
+@import '../../style.scss';
+
 .edit-icon {
-  color: blue;
+  color: $color-900;
   margin-right: 6px;
   cursor: pointer;
 }
 
 :host ::ng-deep .fa-check {
-  border-radius: 3px;
+  border-radius: $radious-xxs;
   font-size: initial;
-  color: darkblue;
-  margin-right: 10px;
+  color: $color-1400;
+  margin-right: $margin-md;
   padding: 2px;
   cursor: pointer;
 }
 
 :host ::ng-deep .fa-trash-alt {
-  margin-right: 10px;
-  color: red;
+  margin-right: $margin-md;
+  color:$color-800;
   padding: 2px;
-  border-radius: 3px;
+  border-radius: $radious-xxs;
   cursor: pointer;
 }
 
 :host ::ng-deep .fa-eye {
-  border-radius: 3px;
-  margin-right: 10px;
-  color: #7b0579;
+  border-radius: $radious-xxs;
+  margin-right: $margin-md;
+  color: $color-2900;
   padding: 2px;
   cursor: pointer;
 }
 
 :host ::ng-deep .remove:hover {
-  background-color: #fd1361;
-  border-color: #fc0758;
+  background-color: $color-1100;
+  border-color: $color-1200;
 }
 
 .tabs_style {
   width: 100%;
   margin: 0px;
-  // border-bottom: 2px solid #26a69a;
-  margin-bottom: 10px;
-  padding-left: 5px !important;
+  // border-bottom: 2px solid $color-5300;
+  margin-bottom: $margin-md;
+  padding-left: $padding-xs !important;
   li {
     padding: 5px 6px;
     list-style: none;
-    margin-right: 5px;
-    // background-color: #26a69a;
-    // border: 2px solid #26a69a;
-    color: #fff;
+    margin-right: $margin-xs;
+    // background-color: $color-5300;
+    // border: 2px solid $color-5300;
+    color: $color-400;
     border-bottom: 0px;
     display: inline-block;
-    border-radius: 5px 5px 0px 0px;
-    font-size: 12px;
+    border-radius: $radious-xs $radious-xs 0px 0px;
+    font-size: $font-sm-xxl;
     font-weight: normal;
     cursor: pointer;
     &.active {
-      background-color: #fff;
-      color: #3366ff;
-      // color: #26a69a;
+      background-color: $color-400;
+      color: $color-100;
+      // color: $color-5300;
       position: relative;
       &::after {
         content: "";
         display: block;
-        background-color: #fff;
+        background-color: $color-400;
         height: 10px;
         width: 100%;
         position: absolute;
@@ -71,20 +73,16 @@
   }
 }
 table{
+  @include fixed-table;
   margin-bottom: 0rem;
   thead{
-     display: table;
-     width: 100%;
-     table-layout: fixed;
      th{
       padding: 0.2rem!important;
-      background: #fff!important;
-      border: 6px solid #000000!important;
+      background: $color-400!important;
+      border: 6px solid $color-500!important;
       font-size: .80rem;
      }
-     th:first-child{
-       width: 60px;
-     }
+  
  
   }
 

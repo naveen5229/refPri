@@ -1,3 +1,5 @@
+@import '../../style';
+
 #route-maper-map {
     width: 100%;
     height: 400px;
@@ -21,7 +23,7 @@
 .time-line-event .time-line-scale {
     position: relative;
     width: 98%;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid $color-500;
     top: 4px;
 }
 
@@ -46,9 +48,9 @@
 
 .player_inner button {
     display: inline-block;
-    background-color: #000;
+    background-color: $color-500;
     border: 0px;
-    color: #fff;
+    color: $color-400;
     font-size: 14px;
     padding: 10px 0px;
     border-radius: 3px;
@@ -113,9 +115,9 @@
     font-size: 22px;
     z-index: 999;
     text-align: center;
-    color: #fff;
+    color: $color-400;
     display: block;
-    background-color: #000;
+    background-color: $color-500;
     padding: 0 7px 6px 7px;
     opacity: 1;
 }

@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title}}</h5>
-    <span *ngIf="!transAction.formType && isFormHere == 1" class="m-1 ml-2"><i class="fa fa-plus" aria-hidden="true" (click)="confirmSaveTransAction(true)"></i></span>
+    <span *ngIf="!transAction.formType && isFormHere == 1" class="m-1 ml-2 open-action"><i class="fa fa-plus" aria-hidden="true" (click)="confirmSaveTransAction(true)"></i></span>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false,null)">
         <span aria-hidden="true">&times;</span>
     </button>

@@ -66,6 +66,7 @@
                     <div class="col-4">
                         <label>Pri Category Alias</label>
                     </div>
+                   
                     <div class="col-7">
                         <input type="text" class="form-control" name="priCatAlias" placeholder="Primary Category Alias"
                             [(ngModel)]="ticketForm.priCatAlias">
@@ -252,7 +253,7 @@
 <!--end: Ticket Property -->
 
 <!--start:add Ticket Property -->
-<div class="modal" id="addTicketProperty">
+<div class="modal" id="addTicketProperty" >
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -260,8 +261,20 @@
                 <button type="button" class="close" data-dismiss="modal"
                     (click)="closeAddTicketPropertyModal()">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body height-adjust" style="max-height: calc(80vh - 50px);
+            overflow-y: auto;overflow-x: hidden;">
                 <div class="row form-group">
+                   
+                    <div class="form-divider form-divider-first col-md-12">
+                        <div class="row">
+                            <div class="col-md-12  text-center">
+                                <h3 class="inner-heading"> Category </h3>
+                            </div>
+                        </div>
+                       
+                    </div>
+
+
                     <div class="col-4">
                         <label>Primary Category</label>
                     </div>
@@ -278,6 +291,7 @@
                     <div class="col-4">
                         <label>Secondary Category</label>
                     </div>
+                   
                     <div class="col-8">
                         <auto-suggestion [data]="secondaryCategoryListForProperty" display="name"
                             placeholder="Secondary Category" name="defaultOwn" id="defaultOwn"
@@ -286,8 +300,18 @@
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
+                   
                 </div>
                 <div class="row form-group">
+                    <div class="form-divider col-md-12">
+                        <div class="row">
+                            <div class="col-md-12  text-center">
+                                <h3 class="inner-heading"> Properties </h3>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    
                     <div class="col-4">
                         <label>Type</label>
                     </div>
@@ -330,7 +354,7 @@
                         <label>Esclation Time for user Ack</label>
                     </div>
                     <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.escTime">
+                        <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.escTime">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -338,7 +362,7 @@
                         <label>Complete Remaining Time</label>
                     </div>
                     <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.complRemTime">
+                        <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.complRemTime">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -386,6 +410,16 @@
                 </div>
                 
                 <div class="row form-group">
+                   
+                    <div class="form-divider col-md-12">
+                        <div class="row">
+                            <div class="col-md-12  text-center">
+                                <h3 class="inner-heading"> Benchmark </h3>
+                            </div>
+                        </div>
+                       
+                    </div>
+
                     <div class="col-4">
                         <label>Calling Benchmark</label>
                     </div>
@@ -446,7 +480,7 @@
                         <label>User Level</label>
                     </div>
                     <div class="col-8">
-                        <select [(ngModel)]="esclationMatrix.userLevel">
+                        <select class="form-control w-50" [(ngModel)]="esclationMatrix.userLevel">
                             <option selected disabled>--Select--</option>
                             <option>1</option>
                             <option>2</option>

@@ -1,3 +1,5 @@
+@import '../../style.scss';
+
 table.salaryTable {
     th,
     td {
@@ -10,7 +12,7 @@ table.salaryTable {
     thead tr th {
         position: sticky;
         top: 0;
-        background-color: #c0b2b2;
+        background-color:$color-700;
     }
 }
 

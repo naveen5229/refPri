@@ -80,10 +80,10 @@
                     <div class="row">
                         <div class="col-8">
                             <input id="searchChat" type="search" value="{{searchTerm}}"
-                                (change)="searchChat($event.target.value)" class="file-control"
+                                (change)="searchChat($event.target.value)" class="form-control rounded-0 shadow-sm"
                                 style="width: 100%;margin: 5px;">
                         </div>
-                        <div class="col-4" style="padding: 5px;">
+                        <div class="col-4 search-control">
                             <span>{{searchCount}}/{{searchedIndex.length}}</span>
                             <span class="ml-2" (click)="onchangeIndex('minus')"><i
                                     class="fas fa-arrow-circle-down"></i></span>
@@ -112,15 +112,15 @@
             <div class="row mt-1 chat_block" id="chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        <div>
+                        <div class="chat-header">
                             <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true"
                                     title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                             <span class="comment_reply">
                                 <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                    [ngbPopover]="commentInfoPopContent" placement="left"
+                                    [ngbPopover]="commentInfoPopContent" placement="left-top"
                                     (click)="messageReadInfo(msg._id)"></i>
                                 <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                    [ngbPopover]="replyPopContent" placement="left"
+                                    [ngbPopover]="replyPopContent" placement="left-top"
                                     (click)="replyToComment(msg,'mine')"></i>
                             </span>
                         </div>
@@ -132,14 +132,14 @@
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat"
                         [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                        <div>
+                        <div class="chat-header">
                             <span>{{msg.added_by +" "+msg.added_date}}</span>
                             <span class="comment_reply">
                                 <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                    [ngbPopover]="commentInfoPopContent" placement="right"
+                                    [ngbPopover]="commentInfoPopContent" placement="right-top"
                                     (click)="messageReadInfo(msg._id)"></i>
                                 <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                    [ngbPopover]="replyPopContent" placement="right"
+                                    [ngbPopover]="replyPopContent" placement="right-top"
                                     (click)="replyToComment(msg,'other')"></i>
                             </span>
                         </div>
@@ -206,7 +206,7 @@
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}
@@ -215,7 +215,7 @@
                 <tr *ngIf="ticketType!=114" valign="top" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto">
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
@@ -237,7 +237,7 @@
                     *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
                     <td>PO:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}
@@ -251,7 +251,7 @@
                             <i class="fa" style="font-size: 12px;"
                                 [ngClass]="(pu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
                                 [title]="(pu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                            <i class="fa fa-circle mr-1" style="font-size: 8px;"
                                 [ngClass]="(pu.present) ? ((pu.present==1) ? 'text-success' : 'text-danger') : ''"
                                 [title]="(pu.present) ? ((pu.present==1) ? 'Present' : 'Leave') : 'Absent'"
                                 aria-hidden="true"></i>
@@ -264,7 +264,7 @@
                     *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
                     <td>EU:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>
@@ -282,7 +282,7 @@
                             <i class="fa" style="font-size: 12px;"
                                 [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
                                 [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                            <i class="fa fa-circle mr-1" style="font-size: 8px;"
                                 [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''"
                                 [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'"
                                 aria-hidden="true"></i>
@@ -324,10 +324,10 @@
                                         title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                                 <span class="comment_reply">
                                     <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                        [ngbPopover]="commentInfoPopContent" placement="left"
+                                        [ngbPopover]="commentInfoPopContent" placement="left-top"
                                         (click)="messageReadInfo(msg._id)"></i>
                                     <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                        [ngbPopover]="replyPopContent" placement="left"
+                                        [ngbPopover]="replyPopContent" placement="left-top"
                                         (click)="replyToComment(msg,'mine')"></i>
                                 </span>
                             </div>
@@ -339,14 +339,14 @@
                         </div>
                         <div *ngIf="loginUserId != msg._userid" class="other_chat"
                             [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                            <div>
+                            <div class="chat-header">
                                 <span>{{msg.added_by +" "+msg.added_date}}</span>
                                 <span class="comment_reply">
                                     <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                        [ngbPopover]="commentInfoPopContent" placement="right"
+                                        [ngbPopover]="commentInfoPopContent" placement="right-top"
                                         (click)="messageReadInfo(msg._id)"></i>
                                     <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                        [ngbPopover]="replyPopContent" placement="right"
+                                        [ngbPopover]="replyPopContent" placement="right-top"
                                         (click)="replyToComment(msg,'other')"></i>
                                 </span>
                             </div>
