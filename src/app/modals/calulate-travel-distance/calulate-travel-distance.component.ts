@@ -55,7 +55,6 @@ export class CalulateTravelDistanceComponent implements OnInit {
     console.log(this.common.params, 'params here')
     if (this.common.params) {
       this.admin = this.common.params.adminId;
-      this.adminList = this.common.params.adminList
       this.startDate = new Date(this.common.params.date);
       this.endDate = new Date(this.common.params.date);
       this.closebuttonForModel = this.common.params.close;
@@ -65,6 +64,7 @@ export class CalulateTravelDistanceComponent implements OnInit {
       this.endDate.setMinutes(59);
       this.getTravelDistance();
     }
+    this.getAdmin();
 
   }
 
@@ -104,11 +104,26 @@ export class CalulateTravelDistanceComponent implements OnInit {
     var path = this.poly.getPath();
   }
 
-  selectInstaller(installer) {
+  selectUser(installer) {
     console.log(installer);
     this.admin.id = installer.id;
     this.admin.name = installer.name;
 
+  }
+
+  getAdmin() {
+    this.adminList = [];
+
+    this.common.loading++;
+    this.api.get('Admin/getAllAdmin.json')
+      .subscribe(res => {
+        this.common.loading--;
+        this.adminList = res['data'] || [];
+        console.log(this.adminList);
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
   }
 
   getTravelDistance() {
@@ -389,12 +404,20 @@ export class CalulateTravelDistanceComponent implements OnInit {
 
   }
 
-  switchLatLngHandler(){
-    switch(this.SwitchButton){
-      case 'Live' : this.SwitchButton = 'Recoded';
-      break;
-      case 'Recoded' : this.SwitchButton = 'Live';
-      break;
+  switchLatLngHandler() {
+    switch (this.SwitchButton) {
+      case 'Live':
+        this.SwitchButton = 'Recorded';
+        const seprateLiveObject = this.travelDistanceData[1];
+        const manuplateLive = { dis: seprateLiveObject.disLive, wayPointdata: seprateLiveObject.wayPointdataLive, wayPoints: seprateLiveObject.wayPointsLive };
+        console.log('Passed', manuplateLive);
+        this.calcRoadDistance(manuplateLive);
+        break;
+      case 'Recorded':
+        this.SwitchButton = 'Live';
+        console.log('Passed', this.travelDistanceData[0]);
+        this.calcRoadDistance(this.travelDistanceData[0]);
+        break;
     }
   }
 

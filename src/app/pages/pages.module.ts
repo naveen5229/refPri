@@ -55,6 +55,7 @@ import { OnSiteImagesComponent } from './on-site-images/on-site-images.component
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
+import { UserExpensesComponent } from './user-expenses/user-expenses.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -114,7 +115,8 @@ import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expens
     OnSiteImagesComponent,
     OnSiteImagesSummaryComponent,
     EntityDeatilsComponent,
-    UserWiseExpensesComponent
+    UserWiseExpensesComponent,
+    UserExpensesComponent
   ],
 })
 export class PagesModule {

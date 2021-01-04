@@ -106,7 +106,7 @@ export class UserWiseExpensesComponent implements OnInit {
     console.log("🚀 ~ file: installer-wise-wages.component.ts ~ line 92 ~ InstallerWiseWagesComponent ~ calculateDistance ~ user", user)
     let dateForTravel = new Date();
     dateForTravel = user.sqdate;
-    this.common.params = { adminId: this.data.admin, date: dateForTravel, close: true,adminList:this.adminList };
+    this.common.params = { adminId: this.data.admin, date: dateForTravel, close: true };
     const activeModal = this.modalService.open(CalulateTravelDistanceComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log(data);
@@ -203,8 +203,9 @@ export class UserWiseExpensesComponent implements OnInit {
       },
     ];
     console.log("image", images)
-    this.common.params = { images, title: 'Image' };
+    // this.common.params = { images, title: 'Image' };
     const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout' });
+    activeModal.componentInstance.imageList = { images, title: 'Image' };
   }
 
 }

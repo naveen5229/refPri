@@ -13,8 +13,8 @@
               <div class="row left-Cols">
                   <div class="form-group">
                       <label>Select User</label>
-                      <auto-suggestion (onSelected)="selectInstaller($event)" [data]="adminList"
-                          display="name" placeholder="Select Installer" inputId="selectInstaller"
+                      <auto-suggestion (onSelected)="selectUser($event)" [data]="adminList"
+                          display="name" placeholder="Select User" inputId="selectUser"
                           name="selectInstaller" [preSelected]="(admin.id>0)?{name:admin.name}:{name:''}">
                       </auto-suggestion>
                   </div>
@@ -69,7 +69,7 @@
 
           <div class="col-8 pr-0">
               <button class="btn btn-primary btn-sm" id="button" (click)="viewRoute()">View Route</button>
-              <button class="btn btn-primary btn-sm pl-2" (click)="switchLatLngHandler()">{{SwitchButton}}</button>
+              <button class="btn btn-primary btn-sm ml-2" (click)="switchLatLngHandler()">{{SwitchButton}}</button>
               <div class="row">
                   <div #map id="map" style="margin: 1rem;"> </div>
               </div>

@@ -1,0 +1,13 @@
+smart-table {
+    height: calc(100vh - 184px);
+    display: block;
+  }
+  :host ::ng-deep .fa-times {
+    padding-left: 15px !important;
+  }
+  :host ::ng-deep .fa-map-marker{
+    color:blue;
+  }
+  .require{
+      color: red;
+  }

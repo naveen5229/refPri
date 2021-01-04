@@ -63,6 +63,7 @@ import { TicketAdminComponent } from '../ticket/ticket-admin/ticket-admin.compon
 import { CustomDashboardComponent } from '../ticket/custom-dashboard/custom-dashboard.component';
 import { EntityDeatilsComponent } from '../pages/entity-deatils/entity-deatils.component';
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
+import { UserExpensesComponent } from './user-expenses/user-expenses.component';
 
 const routes: Routes = [{
   path: '',
@@ -380,6 +381,11 @@ const routes: Routes = [{
     {
       path: 'user-wise-expenses',
       component: UserWiseExpensesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-expenses',
+      component: UserExpensesComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
