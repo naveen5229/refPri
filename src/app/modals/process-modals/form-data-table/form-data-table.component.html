@@ -26,10 +26,10 @@
                         </select>
                     </td>
                     <td>
-                        <button *ngIf="i == additionalFields.length-1" type="button" class="btn btn-bg-transparent" title="Add Row" (click)="AddTableRow()">
+                        <button *ngIf="i == additionalFields.length-1 && !isDisabled" type="button" class="btn btn-bg-transparent" title="Add Row" (click)="AddTableRow()">
                             <i class="fa fa-plus text-primary cursor-pointer"></i>
                         </button>
-                        <button *ngIf="i !== 0" type="button" class="btn btn-bg-transparent" title="Remove Row" (click)="additionalFields.splice(i,1)">
+                        <button *ngIf="i !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row" (click)="additionalFields.splice(i,1)">
                             <i  class="fa fa-trash"></i>
                         </button>
                     </td>
@@ -40,7 +40,7 @@
 
     <div class="row mt-2">
         <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
+            <button type="button" *ngIf="!isDisabled" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
         </div>
     </div>
 </div>

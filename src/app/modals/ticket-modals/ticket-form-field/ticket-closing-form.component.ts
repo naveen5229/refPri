@@ -20,6 +20,8 @@ export class TicketClosingFormComponent implements OnInit {
   ticketId = null;
   requestId =null;
   info = null;
+  isDisabled = false;
+  attachmentFile = [{ name: null, file: null }];
 
   constructor(public activeModal: NgbActiveModal,public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) { 
     this.title = this.common.params.title ? this.common.params.title : 'Ticket Closing Form';
@@ -28,7 +30,7 @@ export class TicketClosingFormComponent implements OnInit {
       this.ticketId = this.common.params.actionData.ticketId;
       this.refId = this.common.params.actionData.refId;
       this.refType = this.common.params.actionData.refType;
-      // this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
+      this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
 
       this.getTicketFormField();
     }
@@ -48,6 +50,7 @@ export class TicketClosingFormComponent implements OnInit {
         this.formatArray();
       }
     }, err => {
+      this.common.showError();
       this.common.loading--;
       console.error('Api Error:', err);
     });
@@ -77,11 +80,11 @@ export class TicketClosingFormComponent implements OnInit {
     console.log("oddArray", this.oddArray);
   }
 
-  dismiss(res) {
-    this.activeModal.close({ response: res });
+  dismiss(res,isContinue) {
+    this.activeModal.close({ response: res,isContinue:isContinue });
   }
 
-  saveFromDetail() {
+  saveFromDetail(isContinue) {
      let detailsTemp = this.evenArray.concat(this.oddArray);
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -108,7 +111,7 @@ export class TicketClosingFormComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             // this.common.showToast(res['data'][0].y_msg);
-            this.dismiss(true);
+            this.dismiss(true,isContinue);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -143,6 +146,59 @@ export class TicketClosingFormComponent implements OnInit {
           }
         }
       }
+    });
+  }
+
+  handleFileSelection(event, i) {
+    this.common.handleFileSelection(event,null).then(res=>{
+      console.log("handleFileSelection:",res);
+      this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+    },err=>{
+      this.common.showError();
+    });
+  }
+
+  uploadattachFile(arrayType, i) {
+    if (!this.attachmentFile[i] || !this.attachmentFile[i].file) {
+      this.common.showError("Browse a file first");
+      return false;
+    }
+    let refId = null;
+    if (arrayType == 'oddArray') {
+      refId = this.oddArray[i].r_colid;
+    } else {
+      refId = this.evenArray[i].r_colid;
+    }
+    let params = {
+      refId: (refId > 0) ? refId : null,
+      name: this.attachmentFile[i].name,
+      attachment: this.attachmentFile[i].file
+    }
+    this.common.loading++;
+    this.api.post('Ticket/uploadAttachment', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0]['r_id'] > 0) {
+          this.common.showToast(res['msg']);
+          this.attachmentFile[i].name = null;
+          this.attachmentFile[i].file = null;
+          if (arrayType == 'oddArray') {
+            this.oddArray[i].r_value = res['data'][0]['r_id'];
+          } else {
+            this.evenArray[i].r_value = res['data'][0]['r_id'];
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+      console.log("evenArray:::", this.evenArray[i]);
+      console.log("oddArray:::", this.oddArray[i]);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.error('Api Error:', err);
     });
   }
 }

@@ -54,6 +54,8 @@ import { EmployeeMonitoringComponent } from './employee-monitoring/employee-moni
 import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
 import { CustomeronboardingComponent } from './customeronboarding/customeronboarding.component';
+import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
+import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -112,7 +114,9 @@ import { CustomeronboardingComponent } from './customeronboarding/customeronboar
     EmployeeMonitoringComponent,
     OnSiteImagesComponent,
     OnSiteImagesSummaryComponent,
-    CustomeronboardingComponent
+    CustomeronboardingComponent,
+    EntityDeatilsComponent,
+    UserWiseExpensesComponent
   ],
 })
 export class PagesModule {

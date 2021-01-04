@@ -675,4 +675,23 @@ export class MapService {
 
   }
 
+  async getAddressByLatLng(latLng){ //by skk
+    let geocoder = new google.maps.Geocoder;
+    return new Promise((resolve, reject) => {
+      geocoder.geocode({ 'location': latLng }, (results)=>{
+        let tempAddress = null;
+        if(results[0]){
+          let place = results[0];
+          tempAddress = place.formatted_address.split(',');
+          tempAddress.pop();
+          tempAddress.pop();
+          tempAddress = tempAddress.join(",");
+          resolve(tempAddress);
+        }else{
+          reject(null);
+        }
+      });
+    });
+  }
+
 }

@@ -26,9 +26,14 @@ export class WifiLogsComponent implements OnInit {
   };
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
+    this.common.refresh = this.refresh.bind(this);
     this.getUserWifiLogs();
   }
   ngOnInit() { }
+
+  refresh() {
+    this.getUserWifiLogs();
+  }
 
   getUserWifiLogs() {
     this.table = {

@@ -18,6 +18,7 @@ export class AssignFieldsComponent implements OnInit {
     left: [],
     right: []
   }
+  formType = null;
 
 
   constructor(
@@ -28,6 +29,7 @@ export class AssignFieldsComponent implements OnInit {
     if (this.common.params && this.common.params.ref) {
       this.refId = this.common.params.ref.id;
       this.refType = this.common.params.ref.type;
+      this.formType = common.params.formType;
       this.getFields();
     }
   }
@@ -40,9 +42,10 @@ export class AssignFieldsComponent implements OnInit {
 
   getFields() {
     this.common.loading++;
+    let api = this.formType == 11 ? 'Ticket/getTicketMatrixCalAssigned?' : 'Processes/getProcessFormField?';
     let params = "refId=" + this.refId +
       "&refType=" + this.refType
-    this.api.get('Processes/getProcessFormField?' + params)
+    this.api.get(api + params)
       .subscribe(res => {
         this.common.loading--;
         console.log("getFields", res['data']);
@@ -123,6 +126,8 @@ export class AssignFieldsComponent implements OnInit {
 
 
   saveColumns() {
+    let apiBase = this.formType == 11 ? 'Ticket/saveTicketMatrixCalAssign' : 'Processes/saveProcessMatrixCalAssign';
+    
     let params = {
       refId: this.refId,
       refType: this.refType,
@@ -131,7 +136,7 @@ export class AssignFieldsComponent implements OnInit {
     console.log("Params", params)
     this.common.loading++;
 
-    this.api.post('Processes/saveProcessMatrixCalAssign', params)
+    this.api.post(apiBase, params)
       .subscribe(res => {
         this.common.loading--;
         console.log("saveColumns", res['data'][0].y_id);
@@ -178,6 +183,11 @@ export class AssignFieldsComponent implements OnInit {
     });
 
     return [...selected, ...this.unassign];
+  }
+
+  markImportant(item) {
+    console.log("AssignFieldsComponent -> markImportant -> item", item)
+    item.r_isdashboard_info = !item.r_isdashboard_info;
   }
 }
 

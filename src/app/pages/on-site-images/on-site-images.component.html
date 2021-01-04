@@ -56,7 +56,7 @@
                     <h5 class="modal-title">Txn Actions</h5>
                     <button type="button" class="close" data-dismiss="modal" (click)="closeTransActionListModal()">&times;</button>
                 </div>
-                <div class="modal-body p-0">
+                <div class="modal-body p-0" *ngIf="!selectedOnSiteImage.data || !selectedOnSiteImage.data._refid">
                     <div class="row">
                         <div class="col-12 text-right">
                             <button class="btn btn-primary btn-sm" id="addLead" (click)="openAddTransactionModal()"><i class="fa fa-plus"></i></button>
@@ -64,6 +64,32 @@
                     </div>
                     <smart-table [data]="tableTransActionList.data" [settings]="tableTransActionList.settings" id="tableTransActionList" class="sl-smart-table"></smart-table>
                 </div>
+
+                <!-- <div class="modal-body p-0" *ngIf="selectedOnSiteImage.data && selectedOnSiteImage.data._refid>0">
+                    <div class="responseve">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>Identity</th>
+                                    <th>Action Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{selectedOnSiteImage.data.process}}</td>
+                                    <td>{{selectedOnSiteImage.data.identity}}</td>
+                                    <td>{{selectedOnSiteImage.data.action_name}}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" (click)="renoveLinkedAction()">Unmap</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> -->
+
             </div>
         </div>
     </div>

@@ -1,0 +1,60 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8">
+                <h5 class="heading-design">Ticket-Admin</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='current'?'active':''" (click)="activeTab='current'; getAdminTicket(999)">
+                    Today's Ticket
+                </li>
+                <li [ngClass]="activeTab=='processWise'?'active':''" (click)="activeTab='processWise'; getAdminTicket(0)">
+                    Process Wise Ticket
+                </li>
+                <li [ngClass]="activeTab=='userWise'?'active':''" (click)="activeTab='userWise'; getAdminTicket(1)">
+                    User Wise Ticket
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="activeTab=='current'">
+            <smart-table [data]="currentTicketTable.data" [settings]="currentTicketTable.settings" id="currentTicketTable" class="sl-smart-table"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='processWise'">
+            <div class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" (click)="getAdminTicket(0)">Search</button>
+                </div>
+            </div>
+            <smart-table [data]="processWiseTicketTable.data" [settings]="processWiseTicketTable.settings" id="processWiseTicketTable" class="sl-smart-table"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='userWise'">
+            <div class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" (click)="getAdminTicket(1)">Search</button>
+                </div>
+            </div>
+            <smart-table [data]="userWiseTicketTable.data" [settings]="userWiseTicketTable.settings" id="userWiseTicketTable" class="sl-smart-table"></smart-table>
+        </div>
+
+    </nb-card-body>
+</nb-card>
