@@ -25,7 +25,7 @@ img {
 }
 
 .title {
-    color: $color-100;
+    color: $color-200;
 }
 
 .sub-title {
@@ -43,7 +43,7 @@ input {
     padding: 4px 14px !important;
     font-size: $font-sm-xxl;
     font-weight: 400;
-    border: 1px solid $color-100 !important;
+    border: 1px solid $color-200 !important;
     border-radius: 4px;
     font-family:$font-family-secondary;
     width: 85%;
@@ -54,7 +54,7 @@ input {
 
 .btn {
     border-radius: $radious-xs;
-    background: $color-100 !important;
+    background: $color-200 !important;
     padding: 7px;
     width: 60%;
     margin: auto;
