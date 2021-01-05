@@ -7,6 +7,7 @@ import { CalulateTravelDistanceComponent } from '../../modals/calulate-travel-di
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { LocationOnSiteImageComponent } from '../../modals/location-on-site-image/location-on-site-image.component';
 
 @Component({
   selector: 'ngx-user-expenses',
@@ -131,7 +132,7 @@ export class UserExpensesComponent implements OnInit {
   }
   actionIcons(request) {
     let icons = [
-      { class: "fas fa-calculator", action: this.calculateDistance.bind(this, request) },
+      { class: "fa fa-map-marker", action: this.calculateDistance.bind(this, request) },
     ];
     return icons;
   }
@@ -152,7 +153,7 @@ export class UserExpensesComponent implements OnInit {
   openImages(installer) {
     console.log("🚀 ~ file: installer-wages.component.ts ~ line 127 ~ InstallerWagesComponent ~ openImages ~ installer", installer);
     this.common.loading++;
-    let param = `startDate=${this.common.dateFormatter1(this.Date)}&endDate=${this.common.dateFormatter1(this.Date)}`
+    let param = `userId=${installer._aduserid}&startDate=${this.common.dateFormatter1(this.Date)}&endDate=${this.common.dateFormatter1(this.Date)}`
     this.api.get(`Admin/getOnSiteImagesByUser?${param}`)
       .subscribe(res => {
         this.common.loading--;
@@ -225,28 +226,28 @@ export class UserExpensesComponent implements OnInit {
 
   actionIconsOnImages(img, installer) {
     let icons = [
-      // { class: "fa fa-map-marker", action: this.location.bind(this, img) }
+      { class: "fa fa-map-marker", action: this.location.bind(this, img) }
     ];
-    // if (img.status.toLowerCase() == 'pending') {
-    //   icons.push(
-    //     { class: "fa fa-times", action: this.reject.bind(this, img, installer) });
-    // }
+    if (img.status.toLowerCase() == 'pending') {
+      icons.push(
+        { class: "fa fa-times", action: this.reject.bind(this, img, installer) });
+    }
     return icons;
   }
 
-  // location(img) {
-  //   this.common.params = {
-  //     filterData: [img]
-  //   }
-  //   console.log(this.common.params);
-  //   const activeModal = this.modalService.open(LocationonsideimageComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
-  //   activeModal.result.then(data => {
-  //     console.log("response:", data)
-  //     if (data && data.response) {
-  //       console.log("response:", data)
-  //     }
-  //   })
-  // }
+  location(img) {
+    this.common.params = {
+      filterData: [img]
+    }
+    console.log(this.common.params);
+    const activeModal = this.modalService.open(LocationOnSiteImageComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log("response:", data)
+      if (data && data.response) {
+        console.log("response:", data)
+      }
+    })
+  }
 
   reject(img, installer) {
     console.log("🚀 ~ file: installer-wages.component.ts ~ line 209 ~ InstallerWagesComponent ~ reject ~ img", img);
@@ -260,10 +261,12 @@ export class UserExpensesComponent implements OnInit {
         console.log("data", data);
         this.common.loading++;
         let params = {
-          id: img._rowid,
+          id: img._id,
           status: -1
         };
-        this.api.post(`Grid/updateOnSideImageStatus`, params, 'I').subscribe(res => {
+        // console.log(params)
+        // return;
+        this.api.post(`Admin/updateOnSiteImageStatus`, params).subscribe(res => {
           this.common.loading--;
           if (res['code'] == 1) {
             this.common.showToast(res['msg']);

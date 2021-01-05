@@ -115,6 +115,7 @@ import { UserEsclationComponent } from './modals/process-modals/user-esclation/u
 import { AddProcessPropertyComponent } from './modals/process-modals/add-process-property/add-process-property.component';
 import { CalulateTravelDistanceComponent } from './modals/calulate-travel-distance/calulate-travel-distance.component';
 import { MobileNoComponent } from './modals/mobile-no/mobile-no.component';
+import { LocationOnSiteImageComponent } from './modals/location-on-site-image/location-on-site-image.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -197,7 +198,8 @@ const PAGE_COMPONENTS = [
   UserEsclationComponent,
   AddProcessPropertyComponent,
   CalulateTravelDistanceComponent,
-  MobileNoComponent
+  MobileNoComponent,
+  LocationOnSiteImageComponent
 ];
 
 @NgModule({

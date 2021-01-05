@@ -407,16 +407,16 @@ export class CalulateTravelDistanceComponent implements OnInit {
   switchLatLngHandler() {
     switch (this.SwitchButton) {
       case 'Live':
-        this.SwitchButton = 'Recorded';
         const seprateLiveObject = this.travelDistanceData[1];
         const manuplateLive = { dis: seprateLiveObject.disLive, wayPointdata: seprateLiveObject.wayPointdataLive, wayPoints: seprateLiveObject.wayPointsLive };
         console.log('Passed', manuplateLive);
         this.calcRoadDistance(manuplateLive);
+        this.SwitchButton = 'Recorded';
         break;
       case 'Recorded':
-        this.SwitchButton = 'Live';
         console.log('Passed', this.travelDistanceData[0]);
         this.calcRoadDistance(this.travelDistanceData[0]);
+        this.SwitchButton = 'Live';
         break;
     }
   }
