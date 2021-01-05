@@ -924,7 +924,9 @@ export class ChatboxComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
-    this.mentionedUsers.push({ id: user.id, name: user.name });
+    if(!this.mentionedUsers.find(x=>x.id==user.id)){
+      this.mentionedUsers.push({ id: user.id, name: user.name });
+    }
     // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     splieted.pop();

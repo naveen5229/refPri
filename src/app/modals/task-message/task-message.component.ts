@@ -363,14 +363,14 @@ export class TaskMessageComponent implements OnInit {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
       
-      const duplicatedGroup = _.groupBy(mentionedUsers,data => {return data.user_id});
-      let finalMentionedUsers = [];
-      Object.keys(duplicatedGroup).map(id =>{
-        console.log('id',id,duplicatedGroup[id][0])
-        finalMentionedUsers.push(duplicatedGroup[id][0]);
-      })
+      // const duplicatedGroup = _.groupBy(mentionedUsers,data => {return data.user_id});
+      // let finalMentionedUsers = [];
+      // Object.keys(duplicatedGroup).map(id =>{
+      //   console.log('id',id,duplicatedGroup[id][0])
+      //   finalMentionedUsers.push(duplicatedGroup[id][0]);
+      // })
       // console.log("formatedMsg:", formatedMsg);
-      // console.log("mentionedUsers:", finalMentionedUsers);
+      // console.log("mentionedUsers:", mentionedUsers,finalMentionedUsers);
       // return false;
       let params = {
         ticketId: this.ticketId,
@@ -379,7 +379,7 @@ export class TaskMessageComponent implements OnInit {
         attachment: this.attachmentFile.file,
         attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
-        users: (finalMentionedUsers && finalMentionedUsers.length > 0) ? JSON.stringify(finalMentionedUsers) : null,
+        users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
@@ -802,10 +802,9 @@ export class TaskMessageComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
-    // if(this.taskMessage.length > 0){
-    //   this.taskMessage = this.taskMessage + ' ';
-    // }
-    this.mentionedUsers.push({ id: user.id, name: user.name });
+    if(!this.mentionedUsers.find(x=>x.id==user.id)){
+      this.mentionedUsers.push({ id: user.id, name: user.name });
+    }
     // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     console.log(splieted);
