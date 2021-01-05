@@ -827,28 +827,36 @@ export class CommonService {
       let images = [{name:name,image:url}];
       this.openImageView(images);
     }else{
-      this.getFile(url,name);
+      this.getFile(url,name,true);
     }
   }
 
-  getFile(url,name){
-    let params = {
-      url: url,
-      name: name
-    };
-    this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
-      if(res['code']==1){
-        let b64encodedString = res['data']['base64'];
-        let fileName = res['data']['name'];
-        var blob = this.base64ToBlob(b64encodedString, 'text/plain');
-        saveAs(blob, fileName);
-      }else{
-        this.showError(res['data']);
-      }
-    }, err => {
-      this.showError();
-      console.log('Error: ', err);
-    });
+  getFile(url,name,isDownload=false){
+    return new Promise((resolve, reject) => {
+      let params = {
+        url: url,
+        name: name
+      };
+      this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
+        if(res['code']==1){
+          let b64encodedString = res['data']['base64'];
+          let fileName = res['data']['name'];
+          if(isDownload){
+            var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+            saveAs(blob, fileName);
+          }
+          resolve(res);
+        }else{
+          this.showError(res['data']);
+          reject(res);
+        }
+      }, err => {
+        this.showError();
+        console.log('Error: ', err);
+        reject(err);
+      });
+      
+    })
   }
 
   public base64ToBlob(b64Data, contentType='', sliceSize=512) {
@@ -978,7 +986,7 @@ export class CommonService {
     activeModal.componentInstance.isDownload = true;
     activeModal.result.then((data) => {
       if (data.response) {
-        this.getFile(images[0]['image'],images[0]['name']);
+        this.getFile(images[0]['image'],images[0]['name'],true);
       }
     });
   }
