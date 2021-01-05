@@ -8,7 +8,7 @@
 
 #iv-container {
     position: fixed;
-    background:$color-8500;
+    background:$dark-3;
     width: 100%;
     height: 100%;
     top: 0;
@@ -74,7 +74,7 @@
     top: 20px;
     left: 20px;
     border: 1px solid #666;
-    background: $color-500;
+    background: $dark-1;
     z-index: 100;
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -104,15 +104,15 @@
 }
 .iv-snap-handle {
     position: absolute;
-    border: 1px solid $color-4800;
+    border: 1px solid $secondary-21;
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
     -ms-transform: translate3d(0, 0, 0);
     -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
-    -webkit-box-shadow: 0px 0px 0px 200px rgba($color-500, 0.5);
-    -moz-box-shadow: 0px 0px 0px 200px rgba($color-500, 0.5);
-    box-shadow: 0px 0px 0px 200px rgba($color-500, 0.5);
+    -webkit-box-shadow: 0px 0px 0px 200px rgba($dark-1, 0.5);
+    -moz-box-shadow: 0px 0px 0px 200px rgba($dark-1, 0.5);
+    box-shadow: 0px 0px 0px 200px rgba($dark-1, 0.5);
 }
 /*** zoom slider ***/
 .iv-zoom-slider {
@@ -131,7 +131,7 @@
 .iv-zoom-handle {
     width: 20px;
     height: 15px;
-    background: $color-4800;
+    background: $secondary-21;
     position: absolute;
 }
 /**** snap view css end *****/
@@ -179,10 +179,10 @@
     font-size: 5px;
     position: absolute;
     text-indent: -9999em;
-    border-top: 1.1em solid rgba($color-500, 0.4) !important;
-    border-right: 1.1em solid rgba($color-500, 0.4) !important;
-    border-bottom: 1.1em solid $color-8300 !important;
-    border-left: 1.1em solid $color-8400 !important;
+    border-top: 1.1em solid rgba($dark-1, 0.4) !important;
+    border-right: 1.1em solid rgba($dark-1, 0.4) !important;
+    border-bottom: 1.1em solid $warning-5 !important;
+    border-left: 1.1em solid $primary-9 !important;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
@@ -192,7 +192,7 @@
 
 .iv-fullscreen {
     position: fixed;
-    background: $color-8500;
+    background: $dark-3;
     width: 100%;
     height: 100%;
     top: 0;
@@ -223,7 +223,7 @@
     content: "";
     height: 4px;
     width: 24px;
-    background: $color-400;
+    background: $light-1;
     position: absolute;
     left: 0;
     top: 50%;
@@ -291,7 +291,7 @@
     width: 100%;
     position: relative;
     height: 700px;
-    background: $color-500;
+    background: $dark-1;
     margin-top: 60px;
     margin-bottom: 15px;
 }
@@ -301,8 +301,8 @@
     left: 0;
     right: 0;
     bottom: 50px;
-    background-color: $color-4600;
-    border: 0.1px solid rgba($color-500, 0.3);
+    background-color: $light-9;
+    border: 0.1px solid rgba($dark-1, 0.3);
 }
 .image-gallery-2 .prev,
 .image-gallery-2 .next {
@@ -340,7 +340,7 @@
     line-height: 50px;
     font-size: 24px;
     text-align: center;
-    color: $color-400;
+    color: $light-1;
     display: flex;
     justify-content: center;
 }
@@ -355,10 +355,10 @@
     cursor: pointer;
     transition: 0.3s linear;
     -webkit-transition: 0.3s linear;
-    color: $color-400;
+    color: $light-1;
 
     &:hover {
-        color:$color-8300 !important;
+        color:$warning-5 !important;
         transition: 0.3s ease-in-out;
         -webkit-transition: 0.3s ease-in-out;
     }

@@ -9,7 +9,7 @@
   table {
     th {
       padding: 0.2rem;
-      background: $color-400;
+      background: $light-1;
       font-size: .80rem;
     }
 
@@ -20,7 +20,7 @@
 
       th {
         .ng-star-inserted {
-          color: $color-400 !important;
+          color: $light-1 !important;
         }
       }
 
@@ -49,13 +49,13 @@
 
 
   .input-container input {
-    background: $color-6500;
+    background: $light-3;
     width: 100%;
     border: none;
     outline: none;
     padding: 10px;
     /* border: 1px solid; */
-    box-shadow: 0px 2px 6px 0px $color-4900;
+    box-shadow: 0px 2px 6px 0px $secondary-8;
     letter-spacing: .5px;
   }
 
@@ -68,13 +68,13 @@
 
 
   .btn-primary {
-    background-color: $color-100;
-    border: 1px solid $color-100;
+    background-color: $primary-11;
+    border: 1px solid $primary-11;
 
     &:active {
-      color: $color-400;
-      background-color: $color-100;
-      border: 1px solid $color-100;
+      color: $light-1;
+      background-color: $primary-11;
+      border: 1px solid $primary-11;
     }
   }
 
@@ -100,7 +100,7 @@
   .table-bordered,
   .table-bordered td,
   .table-bordered th {
-    border: 1px solid $color-700;
+    border: 1px solid $light-7;
     border-bottom:0;
   }
 
@@ -108,7 +108,7 @@
     thead {
       th {
         border-top: 0;
-        border-bottom: 2px solid $color-700;
+        border-bottom: 2px solid $light-7;
       }
 
       th:first-child {
@@ -197,11 +197,11 @@
 
   .modal-header {
     padding: $padding-xs $padding-lg !important;
-    background-color: $color-100;
+    background-color: $primary-11;
     border-bottom: none;
 
     &.sub-title {
-      background-color: $color-3500
+      background-color: $secondary-16
     }
 
     &.sub-title span {
@@ -212,17 +212,17 @@
 
     //  manish juangid 
     .custom-file-upload {
-      color: $color-400;
+      color: $light-1;
     }
 
     h5 {
-      color: $color-400;
+      color: $light-1;
       margin-bottom: 0rem !important;
     }
 
     .close {
       background: transparent;
-      color: $color-400 !important;
+      color: $light-1 !important;
       opacity: 1;
       padding: $padding-sm ($padding-lg + 5px);
       margin: -10px -1rem -1rem auto;
@@ -319,65 +319,65 @@
     }
 
     .fa-edit {
-      color: $color-1800;
+      color: $success-3;
     }
 
     .fa-trash {
-      color: $color-800;
+      color: $danger-2;
     }
 
     .fa-trash-alt {
-      color: $color-800;
+      color: $danger-2;
     }
 
     .fa-times {
-      color: $color-800;
+      color: $danger-2;
     }
 
     .fa-user-plus {
-      color: $color-900;
+      color: $primary-2;
     }
 
     .fa-check {
-      color: $color-1400;
+      color: $primary-4;
     }
 
     .fa-eye {
-      color: $color-2900;
+      color: $danger-11;
     }
 
     .fa-thumbs-up {
-      color: $color-1800;
+      color: $success-3;
     }
   }
 
 
   .fa-bell {
-    color: $color-2100;
+    color: $secondary-3;
   }
 
   .fa-bell.isRemind {
-    color: $color-800;
+    color: $danger-2;
   }
 
   .fa-bell.reminderAdded {
-    color: $color-2000;
+    color: $warning-1;
   }
 
   .fa-pause-circle {
-    color: $color-2000;
+    color: $warning-1;
   }
 
   .fa-play-circle {
-    color: $color-2000;
+    color: $warning-1;
   }
 
   table .fa-comments {
-    color: $color-1900;
+    color: $success-8;
   }
 
   table .fa-comments.no-comment {
-    color: $color-2100;
+    color: $secondary-3;
   }
 
   table .fa-comments.new-comment span {
@@ -390,7 +390,7 @@
     left: 1px;
     padding: 1px;
     font-size: $font-sm-sm;
-    color: $color-400;
+    color: $light-1;
     text-align: center;
     vertical-align: middle;
     line-height: 11px;
@@ -401,7 +401,7 @@
     width: 100%;
     margin: 0px;
     /* border-bottom: 2px solid #26a69a; */
-    border-bottom: 2px solid $color-100;
+    border-bottom: 2px solid $primary-11;
     
     margin-bottom: $margin-md;
     padding-left: 5px !important;
@@ -412,9 +412,9 @@
       margin-right: 5px;
       /* background-color: #26a69a;
           border: 2px solid #26a69a; */
-      background-color: $color-100;
-      border: 2px solid $color-100;
-      color: $color-400;
+      background-color: $primary-11;
+      border: 2px solid $primary-11;
+      color: $light-1;
       border-bottom: 0px;
       display: inline-block;
       border-radius: 5px 5px 0px 0px;
@@ -423,16 +423,16 @@
       cursor: pointer;
 
       &.active {
-        background-color: $color-400;
+        background-color: $light-1;
         /* color: #26a69a; */
-        color: $color-100;
-        // position: relative;
+        color: $primary-11;
+        position: relative;
         // top: 1px;
 
         &::after {
           content: "";
           display: block;
-          background-color: $color-400;
+          background-color: $light-1;
           height: 10px;
           width: 100%;
           position: absolute;
@@ -460,27 +460,27 @@
     height: 100%;
     align-items: center;
     font-size: $font-md-lg;
-    color: $color-7700;
+    color: $secondary-13;
   }
 
   .attachment-view {
     width: 100%;
     position: absolute;
     z-index: 1;
-    background: $color-3600;
+    background: $secondary-19;
   }
 
   .search-style {
-    background: $color-3600;
+    background: $secondary-19;
     align-items: center;
   }
 
   .new_message {
-    background: $color-3600 !important;
+    background: $secondary-19 !important;
   }
 
   .other_chat.new_message .quoted_msg {
-    background: $color-3700;
+    background:$secondary-10;
   }
 
   .popover-body {
@@ -492,16 +492,16 @@
   }
 
   .quoted_msg {
-    background: $color-3800;
+    background: $secondary-28;
     margin: 3px -7px;
     padding: 5px 10px;
-    border-left: 2px solid $color-7600;
+    border-left: 2px solid $primary-12;
     font-style: italic;
-    color: $color-500 !important;
+    color: $dark-1 !important;
   }
 
   .quoted_selected {
-    background: $color-7500;
+    background: $secondary-15;
   }
 
   .comment_reply {
@@ -558,7 +558,7 @@
   }
 
   nb-card-header {
-    border-bottom: 1px solid $color-7400 !important;
+    border-bottom: 1px solid $secondary-22 !important;
   }
 
   nb-layout .layout .layout-container .content .columns nb-layout-column {
@@ -586,7 +586,7 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     transition: .5s;
-    color: rgba($color-500, 0.5) !important;
+    color: rgba($dark-1, 0.5) !important;
 
     &:hover {
       letter-spacing: 4px;
@@ -598,7 +598,7 @@
       position: absolute;
       width: 50px;
       height: 1px;
-      background-color: $color-100;
+      background-color: $primary-11;
       z-index: -1;
       bottom: 5px;
       left: 2px;
@@ -609,7 +609,7 @@
       position: absolute;
       width: 25px;
       height: 1px;
-      background-color: $color-100;
+      background-color: $primary-11;
       z-index: -1;
       bottom: 0px;
       left: 2px;
@@ -619,11 +619,11 @@
 
 
   .btn-primary {
-    color: $color-400;
-    background-color: $color-100;
-    border-color: $color-100;
+    color: $light-1;
+    background-color: $primary-11;
+    border-color: $primary-11;
     height: 30px;
-    box-shadow: 0px 3px 1px -2px rgba($color-500, 0.2), 0px 2px 2px 0px rgba($color-500, 0.14), 0px 1px 5px 0px rgba($color-500, .12);
+    box-shadow: 0px 3px 1px -2px rgba($dark-1, 0.2), 0px 2px 2px 0px rgba($dark-1, 0.14), 0px 1px 5px 0px rgba($dark-1, .12);
     transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
     padding: 4px 10px 5px 10px !important;
     font-family: Poppins, sans-serif !important;
@@ -634,7 +634,7 @@
   .btn-primary:hover,
   .btn-danger:hover,
   .btn-secondary:hover {
-    box-shadow: 0px 2px 4px -1px rgba($color-500, 0.2), 0px 4px 5px 0px rgba($color-500, 0.14), 0px 1px 10px 0px rgba($color-500, .12);
+    box-shadow: 0px 2px 4px -1px rgba($dark-1, 0.2), 0px 4px 5px 0px rgba($dark-1, 0.14), 0px 1px 10px 0px rgba($dark-1, .12);
   }
 
   .btn-primary:active,
@@ -643,15 +643,16 @@
   .btn-danger:focus,
   .btn-secondary:focus,
   .btn-secondary:active {
-    box-shadow: 0px 5px 5px -3px rgba($color-500, 0.2),
-      0px 8px 10px 1px rgba($color-500, 0.14),
-      0px 3px 14px 2px rgba($color-500, .12);
+    box-shadow: 0px 5px 5px -3px rgba($dark-1, 0.2),
+      0px 8px 10px 1px rgba($dark-1, 0.14),
+      0px 3px 14px 2px rgba($dark-1, .12);
+      background-color:$primary-5
   }
 
   .btn-danger,
   .btn-secondary {
     height: 30px;
-    box-shadow: 0px 3px 1px -2px rgba($color-500, 0.2), 0px 2px 2px 0px rgba($color-500, 0.14), 0px 1px 5px 0px rgba($color-500, .12);
+    box-shadow: 0px 3px 1px -2px rgba($dark-1, 0.2), 0px 2px 2px 0px rgba($dark-1, 0.14), 0px 1px 5px 0px rgba($dark-1, .12);
     transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
     padding: 5px 10px 5px 10px !important;
     font-family: Poppins, sans-serif !important;
@@ -673,7 +674,7 @@
     }
 
     th {
-      color: $color-7300;
+      color: $dark-5;
     }
 
   }
@@ -709,11 +710,11 @@
 
   .exel-icon {
     font-size: 25px;
-    color: $color-600;
+    color: $success-2;
   }
 
   .user-active {
-    background: $color-5800;
+    background: $warning-3;
   }
 
   .hr_full {
@@ -748,23 +749,23 @@
   //  custom style 
   //  table component stye 
   .tableFixHead th {
-    background-color: $color-1300 !important;
+    background-color: $secondary-17 !important;
   }
 
   .sort-icon {
-    color: $color-1300 !important;
+    color: $secondary-17 !important;
   }
 
   nb-menu .menu-item .menu-icon {
-    color: $color-1500 !important;
+    color: $secondary-14 !important;
   }
 
 
   .fa-trash-alt {
     font-size: $font-sm-xxl;
     margin-right: $margin-md;
-    color: $color-800;
-    border-color: $color-800;
+    color: $danger-2;
+    border-color: $danger-2;
     padding: $padding-sm;
     border-radius: $radious-xxs;
   }
@@ -790,9 +791,9 @@
 
 
 .suggestions {
-  background: $color-400;
+  background: $light-1;
   font-size: $font-md-sm;
-  box-shadow: 1px 1px 3px $color-4900;
+  box-shadow: 1px 1px 3px $secondary-8;
 
 }
 
@@ -800,22 +801,22 @@
 .suggestion {
   padding: $padding-xs 0 1px $padding-md;
   font-size: $font-sm-xxl;
-  border-bottom: 1px solid $color-4600;
+  border-bottom: 1px solid $light-9;
 }
 
 .active-suggestion {
-  background: $color-5800;
-  color: $color-500;
+  background: $warning-3;
+  color: $dark-1;
   font-weight: $bold;
 }
 
 .tagsinput {
-  border: 2px solid $color-4600;
+  border: 2px solid $light-9;
   border-radius: $radious-xxs;
 
   p {
-    background-color: $color-7200;
-    color: $color-500;
+    background-color: $secondary-32;
+    color: $dark-1;
     border-radius: $radious-xl;
     font-size: $font-md-sm;
 
@@ -827,7 +828,7 @@
 
 
 .fa-times-circle {
-  color: $color-800;
+  color: $danger-2;
 }
 
 
@@ -835,7 +836,7 @@
 
 :host ::ng-deep kendo-datepicker input,
 :host ::ng-deep kendo-timepicker input {
-  background-color: $color-400;
+  background-color: $light-1;
 
 }
 
@@ -847,23 +848,23 @@
 }
 
 .image-viewer-tooltip .tooltiptext {
-  background-color: $color-5100;
-  color: $color-400;
+  background-color: $secondary-2;
+  color: $light-1;
   border-radius: $radious-xxs*2;
   padding: $padding-xxs 0;
 }
 
 .image-viewer-tooltip .tooltiptext::after {
-  border-color: $color-5100 transparent transparent transparent;
+  border-color: $secondary-2 transparent transparent transparent;
 }
 
 
 // month picker rdirectibe
 .month-list {
-  background: $color-400;
+  background: $light-1;
   padding: $padding-md 0px 0px;
-  box-shadow: 2px 10px 10px $color-4800;
-  border: 1px solid $color-4800;
+  box-shadow: 2px 10px 10px $secondary-21;
+  border: 1px solid $secondary-21;
 
   button {
     border-radius: $radious-xxs;
@@ -872,18 +873,18 @@
 }
 
 .month-btn {
-  background: $color-400;
-  color: $color-500;
+  background: $light-1;
+  color: $dark-1;
 }
 
 .month-btn:hover {
-  background: $color-2600;
-  color: $color-500;
+  background: $light-10;
+  color: $dark-1;
 }
 
 .month-btn-active {
-  background: $color-7100;
-  color: $color-400;
+  background: $primary-8;
+  color: $light-1;
 }
 
 .year-container {
@@ -897,7 +898,14 @@
 //  smart table directive
 
 .filter-container {
-  background: $color-400; // border: 1.5px solid gray;
+  background: $light-1; // border: 1.5px solid gray;
+}
+
+.no-record-found{
+ color:$warning-4 !important; 
+}
+.text-success {
+  color:$success !important;
 }
 
 .filter-input-container {
@@ -908,11 +916,11 @@
 .filter-input {
   font-size: $font-sm-xxl;
   font-weight: $normal;
-  color: $color-500;
+  color: $dark-1;
 }
 
 .filter-input::placeholder {
-  color: $color-500;
+  color: $dark-1;
   font-weight: $bolder;
 }
 
@@ -937,43 +945,43 @@
 
 .no-record-found {
   font-weight: $normal;
-  color: $color-6600;
+  color: $warning-4;
 }
 
 .sort-icon {
   font-size: $font-md-sm;
-  color: $color-1300;
+  color: $secondary-17;
 }
 
 .no-search {
   line-height: 24px;
   font-weight: $bold;
-  background-color: $color-400;
-  color: $color-500;
+  background-color: $light-1;
+  color: $dark-1;
 }
 
 .tableFixHead th {
-  background: $color-1300;
+  background: $secondary-17;
 }
 
 
 
 
 .active-row {
-  background: $color-7000 !important;
-  color: $color-400;
+  background: $secondary-1 !important;
+  color: $light-1;
 }
 
 .active-row a {
-  color: $color-400;
+  color: $light-1;
 }
 
 thead {
-  color: $color-400;
+  color: $light-1;
 }
 
 tbody tr:nth-child(even) {
-  background-color: $color-6900;
+  background-color: $secondary-31;
 }
 
 .pagination {
@@ -982,52 +990,94 @@ tbody tr:nth-child(even) {
 
   .pagination_links {
     button {
-      color: $color-5200;
-      background-color: $color-400;
-      border: 1px solid $color-700;
+      color: $primary-1;
+      background-color: $light-1;
+      border: 1px solid $light-7;
       font-size: $font-sm-xxl;
     }
 
     button:hover,
     button:active,
     button.active-page {
-      color: $color-400;
-      background-color: $color-5200;
-      border-color: $color-5200;
-      box-shadow: 0 0 0 0.2rem rgba($color-5200, .25);
+      color: $light-1;
+      background-color: $primary-1;
+      border-color: $primary-1;
+      box-shadow: 0 0 0 0.2rem rgba($primary-1, .25);
+      background-color:$primary-5
     }
 
     span:focus {
-      box-shadow: 0 0 0 0.2rem rgba($color-5200, .25);
+      box-shadow: 0 0 0 0.2rem rgba($primary-1, .25);
     }
   }
 }
 
 .tablePagination {
-  color: $color-500;
+  color: $dark-1;
 }
 
 .test {
-  color: $color-500;
+  color: $dark-1;
 }
 
 .customPage {
-  border: 1px solid $color-6800;
-  color: $color-5200;
+  border: 1px solid $secondary-9;
+  color: $primary-1;
 }
 
 
 .action-box .fa-check {
-  color: $color-400;
+  color: $light-1;
 }
 
 .action-box .fa-times {
-  background-color: $color-6700;
-  color: $color-400;
+  background-color: $danger-6;
+  color: $light-1;
   margin-left: $margin-md;
 }
 
 table tr.highlight {
-  background-color: $color-6600 !important;
-  color: $color-500 !important;
+  background-color: $warning-4 !important;
+  color: $dark-1 !important;
+}
+
+
+
+//  bootstrap defaults
+
+.text-primary{
+  color:$primary !important;
+}
+
+.text-success{
+  color:$success !important;
+}
+
+.text-danger{
+  color:$danger !important;
+}
+
+.text-dark{
+  color:$dark;
+}
+
+.text-light{
+  color:$light !important;
+}
+
+
+
+// backgrounds
+
+.bg-primary{
+  background-color:$primary !important;
+}
+
+
+.bg-secondary{
+  background-color:$secondary!important;
+}
+
+.bg-danger{
+  background-color:$danger!important;
 }

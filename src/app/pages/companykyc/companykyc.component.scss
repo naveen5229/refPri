@@ -6,7 +6,7 @@
     height: calc(100vh - 160px);
 
     .green {
-      color: $color-1800 !important;
+      color: $success-3 !important;
 
     }
 
@@ -16,7 +16,7 @@
       padding-right: $padding-sm;
       padding-top: $padding-xxs;
       padding-bottom: $padding-xxs;
-      color: $color-500;
+      color: $dark-1;
       font-style: normal;
       border-radius: $radious-xxs;
       cursor: pointer;
@@ -32,7 +32,7 @@
       padding-right: $padding-sm;
       padding-top: $padding-xxs;
       padding-bottom: $padding-xxs;
-      color: $color-500;
+      color: $dark-1;
       font-style: normal;
       border-radius: $radious-xxs;
       cursor: pointer;
@@ -43,7 +43,7 @@
     }
 
     .show {
-      color: $color-900;
+      color: $primary-2;
       cursor: pointer;
       font-style: normal;
       font-weight: $bold;

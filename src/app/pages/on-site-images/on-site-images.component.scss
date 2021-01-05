@@ -1,13 +1,13 @@
 @import '../../style.scss';
 
 :host ::ng-deep .gray {
-    color: $color-2100;
+    color: $secondary-3;
 }
 
 :host ::ng-deep .fa-grip-horizontal {
-    color: $color-2700;
+    color: $success-4;
 }
 
 :host ::ng-deep .fa-handshake {
-    color: $color-2800;
+    color: $primary-3;
 }

@@ -3,44 +3,44 @@
 
 :host ::ng-deep .fa-check {
     font-size: initial;
-    color: $color-1400;
+    color: $primary-4;
     cursor: pointer;
 }
 
  :host ::ng-deep .fa-trash-alt {
-    color: $color-800;
+    color: $danger-2;
     cursor: pointer;
 }
 
  :host ::ng-deep .fa-eye {
     border-radius: $radious-xxs;
     margin-right: $margin-md;
-    color: $color-1100;
+    color: $danger-7;
     padding: 2px;
     cursor: pointer;
 }
 
  :host ::ng-deep .remove:hover {
-    background-color: $color-1100;
-    border-color: $color-1200;
+    background-color: $danger-7;
+    border-color: $danger-8;
 }
 
 .tabs_style {
     width: 100%;
     margin: 0px;
-    // border-bottom: 2px solid $color-5300;
-    border-bottom: 2px solid $color-100;
+    // border-bottom: 2px solid $success-5;
+    border-bottom: 2px solid $primary-11;
     margin-bottom:$margin-md;
     padding-left: $padding-xs!important;
     li {
         padding: 5px 6px;
         list-style: none;
         margin-right: $margin-xs;
-        // background-color: $color-5300;
-        // border: 2px solid $color-5300;
-        background-color: $color-100;
-        border: 2px solid $color-100;
-        color: $color-400;
+        // background-color: $success-5;
+        // border: 2px solid $success-5;
+        background-color: $primary-11;
+        border: 2px solid $primary-11;
+        color: $light-1;
         border-bottom: 0px;
         display: inline-block;
         border-radius: $radious-xs $radious-xs 0px 0px;
@@ -48,14 +48,14 @@
         font-weight: normal;
         cursor: pointer;
         &.active {
-            background-color: $color-400;
-            // color: $color-5300;
-            color: $color-100;;
+            background-color: $light-1;
+            // color: $success-5;
+            color: $primary-11;;
             position: relative;
             &::after {
                 content: "";
                 display: block;
-                background-color: $color-400;
+                background-color: $light-1;
                 height: 10px;
                 width: 100%;
                 position: absolute;
@@ -66,14 +66,14 @@
 }
 
 :host ::ng-deep .fa-edit {
-    color: $color-1800;
+    color: $success-3;
     font-size:$font-md-lg;
     cursor: pointer;
 }
 
 :host ::ng-deep .fa-comments {
     font-size:$font-md-lg;
-    color: $color-1900;
+    color: $success-8;
     cursor: pointer;
     &.new-comment span {
         min-width: 13px;
@@ -85,7 +85,7 @@
         left: 1px;
         padding: 1px;
         font-size:$font-sm-sm;
-        color: $color-400;
+        color: $light-1;
         text-align: center;
         vertical-align: middle;
         line-height: 11px;
@@ -94,7 +94,7 @@
 }
 
 :host ::ng-deep .fa-calendar-alt {
-    color: $color-1800;
+    color: $success-3;
     font-size:$font-md-lg;
     cursor: pointer;
 }
@@ -106,16 +106,16 @@
         cursor: pointer;
     }
     .fa-bell {
-        color: $color-2100;
+        color: $secondary-3;
     }
     .isRemind {
-        color: $color-800;
+        color: $danger-2;
     }
     .reminderAdded {
-        color: $color-2000;
+        color: $warning-1;
     }
     .no-comment {
-        color:$color-2100;
+        color:$secondary-3;
     }
 
 }

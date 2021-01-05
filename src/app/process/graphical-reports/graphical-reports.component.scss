@@ -6,7 +6,7 @@
     display: inline-block;
     vertical-align: top;
     z-index: 0;
-    border: 1px solid $color-5500;
+    border: 1px solid $light-5;
     padding: $padding-xs;
     border-radius: $radious-xxs;
     border-radius: $radious-xxs;
@@ -18,7 +18,7 @@
     display: inline-block;
     vertical-align: top;
     z-index: 0;
-    border: 1px solid $color-5500;
+    border: 1px solid $light-5;
     padding: $padding-xs;
     border-radius: $radious-xxs;
     border-radius: $radious-xxs;
@@ -32,7 +32,7 @@
 
 .fieldStyle {
     background-color: #d1dada;
-    color: $color-500;
+    color: $dark-1;
     display: inline-block;
     border-radius: $radious-xl;
     padding: 2px 12px 5px 10px;
@@ -44,7 +44,7 @@
     margin-top: 1px;
 }
 .cancelButtonCss {
-    color: $color-800;
+    color: $danger-2;
     cursor: pointer;
 }
 .margin_right {
@@ -67,23 +67,23 @@
     max-height: calc(100vh - 125px);
     overflow: auto;
     h6 {
-        color: $color-400;
+        color: $light-1;
         font-size: 0.8rem;
-        background: $color-100;
+        background: $primary-11;
         padding: 0 10px;
     }
     .drophead {
         font-size: 0.7rem;
-        border: 1px solid $color-5500;
+        border: 1px solid $light-5;
         padding: 0px 5px;
         margin-bottom: 0.2rem;
-        background: $color-400;
+        background: $light-1;
         position: relative;
         .dropcaret {
             position: absolute;
             right: 5px;
             top: -1px;
-            color: $color-3200;
+            color: $secondary-7;
         }
     }
 
@@ -92,19 +92,19 @@
     }
 
     .innerdrop {
-        background: $color-400;
+        background: $light-1;
         padding: $padding-xs $padding-xs 0 $padding-xs;
         padding: $padding-xs $padding-xs 0 $padding-xs;
         margin-bottom: $margin-md;
         margin-top: -4px;
-        border: 1px solid $color-6400;
+        border: 1px solid $secondary-30;
         max-height: 130px;
         overflow: auto;
         
         li {
             font-family: "Poppins", sans-serif !important;
             font-size: 0.68rem;
-            border-bottom: 1px solid $color-6400;
+            border-bottom: 1px solid $secondary-30;
             padding-left: 5px;
             position: relative;
         }
@@ -133,7 +133,7 @@
     }
 }
 .active {
-    border-bottom: 2px solid $color-500;
+    border-bottom: 2px solid $dark-1;
 }
 .hoverChart:hover {
     cursor: pointer;
@@ -143,9 +143,9 @@
     width: 70px;
     box-shadow: 0 4px 13px #ccc8c8;
     border-radius: 9px!important;
-    background: $color-400;
+    background: $light-1;
     border: 1px solid #e2e2e2;
-    border-top: 3px solid $color-100;
+    border-top: 3px solid $primary-11;
     margin-bottom: 10%;
 }
 .centarize {
@@ -169,7 +169,7 @@
 }
 
 .tableref{
-    background: $color-500;
+    background: $dark-1;
     padding: 4px;
     border-radius: 20px;
     color: white;

@@ -2,13 +2,13 @@
 
 :host ::ng-deep {
     .fa-edit {
-        color: $color-1800;
+        color: $success-3;
         font-size: $font-md-lg;
         cursor: pointer;
     }
     .fa-trash-alt {
         margin-right: $margin-md;
-        color: $color-800;
+        color: $danger-2;
         font-size: $font-md-lg;
         cursor: pointer;
     }

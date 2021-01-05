@@ -3,7 +3,7 @@
 .tabs_style {
   width: 100%;
   margin: 0px;
-  // border-bottom: 2px solid $color-5300;
+  // border-bottom: 2px solid $success-5;
   margin-bottom: $margin-md;
   padding-left: $padding-xs !important;
 
@@ -11,9 +11,9 @@
     padding: 5px 6px;
     list-style: none;
     margin-right: $margin-xs;
-    // background-color: $color-5300;
-    // border: 2px solid $color-5300;
-    color: $color-400;
+    // background-color: $success-5;
+    // border: 2px solid $success-5;
+    color: $light-1;
     border-bottom: 0px;
     display: inline-block;
     border-radius: $radious-xs $radious-xs 0px 0px;
@@ -22,15 +22,15 @@
     cursor: pointer;
 
     &.active {
-      background-color: $color-400;
-      // color: $color-5300;
-      color: $color-100;
+      background-color: $light-1;
+      // color: $success-5;
+      color: $primary-11;
       position: relative;
 
       &::after {
         content: "";
         display: block;
-        background-color: $color-400;
+        background-color: $light-1;
         height: 10px;
         width: 100%;
         position: absolute;
@@ -43,18 +43,18 @@
 
 
 :host ::ng-deep .fa-edit {
-  color: $color-3300;
+  color: $primary-10;
   cursor: pointer;
   display: contents;
 }
 
 :host ::ng-deep .edit-btn:hover {
-  background-color: $color-3400;
+  background-color: $primary-6;
 }
 
 :host ::ng-deep .fa-trash-alt {
   margin-right: $margin-md;
-  color: $color-800;
+  color: $danger-2;
   padding: 2px;
   border-radius: 3px;
   cursor: pointer;
@@ -70,8 +70,8 @@ table {
 
     th {
       padding: 0.2rem !important;
-      background: $color-400 !important;
-      border: 6px solid $color-500 !important;
+      background: $light-1 !important;
+      border: 6px solid $dark-1 !important;
       font-size: .80rem;
       vertical-align: top;
     }
@@ -85,7 +85,7 @@ table {
       td {
         padding: 0.5rem;
         vertical-align: top;
-        border-top: 1px solid $color-700;
+        border-top: 1px solid $light-7;
       }
 
       td:first-child {

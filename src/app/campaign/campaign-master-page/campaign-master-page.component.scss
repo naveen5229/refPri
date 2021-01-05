@@ -3,16 +3,16 @@
 .tabs_style {
   width: 100%;
   margin: 0px;
- // border-bottom: 2px solid $color-5300;
+ // border-bottom: 2px solid $success-5;
   margin-bottom: $margin-md;
   padding-left: $padding-xs !important;
   li {
     padding: 5px 6px;
     list-style: none;
     margin-right: $margin-xs;
-    // background-color: $color-5300;
-    // border: 2px solid $color-5300;
-    color:$color-400;
+    // background-color: $success-5;
+    // border: 2px solid $success-5;
+    color:$light-1;
     border-bottom: 0px;
     display: inline-block;
     border-radius: $radious-xs 5px 0px 0px;
@@ -20,14 +20,14 @@
     font-weight:$normal;
     cursor: pointer;
     &.active {
-      background-color:$color-400;
-      //color: $color-5300;
-      color: $color-100;
+      background-color:$light-1;
+      //color: $success-5;
+      color: $primary-11;
       position: relative;
       &::after {
         content: "";
         display: block;
-        background-color:$color-400;
+        background-color:$light-1;
         height: 10px;
         width: 100%;
         position: absolute;
@@ -38,7 +38,7 @@
 }
 
 :host ::ng-deep .fa-trash-alt {
-  color: $color-800;
+  color: $danger-2;
   font-size:$font-md-lg;
   span {
     position: absolute;
@@ -48,8 +48,8 @@
     font-size:$font-sm-xl;
     left: 0px;
     top: -32px;
-    -webkit-box-shadow: 5px 2px 8px rgba($color-500,0.5);
-    box-shadow: 5px 2px 8px rgba($color-500,0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($dark-1,0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1,0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -59,10 +59,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: $color-800;
+    background-color: $danger-2;
     border-radius: $radious-xxs;;
     padding: $padding-xs $padding-md;
-    color:$color-400;
+    color:$light-1;
     width: 100%;
   }
   span::after {
@@ -71,7 +71,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid $color-800;
+    border-top: 5px solid $danger-2;
     position: absolute;
     bottom: -5px;
     right: 24px;

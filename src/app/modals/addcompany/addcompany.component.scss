@@ -11,13 +11,13 @@ img{
 }
 
 :host ::ng-deep.red {
-    background:$color-800;
-    color: $color-400;
+    background:$danger-2;
+    color: $light-1;
     margin-left:$margin-xs;
   }
   :host ::ng-deep.green {
-    background: $color-1800;
-    color: $color-400;
+    background: $success-3;
+    color: $light-1;
     margin-left:$margin-xs;
   }
   :host ::ng-deep.icon{

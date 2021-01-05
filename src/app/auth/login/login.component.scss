@@ -3,7 +3,7 @@
 .main {
     width: 350px;
     margin: auto;
-    background: rgba($color-500, 0.25);
+    background: rgba($dark-1, 0.25);
     padding: $padding-md*2;
     height: auto;
     border-radius: $radious-sm;
@@ -25,11 +25,11 @@ img {
 }
 
 .title {
-    color: $color-200;
+    color: $danger-4;
 }
 
 .sub-title {
-    color:$color-400;
+    color:$light-1;
     font-weight: normal;
     font-size: $font-sm-xxl;
     letter-spacing: 0.2px;
@@ -39,11 +39,11 @@ img {
 
 input {
     background: transparent !important;
-    color:$color-400 !important;
+    color:$light-1 !important;
     padding: 4px 14px !important;
     font-size: $font-sm-xxl;
     font-weight: 400;
-    border: 1px solid $color-200 !important;
+    border: 1px solid $danger-4 !important;
     border-radius: 4px;
     font-family:$font-family-secondary;
     width: 85%;
@@ -54,7 +54,7 @@ input {
 
 .btn {
     border-radius: $radious-xs;
-    background: $color-200 !important;
+    background: $danger-4 !important;
     padding: 7px;
     width: 60%;
     margin: auto;
@@ -63,21 +63,21 @@ input {
 
 .back-icon {
     position: absolute;
-    color:$color-400;
+    color:$light-1;
     font-size:$font-md-xl;
     cursor: pointer;
 }
 
 .error {
     font-size:$font-md-xl;
-    color:$color-400;
-    // color: $color-100;
+    color:$light-1;
+    // color: $primary-11;
     margin-top: 3px;
     margin-left: 25px;
 }
 
 .resendOtp {
-    color:$color-400;
+    color:$light-1;
     margin-left: 25px;
     font-size:$font-md-xl;
 }
@@ -90,30 +90,30 @@ input {
 span {
     font-size: 25px;
     font-family: cursive;
-    color: $color-400;
+    color: $light-1;
     animation: blink 5s linear infinite;
 }
 
 @keyframes blink {
     0% {
         opacity: 0;
-        color: $color-400;
+        color: $light-1;
     }
     0% {
         opacity: 0.25;
-        color: $color-400;
+        color: $light-1;
     }
     50% {
         opacity: 0.5;
-        color: $color-400;
+        color: $light-1;
     }
     0% {
         opacity: 0.75;
-        color: $color-100;
+        color: $primary-11;
     }
     100% {
         opacity: 1;
-        color: $color-100;
+        color: $primary-11;
     }
 }
 

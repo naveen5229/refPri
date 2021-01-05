@@ -19,14 +19,14 @@
 // }
 .tabs_style {
   @include tab-style;
-  //   border-bottom: 2px solid $color-5300;
+  //   border-bottom: 2px solid $success-5;
 
   li {
     @include tablist;
     font-weight: normal;
 
     &.active {
-      // color: $color-5300;
+      // color: $success-5;
       @include tablist-active;
     }
   }
