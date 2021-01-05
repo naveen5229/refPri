@@ -19,7 +19,7 @@
     width: 100%;
     position: relative;
     height: 600px;
-    background: $color-500;
+    background: $dark-1;
     margin-top: 45px;
     margin-bottom: 0px;
 }
@@ -28,14 +28,14 @@
 }
 .modal-header{
     padding: $padding-md $padding-md;
-    background-color: $color-1300;
+    background-color: $secondary-17;
     h5{
-        color: $color-400;
+        color: $light-1;
         margin: 0px;
     }
     .close{
         background: transparent;
-        color: $color-400 !important;
+        color: $light-1 !important;
         opacity: 1;
         padding: $padding-md 20px;
         margin: -10px -1rem -1rem auto;

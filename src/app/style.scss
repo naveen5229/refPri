@@ -21,7 +21,7 @@ $light: '.nb-theme-light';
 }
 
 @mixin th-bordered {
-  border: 6px solid $color-500 !important;
+  border: 6px solid $dark-1 !important;
   padding: .2rem !important;
   background: #fff !important
 }
@@ -58,7 +58,7 @@ $light: '.nb-theme-light';
 @mixin td {
   padding: 0.5rem;
   vertical-align: top;
-  border-top: 1px solid $color-700;
+  border-top: 1px solid $light-7;
 }
 
 
@@ -74,7 +74,7 @@ $light: '.nb-theme-light';
   padding: 5px 6px;
   list-style: none;
   margin-right: $margin-xs;
-  color: $color-400;
+  color: $light-1;
   border-bottom: 0px;
   display: inline-block;
   border-radius: $radious-xs $radious-xs 0px 0px;
@@ -86,7 +86,7 @@ $light: '.nb-theme-light';
 @mixin tablist-pseudo {
   content: "";
   display: block;
-  background-color: $color-400;
+  background-color: $light-1;
   height: 10px;
   width: 100%;
   position: absolute;
@@ -94,14 +94,14 @@ $light: '.nb-theme-light';
 }
 
 @mixin tablist-active {
-  background-color: $color-400;
-  color: $color-100;
+  background-color: $light-1;
+  color: $primary-11;
   position: relative;
 
   &::after {
     content: "";
     display: block;
-    background-color: $color-400;
+    background-color: $light-1;
     height: 10px;
     width: 100%;
     position: absolute;
@@ -112,7 +112,7 @@ $light: '.nb-theme-light';
 @mixin td {
   padding: 0.5rem;
   vertical-align: top;
-  border-top: 1px solid $color-700;
+  border-top: 1px solid $light-7;
 }
 
 @mixin fixed-table {
@@ -142,7 +142,7 @@ $light: '.nb-theme-light';
 
 
 @mixin trash-alt {
-  color: $color-800;
+  color: $danger-2;
   font-size: 18px;
 
   span {
@@ -153,8 +153,8 @@ $light: '.nb-theme-light';
     font-size: 11px;
     left: -10px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba($color-500, 0.5);
-    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($dark-1, 0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1, 0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -165,10 +165,10 @@ $light: '.nb-theme-light';
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: $color-800;
+    background-color: $danger-2;
     border-radius: 3px;
     padding: $padding-xs $padding-md;
-    color: $color-400;
+    color: $light-1;
     width: 100%;
   }
 
@@ -178,7 +178,7 @@ $light: '.nb-theme-light';
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid $color-800;
+    border-top: 5px solid $danger-2;
     position: absolute;
     bottom: -5px;
     right: 24px;
@@ -187,7 +187,7 @@ $light: '.nb-theme-light';
 }
 
 @mixin fa-edit {
-  color: $color-1800;
+  color: $success-3;
   font-size: $font-md-lg;
 
   span {
@@ -198,8 +198,8 @@ $light: '.nb-theme-light';
     font-size: 11px;
     left: -12px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba($color-500, 0.5);
-    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($dark-1, 0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1, 0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -210,10 +210,10 @@ $light: '.nb-theme-light';
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: $color-1800;
+    background-color: $success-3;
     border-radius: 3px;
     padding: 5px 10px;
-    color: $color-400;
+    color: $light-1;
     width: 100%;
   }
 
@@ -223,7 +223,7 @@ $light: '.nb-theme-light';
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid $color-1800;
+    border-top: 5px solid $success-3;
     position: absolute;
     bottom: -5px;
     right: 24px;

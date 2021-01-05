@@ -2,23 +2,23 @@
 
 ::ng-deep .blue{
     width: 200px;
-    color: $color-900;
+    color: $primary-2;
 }
 ::ng-deep .red{
-    color:$color-800,
+    color:$danger-2,
     ;
 }
 ::ng-deep .brown{
-    color:$color-3900;
+    color:$danger-4;
 }
 ::ng-deep .magenta{
-    color: $color-4000;
+    color: $danger-10;
 }
 ::ng-deep .green{
-    color: $color-1800;
+    color: $success-3;
 }
 ::ng-deep .purple{
-    color: $color-4100;
+    color: $danger-12;
 }
 :host ::ng-deep{
     th:nth-child(2){

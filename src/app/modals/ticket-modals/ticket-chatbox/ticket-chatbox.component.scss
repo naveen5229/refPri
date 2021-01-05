@@ -3,7 +3,7 @@
 .table {
     font-size: $font-md-sm;
     thead {
-        background-color:$color-4200;
+        background-color:$secondary-23;
     }
     th,
     td {
@@ -19,7 +19,7 @@
     // min-height: 56vh;
     max-height: 56vh;
     overflow: auto;
-    background:$color-4400;
+    background:$light-2;
     margin-top: 0!important;
     padding-top: 2vh;
 }
@@ -29,23 +29,23 @@
     // text-align: right;
     background: #e0ff302e;
     //border: 1px solid #1def1d2e;
-    box-shadow: 0 1px 3px $color-4700;
+    box-shadow: 0 1px 3px $secondary-20;
     .quoted_msg {
-        background: $color-6200;
-        border-left: 2px solid $color-3000;
+        background: $light-8;
+        border-left: 2px solid $success-7;
     }
 }
 
 .other_chat {
     float: left;
-    background-color: $color-400;
+    background-color: $light-1;
     // border: 1px solid lightgray;
-    box-shadow: 0 1px 3px $color-4700;
+    box-shadow: 0 1px 3px $secondary-20;
 }
 
 .other_chat,
 .active_chat {
-    $color-400-space: pre-wrap;
+    $light-1-space: pre-wrap;
     max-width: 82%;
     margin-bottom: $margin-xs;
     border-radius: $radious-xs;
@@ -54,9 +54,9 @@
         //display: flow-root;
         // display: block;
         font-size: $font-sm-lg;
-        color:$color-6300;
+        color:$secondary-5;
         i {
-            color: $color-100;
+            color: $primary-11;
             font-size: $font-sm-sm;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
@@ -76,7 +76,7 @@
 }
 
 .bottom-block {
-    background: $color-4400;
+    background: $light-2;
     .button-box {
         display: inline-grid;
     }
@@ -85,7 +85,7 @@
 .modal-header.sub-title {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    color: $color-400;
+    color: $light-1;
 }
 
 .action-icon {
@@ -99,7 +99,7 @@
 
 :host::ng-deep {
     .highlight-blue {
-        color:$color-900
+        color:$primary-2
     }
 }
 
@@ -113,7 +113,7 @@
 }
 
 .reply_demand {
-    color: $color-800;
+    color: $danger-2;
 }
 
 .mentioned_user {
@@ -122,30 +122,30 @@
     overflow: auto;
     position: absolute;
     bottom: 60px;
-    background: $color-400;
+    background: $light-1;
     font-size:$font-sm-xxl;
     left: 15px;
     z-index: 1;
     border-radius: 4px;
-    border: 1px solid $color-5000;
-    box-shadow: 0 2px 4px$color-6000;
+    border: 1px solid $secondary-29;
+    box-shadow: 0 2px 4px $success-2;
     span,
     a { 
         display: block;
         cursor: pointer;
         padding: $padding-xxs $padding-md;
         letter-spacing: .5px;
-        color: $color-500;
+        color: $dark-1;
     }
     span:focus,
     a:focus {
-        background: $color-5800 !important;
+        background: $warning-3 !important;
         border: none;
     }
 }
 
 .send {
-    color: $color-100;
+    color: $primary-11;
     width: fit-content;
     transition: .5s;
     z-index: 10;
@@ -180,7 +180,7 @@
 }
 
 .add {
-    color: $color-6100;
+    color: $primary-7;
     padding: 0 $padding-sm;
     i {
         font-size:$font-sm-xxl;
@@ -199,9 +199,9 @@
 .chatmsg {
     height: auto !important;
     resize: none;
-    border: 1px solid $color-400;
-    background: $color-5900;
-    color: $color-500;
+    border: 1px solid $light-1;
+    background: $secondary-4;
+    color: $dark-1;
     padding-top: $padding-md!important;
 }
 
@@ -210,7 +210,7 @@
 }
 
 .chatmsg::placeholder {
-    color: $color-5900;
+    color: $secondary-4;
 }
 
 .cc_user {

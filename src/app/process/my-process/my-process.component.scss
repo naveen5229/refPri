@@ -1,11 +1,11 @@
 
 @import '../../style';
 :host ::ng-deep .fa-grip-horizontal {
-    color:$color-2700
+    color:$success-4
 }
 
 :host ::ng-deep .fa-handshake {
-    color: $color-2800;
+    color: $primary-3;
 }
 
 :host ::ng-deep #tableOwnedByMe,

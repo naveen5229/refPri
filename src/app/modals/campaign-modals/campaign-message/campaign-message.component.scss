@@ -4,7 +4,7 @@
 .table {
     font-size: 14px;
     thead {
-        background-color: $color-4200;
+        background-color: $secondary-23;
     }
     th,
     td {
@@ -19,21 +19,21 @@
 .chat_block {
     max-height: 59vh;
     overflow: auto;
-    background: $color-4400;
+    background: $light-2;
     margin-top: 0!important;
 }
 
 .active_chat {
     float: right;
     text-align: right;
-    background: $color-4300;
-    border: 1px solid $color-4300;
+    background: $success-1;
+    border: 1px solid $success-1;
 }
 
 .other_chat {
     float: left;
-    background-color: $color-400;
-    border: 1px solid $color-3600;
+    background-color: $light-1;
+    border: 1px solid $secondary-19;
 }
 
 .other_chat,
@@ -177,7 +177,7 @@
 .modal-header.sub-title {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    color: $color-400;
+    color: $light-1;
 }
 
 .action-icon {

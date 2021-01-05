@@ -5,11 +5,11 @@
 }
 
 :host ::ng-deep .red{
-    color:$color-800;
+    color:$danger-2;
 }
 
 :host ::ng-deep .green{
-    color:$color-1800;
+    color:$success-3;
     //height: calc(100vh - 185px)!important;
 }
 

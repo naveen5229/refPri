@@ -1,11 +1,11 @@
 
 @import '../../style.scss';
 :host ::ng-deep.blue{
-    color:$color-900;
+    color:$primary-2;
     text-decoration: underline;
 }
 .ng-star-inserted   { 
-    color: $color-800;
+    color: $danger-2;
 }
 :host ::ng-deep{
     th:nth-child(2){

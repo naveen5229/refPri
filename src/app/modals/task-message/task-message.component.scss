@@ -5,7 +5,7 @@
   font-size:$font-md-sm;
 
   thead {
-    background-color: $color-4200;
+    background-color: $secondary-23;
   }
 
   th,
@@ -30,7 +30,7 @@
   // min-height: 56vh;
   max-height: 56vh;
   overflow: auto;
-  background: $color-4400;
+  background: $light-2;
   margin-top: 0 !important;
   padding-top: 2vh;
 }
@@ -40,7 +40,7 @@
   // text-align: right;
   background: #e0ff302e;
   //border: 1px solid #1def1d2e;
-  box-shadow: 0 1px 3px $color-4700;
+  box-shadow: 0 1px 3px $secondary-20;
 
   .quoted_msg {
     background: #eff9c6;
@@ -50,9 +50,9 @@
 
 .other_chat {
   float: left;
-  background-color: $color-400;
+  background-color: $light-1;
   // border: 1px solid lightgray;
-  box-shadow: 0 1px 3px $color-4700;
+  box-shadow: 0 1px 3px $secondary-20;
   position: relative;
 
 }
@@ -78,7 +78,7 @@
     color: #676767;
 
     i {
-      color: $color-100;
+      color: $primary-11;
       font-size: $font-sm-sm;
       vertical-align: -webkit-baseline-middle;
 
@@ -107,7 +107,7 @@
 }
 
 .bottom-block {
-  background: $color-4400;
+  background: $light-2;
 
   .button-box {
     display: inline-grid;
@@ -246,7 +246,7 @@
 .modal-header.sub-title {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  color: $color-400;
+  color: $light-1;
 }
 
 .action-icon {
@@ -261,7 +261,7 @@
 
 :host::ng-deep {
   .highlight-blue {
-    color: $color-900;
+    color: $primary-2;
   }
 }
 
@@ -276,7 +276,7 @@
 }
 
 .reply_demand {
-  color: $color-800;
+  color: $danger-2;
 }
 
 .mentioned_user {
@@ -285,13 +285,13 @@
   overflow: auto;
   position: absolute;
   bottom: 60px;
-  background: $color-400;
+  background: $light-1;
   font-size: 12px;
   left: 15px;
   z-index: 1;
   border-radius: 4px;
-  border: 1px solid $color-5000;
-  box-shadow: 0 2px 4px $color-6000;
+  border: 1px solid $secondary-29;
+  box-shadow: 0 2px 4px $success-2;
 
   span,
   a {
@@ -299,18 +299,18 @@
     cursor: pointer;
     padding: 3px 10px;
     letter-spacing: .5px;
-    color: $color-500;
+    color: $dark-1;
   }
 
   span:focus,
   a:focus {
-    background: $color-5800 !important;
+    background: $warning-3 !important;
     border: none;
   }
 }
 
 .send {
-  color: $color-100;
+  color: $primary-11;
   width: fit-content;
   transition: .5s;
   z-index: 10;
@@ -345,7 +345,7 @@
 }
 
 .add {
-  color: $color-6100;
+  color: $primary-7;
   padding: 0 $padding-sm;
 
   i {
@@ -365,9 +365,9 @@
 .chatmsg {
   height: auto !important;
   resize: none;
-  border: 1px solid$color-400;
-  background: $color-5900;
-  color: $color-500;
+  border: 1px solid$light-1;
+  background: $secondary-4;
+  color: $dark-1;
   padding-top: 10px !important;
 }
 
@@ -376,7 +376,7 @@
 }
 
 .chatmsg::placeholder {
-  color: $color-5900;
+  color: $secondary-4;
 }
 
 .cc_user {
@@ -400,15 +400,15 @@
 }
 
 .user-active {
-  background: $color-5800;
+  background: $warning-3;
 }
 
 ::ng-deep .text-highlight {
-  background: $color-5800;
+  background: $warning-3;
 }
 
 ::ng-deep .text-focus-highlight {
-  background: $color-5800;
+  background: $warning-3;
   font-size: 12px;
-  border: 1px solid $color-500;
+  border: 1px solid $dark-1;
 }

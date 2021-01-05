@@ -3,8 +3,8 @@
 .fa-trash-alt {
   font-size: $font-sm-xxl;
   margin-right: $margin-md;
-  color: $color-800;
-  border-color: $color-800;
+  color: $danger-2;
+  border-color: $danger-2;
   padding:$padding-sm;
   border-radius: $radious-xxs;
 }
@@ -13,7 +13,7 @@
   // font-size: 12px;
   margin-right: $margin-md;
   //background-color: #3c6ac7;
-  color: $color-1400;
+  color: $primary-4;
   // border-color: #73a1ff;
   padding: 2px;
   border-radius: $radious-xxs;
@@ -26,8 +26,8 @@ table {
   thead {
     th {
       padding: 0.2rem !important;
-      background: $color-400 !important;
-      border: 6px solid $color-500 !important;
+      background: $light-1 !important;
+      border: 6px solid $dark-1 !important;
       font-size: .80rem;
     }
 

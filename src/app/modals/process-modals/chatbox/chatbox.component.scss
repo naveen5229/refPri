@@ -56,7 +56,7 @@
         font-size:$font-sm-lg;
         color: #676767;
         i {
-            color: $color-100;
+            color: $primary-11;
             font-size:$font-sm-sm;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
@@ -177,7 +177,7 @@
 //     animation-duration: 3s;
 // }
 // @media (print),
-// (prefers-$color-800uced-motion: $color-800uce) {
+// (prefers-$danger-2uced-motion: $danger-2uce) {
 //     .animated {
 //         -webkit-animation-duration: 1ms !important;
 //         animation-duration: 1ms !important;
@@ -225,7 +225,7 @@ smart-table {
 }
 
 .reply_demand {
-    color: $color-800;
+    color: $danger-2;
 }
 
 .mentioned_user {
@@ -247,7 +247,7 @@ smart-table {
         cursor: pointer;
         padding: 3px 10px;
         letter-spacing: .5px;
-        color:$color-500;
+        color:$dark-1;
     }
     span:focus,
     a:focus {
@@ -257,7 +257,7 @@ smart-table {
 }
 
 .send {
-    color: $color-100;
+    color: $primary-11;
     width: fit-content;
     transition: .5s;
     z-index: 10;
@@ -298,9 +298,9 @@ smart-table {
 .chatmsg {
     height: auto !important;
     resize: none;
-    border: 1px solid $color-400;
+    border: 1px solid $light-1;
     background: #d1ddff;
-    color:$color-500;
+    color:$dark-1;
     padding-top: 10px!important;
 }
 

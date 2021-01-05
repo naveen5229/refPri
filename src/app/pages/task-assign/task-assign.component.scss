@@ -1,7 +1,7 @@
 @import '../../style.scss';
 
 .edit-icon {
-  color: $color-900;
+  color: $primary-2;
   margin-right: 6px;
   cursor: pointer;
 }
@@ -9,7 +9,7 @@
 :host ::ng-deep .fa-check {
   border-radius: $radious-xxs;
   font-size: initial;
-  color: $color-1400;
+  color: $primary-4;
   margin-right: $margin-md;
   padding: 2px;
   cursor: pointer;
@@ -17,7 +17,7 @@
 
 :host ::ng-deep .fa-trash-alt {
   margin-right: $margin-md;
-  color:$color-800;
+  color:$danger-2;
   padding: 2px;
   border-radius: $radious-xxs;
   cursor: pointer;
@@ -26,29 +26,29 @@
 :host ::ng-deep .fa-eye {
   border-radius: $radious-xxs;
   margin-right: $margin-md;
-  color: $color-2900;
+  color: $danger-11;
   padding: 2px;
   cursor: pointer;
 }
 
 :host ::ng-deep .remove:hover {
-  background-color: $color-1100;
-  border-color: $color-1200;
+  background-color: $danger-7;
+  border-color: $danger-8;
 }
 
 .tabs_style {
   width: 100%;
   margin: 0px;
-  // border-bottom: 2px solid $color-5300;
+  // border-bottom: 2px solid $success-5;
   margin-bottom: $margin-md;
   padding-left: $padding-xs !important;
   li {
     padding: 5px 6px;
     list-style: none;
     margin-right: $margin-xs;
-    // background-color: $color-5300;
-    // border: 2px solid $color-5300;
-    color: $color-400;
+    // background-color: $success-5;
+    // border: 2px solid $success-5;
+    color: $light-1;
     border-bottom: 0px;
     display: inline-block;
     border-radius: $radious-xs $radious-xs 0px 0px;
@@ -56,14 +56,14 @@
     font-weight: normal;
     cursor: pointer;
     &.active {
-      background-color: $color-400;
-      color: $color-100;
-      // color: $color-5300;
+      background-color: $light-1;
+      color: $primary-11;
+      // color: $success-5;
       position: relative;
       &::after {
         content: "";
         display: block;
-        background-color: $color-400;
+        background-color: $light-1;
         height: 10px;
         width: 100%;
         position: absolute;
@@ -78,8 +78,8 @@ table{
   thead{
      th{
       padding: 0.2rem!important;
-      background: $color-400!important;
-      border: 6px solid $color-500!important;
+      background: $light-1!important;
+      border: 6px solid $dark-1!important;
       font-size: .80rem;
      }
   

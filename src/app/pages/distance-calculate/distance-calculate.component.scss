@@ -17,19 +17,19 @@ table {
 
 th {
 
-    background-color: $color-500 !important;
-    border: 1px solid $color-1000!important;
+    background-color: $dark-1 !important;
+    border: 1px solid $secondary-25!important;
     text-align: center!important;
     padding: $padding-sm!important;
-    color: $color-400!important;
+    color: $light-1!important;
     font-size: $font-sm-xxl!important;
 }
 
 td {
-    border: 1px solid $color-1000;
+    border: 1px solid $secondary-25;
     text-align: center;
     padding: $padding-sm;
-    color: $color-500;
+    color: $dark-1;
 
 
 }

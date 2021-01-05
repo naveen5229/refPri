@@ -14,7 +14,7 @@
 }
 
 :host ::ng-deep .fa-trash-alt {
-  color: $color-800;
+  color: $danger-2;
   font-size: $font-md-lg
   span {
     position: absolute;
@@ -24,8 +24,8 @@
     font-size:$font-sm-xl;
     left: -10px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px  rgba($color-500, 0.5);
-    box-shadow: 5px 2px 8px rgba($color-500, 0.5);
+    -webkit-box-shadow: 5px 2px 8px  rgba($dark-1, 0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1, 0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -35,10 +35,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: $color-800;
+    background-color: $danger-2;
     border-radius:$radious-xxs;
     padding: $padding-xs $padding-md;
-    color: $color-400;
+    color: $light-1;
     width: 100%;
   }
   span::after {
@@ -47,7 +47,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid $color-800;
+    border-top: 5px solid $danger-2;
     position: absolute;
     bottom: -5px;
     right: 24px;
@@ -58,5 +58,5 @@
 }
 .require {
   font-size:$font-md-xl;
-  color: $color-800;
+  color: $danger-2;
 }
