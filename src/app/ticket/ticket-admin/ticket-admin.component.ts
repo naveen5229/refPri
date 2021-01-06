@@ -200,7 +200,7 @@ export class TicketAdminComponent implements OnInit {
     return columns;
   }
   // end: processwise
-// start: processwise
+// start: userwise
 setTableUserWise(type) {
   this.userWiseTicketTable.data = {
     headings: this.generateHeadingsUserWiseTicket(),
@@ -233,6 +233,8 @@ getTableColumnsUserWiseTicket(type) {
           action: null,
           // icons: this.actionIcons(ticket, type)
         };
+      } else if(key.toLowerCase()=='tot. call cnt') {
+        column[key] = { value: ticket[key], class: 'blue', action: this.callDetails.bind(this, ticket,2,true) };
       } else {
         column[key] = { value: ticket[key], class: 'black', action: '' };
       }
@@ -243,16 +245,21 @@ getTableColumnsUserWiseTicket(type) {
   });
   return columns;
 }
-// end: processwise
+// end: userwise
 
-callDetails(ticket,type) {
+callDetails(ticket,type,isDate=false) {
+  let params = {
+    userId: ticket['_aduserid'],
+    type: type
+  }
+  if(isDate){
+    params['startDate'] = (this.searchTask.startDate) ? this.common.dateFormatter(this.searchTask.startDate) : null,
+    params['endDate'] = (this.searchTask.endDate) ? this.common.dateFormatter(this.searchTask.endDate) : null
+  }
   let dataparams = {
     view: {
       api: 'Ticket/getTicketSummaryById',
-      param: {
-        userId: ticket['_aduserid'],
-        type: type
-      }
+      param: params
     },
     title: "Call Log Details "+'(' + ticket['employee_name'] + ')'
   }

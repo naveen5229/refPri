@@ -823,32 +823,25 @@ export class CommonService {
     var ext = url.split('.').pop();
     let formats = ["jpeg", "jpg", "png", 'pdf'];
     console.log("ext:",ext);
+    let files = [{name:name,url:url}];
     if (formats.includes(ext.toLowerCase())) {
-      let images = [{name:name,image:url}];
-      this.openImageView(images);
+      this.openImageView(files);
     }else{
-      this.getFile(url,name,true);
+      this.getFile(files);
     }
   }
 
-  getFile(url,name,isDownload=false){
+  convertFileToBase64(files){
     return new Promise((resolve, reject) => {
       let params = {
-        url: url,
-        name: name
+        files: files
       };
-      this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
+      this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
         if(res['code']==1){
-          let b64encodedString = res['data']['base64'];
-          let fileName = res['data']['name'];
-          if(isDownload){
-            var blob = this.base64ToBlob(b64encodedString, 'text/plain');
-            saveAs(blob, fileName);
-          }
-          resolve(res);
+          resolve(res['data']);
         }else{
           this.showError(res['data']);
-          reject(res);
+          reject(res['data']);
         }
       }, err => {
         this.showError();
@@ -857,6 +850,41 @@ export class CommonService {
       });
       
     })
+  }
+
+  getFile(files){
+    this.convertFileToBase64(files).then(res=>{
+      let b64encodedString = res[0]['base64'];
+      let fileName = res[0]['name'];
+      var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+      saveAs(blob, fileName);
+    });
+    // return new Promise((resolve, reject) => {
+    //   let params = {
+    //     url: url,
+    //     name: name
+    //   };
+      
+    //   this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
+    //     if(res['code']==1){
+    //       let b64encodedString = res['data']['base64'];
+    //       let fileName = res['data']['name'];
+    //       if(isDownload){
+    //         var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+    //         saveAs(blob, fileName);
+    //       }
+    //       resolve(res['data']);
+    //     }else{
+    //       this.showError(res['data']);
+    //       reject(res['data']);
+    //     }
+    //   }, err => {
+    //     this.showError();
+    //     console.log('Error: ', err);
+    //     reject(err);
+    //   });
+      
+    // })
   }
 
   public base64ToBlob(b64Data, contentType='', sliceSize=512) {
@@ -979,15 +1007,21 @@ export class CommonService {
     return result;
   }
 
-  openImageView(images) {
-    console.log("openImageView", images);
-    const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.componentInstance.imageList = { images, title: 'Image' };
-    activeModal.componentInstance.isDownload = true;
-    activeModal.result.then((data) => {
-      if (data.response) {
-        this.getFile(images[0]['image'],images[0]['name'],true);
-      }
+  openImageView(files) {
+    console.log("openImageView", files);
+    this.convertFileToBase64(files).then(res=>{
+      let getFiles:any = res;
+      let img = getFiles.map(x=>{return{image:x.base64,name:x.name} });
+      const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.componentInstance.imageList = { images:img, title: 'Image' };
+      activeModal.componentInstance.isDownload = true;
+      activeModal.result.then((data) => {
+        if (data.response) {
+          let selectedImg = res[data.index];
+          var blob = this.base64ToBlob(selectedImg['base64'], 'text/plain');
+          saveAs(blob, selectedImg['name']);
+        }
+      });
     });
   }
 

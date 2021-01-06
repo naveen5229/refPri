@@ -19,7 +19,7 @@ export class ImageViewComponent implements OnInit {
   params = "";
   index = 0 ;
   imageList;
-  fullscreen = false;
+  fullscreen = true;
   isDownload = false;
   constructor(public api: ApiService,private activeModal: NgbActiveModal) {
       
@@ -72,7 +72,7 @@ export class ImageViewComponent implements OnInit {
   }
 
   closeModal(response) {
-    this.activeModal.close({response:response});
+    this.activeModal.close({response:response,index:this.index});
   }
 
   nextMove(){
