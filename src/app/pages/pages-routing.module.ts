@@ -59,8 +59,12 @@ import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.
 import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
 import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
 import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
+import { CustomeronboardingComponent } from './customeronboarding/customeronboarding.component';
 import { TicketAdminComponent } from '../ticket/ticket-admin/ticket-admin.component';
 import { CustomDashboardComponent } from '../ticket/custom-dashboard/custom-dashboard.component';
+import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
+import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
+import { UserExpensesComponent } from './user-expenses/user-expenses.component';
 
 const routes: Routes = [{
   path: '',
@@ -210,6 +214,12 @@ const routes: Routes = [{
     {
       path: 'user-mapping',
       component: UserMappingComponent,
+      canActivate: [AuthGuard, RouteGuard]
+
+    },
+    {
+      path: 'customeronboarding',
+      component: CustomeronboardingComponent,
       canActivate: [AuthGuard, RouteGuard]
 
     },
@@ -368,6 +378,21 @@ const routes: Routes = [{
     {
       path: 'on-site-images-summary',
       component: OnSiteImagesSummaryComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'entity-details',
+      component: EntityDeatilsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-wise-expenses',
+      component: UserWiseExpensesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-expenses',
+      component: UserExpensesComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

@@ -1,17 +1,18 @@
+@import '../../style.scss';
+
 .map-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 #map {
-    // height: 100%;
-    height: 400px;
-    width: 100%;
-    z-index: 1;
+  // height: 100%;
+  height: 400px;
+  width: 100%;
+  z-index: 1;
 }
-smart-table{
-    display: block;
-    height: calc(100vh - 160px);
-    overflow: auto;
+
+smart-table {
+  height: calc(100vh - 160px);
 }

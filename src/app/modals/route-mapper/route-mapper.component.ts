@@ -31,6 +31,7 @@ interface Location {
 })
 export class RouteMapperComponent implements OnInit {
   report: Report;
+  userId = null;
   startDate = new Date(this.common.getDate(-1));
   endDate = new Date(this.common.getDate())
   locations: Location[] = [];
@@ -61,6 +62,9 @@ export class RouteMapperComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal, private api: ApiService, private common: CommonService,
     private mapService: MapService) {
     this.report = this.common.params;
+    this.userId = this.common.params.userId;
+    this.startDate = this.common.params.startDate;
+    this.endDate = this.common.params.endDate;
     this.getLocationLogs();
   }
 
@@ -74,7 +78,7 @@ export class RouteMapperComponent implements OnInit {
   }
 
   getLocationLogs() {
-    const params = `fromDate=${this.common.dateFormatter(this.startDate)}&toDate=${this.common.dateFormatter(this.endDate)}&userId=${this.report.userId}`;
+    const params = `fromDate=${this.common.dateFormatter(this.startDate)}&toDate=${this.common.dateFormatter(this.endDate)}&userId=${this.userId}`;
     this.common.loading++;
     this.api.get('Admin/getLocationLogsWrtUser?' + params)
       .subscribe((res: any) => {

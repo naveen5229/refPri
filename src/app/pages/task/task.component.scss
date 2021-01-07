@@ -1,82 +1,71 @@
+@import '../../style.scss';
+
+
 .edit-icon {
-    color: blue;
+    color: $primary-2;
     margin-right: 6px;
     cursor: pointer;
 }
 
- :host ::ng-deep .fa-check {
+
+:host ::ng-deep .fa-check {
     font-size: initial;
-    color: darkblue;
+    color:$primary-4;
     cursor: pointer;
 }
 
  :host ::ng-deep .fa-trash-alt {
-    color: red;
+    color: $danger-2;
     cursor: pointer;
 }
 
  :host ::ng-deep .fa-eye {
     border-radius: 3px;
     margin-right: 10px;
-    color: #7b0579;
+    color: $danger-11;
     padding: 2px;
     cursor: pointer;
 }
 
  :host ::ng-deep .remove:hover {
-    background-color: #fd1361;
-    border-color: #fc0758;
+    background-color: $danger-7;
+    border-color: $secondary-17;
     cursor: pointer;
 }
 
 .tabs_style {
-    width: 100%;
-    margin: 0px;
-    // border-bottom: 2px solid #26a69a;
-    border-bottom: 2px solid #3366ff;
-    margin-bottom: 7px;
-    padding-left: 5px !important;
+    @include tab-style;
+    margin: 0 0 7px;
     li {
-        padding: 5px 6px;
-        list-style: none;
-        margin-right: 5px;
-        // background-color: #26a69a;
-        // border: 2px solid #26a69a;
-        background-color: #3366ff;
-        border: 2px solid #3366fe;
-        color: #fff;
-        border-bottom: 0px;
-        display: inline-block;
-        border-radius: 5px 5px 0px 0px;
-        font-size: 12px;
-        font-weight: normal;
-        cursor: pointer;
+     
+        @include tablist;
         &.active {
-            background-color: #fff;
-            color: #3366ff;
+            background-color: $light-1;
+            color: $primary-11;
             position: relative;
+            // top: 1px;
             &::after {
                 content: "";
                 display: block;
-                background-color: #fff;
+                background-color: $light-1;
                 height: 10px;
                 width: 100%;
                 position: absolute;
-                left: 0px;
+
             }
         }
     }
 }
 
 :host ::ng-deep .fa-edit {
-    color: green;
+    color: $success-3;
     font-size: 18px;
     cursor: pointer;
 }
 
 :host ::ng-deep .fa-comments {
     font-size: 18px;
-    color: limegreen;
+    color: $success-8;
     cursor: pointer;
     &.new-comment span {
         min-width: 13px;
@@ -87,8 +76,8 @@
         top: -3px;
         left: 1px;
         padding: 1px;
-        font-size: 8px;
-        color: #fff;
+        font-size: $font-sm-sm;
+        color: $light-1;
         text-align: center;
         vertical-align: middle;
         line-height: 11px;
@@ -108,16 +97,16 @@
         cursor: pointer;
     }
     .fa-bell {
-        color: gray;
+        color: $secondary-3;
     }
     .isRemind {
-        color: red;
+        color: $danger-2;
     }
     .reminderAdded {
-        color: #ffba12;
+        color: $warning-1;
     }
     .no-comment {
-        color: gray;
+        color: $secondary-3;
     }
 }
 
@@ -138,7 +127,7 @@
         width: 300px !important;
     }
     .searchselect .tagsinput{
-        border: 1px solid #3366ff!important;
+        border: 1px solid $primary-11!important;
         border-radius: 0px!important;
         margin-left: 1px!important;
         margin-top: 1px!important;
@@ -150,9 +139,8 @@
 }
 
 smart-table {
-    display: block;
    height: calc(100vh - 168px);
-    overflow: auto;
+
 }
 
 .sl-smart-table {
@@ -160,12 +148,12 @@ smart-table {
 }
 
 .searchbtn {
-    outline: 1px solid #3366ff;
+    outline: 1px solid $primary-11;
     border: 0;
 }
 @-moz-document url-prefix() {
     .searchbtn {
-        padding: 3px 3px 5px 3px !important;
+        padding:$padding-xxs $padding-xxs $padding-xs $padding-xxs !important;
     }
 }
 :host ::ng-deep #tableUnreadLeads {
@@ -177,8 +165,8 @@ smart-table {
     }
 }
 .byselect{
-    border: 1px solid #3366ff;
-    color: #7f7f7f;
+    border: 1px solid $primary-11;
+    color: $secondary-7;
     }
 .byselect:focus{
 outline: none;
@@ -204,6 +192,9 @@ outline: none;
    }
 }
 .selected {
-    background-color: #576c77;
+    background-color: $secondary-6;
 }
+
+
+
 

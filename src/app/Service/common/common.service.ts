@@ -9,6 +9,8 @@ import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
 import { Router } from '@angular/router';
 import { ApiService } from '../../Service/Api/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImageViewComponent } from '../../modals/image-view/image-view.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -28,7 +30,7 @@ export class CommonService {
     reject: "red",
     hold: "antiquewhite",
   }
-  constructor(private toastrService: NbToastrService,
+  constructor(private toastrService: NbToastrService,public modalService: NgbModal,
     private datePipe: DatePipe,public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
   showError(msg?, err?) {
@@ -759,9 +761,21 @@ export class CommonService {
     splitedMsg2.forEach((element2, index2) => {
       let splitedMsg = element2.split("\n");
       splitedMsg.forEach((element, index) => {
-        if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
-          // let fullURL = (element.match('http')) ? element : "http://" + element;
-          // let href_temp = '<a target="_blank" href=' + fullURL + '>' + element + '</a>';
+        let linkFound = false;
+        if(match == "www." && (element.match(match) || element.match('http://') || element.match('https://'))){
+          linkFound = true;
+        }else{
+          let totalSize = element.length;
+          let inIndex = element.indexOf('.in');
+          let comIndex = element.indexOf('.com');
+          let inFound = (inIndex>0 && ((totalSize - inIndex) ==3)) ? true : false;
+          let comFound = (comIndex>0 && ((totalSize - comIndex) ==4)) ? true : false;
+          if(inFound || comFound){
+            linkFound = true;
+          }
+        }
+        // if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
+        if(match == "www." && linkFound){
           let indexHTTP = element.indexOf("http://");
           let indexHTTPS = element.indexOf("https://");
           let indexWWW = element.indexOf("www.");
@@ -805,24 +819,72 @@ export class CommonService {
     return (mentionUserList.length > 0) ? mentionUserList : null;
   }
 
-  getFile(url,name){
-    let params = {
-      url: url,
-      name: name
-    };
-    this.api.post('Processes/downloadFileWithCustomName',params,"I").subscribe(res => {
-      if(res['code']==1){
-        let b64encodedString = res['data']['base64'];
-        let fileName = res['data']['name'];
-        var blob = this.base64ToBlob(b64encodedString, 'text/plain');
-        saveAs(blob, fileName);
-      }else{
-        this.showError(res['data']);
-      }
-    }, err => {
-      this.showError();
-      console.log('Error: ', err);
+  checkFile(url,name){
+    var ext = url.split('.').pop();
+    let formats = ["jpeg", "jpg", "png", 'pdf'];
+    console.log("ext:",ext);
+    let files = [{name:name,url:url}];
+    if (formats.includes(ext.toLowerCase())) {
+      this.openImageView(files);
+    }else{
+      this.getFile(files);
+    }
+  }
+
+  convertFileToBase64(files){
+    return new Promise((resolve, reject) => {
+      let params = {
+        files: files
+      };
+      this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
+        if(res['code']==1){
+          resolve(res['data']);
+        }else{
+          this.showError(res['data']);
+          reject(res['data']);
+        }
+      }, err => {
+        this.showError();
+        console.log('Error: ', err);
+        reject(err);
+      });
+      
+    })
+  }
+
+  getFile(files){
+    this.convertFileToBase64(files).then(res=>{
+      let b64encodedString = res[0]['base64'];
+      let fileName = res[0]['name'];
+      var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+      saveAs(blob, fileName);
     });
+    // return new Promise((resolve, reject) => {
+    //   let params = {
+    //     url: url,
+    //     name: name
+    //   };
+      
+    //   this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
+    //     if(res['code']==1){
+    //       let b64encodedString = res['data']['base64'];
+    //       let fileName = res['data']['name'];
+    //       if(isDownload){
+    //         var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+    //         saveAs(blob, fileName);
+    //       }
+    //       resolve(res['data']);
+    //     }else{
+    //       this.showError(res['data']);
+    //       reject(res['data']);
+    //     }
+    //   }, err => {
+    //     this.showError();
+    //     console.log('Error: ', err);
+    //     reject(err);
+    //   });
+      
+    // })
   }
 
   public base64ToBlob(b64Data, contentType='', sliceSize=512) {
@@ -852,7 +914,7 @@ export class CommonService {
         console.log('Name:', name);
         if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
           eve.preventDefault();
-          this.getFile(url,name);
+          this.checkFile(url,name);
           console.log('--------------------ITS FILE--------------------');
         }
         // console.log('url:', url)
@@ -918,6 +980,49 @@ export class CommonService {
       searchedIndex: searchedIndex
     }
     return result;
+  }
+
+  async handleFileSelection(event, format) {
+    let result = { name: null, file: null };
+    this.loading++;
+    await this.getBase64(event.target.files[0]).then((res: any) => {
+      this.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      let formats = (format && format.length) ? format :  ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+        result.name = file.name;
+        result.file =  res;
+      } else {
+        this.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        return false;
+      }
+      // console.log("attachmentFile:", file);
+    }, err => {
+      this.loading--;
+      this.showError(err);
+      console.error('Base Err: ', err);
+    })
+    return result;
+  }
+
+  openImageView(files) {
+    console.log("openImageView", files);
+    this.convertFileToBase64(files).then(res=>{
+      let getFiles:any = res;
+      let img = getFiles.map(x=>{return{image:x.base64,name:x.name} });
+      const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.componentInstance.imageList = { images:img, title: 'Image' };
+      activeModal.componentInstance.isDownload = true;
+      activeModal.result.then((data) => {
+        if (data.response) {
+          let selectedImg = res[data.index];
+          var blob = this.base64ToBlob(selectedImg['base64'], 'text/plain');
+          saveAs(blob, selectedImg['name']);
+        }
+      });
+    });
   }
 
 }

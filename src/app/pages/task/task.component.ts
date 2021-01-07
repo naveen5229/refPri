@@ -224,9 +224,9 @@ export class TaskComponent implements OnInit {
     let activeId = document.activeElement.id;
     //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
     //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
-    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
-      this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
-    }
+    // if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
+    //   this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
+    // }
 
   }
   getAllAdmin() {
@@ -249,8 +249,12 @@ export class TaskComponent implements OnInit {
     );
   }
   actionHandler(event) {
-    this.selectedRow = event.rowcount;
-    // console.log('row data again', this.unreadTaskForMeList[this.selectedRow]);
+    console.log('row data again:', event);
+    this.selectedRow = (event.smartId=='undefined') ? event.rowcount : event.smartId;//event.rowcount;
+    let activeId = document.activeElement.id;
+    if ((!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
+      this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
+    }
     //  this.transMessage(this, lead, type)
   }
   getUserGroupList() {
@@ -1868,6 +1872,12 @@ export class TaskComponent implements OnInit {
       console.log('reszponse 2nd', activeModal, type);
       type ? this.getTaskByType(type) : null;
       this.tableUnreadTaskForMeList.settings.arrow = true;
+      // if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) { } else
+       if (ticket._cc_user_id && !ticket._cc_status) {
+        this.ackTaskByCcUser(ticket, type);
+      } else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+        this.ackTaskByProjectUser(ticket, type);
+      }
     });
   }
 

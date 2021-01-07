@@ -1,7 +1,7 @@
+@import '../../style.scss';
+
 smart-table {
-    display: block;
     height: calc(100vh - 170px);
-    overflow: auto;
 }
 :host ::ng-deep {
     .tagsinput{
@@ -9,6 +9,6 @@ smart-table {
         overflow: auto;
     }
     .tagsinput p{
-        font-size: 12px!important;
+        font-size: $font-sm-xxl!important;
     }
 }

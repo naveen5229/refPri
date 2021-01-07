@@ -135,15 +135,16 @@ export class OnSiteImagesSummaryComponent implements OnInit {
   openImageView(shift) {
     console.log("OnSiteImagesSummaryComponent -> openImageView -> shift", shift)
     // return;
-    let images = [];
+    let images = null;
     images = shift._img.map(data => {
       return {
         name: data.doc_name,
         image: data.url,
       }
     });
-    this.common.params = { images, title: 'Image' };
+    // this.common.params = { images, title: 'Image' };
     const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.componentInstance.imageList = { images, title: 'Image' };
   }
 
 

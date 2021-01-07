@@ -1,8 +1,9 @@
+@import '../../style';
 .form_view_header{
     text-align: center;
     margin-bottom: 1rem;
     display: block;
-    font-weight: bold;
+    font-weight: $bold;
 }
 .paddingBTW{
     padding-bottom: 2rem;

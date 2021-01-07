@@ -1,6 +1,8 @@
 // @import 'https://github.com/daneden/animate.css/blob/master/animate.css';
+@import '../../../style';
+
 .table {
-    font-size: 14px;
+    font-size:$font-md-sm;
     thead {
         background-color: lightgrey;
     }
@@ -51,19 +53,19 @@
     span {
         //display: flow-root;
         // display: block;
-        font-size: 10px;
+        font-size:$font-sm-lg;
         color: #676767;
         i {
-            color: #3366ff;
-            font-size: 8px;
+            color: $primary-11;
+            font-size:$font-sm-sm;
             vertical-align: -webkit-baseline-middle;
             &.fa-star {
                 display: contents;
-                font-size: 10px;
+                font-size:$font-sm-lg;
             }
         }
         i.fa-sort-desc {
-            font-size: 14px;
+            font-size:$font-md-sm;
         }
     }
     label {
@@ -175,7 +177,7 @@
 //     animation-duration: 3s;
 // }
 // @media (print),
-// (prefers-reduced-motion: reduce) {
+// (prefers-$danger-2uced-motion: $danger-2uce) {
 //     .animated {
 //         -webkit-animation-duration: 1ms !important;
 //         animation-duration: 1ms !important;
@@ -218,12 +220,12 @@ smart-table {
     padding: 0;
     margin: 0;
     li {
-        font-size: 12px;
+        font-size:$font-sm-xxl;
     }
 }
 
 .reply_demand {
-    color: red;
+    color: $danger-2;
 }
 
 .mentioned_user {
@@ -233,7 +235,7 @@ smart-table {
     position: absolute;
     bottom: 60px;
     background: #ffffff;
-    font-size: 12px;
+    font-size:$font-sm-xxl;
     left: 15px;
     z-index: 1;
     border-radius: 4px;
@@ -245,7 +247,7 @@ smart-table {
         cursor: pointer;
         padding: 3px 10px;
         letter-spacing: .5px;
-        color: #000;
+        color:$dark-1;
     }
     span:focus,
     a:focus {
@@ -255,7 +257,7 @@ smart-table {
 }
 
 .send {
-    color: #3366ff;
+    color: $primary-11;
     width: fit-content;
     transition: .5s;
     z-index: 10;
@@ -296,9 +298,9 @@ smart-table {
 .chatmsg {
     height: auto !important;
     resize: none;
-    border: 1px solid white;
+    border: 1px solid $light-1;
     background: #d1ddff;
-    color: #000;
+    color:$dark-1;
     padding-top: 10px!important;
 }
 
@@ -314,4 +316,14 @@ smart-table {
     position: absolute;
     bottom: -18px;
     right: 0;
+}
+
+
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 12px;
+    border: 1px solid black;
 }

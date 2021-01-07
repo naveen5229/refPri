@@ -167,6 +167,7 @@ export class TicketComponent implements OnInit {
   openingFormInfo = [];
   closingFormInfo = [];
   primaryFormInfo = [];
+  attachmentFile = [{ name: null, file: null }];
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getTicketByType(101);
@@ -1442,4 +1443,58 @@ export class TicketComponent implements OnInit {
     document.getElementById('infoWindow').style.display = 'none';
     this.resetTicketForm();
   }
+
+  handleFileSelection(event, i) {
+    this.common.handleFileSelection(event,null).then(res=>{
+      console.log("handleFileSelection:",res);
+      this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+    },err=>{
+      this.common.showError();
+    });
+  }
+
+  uploadattachFile(arrayType, i) {
+    if (!this.attachmentFile[i] || !this.attachmentFile[i].file) {
+      this.common.showError("Browse a file first");
+      return false;
+    }
+    let refId = null;
+    if (arrayType == 'oddArray') {
+      refId = this.oddArray[i].r_colid;
+    } else {
+      refId = this.evenArray[i].r_colid;
+    }
+    let params = {
+      refId: (refId > 0) ? refId : null,
+      name: this.attachmentFile[i].name,
+      attachment: this.attachmentFile[i].file
+    }
+    this.common.loading++;
+    this.api.post('Ticket/uploadAttachment', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0]['r_id'] > 0) {
+          this.common.showToast(res['msg']);
+          this.attachmentFile[i].name = null;
+          this.attachmentFile[i].file = null;
+          if (arrayType == 'oddArray') {
+            this.oddArray[i].r_value = res['data'][0]['r_id'];
+          } else {
+            this.evenArray[i].r_value = res['data'][0]['r_id'];
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+      console.log("evenArray:::", this.evenArray[i]);
+      console.log("oddArray:::", this.oddArray[i]);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.error('Api Error:', err);
+    });
+  }
+
 }

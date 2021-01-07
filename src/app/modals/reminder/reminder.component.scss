@@ -1,7 +1,9 @@
+@import '../../style.scss';
+
 .row-border {
-    border-bottom: 1px solid gray;
-    margin-bottom: 5px;
-    padding-bottom: 10px;
+    border-bottom: 1px solid $secondary-3;
+    margin-bottom: $margin-xs;
+    padding-bottom: $padding-md;
 }
 
 .content {
@@ -19,7 +21,7 @@
     height: 100%;
     z-index: 1;
     opacity: .3;
-    background-color: #000;
+    background-color: $dark-1;
 }
 
 .custom-modal {
@@ -29,14 +31,14 @@
     right: 0;
     width: 85%;
     height: auto;
-    padding: 10px;
+    padding: $padding-md;
     z-index: 100;
     margin: 0 auto;
     padding: 0px;
     color: #333;
     background: transparent;
     border-radius: 0px;
-    box-shadow: none;
+      box-shadow: none;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -49,9 +51,9 @@
 
 .custom-modal-header {
     text-align: center;
-    background: #FF421A;
+    background: $danger-5;
     padding: 10px;
-    color: #fff;
+    color: $light-1;
     letter-spacing: .5px;
     font-size: 16px;
     border-radius: 10px 10px 0px 0px;
@@ -61,7 +63,7 @@
 }
 
 .custom-modal-content {
-    background: #fff;
+    background: $light-1;
     padding: 5px 10px 45px 10px;
     border-radius: 0px;
 }
@@ -74,47 +76,47 @@
 .custom-modal-footer {
     margin-top: 0;
     padding: 0;
-    background-color: #fff;
+    background-color: $light-1;
     border-radius: 0px 0px 10px 10px;
 }
 
 .modal-footer-btn {
     font-size: 12px;
     border-radius: 20px;
-    border: 1px solid #f2f2f2;
+    border: 1px solid $light-10;
     width: 110px;
-    color: #000;
+    color: $dark-1;
     width: 100px;
     max-width: 80%;
     height: 36px;
 }
 
 .forward-btn {
-    background: #FF421A;
+    background: $danger-5;
 }
 
 .green {
-    color: green;
+    color: $success-3;
 }
 
 .red {
-    color: red;
+    color: $danger-2;
 }
 
 .suggestions {
     position: absolute;
     z-index: 999;
-    background: #fff;
+    background: $light-1;
     width: 90%;
     margin: 1px 2px;
-    padding: 0px 8px;
-    font-size: 11px;
+    padding: 0 $padding-sm;
+    font-size: $font-sm-xl;
     letter-spacing: .5px;
     box-shadow: 1px 1px 3px grey;
 }
 
 .suggestion {
-    border-bottom: 1px solid #e2e2e2;
+    border-bottom: 1px solid $light-9;
     padding: 8px 0px 1px 0px;
     margin: 2px 0px 2px 0px;
 }
@@ -124,20 +126,20 @@
 }
 
 .input-group label {
-    font-size: 12px;
+    font-size:$font-sm-xxl;
     font-weight: bold;
     letter-spacing: .5px;
-    padding: 3px;
+    padding: $padding-xxs;
 }
 
 .input-group input,
 .input-group textarea {
     display: block;
     width: 100%;
-    border: 1px solid #c2c2c2;
+    border: 1px solid $secondary-20;
     border-radius: 3px;
-    font-size: 12px;
-    padding: 5px 5px;
+    font-size: $font-sm-xxl;
+    padding: $padding-xs $padding-xs;
     max-width: 100%;
     min-height: 27px;
 }
@@ -150,7 +152,7 @@
 
 .btn-date,
 .btn-hour {
-    background: #f2f2f2;
+    background: $light-10;
     // padding: 5px 6px;
     font-weight: bold;
     margin-right: 3px;
@@ -158,7 +160,7 @@
     margin-top: 8px;
     display: inline-block;
     width: 45%;
-    font-size: 12px;
+    font-size: $font-sm-xxl;
     text-align: center;
     height: 30px;
     line-height: 30px;
@@ -166,7 +168,7 @@
     font-family: monospace;
     max-width: 100%;
     display: inline-block;
-    padding: 0px 10px;
+    padding: 0 $padding-md;
 }
 
 .btn-hour {
@@ -175,34 +177,34 @@
 
 .active-btn,
 .active-hr {
-    background: #FF421A;
-    color: #fff;
-    font-size: 14px;
+    background: $danger-5;
+    color: $light-1;
+    font-size: $font-md-sm;
 }
 
 .row-style {
-    font-size: 14px; // font-weight: bold;
+    font-size: $font-md-sm; // font-weight: bold;
     text-align: center;
     width: calc(100% + 20px);
     margin-left: -10px;
-    background: #f2f2f2;
-    border-top: 2px solid #e2e2e2;
-    border-bottom: 1px solid #e2e2e2;
+    background: $light-10;
+    border-top: 2px solid $light-9;
+    border-bottom: 1px solid $light-9;
 }
 
 .active-col {
-    background: #fff;
-    color: #FF421A;
+    background: $light-1;
+    color: $danger-5;
     font-weight: bold;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius:$radious-xs;
+    font-size: $font-md-md;
 }
 
 .hour-row-1,
 .hour-row-4 {
     width: 20px;
     padding: 0px;
-    font-size: 10px;
+    font-size:$font-sm-lg;
     height: 20px;
     line-height: 20px;
 }
@@ -211,14 +213,15 @@
 .hour-row-3 {
     width: 30px;
     padding: 0px;
-    font-size: 10px;
+    font-size:$font-sm-lg;
 }
 
 .back-btn {
     position: absolute;
     left: 10px;
-    font-size: 13px;
+    font-size: $font-sm-xxl+1;
     margin-top: 3px;
+    cursor: pointer;
 }
 
 .back-btn * {

@@ -1,10 +1,10 @@
+@import '../../style';
+
 :host ::ng-deep .fa-trash-alt {
-    font-size: 18px;
-    color: red;
+    font-size: $font-md-lg;
+    color: $danger-2;
     cursor: pointer;
 }
 smart-table{
-    display: block;
     height: calc(100vh - 160px);
-    overflow: auto;
 }

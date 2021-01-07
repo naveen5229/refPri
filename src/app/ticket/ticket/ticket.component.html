@@ -184,13 +184,11 @@
                                 </select>
 
                                 <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
-                                    <span *ngIf="oddArray[i].r_url">
-                                        <a target="_blank" [href]="oddArray[i].r_url"
-                                            [download]="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                                     </span>
-                                    <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i"
-                                        (change)="handleFileSelection($event,i)"> -->
-                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
                                 </label>
                             </div>
                         </div>
@@ -251,17 +249,13 @@
                                 </select>
 
                                 <!-- attachment -->
-                                <!-- <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
-                                    <span *ngIf="evenArray[i].r_url">
-                                        <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url"
-                                            [download]="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
-                                    </span> -->
-                                <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i"
-                                        (change)="handleFileSelection($event,i)"> -->
-                                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                                <!-- <button type="button" class="btn btn-primary btn-sm col-4"
-                                        (click)="uploadattachFile('evenArray',i)">Upload</button> -->
-                                <!-- </div> -->
+                                <label class="custom-file-upload p-0" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                                </label>
                             </div>
                         </span>
                     </div>
@@ -400,7 +394,10 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
+                                <input *ngIf="opening.r_coltype!='attachment'" type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
+                                <span *ngIf="opening.r_coltype=='attachment' && opening.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(opening.r_url,opening.r_doc_name)">{{opening.r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -416,7 +413,10 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
+                                <input *ngIf="primary.r_coltype!='attachment'" type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
+                                <span *ngIf="primary.r_coltype=='attachment' && primary.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(primary.r_url,primary.r_doc_name)">{{primary.r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -432,7 +432,10 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
+                                <input *ngIf="closing.r_coltype!='attachment'" type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
+                                <span *ngIf="closing.r_coltype=='attachment' && closing.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(closing.r_url,opening.r_doc_name)">{{closing.r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -451,7 +454,10 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <input *ngIf="oddArray[i].r_coltype!='attachment'" type="text" class="form-control" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <span *ngIf="oddArray[i].r_coltype=='attachment' && oddArray[i].r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -464,7 +470,10 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <input *ngIf="evenArray[i].r_coltype!='attachment'" type="text" class="form-control" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <span *ngIf="evenArray[i].r_coltype=='attachment' && evenArray[i].r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>

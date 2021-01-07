@@ -1,6 +1,7 @@
+@import '../../style.scss';
 .no-record {
     text-align: center;
-    color: red;
+    color: $danger-2;
     padding-left: 40%;
   }
   //::ng-deep  .black {
@@ -9,7 +10,5 @@
 
 
   smart-table{
-    display: block;
-    height: calc(100vh - 188px);
-    overflow: auto;
+    height: calc(100vh - 180px);
 }

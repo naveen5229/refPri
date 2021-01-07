@@ -1,3 +1,4 @@
+@import '../../style.scss';
 // :host::ng-deep{
 //     .tableFixHead{
 //         height: auto !important;
@@ -7,50 +8,36 @@
 //     display: block;
 //     max-height: calc(100vh - 370px);
 //     overflow: auto;
+
 // }
 
-#devices{
-    :host::ng-deep{
-        .suggestion{
-            text-transform: uppercase !important;
-        }
+#devices {
+  :host::ng-deep {
+    .suggestion {
+      text-transform: uppercase !important;
     }
+  }
 }
+
 .exel-icon {
-    font-size: 30px;
-    color: #217346;
+  font-size: $font-lg-xl;
+  color: $success-2;
+}
+
+table {
+  margin-bottom: 0rem;
+  thead {
+    display: table;
+    //width: 100%;
+    table-layout: fixed;
+    th {
+      min-width: 135px;
+      word-break: keep-all;
+      white-space: nowrap;
+    }
   }
 
-table{
-    margin-bottom: 0rem;
-    thead{
-       display: table;
-       //width: 100%;
-       table-layout: fixed;
-       th{
-        padding: .2rem!important;
-        background: #fff!important;
-        border: 6px solid #000!important;
-        min-width: 135px;
-        word-break: keep-all;
-        white-space: nowrap;
-       }
-     
-     
-    }
-  
-    tbody{
-        overflow-y: auto;
-        display: block;
-        width: 100%;
-        table-layout: fixed;
-        overflow: auto;
-        max-height: calc(100vh - 238px);
-        tr{
-          display: table;
-          table-layout: fixed;
-          width: 100%;
-        }
-    
-    }
+  tbody {
+    max-height: calc(100vh - 238px);
   }
+}

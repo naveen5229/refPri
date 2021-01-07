@@ -96,7 +96,7 @@ export class DocumentListingComponent implements OnInit {
     // end: Documents
 
   getFiles(url,name){
-    this.common.getFile(url,name)
+    this.common.checkFile(url,name)
   }
 
   closeModal(response) {
