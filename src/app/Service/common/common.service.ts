@@ -286,6 +286,7 @@ export class CommonService {
   }
 
   getBase64(files) {
+    console.log("🚀 ~ file: common.service.ts ~ line 289 ~ CommonService ~ getBase64 ~ files", files)
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(files);
@@ -811,7 +812,8 @@ export class CommonService {
   checkMentionedUser(userList, str) {
     let mentionUserList = [];
     userList.forEach((element, index) => {
-      if (str.match(element.name)) {
+      let matchstr = "@"+element.name;
+      if (str.match(matchstr)) {
         // console.log("element:", element);
         mentionUserList.push(element);
       }
