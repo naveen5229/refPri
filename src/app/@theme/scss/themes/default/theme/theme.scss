@@ -466,7 +466,7 @@
   .attachment-view {
     width: 100%;
     position: absolute;
-    z-index: 1;
+    z-index: 20;
     background: $secondary-19;
   }
 
@@ -975,9 +975,9 @@
   color: $light-1;
 }
 
-thead {
-  color: $light-1;
-}
+// thead {
+//   color: $light-1;
+// }
 
 tbody tr:nth-child(even) {
   background-color: $secondary-31;
