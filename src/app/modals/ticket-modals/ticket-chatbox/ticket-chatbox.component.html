@@ -10,7 +10,8 @@
         <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
                 (click)="search();isAttachmentShow=false"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
-                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow;isSearchShow=false"></i></span>
+                aria-hidden="true" title="View Attachment"
+                (click)="isAttachmentShow=!isAttachmentShow;isSearchShow=false"></i></span>
     </div>
 </div>
 <div class="modal-body">
@@ -152,19 +153,19 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
-                <div class="col-9">
+            <div *ngIf="attachmentFile && attachmentFile.length > 0" class="row">
+                <div class="col-9" *ngFor="let attachment of attachmentFile;let i = index">
                     <!-- {{attachmentFile.name}} -->
                     <!-- <span><img height="50" width="50" src="{{attachmentFile.file}}"
                             alt="{{attachmentFile.name}}"></span> -->
-
                     <span>
-                        <img height="25" width="25" src="{{attachmentFile.file}}" *ngIf="!fileType">
-                        <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
-                        <span>{{attachmentFile.name}}</span>
+                        <img height="25" width="25" src="{{attachment.file}}" *ngIf="!attachment['format']">
+                        <i [class]="attachment['format']" *ngIf="attachment['format']" aria-hidden="true"
+                            style="font-size: 22px;"></i>
+                        <span>{{attachment.name}}</span>
                     </span>
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
-                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="remove"
+                        (click)="removeFile(i)"></i>
                 </div>
             </div>
         </div>
@@ -173,14 +174,18 @@
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
+                            [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''"
+                            [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}
                     </td>
                 </tr>
                 <tr valign="middle" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto" class="d-flex align-items-center">
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;" [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''" [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
+                            [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''"
+                            [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
                         <button
                             *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId)"
