@@ -10,6 +10,7 @@ import { AddFieldComponent } from '../../modals/process-modals/add-field/add-fie
 import { AddCategoryComponent } from '../../modals/process-modals/add-category/add-category.component';
 import { AddDashboardFieldComponent } from '../../modals/process-modals/add-dashboard-field/add-dashboard-field.component';
 import { SettingsComponent } from '../../modals/process-modals/settings/settings.component';
+import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -236,6 +237,15 @@ export class ProcessListComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         this.getProcessList();
+      }
+    });
+  }
+
+  addGlobalfield(){
+    this.common.params = {process:{id:47,name:'test 3'}};
+    const activeModal = this.modalService.open(AddGlobalFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
       }
     });
   }

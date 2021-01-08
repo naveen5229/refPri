@@ -116,6 +116,7 @@ import { AddProcessPropertyComponent } from './modals/process-modals/add-process
 import { CalulateTravelDistanceComponent } from './modals/calulate-travel-distance/calulate-travel-distance.component';
 import { MobileNoComponent } from './modals/mobile-no/mobile-no.component';
 import { LocationOnSiteImageComponent } from './modals/location-on-site-image/location-on-site-image.component';
+import { AddGlobalFieldComponent } from './modals/process-modals/add-global-field/add-global-field.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -199,7 +200,8 @@ const PAGE_COMPONENTS = [
   AddProcessPropertyComponent,
   CalulateTravelDistanceComponent,
   MobileNoComponent,
-  LocationOnSiteImageComponent
+  LocationOnSiteImageComponent,
+  AddGlobalFieldComponent
 ];
 
 @NgModule({
