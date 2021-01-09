@@ -18,6 +18,12 @@
     }
 }
 
+ .comment_reply {
+    position: relative;
+    right: -6px;
+    top: -2px;
+}
+
 smart-table {
     height: calc(100vh - 168px);
 }
@@ -33,3 +39,17 @@ smart-table {
     font-weight: $bold;
 }
 
+// .active_chat .comment_reply{
+//     position: relative;
+//     right: -6px;
+//     top: 3px;
+// }
+
+// :host ::ng-deep .active_chat .comment_reply {
+//     position: relative;
+//     right: -6px;
+//     top: 3px;
+//   }
+
+
+ 
