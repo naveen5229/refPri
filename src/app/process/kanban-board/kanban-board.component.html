@@ -1,0 +1,56 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-4">
+        <h5 class="heading-design">Kanban Board</h5>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <div class="row" *ngIf="!dashboardState">
+      <div class="col-12">
+        <smart-table *ngIf="processList.length!=0" [data]="processListTable.data" [settings]="processListTable.settings"
+          id="processList" class="sl-smart-table">
+        </smart-table>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="dashboardState">
+      <button class="btn btn-primary margin" (click)="dashboardState = false">Back</button>
+    </div>
+
+    <div class="row" style="width: 100%;overflow-x: auto;flex-wrap: inherit" *ngIf="dashboardState">
+      <div class="cardStyle ml-2"  *ngFor="let card of cards;let i = index">
+        <div style="height: 5px;background: blueviolet;"></div>
+        <label>status</label>
+        <h5>{{card.title}}</h5>
+        <div style="width: 100%;height: 2rem;text-align: center;font-size: 20px;background: lightgrey;"><label>+</label>
+        </div>
+
+        <div cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event);" [id]="card.id"
+          [cdkDropListConnectedTo]="card.connectedto" style="min-width: 300px;height:470px;overflow:auto">
+          <div class="row" style="margin: 5px;border: 1px solid gray;border-left: 5px solid green;border-radius: 5px;"
+            *ngFor="let data of card.data" cdkDrag (cdkDragStarted)="onDragStarted($event)"
+            (cdkDragEnded)="onDragEnded($event)">
+            <div class="col-12"><label>{{data.title}}</label></div>
+            <div class="col-12">
+              <h5 style="color: purple;">{{data.type}}</h5>
+            </div>
+            <div class="col-12">
+              <h5>{{data.desc}}</h5>
+            </div>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-6" style="float: left;">
+                  <div class="rounded-circle">{{data.user}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
