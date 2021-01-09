@@ -23,6 +23,16 @@ export class AddGlobalFieldComponent implements OnInit {
     { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' }
   ];
 
+  restrictionForm = {
+    matrixId : null,
+    info: [
+      {id:1, refType:2, name: "Transaction Form", isShow: true},
+      {id:2, refType:3, name: "Primary Info Form", isShow: true},
+      {id:3, refType:0, name: "State Form", isShow: true},
+      {id:4, refType:1, name: "Action Form", isShow: true}
+    ]
+  };
+
   form = {
     processId:null,
     requestId:null,
@@ -78,22 +88,20 @@ export class AddGlobalFieldComponent implements OnInit {
     }
   }
 
-  // openOptionModal(){
-  //   if(this.form.isFixedValue){
-  //     this.fixValuesTemp = this.form.fixValues;
-  //     document.getElementById("addGlobalFieldModal").style.display = "block";
-  //   }else{
-  //     this.fixValuesTemp = [{option: ''}]; 
-  //     this.form.fixValues = [{option: ''}];
-  //   }
-  // };
+  openFieldInfoModal(row){
+    if(row._matrixid){
+      this.restrictionForm.matrixId = row._matrixid;
+      document.getElementById("fieldInfoModal").style.display = "block";
+    }
+  };
 
-  // closeOptionModal(res){
-  //   if(res){
-  //     this.form.fixValues = this.fixValuesTemp;
-  //   }
-  //   document.getElementById("addGlobalFieldModal").style.display = "none";
-  // }
+  closeFieldInfoModal(res){
+    this.restrictionForm.matrixId = null;
+    this.restrictionForm.info.forEach(element => {
+      element.isShow = true;
+    });
+    document.getElementById("fieldInfoModal").style.display = "none";
+  }
 
   resetData() {
     this.form.requestId = null;
@@ -106,6 +114,10 @@ export class AddGlobalFieldComponent implements OnInit {
   }
   
   AddField() {
+    if (((this.form.name.toLowerCase()).includes('mobile') || (this.form.name.toLowerCase()).includes('contact')) && this.form.typeId.includes('number')) {
+      this.common.showError('Please use Global Fields to add contact name or contact number.');
+      return false;
+    }
     let childArray = (this.form.childArray && this.form.childArray.length > 0) ? this.form.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
     let tmpJson = {
       param: this.form.name,
@@ -244,9 +256,14 @@ export class AddGlobalFieldComponent implements OnInit {
   actionIcons(row) {
     let icons = [];
     icons.push(
-      { class: "fas fa-trash-alt", action: this.deleteRow.bind(this, row) },
-      { class: "fas fa-edit edit", action: this.setData.bind(this, row) },
-    )
+      { class: "fas fa-info-circle", action: this.openFieldInfoModal.bind(this, row) },
+    );
+    if(!row._used_in){
+      icons.push(
+        { class: "fas fa-trash-alt", action: this.deleteRow.bind(this, row) },
+        { class: "fas fa-edit edit", action: this.setData.bind(this, row) },
+      );
+    }
     return icons;
   }
 
@@ -333,6 +350,44 @@ export class AddGlobalFieldComponent implements OnInit {
         console.log("AddFieldTableComponent:", data);
       }
     });
+  };
+
+  saveFieldRestriction(){
+    console.log("saveFieldRestriction:",this.restrictionForm);
+    if (this.restrictionForm.matrixId) {
+      let atleastOne = this.restrictionForm.info.find(x=>x.isShow);
+      console.log("atleastOne:",atleastOne);
+      if(!atleastOne){
+        this.common.showError("Select atlease one form");
+      }
+      return false;
+      let params = {
+        processId: this.form.processId,
+        matrixId: this.restrictionForm.matrixId,
+        info: JSON.stringify(this.restrictionForm.info)
+      }
+      let apiName = 'Processes/addProcessGlobalFieldRestriction';
+      this.common.loading++;
+      this.api.post(apiName, params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.getProcessGlobalField();
+            this.closeFieldInfoModal(true);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Invalid Request");
+    }
   }
 
 }

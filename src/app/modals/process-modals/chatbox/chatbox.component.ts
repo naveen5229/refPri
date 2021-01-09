@@ -76,10 +76,11 @@ export class ChatboxComponent implements OnInit {
   activeTab = 'actionList';
   priOwnId = null;
   stateOwnerId = null;
-  attachmentFile = {
-    name: null,
-    file: null
-  };
+  // attachmentFile = {
+  //   name: null,
+  //   file: null
+  // };
+  attachmentFile = [];
   attachmentList = [];
   isAttachmentShow = false;
   actionOwnerForm = {
@@ -270,7 +271,7 @@ export class ChatboxComponent implements OnInit {
   }
 
   saveLeadMessage() {
-    if (this.taskMessage == "" && !this.attachmentFile.file) {
+    if (this.taskMessage == "" && !(this.attachmentFile && this.attachmentFile.length)) {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
@@ -289,8 +290,9 @@ export class ChatboxComponent implements OnInit {
         ticketId: this.ticketId,
         status: this.statusId,
         message: formatedMsg,//this.taskMessage,
-        attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        // attachment: this.attachmentFile.file,
+        // attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        attachments: JSON.stringify(this.attachmentFile.map(attachments=> {return{name: attachments.name, file: attachments.file}})),
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
         users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
@@ -300,8 +302,9 @@ export class ChatboxComponent implements OnInit {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
-          this.attachmentFile.file = null;
-          this.attachmentFile.name = null;
+          // this.attachmentFile.file = null;
+          // this.attachmentFile.name = null;
+          this.attachmentFile = [];
           this.resetQuotedMsg();
           this.getLeadMessage();
           this.getAttachmentByLead();
@@ -319,27 +322,27 @@ export class ChatboxComponent implements OnInit {
 
   handleFileSelection(event) {
     this.common.loading++;
-    this.common.getBase64(event.target.files[0]).then((res: any) => {
-      // console.log("ChatboxComponent -> handleFileSelection -> event.target.files[0]", event.target.files[0])
-      this.common.loading--;
-      let file = event.target.files[0];
-      // console.log("Type:", file, res);
-      var ext = file.name.split('.').pop();
-      this.formatIcon(ext);
-      // let formats = ["image/jpeg", "image/jpg", "image/png", 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
-      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext.toLowerCase())) {
-      } else {
-        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
-        return false;
-      }
-      this.attachmentFile.name = file.name;
-      this.attachmentFile.file = res;
-      // console.log("attachmentFile:", this.attachmentFile)
-    }, err => {
-      this.common.loading--;
-      console.error('Base Err: ', err);
-    })
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.common.getBase64(event.target.files[i]).then((res: any) => {
+        let file = event.target.files[i];
+        var ext = file.name.split('.').pop();
+        let format = this.formatIcon(ext);
+        let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+        if (formats.includes(ext.toLowerCase())) {
+        } else {
+          this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+          return false;
+        }
+        // this.attachmentFile.name = file.name;
+        // this.attachmentFile.file = res;
+        this.attachmentFile.push({ name: file.name, file: res, format:format });
+        console.log("attachmentFile:", this.attachmentFile);
+      }, err => {
+        this.common.loading--;
+        console.error('Base Err: ', err);
+      })
+    }
+    this.common.loading--;
   }
 
   formatIcon(ext) {
@@ -351,7 +354,13 @@ export class ChatboxComponent implements OnInit {
       case 'csv': icon = 'fas fa-file-csv'; break;
       default: icon = null;
     }
+    return icon;
     this.fileType = icon;
+  }
+
+  removeFile(i){
+    this.attachmentFile.splice(i,1);
+    console.log('after delete',this.attachmentFile);
   }
 
   onPaste(event: any) {
@@ -372,7 +381,9 @@ export class ChatboxComponent implements OnInit {
     // console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
-    selectedFile.target.files.push(this.files[0].file);
+    this.files.map(files => {
+      selectedFile.target.files.push(files.file)
+    })
     this.handleFileSelection(selectedFile);
   }
 

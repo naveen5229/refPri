@@ -154,7 +154,7 @@
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
                         <input type="file" class="file-control" id="chat-attachment"
-                            (change)="handleFileSelection($event)">
+                            (change)="handleFileSelection($event)" multiple>
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
@@ -165,18 +165,15 @@
                             class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
-            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
-                <div class="col-9">
-                    <!-- {{attachmentFile.name}} -->
-                    <!-- <span><img height="50" width="50" src="{{attachmentFile.file}}"
-                            alt="{{attachmentFile.name}}"></span> -->
+            <div *ngIf="attachmentFile && attachmentFile.length > 0" class="row">
+                <div class="col-9" *ngFor="let attachment of attachmentFile;let i = index">
                     <span>
-                        <img height="25" width="25" src="{{attachmentFile.file}}" *ngIf="!fileType">
-                        <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
-                        <span>{{attachmentFile.name}}</span>
+                        <img height="25" width="25" src="{{attachment.file}}" *ngIf="!attachment['format']">
+                        <i [class]="attachment['format']" *ngIf="attachment['format']" aria-hidden="true" style="font-size: 22px;"></i>
+                        <span>{{attachment.name}}</span>
                     </span>
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
-                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="remove"
+                        (click)="removeFile(i)"></i>
                 </div>
             </div>
         </div>

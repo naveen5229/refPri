@@ -19,6 +19,11 @@
   </div>
 <!-- start: addformfiled -->
   <div *ngIf="isShowField">
+    <div class="row">
+      <div class="col small">
+        <span class="text-danger">*</span>Use global field "contact name" and "mobile number" to add in contact into the contact list and to show on the dashboard of the ticket.
+      </div>
+    </div>
     <div class="row mb-2">
       <div class="col-3 mr-0">
           <label>Type</label>
@@ -68,14 +73,25 @@
 
 
 <!--start: add-field-modal -->
-<div class="modal mt-2" id="addGlobalFieldModal">
+<div class="modal mt-2" id="fieldInfoModal">
   <div class="modal-dialog modal-md">
       <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title">Dropdown Option</h5>
-              <button type="button" class="close" data-dismiss="modal" (click)="closeOptionModal(false)">&times;</button>
+              <h5 class="modal-title">Field Restriction</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeFieldInfoModal(false)">&times;</button>
           </div>
           <div class="modal-body">
+            <div *ngFor="let r of restrictionForm.info" class="row">
+              <div class="col-6">
+                <label><input type="checkbox" [(ngModel)]="r.isShow"> {{r.name}}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col text-right">
+                <button class="btn btn-danger btn-sm mr-1" name="infoCancelBtn" (click)="closeFieldInfoModal(false)">Cancel</button>
+                <button class="btn btn-primary btn-sm" name="infoSubmitBtn" (click)="saveFieldRestriction()">Save</button>
+              </div>
+            </div>
               <!-- <div class="row form-group">
                 <div class="col-12">
                   <div class="row mb-2">
