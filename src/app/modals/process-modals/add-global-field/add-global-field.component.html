@@ -6,16 +6,28 @@
 </div>
 <div class="modal-body">
   <div *ngIf="!isShowField">
-    <div class="row mb-2">
-      <div *ngFor="let t of types;let i=index;" class="col-2 text-center" [ngClass]="i==(types.length-1) ? '' : 'pr-0'">
-        <div class="card text-center cursor-pointer" (click)="openAddFieldModal(t)" [title]="t.title">
-          <span *ngIf="t.id=='text'" class="mt-1"><strong><i>T</i></strong></span>
-          <span *ngIf="t.id!='text'" class="mt-1"><i [ngClass]="t.icon"></i></span>
-          <div class="card-body pr-1 pl-1"><strong>{{t.name}}</strong></div>
+    <div class="row">
+      <div class="col-10">
+        <div class="row mb-2">
+          <div *ngFor="let t of types;let i=index;" class="col-2 text-center" [ngClass]="i==(types.length-1) ? '' : 'pr-0'">
+            <div class="card text-center cursor-pointer" (click)="openAddFieldModal(t)" [title]="t.title">
+              <span *ngIf="t.id=='text'" class="mt-1"><strong><i>T</i></strong></span>
+              <span *ngIf="t.id!='text'" class="mt-1"><i [ngClass]="t.icon"></i></span>
+              <div class="card-body pr-1 pl-1"><strong>{{t.name}}</strong></div>
+            </div>
+          </div>
         </div>
+        <smart-table [data]="table.data" [settings]="table.settings" id="addGlobalField"></smart-table>
+      </div>
+      <div class="col-2" style="border-left:1px solid black;">
+        <label><b>Master Fields</b></label>
+        <table class="table border">
+            <tr *ngFor="let m of masterFiledList;let i=index">
+                <td>{{m.col_name}}</td>
+            </tr>
+        </table>
       </div>
     </div>
-    <smart-table [data]="table.data" [settings]="table.settings" id="addGlobalField"></smart-table>
   </div>
 <!-- start: addformfiled -->
   <div *ngIf="isShowField">

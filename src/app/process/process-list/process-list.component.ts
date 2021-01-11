@@ -11,6 +11,7 @@ import { AddCategoryComponent } from '../../modals/process-modals/add-category/a
 import { AddDashboardFieldComponent } from '../../modals/process-modals/add-dashboard-field/add-dashboard-field.component';
 import { SettingsComponent } from '../../modals/process-modals/settings/settings.component';
 import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
+import { AssignFieldsComponent } from '../../modals/process-modals/assign-fields/assign-fields.component';
 
 @Component({
   selector: 'ngx-process-list',
@@ -169,12 +170,22 @@ export class ProcessListComponent implements OnInit {
   }
 
   openFieldModal(process, type) {
-    let refData = {
+    // let refData = {
+    //   id: process._id,
+    //   type: type
+    // }
+    // this.common.params = { ref: refData };
+    // const activeModal = this.modalService.open(AddFieldComponent, { size: (type == 2) ? 'xl' : 'lg', container: 'nb-layout', backdrop: 'static' });
+    let ref = {
       id: process._id,
       type: type
     }
-    this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: (type == 2) ? 'xl' : 'lg', container: 'nb-layout', backdrop: 'static' });
+    let title = "Transaction Form Assignment";
+    if(type==3){
+      title = "Primary Info Form Assignment";
+    }
+    this.common.params = { ref: ref, processId: process._id, title: title };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
   addProcessUsers(process) {

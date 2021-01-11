@@ -26,10 +26,10 @@ export class AddGlobalFieldComponent implements OnInit {
   restrictionForm = {
     matrixId : null,
     info: [
-      {id:1, refType:2, name: "Transaction Form", isShow: true},
-      {id:2, refType:3, name: "Primary Info Form", isShow: true},
-      {id:3, refType:0, name: "State Form", isShow: true},
-      {id:4, refType:1, name: "Action Form", isShow: true}
+      {id:1, refType:2, name: "Transaction Form", isShow: false},
+      {id:2, refType:3, name: "Primary Info Form", isShow: false},
+      {id:3, refType:0, name: "State Form", isShow: false},
+      {id:4, refType:1, name: "Action Form", isShow: false}
     ]
   };
 
@@ -55,11 +55,14 @@ export class AddGlobalFieldComponent implements OnInit {
     }
   };
   globalFieldList = [];
+  isShowField = false;
+  masterFiledList = [];
 
   constructor(public api: ApiService,public common: CommonService,public activeModal: NgbActiveModal,private modalService: NgbModal) {
     if(this.common.params){
       this.form.processId = (this.common.params.process.id) ? this.common.params.process.id : null;
       this.getProcessGlobalField();
+      this.getGlobalFormField();
     }
    }
 
@@ -69,7 +72,25 @@ export class AddGlobalFieldComponent implements OnInit {
     this.activeModal.close({ response: res });
   }
 
-  isShowField = false;
+  getGlobalFormField() {
+    this.masterFiledList = [];
+    let apiName = "Processes/getGlobalFormField";
+    let params = "?refId=" + this.form.processId + "&refType=2";
+    this.common.loading++;
+    this.api.get(apiName + params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        this.masterFiledList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Err:', err);
+    });
+  }
+
   openAddFieldModal(type){
     if(type && type.id){
       this.form.typeId = type.id;
@@ -91,6 +112,13 @@ export class AddGlobalFieldComponent implements OnInit {
   openFieldInfoModal(row){
     if(row._matrixid){
       this.restrictionForm.matrixId = row._matrixid;
+      if(row._col_visibility && row._col_visibility.length){
+        row._col_visibility.forEach(element => {
+          let selected = this.restrictionForm.info.find(x=>x.refType==element.form);
+          console.log("selected:",selected);
+          selected.isShow = (selected) ? true : false;
+        });
+      }
       document.getElementById("fieldInfoModal").style.display = "block";
     }
   };
@@ -98,7 +126,7 @@ export class AddGlobalFieldComponent implements OnInit {
   closeFieldInfoModal(res){
     this.restrictionForm.matrixId = null;
     this.restrictionForm.info.forEach(element => {
-      element.isShow = true;
+      element.isShow = false;
     });
     document.getElementById("fieldInfoModal").style.display = "none";
   }
@@ -355,28 +383,31 @@ export class AddGlobalFieldComponent implements OnInit {
   saveFieldRestriction(){
     console.log("saveFieldRestriction:",this.restrictionForm);
     if (this.restrictionForm.matrixId) {
-      let atleastOne = this.restrictionForm.info.find(x=>x.isShow);
-      console.log("atleastOne:",atleastOne);
-      if(!atleastOne){
-        this.common.showError("Select atlease one form");
-      }
-      return false;
+      // let atleastOne = this.restrictionForm.info.find(x=>x.isShow);
+      // console.log("atleastOne:",atleastOne);
+      // if(!atleastOne){
+      //   this.common.showError("Select atlease one form");
+      // }
+      let selected = this.restrictionForm.info.filter(x=>x.isShow==true);
+      let info = (selected && selected.length) ? selected.map(y=>{return {form:y.refType} }) : null;
       let params = {
         processId: this.form.processId,
         matrixId: this.restrictionForm.matrixId,
-        info: JSON.stringify(this.restrictionForm.info)
+        info: JSON.stringify(info)
       }
       let apiName = 'Processes/addProcessGlobalFieldRestriction';
+      console.log("saveFieldRestriction:",params,apiName);
+      // return false;
       this.common.loading++;
       this.api.post(apiName, params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
-            this.common.showToast(res['data'][0].y_msg);
+            this.common.showToast(res['msg']);
             this.getProcessGlobalField();
             this.closeFieldInfoModal(true);
           } else {
-            this.common.showError(res['data'][0].y_msg);
+            this.common.showError(res['msg']);
           }
         } else {
           this.common.showError(res['msg']);

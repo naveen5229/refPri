@@ -10,8 +10,10 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./assign-fields.component.scss']
 })
 export class AssignFieldsComponent implements OnInit {
+  title = "Assign Columns";
   fields = [];
   unassign = [];
+  processId = null;
   refId = null;
   refType = null;
   assign = {
@@ -29,7 +31,9 @@ export class AssignFieldsComponent implements OnInit {
     if (this.common.params && this.common.params.ref) {
       this.refId = this.common.params.ref.id;
       this.refType = this.common.params.ref.type;
-      this.formType = common.params.formType;
+      this.formType = this.common.params.formType;
+      this.title = (this.common.params.title) ? this.common.params.title : "Assign Columns";
+      this.processId = (this.common.params.processId) ? this.common.params.processId : null;
       this.getFields();
     }
   }
@@ -43,8 +47,7 @@ export class AssignFieldsComponent implements OnInit {
   getFields() {
     this.common.loading++;
     let api = this.formType == 11 ? 'Ticket/getTicketMatrixCalAssigned?' : 'Processes/getProcessFormField?';
-    let params = "refId=" + this.refId +
-      "&refType=" + this.refType
+    let params = "processId=" + this.processId +"&refId=" + this.refId +"&refType=" + this.refType
     this.api.get(api + params)
       .subscribe(res => {
         this.common.loading--;
