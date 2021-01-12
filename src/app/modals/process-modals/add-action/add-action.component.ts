@@ -7,6 +7,7 @@ import { AddFieldComponent } from '../add-field/add-field.component';
 import { stateActionMapping } from '../../state-action-mapping/state-action-mapping';
 import { UserEsclationComponent } from '../user-esclation/user-esclation.component';
 import { AddProcessPropertyComponent } from '../add-process-property/add-process-property.component';
+import { AssignFieldsComponent } from '../assign-fields/assign-fields.component';
 
 @Component({
   selector: 'ngx-add-action',
@@ -250,6 +251,13 @@ export class AddActionComponent implements OnInit {
         console.log(data.response);
       }
     });
+    // let ref = {
+    //   id: action._action_id,
+    //   type: 1
+    // }
+    // let title = "Action Form Assignment";
+    // this.common.params = { ref: ref, processId: this.actionForm.process.id, title: title };
+    // const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
   editAction(action) {
