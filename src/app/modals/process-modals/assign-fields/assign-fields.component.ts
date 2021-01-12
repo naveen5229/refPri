@@ -3,6 +3,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddGlobalFieldComponent } from '../add-global-field/add-global-field.component';
 
 @Component({
   selector: 'ngx-assign-fields',
@@ -192,5 +193,14 @@ export class AssignFieldsComponent implements OnInit {
     console.log("AssignFieldsComponent -> markImportant -> item", item)
     item.r_isdashboard_info = !item.r_isdashboard_info;
   }
+
+  addGlobalfield(){
+    this.common.params = {process:{id:this.processId,name:null}};
+    const activeModal = this.modalService.open(AddGlobalFieldComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getFields();
+    });
+  }
+
 }
 

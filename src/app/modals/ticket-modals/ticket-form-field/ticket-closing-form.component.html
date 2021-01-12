@@ -56,7 +56,7 @@
                           <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                       </span>
                       <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
-                      <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                      <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
                     </div>
                 </div>
         </div>
@@ -112,7 +112,7 @@
                   <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
               </span>
                 <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
-                <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
             </div>
           </div>
         </span>
