@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EntityFormComponent } from '../../modals/entity-form/entity-form.component';
+import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 
@@ -75,6 +77,7 @@ export class EntityDeatilsComponent implements OnInit {
   }
 
   refresh() {
+    this.activeTab = 'entityType';
     this.getEntityType();
   }
 
@@ -248,8 +251,10 @@ export class EntityDeatilsComponent implements OnInit {
       { class: "fas fa-edit", action: this.edit.bind(this, entity, type), txt: '', title: "Edit" },
     ];
     if (type === 'entityList') {
-      icons.push(
-        { class: "fas fa-phone", action: this.contact.bind(this, entity), txt: '', title: "View Contacts" });
+      icons.push({ class: "fas fa-phone", action: this.contact.bind(this, entity), txt: '', title: "View Contacts" });
+      // icons.push({ class: "fab fa-wpforms", action: this.addEntityFormMatrix.bind(this, entity, type), txt: '', title: "Open Entity Form" });
+    }else if(type === 'entityType') {
+      // icons.push({ class: "fas fa-plus-square text-primary", action: this.addGlobalfield.bind(this, entity, type), txt: '', title: "Add Field" });
     }
     return icons;
   }
@@ -399,4 +404,23 @@ export class EntityDeatilsComponent implements OnInit {
     });
     console.log(apiBase, params);
   }
+
+  addGlobalfield(entity,type){
+    this.common.params = {process:{id:entity._id,name:entity.name},fromPage:3};
+    const activeModal = this.modalService.open(AddGlobalFieldComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+      }
+    });
+  }
+
+  addEntityFormMatrix(entity,type){
+    this.common.params = {entity:{id:entity._id,name:entity.name,entity_type_id:entity._entity_type_id,isDisabled:false},title:"Entity Form"};
+    const activeModal = this.modalService.open(EntityFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+      }
+    });
+  }
+
 }

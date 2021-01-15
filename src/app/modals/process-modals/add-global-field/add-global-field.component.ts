@@ -11,7 +11,7 @@ import { AddFieldTableComponent } from '../add-field-table/add-field-table.compo
   styleUrls: ['./add-global-field.component.scss']
 })
 export class AddGlobalFieldComponent implements OnInit {
-  title = "Add Global Field";
+  title = "Add Field";
   addBtn = "Add";
   cancelBtn = "Cancel";
   types = [
@@ -38,6 +38,7 @@ export class AddGlobalFieldComponent implements OnInit {
     requestId:null,
     typeId: null,
     name: null,
+    order:null,
     isFixedValue:false,
     fixValues: [{option: ''}],
     childArray: []
@@ -57,12 +58,16 @@ export class AddGlobalFieldComponent implements OnInit {
   globalFieldList = [];
   isShowField = false;
   masterFiledList = [];
+  fromPage = null; //null=process,1=ticket,3=entity
 
   constructor(public api: ApiService,public common: CommonService,public activeModal: NgbActiveModal,private modalService: NgbModal) {
     if(this.common.params){
       this.form.processId = (this.common.params.process.id) ? this.common.params.process.id : null;
+      this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
       this.getProcessGlobalField();
-      this.getGlobalFormField();
+      if(!this.fromPage){
+        this.getGlobalFormField();
+      }
     }
    }
 
@@ -103,10 +108,10 @@ export class AddGlobalFieldComponent implements OnInit {
   closeAddGlobalFieldModal(res){
     this.resetData();
     this.isShowField = false;
-    this.title = "Add Global Field";
-    if(res){
-      this.closeModal(true);
-    }
+    this.title = "Add Field";
+    // if(res){
+    //   this.closeModal(true);
+    // }
   }
 
   openFieldInfoModal(row){
@@ -135,6 +140,7 @@ export class AddGlobalFieldComponent implements OnInit {
     this.form.requestId = null;
     this.form.typeId = null;
     this.form.name = null;
+    this.form.order = null;
     this.form.isFixedValue = false;
     this.form.fixValues = [{option: ''}];
     this.form.childArray = [];
@@ -152,6 +158,7 @@ export class AddGlobalFieldComponent implements OnInit {
       type: this.form.typeId,
       drpOption: (this.form.isFixedValue) ? this.form.fixValues : null,
       is_required: false,
+      order: this.form.order,
       param_child: childArray
     }
     let params = {
@@ -187,6 +194,9 @@ export class AddGlobalFieldComponent implements OnInit {
       return false;
     }
     let apiName = 'Processes/addProcessGlobalField';
+    if(this.fromPage==3){
+      apiName = "Entities/addEntityGlobalField";
+    }
     console.log("apiName:", apiName,params); 
     // return false;
     this.common.loading++;
@@ -210,6 +220,9 @@ export class AddGlobalFieldComponent implements OnInit {
   getProcessGlobalField() {
     let params = "?processId=" + this.form.processId;
     let apiName = 'Processes/getProcessGlobalField';
+    if(this.fromPage==3){
+      apiName = "Entities/getEntityGlobalField";
+    }
     // console.log("apiName:", apiName); return false;
     this.common.loading++;
     this.api.get(apiName + params).subscribe(res => {
@@ -283,9 +296,11 @@ export class AddGlobalFieldComponent implements OnInit {
 
   actionIcons(row) {
     let icons = [];
-    icons.push(
-      { class: "fas fa-info-circle", action: this.openFieldInfoModal.bind(this, row) },
-    );
+    if(!this.fromPage){
+      icons.push(
+        { class: "fas fa-info-circle", action: this.openFieldInfoModal.bind(this, row) },
+      );
+    }
     if(!row._used_in){
       icons.push(
         { class: "fas fa-trash-alt", action: this.deleteRow.bind(this, row) },
@@ -311,6 +326,9 @@ export class AddGlobalFieldComponent implements OnInit {
       activeModal.result.then(data => {
         if (data.response) {
           let apiName = 'Processes/addProcessGlobalField';
+          if(this.fromPage==3){
+            apiName = "Entities/addEntityGlobalField";
+          }
           console.log("apiName:", apiName,params); 
           // return false;
           this.common.loading++;
@@ -349,6 +367,7 @@ export class AddGlobalFieldComponent implements OnInit {
     console.log("data edit:", data);
     this.form.typeId = data.param_type;
     this.form.name = data.param_name;
+    this.form.order = (data.param_order) ? data.param_order : null;
     if (data._param_child && data._param_child.length > 0) {
       data._param_child.map((ele, index) => {
         this.form.childArray.push({ param: '', type: '', order: null, is_required: false, _param_info: null, _param_id: null, _used_in: null });

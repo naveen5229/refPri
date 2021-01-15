@@ -79,6 +79,17 @@ export class AutoSuggestionComponent implements OnInit {
       search: ['']
     });
   }
+  
+  ngOnChanges(changes) {
+    if (changes.preSelected) {
+      this.preSelected = changes.preSelected.currentValue;
+      this.preSelected && this.handlePreSelection();
+      if (this.isMultiSelect) {
+        this.selectedSuggestions = this.preSelected || [];
+      }
+    }
+
+  }
 
   ngAfterViewInit() {
     if (this.preSelected) this.handlePreSelection();
@@ -269,10 +280,5 @@ export class AutoSuggestionComponent implements OnInit {
     }
   }
 
-  ngOnChanges() {
-    setTimeout(() => {
-      console.log(this.el.nativeElement.offsetWidth);
-    })
-  }
 
 }

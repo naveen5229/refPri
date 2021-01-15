@@ -31,13 +31,13 @@
   </div>
 <!-- start: addformfiled -->
   <div *ngIf="isShowField">
-    <div class="row">
+    <!-- <div class="row">
       <div class="col small">
         <span class="text-danger">*</span>Use global field "contact name" and "mobile number" to add in contact into the contact list and to show on the dashboard of the ticket.
       </div>
-    </div>
+    </div> -->
     <div class="row mb-2">
-      <div class="col-3 mr-0">
+      <div class="col-2 mr-0">
           <label>Type</label>
           <input type="text" name="type" id="type" [(ngModel)]="form.typeId" class="form-control" readonly>
       </div>
@@ -45,12 +45,16 @@
           <label>Field Name</label>
           <input type="text" name="name" id="name" [(ngModel)]="form.name" class="form-control" maxlength="25">
       </div>
-      <div *ngIf="form.typeId =='table'" class="col-3 pt-4">
+      <div *ngIf="fromPage==3" class="col-2 mr-0">
+        <label>Order</label>
+        <input type="number" name="order" id="order" min="0" maxlength="25" [(ngModel)]="form.order" class="form-control">
+      </div>
+      <div *ngIf="form.typeId =='table'" class="col-2 pt-4">
           <span class="cursor-pointer" title="Add Table Column" (click)="openAddFieldTable()">
             <i class="fa fa-table" aria-hidden="true"></i>
           </span>
       </div>
-      <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="col-3 pt-4">
+      <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="col-2 pt-4">
         <label><input type="checkbox" [(ngModel)]="form.isFixedValue"> Is Dropdown ?</label>
       </div>
       <div class="pt-4 text-right" [ngClass]="(['text','number','table'].includes(form.typeId)) ? 'col-3' : 'col-6'">

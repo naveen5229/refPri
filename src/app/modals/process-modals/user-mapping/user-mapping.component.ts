@@ -16,6 +16,12 @@ export class UserMappingComponent implements OnInit { // use from two page proce
     processId: null,
     users: []
   };
+  userFormNew = {
+    processId: null,
+    user: { id: null, name: null,groupId:null},
+    isAdmin: false,
+    requestId: null
+  };
   fromPage;
 
   constructor(public activeModal: NgbActiveModal,
@@ -25,6 +31,7 @@ export class UserMappingComponent implements OnInit { // use from two page proce
     public userService: UserService) {
     if (this.common.params && this.common.params.process_id) {
       this.userForm.processId = this.common.params.process_id;
+      this.userFormNew.processId = this.common.params.process_id;
       this.userList = this.common.params.adminList;
       this.fromPage = this.common.params.fromPage;
       if (this.fromPage == "ticket") {
@@ -63,19 +70,18 @@ export class UserMappingComponent implements OnInit { // use from two page proce
   }
 
   changeUsers(event) {
-    console.log(event);
+    // console.log(event);
     let userExist = this.userForm.users.map(user => { return { id: user.id, name: user.name, is_admin: user.is_admin } });
-    console.log("userExist:", userExist);
+    // console.log("userExist:", userExist);
     if (event && event.length) {
       this.userForm.users = event.map(user => { return { id: user.id, name: user.name, is_admin: false } });
-      console.log("selected users:", this.userForm.users);
+      // console.log("selected users:", this.userForm.users);
     } else {
       this.userForm.users = [];
     }
 
     for (let i = 0; i < this.userForm.users.length; i++) {
       let aa = userExist.find(x => { return (x.id == this.userForm.users[i].id && x.is_admin) });
-      console.log("aa:", aa);
       this.userForm.users[i].is_admin = (aa) ? true : false;
     };
   }
@@ -102,7 +108,6 @@ export class UserMappingComponent implements OnInit { // use from two page proce
     }
     this.common.loading++;
     this.api.post(apiName, params).subscribe(res => {
-      console.log(res);
       this.common.loading--;
       if (res['code'] == 1) {
         // this.resetTask();
@@ -120,6 +125,48 @@ export class UserMappingComponent implements OnInit { // use from two page proce
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  saveUserOrGroup() {
+    if (!this.userFormNew.user.id) {
+      let eMsg = "User/Group is missing";
+      this.common.showError(eMsg);
+      return false;
+    }
+    const params = {
+      processId: this.userFormNew.processId,
+      userId: this.userFormNew.user.id,
+      groupId: this.userFormNew.user.id,
+      isAdmin: this.userFormNew.isAdmin,
+      requestId: this.userFormNew.requestId
+    };
+    let apiName = 'Processes/addUserMappingNew';
+    console.log("saveUserOrGroup:",apiName,params); return false;
+    this.common.loading++;
+    this.api.post(apiName, params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        // this.resetTask();
+        if (res['data'][0]['y_id'] > 0) {
+          this.common.showToast(res['data'][0].y_msg)
+          this.closeModal(true);
+        } else {
+          this.common.showError(res['data'][0].y_msg)
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  resetUserForm(){
+    this.userFormNew.user = { id: null, name: null, groupId: null};
+    this.userFormNew.isAdmin = false;
+    this.userFormNew.requestId = null;
   }
 
 }
