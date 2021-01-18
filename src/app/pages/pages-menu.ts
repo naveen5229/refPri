@@ -375,12 +375,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/graphical-reports',
         home: true,
       },
-      // {
-      //   title: 'Kanban Board',
-      //   icon: 'grid-outline',
-      //   link: '/pages/kanban-board',
-      //   home: true,
-      // }
+      {
+        title: 'Kanban Board',
+        icon: 'grid-outline',
+        link: '/pages/kanban-board',
+        home: true,
+      }
     ]
   },
   {

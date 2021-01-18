@@ -7,6 +7,8 @@ import { AddTransactionActionComponent } from '../../modals/process-modals/add-t
 import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../Service/user/user.service';
+import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'ngx-kanban-board',
@@ -26,9 +28,15 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
   cards = [];
+  cardsForFilter = [];
   adminList = [];
   processId = null;
   processName = null;
+  issueCategory = true;
+  cardsUserGroup = [];
+  cardsForFilterByUser = [];
+  filterUserGroup = [];
+  
 
   constructor(
     public common: CommonService,
@@ -45,8 +53,13 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   refresh() {
-    this.getProcessListByUser();
-    this.getAllAdmin();
+    if (this.dashboardState) {
+      this.goToBoard({ _id: this.processId, name: this.processName });
+      this.getProcessListByUser();
+    } else {
+      this.getProcessListByUser();
+      this.getAllAdmin();
+    }
   }
 
   getProcessListByUser() {
@@ -55,6 +68,7 @@ export class KanbanBoardComponent implements OnInit {
       this.common.loading--;
       if (res['code'] == 1) {
         this.processList = res['data'] || [];
+        console.log("🚀 ~ file: kanban-board.component.ts ~ line 70 ~ KanbanBoardComponent ~ this.api.get ~ this.processList", this.processList)
         this.setProcessList();
       } else {
         this.common.showError(res['msg']);
@@ -126,9 +140,9 @@ export class KanbanBoardComponent implements OnInit {
 
   actionIcons(lead) {
     let Icons = [{
-      class: "fa fa-eye",
+      class: "btn btn-primary cursor-pointer",
       action: this.goToBoard.bind(this, lead),
-      txt: "",
+      txt: "View Board",
       title: "View Board",
     }];
 
@@ -136,7 +150,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   goToBoard(lead) {
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 177 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead);
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead)
     this.processId = lead._id;
     this.processName = lead.name;
 
@@ -144,7 +158,11 @@ export class KanbanBoardComponent implements OnInit {
     this.common.loading++;
     this.api.get(`Processes/getProcessBoardView?` + params).subscribe((res) => {
       this.common.loading--;
-      this.cards = res['data'] || [];
+      let boardData = res['data'] || [];
+      this.cards = boardData;
+      this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
+      this.placeCardLength(this.cards);
+      this.getAllUserGroup(this.cards);
       this.dashboardState = true;
     }, (err) => {
       this.common.loading--;
@@ -152,10 +170,45 @@ export class KanbanBoardComponent implements OnInit {
     });
   }
 
+  placeCardLength(boardData) {
+    if (boardData) {
+      boardData.forEach(element => {
+        if (element.data) {
+          element.transCount = element.data.filter(obj => obj._is_action === 0).length;
+          element.actionCount = element.data.filter(obj => obj._is_action === 1).length;
+        }
+      });
+    }
+  }
+
+  getAllUserGroup(boardData) {
+    this.cardsUserGroup = [];
+    let userGroup = [];
+    if (boardData) {
+      boardData.forEach(element => {
+        if (element.data) {
+          element.data.forEach(data => {
+            userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff' });
+          })
+        }
+      });
+    }
+    let groupBy = _.groupBy(userGroup, data => { return data.id });
+    Object.keys(groupBy).map(key => {
+      this.cardsUserGroup.push(groupBy[key][0]);
+    });
+  }
+
+  goToList() {
+    this.dashboardState = false;
+    this.processId = null;
+    this.processName = null;
+    this.getProcessListByUser();
+  }
+
   onDragStarted(event: CdkDragStart<string[]>) {
     // let scrollWidth = document.getElementById('cardField').offsetWidth;
     // console.log("🚀 ~ file: kanban-board.component.ts ~ line 157 ~ KanbanBoardComponent ~ onDragStarted ~ scrollWidth", scrollWidth)
-    console.log("onDragStarted:", event);
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
       connTo.forEach(e2 => {
@@ -167,7 +220,6 @@ export class KanbanBoardComponent implements OnInit {
     }
   };
   onDragEnded(event: CdkDragEnd<string[]>) {
-    console.log("onDragEnded:", event);
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
       connTo.forEach(e2 => {
@@ -178,14 +230,12 @@ export class KanbanBoardComponent implements OnInit {
       });
     }
   };
-  
 
-  drop(event: CdkDragDrop<string[]>, index) {
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 86 ~ KanbanBoardComponent ~ drop ~ event", event, index);
 
+  drop(event: CdkDragDrop<string[]>) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-
     } else {
       console.log('Pd', event.previousContainer.data)
       // transferArrayItem(event.previousContainer.data,
@@ -199,18 +249,32 @@ export class KanbanBoardComponent implements OnInit {
       let moveFrom = this.cards.findIndex(data => data.id === event.previousContainer.id);
       let moveTo = this.cards.findIndex(data => data.id === event.container.id);
       let isComplete = moveTo > moveFrom ? true : false;
-      console.log('index from To', moveFrom, moveTo, isComplete);
       if (!event.isPointerOverContainer) {
         return;
       }
       this.cards.forEach((data, i) => {
         if (data.id === event.container.id) {
           console.log('index', data, i);
+          if (data.data === null) {
+            data.data = [];
+          }
           data.data.push(JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex])));
           if (event.previousContainer.data[event.previousIndex]['_is_action'] === 1) {
-            this.openTransAction(event.previousContainer.data[event.previousIndex], null, null, isComplete);
+            let lead = event.previousContainer.data[event.previousIndex];
+            lead['_state_id'] = this.cards[moveFrom]['_state_id'];
+            lead['_state_name'] = this.cards[moveFrom]['title'];
+            this.openTransAction(lead, null, null, isComplete);
           } else {
             // this.openTransFormData(event.previousContainer.data[event.previousIndex],null,null);
+            let transaction = {
+              _transaction_id: event.previousContainer.data[event.previousIndex]['_transaction_id'],
+              _state_id: this.cards[moveFrom]['_state_id'],
+              _next_state_id: this.cards[moveTo]['_state_id'],
+              state_name: this.cards[moveFrom]['title'],
+              _next_state_name: this.cards[moveTo]['title'],
+              _state_form: event.previousContainer.data[event.previousIndex]['_state_form']
+            }
+            this.saveTransNextState(transaction);
           }
         }
         setTimeout(() => {
@@ -220,8 +284,6 @@ export class KanbanBoardComponent implements OnInit {
         }, 200);
       })
     }
-
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 86 ~ KanbanBoardComponent ~ drop ~ event", this.cards)
   }
 
   movedIn(event) {
@@ -235,13 +297,12 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   openTransAction(lead, type, formType = null, isComplete: Boolean = null) {
-    console.log("openTransAction", lead);
     let formTypeTemp = 0;
-    // if (!formType) {
-    //   formTypeTemp = ([2, 6, 7].includes(type)) ? 1 : 0;
-    // } else {
-    //   formTypeTemp = formType;
-    // }
+    if (!formType) {
+      formTypeTemp = 0;
+    } else {
+      formTypeTemp = formType;
+    }
     let actionData = {
       processId: this.processId,
       processName: this.processName,
@@ -292,16 +353,15 @@ export class KanbanBoardComponent implements OnInit {
         if (data.nextFormType == 2 && data.isFormHere == 1) {
           this.openTransFormData(lead, type, data.nextFormType);
         } else {
-          this.getProcessListByUser();
+          this.goToBoard({ _id: this.processId, name: this.processName });
         }
       } else {
-        this.getProcessListByUser();
+        this.goToBoard({ _id: this.processId, name: this.processName });
       }
     });
   }
 
   openTransFormData(lead, type, formType = null) {
-    console.log("openTransAction");
     let title = 'Action Form';
     let refId = 0;
     let refType = 0;
@@ -333,10 +393,175 @@ export class KanbanBoardComponent implements OnInit {
       } else if (formType == 1) {
         this.openTransAction(lead, type, 2);
       } else {
-        this.getProcessListByUser();
+        this.goToBoard({ _id: this.processId, name: this.processName });
       }
     });
   }
 
+
+  saveTransNextState(transaction) {
+    if (!transaction._next_state_id) {
+      this.common.showError('Next state is missing');
+      this.goToBoard({ _id: this.processId, name: this.processName });
+    }
+    else {
+      const params = {
+        requestId: null,
+        transId: transaction._transaction_id,
+        stateId: transaction._next_state_id,
+        actionId: null,
+        nexActId: null,
+        nextActTarTime: null,
+        remark: null,
+        modeId: null,
+        actionOwnerId: null,
+        isNextAction: null,
+        isCompleted: false
+      };
+      console.log("saveTransNextState - saveTransAction:", params,transaction);
+      // return;
+      this.common.loading++;
+      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            transaction._state_id = transaction._next_state_id;
+            transaction.state_name = transaction._next_state_name;;
+            this.common.showToast(res['data'][0].y_msg);
+            if (transaction._state_form == 1) {
+              this.openTransFormData(transaction, null, 1);
+            }
+            else {
+              // this.openTransAction(lead, type, 2);
+              this.goToBoard({ _id: this.processId, name: this.processName });
+            }
+
+            // this.transAction.state = this.transAction.nextState;
+            // this.isFormHere = this.nextStateForm;
+            // if (this.isMarkTxnComplete == 1 && stateType == 2) {
+            //   setTimeout(() => {
+            //     this.markTxnComplete(params.transId);
+            //   }, 1000);
+            // }
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.log(err);
+      });
+    }
+  }
+
+  transMessage(lead, type) {
+    if (lead._transaction_id > 0) {
+      let editData = {
+        transactionid: lead._transaction_id,
+        lastSeenId: lead._lastreadid,
+        tabType: type,
+        priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
+        rowData: lead,
+        stateOwnerId: lead._state_owner_id
+      }
+      this.common.params = {
+        editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process',
+        userList: this.adminList,
+        groupList: null,
+        departmentList: null
+      };
+      const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        this.goToBoard({ _id: this.processId, name: this.processName });
+      });
+    } else {
+      this.common.showError("Invalid Lead");
+    }
+  }
+
+  getFilteredCard(searchedKey) {
+    if (!searchedKey.length) {
+      this.cards = this.cardsForFilter;
+    } else {
+      let cardsForFilter = JSON.parse(JSON.stringify(this.cardsForFilter));
+      cardsForFilter.forEach(element => {
+        if (element.data) {
+          element.data = element.data.filter(data => {
+            return (data.title.toLowerCase()).match(searchedKey) || (data.type.toLowerCase()).match(searchedKey)
+          })
+        }
+      });
+      this.cards = cardsForFilter;
+    }
+    this.cardsForFilterByUser = JSON.parse(JSON.stringify(this.cards));
+    this.placeCardLength(this.cards);
+    this.getAllUserGroup(this.cards);
+    this.filterUserGroup = [];
+  }
+
+  issueSort(type) {
+    if (type === 0) {
+      let cardsForFilter = JSON.parse(JSON.stringify(this.cardsForFilter));
+      cardsForFilter.forEach(element => {
+        if (element.data) {
+          element.data = element.data.filter(data => {
+            return this.userService._details.id === data.userid
+          })
+        }
+      });
+      this.cards = cardsForFilter;
+      this.placeCardLength(this.cards);
+      this.issueCategory = false;
+    } else if (type === 1) {
+      this.cards = this.cardsForFilter;
+      this.placeCardLength(this.cards);
+      this.issueCategory = true;
+    }
+    this.getAllUserGroup(this.cards);
+    this.filterUserGroup = [];
+  }
+
+  getCardsByUser(userId) {
+    let allAssignedUser = [];
+    this.cardsUserGroup.forEach(ele => {
+      allAssignedUser.push(ele.id);
+    });
+
+    if (this.filterUserGroup.includes(userId)) {
+      this.filterUserGroup.splice(this.filterUserGroup.indexOf(userId), 1);
+    } else {
+      this.filterUserGroup.push(userId);
+    }
+
+    let cardsForFilter = this.cardsForFilterByUser.length ? JSON.parse(JSON.stringify(this.cardsForFilterByUser)) : JSON.parse(JSON.stringify(this.cardsForFilter));
+    cardsForFilter.forEach(element => {
+      if (element.data) {
+        element.data = element.data.filter(data => {
+          if (this.filterUserGroup.length > 0) {
+            return this.filterUserGroup.includes(data.userid);
+          } else {
+            return this.cardsForFilter;
+          }
+        })
+      }
+    });
+    this.cards = cardsForFilter;
+    this.placeCardLength(this.cards);
+
+    allAssignedUser.map(ele => {
+      if (this.filterUserGroup.includes(ele)) {
+        document.getElementById(`${ele}`).classList.add('userCardBoderOnCLick');
+      } else {
+        document.getElementById(`${ele}`).classList.remove('userCardBoderOnCLick');
+      }
+    });
+  }
+
+  resetUserFilter() {
+    this.filterUserGroup = [];
+    this.issueSort(1);
+  }
 
 }

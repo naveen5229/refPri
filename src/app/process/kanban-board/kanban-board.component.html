@@ -2,12 +2,19 @@
   <nb-card-header>
     <div class="row">
       <div class="col-4">
-        <h5 class="heading-design">Kanban Board</h5>
+        <h5 class="heading-design">Kanban Board <label *ngIf="processName">({{processName}})</label></h5>
       </div>
-      <div class="col-6"></div>
-      <div class="col-2 text-right">
-        <button class="btn btn-primary" (click)="dashboardState = false;processId = null;processName = null;"
-          *ngIf="dashboardState">Back</button>
+      <div class="col-4"></div>
+      <div class="col-3" *ngIf="dashboardState">
+        <auto-suggestion  (onSelected)="goToBoard($event)" [display]="['name']"
+          [data]="processList" placeholder="Select Process" seperator="-" [preSelected]="{name:processName}"
+          className="borderStyle" inputId="_id">
+        </auto-suggestion>
+      </div>
+      <div class="col-1 text-right">
+        <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
+            aria-hidden="true"></i>Filter</button> -->
+        <button class="btn btn-primary" (click)="goToList()" *ngIf="dashboardState">Back</button>
       </div>
     </div>
   </nb-card-header>
@@ -22,37 +29,65 @@
       </div>
     </div>
 
-    <div class="row" id="cardField" style="width: 100%;overflow-x: auto;flex-wrap: inherit" *ngIf="dashboardState">
-      <div class="cardStyle ml-2" *ngFor="let card of cards;let i = index">
-        <div style="height: 5px;border-radius:10px" [style.background]="card.color"></div>
+    <div class="row" style="padding: 1rem;" *ngIf="dashboardState">
+      <div class="col-4">
+        <input type='search' placeholder="Search" style="width: 100%;" (search)="getFilteredCard($event.target.value)">
+      </div>
+      <div class="col-4">
+        <div class="userProfileIcons cursor-pointer" id="{{user.id}}" title="{{user.user_label}}"
+          (click)="getCardsByUser(user.id)" [style.background]="user.color" *ngFor="let user of cardsUserGroup">
+          {{user.name}}
+        </div>
+        <button class="btn btn-primary ml-2" (click)="resetUserFilter()" *ngIf="filterUserGroup.length > 0">Clear
+          Filter</button>
+      </div>
+      <div class="col-4 text-right">
+        <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
+        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
+      </div>
+    </div>
+
+    <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
+      <div class="stateContainerStyle ml-2" *ngFor="let card of cards;let i = index">
+        <div class="stateStatusBar" [style.background]="card.color"></div>
         <!-- background: {{data.color}};-->
-        <label>status</label>
-        <h5>{{card.title}}</h5>
-        <div style="width: 100%;height: 2rem;text-align: center;font-size: 20px;background: lightgrey;"><label>+</label>
+        <div>
+          <h5 class="stateTitleStyle" title="{{card.title}}">{{card.title}}</h5>
+        </div>
+        <div class="stateTansActCountStyle">
+          <label>{{card.transCount}} Transaction / {{card.actionCount}} Action</label>
         </div>
 
-        <div cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event,i);" [id]="card.id"
-          [cdkDropListConnectedTo]="card.connectedto" style="min-width: 300px;height:470px;overflow:auto">
-          <div class="row" style="margin: 5px;border: 1px solid gray;border-left: 5px solid green;border-radius: 5px;"
-            *ngFor="let data of card.data" cdkDrag  (cdkDragStarted)="onDragStarted($event)"
-            (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)">
+        <div class="cardStyle" cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event);"
+          [id]="card.id" [cdkDropListConnectedTo]="card.connectedto">
+
+          <div class="row shadow-sm cursor-pointer"
+            [ngClass]="data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle'" *ngFor="let data of card.data"
+            cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
+            (cdkDragMoved)="movedIn($event)" (click)="transMessage(data,null)">
+            <div class="col-12">
+              <h5 [style.color]="data.type_color" style="margin-bottom:0">{{data.type}}</h5>
+            </div>
             <div class="col-12"><label>{{data.title}}</label></div>
             <div class="col-12">
-              <h5 style="color: purple;">{{data.type}}</h5>
+              <label class="cardTitleStyle" title="{{data.desc}}">{{data.desc}}</label>
             </div>
-            <div class="col-12">
-              <h5>{{data.desc}}</h5>
-            </div>
-            <div class="col-12">
+            <div class="col-12" style="padding-bottom:5px">
               <div class="row">
-                <div class="col-6" style="float: left;">
-                  <div class="rounded-circle">{{data.user}}</div>
+                <div class="col-6">
+                  <div>{{data.status}}</div>
+                </div>
+                <div class="col-6">
+                  <div class="rounded-circle" title="{{data.user_label}}">
+                    {{data.user}}</div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
+
   </nb-card-body>
 </nb-card>
