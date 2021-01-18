@@ -170,22 +170,22 @@ export class ProcessListComponent implements OnInit {
   }
 
   openFieldModal(process, type) {
-    let refData = {
-      id: process._id,
-      type: type
-    }
-    this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: (type == 2) ? 'xl' : 'lg', container: 'nb-layout', backdrop: 'static' });
-    // let ref = {
+    // let refData = {
     //   id: process._id,
     //   type: type
     // }
-    // let title = "Transaction Form Assignment";
-    // if(type==3){
-    //   title = "Primary Info Form Assignment";
-    // }
-    // this.common.params = { ref: ref, processId: process._id, title: title };
-    // const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    // this.common.params = { ref: refData };
+    // const activeModal = this.modalService.open(AddFieldComponent, { size: (type == 2) ? 'xl' : 'lg', container: 'nb-layout', backdrop: 'static' });
+    let ref = {
+      id: process._id,
+      type: type
+    }
+    let title = "Transaction Form Assignment";
+    if(type==3){
+      title = "Primary Info Form Assignment";
+    }
+    this.common.params = { ref: ref, processId: process._id, title: title };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
   addProcessUsers(process) {

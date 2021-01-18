@@ -252,9 +252,9 @@ export class EntityDeatilsComponent implements OnInit {
     ];
     if (type === 'entityList') {
       icons.push({ class: "fas fa-phone", action: this.contact.bind(this, entity), txt: '', title: "View Contacts" });
-      // icons.push({ class: "fab fa-wpforms", action: this.addEntityFormMatrix.bind(this, entity, type), txt: '', title: "Open Entity Form" });
+      icons.push({ class: "fab fa-wpforms", action: this.addEntityFormMatrix.bind(this, entity, type), txt: '', title: "Open Entity Form" });
     }else if(type === 'entityType') {
-      // icons.push({ class: "fas fa-plus-square text-primary", action: this.addGlobalfield.bind(this, entity, type), txt: '', title: "Add Field" });
+      icons.push({ class: "fas fa-plus-square text-primary", action: this.addGlobalfield.bind(this, entity, type), txt: '', title: "Add Field" });
     }
     return icons;
   }

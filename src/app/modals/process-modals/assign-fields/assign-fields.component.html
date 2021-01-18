@@ -7,13 +7,13 @@
 <div class="modal-body">
     <div class="clearfix">
             <div class="row mt-2">
-                <div class="col-12">
+                <div class="col-10">
                     <p *ngIf="formType == 11 && refType==0" style="font-size: 15px;"><span style="color:red">*</span>Use global field "contact name" and "mobile number" to add
                         in contact into the contact list and to show on the dashboard of the ticket.</p>
                 </div>
-                <!-- <div *ngIf="formType != 11" class="col-2 text-right">
+                <div *ngIf="formType != 11" class="col-2 text-right">
                     <button class="btn btn-primary btn-sm" id="addGlobalfield" (click)="addGlobalfield()">Add Field</button>
-                </div> -->
+                </div>
             </div>
             
         <div *ngIf="fields.length>0">

@@ -240,24 +240,24 @@ export class AddActionComponent implements OnInit {
   }
 
   openFieldModal(action) {
-    let refData = {
-      id: action._action_id,
-      type: 1
-    }
-    this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.response);
-      }
-    });
-    // let ref = {
+    // let refData = {
     //   id: action._action_id,
     //   type: 1
     // }
-    // let title = "Action Form Assignment";
-    // this.common.params = { ref: ref, processId: this.actionForm.process.id, title: title };
-    // const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    // this.common.params = { ref: refData };
+    // const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     console.log(data.response);
+    //   }
+    // });
+    let ref = {
+      id: action._action_id,
+      type: 1
+    }
+    let title = "Action Form Assignment";
+    this.common.params = { ref: ref, processId: this.actionForm.process.id, title: title };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
   editAction(action) {

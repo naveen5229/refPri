@@ -284,25 +284,25 @@ export class AddStateComponent implements OnInit {
   }
 
   openFieldModal(data) {
-    let refData = {
-      id: data._state_id,
-      type: 0
-    }
-    this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.response);
-      }
-    });
-
-    // let ref = {
+    // let refData = {
     //   id: data._state_id,
     //   type: 0
     // }
-    // let title = "State Form Assignment";
-    // this.common.params = { ref: ref, processId: this.processId, title: title };
-    // const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    // this.common.params = { ref: refData };
+    // const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     console.log(data.response);
+    //   }
+    // });
+
+    let ref = {
+      id: data._state_id,
+      type: 0
+    }
+    let title = "State Form Assignment";
+    this.common.params = { ref: ref, processId: this.processId, title: title };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
   addProcessAction(row) {
