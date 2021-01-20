@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList,HostListener } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EntityFormComponent } from '../../modals/entity-form/entity-form.component';
 import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
@@ -68,17 +68,56 @@ export class EntityDeatilsComponent implements OnInit {
     }
   }
 
+  isSearchFormat = false;
+  searchFormatList = [];
+  searchFormatIndex = 0;
+  entityFormFields = [];
+  searchFormatForm = {
+    entityId:null,
+    value:null
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
+  @ViewChildren('searchFormatInput') searchFormatInput: QueryList<ElementRef>;
+  @ViewChild('formatTextarea', { static: false }) private formatTextarea: ElementRef;
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getEntityType();
     this.common.refresh = this.refresh.bind(this);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   refresh() {
     this.activeTab = 'entityType';
     this.getEntityType();
+  }
+
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    console.log(key)
+    if (this.isSearchFormat) {
+      if (key === 'arrowdown') {
+        event.preventDefault();
+        this.searchFormatIndex++;
+        if (this.searchFormatList.length === this.searchFormatIndex) {
+          this.searchFormatIndex = 0;
+        }
+      } else if (key === 'arrowup') {
+        event.preventDefault();
+        this.searchFormatIndex--;
+        if (this.searchFormatIndex < 0) {
+          this.searchFormatIndex = this.searchFormatList.length - 1;
+        }
+      } else if (key === 'enter') {
+        event.preventDefault();
+        this.onSelectFormField(this.searchFormatList[this.searchFormatIndex]);
+        this.isSearchFormat = false;
+      }
+    }
+
   }
 
   resetAllFieldForms() {
@@ -255,6 +294,7 @@ export class EntityDeatilsComponent implements OnInit {
       icons.push({ class: "fab fa-wpforms", action: this.addEntityFormMatrix.bind(this, entity, type), txt: '', title: "Open Entity Form" });
     }else if(type === 'entityType') {
       icons.push({ class: "fas fa-plus-square text-primary", action: this.addGlobalfield.bind(this, entity, type), txt: '', title: "Add Field" });
+      icons.push({ class: "fas fa-plus-square text-info", action: this.openAddSearchFormatModal.bind(this, entity, type), txt: '', title: "Add Search Format" });
     }
     return icons;
   }
@@ -421,6 +461,100 @@ export class EntityDeatilsComponent implements OnInit {
       if (data.response) {
       }
     });
+  }
+
+  closeSearchFormatModal(){
+    document.getElementById('searchFormatModal').style.display = 'none';
+    this.isSearchFormat = false;
+    this.searchFormatList = [];
+    this.searchFormatIndex = 0;
+    this.entityFormFields = [];
+    this.searchFormatForm = {
+      entityId:null,
+      value:null
+    }
+  }
+
+  openAddSearchFormatModal(entityType,type){
+    console.log("openAddFormatModal:",entityType);
+    this.searchFormatForm.entityId = entityType._id;
+    this.searchFormatForm.value = entityType._entity_search_format
+    document.getElementById('searchFormatModal').style.display = 'block';
+    this.getEntityGlobalField();
+  }
+
+  getEntityGlobalField() {
+    let params = "?processId=" + this.searchFormatForm.entityId;
+    this.common.loading++;
+    this.api.get("Entities/getEntityGlobalField" + params).subscribe(res => {
+        this.common.loading--;
+        this.entityFormFields =  res['data'] || [];
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  onMessageType(e){
+    let value = e.data;
+    if (e && value && value == "@") {
+      // console.log("onMessageType");
+      this.isSearchFormat = true;
+      this.searchFormatList = this.entityFormFields;
+      setTimeout(() => {
+        if(this.searchFormatInput){
+          this.searchFormatInput.toArray()[0].nativeElement.focus();
+        }
+      }, 100);
+    } else if (e && value && value == " " || this.searchFormatForm.value.trim()=="") {
+      // console.log("onMessageType2");
+      this.isSearchFormat = false;
+    } else if (this.isSearchFormat) {
+      let splieted = this.searchFormatForm.value.split('@');
+      let searchableTxt = splieted[splieted.length - 1];
+      this.searchFormatList = this.entityFormFields.filter(x => { return (x.param_name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+      if (this.searchFormatIndex >= this.searchFormatList.length) {
+        this.searchFormatIndex = 0;
+      }
+    }
+  }
+
+  onSelectFormField(field) {
+    console.log("onSelectFormField:", field);
+    let splieted = this.searchFormatForm.value.split('@');
+    console.log(splieted);
+    splieted.pop();
+    console.log(splieted, splieted.join('@'));
+    this.searchFormatForm.value = splieted.join('@') + '@' + field.param_code + '@,';
+    this.formatTextarea.nativeElement.focus();
+    console.log('searchFormatForm', this.searchFormatForm)
+  }
+
+  saveSearchFormat() {
+    if(!this.searchFormatForm.entityId){
+      this.common.showError("Entity Type is missing");
+      return false;
+    }
+    let params = {
+      entityTypeId: this.searchFormatForm.entityId,
+      format: this.searchFormatForm.value.trim()
+    }
+    this.common.loading++;
+    this.api.post('Entities/saveSearchFormat',params).subscribe(res => {
+        this.common.loading--;
+        if (res['code']==1){
+          this.common.showToast(res['msg']);
+          this.closeSearchFormatModal();
+          this.getEntityType();
+        }else{
+          this.common.showToast(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
 }

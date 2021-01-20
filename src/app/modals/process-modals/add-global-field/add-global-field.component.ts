@@ -66,6 +66,7 @@ export class AddGlobalFieldComponent implements OnInit {
       this.fromPage = (this.common.params.fromPage) ? this.common.params.fromPage : null;
       this.getProcessGlobalField();
       if(!this.fromPage){
+        this.types.push({ id: 'entity', name: 'Entity', title:'Add any entity type field', icon:'fas fa-text' });
         this.getGlobalFormField();
       }
     }
@@ -96,15 +97,6 @@ export class AddGlobalFieldComponent implements OnInit {
     });
   }
 
-  openAddFieldModal(type){
-    if(type && type.id){
-      this.form.typeId = type.id;
-      this.isShowField = true;
-    }else{
-      this.common.showError();
-    }
-  };
-
   closeAddGlobalFieldModal(res){
     this.resetData();
     this.isShowField = false;
@@ -112,6 +104,33 @@ export class AddGlobalFieldComponent implements OnInit {
     // if(res){
     //   this.closeModal(true);
     // }
+  }
+
+  openAddFieldModal(type){
+    if(type && type.id){
+      this.form.typeId = type.id;
+      this.isShowField = true;
+      this.getEntityType();
+    }else{
+      this.common.showError();
+    }
+  };
+  
+  entityTypeList = [];
+  getEntityType() {
+    this.common.loading++;
+    this.api.get('Entities/getEntityTypes')
+      .subscribe(res => {
+        this.common.loading--;
+        console.log("api data", res);
+        if (!res['data']) return;
+        this.entityTypeList = res['data'] || [];
+
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
   openFieldInfoModal(row){
@@ -366,7 +385,7 @@ export class AddGlobalFieldComponent implements OnInit {
   setData(data) {
     console.log("data edit:", data);
     this.form.typeId = data.param_type;
-    this.form.name = data.param_name;
+    this.form.name = data._param_name;
     this.form.order = (data.param_order) ? data.param_order : null;
     if (data._param_child && data._param_child.length > 0) {
       data._param_child.map((ele, index) => {

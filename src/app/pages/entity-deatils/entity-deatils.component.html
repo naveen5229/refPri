@@ -154,4 +154,35 @@
   </div>
 
   <!-- end:update modal -->
+
+  <!-- start: search format modal -->
+  <div class="modal" id="searchFormatModal">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Search Format</h5>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeSearchFormatModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div *ngIf="isSearchFormat" class="col-12 mentioned_user p-0">
+                <span *ngFor="let u of searchFormatList;let i=index;"
+                    (click)="onSelectFormField(u);isSearchFormat=false;" #searchFormatInput
+                    [class]="searchFormatIndex === i ? 'user-active': ''">{{u.param_name}}</span>
+            </div>
+            <div class="col-12 text-right">
+              <textarea name="formatTextarea" maxlength="500" class="form-control"
+                  id="formatTextarea" placeholder="Type format" [(ngModel)]="searchFormatForm.value" (input)="onMessageType($event)" #formatTextarea></textarea>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12 text-right">
+              <button class="btn btn-primary btn-sm allicons mr-2" id="searchFormat" title="Save Search Format" (click)="saveSearchFormat()">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end: search format modal -->
 </nb-card>

@@ -67,6 +67,11 @@ export class TaskMessageComponent implements OnInit {
     id: null,
     name: ""
   };
+  showAssignerUserAuto = null;
+  newAssignerUser = {
+    id: null,
+    name: ""
+  };
   // attachmentFile = {
   //   name: null,
   //   file: null
@@ -590,6 +595,50 @@ export class TaskMessageComponent implements OnInit {
       });
     } else {
       this.common.showError("Select Assignee user");
+    }
+  }
+  
+  updateTaskAssignerUser() {
+    if (this.ticketId > 0 && this.newAssignerUser.id > 0) {
+      let isCCUpdate = 1;
+      if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+        let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
+        if (findCC) {
+          isCCUpdate = 0;
+        }
+      }
+      if (this.loginUserId == this.newAssignerUser.id) {
+        this.common.showError("Please assign a new user");
+        return false;
+      }
+      let params = {
+        ticketId: this.ticketId,
+        taskId: this.taskId,
+        ticketType: this.ticketType,
+        assignerUserId: this.newAssignerUser.id,
+        status: this.statusId,
+        isCCUpdate: isCCUpdate,
+        assignerUserNameOld: this.userListByTask['taskUsers'][0].assignto,
+        assignerUserNameNew: this.newAssignerUser.name
+      }
+      // console.log("updateTaskAssigneeUser params:", params);return false;
+      this.common.loading++;
+      this.api.post('AdminTask/updateTaskAssignerUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.getAllUserByTask();
+          this.getMessageList();
+          this.showAssignerUserAuto = null;
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Select Assigner user");
     }
   }
 
