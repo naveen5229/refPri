@@ -165,7 +165,7 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div *ngIf="isSearchFormat" class="col-12 mentioned_user p-0">
+            <!-- <div *ngIf="isSearchFormat" class="col-12 mentioned_user p-0">
                 <span *ngFor="let u of searchFormatList;let i=index;"
                     (click)="onSelectFormField(u);isSearchFormat=false;" #searchFormatInput
                     [class]="searchFormatIndex === i ? 'user-active': ''">{{u.param_name}}</span>
@@ -173,11 +173,19 @@
             <div class="col-12 text-right">
               <textarea name="formatTextarea" maxlength="500" class="form-control"
                   id="formatTextarea" placeholder="Type format" [(ngModel)]="searchFormatForm.value" (input)="onMessageType($event)" #formatTextarea></textarea>
+            </div> -->
+            <div class="col-9">
+              <label>Select Field<span class="text-danger">*</span></label>
+              <auto-suggestion [data]="entityFormFields" display="param_name" seperator="-" placeholder="Select Users" [preSelected]="searchFormatForm.value" (onSelected)="searchFormatForm.value = $event" inputId="searchFormat" name="searchFormat" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            </div>
+            <div class="col-3">
+              <label>Separator<span class="text-danger">*</span></label>
+              <input class="form-control" name="seperator" [(ngModel)]="searchFormatForm.separator"/>
             </div>
           </div>
           <div class="row mt-2">
             <div class="col-12 text-right">
-              <button class="btn btn-primary btn-sm allicons mr-2" id="searchFormat" title="Save Search Format" (click)="saveSearchFormat()">Save</button>
+              <button class="btn btn-primary btn-sm allicons mr-2" id="searchFormatbtn" title="Save Search Format" (click)="saveSearchFormat()">Save</button>
             </div>
           </div>
         </div>

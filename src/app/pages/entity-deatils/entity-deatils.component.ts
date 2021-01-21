@@ -68,21 +68,22 @@ export class EntityDeatilsComponent implements OnInit {
     }
   }
 
-  isSearchFormat = false;
-  searchFormatList = [];
-  searchFormatIndex = 0;
+  // isSearchFormat = false;
+  // searchFormatList = [];
+  // searchFormatIndex = 0;
   entityFormFields = [];
   searchFormatForm = {
     entityId:null,
-    value:null
+    value:[],
+    separator:null
   }
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event) {
-    this.keyHandler(event);
-  }
-  @ViewChildren('searchFormatInput') searchFormatInput: QueryList<ElementRef>;
-  @ViewChild('formatTextarea', { static: false }) private formatTextarea: ElementRef;
+  // @HostListener('document:keydown', ['$event'])
+  // handleKeyboardEvent(event) {
+  //   this.keyHandler(event);
+  // }
+  // @ViewChildren('searchFormatInput') searchFormatInput: QueryList<ElementRef>;
+  // @ViewChild('formatTextarea', { static: false }) private formatTextarea: ElementRef;
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getEntityType();
     this.common.refresh = this.refresh.bind(this);
@@ -95,30 +96,30 @@ export class EntityDeatilsComponent implements OnInit {
     this.getEntityType();
   }
 
-  keyHandler(event) {
-    const key = event.key.toLowerCase();
-    console.log(key)
-    if (this.isSearchFormat) {
-      if (key === 'arrowdown') {
-        event.preventDefault();
-        this.searchFormatIndex++;
-        if (this.searchFormatList.length === this.searchFormatIndex) {
-          this.searchFormatIndex = 0;
-        }
-      } else if (key === 'arrowup') {
-        event.preventDefault();
-        this.searchFormatIndex--;
-        if (this.searchFormatIndex < 0) {
-          this.searchFormatIndex = this.searchFormatList.length - 1;
-        }
-      } else if (key === 'enter') {
-        event.preventDefault();
-        this.onSelectFormField(this.searchFormatList[this.searchFormatIndex]);
-        this.isSearchFormat = false;
-      }
-    }
+  // keyHandler(event) {
+  //   const key = event.key.toLowerCase();
+  //   console.log(key)
+  //   if (this.isSearchFormat) {
+  //     if (key === 'arrowdown') {
+  //       event.preventDefault();
+  //       this.searchFormatIndex++;
+  //       if (this.searchFormatList.length === this.searchFormatIndex) {
+  //         this.searchFormatIndex = 0;
+  //       }
+  //     } else if (key === 'arrowup') {
+  //       event.preventDefault();
+  //       this.searchFormatIndex--;
+  //       if (this.searchFormatIndex < 0) {
+  //         this.searchFormatIndex = this.searchFormatList.length - 1;
+  //       }
+  //     } else if (key === 'enter') {
+  //       event.preventDefault();
+  //       this.onSelectFormField(this.searchFormatList[this.searchFormatIndex]);
+  //       this.isSearchFormat = false;
+  //     }
+  //   }
 
-  }
+  // }
 
   resetAllFieldForms() {
     this.entityTypeForm = {
@@ -157,10 +158,8 @@ export class EntityDeatilsComponent implements OnInit {
 
   getEntityType() {
     this.common.loading++;
-    this.api.get('Entities/getEntityTypes')
-      .subscribe(res => {
+    this.api.get('Entities/getEntityTypes').subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (!res['data']) return;
         this.entityTypeData = res['data'];
         let entityForManuplation = res['data'];
@@ -210,7 +209,6 @@ export class EntityDeatilsComponent implements OnInit {
       }
       columns.push(column);
     })
-
     return columns;
   }
 
@@ -221,17 +219,13 @@ export class EntityDeatilsComponent implements OnInit {
     };
   }
 
-
   getEntitiesList() {
     this.common.loading++;
-    this.api.get('Entities/getEntities')
-      .subscribe(res => {
+    this.api.get('Entities/getEntities').subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (!res['data']) return;
         this.entitiesData = res['data'];
         this.entitiesData.length ? this.setEntitiesData() : this.resetEntitiesData();
-
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -300,7 +294,6 @@ export class EntityDeatilsComponent implements OnInit {
   }
 
   edit(entity, type) {
-    console.log("🚀 ~ file: entity-deatils.component.ts ~ line 233 ~ EntityDeatilsComponent ~ edit ~ entity", entity)
     if (type === 'entityType') {
       this.entityContactFieldsTitle = 'Update Entity Type';
       this.modalType = 1;
@@ -322,7 +315,6 @@ export class EntityDeatilsComponent implements OnInit {
   }
 
   setData(storeType, entity) {
-    console.log("🚀 ~ file: entity-deatils.component.ts ~ line 251 ~ EntityDeatilsComponent ~ setData ~ storeType", storeType,entity)
     switch (storeType) {
       case 1: this.entityTypeForm.name = entity.type, this.entityTypeForm.requestId = entity._id
         break;
@@ -334,14 +326,12 @@ export class EntityDeatilsComponent implements OnInit {
   }
 
   contact(entity) {
-    console.log("🚀 ~ file: entity-deatils.component.ts ~ line 292 ~ EntityDeatilsComponent ~ contact ~ entity", entity)
     this.contactForm.entityId = entity._id;
     const param = `?entityId=${entity._id}`
     this.common.loading++;
     this.api.get('Entities/getEntityContact' + param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (!res['data']) return;
         this.contactDataList = res['data'];
         this.contactDataList.length ? this.setcontactData() : this.resetcontactData();
@@ -408,7 +398,7 @@ export class EntityDeatilsComponent implements OnInit {
   save(createType, type) {
     let params = {};
     let apiBase = '';
-    console.log("🚀 ~ file: entity-deatils.component.ts ~ line 320 ~ EntityDeatilsComponent ~ save ~ type", createType, type);
+    // console.log("🚀 ~ file: entity-deatils.component.ts ~ line 320 ~ EntityDeatilsComponent ~ save ~ type", createType, type);
     switch (type) {
       case 1: apiBase = `Entities/saveEntityType`, params = this.entityTypeForm;
         break;
@@ -418,7 +408,7 @@ export class EntityDeatilsComponent implements OnInit {
         break;
     }
 
-    console.log('final data',apiBase,params)
+    // console.log('final data',apiBase,params)
     // return;
     this.common.loading++;
     this.api.post(apiBase, params).subscribe(res => {
@@ -465,20 +455,22 @@ export class EntityDeatilsComponent implements OnInit {
 
   closeSearchFormatModal(){
     document.getElementById('searchFormatModal').style.display = 'none';
-    this.isSearchFormat = false;
-    this.searchFormatList = [];
-    this.searchFormatIndex = 0;
+    // this.isSearchFormat = false;
+    // this.searchFormatList = [];
+    // this.searchFormatIndex = 0;
     this.entityFormFields = [];
     this.searchFormatForm = {
       entityId:null,
-      value:null
+      value:[],
+      separator:null
     }
   }
 
   openAddSearchFormatModal(entityType,type){
-    console.log("openAddFormatModal:",entityType);
     this.searchFormatForm.entityId = entityType._id;
-    this.searchFormatForm.value = entityType._entity_search_format
+    this.searchFormatForm.value = (entityType._search_format) ? JSON.parse(entityType._search_format) : [];
+    this.searchFormatForm.separator = (entityType._separator) ? entityType._separator : null;
+    console.log("searchFormatForm:",this.searchFormatForm);
     document.getElementById('searchFormatModal').style.display = 'block';
     this.getEntityGlobalField();
   }
@@ -496,59 +488,66 @@ export class EntityDeatilsComponent implements OnInit {
       });
   }
 
-  onMessageType(e){
-    let value = e.data;
-    if (e && value && value == "@") {
-      // console.log("onMessageType");
-      this.isSearchFormat = true;
-      this.searchFormatList = this.entityFormFields;
-      setTimeout(() => {
-        if(this.searchFormatInput){
-          this.searchFormatInput.toArray()[0].nativeElement.focus();
-        }
-      }, 100);
-    } else if (e && value && value == " " || this.searchFormatForm.value.trim()=="") {
-      // console.log("onMessageType2");
-      this.isSearchFormat = false;
-    } else if (this.isSearchFormat) {
-      let splieted = this.searchFormatForm.value.split('@');
-      let searchableTxt = splieted[splieted.length - 1];
-      this.searchFormatList = this.entityFormFields.filter(x => { return (x.param_name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
-      if (this.searchFormatIndex >= this.searchFormatList.length) {
-        this.searchFormatIndex = 0;
-      }
-    }
-  }
+  // onMessageType(e){
+  //   let value = e.data;
+  //   if (e && value && value == "@") {
+  //     this.searchFormatList = this.entityFormFields;
+  //     if(this.searchFormatList && this.searchFormatList.length){
+  //       this.isSearchFormat = true;
+  //     }
+  //     setTimeout(() => {
+  //       if(this.searchFormatInput){
+  //         this.searchFormatInput.toArray()[0].nativeElement.focus();
+  //       }
+  //     }, 100);
+  //   } else if (e && value && value == " " || this.searchFormatForm.value.trim()=="") {
+  //     this.isSearchFormat = false;
+  //   } else if (this.isSearchFormat) {
+  //     let splieted = this.searchFormatForm.value.split('@');
+  //     let searchableTxt = splieted[splieted.length - 1];
+  //     this.searchFormatList = this.entityFormFields.filter(x => { return (x.param_name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
+  //     if (this.searchFormatIndex >= this.searchFormatList.length) {
+  //       this.searchFormatIndex = 0;
+  //     }
+  //   }
+  // }
 
-  onSelectFormField(field) {
-    console.log("onSelectFormField:", field);
-    let splieted = this.searchFormatForm.value.split('@');
-    console.log(splieted);
-    splieted.pop();
-    console.log(splieted, splieted.join('@'));
-    this.searchFormatForm.value = splieted.join('@') + '@' + field.param_code + '@,';
-    this.formatTextarea.nativeElement.focus();
-    console.log('searchFormatForm', this.searchFormatForm)
-  }
+  // onSelectFormField(field) {
+  //   console.log("onSelectFormField:", field);
+  //   let splieted = this.searchFormatForm.value.split('@');
+  //   console.log(splieted);
+  //   splieted.pop();
+  //   console.log(splieted, splieted.join('@'));
+  //   this.searchFormatForm.value = splieted.join('@') + '@' + field.param_code + '@,';
+  //   this.formatTextarea.nativeElement.focus();
+  //   console.log('searchFormatForm', this.searchFormatForm)
+  // }
 
   saveSearchFormat() {
     if(!this.searchFormatForm.entityId){
       this.common.showError("Entity Type is missing");
       return false;
     }
+    let searchFormat = this.searchFormatForm.value.map(x=>{return {_matrixid:x._matrixid,param_name:x.param_name,param_code:x.param_code}});
     let params = {
       entityTypeId: this.searchFormatForm.entityId,
-      format: this.searchFormatForm.value.trim()
+      format: (searchFormat.length) ? JSON.stringify(searchFormat):null,
+      separator: this.searchFormatForm.separator
     }
+    // console.log("saveSearchFormat:",params);return false;
     this.common.loading++;
     this.api.post('Entities/saveSearchFormat',params).subscribe(res => {
         this.common.loading--;
         if (res['code']==1){
-          this.common.showToast(res['msg']);
+          if(res['data'][0].y_id>0){
+          this.common.showToast(res['data'][0].y_msg);
           this.closeSearchFormatModal();
           this.getEntityType();
+          }else{
+            this.common.showError(res['data'][0].y_msg);
+          }
         }else{
-          this.common.showToast(res['msg']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
