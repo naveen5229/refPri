@@ -2,22 +2,47 @@
   <nb-card-header>
     <div class="row">
       <div class="col-4">
-        <h5 class="heading-design">Kanban Board <label *ngIf="processName">({{processName}})</label></h5>
+        <h5 class="heading-design">Kanban Board <label *ngIf="dashboardState">({{project.projectName}})</label>
+        </h5>
       </div>
       <div class="col-4"></div>
+
+
+      <!--Start: For List Screen -->
+      <!-- <div class="col-2" *ngIf="!dashboardState">
+        <auto-suggestion (onSelected)="projectType = $event" display="name" [data]="typeList" placeholder="Select Type"
+          seperator="-" [preSelected]="projectType.id >=0 ? {name:projectType.name} : {name:''}"
+          className="borderStyle">
+        </auto-suggestion>
+      </div> -->
+      <div class="col-4 text-right" *ngIf="!dashboardState">
+        <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
+            aria-hidden="true"></i>Filter</button> -->
+        <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0)">My All
+          Issues</button>
+      </div>
+      <!--Start: For List Screen -->
+
+
+      <!--Start: For Board Screen -->
       <div class="col-2" *ngIf="dashboardState">
-        <auto-suggestion (onSelected)="goToBoard($event)" [display]="['name']" [data]="processList"
-          placeholder="Select Process" seperator="-" [preSelected]="{name:processName}" className="borderStyle"
-          inputId="_id">
+        <auto-suggestion (onSelected)="goToBoard($event,1)" display="project_desc" [data]="projectList"
+          placeholder="Select Process" seperator="-" [preSelected]="{project_desc:project.projectName}"
+          className="borderStyle" inputId="_id">
         </auto-suggestion>
       </div>
       <div class="col-2 text-right" *ngIf="dashboardState">
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
-        <button class="btn btn-primary btn-sm mr-2" id="addLead" ><i
-            class="fa fa-plus"></i></button>
-        <button class="btn btn-primary" (click)="goToList()" >Back</button>
+
+        <button class="btn btn-primary btn-sm allicons mr-2" id="taskpopup" title="Add Normal Task"
+          (click)="showTaskPopup()">
+          <img src="./assets/images/addtask.svg" alt="Add Normal Task">
+        </button>
+
+        <button class="btn btn-primary" (click)="goToList()">Back</button>
       </div>
+      <!--Start: For Board Screen -->
     </div>
   </nb-card-header>
 
@@ -25,7 +50,7 @@
 
     <div class="row" *ngIf="!dashboardState">
       <div class="col-12">
-        <smart-table *ngIf="processList.length!=0" [data]="processListTable.data" [settings]="processListTable.settings"
+        <smart-table *ngIf="projectList.length!=0" [data]="projectListTable.data" [settings]="projectListTable.settings"
           id="processList" class="sl-smart-table">
         </smart-table>
       </div>
@@ -43,7 +68,7 @@
         <button class="btn btn-primary ml-2" (click)="resetUserFilter()" *ngIf="filterUserGroup.length > 0">Clear
           Filter</button>
       </div>
-      <div class="col-4 text-right">
+      <div class="col-4 text-right" *ngIf="project.projectId">
         <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
         <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
       </div>
@@ -57,19 +82,21 @@
           <h5 class="stateTitleStyle" title="{{card.title}}">{{card.title}}</h5>
         </div>
         <div class="stateTansActCountStyle">
-          <label>{{card.transCount}} Transaction / {{card.actionCount}} Action</label>
+          <label>{{card.normalTaskCount}} Normal / {{card.scheduleTaskCount}} Schedule</label>
         </div>
 
         <div class="cardStyle" cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event);"
-          [id]="card.id" [cdkDropListConnectedTo]="card.connectedto">
+          [id]="card.title" [cdkDropListConnectedTo]="card.connectedto">
 
           <div class="row shadow-sm cursor-pointer"
-            [ngClass]="data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle'" *ngFor="let data of card.data"
+            [ngClass]="data.type.includes('Normal') ? 'NormalStyle' : 'ScheduledStyle'" *ngFor="let data of card.data"
             cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
-            (cdkDragMoved)="movedIn($event)" (click)="transMessage(data,null)">
+            (cdkDragMoved)="movedIn($event)" (click)="transMessage(data,null)"
+            [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
             <div class="col-12">
               <h5 [style.color]="data.type_color" style="margin-bottom:0">{{data.type}}</h5>
             </div>
+            <div class="col-12"><label style="font-weight: bold;">{{data._project_type}}</label></div>
             <div class="col-12"><label>{{data.title}}</label></div>
             <div class="col-12">
               <label class="cardTitleStyle" title="{{data.desc}}">{{data.desc}}</label>

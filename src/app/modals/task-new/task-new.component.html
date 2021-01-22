@@ -29,7 +29,7 @@
             <label>Project:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
+            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId" [preSelected]="(projectName) ? {project_desc: projectName} : {name: ''}">
             </auto-suggestion>
         </div>
     </div>
