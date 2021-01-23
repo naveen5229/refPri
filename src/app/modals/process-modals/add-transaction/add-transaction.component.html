@@ -47,7 +47,7 @@
 
                     <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <div *ngIf="oddArray[i].r_coltitle" class="row">
-                            <div class="col-4">
+                            <div class="col-4 pr-0">
                                 <label>{{oddArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="oddArray[i].r_required">*</span>
                                 </label>
@@ -72,7 +72,7 @@
                                     [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
                                 <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="oddArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                    [preSelected]="{location:oddArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
 
                                 <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
@@ -101,7 +101,7 @@
 
                     <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <span *ngIf="evenArray[i].r_coltitle" class="row">
-                            <div class="col-4">
+                            <div class="col-4 pr-0">
                                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
                                         *ngIf="evenArray[i].r_required">*</span></label>
                     </div>

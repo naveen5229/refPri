@@ -8,21 +8,20 @@
     <div style="width: 100%;">
 
         <div>
-            <div *ngFor="let dd of oddArray ; let i = index; " class="row">
+            <div *ngFor="let dd of oddArray ; let i = index; " class="row mb-3">
 
-                <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'">
                     <div *ngIf="oddArray[i].r_coltitle" class="row">
-                        <div class="col-4">
+                        <div class="col-4 pr-0">
                             <label>{{oddArray[i].r_coltitle}}<span style="color: red"
                                     *ngIf="oddArray[i].r_required">*</span></label>
                         </div>
 
                         <div class="col-8">
-                            <input type="text" class="form-control" style="width: 95%;" [(ngModel)]=oddArray[i].r_value
+                            <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
                                 *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "
                                 [readonly]="isDisabled">
-                            <input type="number" class="form-control" style="width: 95%;"
-                                [(ngModel)]=oddArray[i].r_value
+                            <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value
                                 *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues "
                                 [readonly]="isDisabled">
                             <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
@@ -30,7 +29,6 @@
                                 [isTime]="false" >
                             </uj-date-time-picker>
 
-                            <!-- <input type="checkbox" class="form-control" style="width: 95%;margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues"> -->
                             <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
                                 *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues"
                                 [readonly]="isDisabled">
@@ -40,7 +38,7 @@
                                     aria-hidden="true"></i></span>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12"
+                            <select [(ngModel)]="oddArray[i].r_value" class="form-control col-12"
                                 *ngIf="oddArray[i].r_fixedvalues" [disabled]="isDisabled">
                                 <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                     {{fixValue.option}}</option>
@@ -57,19 +55,18 @@
                     </div>
                 </div>
 
-                <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
                     <div *ngIf="evenArray[i].r_coltitle" class="row">
-                        <div class="col-4">
+                        <div class="col-4 pr-0">
                             <label>{{evenArray[i].r_coltitle}} <span style="color: red"
                                     *ngIf="evenArray[i].r_required">*</span></label>
                         </div>
 
                         <div class="col-8">
-                            <input type="text" class="form-control" style="width: 95%;" [(ngModel)]=evenArray[i].r_value
+                            <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
                                 *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"
                                 [readonly]="isDisabled">
-                            <input type="number" class="form-control" style="width: 95%;"
-                                [(ngModel)]=evenArray[i].r_value
+                            <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
                                 *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues"
                                 [readonly]="isDisabled">
                             <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
@@ -86,7 +83,7 @@
                                     aria-hidden="true"></i></span>
 
                             <!-- dynamic data array -->
-                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
+                            <select [(ngModel)]="evenArray[i].r_value" class="form-control col-12"
                                 *ngIf="evenArray[i].r_fixedvalues" [disabled]="isDisabled">
                                 <option [value]="fixValue.option" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                     {{fixValue.option}}</option>
@@ -104,7 +101,7 @@
             </div>
 
             <div class="col-12">
-                <div class="row" style="margin-top: 1rem;">
+                <div class="row">
                     <div class="col-4"></div>
                     <div class="col-8" *ngIf="!isDisabled">
                         <div class="row" style="float: right;">

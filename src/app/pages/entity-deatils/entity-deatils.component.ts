@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList,HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EntityFormComponent } from '../../modals/entity-form/entity-form.component';
 import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
@@ -68,22 +68,13 @@ export class EntityDeatilsComponent implements OnInit {
     }
   }
 
-  // isSearchFormat = false;
-  // searchFormatList = [];
-  // searchFormatIndex = 0;
-  entityFormFields = [];
+  entityFormFields = [{"_matrixid":null,"param_name":"Entity Name","param_code":"Entity_Name"}];
   searchFormatForm = {
     entityId:null,
     value:[],
     separator:null
   }
 
-  // @HostListener('document:keydown', ['$event'])
-  // handleKeyboardEvent(event) {
-  //   this.keyHandler(event);
-  // }
-  // @ViewChildren('searchFormatInput') searchFormatInput: QueryList<ElementRef>;
-  // @ViewChild('formatTextarea', { static: false }) private formatTextarea: ElementRef;
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getEntityType();
     this.common.refresh = this.refresh.bind(this);
@@ -96,43 +87,16 @@ export class EntityDeatilsComponent implements OnInit {
     this.getEntityType();
   }
 
-  // keyHandler(event) {
-  //   const key = event.key.toLowerCase();
-  //   console.log(key)
-  //   if (this.isSearchFormat) {
-  //     if (key === 'arrowdown') {
-  //       event.preventDefault();
-  //       this.searchFormatIndex++;
-  //       if (this.searchFormatList.length === this.searchFormatIndex) {
-  //         this.searchFormatIndex = 0;
-  //       }
-  //     } else if (key === 'arrowup') {
-  //       event.preventDefault();
-  //       this.searchFormatIndex--;
-  //       if (this.searchFormatIndex < 0) {
-  //         this.searchFormatIndex = this.searchFormatList.length - 1;
-  //       }
-  //     } else if (key === 'enter') {
-  //       event.preventDefault();
-  //       this.onSelectFormField(this.searchFormatList[this.searchFormatIndex]);
-  //       this.isSearchFormat = false;
-  //     }
-  //   }
-
-  // }
-
   resetAllFieldForms() {
     this.entityTypeForm = {
       name: null,
       requestId: null
     }
-
     this.entityListForm = {
       name: null,
       entityType: { id: null, name: null },
       requestId: null
     }
-
     this.contactForm = {
       entityId: this.contactForm.entityId,
       name: null,
@@ -186,6 +150,9 @@ export class EntityDeatilsComponent implements OnInit {
     for (var key in this.entityTypeData[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
       }
     }
     return headings;
@@ -246,6 +213,9 @@ export class EntityDeatilsComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -268,7 +238,6 @@ export class EntityDeatilsComponent implements OnInit {
       }
       columns.push(column);
     })
-
     return columns;
   }
 
@@ -362,6 +331,9 @@ export class EntityDeatilsComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
@@ -384,7 +356,6 @@ export class EntityDeatilsComponent implements OnInit {
       }
       columns.push(column);
     })
-
     return columns;
   }
 
@@ -398,7 +369,6 @@ export class EntityDeatilsComponent implements OnInit {
   save(createType, type) {
     let params = {};
     let apiBase = '';
-    // console.log("🚀 ~ file: entity-deatils.component.ts ~ line 320 ~ EntityDeatilsComponent ~ save ~ type", createType, type);
     switch (type) {
       case 1: apiBase = `Entities/saveEntityType`, params = this.entityTypeForm;
         break;
@@ -407,9 +377,7 @@ export class EntityDeatilsComponent implements OnInit {
       case 3: apiBase = `Entities/saveEntityContact`, params = this.contactForm;
         break;
     }
-
-    // console.log('final data',apiBase,params)
-    // return;
+    // console.log('final data',apiBase,params);return;
     this.common.loading++;
     this.api.post(apiBase, params).subscribe(res => {
       this.common.loading--;
@@ -422,7 +390,6 @@ export class EntityDeatilsComponent implements OnInit {
         } else if (type == 3) {
           this.contact({_id:this.contactForm.entityId});
         }
-        // this.getProcessLeadByType(type);
         this.closeEntityContactFields();
       } else {
         this.common.showError(res['data']);
@@ -455,10 +422,7 @@ export class EntityDeatilsComponent implements OnInit {
 
   closeSearchFormatModal(){
     document.getElementById('searchFormatModal').style.display = 'none';
-    // this.isSearchFormat = false;
-    // this.searchFormatList = [];
-    // this.searchFormatIndex = 0;
-    this.entityFormFields = [];
+    this.entityFormFields = [{"_matrixid":null,"param_name":"Entity Name","param_code":"Entity_Name"}];
     this.searchFormatForm = {
       entityId:null,
       value:[],
@@ -476,11 +440,17 @@ export class EntityDeatilsComponent implements OnInit {
   }
 
   getEntityGlobalField() {
+    this.entityFormFields = [{"_matrixid":null,"param_name":"Entity Name","param_code":"Entity_Name"}];
     let params = "?processId=" + this.searchFormatForm.entityId;
     this.common.loading++;
     this.api.get("Entities/getEntityGlobalField" + params).subscribe(res => {
         this.common.loading--;
-        this.entityFormFields =  res['data'] || [];
+        let entityFormFields =  res['data'] || [];
+        if(entityFormFields && entityFormFields.length){
+          for(let i=0;i< entityFormFields.length;i++){
+            this.entityFormFields.push({"_matrixid":entityFormFields[i]['_matrixid'],"param_name":entityFormFields[i]['param_name'],"param_code":entityFormFields[i]['param_code']});
+          }
+        }
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -488,44 +458,12 @@ export class EntityDeatilsComponent implements OnInit {
       });
   }
 
-  // onMessageType(e){
-  //   let value = e.data;
-  //   if (e && value && value == "@") {
-  //     this.searchFormatList = this.entityFormFields;
-  //     if(this.searchFormatList && this.searchFormatList.length){
-  //       this.isSearchFormat = true;
-  //     }
-  //     setTimeout(() => {
-  //       if(this.searchFormatInput){
-  //         this.searchFormatInput.toArray()[0].nativeElement.focus();
-  //       }
-  //     }, 100);
-  //   } else if (e && value && value == " " || this.searchFormatForm.value.trim()=="") {
-  //     this.isSearchFormat = false;
-  //   } else if (this.isSearchFormat) {
-  //     let splieted = this.searchFormatForm.value.split('@');
-  //     let searchableTxt = splieted[splieted.length - 1];
-  //     this.searchFormatList = this.entityFormFields.filter(x => { return (x.param_name.toLowerCase()).includes(searchableTxt.toLowerCase()) });
-  //     if (this.searchFormatIndex >= this.searchFormatList.length) {
-  //       this.searchFormatIndex = 0;
-  //     }
-  //   }
-  // }
-
-  // onSelectFormField(field) {
-  //   console.log("onSelectFormField:", field);
-  //   let splieted = this.searchFormatForm.value.split('@');
-  //   console.log(splieted);
-  //   splieted.pop();
-  //   console.log(splieted, splieted.join('@'));
-  //   this.searchFormatForm.value = splieted.join('@') + '@' + field.param_code + '@,';
-  //   this.formatTextarea.nativeElement.focus();
-  //   console.log('searchFormatForm', this.searchFormatForm)
-  // }
-
   saveSearchFormat() {
     if(!this.searchFormatForm.entityId){
       this.common.showError("Entity Type is missing");
+      return false;
+    }else if(!this.searchFormatForm.separator || this.searchFormatForm.separator.trim()==""){
+      this.common.showError("Separator is missing");
       return false;
     }
     let searchFormat = this.searchFormatForm.value.map(x=>{return {_matrixid:x._matrixid,param_name:x.param_name,param_code:x.param_code}});

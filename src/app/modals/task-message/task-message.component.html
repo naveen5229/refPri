@@ -216,11 +216,11 @@
                                 inputId="assignerUser">
                             </auto-suggestion>
                             <button class="btn add" id="newAssignerBtn">
-                                <i class="fa fa-check m-0" title="assign to new user" (click)="updateTaskAssignerUser()"></i>
+                                <i class="fa fa-check m-0" title="Assign new user" (click)="updateTaskAssignerUser()"></i>
                                 <i class="fa fa-times ml-2" title="Cancel" (click)="showAssignerUserAuto=null"></i>
                             </button>
                         </div>
-                        <button *ngIf="!showAssignerUserAuto && (!this.statusId || this.statusId==1) && userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId && (ticketType == 101 || ticketType == 102)"
+                        <button *ngIf="!showAssignerUserAuto && (!this.statusId || this.statusId==2) && userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId && (ticketType == 101 || ticketType == 102)"
                             class="btn add" title="change assigner" (click)="showAssignerUserAuto=1"><i class="fa fa-plus m-0"></i></button>
                     </td>
                 </tr>
@@ -233,7 +233,7 @@
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
                         <button
                             *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)"
-                            class="btn add" title="assign to new user" (click)="showAssignUserAuto=1"><i class="fa fa-plus m-0"></i>
+                            class="btn add" title="Assign to new user" (click)="showAssignUserAuto=1"><i class="fa fa-plus m-0"></i>
                         </button>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">

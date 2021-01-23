@@ -276,6 +276,9 @@ export class AddGlobalFieldComponent implements OnInit {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
+      if (key === "addtime") {
+        headings[key]["type"] = "date";
+      }
     }
     return headings;
   }
