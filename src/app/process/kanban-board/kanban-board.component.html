@@ -5,16 +5,18 @@
         <h5 class="heading-design">Kanban Board <label *ngIf="processName">({{processName}})</label></h5>
       </div>
       <div class="col-4"></div>
-      <div class="col-3" *ngIf="dashboardState">
-        <auto-suggestion  (onSelected)="goToBoard($event)" [display]="['name']"
-          [data]="processList" placeholder="Select Process" seperator="-" [preSelected]="{name:processName}"
-          className="borderStyle" inputId="_id">
+      <div class="col-2" *ngIf="dashboardState">
+        <auto-suggestion (onSelected)="goToBoard($event)" [display]="['name']" [data]="processList"
+          placeholder="Select Process" seperator="-" [preSelected]="{name:processName}" className="borderStyle"
+          inputId="_id">
         </auto-suggestion>
       </div>
-      <div class="col-1 text-right">
+      <div class="col-2 text-right" *ngIf="dashboardState">
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
-        <button class="btn btn-primary" (click)="goToList()" *ngIf="dashboardState">Back</button>
+        <button class="btn btn-primary btn-sm mr-2" id="addLead" ><i
+            class="fa fa-plus"></i></button>
+        <button class="btn btn-primary" (click)="goToList()" >Back</button>
       </div>
     </div>
   </nb-card-header>

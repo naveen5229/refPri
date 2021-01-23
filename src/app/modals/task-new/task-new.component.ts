@@ -18,6 +18,7 @@ export class TaskNewComponent implements OnInit {
   title = "New Task";
   btn = 'Save';
   userId = null;
+  projectName = null;
   isProject = "";
   projectList = [];
   userList = [];
@@ -62,7 +63,7 @@ export class TaskNewComponent implements OnInit {
     this.normalTask.date = currentLast;
     // console.log(aaaaaa,'date from task new component')
     if (this.common.params != null) {
-      console.log(this.common.params.groupList, 'groupList from task-new component');
+      console.log(this.common.params, 'groupList from task-new component');
       this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
       this.userGroupList = this.common.params.groupList;
       if (this.userGroupList) {
@@ -83,6 +84,13 @@ export class TaskNewComponent implements OnInit {
         this.updateLastDateForm.date = new Date(this.common.params.editData._expdate);
         this.updateLastDateForm.dateOld = this.common.params.editData._expdate;
         this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
+      } else if (this.common.params.editType == 2) {
+        // console.log("🚀 ~ file: task-new.component.ts ~ line 90 ~ TaskNewComponent ~ this.normalTask.projectId", this.normalTask.projectId)
+        if(this.common.params.project.projectId){
+          this.isProject = '1';
+          this.projectName = this.common.params.project.projectName;
+          this.normalTask.projectId = this.common.params.project.projectId;
+        }
       }
     }
     this.getProjectList()
