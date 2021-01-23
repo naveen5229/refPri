@@ -29,7 +29,6 @@ export class ProjectUserKanbanComponent implements OnInit {
     },
     settings: {
       hideHeader: true,
-      arrow: true
     }
   }
   cards = [];
@@ -55,16 +54,13 @@ export class ProjectUserKanbanComponent implements OnInit {
       id: 'statusInProgress',
       to: 'statusComplete',
       data: []
-    },
-    {
-      id: 'statusComplete',
-      to: 'statusInProgress',
-      data: []
-    },
+    }
   ];
   normalTaskByMeList = [];
   ccTaskList = [];
   completeOtherTask = [];
+  otherTaskActiveTab: number = -1;
+  activeButton = 'to';
 
 
   constructor(
@@ -100,7 +96,6 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   showTaskPopup() {
-    this.projectListTable.settings.arrow = false;
     this.common.params = { userList: this.adminList, groupList: this.groupList, parentTaskId: null, editType: 2, project: this.project };
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "lg",
@@ -111,7 +106,6 @@ export class ProjectUserKanbanComponent implements OnInit {
       if (data.response) {
         this.getProjectList();
       }
-      this.projectListTable.settings.arrow = true;
     });
   }
 
@@ -873,21 +867,21 @@ export class ProjectUserKanbanComponent implements OnInit {
 
   closeotherTaskModal() {
     document.getElementById('otherTaskModal').style.display = 'none';
+    this.otherTaskActiveTab = -1;
   }
 
   insertFromOtherToProgress(data, index) {
     this.inProgressData = data;
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 878 ~ ProjectUserKanbanComponent ~ insertFromOtherToProgress ~ index", this.inProgressData, data, index);
-    document.getElementById(index).style.background = 'yellow';
+    this.otherTaskActiveTab = index;
   }
 
   assignTaskToProgress() {
     if (this.taskStatusBarData[0].data[0]) {
       this.common.showError('A Task Already In Progress');
       return;
-    }else{
+    } else {
       this.taskStatusBarData[0].data[0] = this.inProgressData;
-      document.getElementById('otherTaskModal').style.display = 'none';
+      this.closeotherTaskModal();
     }
   }
 }

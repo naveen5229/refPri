@@ -5,7 +5,24 @@
         <h5 class="heading-design">Kanban Board <label *ngIf="dashboardState">({{project.projectName}})</label>
         </h5>
       </div>
-      <div class="col-4"></div>
+      <div class="col-4">
+        <div class="row" *ngIf="dashboardState">
+          <div class="col-4">
+            <input type='search' placeholder="Search" style="width: 100%;"
+              (search)="getFilteredCard($event.target.value)">
+          </div>
+          <div class="col-4 verticalOverflow">
+            <div class="userProfileIcons cursor-pointer" id="{{user.id}}" title="{{user.user_label}}"
+              (click)="getCardsByUser(user.id)" [style.background]="user.color" *ngFor="let user of cardsUserGroup">
+              {{user.name}}
+            </div>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-primary ml-2" (click)="resetUserFilter()"
+              *ngIf="filterUserGroup.length > 0">Clear</button>
+          </div>
+        </div>
+      </div>
 
 
       <!--Start: For List Screen -->
@@ -56,52 +73,46 @@
       </div>
     </div>
 
+
+
     <div class="row" style="padding: 1rem;" *ngIf="dashboardState">
-      <div class="col-4">
-        <input type='search' placeholder="Search" style="width: 100%;" (search)="getFilteredCard($event.target.value)">
-      </div>
-      <div class="col-4">
-        <div class="userProfileIcons cursor-pointer" id="{{user.id}}" title="{{user.user_label}}"
-          (click)="getCardsByUser(user.id)" [style.background]="user.color" *ngFor="let user of cardsUserGroup">
-          {{user.name}}
-        </div>
-        <button class="btn btn-primary ml-2" (click)="resetUserFilter()" *ngIf="filterUserGroup.length > 0">Clear
-          Filter</button>
-      </div>
-      <div class="col-4 text-right" *ngIf="project.projectId">
-        <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
-        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
-      </div>
-    </div>
-
-
-    <!-- <div class="row" style="padding: 1rem;" *ngIf="dashboardState">
       <div class="col-2">
         <button class="btn btn-primary" (click)="getTaskByType()">Other Issues</button>
       </div>
-      <div class="col-4" *ngIf="taskStatusBarData[0].data[0]">
-        <div class="row swipe">
-          <div class="col-6" style="width: 100%;border: 1px solid lightgrey;"
-            *ngFor="let state of taskStatusBarData;let i = index" cdkDropList [cdkDropListData]="state.data"
-            (cdkDropListDropped)="drop($event);" [id]="state.id" [cdkDropListConnectedTo]="state.to">
-            <div *ngFor="let data of state.data"
-              style="text-align: center;vertical-align: middle;border: 1px solid black;" cdkDragLockAxis="x"
-              cdkDragBoundary=".swipe" cdkDrag>
+      <div class="col-4">
+        <div class="row">
+          <div class="col-4">In Progress</div>
+          <div class="col-8 cardContainerProgress" *ngFor="let state of taskStatusBarData;let i = index" cdkDropList
+            [cdkDropListData]="state.data" (cdkDropListDropped)="drop($event);" [id]="state.id"
+            [cdkDropListConnectedTo]="state.to">
+            <div class="row inprocessCardStyle" *ngFor="let data of state.data" cdkDrag>
               <div>
                 {{data.project}}
               </div>
-              <div style="white-space: nowrap;
-              width: 100%;
-              overflow: hidden;
-              text-overflow: ellipsis;
-          ">
+              <div style="white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;"
+                [title]="data.task_subject">
                 {{data.task_subject}}
               </div>
+            </div>
+            <div class="row" *ngIf="taskStatusBarData[0].data[0]">
+              <div class="col-4"><button class="btn btn-primary">Hold</button></div>
+              <div class="col-4" id="timer"></div>
+              <div class="col-4"><button class="btn btn-primary">Done</button></div>
             </div>
           </div>
         </div>
       </div>
-    </div> -->
+      <div class="col-6 text-right" *ngIf="project.projectId">
+        <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
+        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
+      </div>
+
+      <div class="col-6 text-right" *ngIf="!project.projectId">
+        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'to'" (click)="activeButton = 'to'">To</button>
+        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'by'" (click)="activeButton = 'by'">By</button>
+        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'cc'" (click)="activeButton = 'cc'">CC</button>
+      </div>
+    </div>
 
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
       <div class="stateContainerStyle ml-2" *ngFor="let card of cards;let i = index">
@@ -162,8 +173,9 @@
         <!-- Modal body -->
         <div class="modal-body">
           <div style="height: 180px;overflow: auto;">
-            <div class="row otherTaskListStyle" [id]="i" *ngFor="let other of completeOtherTask;let i = index"
-              (click)="insertFromOtherToProgress(other,i)">
+            <div class="row otherTaskListStyle cursor-pointer" *ngFor="let other of completeOtherTask;let i = index"
+              (click)="insertFromOtherToProgress(other,i)"
+              [ngClass]="{'focusOtherTaskList' : otherTaskActiveTab === i}">
               <div class="col-6" style="white-space: nowrap;">
                 {{other.task_subject}}
               </div>
