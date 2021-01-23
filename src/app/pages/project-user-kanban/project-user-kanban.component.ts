@@ -49,6 +49,22 @@ export class ProjectUserKanbanComponent implements OnInit {
   //   { id: 1, name: 'User' }
   // ];
   // projectType = { id: 0, name: 'Project' };
+  inProgressData = null;
+  taskStatusBarData = [
+    {
+      id: 'statusInProgress',
+      to: 'statusComplete',
+      data: []
+    },
+    {
+      id: 'statusComplete',
+      to: 'statusInProgress',
+      data: []
+    },
+  ];
+  normalTaskByMeList = [];
+  ccTaskList = [];
+  completeOtherTask = [];
 
 
   constructor(
@@ -85,7 +101,7 @@ export class ProjectUserKanbanComponent implements OnInit {
 
   showTaskPopup() {
     this.projectListTable.settings.arrow = false;
-    this.common.params = { userList: this.adminList, groupList: this.groupList, parentTaskId: null, editType: 2, project: this.project};
+    this.common.params = { userList: this.adminList, groupList: this.groupList, parentTaskId: null, editType: 2, project: this.project };
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "lg",
       container: "nb-layout",
@@ -801,4 +817,77 @@ export class ProjectUserKanbanComponent implements OnInit {
     }
   }
 
+  getTaskByType() {
+    let params = {};
+    for (let i = 0; i < 2; i++) {
+      if (i === 0) {
+        params = {
+          type: -101,
+          startDate: null,
+          endDate: null,
+        };
+      } else {
+        params = {
+          type: -5,
+          startDate: null,
+          endDate: null,
+        };
+      }
+
+
+      this.common.loading++;
+      this.api.post("AdminTask/getTaskByType", params)
+        .subscribe((res) => {
+          this.common.loading--;
+          console.log("data", res["data"]);
+          if (i === 0) {
+            //task by me
+            this.normalTaskByMeList = (res["data"] || [])
+              .map(task => {
+                task.assignedAs = 'by';
+                return task;
+              });;
+          } else {
+            //CC task
+            this.ccTaskList = (res["data"] || [])
+              .map(task => {
+                task.assignedAs = 'cc';
+                return task;
+              });
+          }
+
+          this.completeOtherTask = this.ccTaskList.concat(this.normalTaskByMeList);
+          if (this.completeOtherTask.length > 0) {
+            document.getElementById('otherTaskModal').style.display = 'block';
+          }
+          console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
+        },
+          (err) => {
+            this.common.loading--;
+            this.common.showError();
+            console.log("Error: ", err);
+          }
+        );
+    }
+  }
+
+  closeotherTaskModal() {
+    document.getElementById('otherTaskModal').style.display = 'none';
+  }
+
+  insertFromOtherToProgress(data, index) {
+    this.inProgressData = data;
+    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 878 ~ ProjectUserKanbanComponent ~ insertFromOtherToProgress ~ index", this.inProgressData, data, index);
+    document.getElementById(index).style.background = 'yellow';
+  }
+
+  assignTaskToProgress() {
+    if (this.taskStatusBarData[0].data[0]) {
+      this.common.showError('A Task Already In Progress');
+      return;
+    }else{
+      this.taskStatusBarData[0].data[0] = this.inProgressData;
+      document.getElementById('otherTaskModal').style.display = 'none';
+    }
+  }
 }

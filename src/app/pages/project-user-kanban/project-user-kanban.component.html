@@ -74,6 +74,35 @@
       </div>
     </div>
 
+
+    <!-- <div class="row" style="padding: 1rem;" *ngIf="dashboardState">
+      <div class="col-2">
+        <button class="btn btn-primary" (click)="getTaskByType()">Other Issues</button>
+      </div>
+      <div class="col-4" *ngIf="taskStatusBarData[0].data[0]">
+        <div class="row swipe">
+          <div class="col-6" style="width: 100%;border: 1px solid lightgrey;"
+            *ngFor="let state of taskStatusBarData;let i = index" cdkDropList [cdkDropListData]="state.data"
+            (cdkDropListDropped)="drop($event);" [id]="state.id" [cdkDropListConnectedTo]="state.to">
+            <div *ngFor="let data of state.data"
+              style="text-align: center;vertical-align: middle;border: 1px solid black;" cdkDragLockAxis="x"
+              cdkDragBoundary=".swipe" cdkDrag>
+              <div>
+                {{data.project}}
+              </div>
+              <div style="white-space: nowrap;
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+          ">
+                {{data.task_subject}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
       <div class="stateContainerStyle ml-2" *ngFor="let card of cards;let i = index">
         <div class="stateStatusBar" [style.background]="card.color"></div>
@@ -107,7 +136,8 @@
                   <div>{{data.status}}</div>
                 </div>
                 <div class="col-6">
-                  <div class="rounded-circle" title="{{data.user_label}}">
+                  <div class="rounded-circle" [style.background]="project.projectId ? '#008000' : '#3366ff'"
+                    title="{{data.user_label}}">
                     {{data.user}}</div>
                 </div>
               </div>
@@ -119,4 +149,38 @@
     </div>
 
   </nb-card-body>
+
+
+  <div class="modal" id="otherTaskModal" #otherTaskModal>
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Other Tasks</h5>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeotherTaskModal()">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div style="height: 180px;overflow: auto;">
+            <div class="row otherTaskListStyle" [id]="i" *ngFor="let other of completeOtherTask;let i = index"
+              (click)="insertFromOtherToProgress(other,i)">
+              <div class="col-6" style="white-space: nowrap;">
+                {{other.task_subject}}
+              </div>
+              <div class="col-6 text-right">
+                {{other.assignedAs}}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="row m-2" style="float: right;">
+              <button class="btn btn-primary" (click)="assignTaskToProgress()">In Progress</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </nb-card>
