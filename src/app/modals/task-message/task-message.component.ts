@@ -618,7 +618,7 @@ export class TaskMessageComponent implements OnInit {
         assignerUserId: this.newAssignerUser.id,
         status: this.statusId,
         isCCUpdate: isCCUpdate,
-        assignerUserNameOld: this.userListByTask['taskUsers'][0].assignto,
+        assignerUserNameOld: this.userListByTask['taskUsers'][0].assignby,
         assignerUserNameNew: this.newAssignerUser.name
       }
       // console.log("updateTaskAssigneeUser params:", params);return false;

@@ -268,4 +268,23 @@ callDetails(ticket,type,isDate=false) {
   const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 }
 
+  exportCSV() {
+    let data = null;
+    let headings = null;
+    let title = null;
+    if(this.activeTab=='processWise'){
+      data = this.processWiseTicketList;
+      headings = this.processWiseTicketTable.data.headings;
+      title = 'Process-Wise-Summary';
+    }else if(this.activeTab=='userWise'){
+      data = this.userWiseTicketList;
+      headings = this.userWiseTicketTable.data.headings;
+      title = 'User-Wise-Summary';
+    }
+    if (data.length == 0) {
+      this.common.showError('No Data Found')
+    } else {
+      this.common.getCSVFromDataArray(data, headings, title);
+    }
+  }
 }
