@@ -147,3 +147,25 @@
     </div>
 </div>
 <!-- end: update date form -->
+
+<!-- start: update project form -->
+<div class="modal-body" *ngIf="editType==3">
+    <div class="row">
+        <div class="col-4">
+            <label>Project:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="updateTaskForm.project.id = $event.id;updateTaskForm.project.name = $event.project_desc" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="updateProjectId" inputId="updateProjectId" [preSelected]="(updateTaskForm.project.id) ? {project_desc: updateTaskForm.project.name} : {project_desc: ''}">
+            </auto-suggestion>
+        </div>
+        <div class="col-2">
+            <i class="fa fa-undo cursor-pointer" aria-hidden="true" title="Remove Project" (click)="updateTaskForm.project = {id: null, name: null}"></i>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="updateProjectbtn" (click)="updateTaskProject()">Update</button>
+        </div>
+    </div>
+</div>
+<!-- end: update project form -->

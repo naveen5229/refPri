@@ -39,10 +39,13 @@
 
                             <!-- dynamic data array -->
                             <select [(ngModel)]="oddArray[i].r_value" class="form-control col-12"
-                                *ngIf="oddArray[i].r_fixedvalues" [disabled]="isDisabled">
+                                *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'" [disabled]="isDisabled">
                                 <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                     {{fixValue.option}}</option>
                             </select>
+                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
+                                name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event.option);" [preSelected]="{option:oddArray[i].r_value}" autocomplete="off">
+                            </auto-suggestion>
                             <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
                                 <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
@@ -84,10 +87,13 @@
 
                             <!-- dynamic data array -->
                             <select [(ngModel)]="evenArray[i].r_value" class="form-control col-12"
-                                *ngIf="evenArray[i].r_fixedvalues" [disabled]="isDisabled">
+                                *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'" [disabled]="isDisabled">
                                 <option [value]="fixValue.option" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                     {{fixValue.option}}</option>
                             </select>
+                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
+                                name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event.option);" [preSelected]="{option:evenArray[i].r_value}" autocomplete="off">
+                            </auto-suggestion>
                             <div class="input-group p-0" *ngIf="evenArray[i].r_coltype =='attachment'">
                                 <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
                                     <span class="blue cursor-pointer" (click)="common.evenArray(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>

@@ -41,7 +41,7 @@ export class TaskNewComponent implements OnInit {
     reason: null
   }
   returnNewDate = null;
-  editType = 0;
+  editType = 0;//0=new,1=child-task,2=new with param,3=edit-project
   userGroupList = [];
   userWithGroup = [];
   bGConditions = [
@@ -51,6 +51,13 @@ export class TaskNewComponent implements OnInit {
       isExist: true
     }
   ];
+  updateTaskForm = {
+    taskId: null,
+    ticketId: null,
+    ticketType: null,
+    project: { id: null,name: null},
+    projectOldName: null
+  };
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -91,6 +98,15 @@ export class TaskNewComponent implements OnInit {
           this.projectName = this.common.params.project.projectName;
           this.normalTask.projectId = this.common.params.project.projectId;
         }
+      } else if (this.common.params.editType == 3) {
+        this.title = "Update Task Project";
+        this.editType = this.common.params.editType;
+        this.updateTaskForm.taskId = this.common.params.parentTaskId;
+        this.updateTaskForm.ticketId = this.common.params.ticketId;
+        this.updateTaskForm.ticketType = this.common.params.ticketType;
+        this.updateTaskForm.project.id = (this.common.params.project.id) ? this.common.params.project.id : null;
+        this.updateTaskForm.project.name = (this.common.params.project.id) ? this.common.params.project.name : null;
+        this.updateTaskForm.projectOldName = (this.common.params.project.id) ? this.common.params.project.name : null;
       }
     }
     this.getProjectList()
@@ -371,6 +387,42 @@ export class TaskNewComponent implements OnInit {
         }
       });
     }
+  }
+
+  updateTaskProject() {
+    if (!this.updateTaskForm.taskId || !this.updateTaskForm.ticketId) {
+      this.common.showError("Invalid Request");
+      return false;
+    }
+      const params = {
+        taskId: this.updateTaskForm.taskId,
+        ticketId: this.updateTaskForm.ticketId,
+        ticketType: this.updateTaskForm.ticketType,
+        projectId: this.updateTaskForm.project.id,
+        projectName: this.updateTaskForm.project.name,
+        projectOld: (this.updateTaskForm.projectOldName) ? this.updateTaskForm.projectOldName : null
+      }
+      // console.log("params:", params); return false;
+      this.common.loading++;
+      this.api.post('AdminTask/updateTaskProject', params).subscribe(res => {
+        console.log(res);
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.resetTask();
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['msg']);
+            this.closeModal(true);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
 }
