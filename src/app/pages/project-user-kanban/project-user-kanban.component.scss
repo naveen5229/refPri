@@ -97,3 +97,44 @@
   margin: 5px;
   border: 1px solid lightgray;
 }
+
+.inprocessCardStyle {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid lightgrey;
+  border-left: 5px solid green;
+  margin: 5px;
+  border-radius: 5px;
+  min-height: 50px;
+  background: #fff;
+}
+
+.focusOtherTaskList {
+  background: yellow;
+}
+
+.cardContainerProgress {
+  border: 1px solid lightgrey;
+  min-height: 30px;
+}
+
+.verticalOverflow {
+  display: flex;
+  overflow: auto;
+}
+
+.customBtn-primary {
+  color: #000;
+  border-color: lightgrey;
+  height: 30px;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 4px 10px 5px 10px!important;
+  font-family: Poppins, sans-serif!important;
+  font-size: .875rem!important;
+  font-weight: 500;
+}
+
+.buttonActive{
+  background: blue;
+  color: white;
+}
