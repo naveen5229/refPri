@@ -696,7 +696,7 @@ export class ProjectUserKanbanComponent implements OnInit {
       isChecked: ticket._is_star_mark
     };
 
-    let subTitle = ticket.title + ":<br>" + ticket.desc;
+    let subTitle = ticket.title + ":<br>" + ticket._task_desc;
     this.common.params = {
       ticketEditData,
       title: "Ticket Comment",
@@ -713,7 +713,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     });
     console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
-      this.getProjectList();
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
     });
   }
 
