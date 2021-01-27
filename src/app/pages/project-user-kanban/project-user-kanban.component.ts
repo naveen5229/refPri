@@ -1,18 +1,15 @@
 
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragRelease, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { ApiService } from '../../Service/Api/api.service';
 import { ChartService } from '../../Service/Chart/chart.service';
 import { CommonService } from '../../Service/common/common.service';
-import { AddTransactionActionComponent } from '../../modals/process-modals/add-transaction-action/add-transaction-action.component';
-import { FormDataComponent } from '../../modals/process-modals/form-data/form-data.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../Service/user/user.service';
-import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import * as _ from 'lodash';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
-
+import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 @Component({
   selector: 'ngx-project-user-kanban',
   templateUrl: './project-user-kanban.component.html',
@@ -43,6 +40,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   cardsForFilterByUser = [];
   filterUserGroup = [];
   groupList = [];
+  departmentList = [];
   // typeList = [
   //   { id: 0, name: 'Project' },
   //   { id: 1, name: 'User' }
@@ -51,8 +49,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   inProgressData = null;
   taskStatusBarData = [
     {
-      id: 'statusInProgress',
-      to: 'statusComplete',
+      id: 'inProgress',
       data: []
     }
   ];
@@ -61,7 +58,6 @@ export class ProjectUserKanbanComponent implements OnInit {
   completeOtherTask = [];
   otherTaskActiveTab: number = -1;
   activeButton = 'to';
-
 
   constructor(
     public common: CommonService,
@@ -72,6 +68,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.getProjectList();
     this.getAllAdmin();
     this.getUserGroupList();
+    this.getDepartmentList();
     this.common.refresh = this.refresh.bind(this);
     this.loggedInUser = this.userService._details.id;
   }
@@ -80,19 +77,19 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   refresh() {
+    this.taskStatusBarData[0].data = [];
     if (this.dashboardState) {
       if (this.project.projectId) {
         this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
       } else {
         this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
       }
-      this.getProjectList();
-      this.getUserGroupList();
     } else {
-      this.getProjectList();
       this.getAllAdmin();
-      this.getUserGroupList();
     }
+    this.getProjectList();
+    this.getUserGroupList();
+    this.getDepartmentList();
   }
 
   showTaskPopup() {
@@ -129,6 +126,23 @@ export class ProjectUserKanbanComponent implements OnInit {
         });
   }
 
+  getDepartmentList() {
+    this.api.get("Admin/getDepartmentList.json").subscribe(
+      (res) => {
+        console.log("data", res["data"]);
+        if (res["code"] > 0) {
+          this.departmentList = res["data"] || [];
+        } else {
+          this.common.showError(res["msg"]);
+        }
+      },
+      (err) => {
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
+  }
+
   getProjectList() {
     this.common.loading++;
     this.api.get("AdminTask/getProjectListByUser").subscribe(res => {
@@ -145,23 +159,6 @@ export class ProjectUserKanbanComponent implements OnInit {
       console.log('Error: ', err);
     });
   }
-
-  // getProcessListByUser() {
-  //   this.common.loading++;
-  //   this.api.get(`Processes/getProcessListByUser`).subscribe((res) => {
-  //     this.common.loading--;
-  //     if (res['code'] == 1) {
-  //       this.projectList = res['data'] || [];
-  //       console.log("🚀 ~ file: kanban-board.component.ts ~ line 70 ~ KanbanBoardComponent ~ this.api.get ~ this.processList", this.projectList)
-  //       this.setProcessList();
-  //     } else {
-  //       this.common.showError(res['msg']);
-  //     }
-  //   }, (err) => {
-  //     this.common.loading--;
-  //     this.common.showError(err);
-  //   });
-  // }
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
@@ -214,8 +211,6 @@ export class ProjectUserKanbanComponent implements OnInit {
         } else {
           column[key] = { value: Project[key], class: 'black', action: '' };
         }
-
-        // column['style'] = { 'background': this.common.taskStatusBg(process._status) };
       }
       columns.push(column);
     });
@@ -229,14 +224,11 @@ export class ProjectUserKanbanComponent implements OnInit {
       txt: "View Board",
       title: "View Board",
     }];
-
     return Icons
   }
 
   goToBoard(lead, type) {
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead, type);
-
-    console.log('project type fromgoToBoard', this.project)
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead, type,this.project);
     let params = `projectId=${lead._id}&type=${type}&filter=null`
     this.common.loading++;
     this.api.get(`AdminTask/getTaskBoardView?` + params).subscribe((res) => {
@@ -312,6 +304,7 @@ export class ProjectUserKanbanComponent implements OnInit {
       });
     }
   };
+
   onDragEnded(event: CdkDragEnd<string[]>) {
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
@@ -323,7 +316,6 @@ export class ProjectUserKanbanComponent implements OnInit {
       });
     }
   };
-
 
   drop(event: CdkDragDrop<string[]>) {
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
@@ -351,11 +343,17 @@ export class ProjectUserKanbanComponent implements OnInit {
           if (data.data === null) {
             data.data = [];
           }
+          let containerIdTemp = (event.container.id).toLocaleLowerCase();
+          if(containerIdTemp=='inprogress' && this.taskStatusBarData[0].data[0]){
+              this.common.showError('A Task Already In Progress');
+              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 :0 );
+              return false;
+          }
           data.data.push(JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex])));
 
           console.log('data', event.container.id)
           let ticket = event.previousContainer.data[event.previousIndex];
-          switch ((event.container.id).toLocaleLowerCase()) {
+          switch (containerIdTemp) {
             case 'complete': this.changeTicketStatusWithConfirm(ticket, null, 5);
               break;
             case 'hold': this.changeTicketStatusWithConfirm(ticket, null, 3);
@@ -364,27 +362,12 @@ export class ProjectUserKanbanComponent implements OnInit {
               break;
             case 'ack': this.updateTicketStatus(ticket, null, 2);
               break;
-            case 'assigned': this.reactiveTicket(ticket, null)
+            case 'assigned': this.reactiveTicket(ticket, null);
+              break;
+            case 'inprogress': this.saveActivityLog(ticket, null);// change with status update function
               break;
             default: '';
           }
-          // if (event.previousContainer.data[event.previousIndex]['_is_action'] === 1) {
-          //   let lead = event.previousContainer.data[event.previousIndex];
-          //   lead['_state_id'] = this.cards[moveFrom]['_state_id'];
-          //   lead['_state_name'] = this.cards[moveFrom]['title'];
-          //   this.openTransAction(lead, null, null, isComplete);
-          // } else {
-          //   // this.openTransFormData(event.previousContainer.data[event.previousIndex],null,null);
-          //   let transaction = {
-          //     _transaction_id: event.previousContainer.data[event.previousIndex]['_transaction_id'],
-          //     _state_id: this.cards[moveFrom]['_state_id'],
-          //     _next_state_id: this.cards[moveTo]['_state_id'],
-          //     state_name: this.cards[moveFrom]['title'],
-          //     _next_state_name: this.cards[moveTo]['title'],
-          //     _state_form: event.previousContainer.data[event.previousIndex]['_state_form']
-          //   }
-          //   this.saveTransNextState(transaction);
-          // }
         }
         setTimeout(() => {
           if (data.title === event.previousContainer.id) {
@@ -402,193 +385,6 @@ export class ProjectUserKanbanComponent implements OnInit {
       scrollWidth.scrollTo(scrollWidth.scrollLeft + 5, 0);
     } else if (event.delta.x == -1) {
       scrollWidth.scrollTo(scrollWidth.scrollLeft - 5, 0);
-    }
-  }
-
-  openTransAction(lead, type, formType = null, isComplete: Boolean = null) {
-    let formTypeTemp = 0;
-    if (!formType) {
-      formTypeTemp = 0;
-    } else {
-      formTypeTemp = formType;
-    }
-    let actionData = {
-      processId: this.project.projectId,
-      processName: this.project.projectName,
-      transId: lead._transaction_id,
-      identity: null,
-      formType: formTypeTemp,
-      requestId: (type == 1) ? lead._transaction_actionid : null,
-      actionId: (lead._action_id > 0) ? lead._action_id : null,
-      actionName: (lead._action_id > 0) ? lead._action_name : '',
-      stateId: (lead._state_id > 0) ? lead._state_id : null,
-      stateName: (lead._state_id > 0) ? lead._state_name : '',
-      actionOwnerId: this.userService._details.id, //current user
-      modeId: (lead._mode_id > 0) ? lead._mode_id : null,
-      modeName: (lead._mode_id > 0) ? lead._mode_name : '',
-      remark: (lead._remark) ? lead._remark : null,
-      isStateForm: lead._state_form,
-      isActionForm: lead._action_form,
-      isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
-      isMarkTxnComplete: (lead._state_change == 2 && type == 1) ? 1 : null
-    };
-
-    // console.log('actionData',actionData);
-    // return;
-    let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
-    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add", isComplete: isComplete };
-    const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      console.log("res data:", data, lead);
-      if (data.response && data.nextFormType) {
-        // nextFormType: 1 = fromstate, 2=fromaction
-        // if (data.nextFormType == 1) {
-        //   lead._state_id = data.state.id;
-        //   lead.state_name = data.state.name;
-        //   if (data.isFormHere == 1) {
-        //     this.openTransFormData(lead, type, data.nextFormType);
-        //   }
-        //   else {
-        //     this.openTransAction(lead, type, 2);
-        //   }
-
-        // } else if (data.nextFormType == 2) {
-        //   if (data.isFormHere == 1) {
-        //     this.openTransFormData(lead, type, data.nextFormType);
-        //   } else {
-        //     this.openTransAction(lead, type, 1);
-        //   }
-        // }
-        if (data.nextFormType == 2 && data.isFormHere == 1) {
-          this.openTransFormData(lead, type, data.nextFormType);
-        } else {
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-        }
-      } else {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-      }
-    });
-  }
-
-  openTransFormData(lead, type, formType = null) {
-    let title = 'Action Form';
-    let refId = 0;
-    let refType = 0;
-    // formType: 1 = stateform, 2=actionform
-    if (formType == 1) {
-      title = 'State Form';
-      refId = lead._state_id;
-      refType = 0;
-    } else if (formType == 2) {
-      title = 'Action Form';
-      refId = lead._action_id;
-      refType = 1;
-    }
-    let actionData = {
-      processId: this.project.projectId,
-      processName: this.project.projectName,
-      transId: lead._transaction_id,
-      refId: refId,
-      refType: refType,
-      formType: formType,
-    };
-
-    this.common.params = { actionData, title: title, button: "Save" };
-    const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      console.log("formData:", formType);
-      if (formType == 2) {
-        this.openTransAction(lead, type, 1);
-      } else if (formType == 1) {
-        this.openTransAction(lead, type, 2);
-      } else {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-      }
-    });
-  }
-
-
-  saveTransNextState(transaction) {
-    if (!transaction._next_state_id) {
-      this.common.showError('Next state is missing');
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-    }
-    else {
-      const params = {
-        requestId: null,
-        transId: transaction._transaction_id,
-        stateId: transaction._next_state_id,
-        actionId: null,
-        nexActId: null,
-        nextActTarTime: null,
-        remark: null,
-        modeId: null,
-        actionOwnerId: null,
-        isNextAction: null,
-        isCompleted: false
-      };
-      console.log("saveTransNextState - saveTransAction:", params, transaction);
-      // return;
-      this.common.loading++;
-      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
-        this.common.loading--;
-        if (res['code'] == 1) {
-          if (res['data'][0].y_id > 0) {
-            transaction._state_id = transaction._next_state_id;
-            transaction.state_name = transaction._next_state_name;;
-            this.common.showToast(res['data'][0].y_msg);
-            if (transaction._state_form == 1) {
-              this.openTransFormData(transaction, null, 1);
-            }
-            else {
-              // this.openTransAction(lead, type, 2);
-              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-            }
-
-            // this.transAction.state = this.transAction.nextState;
-            // this.isFormHere = this.nextStateForm;
-            // if (this.isMarkTxnComplete == 1 && stateType == 2) {
-            //   setTimeout(() => {
-            //     this.markTxnComplete(params.transId);
-            //   }, 1000);
-            // }
-          } else {
-            this.common.showError(res['data'][0].y_msg);
-          }
-        } else {
-          this.common.showError(res['msg']);
-        }
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
-    }
-  }
-
-  transMessage(lead, type) {
-    console.log('click occured');
-    return;
-    if (lead._transaction_id > 0) {
-      let editData = {
-        transactionid: lead._transaction_id,
-        lastSeenId: lead._lastreadid,
-        tabType: type,
-        priOwnId: (lead._pri_own_id > 0) ? lead._pri_own_id : null,
-        rowData: lead,
-        stateOwnerId: lead._state_owner_id
-      }
-      this.common.params = {
-        editData, title: "Transaction Comment", button: "Save", subTitle: lead.identity, fromPage: 'process',
-        userList: this.adminList,
-        groupList: null,
-        departmentList: null
-      };
-      const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
-      activeModal.result.then(data => {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-      });
-    } else {
-      this.common.showError("Invalid Lead");
     }
   }
 
@@ -778,27 +574,10 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            if (this.project.projectId) {
-              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-            } else {
-              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
-            }
-            // if (
-            //   type == -102 &&
-            //   this.searchTask.startDate &&
-            //   this.searchTask.endDate
-            // ) {
-            //   let startDate = this.common.dateFormatter(
-            //     this.searchTask.startDate
-            //   );
-            //   let endDate = this.common.dateFormatter(this.searchTask.endDate);
-            //   this.getTaskByType(type, startDate, endDate);
-            // } else {
-            //   this.getTaskByType(type);
-            // }
           } else {
             this.common.showError(res["msg"]);
           }
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
         },
         (err) => {
           this.common.loading--;
@@ -827,8 +606,6 @@ export class ProjectUserKanbanComponent implements OnInit {
           endDate: null,
         };
       }
-
-
       this.common.loading++;
       this.api.post("AdminTask/getTaskByType", params)
         .subscribe((res) => {
@@ -851,9 +628,9 @@ export class ProjectUserKanbanComponent implements OnInit {
           }
 
           this.completeOtherTask = this.ccTaskList.concat(this.normalTaskByMeList);
-          if (this.completeOtherTask.length > 0) {
-            document.getElementById('otherTaskModal').style.display = 'block';
-          }
+          // if (this.completeOtherTask.length > 0) {
+          //   document.getElementById('otherTaskModal').style.display = 'block';
+          // }
           console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
         },
           (err) => {
@@ -865,23 +642,120 @@ export class ProjectUserKanbanComponent implements OnInit {
     }
   }
 
-  closeotherTaskModal() {
-    document.getElementById('otherTaskModal').style.display = 'none';
-    this.otherTaskActiveTab = -1;
-  }
+  // closeotherTaskModal() {
+  //   document.getElementById('otherTaskModal').style.display = 'none';
+  //   this.otherTaskActiveTab = -1;
+  // }
 
   insertFromOtherToProgress(data, index) {
     this.inProgressData = data;
     this.otherTaskActiveTab = index;
   }
 
-  assignTaskToProgress() {
+  assignTaskToProgress(ticket) {
+    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 898 ~ ProjectUserKanbanComponent ~ assignTaskToProgress ~ ticket", ticket)
+    const expdate = ticket['due date'];
+    var countDownDate = new Date(expdate).getTime();
+    var x = setInterval(function () {
+      var now = new Date().getTime();
+      var distance = countDownDate - now; // Find the distance between now and the count down date
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // Output the result in an element with id="demo"
+      document.getElementById("timer").innerHTML = days + "d " + hours + "h "
+        + minutes + "m " + seconds + "s ";
+      // If the count down is over, write some text 
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("timer").innerHTML = "EXPIRED";
+      }
+    }, 1000);
+
     if (this.taskStatusBarData[0].data[0]) {
       this.common.showError('A Task Already In Progress');
-      return;
+      this.getProjectList();
+      return false;
     } else {
-      this.taskStatusBarData[0].data[0] = this.inProgressData;
-      this.closeotherTaskModal();
+      this.taskStatusBarData[0].data[0] = ticket;
     }
   }
+
+  ticketMessage(ticket, type) {
+    console.log("type:", type);
+    let ticketEditData = {
+      ticketData: null,
+      ticketId: ticket._tktid,
+      statusId: ticket._status,
+      lastSeenId: ticket._lastreadid,
+      taskId: ticket._tktype == 101 || ticket._tktype == 102 ? ticket._refid : null,
+      taskType: ticket._tktype,
+      tabType: type,
+      isChecked: ticket._is_star_mark
+    };
+
+    let subTitle = ticket.title + ":<br>" + ticket.desc;
+    this.common.params = {
+      ticketEditData,
+      title: "Ticket Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.adminList,
+      groupList: this.groupList,
+      departmentList: this.departmentList
+    };
+    const activeModal = this.modalService.open(TaskMessageComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    console.log('reszponse', activeModal, type);
+    activeModal.result.then((data) => {
+      this.getProjectList();
+    });
+  }
+
+  saveActivityLog(ticket,isCompleted=0,startTime = this.common.getDate(),endTime=null){
+      let params = {
+        requestId: ticket._last_logid > 0 ?  ticket._last_logid : null,
+        refid: ticket._tktid,
+        reftype: 0,
+        outcome: null,
+        spendHour: null,
+        startTime: (startTime) ? this.common.dateFormatter(startTime) : null,
+        endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
+        isCompleted: isCompleted
+      };
+      console.log("params:", params);this.assignTaskToProgress(ticket);
+       return false;
+      this.common.loading++;
+      this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
+        (res) => {
+          this.common.loading--;
+          if (res["code"] > 0) {
+            if(res['data'][0]['y_id']>0){
+              this.common.showToast(res['data'][0]['y_msg']);
+              if(!endTime){
+                this.assignTaskToProgress(ticket);
+              }else{
+                this.taskStatusBarData[0].data = [];
+              }
+            }else{
+              this.common.showError(res['data'][0]['y_msg']);
+            }
+          } else {
+            this.common.showError(res["msg"]);
+          }
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+        },
+        (err) => {
+          this.common.loading--;
+          this.common.showError();
+          console.log("Error: ", err);
+        }
+      );
+  }
+
 }
