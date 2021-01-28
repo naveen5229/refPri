@@ -85,21 +85,21 @@
           <div class="col-8 cardContainerProgress" *ngFor="let state of taskStatusBarData;let i = index" cdkDropList
             [cdkDropListData]="state.data" (cdkDropListDropped)="drop($event);" [id]="state.id">
             <div class="row inprocessCardStyle" *ngFor="let data of state.data" cdkDrag>
-              <div class="col-12 text-left font-weight-bold" [style.color]="data.type_color">
+              <div class="col-12 text-left title" [style.color]="data.type_color">
                 {{data.type}}
               </div>
-              <div class="col-12 text-left cardTitleStyle"
+              <div class="col-12 text-left  cardTitleStyle"
                 [title]="data.title">
                 {{data.title}}
               </div>
             </div>
-            <div class="row" *ngIf="taskStatusBarData[0].data[0]">
+            <div class="row align-items-center" *ngIf="taskStatusBarData[0].data[0]">
               <div class="col-4 pr-0">
-                <button *ngIf="state.data[0]['log_start_time']" class="btn btn-primary" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">Pause</button>
-                <button *ngIf="!state.data[0]['log_start_time']" class="btn btn-primary" (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)">Start</button>
+                <button *ngIf="state.data[0]['log_start_time']" class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">Pause</button>
+                <button *ngIf="!state.data[0]['log_start_time']" class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)">Start</button>
               </div>
-              <div class="col-4 pr-0 pl-0 small" id="timer">{{inprogressTimer}}</div>
-              <div class="col-4 pl-0 text-right"><button class="btn btn-primary" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button></div>
+              <div class="col-4 pr-0 pl-0 small" id="timer"><i class="far fa-clock"></i>  {{inprogressTimer}}</div>
+              <div class="col-4 pl-0 text-right"><button class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button></div>
             </div>
           </div>
         </div>
@@ -117,10 +117,12 @@
     </div>
 
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
-      <div class="stateContainerStyle ml-2" *ngFor="let card of cards;let i = index">
+      <div class="stateContainerStyle col" *ngFor="let card of cards;let i = index">
         <div class="stateStatusBar" [style.background]="card.color"></div>
         <!-- background: {{data.color}};-->
-        <div>
+        <div class="title">
+          <div class="strip" [style.background]="card.color">    
+          </div>
           <h5 class="stateTitleStyle" title="{{card.title}}">{{card.title}}</h5>
         </div>
         <div class="stateTansActCountStyle">
