@@ -16,6 +16,7 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
   styleUrls: ['./project-user-kanban.component.scss']
 })
 export class ProjectUserKanbanComponent implements OnInit {
+  cardlength = null;
   loggedInUser = null;
   dashboardState = false;
   projectList = [];
@@ -255,6 +256,7 @@ export class ProjectUserKanbanComponent implements OnInit {
         this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
         this.placeCardLength(this.cards);
         this.getAllUserGroup(this.cards);
+        this.cardlength =  this.cards.length;
         this.dashboardState = true;
         this.project.projectId = lead._id;
         this.project.projectName = lead.project_desc;

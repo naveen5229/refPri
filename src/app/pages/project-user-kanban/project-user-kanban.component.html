@@ -117,7 +117,7 @@
     </div>
 
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
-      <div class="stateContainerStyle col" *ngFor="let card of cards;let i = index">
+      <div class="stateContainerStyle col" [style.width.%]="100/cardlength"  *ngFor="let card of cards;let i = index">
         <div class="stateStatusBar" [style.background]="card.color"></div>
         <!-- background: {{data.color}};-->
         <div class="title">
