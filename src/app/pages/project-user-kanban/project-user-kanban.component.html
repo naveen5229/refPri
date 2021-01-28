@@ -85,16 +85,19 @@
           <div class="col-8 cardContainerProgress" *ngFor="let state of taskStatusBarData;let i = index" cdkDropList
             [cdkDropListData]="state.data" (cdkDropListDropped)="drop($event);" [id]="state.id">
             <div class="row inprocessCardStyle" *ngFor="let data of state.data" cdkDrag>
-              <div>
-                {{data.title}}
+              <div class="col-12 text-left font-weight-bold" [style.color]="data.type_color">
+                {{data.type}}
               </div>
-              <div class="text-left cardTitleStyle"
-                [title]="data._task_desc">
-                {{data._task_desc}}
+              <div class="col-12 text-left cardTitleStyle"
+                [title]="data.title">
+                {{data.title}}
               </div>
             </div>
             <div class="row" *ngIf="taskStatusBarData[0].data[0]">
-              <div class="col-4 pr-0"><button class="btn btn-primary" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">{{taskStatusButton}}</button></div>
+              <div class="col-4 pr-0">
+                <button *ngIf="state.data[0]['log_start_time']" class="btn btn-primary" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">Pause</button>
+                <button *ngIf="!state.data[0]['log_start_time']" class="btn btn-primary" (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)">Start</button>
+              </div>
               <div class="col-4 pr-0 pl-0 small" id="timer">{{inprogressTimer}}</div>
               <div class="col-4 pl-0 text-right"><button class="btn btn-primary" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button></div>
             </div>
@@ -143,9 +146,9 @@
             <div class="col-12 pb-2">
               <div class="row">
                 <div class="col-6">
-                  <i class="fas fa-arrow-up" style="color: red;" title="High Priority" *ngIf="data.priority"></i>
-                  <i class="fas fa-arrow-up" style="color: yellow;" title="Low Priority" *ngIf="!data.priority"></i>
-                  <i class="fa fa-comments text-warning" aria-hidden="true" *ngIf="data._reply_demanded > 0"></i>
+                  <i class="fas fa-arrow-up text-danger"  title="High Priority" *ngIf="data.priority"></i>
+                  <i class="fas fa-arrow-up text-warning" title="Low Priority" *ngIf="!data.priority"></i>
+                  <i class="fa fa-comments text-danger pl-1" aria-hidden="true" title="Reply Demanded" *ngIf="data._reply_demanded > 0"></i>
                   <div>{{data.status}}</div>
                 </div>
                 <div class="col-6">
