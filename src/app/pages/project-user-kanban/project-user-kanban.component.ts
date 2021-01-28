@@ -60,6 +60,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   activeButton = 'to';
   inprogressTimer = null;
   taskStatusButton = 'Hold';
+  boardType:number = 0;
 
   constructor(
     public common: CommonService,
@@ -92,6 +93,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   getDashboardByType(type){
+    this.boardType = type;
     this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, type);
   }
 
@@ -358,7 +360,7 @@ export class ProjectUserKanbanComponent implements OnInit {
           if (containerIdTemp == 'inprogress' && this.taskStatusBarData[0].data[0]) {
             // if (this.taskStatusBarData[0].data[0]) {
               this.common.showError('A Task Already In Progress');
-              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
               return false;
             // } else {
             //   this.taskStatusBarData[0].data[0] = ticket;
@@ -507,12 +509,12 @@ export class ProjectUserKanbanComponent implements OnInit {
         if (data.response) {
           this.updateTicketStatus(ticket, type, 0);
         } else {
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
         }
       });
     } else {
       this.common.showError("Ticket ID Not Available");
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
     }
   }
 
@@ -546,12 +548,12 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.updateTicketStatus(ticket, type, status, data.remark);
         } else {
           console.log('project type', this.project)
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
         }
       });
     } else {
       this.common.showError("Task ID Not Available");
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
     }
   }
 
@@ -575,13 +577,13 @@ export class ProjectUserKanbanComponent implements OnInit {
           } else {
             this.common.showError(res["msg"]);
           }
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
         },
         (err) => {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
         }
       );
     } else {
@@ -703,7 +705,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     });
     console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
     });
   }
 
@@ -739,13 +741,13 @@ export class ProjectUserKanbanComponent implements OnInit {
         } else {
           this.common.showError(res["msg"]);
         }
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
       },
       (err) => {
         this.common.loading--;
         this.common.showError();
         console.log("Error: ", err);
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
       }
     );
   }
@@ -767,7 +769,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     const activeModal = this.modalService.open(TaskNewComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
       if (data.response) {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
       }
     });
   }
