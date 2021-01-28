@@ -57,6 +57,8 @@ import { CustomeronboardingComponent } from './customeronboarding/customeronboar
 import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 import { UserExpensesComponent } from './user-expenses/user-expenses.component';
+import { ProjectUserKanbanComponent } from './project-user-kanban/project-user-kanban.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -68,7 +70,8 @@ import { UserExpensesComponent } from './user-expenses/user-expenses.component';
     DashboardModule,
     CampaignModule,
     ProcessModule,
-    TicketModule
+    TicketModule,
+    DragDropModule
   ],
   declarations: [
     PagesComponent,
@@ -118,7 +121,8 @@ import { UserExpensesComponent } from './user-expenses/user-expenses.component';
     CustomeronboardingComponent,
     EntityDeatilsComponent,
     UserWiseExpensesComponent,
-    UserExpensesComponent
+    UserExpensesComponent,
+    ProjectUserKanbanComponent
   ],
 })
 export class PagesModule {

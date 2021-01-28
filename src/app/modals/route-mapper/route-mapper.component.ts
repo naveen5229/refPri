@@ -78,6 +78,7 @@ export class RouteMapperComponent implements OnInit {
   }
 
   getLocationLogs() {
+    console.log('dates', this.startDate, this.endDate);
     const params = `fromDate=${this.common.dateFormatter(this.startDate)}&toDate=${this.common.dateFormatter(this.endDate)}&userId=${this.userId}`;
     this.common.loading++;
     this.api.get('Admin/getLocationLogsWrtUser?' + params)
@@ -85,10 +86,15 @@ export class RouteMapperComponent implements OnInit {
         this.common.loading--;
         console.log('res:', res);
         this.locations = res.data;
-        if (this.locations.length) {
+        if (this.locations && this.locations.length) {
           this.createCompleteRoute();
           this.setMarker(this.locations[0]);
           if (!this.routeMapperPolyline) this.initPolyline();
+        } else {
+          if (this.completeRoutePolyline) {
+            this.completeRoutePolyline.setMap(null);
+            this.setMarker(null);
+          }
         }
       }, err => {
         this.common.loading--;

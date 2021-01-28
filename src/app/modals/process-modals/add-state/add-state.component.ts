@@ -5,6 +5,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../add-field/add-field.component';
 import { AddActionComponent } from '../add-action/add-action.component';
+import { AssignFieldsComponent } from '../assign-fields/assign-fields.component';
 
 @Component({
   selector: 'ngx-add-state',
@@ -283,17 +284,25 @@ export class AddStateComponent implements OnInit {
   }
 
   openFieldModal(data) {
-    let refData = {
+    // let refData = {
+    //   id: data._state_id,
+    //   type: 0
+    // }
+    // this.common.params = { ref: refData };
+    // const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     console.log(data.response);
+    //   }
+    // });
+
+    let ref = {
       id: data._state_id,
       type: 0
     }
-    this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.response);
-      }
-    });
+    let title = "State Form Assignment";
+    this.common.params = { ref: ref, processId: this.processId, title: title };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
 
   addProcessAction(row) {

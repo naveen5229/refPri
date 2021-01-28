@@ -65,6 +65,8 @@ import { CustomDashboardComponent } from '../ticket/custom-dashboard/custom-dash
 import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 import { UserExpensesComponent } from './user-expenses/user-expenses.component';
+import { KanbanBoardComponent } from '../process/kanban-board/kanban-board.component';
+import { ProjectUserKanbanComponent } from './project-user-kanban/project-user-kanban.component';
 
 const routes: Routes = [{
   path: '',
@@ -393,6 +395,16 @@ const routes: Routes = [{
     {
       path: 'user-expenses',
       component: UserExpensesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'kanban-board',
+      component: KanbanBoardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'project-user-kanban-board',
+      component: ProjectUserKanbanComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

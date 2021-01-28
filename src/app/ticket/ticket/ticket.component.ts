@@ -1181,6 +1181,12 @@ export class TicketComponent implements OnInit {
     });
   }
 
+  AdditionalFormNew(data) {
+    console.log('final data:',data);
+    this.common.params = { additionalform: (data > 0) ? data : null,isDisabled:true };
+    const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
   openAssignUserModal(ticket, type) {
     console.log(this.assignUserObject, ticket);
     this.assignUserObject.tktId = ticket._ticket_id;

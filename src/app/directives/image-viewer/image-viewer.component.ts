@@ -183,6 +183,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     this.prepararTrocaImagem();
 
     let imgObj = this.BASE_64_PNG;
+    console.log("🚀 ~ file: image-viewer.component.ts ~ line 186 ~ ImageViewerComponent ~ showImage ~ imgObj", imgObj)
     if (this.isPDF()) {
 
       this.carregarViewerPDF();

@@ -67,10 +67,16 @@ export class TaskMessageComponent implements OnInit {
     id: null,
     name: ""
   };
-  attachmentFile = {
-    name: null,
-    file: null
+  showAssignerUserAuto = null;
+  newAssignerUser = {
+    id: null,
+    name: ""
   };
+  // attachmentFile = {
+  //   name: null,
+  //   file: null
+  // };
+  attachmentFile = [];
   attachmentList = [];
   isAttachmentShow = false;
   isSearchShow = false;
@@ -103,7 +109,7 @@ export class TaskMessageComponent implements OnInit {
   mentionUserIndex: number = 0;
   query_conversation = null;
   // searchTerm = null;
-  
+
   searchedIndex = [];
   selectedIndex = 0;
   searchCount = 0;
@@ -217,7 +223,7 @@ export class TaskMessageComponent implements OnInit {
     if (key == 'escape') {
       this.closeModal(false);
     }
-    if(key =='backspace'){
+    if (key == 'backspace') {
       console.log(this.taskMessage.split('@'));
     }
 
@@ -350,7 +356,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   saveTicketMessage() {
-    if (this.taskMessage == "" && !this.attachmentFile.file) {
+    if (this.taskMessage == "" && !this.attachmentFile) {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
@@ -362,7 +368,7 @@ export class TaskMessageComponent implements OnInit {
       if (mentionedUsers && mentionedUsers.length > 0) {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
-      
+
       // const duplicatedGroup = _.groupBy(mentionedUsers,data => {return data.user_id});
       // let finalMentionedUsers = [];
       // Object.keys(duplicatedGroup).map(id =>{
@@ -376,22 +382,24 @@ export class TaskMessageComponent implements OnInit {
         ticketId: this.ticketId,
         status: this.statusId,
         message: formatedMsg,//this.taskMessage,
-        attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        // attachment: this.attachmentFile.file,
+        // attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        attachments: JSON.stringify(this.attachmentFile.map(attachments=> {return{name: attachments.name, file: attachments.file}})),
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
         users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
-      // console.log("params:", params);
+      console.log("params:", params);
       // return false;
       this.common.loading++;
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
-          this.attachmentFile.file = null;
-          this.attachmentFile.name = null;
+          // this.attachmentFile.file = null;
+          // this.attachmentFile.name = null;
+          this.attachmentFile = [];
           this.resetQuotedMsg();
           if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
@@ -589,6 +597,50 @@ export class TaskMessageComponent implements OnInit {
       this.common.showError("Select Assignee user");
     }
   }
+  
+  updateTaskAssignerUser() {
+    if (this.ticketId > 0 && this.newAssignerUser.id > 0) {
+      let isCCUpdate = 1;
+      if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+        let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
+        if (findCC) {
+          isCCUpdate = 0;
+        }
+      }
+      if (this.loginUserId == this.newAssignerUser.id) {
+        this.common.showError("Please assign a new user");
+        return false;
+      }
+      let params = {
+        ticketId: this.ticketId,
+        taskId: this.taskId,
+        ticketType: this.ticketType,
+        assignerUserId: this.newAssignerUser.id,
+        status: this.statusId,
+        isCCUpdate: isCCUpdate,
+        assignerUserNameOld: this.userListByTask['taskUsers'][0].assignby,
+        assignerUserNameNew: this.newAssignerUser.name
+      }
+      // console.log("updateTaskAssigneeUser params:", params);return false;
+      this.common.loading++;
+      this.api.post('AdminTask/updateTaskAssignerUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.getAllUserByTask();
+          this.getMessageList();
+          this.showAssignerUserAuto = null;
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Select Assigner user");
+    }
+  }
 
   updateTicketStatus(status, remark = null) {
     if (this.ticketId) {
@@ -689,23 +741,28 @@ export class TaskMessageComponent implements OnInit {
 
   handleFileSelection(event) {
     this.common.loading++;
-    this.common.getBase64(event.target.files[0]).then((res: any) => {
-      this.common.loading--;
-      let file = event.target.files[0];
-      var ext = file.name.split('.').pop();
-      this.formatIcon(ext);
-      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext.toLowerCase())) {
-      } else {
-        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
-        return false;
-      }
-      this.attachmentFile.name = file.name;
-      this.attachmentFile.file = res;
-    }, err => {
-      this.common.loading--;
-      console.error('Base Err: ', err);
-    })
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.common.getBase64(event.target.files[i]).then((res: any) => {
+        console.log("🚀 ~ file: task-message.component.ts ~ line 697 ~ TaskMessageComponent ~ this.common.getBase64 ~ res", res)
+        let file = event.target.files[i];
+        var ext = file.name.split('.').pop();
+        let format = this.formatIcon(ext);
+        let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+        if (formats.includes(ext.toLowerCase())) {
+        } else {
+          this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
+          return false;
+        }
+        // this.attachmentFile.name = file.name;
+        // this.attachmentFile.file = res;
+        this.attachmentFile.push({ name: file.name, file: res, format:format });
+        console.log(this.attachmentFile);
+      }, err => {
+        this.common.loading--;
+        console.error('Base Err: ', err);
+      })
+    }
+    this.common.loading--;
   }
 
   formatIcon(ext) {
@@ -717,13 +774,20 @@ export class TaskMessageComponent implements OnInit {
       case 'csv': icon = 'fas fa-file-csv'; break;
       default: icon = null;
     }
+    return icon;
     this.fileType = icon;
   }
 
+  removeFile(i){
+    this.attachmentFile.splice(i,1);
+    console.log('after delete',this.attachmentFile);
+  }
+
   onPaste(event: any) {
-    // console.log('event', event);
+    console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
+    console.log("🚀 ~ file: task-message.component.ts ~ line 741 ~ TaskMessageComponent ~ onPaste ~ items", items)
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
         event.preventDefault();
@@ -734,10 +798,14 @@ export class TaskMessageComponent implements OnInit {
   }
 
   filesDropped(files: FileHandle[]) {
-    // console.log("ChatboxComponent -> filesDropped -> files", files)
+    console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
-    selectedFile.target.files.push(this.files[0].file);
+    // selectedFile.target.files.push(this.files[0].file);
+    this.files.map(files => {
+      selectedFile.target.files.push(files.file)
+    })
+    console.log("🚀 ~ file: task-message.component.ts ~ line 741 ~ TaskMessageComponent ~ filesDropped ~ selectedFile", selectedFile);
     this.handleFileSelection(selectedFile);
   }
 
@@ -802,17 +870,17 @@ export class TaskMessageComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
-    if(!this.mentionedUsers.find(x=>x.id==user.id)){
+    if (!this.mentionedUsers.find(x => x.id == user.id)) {
       this.mentionedUsers.push({ id: user.id, name: user.name });
     }
     // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
     console.log(splieted);
     splieted.pop();
-    console.log(splieted,splieted.join('@'));
+    console.log(splieted, splieted.join('@'));
     this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
-    console.log('mentioned users', this.mentionedUsers,this.taskMessage)
+    console.log('mentioned users', this.mentionedUsers, this.taskMessage)
   }
 
   getScheduledMasterByTaskId() {
@@ -973,16 +1041,16 @@ export class TaskMessageComponent implements OnInit {
     //   }
     // }
     // setTimeout(() => {
-      let messageList = JSON.parse(JSON.stringify(this.messageListShow));
-      this.common.searchString(value,messageList).then((res)=>{
-        console.log("res:",res);
-        this.searchedIndex = res.searchedIndex;
-        this.searchCount = this.searchedIndex.length;
-        this.messageList = res.messageList;
-        setTimeout(() => {
-          this.searchCount>0 ? this.focusOnSelectedIndex() : null;
-        }, 500);
-      });
+    let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+    this.common.searchString(value, messageList).then((res) => {
+      console.log("res:", res);
+      this.searchedIndex = res.searchedIndex;
+      this.searchCount = this.searchedIndex.length;
+      this.messageList = res.messageList;
+      setTimeout(() => {
+        this.searchCount > 0 ? this.focusOnSelectedIndex() : null;
+      }, 500);
+    });
     // }, 500);
   }
 
@@ -996,7 +1064,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   onchangeIndex(type) {
-    console.log('selectedIndex:', this.selectedIndex,this.searchedIndex.length);
+    console.log('selectedIndex:', this.selectedIndex, this.searchedIndex.length);
     if (this.searchedIndex.length > 0) {
       if (type == "plus") {
         if (this.selectedIndex == this.searchedIndex.length - 1) {
@@ -1025,7 +1093,7 @@ export class TaskMessageComponent implements OnInit {
         removeClass.classList.remove('text-focus-highlight');
     }
     let addClass = document.getElementById("focusOn-" + focusOn);
-    if(addClass)
+    if (addClass)
       addClass.classList.add('text-focus-highlight');
     this.scrollToChat(focusOn);
   }

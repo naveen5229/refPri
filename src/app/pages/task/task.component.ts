@@ -882,6 +882,8 @@ export class TaskComponent implements OnInit {
             action: null,
             class: "text-center",
           };
+        } else if (key == "project") {
+          column[key] = {value: ticket[key], class:[101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null,};
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -952,6 +954,8 @@ export class TaskComponent implements OnInit {
             action: null,
             class: "text-center",
           };
+        } else if (key == "project") {
+          column[key] = {value: ticket[key], class:[101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null,};
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -1664,16 +1668,20 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  editTask(ticket, type) {
+  editTask(ticket, type,isProject=false) {
     console.log("type:", type);
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
       parentTaskId: ticket._refid,
       parentTaskDesc: ticket.task_desc,
-      editType: 1,
+      editType: (isProject) ? 3 : 1,
       editData: ticket,
+      ticketId: ticket._tktid,
+      ticketType: ticket._tktype,
+      project:{id: (ticket.project.toLowerCase()!='standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase()!='standalone') ? ticket.project : null}
     };
+    
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "md",
       container: "nb-layout",

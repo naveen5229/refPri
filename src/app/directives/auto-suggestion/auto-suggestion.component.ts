@@ -1,7 +1,24 @@
-import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../Service/Api/api.service';
-import { CommonService } from '../../Service/common/common.service';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  ViewChild,
+  Output,
+  Input,
+  ChangeDetectorRef,
+  ElementRef
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import {
+  ApiService
+} from '../../Service/Api/api.service';
+import {
+  CommonService
+} from '../../Service/common/common.service';
 
 
 
@@ -37,7 +54,6 @@ export class AutoSuggestionComponent implements OnInit {
   @Input() isMultiSelect: boolean;
   @Input() bGConditions: any[] = [];
   @Input() apiMethod: string = 'get';
-
   counter = 0;
   searchText = '';
   showSuggestions = false;
@@ -49,17 +65,30 @@ export class AutoSuggestionComponent implements OnInit {
   selectedSuggestions = [];
   isAllData = false;
   suggestionApiHitTimer: any = null;
+  scrollIntoView: any;
+
 
   constructor(public api: ApiService,
     private cdr: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-    public common: CommonService) {
-  }
+    public common: CommonService,
+    public el: ElementRef) {}
 
   ngOnInit() {
     this.searchForm = this.formBuilder.group({
       search: ['']
     });
+  }
+  
+  ngOnChanges(changes) {
+    if (changes.preSelected) {
+      this.preSelected = changes.preSelected.currentValue;
+      this.preSelected && this.handlePreSelection();
+      if (this.isMultiSelect) {
+        this.selectedSuggestions = this.preSelected || [];
+      }
+    }
+
   }
 
   ngAfterViewInit() {
@@ -75,16 +104,6 @@ export class AutoSuggestionComponent implements OnInit {
 
   }
 
-  ngOnChanges(changes) {
-    if (changes.preSelected) {
-      this.preSelected = changes.preSelected.currentValue;
-      this.preSelected && this.handlePreSelection();
-      if (this.isMultiSelect) {
-        this.selectedSuggestions = this.preSelected || [];
-      }
-    }
-
-  }
 
   handlePreSelection() {
     this.selectedSuggestion = this.preSelected;
@@ -135,7 +154,9 @@ export class AutoSuggestionComponent implements OnInit {
     this.api[this.apiMethod](this.url + params, this.apiBase)
       .subscribe(res => {
         this.suggestions = res['data'];
-        if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({ search: this.searchText });
+        if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({
+          search: this.searchText
+        });
       }, err => {
         console.error(err);
         this.common.showError();
@@ -174,17 +195,22 @@ export class AutoSuggestionComponent implements OnInit {
     return displayText;
   }
 
+
   handleKeyDown(event) {
     const key = event.key.toLowerCase();
+
     if (!this.showSuggestions) return;
     if (key == 'arrowdown') {
       if (this.activeSuggestion != this.suggestions.length - 1) this.activeSuggestion++;
       else this.activeSuggestion = 0;
       event.preventDefault();
+      this.scrolintoView();
     } else if (key == 'arrowup') {
       if (this.activeSuggestion != 0) this.activeSuggestion--;
       else this.activeSuggestion = this.suggestions.length - 1;
       event.preventDefault();
+      this.scrolintoView();
+
     } else if (key == 'enter' || key == 'tab') {
       if (this.activeSuggestion !== -1) {
         this.selectSuggestion(this.suggestions[this.activeSuggestion]);
@@ -193,8 +219,19 @@ export class AutoSuggestionComponent implements OnInit {
       }
     }
 
-
   }
+
+
+  scrolintoView() {
+    let suggestion = document.querySelectorAll('.suggestions .suggestion');
+    if (this.activeSuggestion) {
+      suggestion[this.activeSuggestion].scrollIntoView();
+    } else {
+      suggestion[this.activeSuggestion].scrollIntoView(false);
+    }
+  }
+
+
 
   handleUnselected() {
     setTimeout(() => {
@@ -242,5 +279,6 @@ export class AutoSuggestionComponent implements OnInit {
       this.onSelected.emit(this.selectedSuggestions);
     }
   }
+
 
 }
