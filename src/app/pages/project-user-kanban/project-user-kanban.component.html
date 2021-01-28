@@ -79,7 +79,7 @@
       <!-- <div class="col-2">
         <button class="btn btn-primary" (click)="getTaskByType()">Other Issues</button>
       </div> -->
-      <!-- <div class="col-6">
+      <div class="col-6">
         <div class="row">
           <div class="col-4">In Progress</div>
           <div class="col-8 cardContainerProgress" *ngFor="let state of taskStatusBarData;let i = index" cdkDropList
@@ -88,29 +88,29 @@
               <div>
                 {{data.title}}
               </div>
-              <div style="white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;"
-                [title]="data.task_subject">
-                {{data.task_subject}}
+              <div class="text-left cardTitleStyle"
+                [title]="data._task_desc">
+                {{data._task_desc}}
               </div>
             </div>
             <div class="row" *ngIf="taskStatusBarData[0].data[0]">
-              <div class="col-4 pr-0"><button class="btn btn-primary">Hold</button></div>
-              <div class="col-4 pr-0 pl-0" style="font-size: 11px;" id="timer"></div>
-              <div class="col-4 pl-0 text-right"><button class="btn btn-primary">Done</button></div>
+              <div class="col-4 pr-0"><button class="btn btn-primary" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">{{taskStatusButton}}</button></div>
+              <div class="col-4 pr-0 pl-0 small" id="timer">{{inprogressTimer}}</div>
+              <div class="col-4 pl-0 text-right"><button class="btn btn-primary" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button></div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="col-12 text-right" *ngIf="project.projectId">
         <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
         <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
       </div>
 
-      <!-- <div class="col-6 text-right" *ngIf="!project.projectId">
-        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'to'" (click)="activeButton = 'to'">To</button>
-        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'by'" (click)="activeButton = 'by'">By</button>
-        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'cc'" (click)="activeButton = 'cc'">CC</button>
-      </div> -->
+      <div class="col-6 text-right" *ngIf="!project.projectId">
+        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'to'" (click)="activeButton = 'to';getDashboardByType(0)">To</button>
+        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'by'" (click)="activeButton = 'by';getDashboardByType(2)">By</button>
+        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'cc'" (click)="activeButton = 'cc';getDashboardByType(3)">CC</button>
+      </div>
     </div>
 
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
@@ -127,24 +127,25 @@
         <div class="cardStyle" cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event);"
           [id]="card.title" [cdkDropListConnectedTo]="card.connectedto">
 
-          <div class="row shadow-sm cursor-pointer"
+          <div class="row shadow-sm"
             [ngClass]="data.type.includes('Normal') ? 'NormalStyle' : 'ScheduledStyle'" *ngFor="let data of card.data"
             cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
             (cdkDragMoved)="movedIn($event)" (click)="ticketMessage(data,null)"
             [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
             <div class="col-12">
-              <h5 [style.color]="data.type_color" style="margin-bottom:0">{{data.type}}</h5>
+              <h5 [style.color]="data.type_color" class="mb-0">{{data.type}}</h5>
             </div>
-            <div class="col-12"><label class="cardTitleStyle" title="{{data._project_type}}" style="font-weight: bold;">{{data._project_type}}</label></div>
+            <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label></div>
             <div class="col-12"><label class="cardTitleStyle" title="{{data.title}}">{{data.title}}</label></div>
             <div class="col-12">
-              <label class="cardTitleStyle" title="{{data.desc}}">{{data._task_desc}}</label>
+              <label class="cardTitleStyle" title="{{data._task_desc}}">{{data._task_desc}}</label>
             </div>
-            <div class="col-12" style="padding-bottom:5px">
+            <div class="col-12 pb-2">
               <div class="row">
                 <div class="col-6">
                   <i class="fas fa-arrow-up" style="color: red;" title="High Priority" *ngIf="data.priority"></i>
                   <i class="fas fa-arrow-up" style="color: yellow;" title="Low Priority" *ngIf="!data.priority"></i>
+                  <i class="fa fa-comments text-warning" aria-hidden="true" *ngIf="data._reply_demanded > 0"></i>
                   <div>{{data.status}}</div>
                 </div>
                 <div class="col-6">

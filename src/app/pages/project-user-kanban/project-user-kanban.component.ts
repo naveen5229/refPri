@@ -58,6 +58,8 @@ export class ProjectUserKanbanComponent implements OnInit {
   completeOtherTask = [];
   otherTaskActiveTab: number = -1;
   activeButton = 'to';
+  inprogressTimer = null;
+  taskStatusButton = 'Hold';
 
   constructor(
     public common: CommonService,
@@ -77,19 +79,20 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   refresh() {
+    this.activeButton = 'to';
     this.taskStatusBarData[0].data = [];
     if (this.dashboardState) {
-      if (this.project.projectId) {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-      } else {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
-      }
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
     } else {
       this.getAllAdmin();
     }
     this.getProjectList();
     this.getUserGroupList();
     this.getDepartmentList();
+  }
+
+  getDashboardByType(type){
+    this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, type);
   }
 
   showTaskPopup() {
@@ -228,7 +231,8 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   goToBoard(lead, type) {
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead, type,this.project);
+    this.taskStatusBarData[0].data = [];
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead, type, this.project);
     let params = `projectId=${lead._id}&type=${type}&filter=null`
     this.common.loading++;
     this.api.get(`AdminTask/getTaskBoardView?` + params).subscribe((res) => {
@@ -236,7 +240,13 @@ export class ProjectUserKanbanComponent implements OnInit {
       if (res['code'] === 1) {
         let boardData = res['data'] || [];
         boardData.forEach(element => {
+          // element.connectedto = (element.title == 'Ack') ? ['Inprogress'] : JSON.parse(element.connectedto);
           element.connectedto = JSON.parse(element.connectedto);
+          if (element.title == 'Inprogress') {
+            (element.data && element.data.length ) ? this.assignTaskToProgress(element.data[0]) : null;
+            // && (element.data[0]['log_start_time'])
+          }
+          console.log('inprogress:',this.taskStatusBarData[0].data);
         });
         console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 228 ~ ProjectUserKanbanComponent ~ this.api.get ~ boardData", boardData)
         this.cards = boardData;
@@ -343,16 +353,20 @@ export class ProjectUserKanbanComponent implements OnInit {
           if (data.data === null) {
             data.data = [];
           }
-          let containerIdTemp = (event.container.id).toLocaleLowerCase();
-          if(containerIdTemp=='inprogress' && this.taskStatusBarData[0].data[0]){
-              this.common.showError('A Task Already In Progress');
-              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 :0 );
-              return false;
-          }
-          data.data.push(JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex])));
-
-          console.log('data', event.container.id)
           let ticket = event.previousContainer.data[event.previousIndex];
+          let containerIdTemp = (event.container.id).toLowerCase();
+          if (containerIdTemp == 'inprogress' && this.taskStatusBarData[0].data[0]) {
+            // if (this.taskStatusBarData[0].data[0]) {
+              this.common.showError('A Task Already In Progress');
+              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+              return false;
+            // } else {
+            //   this.taskStatusBarData[0].data[0] = ticket;
+            //   console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 357 ~ ProjectUserKanbanComponent ~ this.cards.forEach ~ this.taskStatusBarData[0].data", this.taskStatusBarData[0].data)
+            // }
+          }
+          data.data.push(JSON.parse(JSON.stringify(ticket)));
+          console.log('data', event.container.id)
           switch (containerIdTemp) {
             case 'complete': this.changeTicketStatusWithConfirm(ticket, null, 5);
               break;
@@ -364,7 +378,7 @@ export class ProjectUserKanbanComponent implements OnInit {
               break;
             case 'assigned': this.reactiveTicket(ticket, null);
               break;
-            case 'inprogress': this.saveActivityLog(ticket, null);// change with status update function
+            case 'inprogress': this.saveActivityLog(ticket, 0);// change with status update function
               break;
             default: '';
           }
@@ -493,20 +507,12 @@ export class ProjectUserKanbanComponent implements OnInit {
         if (data.response) {
           this.updateTicketStatus(ticket, type, 0);
         } else {
-          if (this.project.projectId) {
-            this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-          } else {
-            this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
-          }
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
         }
       });
     } else {
       this.common.showError("Ticket ID Not Available");
-      if (this.project.projectId) {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-      } else {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
-      }
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
     }
   }
 
@@ -540,20 +546,12 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.updateTicketStatus(ticket, type, status, data.remark);
         } else {
           console.log('project type', this.project)
-          if (this.project.projectId) {
-            this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-          } else {
-            this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
-          }
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
         }
       });
     } else {
       this.common.showError("Task ID Not Available");
-      if (this.project.projectId) {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 1);
-      } else {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, 0);
-      }
+      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
     }
   }
 
@@ -583,6 +581,7 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
         }
       );
     } else {
@@ -654,33 +653,24 @@ export class ProjectUserKanbanComponent implements OnInit {
 
   assignTaskToProgress(ticket) {
     console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 898 ~ ProjectUserKanbanComponent ~ assignTaskToProgress ~ ticket", ticket)
-    const expdate = ticket['due date'];
-    var countDownDate = new Date(expdate).getTime();
+    this.taskStatusBarData[0].data[0] = ticket;
+    let expdate = ticket['due_date'];
+    // var countDownDate = new Date(expdate).getTime();
+    let thisVar = this;
     var x = setInterval(function () {
-      var now = new Date().getTime();
-      var distance = countDownDate - now; // Find the distance between now and the count down date
-      // Time calculations for days, hours, minutes and seconds
-      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      // Output the result in an element with id="demo"
-      document.getElementById("timer").innerHTML = days + "d " + hours + "h "
-        + minutes + "m " + seconds + "s ";
-      // If the count down is over, write some text 
-      if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("timer").innerHTML = "EXPIRED";
-      }
+      thisVar.common.setTimerrr(expdate).then( res => {
+        thisVar.inprogressTimer = (res) ? res : 'EXPIRED';
+        (!res) ? clearInterval(x) : null;
+      });
     }, 1000);
 
-    if (this.taskStatusBarData[0].data[0]) {
-      this.common.showError('A Task Already In Progress');
-      this.getProjectList();
-      return false;
-    } else {
-      this.taskStatusBarData[0].data[0] = ticket;
-    }
+    // if (this.taskStatusBarData[0].data[0]) {
+    //   this.common.showError('A Task Already In Progress');
+    //   this.getProjectList();
+    //   return false;
+    // } else {
+    //   this.taskStatusBarData[0].data[0] = ticket;
+    // }
   }
 
   ticketMessage(ticket, type) {
@@ -717,45 +707,69 @@ export class ProjectUserKanbanComponent implements OnInit {
     });
   }
 
-  saveActivityLog(ticket,isCompleted=0,startTime = this.common.getDate(),endTime=null){
-      let params = {
-        requestId: ticket._last_logid > 0 ?  ticket._last_logid : null,
-        refid: ticket._tktid,
-        reftype: 0,
-        outcome: null,
-        spendHour: null,
-        startTime: (startTime) ? this.common.dateFormatter(startTime) : null,
-        endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
-        isCompleted: isCompleted
-      };
-      console.log("params:", params);this.assignTaskToProgress(ticket);
-       return false;
-      this.common.loading++;
-      this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
-        (res) => {
-          this.common.loading--;
-          if (res["code"] > 0) {
-            if(res['data'][0]['y_id']>0){
-              this.common.showToast(res['data'][0]['y_msg']);
-              if(!endTime){
-                this.assignTaskToProgress(ticket);
-              }else{
-                this.taskStatusBarData[0].data = [];
-              }
-            }else{
-              this.common.showError(res['data'][0]['y_msg']);
+  saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    let params = {
+      requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
+      refid: ticket._tktid,
+      reftype: 0,
+      outcome: null,
+      spendHour: null,
+      startTime: (startTime) ? this.common.dateFormatter(startTime) : null,
+      endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
+      isHold: isHold
+    };
+    console.log("params:", params); 
+    // this.assignTaskToProgress(ticket);
+    //  return false;
+    this.common.loading++;
+    this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
+      (res) => {
+        this.common.loading--;
+        if (res["code"] > 0) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0]['y_msg']);
+            if (!endTime) {
+              this.assignTaskToProgress(ticket);
+            } else {
+              this.taskStatusBarData[0].data = [];
             }
           } else {
-            this.common.showError(res["msg"]);
+            this.common.showError(res['data'][0]['y_msg']);
           }
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
-        },
-        (err) => {
-          this.common.loading--;
-          this.common.showError();
-          console.log("Error: ", err);
+        } else {
+          this.common.showError(res["msg"]);
         }
-      );
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      },
+      (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      }
+    );
+  }
+
+  openUpdateTaskProject(event, ticket) {
+    event.stopPropagation();
+    console.log("ticket:", ticket);
+    this.common.params = {
+      userList: this.adminList,
+      groupList: this.groupList,
+      parentTaskId: ticket._refid,
+      parentTaskDesc: ticket._task_desc,
+      editType: 3,
+      editData: null,
+      ticketId: ticket._tktid,
+      ticketType: ticket._tktype,
+      project: { id: (ticket._project_type.toLowerCase() != 'standalone') ? ticket._project_id : null, name: (ticket._project_type.toLowerCase() != 'standalone') ? ticket._project_type : null }
+    };
+    const activeModal = this.modalService.open(TaskNewComponent, { size: "md", container: "nb-layout", backdrop: "static", });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      }
+    });
   }
 
 }
