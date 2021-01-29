@@ -104,9 +104,11 @@
           </div>
         </div>
       </div>
-      <div class="col-12 text-right" *ngIf="project.projectId">
-        <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
-        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
+      <div class="col-6 text-right" *ngIf="project.projectId">
+        <!-- <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
+        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button> -->
+        <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0)">My All
+          Issues</button>
       </div>
 
       <div class="col-6 text-right" *ngIf="!project.projectId">
@@ -136,13 +138,13 @@
             (cdkDragMoved)="movedIn($event)" (click)="ticketMessage(data,null)"
             [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
             <div class="col-12">
-              <h5 [style.color]="data.type_color" class="mb-0">{{data.type}}</h5>
+              <h5 [style.color]="data.type_color" title="{{'Subject: ' + data.title + '\n' + 'Description: ' +data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
             </div>
             <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label></div>
-            <div class="col-12"><label class="cardTitleStyle" title="{{data.title}}">{{data.title}}</label></div>
-            <div class="col-12">
+            <div class="col-12"><label class="cardTitleStyle">{{data.due_date}}</label></div>
+            <!-- <div class="col-12">
               <label class="cardTitleStyle" title="{{data._task_desc}}">{{data._task_desc}}</label>
-            </div>
+            </div> -->
             <div class="col-12 pb-2">
               <div class="row">
                 <div class="col-6">
