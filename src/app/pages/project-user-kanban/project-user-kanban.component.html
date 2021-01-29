@@ -139,7 +139,7 @@
             (cdkDragMoved)="movedIn($event)" (click)="ticketMessage(data,null)"
             [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
             <div class="col-12">
-              <h5 [style.color]="data.type_color" title="{{'Subject: ' + data.title + '\n' + 'Description: ' +data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
+              <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
             </div>
             <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label></div>
             <div class="col-12"><label class="cardTitleStyle">{{data.due_date}}</label></div>
