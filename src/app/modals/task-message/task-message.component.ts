@@ -239,7 +239,7 @@ export class TaskMessageComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104, 111, 112, 113, 114].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.taskId = [101, 102, 104, 111, 112, 113, 114, 115].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
           this.isChatFeature = this.ticketData._chat_feature;
           if (this.ticketType == 114) {
