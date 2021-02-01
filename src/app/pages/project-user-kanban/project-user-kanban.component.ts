@@ -708,7 +708,7 @@ export class ProjectUserKanbanComponent implements OnInit {
       departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });

@@ -350,7 +350,7 @@ export class TaskNewComponent implements OnInit {
       groupList: this.userGroupList,
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });
