@@ -50,7 +50,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   inProgressData = null;
   taskStatusBarData = [
     {
-      id: 'inProgress',
+      id: 'workLog',
       data: []
     }
   ];
@@ -61,7 +61,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   activeButton = 'to';
   inprogressTimer = null;
   taskStatusButton = 'Hold';
-  boardType:number = 0;
+  boardType: number = 0;
 
   constructor(
     public common: CommonService,
@@ -93,7 +93,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.getDepartmentList();
   }
 
-  getDashboardByType(type){
+  getDashboardByType(type) {
     this.boardType = type;
     this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, type);
   }
@@ -116,7 +116,6 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.api.get('UserRole/getUserGroups')
       .subscribe(
         (res) => {
-          console.log(" Group data", res["data"]);
           if (res["code"] > 0) {
             let groupList = res['data'] || [];
             this.groupList = groupList.map((x) => {
@@ -128,14 +127,12 @@ export class ProjectUserKanbanComponent implements OnInit {
         },
         (err) => {
           this.common.showError();
-          console.log("Error: ", err);
         });
   }
 
   getDepartmentList() {
     this.api.get("Admin/getDepartmentList.json").subscribe(
       (res) => {
-        console.log("data", res["data"]);
         if (res["code"] > 0) {
           this.departmentList = res["data"] || [];
         } else {
@@ -144,7 +141,6 @@ export class ProjectUserKanbanComponent implements OnInit {
       },
       (err) => {
         this.common.showError();
-        console.log("Error: ", err);
       }
     );
   }
@@ -162,13 +158,11 @@ export class ProjectUserKanbanComponent implements OnInit {
     }, err => {
       this.common.loading--;
       this.common.showError();
-      console.log('Error: ', err);
     });
   }
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -176,7 +170,6 @@ export class ProjectUserKanbanComponent implements OnInit {
       }
     }, err => {
       this.common.showError();
-      console.log('Error: ', err);
     });
   }
 
@@ -235,7 +228,6 @@ export class ProjectUserKanbanComponent implements OnInit {
 
   goToBoard(lead, type) {
     this.taskStatusBarData[0].data = [];
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead, type, this.project);
     let params = `projectId=${lead._id}&type=${type}&filter=null`
     this.common.loading++;
     this.api.get(`AdminTask/getTaskBoardView?` + params).subscribe((res) => {
@@ -246,17 +238,17 @@ export class ProjectUserKanbanComponent implements OnInit {
           // element.connectedto = (element.title == 'Ack') ? ['Inprogress'] : JSON.parse(element.connectedto);
           element.connectedto = JSON.parse(element.connectedto);
           if (element.title == 'Inprogress') {
-            (element.data && element.data.length ) ? this.assignTaskToProgress(element.data[0]) : null;
+            (element.data && element.data.length) ? this.assignTaskToProgress(element.data[0]) : null;
             // && (element.data[0]['log_start_time'])
           }
-          console.log('inprogress:',this.taskStatusBarData[0].data);
+
+          console.log('inprogress:', this.taskStatusBarData[0].data);
         });
-        console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 228 ~ ProjectUserKanbanComponent ~ this.api.get ~ boardData", boardData)
         this.cards = boardData;
         this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
         this.placeCardLength(this.cards);
         this.getAllUserGroup(this.cards);
-        this.cardlength =  this.cards.length;
+        this.cardlength = this.cards.length;
         this.dashboardState = true;
         this.project.projectId = lead._id;
         this.project.projectName = lead.project_desc;
@@ -351,26 +343,18 @@ export class ProjectUserKanbanComponent implements OnInit {
       if (!event.isPointerOverContainer) {
         return;
       }
+      
+      let containerIdTemp = (event.container.id).toLowerCase();
+      let ticket = event.previousContainer.data[event.previousIndex];
       this.cards.forEach((data, i) => {
         if (data.title === event.container.id) {
           console.log('index', data, i);
           if (data.data === null) {
             data.data = [];
           }
-          let ticket = event.previousContainer.data[event.previousIndex];
-          let containerIdTemp = (event.container.id).toLowerCase();
-          if (containerIdTemp == 'inprogress' && this.taskStatusBarData[0].data[0]) {
-            // if (this.taskStatusBarData[0].data[0]) {
-              this.common.showError('A Task Already In Progress');
-              this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
-              return false;
-            // } else {
-            //   this.taskStatusBarData[0].data[0] = ticket;
-            //   console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 357 ~ ProjectUserKanbanComponent ~ this.cards.forEach ~ this.taskStatusBarData[0].data", this.taskStatusBarData[0].data)
-            // }
-          }
+          
           data.data.push(JSON.parse(JSON.stringify(ticket)));
-          console.log('data', event.container.id)
+          console.log('data', event.container.id,containerIdTemp)
           switch (containerIdTemp) {
             case 'complete': this.changeTicketStatusWithConfirm(ticket, null, 5);
               break;
@@ -382,8 +366,8 @@ export class ProjectUserKanbanComponent implements OnInit {
               break;
             case 'assigned': this.reactiveTicket(ticket, null);
               break;
-            case 'inprogress': this.saveActivityLog(ticket, 0);// change with status update function
-              break;
+            // case 'worklog': this.saveActivityLog(ticket, 0);// change with status update function
+            //   break;
             default: '';
           }
         }
@@ -393,6 +377,16 @@ export class ProjectUserKanbanComponent implements OnInit {
           }
         }, 200);
       })
+
+      if(containerIdTemp === 'worklog'){
+        if (this.taskStatusBarData[0].data[0]) {
+          this.common.showError('A Task Already In Progress');
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          return false;
+        }
+        // this.taskStatusBarData[0].data[0] = ticket;
+        this.saveActivityLog(ticket, 0);
+      }
     }
   }
 
@@ -655,18 +649,31 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.otherTaskActiveTab = index;
   }
 
+  setTimer;
+  resetInterval(){
+    this.inprogressTimer = 0;
+    (this.setTimer) ? clearInterval(this.setTimer) : null;
+  }
   assignTaskToProgress(ticket) {
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 898 ~ ProjectUserKanbanComponent ~ assignTaskToProgress ~ ticket", ticket)
+    this.resetInterval();
     this.taskStatusBarData[0].data[0] = ticket;
     let expdate = ticket['due_date'];
     // var countDownDate = new Date(expdate).getTime();
+    // var x = setInterval(function () {
+    //   thisVar.common.setTimerrr(expdate).then(res => {
+    //     thisVar.inprogressTimer = (res) ? res : 'EXPIRED';
+    //     (!res) ? clearInterval(x) : null;
+    //   });
+    // }, 1000);
+    let starttime = ticket['log_start_time'];
+    this.inprogressTimer = (starttime) ? Math.floor( (new Date().getTime() - new Date(starttime).getTime())/1000 ) : 0;
+    console.log("inprogressTimer:",this.inprogressTimer);
     let thisVar = this;
-    var x = setInterval(function () {
-      thisVar.common.setTimerrr(expdate).then( res => {
-        thisVar.inprogressTimer = (res) ? res : 'EXPIRED';
-        (!res) ? clearInterval(x) : null;
-      });
-    }, 1000);
+    if(ticket['log_start_time']){
+      this.setTimer = setInterval(function () {
+        thisVar.inprogressTimer++;
+      }, 1000);
+    }
 
     // if (this.taskStatusBarData[0].data[0]) {
     //   this.common.showError('A Task Already In Progress');
@@ -712,46 +719,47 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-    let params = {
-      requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
-      refid: ticket._tktid,
-      reftype: 0,
-      outcome: null,
-      spendHour: null,
-      startTime: (startTime) ? this.common.dateFormatter(startTime) : null,
-      endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
-      isHold: isHold
-    };
-    console.log("params:", params); 
-    // this.assignTaskToProgress(ticket);
-    //  return false;
-    this.common.loading++;
-    this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
-      (res) => {
-        this.common.loading--;
-        if (res["code"] > 0) {
-          if (res['data'][0]['y_id'] > 0) {
-            this.common.showToast(res['data'][0]['y_msg']);
-            if (!endTime) {
-              this.assignTaskToProgress(ticket);
+    this.resetInterval();
+      let params = {
+        requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
+        refid: ticket._tktid,
+        reftype: 0,
+        outcome: null,
+        spendHour: null,
+        startTime: (startTime) ? this.common.dateFormatter(startTime) : null,
+        endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
+        isHold: isHold
+      };
+      console.log("params:", params);
+      // this.assignTaskToProgress(ticket);
+      //  return false;
+      this.common.loading++;
+      this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
+        (res) => {
+          this.common.loading--;
+          if (res["code"] > 0) {
+            if (res['data'][0]['y_id'] > 0) {
+              this.common.showToast(res['data'][0]['y_msg']);
+              if (!endTime) {
+                this.assignTaskToProgress(ticket);
+              } else {
+                this.taskStatusBarData[0].data = [];
+              }
             } else {
-              this.taskStatusBarData[0].data = [];
+              this.common.showError(res['data'][0]['y_msg']);
             }
           } else {
-            this.common.showError(res['data'][0]['y_msg']);
+            this.common.showError(res["msg"]);
           }
-        } else {
-          this.common.showError(res["msg"]);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+        },
+        (err) => {
+          this.common.loading--;
+          this.common.showError();
+          console.log("Error: ", err);
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
         }
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
-      },
-      (err) => {
-        this.common.loading--;
-        this.common.showError();
-        console.log("Error: ", err);
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
-      }
-    );
+      );
   }
 
   openUpdateTaskProject(event, ticket) {

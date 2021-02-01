@@ -1445,7 +1445,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102, 104, 111, 112, 113, 114].includes(ticket._tktype)) {
+      if ([101, 102, 104, 111, 112, 113, 114,115].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),
@@ -1482,7 +1482,7 @@ export class TaskComponent implements OnInit {
     } else if (type == 101 || type == 103 || type == -102) {
 
       if (ticket._status == 5 || ticket._status == -1) {
-        if ([104, 111, 112, 113, 114].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
+        if ([104, 111, 112, 113, 114,115].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
 
         } else {
           icons.push({
@@ -1520,7 +1520,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if ([104, 111, 112, 113].includes(ticket._tktype)) {//leave reject
+        if ([104, 111, 112, 113,115].includes(ticket._tktype)) {//leave reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -1871,7 +1871,7 @@ export class TaskComponent implements OnInit {
       departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -2577,7 +2577,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskListAll.filter((x) => {
-          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113 || x._tktype == 115);
         });
       } else {
         //all
@@ -2605,7 +2605,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskByMeListAll.filter((x) => {
-          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113 || x._tktype == 115);
         });
       } else {
         //all
@@ -2619,7 +2619,7 @@ export class TaskComponent implements OnInit {
       if (subTabType == 4) {
         //leave
         selectedList = this.ccTaskListAll.filter((x) => {
-          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113 || x._tktype == 115);
         });
       } else {
         //all
