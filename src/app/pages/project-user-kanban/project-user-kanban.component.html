@@ -52,9 +52,9 @@
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
 
-        <button class="btn btn-primary btn-sm allicons mr-2" id="taskpopup" title="Add Normal Task"
-          (click)="showTaskPopup()">
-          <img src="./assets/images/addtask.svg" alt="Add Normal Task">
+        <button class="btn btn-primary mr-2" id="taskpopup" title="Add Normal Task"
+          (click)="showTaskPopup()"> Add Task
+          <!-- <img src="./assets/images/addtask.svg" alt="Add Normal Task"> -->
         </button>
 
         <button class="btn btn-primary" (click)="goToList()">Back</button>
@@ -80,18 +80,17 @@
         <button class="btn btn-primary" (click)="getTaskByType()">Other Issues</button>
       </div> -->
       <div class="col-6">
-        <div class="row">
-          <div class="col-4">In Progress</div>
+        <div class="row" style="min-height: 110px;">
+          <div class="col-4 font-weight-bold my-auto" style="vertical-align: center;">Currently Working</div>
           <div class="col-8 cardContainerProgress" *ngFor="let state of taskStatusBarData;let i = index" cdkDropList
             [cdkDropListData]="state.data" (cdkDropListDropped)="drop($event);" [id]="state.id">
             <div class="row inprocessCardStyle" *ngFor="let data of state.data" cdkDrag>
-              <div class="col-12 text-left title" [style.color]="data.type_color">
-                {{data.type}}
+              <div class="col-12 text-left title">
+                <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
               </div>
-              <div class="col-12 text-left  cardTitleStyle"
-                [title]="data.title">
-                {{data.title}}
-              </div>
+              <!-- <div class="col-12 text-left">
+                <label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" >{{data._project_type}}</label>
+              </div> -->
             </div>
             <div class="row align-items-center" *ngIf="taskStatusBarData[0].data[0]">
               <div class="col-4 pr-0">
@@ -104,12 +103,14 @@
           </div>
         </div>
       </div>
-      <div class="col-12 text-right" *ngIf="project.projectId">
-        <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
-        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
+      <div class="col-6 text-right my-auto" *ngIf="project.projectId">
+        <!-- <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
+        <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button> -->
+        <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0)">My All
+          Issues</button>
       </div>
 
-      <div class="col-6 text-right" *ngIf="!project.projectId">
+      <div class="col-6 text-right my-auto" *ngIf="!project.projectId">
         <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'to'" (click)="activeButton = 'to';getDashboardByType(0)">To</button>
         <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'by'" (click)="activeButton = 'by';getDashboardByType(2)">By</button>
         <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'cc'" (click)="activeButton = 'cc';getDashboardByType(3)">CC</button>
@@ -138,13 +139,13 @@
             (cdkDragMoved)="movedIn($event)" (click)="ticketMessage(data,null)"
             [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
             <div class="col-12">
-              <h5 [style.color]="data.type_color" class="mb-0">{{data.type}}</h5>
+              <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
             </div>
             <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label></div>
-            <div class="col-12"><label class="cardTitleStyle" title="{{data.title}}">{{data.title}}</label></div>
-            <div class="col-12">
+            <div class="col-12"><label class="cardTitleStyle">{{data.due_date}}</label></div>
+            <!-- <div class="col-12">
               <label class="cardTitleStyle" title="{{data._task_desc}}">{{data._task_desc}}</label>
-            </div>
+            </div> -->
             <div class="col-12 pb-2">
               <div class="row">
                 <div class="col-6">

@@ -656,7 +656,6 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   assignTaskToProgress(ticket) {
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 898 ~ ProjectUserKanbanComponent ~ assignTaskToProgress ~ ticket", ticket)
     this.taskStatusBarData[0].data[0] = ticket;
     let expdate = ticket['due_date'];
     // var countDownDate = new Date(expdate).getTime();
