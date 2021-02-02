@@ -52,8 +52,7 @@
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
 
-        <button class="btn btn-primary mr-2" id="taskpopup" title="Add Normal Task"
-          (click)="showTaskPopup()"> Add Task
+        <button class="btn btn-primary mr-2" id="taskpopup" title="Add Normal Task" (click)="showTaskPopup()"> Add Task
           <!-- <img src="./assets/images/addtask.svg" alt="Add Normal Task"> -->
         </button>
 
@@ -79,20 +78,24 @@
       <!-- <div class="col-2">
         <button class="btn btn-primary" (click)="getTaskByType()">Other Issues</button>
       </div> -->
-      <div class="col-6">
-        <div class="row" *ngFor="let state of taskStatusBarData;let i = index">
+      <div class="col-6" *ngFor="let state of taskStatusBarData;let i = index">
+        <div class="row" *ngIf="!project.projectId">
           <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
           <div class="col-2 my-auto" *ngIf="taskStatusBarData[0].data[0]">
-            <button *ngIf="state.data[0]['log_start_time']" class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">Pause</button>
-            <button *ngIf="!state.data[0]['log_start_time']" class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)">Start</button>
+            <button *ngIf="state.data[0]['log_start_time']" class="btn btn-primary timer-btn"
+              (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">Pause</button>
+            <button *ngIf="!state.data[0]['log_start_time']" class="btn btn-primary timer-btn"
+              (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)">Start</button>
           </div>
 
-          <div class="col-4 cardContainerProgress" cdkDropList
-            [cdkDropListData]="state.data" (cdkDropListDropped)="drop($event);" [id]="state.id">
-            <div class="row small ml-1 mr-1 text-center" *ngIf="!taskStatusBarData[0].data[0]">Drop your card here to start a worklog</div>
+          <div class="col-4 cardContainerProgress" cdkDropList [cdkDropListData]="state.data"
+            (cdkDropListDropped)="drop($event);" [id]="state.id">
+            <div class="row small ml-1 mr-1" *ngIf="!taskStatusBarData[0].data[0]">Drop your card here to start a
+              worklog</div>
             <div class="row inprocessCardStyle" *ngFor="let data of state.data" cdkDrag>
               <div class="col-12 text-left title">
-                <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
+                <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
+                  class="mb-0 cardTitleStyle">{{data.title}}</h5>
               </div>
               <!-- <div class="col-12 text-left">
                 <label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" >{{data._project_type}}</label>
@@ -107,15 +110,18 @@
               <div class="col-4 pl-0 text-right"><button class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button></div>
             </div> -->
           </div>
-          
+
           <div class="col-2 my-auto" *ngIf="taskStatusBarData[0].data[0]">
-            <button class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button>
+            <button class="btn btn-primary timer-btn"
+              (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button>
           </div>
 
-          <div class="col-4 pr-0 pl-0 small my-auto" id="timer"><i class="far fa-clock" *ngIf="taskStatusBarData[0].data[0]"></i>  {{inprogressTimer ? common.findRemainingTime(inprogressTimer) : null}}</div>
+          <div class="col-4 pr-0 pl-0 small my-auto" id="timer"><i class="far fa-clock"
+              *ngIf="taskStatusBarData[0].data[0]"></i> {{inprogressTimer ? common.findRemainingTime(inprogressTimer) :
+            null}}</div>
         </div>
       </div>
-      
+
       <div class="col-6 text-right my-auto" *ngIf="project.projectId">
         <!-- <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
         <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button> -->
@@ -124,18 +130,21 @@
       </div>
 
       <div class="col-6 text-right my-auto" *ngIf="!project.projectId">
-        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'to'" (click)="activeButton = 'to';getDashboardByType(0)">To</button>
-        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'by'" (click)="activeButton = 'by';getDashboardByType(2)">By</button>
-        <button class="btn customBtn-primary" [class.buttonActive]= "activeButton === 'cc'" (click)="activeButton = 'cc';getDashboardByType(3)">CC</button>
+        <button class="btn customBtn-primary" [class.buttonActive]="activeButton === 'to'"
+          (click)="activeButton = 'to';getDashboardByType(0)">To</button>
+        <button class="btn customBtn-primary" [class.buttonActive]="activeButton === 'by'"
+          (click)="activeButton = 'by';getDashboardByType(2)">By</button>
+        <button class="btn customBtn-primary" [class.buttonActive]="activeButton === 'cc'"
+          (click)="activeButton = 'cc';getDashboardByType(3)">CC</button>
       </div>
     </div>
 
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
-      <div class="stateContainerStyle" [style.width.%]="100/cardlength"  *ngFor="let card of cards;let i = index">
+      <div class="stateContainerStyle" [style.width.%]="100/cardlength" *ngFor="let card of cards;let i = index">
         <div class="stateStatusBar" [style.background]="card.color"></div>
         <!-- background: {{data.color}};-->
         <div class="title">
-          <div class="strip" [style.background]="card.color">    
+          <div class="strip" [style.background]="card.color">
           </div>
           <h5 class="stateTitleStyle" title="{{card.title}}">{{card.title}}</h5>
         </div>
@@ -146,15 +155,19 @@
         <div class="cardStyle" cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event);"
           [id]="card.title" [cdkDropListConnectedTo]="card.connectedto">
 
-          <div class="row shadow-sm"
-            [ngClass]="data._tktype === 103 ? 'ScheduledStyle' : 'NormalStyle'" *ngFor="let data of card.data"
-            cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
-            (cdkDragMoved)="movedIn($event)" (click)="ticketMessage(data,null)"
+          <div class="row shadow-sm" [ngClass]="data._tktype === 103 ? 'ScheduledStyle' : 'NormalStyle'"
+            *ngFor="let data of card.data;let i = index" cdkDrag (cdkDragStarted)="onDragStarted($event)"
+            (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)"
+            (cdkDragEntered)="onDragEntered($event,i)" (click)="ticketMessage(data,null)"
             [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
             <div class="col-12">
-              <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"class="mb-0 cardTitleStyle">{{data.title}}</h5>
+              <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
+                class="mb-0 cardTitleStyle">{{data.title}}</h5>
             </div>
-            <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label></div>
+            <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer"
+                title="{{data._project_type}}"
+                (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label>
+            </div>
             <div class="col-12"><label class="cardTitleStyle">{{data.due_date}}</label></div>
             <!-- <div class="col-12">
               <label class="cardTitleStyle" title="{{data._task_desc}}">{{dat a._task_desc}}</label>
@@ -162,10 +175,10 @@
             <div class="col-12 pb-2">
               <div class="row">
                 <div class="col-6">
-                  <i class="fas fa-arrow-up text-danger"  title="High Priority" *ngIf="data.priority"></i>
-                  <i class="fas fa-arrow-up text-warning" title="Low Priority" *ngIf="!data.priority"></i>
-                  <i class="fa fa-comments text-danger pl-1" aria-hidden="true" title="Reply Demanded" *ngIf="data._reply_demanded > 0"></i>
-                  <i class="far fa-clock text-warning pl-1" title="Schedule Task" *ngIf="data._tktype === 103"></i>
+                  <i class="fas fa-arrow-up" [ngClass]="(data.priority)?'text-danger':'text-warning'" [title]="(data.priority)?'High Priority':'Low Priority'"></i>
+                  <i *ngIf="data._reply_demanded > 0" class="fa fa-comments text-danger pl-1" aria-hidden="true" title="Reply Demanded"></i>
+                  <i *ngIf="data._tktype === 103" class="far fa-clock text-warning pl-1" title="Schedule Task" ></i>
+                  <label class="pl-1">{{data.age}}</label>
                   <div>{{data.status}}</div>
                 </div>
                 <div class="col-6">
@@ -183,7 +196,7 @@
 
   </nb-card-body>
 
-<!-- 
+  <!-- 
   <div class="modal" id="otherTaskModal" #otherTaskModal>
     <div class="modal-dialog modal-xl">
       <div class="modal-content">

@@ -169,7 +169,7 @@ export class ActivityLogsComponent implements OnInit {
       if (activity._id) {
         let params =  '?activityId=' + activity._id
         this.common.params = {
-          title: 'Delete Installer',
+          title: 'Delete Activity Logs',
           description: `<b>&nbsp;` + 'Are You Sure To Delete This Record' + `<b>`,
         }
   
