@@ -237,8 +237,15 @@ export class ProjectUserKanbanComponent implements OnInit {
         boardData.forEach(element => {
           // element.connectedto = (element.title == 'Ack') ? ['Inprogress'] : JSON.parse(element.connectedto);
           element.connectedto = JSON.parse(element.connectedto);
+
+          //assigning data to current task if end time is not available
           if (element.title == 'Inprogress') {
-            (element.data && element.data.length) ? this.assignTaskToProgress(element.data[0]) : null;
+            if (element.data && element.data.length) {
+              element.data.map(data => {
+                (!data.log_end_time) ? this.assignTaskToProgress(data) : null;
+              })
+            }
+            // (element.data && element.data.length) ? this.assignTaskToProgress(element.data[0]) : null;
             // && (element.data[0]['log_start_time'])
           }
 
@@ -323,10 +330,21 @@ export class ProjectUserKanbanComponent implements OnInit {
     }
   };
 
+  onDragEntered(event, i) {
+    if ((event.container.id).toLowerCase() === 'worklog') {
+      console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 327 ~ ProjectUserKanbanComponent ~ onDragEntered ~ event", event, i)
+    }
+  }
+
   drop(event: CdkDragDrop<string[]>) {
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
+    let containerIdTemp = (event.container.id).toLowerCase();
+    let ticket = event.previousContainer.data[event.previousIndex];
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      if (containerIdTemp === 'worklog' && !event.isPointerOverContainer) {
+        this.markDoneActivityWithConfirm(ticket);
+      }
     } else {
       console.log('Pd', event.previousContainer.data)
       // transferArrayItem(event.previousContainer.data,
@@ -337,24 +355,39 @@ export class ProjectUserKanbanComponent implements OnInit {
       // if (event.container['_disabled']) {
       //   return;
       // }
+
+
+      if (containerIdTemp === 'worklog') {
+        if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
+          ticket["_last_logid"] = null;
+        }
+        console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 391 ~ ProjectUserKanbanComponent ~ drop ~ containerIdTemp", containerIdTemp)
+        if (this.taskStatusBarData[0].data[0]) {
+          this.common.showError('A Task Already In Progress');
+          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          return false;
+        }
+        // this.taskStatusBarData[0].data[0] = ticket;
+        this.saveActivityLog(ticket, 0);
+      }
+
+
       let moveFrom = this.cards.findIndex(data => data.title === event.previousContainer.id);
       let moveTo = this.cards.findIndex(data => data.title === event.container.id);
       let isComplete = moveTo > moveFrom ? true : false;
       if (!event.isPointerOverContainer) {
         return;
       }
-      
-      let containerIdTemp = (event.container.id).toLowerCase();
-      let ticket = event.previousContainer.data[event.previousIndex];
+
       this.cards.forEach((data, i) => {
         if (data.title === event.container.id) {
           console.log('index', data, i);
           if (data.data === null) {
             data.data = [];
           }
-          
+
           data.data.push(JSON.parse(JSON.stringify(ticket)));
-          console.log('data', event.container.id,containerIdTemp)
+          console.log('data', event.container.id, containerIdTemp)
           switch (containerIdTemp) {
             case 'complete': this.changeTicketStatusWithConfirm(ticket, null, 5);
               break;
@@ -378,15 +411,6 @@ export class ProjectUserKanbanComponent implements OnInit {
         }, 200);
       })
 
-      if(containerIdTemp === 'worklog'){
-        if (this.taskStatusBarData[0].data[0]) {
-          this.common.showError('A Task Already In Progress');
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
-          return false;
-        }
-        // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0);
-      }
     }
   }
 
@@ -650,7 +674,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   setTimer;
-  resetInterval(){
+  resetInterval() {
     this.inprogressTimer = 0;
     (this.setTimer) ? clearInterval(this.setTimer) : null;
   }
@@ -665,11 +689,11 @@ export class ProjectUserKanbanComponent implements OnInit {
     //     (!res) ? clearInterval(x) : null;
     //   });
     // }, 1000);
-    let starttime = ticket['log_start_time'];
-    this.inprogressTimer = (starttime) ? Math.floor( (new Date().getTime() - new Date(starttime).getTime())/1000 ) : 0;
-    console.log("inprogressTimer:",this.inprogressTimer);
+    let starttime =  ticket['log_start_time'];
+    this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
+    console.log("inprogressTimer:", this.inprogressTimer);
     let thisVar = this;
-    if(ticket['log_start_time']){
+    if (ticket['log_start_time']) {
       this.setTimer = setInterval(function () {
         thisVar.inprogressTimer++;
       }, 1000);
@@ -718,48 +742,73 @@ export class ProjectUserKanbanComponent implements OnInit {
     });
   }
 
+  markDoneActivityWithConfirm(ticket) {
+    this.common.params = {
+      title: "Complete Current Log",
+      description:
+        `<b>&nbsp;` + "Are You Sure To Done This Activity Log" + `<b>`,
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      console.log("Confirm response:", data);
+      if (data.response) {
+        this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
+        console.log('ticket', ticket);
+      } else {
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+      }
+    });
+  }
+
   saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
     this.resetInterval();
-      let params = {
-        requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
-        refid: ticket._tktid,
-        reftype: 0,
-        outcome: null,
-        spendHour: null,
-        startTime: (startTime) ? this.common.dateFormatter(startTime) : null,
-        endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
-        isHold: isHold
-      };
-      console.log("params:", params);
-      // this.assignTaskToProgress(ticket);
-      //  return false;
-      this.common.loading++;
-      this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
-        (res) => {
-          this.common.loading--;
-          if (res["code"] > 0) {
-            if (res['data'][0]['y_id'] > 0) {
-              this.common.showToast(res['data'][0]['y_msg']);
-              if (!endTime) {
-                this.assignTaskToProgress(ticket);
-              } else {
-                this.taskStatusBarData[0].data = [];
-              }
+    let params = {
+      requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
+      refid: ticket._tktid,
+      reftype: 0,
+      outcome: null,
+      spendHour: null,
+      startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
+      endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
+      isHold: isHold
+    };
+    console.log("params:", params);
+    // this.assignTaskToProgress(ticket);
+    //  return false;
+    this.common.loading++;
+    this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
+      (res) => {
+        this.common.loading--;
+        if (res["code"] > 0) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0]['y_msg']);
+            if (!endTime) {
+              this.assignTaskToProgress(ticket);
             } else {
-              this.common.showError(res['data'][0]['y_msg']);
+              this.taskStatusBarData[0].data = [];
             }
           } else {
-            this.common.showError(res["msg"]);
+            this.common.showError(res['data'][0]['y_msg']);
           }
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
-        },
-        (err) => {
-          this.common.loading--;
-          this.common.showError();
-          console.log("Error: ", err);
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+        } else {
+          this.common.showError(res["msg"]);
         }
-      );
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+      },
+      (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+      }
+    );
   }
 
   openUpdateTaskProject(event, ticket) {
