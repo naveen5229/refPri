@@ -552,7 +552,7 @@ export class ProjectUserKanbanComponent implements OnInit {
       this.common.params = {
         title: preTitle + " Task ",
         description:
-          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Task" + `<b>`,
+          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Task." + `<b>`,
         isRemark: status == 3 ? true : false,
       };
       const activeModal = this.modalService.open(ConfirmComponent, {
@@ -594,6 +594,9 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
+            if(!ticket.log_end_time){
+              this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
+            }
           } else {
             this.common.showError(res["msg"]);
           }
