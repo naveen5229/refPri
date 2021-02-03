@@ -270,8 +270,9 @@ export class ProjectUserKanbanComponent implements OnInit {
     if (boardData) {
       boardData.forEach(element => {
         if (element.data) {
-          element.normalTaskCount = element.data.filter(obj => (obj.type.toLowerCase()).includes('normal')).length;
-          element.scheduleTaskCount = element.data.filter(obj => (obj.type.toLowerCase()).includes('schedule')).length;
+          // element.normalTaskCount = element.data.filter(obj => (obj.type.toLowerCase()).includes('normal')).length;
+          // element.scheduleTaskCount = element.data.filter(obj => (obj.type.toLowerCase()).includes('schedule')).length;
+          element.cardCount = element.data.length;
         }
       });
     }
@@ -286,6 +287,7 @@ export class ProjectUserKanbanComponent implements OnInit {
         if (element.data) {
           element.data.forEach(data => {
             userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff' });
+            data['text_color'] = (this.common.getDate() > new Date(data.due_date)) ? "text-danger" : '';
           })
         }
       });
@@ -399,7 +401,7 @@ export class ProjectUserKanbanComponent implements OnInit {
               break;
             case 'assigned': this.reactiveTicket(ticket, null);
               break;
-            // case 'worklog': this.saveActivityLog(ticket, 0);// change with status update function
+            // case 'inprogress': this.updateTicketStatus(ticket, null, 1);// change with status update function
             //   break;
             default: '';
           }
@@ -594,7 +596,8 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            if(!ticket.log_end_time){
+            // && status != 1 for moving in inprogress
+            if(!ticket.log_end_time ){
               this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
             }
           } else {
