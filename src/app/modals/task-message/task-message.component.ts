@@ -554,16 +554,16 @@ export class TaskMessageComponent implements OnInit {
 
   updateTaskAssigneeUser() {
     if (this.ticketId > 0 && this.newAssigneeUser.id > 0) {
-      let isCCUpdate = 0;
-      if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
-        isCCUpdate = 1;
+      let isCCUpdate = 1;
+      // if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId) {
+        // isCCUpdate = 1;
         if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
           let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
           if (findCC) {
             isCCUpdate = 0;
           }
         }
-      }
+      // }
       if (this.userListByTask['taskUsers'][0]._assignee_user_id == this.newAssigneeUser.id || this.loginUserId == this.newAssigneeUser.id) {
         this.common.showError("Please assign a new user");
         return false;
