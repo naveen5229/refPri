@@ -12,10 +12,16 @@
               (search)="getFilteredCard($event.target.value)">
           </div>
           <div class="col-5 verticalOverflow p-0">
-            <div class="userProfileIcons cursor-pointer" id="{{user.id}}" title="{{user.user_label}}"
-              (click)="getCardsByUser(user.id)" [style.background]="user.color" *ngFor="let user of cardsUserGroup">
-              {{user.name}}
-            </div>
+           <div class="user-labels">
+         <div class="label-insider">
+          <div class="userProfileIcons cursor-pointer" id="{{user.id}}" title="{{user.user_label}}"
+          (click)="getCardsByUser(user.id)" [style.background]="user.color" *ngFor="let user of cardsUserGroup">
+          {{user.name}}
+        </div>
+         </div>    
+         
+           </div> 
+           
           </div>
           <div class="col-3 p-0">
             <button class="btn btn-primary ml-2" (click)="resetUserFilter()"

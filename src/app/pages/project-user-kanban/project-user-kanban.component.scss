@@ -216,7 +216,13 @@ font-weight: bold;
 .verticalOverflow {
   display: flex;
   overflow: auto;
+  max-width: 175px;
 }
+
+.label-insider {
+  display: flex;
+}
+
 
 .customBtn-primary {
   color: #000;
