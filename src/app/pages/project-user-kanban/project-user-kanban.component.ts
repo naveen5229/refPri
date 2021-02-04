@@ -595,11 +595,12 @@ export class ProjectUserKanbanComponent implements OnInit {
         (res) => {
           this.common.loading--;
           if (res["code"] > 0) {
-            this.common.showToast(res["msg"]);
             // && status != 1 for moving in inprogress
-            if (status != 1 && !ticket.log_end_time) {
+            if (status != 1 && !ticket.log_end_time && ticket._last_logid>0) {
               this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
               console.log('status with 1 working and end time is null');
+            }else{
+              this.common.showToast(res["msg"]);
             }
           } else {
             this.common.showError(res["msg"]);
