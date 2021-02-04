@@ -87,7 +87,7 @@
                                         {{fixValue.option}}</option>
                                 </select>
                                 <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
-                                    name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event.option);" [preSelected]="{option:oddArray[i].r_value}" autocomplete="off">
+                                    name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
                                 </auto-suggestion>
 
                                 <!-- attachment -->
@@ -143,7 +143,7 @@
                                 </select>
                                 
                         <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
-                            name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event.option);" [preSelected]="{option:evenArray[i].r_value}" autocomplete="off">
+                            name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
                         </auto-suggestion>
 
                         <!-- attachment -->

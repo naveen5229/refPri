@@ -70,6 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2px;
 }
 
 .ScheduledStyle {
@@ -216,7 +217,13 @@ font-weight: bold;
 .verticalOverflow {
   display: flex;
   overflow: auto;
+  max-width: 175px;
 }
+
+.label-insider {
+  display: flex;
+}
+
 
 .customBtn-primary {
   color: #000;
@@ -237,4 +244,8 @@ font-weight: bold;
 .buttonActive{
   background: blue;
   color: white;
+}
+
+.font-size-20{
+  font-size: 20px;
 }

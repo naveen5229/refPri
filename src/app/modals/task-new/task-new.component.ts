@@ -195,9 +195,10 @@ export class TaskNewComponent implements OnInit {
         this.common.loading--;
         if (res['code'] == 1) {
           this.resetTask();
-          this.common.showToast(res['data'][0].y_msg);
+          // this.common.showToast(res['data'][0].y_msg);
           this.closeModal(true);
           if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0].y_msg);
             if (isChat == 1) {
               let ticketEditData = {
                 ticketData: null,
@@ -350,7 +351,7 @@ export class TaskNewComponent implements OnInit {
       groupList: this.userGroupList,
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });
