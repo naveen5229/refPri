@@ -1,8 +1,8 @@
+@import '../../../style';
+
 :host ::ng-deep .tableFixHead{
     height: auto !important;
 }
 smart-table{
-    display: block;
     height: calc(100vh - 237px);
-    overflow: auto;
 }

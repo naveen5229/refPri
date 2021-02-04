@@ -65,12 +65,16 @@ export class SmartTableComponent implements OnInit {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
 
-    if ((key.includes('arrowup') || key.includes('arrowdown')) && this.columns.length && (this.settings && this.settings.arrow)) {
+    if (this.columns.length && (this.settings && this.settings.arrow)) {
       // console.log('selected row data',this.selectedRow,'row count ',this.columns[this.selectedRow]);
-      if (key == 'arrowup' && this.selectedRow != 0) this.selectedRow--;
-      else if (this.selectedRow != this.columns.length - 1) this.selectedRow++;
-      this.action.emit({ 'data': this.columns[this.selectedRow], 'rowcount': this.selectedRow });
-
+      if((key.includes('arrowup') || key.includes('arrowdown'))){
+        if (key == 'arrowup' && this.selectedRow != 0) this.selectedRow--;
+        else if (this.selectedRow != this.columns.length - 1) this.selectedRow++;
+      }
+      if(key.includes('enter')){
+        let selectRow = this.columns[this.selectedRow];
+        this.action.emit({ 'data': this.columns[this.selectedRow], 'rowcount': this.selectedRow,'smartId':selectRow._smartId });
+      }
     }
   }
   setData() {
@@ -92,6 +96,8 @@ export class SmartTableComponent implements OnInit {
   }
 
   filterData(key) {
+    this.selectedRow = (this.settings && this.settings.arrow) ? 0 : -20;
+    console.log("filterData:",this.selectedRow);
     let search = this.headings[key].value.toLowerCase();
     this.search = { key, txt: search };
     this.columns = this.data.columns.filter(column => {

@@ -23,16 +23,31 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/admin-tool',
         home: true,
+      },{
+        title: 'User Expenses',
+        icon: 'people-outline',
+        link: '/pages/user-expenses',
+        home: true,
+      }, {
+        title: 'User Wise Expenses',
+        icon: 'people-outline',
+        link: '/pages/user-wise-expenses',
+        home: true,
       }, {
         title: 'On-Site-Images',
         icon: 'people-outline',
         link: '/pages/on-site-images',
         home: true,
       }, {
-        title: 'On-Site-Images-Summary',
+        title: 'On Site Images Summary',
         icon: 'people-outline',
         link: '/pages/on-site-images-summary',
         home: true,
+      }, {
+        title: 'Entity Details',
+        icon: 'people-outline',
+        link: '/pages/entity-details',
+        home: true
       },
       {
         title: 'User Groups',
@@ -71,6 +86,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Project User Kanban',
+        icon: 'grid-outline',
+        link: '/pages/project-user-kanban-board',
+        home: true,
+      },
+      {
         title: 'Task-Admin',
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',
@@ -80,6 +101,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'User-Mapping',
         icon: 'file-text-outline',
         link: '/pages/user-mapping',
+        home: true,
+      },
+      {
+        title: 'Customer-On-Boarding',
+        icon: 'file-text-outline',
+        link: '/pages/customeronboarding',
         home: true,
       },
       {
@@ -352,6 +379,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Graphical Reports',
         icon: 'grid-outline',
         link: '/pages/graphical-reports',
+        home: true,
+      },
+      {
+        title: 'Kanban Board',
+        icon: 'grid-outline',
+        link: '/pages/kanban-board',
         home: true,
       }
     ]

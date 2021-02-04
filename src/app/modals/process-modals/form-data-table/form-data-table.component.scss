@@ -1,0 +1,7 @@
+
+@import '../../../style';
+.table-bordered, .nb-theme-default .table-bordered td,
+.table-bordered th{
+    border: 1px solid $light-7 !important;
+    border-bottom: 1px solid $light-7 !important;
+}

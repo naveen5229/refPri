@@ -224,9 +224,9 @@ export class TaskComponent implements OnInit {
     let activeId = document.activeElement.id;
     //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
     //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
-    if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
-      this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
-    }
+    // if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
+    //   this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
+    // }
 
   }
   getAllAdmin() {
@@ -249,8 +249,12 @@ export class TaskComponent implements OnInit {
     );
   }
   actionHandler(event) {
-    this.selectedRow = event.rowcount;
-    // console.log('row data again', this.unreadTaskForMeList[this.selectedRow]);
+    console.log('row data again:', event);
+    this.selectedRow = (event.smartId=='undefined') ? event.rowcount : event.smartId;//event.rowcount;
+    let activeId = document.activeElement.id;
+    if ((!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
+      this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
+    }
     //  this.transMessage(this, lead, type)
   }
   getUserGroupList() {
@@ -878,6 +882,8 @@ export class TaskComponent implements OnInit {
             action: null,
             class: "text-center",
           };
+        } else if (key == "project") {
+          column[key] = {value: ticket[key], class:[101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null,};
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -948,6 +954,8 @@ export class TaskComponent implements OnInit {
             action: null,
             class: "text-center",
           };
+        } else if (key == "project") {
+          column[key] = {value: ticket[key], class:[101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null,};
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -1437,7 +1445,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102, 104, 111, 112, 113, 114].includes(ticket._tktype)) {
+      if ([101, 102, 104, 111, 112, 113, 114,115].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),
@@ -1474,7 +1482,7 @@ export class TaskComponent implements OnInit {
     } else if (type == 101 || type == 103 || type == -102) {
 
       if (ticket._status == 5 || ticket._status == -1) {
-        if ([104, 111, 112, 113, 114].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
+        if ([104, 111, 112, 113, 114,115].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
 
         } else {
           icons.push({
@@ -1512,7 +1520,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if ([104, 111, 112, 113].includes(ticket._tktype)) {//leave reject
+        if ([104, 111, 112, 113,115].includes(ticket._tktype)) {//leave reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -1660,16 +1668,20 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  editTask(ticket, type) {
+  editTask(ticket, type,isProject=false) {
     console.log("type:", type);
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
       parentTaskId: ticket._refid,
       parentTaskDesc: ticket.task_desc,
-      editType: 1,
+      editType: (isProject) ? 3 : 1,
       editData: ticket,
+      ticketId: ticket._tktid,
+      ticketType: ticket._tktype,
+      project:{id: (ticket.project.toLowerCase()!='standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase()!='standalone') ? ticket.project : null}
     };
+    
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "md",
       container: "nb-layout",
@@ -1845,10 +1857,7 @@ export class TaskComponent implements OnInit {
       isChecked: ticket._is_star_mark
     };
 
-    let subTitle =
-      ticket._tktype == 103 && ![-8, -102].includes(type)
-        ? ticket.task_subject + ":<br>" + ticket._task_desc
-        : ticket.task_subject + ":<br>" + ticket._task_desc;
+    let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
     this.common.params = {
       ticketEditData,
       title: "Ticket Comment",
@@ -1859,7 +1868,7 @@ export class TaskComponent implements OnInit {
       departmentList: this.departmentList
     };
     const activeModal = this.modalService.open(TaskMessageComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -1868,6 +1877,12 @@ export class TaskComponent implements OnInit {
       console.log('reszponse 2nd', activeModal, type);
       type ? this.getTaskByType(type) : null;
       this.tableUnreadTaskForMeList.settings.arrow = true;
+      // if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) { } else
+       if (ticket._cc_user_id && !ticket._cc_status) {
+        this.ackTaskByCcUser(ticket, type);
+      } else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+        this.ackTaskByProjectUser(ticket, type);
+      }
     });
   }
 
@@ -2559,7 +2574,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskListAll.filter((x) => {
-          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113 || x._tktype == 115);
         });
       } else {
         //all
@@ -2587,7 +2602,7 @@ export class TaskComponent implements OnInit {
       } else if (subTabType == 4) {
         //leave
         selectedList = this.normalTaskByMeListAll.filter((x) => {
-          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113 || x._tktype == 115);
         });
       } else {
         //all
@@ -2601,7 +2616,7 @@ export class TaskComponent implements OnInit {
       if (subTabType == 4) {
         //leave
         selectedList = this.ccTaskListAll.filter((x) => {
-          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113);
+          return (x._tktype == 104 || x._tktype == 111 || x._tktype == 112 || x._tktype == 113 || x._tktype == 115);
         });
       } else {
         //all

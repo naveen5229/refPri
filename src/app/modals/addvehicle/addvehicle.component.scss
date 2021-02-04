@@ -1,6 +1,8 @@
+@import '../../style.scss';
+
 button.btn-primary{
-    font-size: 12px;
+    font-size: $font-sm-xxl;
     text-transform: capitalize;
-    border-radius: 5px;
-    padding: 8px 15px;
+    border-radius: $radious-xs;
+    padding:$padding-sm/2 $padding-lg;
 }

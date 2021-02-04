@@ -6,6 +6,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { LocationSelectionComponent } from '../location-selection/location-selection.component';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { MapService } from '../../Service/map/map.service';
 
 @Component({
   selector: 'saveadmin',
@@ -89,7 +90,8 @@ export class SaveadminComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     public renderer: Renderer,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private map: MapService
   ) {
     // console.log(this.user);
     this.Fouser.doj = this.common.getDate(); // for new
@@ -125,6 +127,7 @@ export class SaveadminComponent implements OnInit {
       } else if (this.activeAdminDetails['_atten_medium'] == '001') {
         this.selectedItems = 3;
       }
+      // this.getAddressBylatlong();
     }
     this.common.params = {};
   }
@@ -133,6 +136,15 @@ export class SaveadminComponent implements OnInit {
 
   closeModal(response) {
     this.activeModal.close(response);
+  }
+
+  getAddressBylatlong(){
+    if(this.Fouser.baseLat && this.Fouser.baseLong){
+      this.map.getAddressByLatLng({lat:Number(this.Fouser.baseLat),lng:Number(this.Fouser.baseLong)}).then(res=>{
+        console.log("results2:", res);
+        this.Fouser.location = res;
+      });
+    }
   }
 
   getDepartments() {
@@ -218,6 +230,7 @@ export class SaveadminComponent implements OnInit {
       this.selectedItems = 3;
     }
     console.log("selectedItems:", this.selectedItems, this.Fouser);
+    // this.getAddressBylatlong();
 
   }
 

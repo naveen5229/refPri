@@ -16,6 +16,7 @@
 
                 <div class="col-8">
                     <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
+                    <!-- <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control" [(ngModel)]=oddArray[i].r_value rows="1"></textarea> -->
                     <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
                     <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
                     </uj-date-time-picker>
@@ -52,13 +53,12 @@
                     </select>
 
                     <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
-                      <span *ngIf="oddArray[i].r_url">
-                          <span class="blue cursor-pointer" (click)="common.getFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                      <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                          <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                       </span>
-                      <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i"
-                                  (change)="handleFileSelection($event,i)"> -->
-                      <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
-                      </div>
+                      <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
+                      <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                    </div>
                 </div>
         </div>
       </div>
@@ -109,14 +109,11 @@
 
             <!-- attachment -->
             <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
-              <span *ngIf="evenArray[i].r_url">
-                  <span class="blue cursor-pointer" (click)="common.getFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+              <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                  <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
               </span>
-                <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i"
-                      (change)="handleFileSelection($event,i)"> -->
-                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                <!-- <button type="button" class="btn btn-primary btn-sm col-4"
-                      (click)="uploadattachFile('evenArray',i)">Upload</button> -->
+                <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
             </div>
           </div>
         </span>
@@ -126,7 +123,7 @@
 <div class="row" *ngIf="oddArray && oddArray.length>0 && !isDisabled">
   <div class="col-12 text-right">
       <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm" (click)="saveFromDetail(false)">Save</button>
-      <button *ngIf="refType==1" class="btn btn-primary btn-sm ml-2" form="worklog-form" type='submit' id="saveContinueTicketForm" (click)="saveFromDetail(true)">Save & Continue</button>
+      <button *ngIf="refType==1" class="btn btn-primary btn-sm ml-2" form="worklog-form" type='submit' id="saveContinueTicketForm" (click)="saveFromDetail(true)">Save & Complete</button>
   </div>
 </div>
 <!-- end: dyn field -->

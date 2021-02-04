@@ -43,7 +43,7 @@
                 <li *ngFor="let a of attachmentList; let i =index">
                     <!-- <a target="_blank" [href]="a.url"alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
                     <span class="blue cursor-pointer"
-                        (click)="common.getFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
+                        (click)="common.checkFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
                 </li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
@@ -74,26 +74,16 @@
                 </ul>
             </ng-template>
 
-            <div class="row mt-1" style="background: ghostwhite;" *ngIf="ticketType == 103">
-                <div class="col-5">
-                    <hr>
-                </div>
-                <div class="col-2 history" (click)="getHistory()">History</div>
-                <div class="col-5">
-                    <hr>
-                </div>
-            </div>
-
 
             <div *ngIf="isSearchShow" [@openClose]="isSearchShow" class="row search-style">
                 <div class="col-11">
                     <div class="row">
                         <div class="col-8">
                             <input id="searchChat" type="search" value="{{searchTerm}}"
-                                (change)="searchChat($event.target.value)" class="file-control"
+                                (change)="searchChat($event.target.value)" class="form-control rounded-0 shadow-sm"
                                 style="width: 100%;margin: 5px;">
                         </div>
-                        <div class="col-4" style="padding: 5px;">
+                        <div class="col-4 search-control">
                             <span>{{searchCount}}/{{searchedIndex.length}}</span>
                             <span class="ml-2" (click)="onchangeIndex('minus')"><i
                                     class="fas fa-arrow-circle-down"></i></span>
@@ -109,18 +99,28 @@
                 </div>
             </div>
 
+            <div class="row mt-1" style="background: ghostwhite;" *ngIf="ticketType == 103">
+                <div class="col-5">
+                    <hr>
+                </div>
+                <div class="col-2 history" (click)="getHistory()">History</div>
+                <div class="col-5">
+                    <hr>
+                </div>
+            </div>
+
             <div class="row mt-1 chat_block" id="chat_block" #chat_block>
                 <div class="col-12" *ngFor="let msg of messageList;let i=index;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
-                        <div>
+                        <div class="chat-header">
                             <span><i *ngIf="msg.reply_pending" class="fa fa-star text-warning" aria-hidden="true"
                                     title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                             <span class="comment_reply">
                                 <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                    [ngbPopover]="commentInfoPopContent" placement="left"
+                                    [ngbPopover]="commentInfoPopContent" placement="left-top"
                                     (click)="messageReadInfo(msg._id)"></i>
                                 <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                    [ngbPopover]="replyPopContent" placement="left"
+                                    [ngbPopover]="replyPopContent" placement="left-top"
                                     (click)="replyToComment(msg,'mine')"></i>
                             </span>
                         </div>
@@ -132,14 +132,14 @@
                     </div>
                     <div *ngIf="loginUserId != msg._userid" class="other_chat"
                         [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                        <div>
+                        <div class="chat-header">
                             <span>{{msg.added_by +" "+msg.added_date}}</span>
                             <span class="comment_reply">
                                 <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                    [ngbPopover]="commentInfoPopContent" placement="right"
+                                    [ngbPopover]="commentInfoPopContent" placement="right-top"
                                     (click)="messageReadInfo(msg._id)"></i>
                                 <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                    [ngbPopover]="replyPopContent" placement="right"
+                                    [ngbPopover]="replyPopContent" placement="right-top"
                                     (click)="replyToComment(msg,'other')"></i>
                             </span>
                         </div>
@@ -175,7 +175,7 @@
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
                         <input type="file" class="file-control" id="chat-attachment"
-                            (change)="handleFileSelection($event)">
+                            (change)="handleFileSelection($event)" multiple>
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
@@ -186,18 +186,18 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
-                <div class="col-9">
+            <div *ngIf="attachmentFile && attachmentFile.length > 0" class="row">
+                <div class="col-9" *ngFor="let attachment of attachmentFile;let i = index">
                     <!-- {{attachmentFile.name}} -->
                     <!-- <span><img height="50" width="50" src="{{attachmentFile.file}}"
                             alt="{{attachmentFile.name}}"></span> -->
                     <span>
-                        <img height="25" width="25" src="{{attachmentFile.file}}" *ngIf="!fileType">
-                        <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
-                        <span>{{attachmentFile.name}}</span>
+                        <img height="25" width="25" src="{{attachment.file}}" *ngIf="!attachment['format']">
+                        <i [class]="attachment['format']" *ngIf="attachment['format']" aria-hidden="true" style="font-size: 22px;"></i>
+                        <span>{{attachment.name}}</span>
                     </span>
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
-                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="remove"
+                        (click)="removeFile(i)"></i>
                 </div>
             </div>
         </div>
@@ -206,23 +206,35 @@
                 <tr valign="top" class="bg-lightblue">
                     <td>By:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._assigner_p) ? ((userListByTask['taskUsers'][0]._assigner_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignby:''}}
+                        <div *ngIf="showAssignerUserAuto==1">
+                            <auto-suggestion (onSelected)="newAssignerUser = $event" [data]="adminList" display="name"
+                                seperator="-" placeholder="Search Assigner User" autocomplete="off" name="assignerUser"
+                                inputId="assignerUser">
+                            </auto-suggestion>
+                            <button class="btn add" id="newAssignerBtn">
+                                <i class="fa fa-check m-0" title="Assign new user" (click)="updateTaskAssignerUser()"></i>
+                                <i class="fa fa-times ml-2" title="Cancel" (click)="showAssignerUserAuto=null"></i>
+                            </button>
+                        </div>
+                        <button *ngIf="!showAssignerUserAuto && (!this.statusId || this.statusId==2) && userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId && (ticketType == 101 || ticketType == 102)"
+                            class="btn add" title="change assigner" (click)="showAssignerUserAuto=1"><i class="fa fa-plus m-0"></i></button>
                     </td>
                 </tr>
                 <tr *ngIf="ticketType!=114" valign="top" class="bg-lavender">
                     <td>To:</td>
                     <td *ngIf="!showAssignUserAuto">
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._assignee_p) ? ((userListByTask['taskUsers'][0]._assignee_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].assignto:''}}
                         <button
                             *ngIf="userListByTask['taskUsers'] && (userListByTask['taskUsers'][0]._assignee_user_id == loginUserId || userListByTask['taskUsers'][0]._aduserid == loginUserId) && (ticketType == 101 || ticketType == 102)"
-                            class="btn add" title="assign to new user" (click)="showAssignUserAuto=1"><i
-                                class="fa fa-plus m-0"></i></button>
+                            class="btn add" title="Assign to new user" (click)="showAssignUserAuto=1"><i class="fa fa-plus m-0"></i>
+                        </button>
                     </td>
                     <td *ngIf="showAssignUserAuto==1">
                         <auto-suggestion (onSelected)="newAssigneeUser = $event" [data]="adminList" display="name"
@@ -237,7 +249,7 @@
                     *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].project_owner">
                     <td>PO:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._po_present) ? ((userListByTask['taskUsers'][0]._po_present==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>{{(userListByTask['taskUsers'])?userListByTask['taskUsers'][0].project_owner:''}}
@@ -251,7 +263,7 @@
                             <i class="fa" style="font-size: 12px;"
                                 [ngClass]="(pu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
                                 [title]="(pu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                            <i class="fa fa-circle mr-1" style="font-size: 8px;"
                                 [ngClass]="(pu.present) ? ((pu.present==1) ? 'text-success' : 'text-danger') : ''"
                                 [title]="(pu.present) ? ((pu.present==1) ? 'Present' : 'Leave') : 'Absent'"
                                 aria-hidden="true"></i>
@@ -264,7 +276,7 @@
                     *ngIf="userListByTask['taskUsers'] && userListByTask['taskUsers'][0].esc_user">
                     <td>EU:</td>
                     <td>
-                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-0" style="font-size: 8px;"
+                        <i *ngIf="userListByTask['taskUsers']" class="fa fa-circle mr-1" style="font-size: 8px;"
                             [ngClass]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'text-success' : 'text-danger') : ''"
                             [title]="(userListByTask['taskUsers'][0]._rep_user_p) ? ((userListByTask['taskUsers'][0]._rep_user_p==1) ? 'Present' : 'Leave') : 'Absent'"
                             aria-hidden="true"></i>
@@ -282,7 +294,7 @@
                             <i class="fa" style="font-size: 12px;"
                                 [ngClass]="(ccu.status) ? 'fa-eye text-success' : 'fa-eye-slash'"
                                 [title]="(ccu.status) ? 'Ack' : 'Ack Pending'"></i>
-                            <i class="fa fa-circle mr-0" style="font-size: 8px;"
+                            <i class="fa fa-circle mr-1" style="font-size: 8px;"
                                 [ngClass]="(ccu.present) ? ((ccu.present==1) ? 'text-success' : 'text-danger') : ''"
                                 [title]="(ccu.present) ? ((ccu.present==1) ? 'Present' : 'Leave') : 'Absent'"
                                 aria-hidden="true"></i>
@@ -324,10 +336,10 @@
                                         title="Reply Demanded pending"></i>{{msg.added_date}}</span>
                                 <span class="comment_reply">
                                     <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                        [ngbPopover]="commentInfoPopContent" placement="left"
+                                        [ngbPopover]="commentInfoPopContent" placement="left-top"
                                         (click)="messageReadInfo(msg._id)"></i>
                                     <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                        [ngbPopover]="replyPopContent" placement="left"
+                                        [ngbPopover]="replyPopContent" placement="left-top"
                                         (click)="replyToComment(msg,'mine')"></i>
                                 </span>
                             </div>
@@ -339,14 +351,14 @@
                         </div>
                         <div *ngIf="loginUserId != msg._userid" class="other_chat"
                             [ngClass]="(msg._id>lastSeenIdForView)? 'new_message':''">
-                            <div>
+                            <div class="chat-header">
                                 <span>{{msg.added_by +" "+msg.added_date}}</span>
                                 <span class="comment_reply">
                                     <i class="fa fa-info-circle mr-1" aria-hidden="true" title="info"
-                                        [ngbPopover]="commentInfoPopContent" placement="right"
+                                        [ngbPopover]="commentInfoPopContent" placement="right-top"
                                         (click)="messageReadInfo(msg._id)"></i>
                                     <i class="fa fa-sort-desc" aria-hidden="true" title="Reply"
-                                        [ngbPopover]="replyPopContent" placement="right"
+                                        [ngbPopover]="replyPopContent" placement="right-top"
                                         (click)="replyToComment(msg,'other')"></i>
                                 </span>
                             </div>

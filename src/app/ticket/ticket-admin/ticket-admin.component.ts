@@ -200,7 +200,7 @@ export class TicketAdminComponent implements OnInit {
     return columns;
   }
   // end: processwise
-// start: processwise
+// start: userwise
 setTableUserWise(type) {
   this.userWiseTicketTable.data = {
     headings: this.generateHeadingsUserWiseTicket(),
@@ -233,6 +233,8 @@ getTableColumnsUserWiseTicket(type) {
           action: null,
           // icons: this.actionIcons(ticket, type)
         };
+      } else if(key.toLowerCase()=='tot. call cnt') {
+        column[key] = { value: ticket[key], class: 'blue', action: this.callDetails.bind(this, ticket,2,true) };
       } else {
         column[key] = { value: ticket[key], class: 'black', action: '' };
       }
@@ -243,16 +245,21 @@ getTableColumnsUserWiseTicket(type) {
   });
   return columns;
 }
-// end: processwise
+// end: userwise
 
-callDetails(ticket,type) {
+callDetails(ticket,type,isDate=false) {
+  let params = {
+    userId: ticket['_aduserid'],
+    type: type
+  }
+  if(isDate){
+    params['startDate'] = (this.searchTask.startDate) ? this.common.dateFormatter(this.searchTask.startDate) : null,
+    params['endDate'] = (this.searchTask.endDate) ? this.common.dateFormatter(this.searchTask.endDate) : null
+  }
   let dataparams = {
     view: {
       api: 'Ticket/getTicketSummaryById',
-      param: {
-        userId: ticket['_aduserid'],
-        type: type
-      }
+      param: params
     },
     title: "Call Log Details "+'(' + ticket['employee_name'] + ')'
   }
@@ -261,4 +268,23 @@ callDetails(ticket,type) {
   const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 }
 
+  exportCSV() {
+    let data = null;
+    let headings = null;
+    let title = null;
+    if(this.activeTab=='processWise'){
+      data = this.processWiseTicketList;
+      headings = this.processWiseTicketTable.data.headings;
+      title = 'Process-Wise-Summary';
+    }else if(this.activeTab=='userWise'){
+      data = this.userWiseTicketList;
+      headings = this.userWiseTicketTable.data.headings;
+      title = 'User-Wise-Summary';
+    }
+    if (data.length == 0) {
+      this.common.showError('No Data Found')
+    } else {
+      this.common.getCSVFromDataArray(data, headings, title);
+    }
+  }
 }

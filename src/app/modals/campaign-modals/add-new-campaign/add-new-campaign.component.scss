@@ -1,10 +1,12 @@
+@import  '../../../style.scss';
+
 .footer {
   cursor: pointer;
 }
 label {
-  font-weight: 700;
+  font-weight: $bolder;
 }
 .require {
-  font-size: 20px;
-  color: red;
+  font-size: $font-md-xl;
+  color: $danger-2;
 }

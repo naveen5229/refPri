@@ -41,6 +41,7 @@ export class TicketChatboxComponent implements OnInit {
   ticketId = 0;
   statusId = 0;
   messageList = [];
+  messageListShow = [];
   showLoading = true;
   loginUserId = this.userService._details.id;
   lastMsgId = 0;
@@ -60,10 +61,11 @@ export class TicketChatboxComponent implements OnInit {
     id: null,
     name: ""
   };
-  attachmentFile = {
-    name: null,
-    file: null
-  };
+  // attachmentFile = {
+  //   name: null,
+  //   file: null
+  // };
+  attachmentFile = [];
   attachmentList = [];
   isAttachmentShow = false;
 
@@ -91,6 +93,11 @@ export class TicketChatboxComponent implements OnInit {
   stTaskMaster = null;
   fileType = null;
   mentionUserIndex: number = 0;
+
+  isSearchShow = false;
+  searchedIndex = [];
+  selectedIndex = 0;
+  searchCount = 0;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -222,8 +229,9 @@ export class TicketChatboxComponent implements OnInit {
     }
     this.api.post('Ticket/getTicketMessage', params).subscribe(res => {
       this.showLoading = false;
-      if (res['code']==1) {
+      if (res['code'] == 1) {
         this.messageList = res['data'] || [];
+        this.messageListShow = JSON.parse(JSON.stringify(this.messageList));
         this.scrollToBottom();
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
@@ -309,7 +317,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   saveTicketMessage() {
-    if (this.taskMessage == "" && !this.attachmentFile.file) {
+    if (this.taskMessage == "" && !this.attachmentFile) {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
@@ -327,14 +335,15 @@ export class TicketChatboxComponent implements OnInit {
         ticketId: this.ticketId,
         status: this.statusId,
         message: formatedMsg,//this.taskMessage,
-        attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        // attachment: this.attachmentFile.file,
+        // attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        attachments: JSON.stringify(this.attachmentFile.map(attachments => { return { name: attachments.name, file: attachments.file } })),
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
         users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
-      // console.log("params:", params);
+      console.log("params:", params);
       // return false;
       this.common.loading++;
       this.api.post('Ticket/saveTicketMessage', params).subscribe(res => {
@@ -343,8 +352,9 @@ export class TicketChatboxComponent implements OnInit {
         if (res['code'] > 0) {
           if (res['data'][0].y_id > 0) {
             this.taskMessage = "";
-            this.attachmentFile.file = null;
-            this.attachmentFile.name = null;
+            // this.attachmentFile.file = null;
+            // this.attachmentFile.name = null;
+            this.attachmentFile = [];
             this.resetQuotedMsg();
             if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
               // console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
@@ -618,27 +628,30 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   handleFileSelection(event) {
-    // console.log(event.target.files[0], 'attachement')
     this.common.loading++;
-    this.common.getBase64(event.target.files[0]).then((res: any) => {
-      this.common.loading--;
-      let file = event.target.files[0];
-      console.log("Type:", file, res);
-      var ext = file.name.split('.').pop();
-      this.formatIcon(ext);
-      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext.toLowerCase())) {
-      } else {
-        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
-        return false;
-      }
-      this.attachmentFile.name = file.name;
-      this.attachmentFile.file = res;
-      console.log("attachmentFile:", this.attachmentFile)
-    }, err => {
-      this.common.loading--;
-      console.error('Base Err: ', err);
-    })
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.common.getBase64(event.target.files[i]).then((res: any) => {
+        console.log("🚀 ~ file: task-message.component.ts ~ line 697 ~ TaskMessageComponent ~ this.common.getBase64 ~ res", res)
+        let file = event.target.files[i];
+        console.log("🚀 ~ file: ticket-chatbox.component.ts ~ line 636 ~ TicketChatboxComponent ~ this.common.getBase64 ~ file", file)
+        var ext = file.name.split('.').pop();
+        let format = this.formatIcon(ext);
+        let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+        if (formats.includes(ext.toLowerCase())) {
+        } else {
+          this.common.showError(`${file.name} is not right format.Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv`);
+          return false;
+        }
+        // this.attachmentFile.name = file.name;
+        // this.attachmentFile.file = res;
+        this.attachmentFile.push({ name: file.name, file: res, format: format });
+        console.log(this.attachmentFile);
+      }, err => {
+        this.common.loading--;
+        console.error('Base Err: ', err);
+      })
+    }
+    this.common.loading--;
   }
 
   formatIcon(ext) {
@@ -650,7 +663,14 @@ export class TicketChatboxComponent implements OnInit {
       case 'csv': icon = 'fas fa-file-csv'; break;
       default: icon = null;
     }
+    return icon;
     this.fileType = icon;
+  }
+
+
+  removeFile(i) {
+    this.attachmentFile.splice(i, 1);
+    console.log('after delete', this.attachmentFile);
   }
 
   onPaste(event: any) {
@@ -669,11 +689,15 @@ export class TicketChatboxComponent implements OnInit {
     this.handleFileSelection(selectedFile);
   }
 
-  filesDropped(files: FileHandle[]): void {
-    // console.log("ChatboxComponent -> filesDropped -> files", files)
+  filesDropped(files: FileHandle[]) {
+    console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
-    selectedFile.target.files.push(this.files[0].file);
+    // selectedFile.target.files.push(this.files[0].file);
+    this.files.map(files => {
+      selectedFile.target.files.push(files.file)
+    })
+    console.log("🚀 ~ file: task-message.component.ts ~ line 741 ~ TaskMessageComponent ~ filesDropped ~ selectedFile", selectedFile);
     this.handleFileSelection(selectedFile);
   }
 
@@ -736,7 +760,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
-    if(!this.mentionedUsers.find(x=>x.id==user.id)){
+    if (!this.mentionedUsers.find(x => x.id == user.id)) {
       this.mentionedUsers.push({ id: user.id, name: user.name });
     }
     // this.mentionedUsers.push({ id: user.id, name: user.name });
@@ -747,4 +771,74 @@ export class TicketChatboxComponent implements OnInit {
     this.msgtextarea.nativeElement.focus();
   }
 
+
+  search() {
+    this.isSearchShow = !this.isSearchShow;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      document.getElementById('searchChat').focus();
+    }, 0);
+  }
+
+
+  searchChat(value) {
+    let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+    this.common.searchString(value, messageList).then((res) => {
+      console.log("res:", res);
+      this.searchedIndex = res.searchedIndex;
+      this.searchCount = this.searchedIndex.length;
+      this.messageList = res.messageList;
+      setTimeout(() => {
+        this.searchCount > 0 ? this.focusOnSelectedIndex() : null;
+      }, 500);
+    });
+  }
+
+  scrollToChat(focusOn) {
+    try {
+      setTimeout(() => {
+        let scrollIntoView = document.getElementById("focusOn-" + focusOn);
+        (scrollIntoView) ? scrollIntoView.scrollIntoView() : null;
+      }, 100);
+    } catch (err) { }
+  }
+
+  onchangeIndex(type) {
+    console.log('selectedIndex:', this.selectedIndex, this.searchedIndex.length);
+    if (this.searchedIndex.length > 0) {
+      if (type == "plus") {
+        if (this.selectedIndex == this.searchedIndex.length - 1) {
+          return false;
+        }
+        this.selectedIndex++;
+        this.searchCount--;
+      } else {
+        if (this.selectedIndex == 0) {
+          return false;
+        }
+        this.selectedIndex--;
+        this.searchCount++;
+      }
+      this.focusOnSelectedIndex();
+    }
+  }
+
+  focusOnSelectedIndex() {
+    let focusOn = this.searchedIndex[this.selectedIndex];
+    console.log("focusOn:", focusOn);
+    for (let i = 0; i < this.searchedIndex.length; i++) {
+      let removeClass = document.getElementById("focusOn-" + this.searchedIndex[i])
+      if (removeClass)
+        removeClass.classList.remove('text-focus-highlight');
+    }
+    let addClass = document.getElementById("focusOn-" + focusOn);
+    if (addClass)
+      addClass.classList.add('text-focus-highlight');
+    this.scrollToChat(focusOn);
+  }
+
+  reduceFocusHandler() {
+    this.messageList = JSON.parse(JSON.stringify(this.messageListShow));
+    this.searchedIndex = [];
+    this.searchCount = 0;
+  }
 }

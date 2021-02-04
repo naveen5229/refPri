@@ -110,6 +110,14 @@ import { AddExtraTimeComponent } from './modals/ticket-modals/add-extra-time/add
 import { RouteMapperComponent } from './modals/route-mapper/route-mapper.component';
 import { TicketClosingFormComponent } from './modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 import { ImageViewComponent } from './modals/image-view/image-view.component';
+import { stateActionMapping } from './modals/state-action-mapping/state-action-mapping';
+import { UserEsclationComponent } from './modals/process-modals/user-esclation/user-esclation.component';
+import { AddProcessPropertyComponent } from './modals/process-modals/add-process-property/add-process-property.component';
+import { CalulateTravelDistanceComponent } from './modals/calulate-travel-distance/calulate-travel-distance.component';
+import { MobileNoComponent } from './modals/mobile-no/mobile-no.component';
+import { LocationOnSiteImageComponent } from './modals/location-on-site-image/location-on-site-image.component';
+import { AddGlobalFieldComponent } from './modals/process-modals/add-global-field/add-global-field.component';
+import { EntityFormComponent } from './modals/entity-form/entity-form.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -188,6 +196,14 @@ const PAGE_COMPONENTS = [
   RouteMapperComponent,
   TicketClosingFormComponent,
   ImageViewComponent,
+  stateActionMapping,
+  UserEsclationComponent,
+  AddProcessPropertyComponent,
+  CalulateTravelDistanceComponent,
+  MobileNoComponent,
+  LocationOnSiteImageComponent,
+  AddGlobalFieldComponent,
+  EntityFormComponent,
 ];
 
 @NgModule({
@@ -203,6 +219,10 @@ const PAGE_COMPONENTS = [
     AddcompanyComponent,
     AddfouserComponent,
     ChatboxComponent,
+    stateActionMapping,
+    UserEsclationComponent,
+    AddProcessPropertyComponent,
+    MobileNoComponent,
 
 
     // SendmessageComponent,

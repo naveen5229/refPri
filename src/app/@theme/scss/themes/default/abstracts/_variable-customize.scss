@@ -1,0 +1,257 @@
+//  all base colors
+
+$primary:#007bff;
+$secondary:#6c757d;
+$success:#28a745;
+$danger:#dc3545;
+$warning:#ffc107;
+$light:#f8f9fa;
+$dark:#343a40;
+
+
+//  all colors
+// random color properties
+
+// $color-900:blue;    
+// $color-2800:#00f;
+// $color-1400:darkblue;
+// $color-8100:#0606e3;
+// $color-3400:#0054ff;
+// $color-5200:#007bff;
+// $color-6100:#0062cc;
+// $color-7100:teal;
+// $color-8400:#0176bd;
+// $color-3300:#3c6ac7;
+// $color-100:#3366ff;
+// $color-7600: #1a3380;
+
+
+
+
+//  all primary colors 
+$primary-1:$primary;  //  $color-5200:$primary;
+$primary-2:adjust-hue($primary, 29);  // $color-900:blue; 
+$primary-3:adjust-hue($primary, 29);  // $color-2800:#00f;
+$primary-4:darken(adjust-hue($primary, 29), 22.75);  // $color-1400:darkblue;
+$primary-5:darken(desaturate(adjust-hue($primary, 29), 5.15), 4.31);  // $color-8100:#0606e3;
+$primary-6:adjust-hue($primary, 9);  // $color-3400:#0054ff;
+$primary-7:darken($primary, 10.00);  //  $color-6100:#0062cc;
+$primary-8:darken(adjust-hue($primary, -31), 24.90);  //  $color-7100:teal;
+$primary-9:darken(desaturate(adjust-hue($primary, -8), 1.05), 12.75);  //  $color-8400:#0176bd;
+$primary-10:lighten(desaturate(adjust-hue($primary, 9), 44.62), 0.78); //  $color-3300:#3c6ac7 ,$color-1600:#3c6ac7;
+$primary-11:lighten(adjust-hue($primary, 14), 10.00); // $color-100:#3366ff;
+$primary-12:darken(desaturate(adjust-hue($primary, 14), 33.77), 19.80); // $color-7600: #1a3380;
+
+
+
+
+// $color-7000:#324148;
+// $color-5100:#555;
+// $color-2100:gray;
+// $color-5900:#888585;
+// $color-6300:#676767;
+// $color-3100:#576c77;
+// $color-3200:#7f7f7f;
+// $color-4900:grey;  
+// $color-6800:#b5b9b9;
+// $color-3700:#c2bebe;
+// $color-5700:#c1c1c1;
+// $color-7700:#958e8e;
+// $color-8200:#88a0c4;
+// $color-1500:#8f9bb3;
+// $color-7500:darkgray;
+// $color-3500:#93acc7;
+// $color-1300:#263238;
+// $color-1700:#c0b2b2;
+// $color-3600:lightgray;
+// $color-4700:#c2c2c2;
+// $color-4800:#ccc;
+// $color-7400:#d1d9e8;
+// $color-4200:lightgrey;
+// $color-1000:#dddddd;    
+// $color-2300:#ffd7d7;
+// $color-2500:#d0e4f5;
+// $color-3800:#f9f9f9;
+// $color-5000:#e1e1e1;
+// $color-6400:#dedede;
+// $color-6900:#e4e4e4;
+// $color-7200:#d1dada;
+
+
+
+
+//   all secondary colors
+
+$secondary-1:darken(saturate(adjust-hue($secondary, -9), 10.74), 21.76);  //  $color-7000:#324148;
+$secondary-2:darken(desaturate(adjust-hue($secondary, -208), 7.30), 12.35);  //  $color-5100:#555;
+$secondary-3:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 4.51);  //  $color-2100:gray;
+$secondary-4:lighten(desaturate(adjust-hue($secondary, -208), 6.05), 7.06);  //  $color-5900:#888585;
+$secondary-5:darken(desaturate(adjust-hue($secondary, -208), 7.30), 5.29);  //  $color-6300:#676767;
+$secondary-6:darken(saturate(adjust-hue($secondary, -8), 8.24), 5.29);  //  $color-3100:#576c77;
+$secondary-7:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 4.12);  //  $color-3200:#7f7f7f;
+$secondary-8:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 4.51);  //  $color-4900:grey;  
+$secondary-9:lighten(desaturate(adjust-hue($secondary, -28), 4.52), 26.08);  //  $color-6800:#b5b9b9;
+$secondary-10:lighten(desaturate(adjust-hue($secondary, -208), 4.12), 29.61); //  $color-3700:#c2bebe;
+$secondary-11:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 30.00); //  $color-5700:#c1c1c1;
+$secondary-12:lighten(desaturate(adjust-hue($secondary, -208), 4.10), 11.37); //  $color-7700:#958e8e;
+$secondary-13:lighten(saturate(adjust-hue($secondary, 8), 26.41), 19.41); //  $color-8200:#88a0c4;
+$secondary-14:lighten(saturate(adjust-hue($secondary, 12), 11.85), 17.45); //  $color-1500:#8f9bb3;
+$secondary-15:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 20.59); //  $color-7500:darkgray;
+$secondary-16:lighten(saturate(adjust-hue($secondary, 3), 24.41), 22.16); //  $color-3500:#93acc7;
+$secondary-17:darken(saturate(adjust-hue($secondary, -8), 11.85), 27.25); //  $color-1300:#263238;
+$secondary-18:lighten(saturate(adjust-hue($secondary, -208), 2.70), 26.86); // $color-1700:#c0b2b2;
+$secondary-19:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 37.06); // $color-3600:lightgray;
+$secondary-20:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 30.39); // $color-4700:#c2c2c2;
+$secondary-21:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 34.31); // $color-4800:#ccc;
+$secondary-22:lighten(saturate(adjust-hue($secondary, 11), 26.04), 40.78); // $color-7400:#d1d9e8;  
+$secondary-23:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 37.06); // $color-4200:lightgrey;
+$secondary-25:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 40.98); // $color-1000:#dddddd;  
+$secondary-26:lighten(saturate(adjust-hue($secondary, -208), 92.70), 46.47); // $color-2300:#ffd7d7;
+$secondary-27:lighten(saturate(adjust-hue($secondary, -1), 57.62), 43.14); // $color-2500:#d0e4f5;
+$secondary-28:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 51.96); // $color-3800:#f9f9f9
+$secondary-29:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 42.55); // $color-5000:#e1e1e1
+$secondary-30:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 41.37); // $color-6400:#dedede
+$secondary-31:lighten(desaturate(adjust-hue($secondary, -208), 7.30), 43.73); // $color-6900:#e4e4e4
+$secondary-32:lighten(saturate(adjust-hue($secondary, -28), 3.55), 38.04); // $color-7200:#d1dada
+
+
+// $color-4300:#1def1d2e;
+// $color-600:#217346;
+// $color-1800:green;
+// $color-8000:#217346;
+// $color-2700:#07f8d4;
+// $color-5300:#26a69a;
+// $color-5600:lawngreen;
+// $color-300:#00ff11;
+// $color-1900:limegreen;
+
+
+
+
+
+$success-1:lighten(saturate(adjust-hue($success, 221), 25.42), 11.96); //  $color-4300:#1def1d2e;
+$success-2:darken(desaturate(adjust-hue($success, 13), 5.95), 11.57); // $color-600:#217346 , $color-8000:#217346;
+$success-3:darken(saturate(adjust-hue($success, -14), 38.65), 15.49); // $color-1800:green;
+$success-4:lighten(saturate(adjust-hue($success, 37), 33.16), 9.41); // $color-2700:#07f8d4;
+$success-5:darken(saturate(adjust-hue($success, 41), 1.39), 0.59); // $color-5300:#26a69a;
+$success-6:lighten(saturate(adjust-hue($success, -43), 38.65), 8.82); // $color-5600:lawngreen;
+$success-7:lighten(saturate(adjust-hue($success, -10), 38.65), 9.41); // $color-300:#00ff11;
+$success-8:lighten(desaturate(adjust-hue($success, -14), 0.57), 9.41); // $color-1900:limegreen;
+
+
+
+
+// $color-7900:#9F0001;
+// $color-800:red;
+// $color-3900:brown;
+// $color-200:#ff5722;
+// $color-4500: #FF421A;
+// $color-6700:#f73939;
+// $color-1100:#fd1361;
+// $color-1200:#fc0758;
+// $color-5400:deeppink;
+// $color-4000:magenta;
+// $color-2900:#7b0579;
+// $color-4100:purple;
+
+
+
+
+$danger-1:darken(saturate(adjust-hue($danger, 5), 29.54), 22.35);  //  $color-7900:#9F0001;
+$danger-2:darken(saturate(adjust-hue($danger, -354), 29.54), 3.53);  //  $color-800:red;
+$danger-3:darken(desaturate(adjust-hue($danger, -354), 11.04), 12.94);  //  $color-3900:brown
+$danger-4:lighten(saturate(adjust-hue($danger, -340), 29.54), 3.14);  //  $color-200:#ff5722;
+$danger-5:lighten(saturate(adjust-hue($danger, -344), 29.54), 1.57);  //  $color-4500: #FF421A;
+$danger-6:lighten(saturate(adjust-hue($danger, -354), 21.77), 6.08);  //  $color-6700:#f73939;
+$danger-7:darken(saturate(adjust-hue($danger, -14), 27.86), 0.20);  //  $color-1100:#fd1361;
+$danger-8:darken(saturate(adjust-hue($danger, -14), 27.15), 2.75);  //  $color-1200:#fc0758;
+$danger-9:lighten(saturate(adjust-hue($danger, -27), 29.54), 0.39);  //  $color-5400:deeppink;
+$danger-10:darken(saturate(adjust-hue($danger, -54), 29.54), 3.53); //  $color-4000:magenta; 
+$danger-11:darken(saturate(adjust-hue($danger, -53), 21.72), 28.43); //  $color-2900:#7b0579. 
+$danger-12:darken(saturate(adjust-hue($danger, -53), 21.72), 28.43);  // $color-4100:purple;
+
+
+
+
+
+
+
+// $color-2000:#ffba12;
+// $color-3000:#c6ed24;
+// $color-5800:yellow;
+// $color-6600:orange;
+// $color-8300:#feca37;
+
+
+
+
+$warning-1:lighten(adjust-hue($warning, -2), 2.16); // $color-2000:#ffba12;
+$warning-2:lighten(desaturate(adjust-hue($warning, 27), 15.19), 2.16); // $color-3000:#c6ed24;
+$warning-3:darken(adjust-hue($warning, 15), 1.37); // $color-5800:yellow;
+$warning-4:darken(adjust-hue($warning, -6), 1.37); // $color-6600:orange;
+$warning-5:lighten(desaturate(adjust-hue($warning, -1), 1.00), 9.22); // $color-8300:#feca37;
+
+
+
+
+
+
+
+
+$light-1:lighten(desaturate(adjust-hue($light, -210), 16.67), 2.35); //  $color-400: #fff;
+$light-2:lighten(saturate(adjust-hue($light, 30), 83.33), 0.98); // $color-4400:ghostwhite;
+$light-3:darken(desaturate(adjust-hue($light, -210), 16.67), 0.39); //  $color-6500: #f8f8f8;
+$light-4:darken(saturate(adjust-hue($light, -2), 83.33), 0.59); //  $color-7800:aliceblue;
+$light-5:darken(desaturate(adjust-hue($light, -210), 16.67), 16.08); // $color-5500:#d0d0d0;
+$light-6:darken(desaturate(adjust-hue($light, -210), 16.67), 7.45); //  $color-6000:#e6e6e6;
+$light-7:darken(desaturate($light, 2.87), 9.02);  //  $color-700: #dee2e6;
+$light-8:darken(saturate(adjust-hue($light, -138), 64.29), 10.00);  //  $color-6200:#eff9c6;
+$light-9:darken(desaturate(adjust-hue($light, -210), 16.67), 9.02);  //  $color-4600:#e2e2e2;
+$light-10:darken(desaturate(adjust-hue($light, -210), 16.67), 2.75); // $color-2600:#f2f2f2;
+
+
+
+
+// $color-500:#000;
+// $color-2200:#161617;
+// $color-8500:#0d0d0d;
+// $color-2400:#01203c;
+// $color-7300:#1a2138;
+
+
+
+
+$dark-1:darken(desaturate(adjust-hue(#343a40, -210), 10.34), 22.75); // $color-500:#000;
+$dark-2:darken(desaturate(adjust-hue(#343a40, 30), 8.12), 13.92); // $color-2200:#161617;
+$dark-3:darken(desaturate(adjust-hue(#343a40, -210), 10.34), 17.65); // $color-8500:#0d0d0d;
+$dark-4:darken(saturate(adjust-hue(#343a40, -2), 86.38), 10.78); // $color-2400:#01203c;
+$dark-5:darken(saturate(adjust-hue(#343a40, 16), 26.24), 6.67); // $color-7300:#1a2138; 
+
+
+
+
+
+
+
+
+
+//  font-families 
+$font-family-primary:sans-serif;
+$font-family-main:cursive;
+$font-family-main:sans-serif;
+$font-family-secondary:cursive;
+
+
+
+
+//  scrollbar color
+$scroll-colors:(
+track-main:#000,    
+thumb-hover:#a8a8a8,
+track:#f1f1f1,
+thumb:#c1c1c1,
+main:#696969,
+gradient:rgba(0, 0, 0, 0),
+);
+
+

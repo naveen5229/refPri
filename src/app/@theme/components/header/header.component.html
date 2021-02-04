@@ -10,9 +10,10 @@
         <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
     </nb-select> -->
 </div>
-<h6 style="color: #00000080; margin-bottom: 0;">
+<h6 style="color: #00000080; margin-bottom: 0;display:flex;align-items:center;justify-content: center; ">
     <span class="profilehead">{{userLogin | titlecase}} </span>
-    <i class="mr-0" style="cursor: pointer;" [ngClass]="(userService._details && userService._details.present) ? 'fas fa-check-circle text-success' : 'far fa-circle'" [ngStyle]="(userService._details && userService._details.present) ? {'font-size':'13px'} : {'font-size':'10px'}"
+    <i class="mr-0" style="cursor: pointer;position: relative;
+    top: -6px;left: 4px;" [ngClass]="(userService._details && userService._details.present) ? 'fas fa-check-circle text-success' : 'far fa-circle'" [ngStyle]="(userService._details && userService._details.present) ? {'font-size':'13px'} : {'font-size':'10px'}"
         [title]="(userService._details && userService._details.present) ? 'Present' : 'Absent'" aria-hidden="true" (click)="getUserPresence()"></i>
 </h6>
 

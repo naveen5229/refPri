@@ -1,5 +1,7 @@
+@import '../../style.scss';
+
 .row1{
-    margin-top: 15px;
+    margin-top: $margin-lg;
 }
 img{
     width:40px;
@@ -7,19 +9,20 @@ img{
     margin-left: 35%;
     display: inline-block;
 }
+
 :host ::ng-deep.red {
-    background: red;
-    color: #fff;
-    margin-left: 5px;
+    background:$danger-2;
+    color: $light-1;
+    margin-left:$margin-xs;
   }
   :host ::ng-deep.green {
-    background: green;
-    color: #fff;
-    margin-left: 5px;
+    background: $success-3;
+    color: $light-1;
+    margin-left:$margin-xs;
   }
   :host ::ng-deep.icon{
-  font-size:20px;
+  font-size:$font-md-xl;
 }
 :host ::ng-deep label{
-    font-weight:500;
+    font-weight:$normal;
 }

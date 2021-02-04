@@ -777,7 +777,7 @@ export class TaskScheduledComponent implements OnInit {
     }
     let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
     this.common.params = { ticketEditData, title: "Ticket Comment", button: "Save", subTitle: subTitle, userList: this.adminList, groupList: this.groupList, departmentList: this.departmentList };
-    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(TaskMessageComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getAllTask(type);
     });
