@@ -242,7 +242,7 @@ export class ProjectUserKanbanComponent implements OnInit {
           if (element.title == 'Inprogress') {
             if (element.data && element.data.length) {
               element.data.map(data => {
-                (!data.log_end_time) ? this.assignTaskToProgress(data) : null;
+                (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
               })
             }
             // (element.data && element.data.length) ? this.assignTaskToProgress(element.data[0]) : null;
@@ -401,8 +401,8 @@ export class ProjectUserKanbanComponent implements OnInit {
               break;
             case 'assigned': this.reactiveTicket(ticket, null);
               break;
-            // case 'inprogress': this.updateTicketStatus(ticket, null, 1);// change with status update function
-            //   break;
+            case 'inprogress': this.updateTicketStatus(ticket, null, 1);// change with status update function
+              break;
             default: '';
           }
         }
@@ -597,8 +597,9 @@ export class ProjectUserKanbanComponent implements OnInit {
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
             // && status != 1 for moving in inprogress
-            if(!ticket.log_end_time ){
+            if (status != 1 && !ticket.log_end_time) {
               this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
+              console.log('status with 1 working and end time is null');
             }
           } else {
             this.common.showError(res["msg"]);
@@ -695,7 +696,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     //     (!res) ? clearInterval(x) : null;
     //   });
     // }, 1000);
-    let starttime =  ticket['log_start_time'];
+    let starttime = ticket['log_start_time'];
     this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
     console.log("inprogressTimer:", this.inprogressTimer);
     let thisVar = this;
@@ -717,7 +718,18 @@ export class ProjectUserKanbanComponent implements OnInit {
   ticketMessage(ticket, type) {
     console.log("type:", type);
     let ticketEditData = {
-      ticketData: null,
+      ticketData: {
+        _chat_feature: null,
+        _tktid: ticket._tktid,
+        _refid: ticket._refid,
+        _tktype: ticket._tktype,
+        _lastreadid: ticket._lastreadid,
+        _status: ticket._status,
+        _isremind: (ticket._isremind) ? ticket._isremind : null,
+        task_desc: ticket._task_desc,
+        _expdate: ticket.due_date,
+        expdate: ticket.due_date
+      },
       ticketId: ticket._tktid,
       statusId: ticket._status,
       lastSeenId: ticket._lastreadid,

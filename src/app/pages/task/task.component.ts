@@ -1857,10 +1857,7 @@ export class TaskComponent implements OnInit {
       isChecked: ticket._is_star_mark
     };
 
-    let subTitle =
-      ticket._tktype == 103 && ![-8, -102].includes(type)
-        ? ticket.task_subject + ":<br>" + ticket._task_desc
-        : ticket.task_subject + ":<br>" + ticket._task_desc;
+    let subTitle = ticket.task_subject + ":<br>" + ticket._task_desc;
     this.common.params = {
       ticketEditData,
       title: "Ticket Comment",
