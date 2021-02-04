@@ -401,7 +401,8 @@ export class TaskMessageComponent implements OnInit {
           // this.attachmentFile.name = null;
           this.attachmentFile = [];
           this.resetQuotedMsg();
-          if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          // if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          if (this.userListByTask['taskUsers'] && this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
           }
