@@ -81,6 +81,17 @@
                         (click)="getTicketByType(105)">Search</button>
                 </div>
             </div>
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; filterTicketBySubTab(105,0)">
+                    All
+                </li>
+                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; filterTicketBySubTab(105,1)">
+                    By Me
+                </li>
+                <li [ngClass]="activeSabTab==2?'active':''" (click)="activeSabTab=2; filterTicketBySubTab(105,2)">
+                    For Me
+                </li>
+            </ul>
             <smart-table [data]="tableCompletedTkt.data" [settings]="tableCompletedTkt.settings" id="tablecompletedTkt">
             </smart-table>
         </div>

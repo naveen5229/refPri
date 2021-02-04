@@ -21,6 +21,7 @@ export class TicketComponent implements OnInit {
   ticketDetailTitle = 'Ticket Info';
   loginUserId = this.userService._details.id;
   activeTab = 'allocatedTkt';
+  activeSabTab = 0;
   adminList = [];
   tpList = [];
   allocatedTkt = [];
@@ -28,6 +29,7 @@ export class TicketComponent implements OnInit {
   unreadTkt = [];
   unassignedTkt = [];
   completedTkt = [];
+  completedTktAll = [];
   ccTkt = [];
   addedByMeTkt = [];
   groupList = [];
@@ -183,6 +185,7 @@ export class TicketComponent implements OnInit {
     this.getTicketProcessList();
     this.getUserGroupList();
     this.activeTab = 'allocatedTkt';
+    this.activeSabTab = 0;
   }
 
   ngOnInit() { }
@@ -397,6 +400,7 @@ export class TicketComponent implements OnInit {
   }
 
   getTicketByType(type, startDate = null, endDate = null) {
+    this.activeSabTab = 0;
     this.common.loading++;
     if ((type == 105) && this.searchData.startDate && this.searchData.endDate) {
       startDate = this.common.dateFormatter(this.searchData.startDate);
@@ -421,6 +425,7 @@ export class TicketComponent implements OnInit {
           this.setTableUnassignedTkt(type);
         } else if (type == 105) {
           this.completedTkt = res['data'] || [];
+          this.completedTktAll = this.completedTkt;
           this.setTablecompletedTkt(type);
         } else if (type == 104) {
           this.ccTkt = res['data'] || [];
@@ -1503,6 +1508,25 @@ export class TicketComponent implements OnInit {
       this.common.showError();
       console.error('Api Error:', err);
     });
+  }
+
+  filterTicketBySubTab(type, subTabType) {
+    if (type == 105) {
+      let selectedList = [];
+      if (subTabType == 1) {//by me
+        selectedList = this.completedTktAll.filter((x) => {
+          return x._aduserid == this.loginUserId;
+        });
+      } else if (subTabType == 2) {//for me
+        selectedList = this.completedTktAll.filter((x) => {
+          return x._allocated_user == this.loginUserId;
+        });
+      } else {//all
+        selectedList = this.completedTktAll;
+      }
+      this.completedTkt = selectedList.length > 0 ? selectedList : [];
+      this.setTablecompletedTkt(type);
+    }
   }
 
 }
