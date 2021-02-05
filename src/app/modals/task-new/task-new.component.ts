@@ -142,14 +142,14 @@ export class TaskNewComponent implements OnInit {
 
   saveTask(isChat = null) {
     // console.log("normalTask:", this.normalTask);
-    if (this.normalTask.userName == '') {
-      return this.common.showError("User Name is missing");
+    if (!this.normalTask.projectId && (this.normalTask.userName == '' || !this.userId)) {
+      return this.common.showError("User is missing");
     }
+    // else if (!this.normalTask.projectId && !this.userId) {
+    //   return this.common.showError("Please assign a user");
+    // }
     else if (this.normalTask.subject == '') {
       return this.common.showError("subject is missing");
-    }
-    else if (!this.userId) {
-      return this.common.showError("Please assign a user");
     }
     else if (!this.normalTask.isFuture && !this.normalTask.date) {
       return this.common.showError("Expected date is missing");
@@ -194,10 +194,10 @@ export class TaskNewComponent implements OnInit {
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.resetTask();
           // this.common.showToast(res['data'][0].y_msg);
-          this.closeModal(true);
           if (res['data'][0]['y_id'] > 0) {
+            this.resetTask();
+            this.closeModal(true);
             this.common.showToast(res['data'][0].y_msg);
             if (isChat == 1) {
               let ticketEditData = {
