@@ -19,9 +19,9 @@
         }
       }
 
-      th:first-child {
-        width: 60px;
-      }
+      // th:first-child {
+      //   width: 60px;
+      // }
     }
 
     // tbody {
@@ -87,6 +87,8 @@
   input,
   select,
   textarea,
+  [contenteditable],
+  .div-input,
   .nb-theme-corporate nb-layout .layout {
     font-family: "Poppins", sans-serif !important;
     font-size: .8rem;
@@ -141,7 +143,8 @@
 
   input,
   select,
-  textarea {
+  textarea,[contenteditable],
+  .div-input {
     padding: $padding-xs !important;
     font-size: $font-sm-xxl !important;
     line-height: $lh-md !important;
