@@ -298,7 +298,7 @@ export class TaskComponent implements OnInit {
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(AddProjectComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });

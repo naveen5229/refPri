@@ -91,7 +91,7 @@ export class AddFieldComponent implements OnInit {
         { id: 'text', name: 'Text' },
         { id: 'number', name: 'Number' },
         { id: 'date', name: 'Date' },
-        // { id: 'table', name: 'Table' },
+        { id: 'table', name: 'Table' },
         { id: 'checkbox', name: 'Checkbox' },
         { id: 'attachment', name: 'Attachment' }
       ];
