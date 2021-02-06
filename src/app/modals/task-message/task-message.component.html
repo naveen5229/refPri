@@ -145,7 +145,7 @@
         </div>
       </div>
 
-      <div class="row pt-1 pb-2 bottom-block">
+      <div class="row pt-1 pb-4 bottom-block">
         <div *ngIf="parentCommentId>0 && replyType>0" class="col-12 quoted_selected">
           <label [innerHTML]="parentComment"></label>
           <span class="comment_reply"><i class="fa fa-times" aria-hidden="true" (click)="resetQuotedMsg()"></i></span>
@@ -156,29 +156,38 @@
             [class]="mentionUserIndex === i ? 'user-active': ''">{{u.name}}</span>
           <!-- <a href="javascript:void(0)" *ngFor="let u of mentionedUserList;let i=index;" (click)="onSelectMenstionedUser(u);isMentionedUser=false;" #userlistInput>{{u.name}}</a> -->
         </div>
-        <div class="col-10 pr-0">
-          <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
-            id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd (files)="filesDropped($event)"
-            (input)="onMessageType($event)" #msgtextarea></textarea>
-          <small class="limit">{{500 - taskMessage.length}} characters left</small>
-        </div>
-        <div class="col-1 pl-0 pr-0">
-          <label class="custom-file-upload">
-            <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)"
-              multiple>
-            <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
-          </label>
-        </div>
-        <div
-          *ngIf="isChatFeature || (userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId)"
-          class="col-1 pl-0 text-right plane-icon">
-          <div class="button-box">
-            <button class="btn send" id="button" (click)="saveTicketMessage()" title="Send"><i
-                class="fas fa-paper-plane"></i>
-            </button>
+        <div class="message-container pr-0">
+          <div class="chatmsg-box">
+            <textarea name="taskMessage" (paste)="onPaste($event)" maxlength="500" class="form-control chatmsg"
+              id="msgtext" placeholder="Type a message" [(ngModel)]="taskMessage" ngxDnd (files)="filesDropped($event)"
+              (input)="onMessageType($event)" #msgtextarea></textarea>
+            <small class="limit">{{500 - taskMessage.length}} characters left</small>
           </div>
 
+
+
+
+          <div class="actions">
+            <div class="pl-0 pr-0">
+              <label class="custom-file-upload">
+                <input type="file" class="file-control" id="chat-attachment" (change)="handleFileSelection($event)"
+                  multiple>
+                <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
+              </label>
+            </div>
+            <div
+              *ngIf="isChatFeature || (userListByTask['taskUsers'] && userListByTask['taskUsers'][0]._aduserid == loginUserId)"
+              class="pl-0 pr-1 text-right plane-icon">
+              <div class="button-box">
+                <button class="btn send" id="button" (click)="saveTicketMessage()" title="Send"><i
+                    class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
         </div>
+
       </div>
       <div *ngIf="attachmentFile && attachmentFile.length > 0" class="row">
         <div class="col-9" *ngFor="let attachment of attachmentFile;let i = index">
