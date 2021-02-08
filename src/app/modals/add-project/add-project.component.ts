@@ -212,8 +212,8 @@ export class AddProjectComponent implements OnInit {
 
   editProject(project) {
     console.log("edit project:", project);
-    let userNames = project.userName.split(',');
-    let userIds = project._userids.split(',');
+    // let userNames = project.userName.split(',');
+    // let userIds = project._userids.split(',');
     this.project = {
       projectId: project._project_id,
       projectDesc: project.project_desc,
@@ -225,9 +225,10 @@ export class AddProjectComponent implements OnInit {
         id: project._parent_project_id,
         name: project.parent_project
       },
-      users: userIds.map((id, index) => {
-        return { id, name: userNames[index] }
-      })
+      users: project._users
+      // users: userIds.map((id, index) => {
+      //   return { id, name: userNames[index] }
+      // })
     };
 
     console.log("project:", this.project);
