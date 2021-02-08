@@ -2,7 +2,7 @@
   <nb-card-header>
     <div class="row">
       <div class="col-4">
-        <h5 class="heading-design">Kanban Board <label *ngIf="dashboardState">({{project.projectName}})</label>
+        <h5 class="heading-design">Kanban Board <label *ngIf="dashboardState">({{project.project_desc}})</label>
         </h5>
       </div>
       <div class="col-4">
@@ -41,7 +41,7 @@
       <div class="col-4 text-right" *ngIf="!dashboardState">
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
-        <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0)"
+        <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0,'parent')"
           (click)="activeButton = 'to'">My All
           Issues</button>
       </div>
@@ -51,7 +51,7 @@
       <!--Start: For Board Screen -->
       <div class="col-2" *ngIf="dashboardState">
         <auto-suggestion (onSelected)="goToBoard($event,1,'parent')" display="project_desc" [data]="projectList"
-          placeholder="Select Project" seperator="-" [preSelected]="{project_desc:project.projectName}"
+          placeholder="Select Project" seperator="-" [preSelected]="{project_desc:project.project_desc}"
           className="borderStyle" inputId="_id">
         </auto-suggestion>
       </div>
@@ -86,7 +86,7 @@
         <button class="btn btn-primary" (click)="getTaskByType()">Other Issues</button>
       </div> -->
       <div class="col-6" *ngFor="let state of taskStatusBarData;let i = index">
-        <div class="row" *ngIf="!project.projectId">
+        <div class="row" *ngIf="!project._id">
           <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
             <span *ngIf="state.data[0]['log_start_time']"
@@ -132,15 +132,15 @@
         </div>
       </div>
 
-      <div class="col-6 text-right my-auto" *ngIf="project.projectId">
+      <div class="col-6 text-right my-auto" *ngIf="project._id">
         <div class="row">
           <div class="col-8">
             <auto-suggestion display="project_desc" (onSelected)="goToBoard($event,1,'child')" [data]="childProject" placeholder="Select Sub Project" seperator="-"
-              [preSelected]="{project_desc:subProject.subProjectName}" className="borderStyle" inputId="_id">
+              [preSelected]="{project_desc:subProject.project_desc}" className="borderStyle" inputId="_id">
             </auto-suggestion>
           </div>
           <div class="col-4">
-            <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0)"
+            <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0,'parent')"
               (click)="activeButton = 'to'">My All
               Issues</button>
           </div>
@@ -149,7 +149,7 @@
         <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button> -->
       </div>
 
-      <div class="col-6 text-right my-auto" *ngIf="!project.projectId">
+      <div class="col-6 text-right my-auto" *ngIf="!project._id">
         <button class="btn customBtn-primary" [class.buttonActive]="activeButton === 'to'"
           (click)="activeButton = 'to';getDashboardByType(0)">To</button>
         <button class="btn customBtn-primary" [class.buttonActive]="activeButton === 'by'"
@@ -180,7 +180,7 @@
             *ngFor="let data of card.data;let i = index" cdkDrag (cdkDragStarted)="onDragStarted($event)"
             (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)"
             (cdkDragEntered)="onDragEntered($event,i)" (click)="ticketMessage(data,null)"
-            [cdkDragDisabled]="project.projectId && data.userid != loggedInUser">
+            [cdkDragDisabled]="project._id && data.userid != loggedInUser">
             <div class="col-12">
               <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
                 class="mb-0 cardTitleStyle">{{data.title}}</h5>
@@ -206,7 +206,7 @@
                   <div>{{data.status}}</div>
                 </div>
                 <div class="col-4">
-                  <div class="rounded-circle" [style.background]="project.projectId ? '#008000' : '#3366ff'"
+                  <div class="rounded-circle" [style.background]="project._id ? '#008000' : '#3366ff'"
                     title="{{data.user_label}}">
                     {{data.user}}</div>
                 </div>
