@@ -105,6 +105,14 @@
             </uj-date-time-picker>
         </div>
     </div>
+    <div class="row mt-2 " *ngIf="normalTask.parentTaskId">
+        <div class="col-4">
+            <label>Is Queue:</label>
+        </div>
+        <div class="col-1">
+            <input type="checkbox" [checked]="normalTask.isQueue" (change)="normalTask.isQueue = !normalTask.isQueue" />
+        </div>
+    </div>
 
     <div class="row mt-1">
         <div class="col-12 text-right">
