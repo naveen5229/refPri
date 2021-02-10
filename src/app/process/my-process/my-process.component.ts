@@ -20,6 +20,7 @@ import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component
   styleUrls: ['./my-process.component.scss']
 })
 export class MyProcessComponent implements OnInit {
+  loginUserId = this.userService._details.id;
   activeSabTab = 0;
   activeSabTab1 = 0;
   activeTab = 'leadsForMe';
@@ -27,6 +28,7 @@ export class MyProcessComponent implements OnInit {
   processList = [];
   leadsForMe = [];
   leadsByMe = [];
+  completedLeadsForFilter = [];
   allCompletedLeads = [];
   unreadLeads = [];
   ccLeads = [];
@@ -242,6 +244,7 @@ export class MyProcessComponent implements OnInit {
           this.setTableCcLeads(type);
         } else if (type == 4) {
           this.allCompletedLeads = res['data'] || [];
+          this.completedLeadsForFilter = this.allCompletedLeads;
           this.processDashboardList = this.allCompletedLeads;
           this.processDashboardTitle = 'Completed_Transaction'
           this.setTableAllCompletedLeads(type);
@@ -1383,4 +1386,26 @@ export class MyProcessComponent implements OnInit {
     }
   }
 
+  filterTicketBySubTab(type, subTabType) {
+    if (type == 4) {
+      let selectedList = [];
+      if (subTabType == 1) {//by me
+        selectedList = this.completedLeadsForFilter.filter((x) => {
+          return x._aduserid == this.loginUserId;
+        });
+      } else if (subTabType == 2) {//owned by me
+        selectedList = this.completedLeadsForFilter.filter((x) => {
+          return x._pri_own_id == this.loginUserId;
+        });
+      } else if (subTabType == 3) {//admin
+        selectedList = this.completedLeadsForFilter.filter((x) => {
+          return x._admin_id == this.loginUserId;
+        });
+      } else {//all
+        selectedList = this.completedLeadsForFilter;
+      }
+      this.allCompletedLeads = selectedList.length > 0 ? selectedList : [];
+      this.setTableAllCompletedLeads(type);
+    }
+  }
 }
