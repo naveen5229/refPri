@@ -10,6 +10,8 @@ import * as _ from 'lodash';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+import { NbSidebarService } from '@nebular/theme';
+import { LayoutService } from '../../@core/utils';
 @Component({
   selector: 'ngx-project-user-kanban',
   templateUrl: './project-user-kanban.component.html',
@@ -71,7 +73,8 @@ export class ProjectUserKanbanComponent implements OnInit {
   boardType: number = 0;
   callType = '';
 
-  constructor(
+  constructor(private sidebarService: NbSidebarService,
+    private layoutService: LayoutService,
     public common: CommonService,
     public api: ApiService,
     public chart: ChartService,
@@ -238,9 +241,8 @@ export class ProjectUserKanbanComponent implements OnInit {
 
   goToBoard(lead, type, callType) {
     this.callType = callType;
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 245 ~ ProjectUserKanbanComponent ~ goToBoard ~ lead", lead, this.callType)
-    this.childProject = this.projectList.filter((data) => lead._id === data._parent_id);
-    (this.callType === 'parent') ? this.subProject = { _id: null, project_desc: null, _parent_id: null } : null;
+
+    (this.callType === 'parent') ? (this.subProject = { _id: null, project_desc: null, _parent_id: null }, this.childProject = this.projectList.filter((data) => lead._id === data._parent_id)) : null;
     this.taskStatusBarData[0].data = [];
     let params = `projectId=${lead._id}&type=${type}&filter=null`;
     this.common.loading++;
@@ -265,6 +267,9 @@ export class ProjectUserKanbanComponent implements OnInit {
 
           console.log('inprogress:', this.taskStatusBarData[0].data);
         });
+
+        let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
+        sideBarClassList.remove('expanded'), sideBarClassList.add('compacted');
         this.cards = boardData;
         this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
         this.placeCardLength(this.cards);
@@ -318,6 +323,8 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.project._id = null;
     this.project.project_desc = null;
     this.getProjectList();
+    let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
+    sideBarClassList.remove('compacted'), sideBarClassList.add('expanded');
   }
 
   onDragStarted(event: CdkDragStart<string[]>) {
