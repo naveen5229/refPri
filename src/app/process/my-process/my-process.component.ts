@@ -146,6 +146,7 @@ export class MyProcessComponent implements OnInit {
     this.getAllAdmin();
     this.getProcessList();
     this.activeTab = 'leadsForMe';
+    this.activeSabTab = 0;
   }
 
   ngOnInit() { }
@@ -206,6 +207,7 @@ export class MyProcessComponent implements OnInit {
   }
 
   getProcessLeadByType(type, startDate = null, endDate = null) {
+    this.activeSabTab = 0;
     this.common.loading++;
     if ((type == 4 || type == 8 || type == 9) && this.searchData.startDate && this.searchData.endDate) {
       startDate = this.common.dateFormatter(this.searchData.startDate);
