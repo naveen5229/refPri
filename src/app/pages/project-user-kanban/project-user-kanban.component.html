@@ -134,12 +134,12 @@
 
       <div class="col-6 text-right my-auto" *ngIf="project._id">
         <div class="row">
-          <div class="col-8">
+          <div class="col-8" *ngIf="childProject.length > 0">
             <auto-suggestion display="project_desc" (onSelected)="goToBoard($event,1,'child')" [data]="childProject" placeholder="Select Sub Project" seperator="-"
               [preSelected]="{project_desc:subProject.project_desc}" className="borderStyle" inputId="_id">
             </auto-suggestion>
           </div>
-          <div class="col-4">
+          <div [ngClass]="childProject.length > 0 ? 'col-4' : 'col-12'">
             <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0,'parent')"
               (click)="activeButton = 'to'">My All
               Issues</button>
