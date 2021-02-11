@@ -106,6 +106,14 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.getDepartmentList();
   }
 
+  toggleSidebar(type): boolean {
+    let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
+    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+      this.sidebarService.toggle(true, 'menu-sidebar');
+    }
+    return false;
+  }
+
   getDashboardByType(type) {
     this.boardType = type;
     this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, type, this.callType);
@@ -268,8 +276,6 @@ export class ProjectUserKanbanComponent implements OnInit {
           console.log('inprogress:', this.taskStatusBarData[0].data);
         });
 
-        let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
-        sideBarClassList.remove('expanded'), sideBarClassList.add('compacted');
         this.cards = boardData;
         this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
         this.placeCardLength(this.cards);
@@ -277,7 +283,8 @@ export class ProjectUserKanbanComponent implements OnInit {
         this.cardlength = this.cards.length;
         this.dashboardState = true;
         (this.callType === 'parent') ? this.project = lead : this.subProject = lead;
-        console.log('sub:', this.subProject, 'parent:', this.project)
+        console.log('sub:', this.subProject, 'parent:', this.project);
+        this.toggleSidebar('compact');
       }
     }, (err) => {
       this.common.loading--;
@@ -323,8 +330,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.project._id = null;
     this.project.project_desc = null;
     this.getProjectList();
-    let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
-    sideBarClassList.remove('compacted'), sideBarClassList.add('expanded');
+    this.toggleSidebar('expand');
   }
 
   onDragStarted(event: CdkDragStart<string[]>) {
