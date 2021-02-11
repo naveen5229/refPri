@@ -264,4 +264,12 @@ export class ProcessAdminComponent implements OnInit {
     return columns;
   }
   // end Summary
+
+  exportCSV() {
+    if (this.Summary.length == 0) {
+      this.common.showError('No Data Found')
+    } else {
+      this.common.getCSVFromDataArray(this.Summary, this.tableSummary.data.headings, 'Process-summary')
+    }
+  }
 }

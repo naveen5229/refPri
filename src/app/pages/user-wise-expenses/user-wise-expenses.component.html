@@ -1,0 +1,115 @@
+<nb-card>
+  <nb-card-header>
+    <h5>User Wise Expenses</h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="row ml-0 mr-0">
+      <div class="col-4 pl-0">
+        <label class="mylabel">select User<span class="require">*</span></label>
+        <auto-suggestion class="d-inline-block w-70" (onSelected)="selectAdmin($event)" (onChange)="selectAdmin($event)"
+          [data]="adminList" display="name" placeholder="Select User" inputId="selectAdmin" name="selectAdmin">
+        </auto-suggestion>
+      </div>
+
+
+      <div class="col-3 pl-0" style="display: flex;">
+        <label class="mylabel">Start Date:<span class="require">*</span></label>
+        <uj-date-time-picker (onChanged)="data.startDate=($event)" [dateTimeValue]="today" [isTime]="false">
+        </uj-date-time-picker>
+      </div>
+      <div class="col-3 pl-0" style="display: flex;">
+        <label class="mylabel">End Date:<span class="require">*</span></label>
+        <uj-date-time-picker (onChanged)="data.endDate=($event)" [dateTimeValue]="today" [isTime]="false">
+        </uj-date-time-picker>
+      </div>
+
+      <div class="col-2 taR pl-0">
+        <button class="btn btn-primary btn-sm mr-2" (click)="showAdminWiseWagesList()">Submit</button>
+        <button class="btn btn-primary btn-sm" (click)="downloadExcel()" title="Download Excel"><i
+            class="fas fa-download"></i></button>
+      </div>
+    </div>
+
+
+    <div class="row ml-0 mr-0" *ngIf="updatedExpenses.length > 0">
+      <div class="col-12 taR pt-2">
+          <button class="btn btn-primary btn-sm mr-2" (click)="saveWages()">Save</button>
+      </div>
+    </div>
+
+    <div class="row ml-0 mr-0 mt-2">
+      <table class="table table-bordered table-striped">
+        <thead style="background: #d9e1f3;">
+          <tr>
+            <th scope="col-2">Date</th>
+            <th scope="col-1">User Travel</th>
+            <th scope="col-1">Other Expense</th>
+            <th scope="col-2">System Travel</th>
+            <th scope="col-2" style="width: 20%;">Summary</th>
+            <th scope="col-2" style="width: 30%;">OnSide Images </th>
+            <th scope="col-1" style="width: 10%;">Total Expense</th>
+            <th scope="col-1">Action </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of adminWiseList;let i = index">
+            <td>{{user.sqdate}}</td>
+            <td>{{user.travel_amount}}</td>
+            <td>{{user.other_amount}}</td>
+            <td>{{user.system_wages}} | {{user.system_wages_live}}</td>
+            <td scope="col-2" style="width: 20%;">{{user.km_calculation}}</td>
+            <td scope="col-2" style="width: 30%;">
+          <tr *ngFor="let images of user._onside_img;let j=index">
+
+            <td style="border : none;padding: 0;">
+          <tr>
+            <td style="border : none;padding: 0;">
+              <span style="margin-right: 1rem;"><i class="fas fa-long-arrow-alt-right"
+                  style="font-size: 14px;color: gray;vertical-align: middle;"></i></span>
+              <span *ngIf="images.img" class="imageLink" (click)="openLink(images.request_type,images.img)"
+                target="_blank">
+                Image
+              </span>
+              <span *ngIf="!images.img"> Null</span>
+            </td>
+          </tr>
+          </td>
+
+          <td style="border : none;padding: 0">
+            <table class="table">
+              <tbody>
+                <tr *ngFor="let image of images.exp_img; let k = index">
+                  <td style="border : none;padding: 0;width: 8px;">
+                    <span style="margin-right: 1rem;"><i class="fas fa-circle"
+                        style="font-size: 5px;color: gray;vertical-align: middle;"></i></span>
+                  </td>
+                  <td style="border : none;padding: 0;">
+                    <a *ngIf="image.exp_img" href={{image.exp_img}} target="_blank">
+                      Image
+                    </a>
+                    <span *ngIf="!image.exp_img">Null</span>
+                  </td>
+                  <td style="border : none;padding: 0;width: 5px;"> <span style="padding: 0 5px 0 5px;">-</span></td>
+                  <td style="border : none;padding: 0;">{{image.amount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          </tr>
+
+          </td>
+          <td style="width: 10%;">
+            <input type="number" class="form-group" style="width: 100%;"
+              [(ngModel)]="updatedExpenses[i]['total_amount']">
+          </td>
+          <td>
+            <span (click)="calculateDistance(user)"><i class="fas fa-map-marker-alt" title="Travel distance"></i></span>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </nb-card-body>
+</nb-card>

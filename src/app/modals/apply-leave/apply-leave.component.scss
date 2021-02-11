@@ -1,3 +1,4 @@
+@import '../../style.scss';
 :host::ng-deep .highlight-blue {
-    color: blue;
+    columns: $primary-2;;
 }

@@ -8,6 +8,7 @@ import { AddpartnerComponent } from '../../modals/addpartner/addpartner.componen
 import { AddpartneruserComponent } from '../../modals/addpartneruser/addpartneruser.component';
 import { AddcompanyComponent } from '../../modals/addcompany/addcompany.component';
 import { AddfouserComponent } from '../../modals/addfouser/addfouser.component';
+import { MobileNoComponent } from '../../modals/mobile-no/mobile-no.component';
 
 @Component({
   selector: 'ngx-user-mapping',
@@ -96,6 +97,7 @@ export class UserMappingComponent implements OnInit {
 
   // Partner Mapping Start
   getPartnerMappingData(){
+   
     this.partnerMapping=[];
     this.common.loading++;
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
@@ -112,9 +114,14 @@ export class UserMappingComponent implements OnInit {
   }
 
   resetTable() {
-    this.table.data = {
-      headings: {},
-      columns: []
+    this.table = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
 
@@ -157,7 +164,9 @@ export class UserMappingComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else {
+        }else if(key =='mobileno'){
+            column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -212,9 +221,14 @@ export class UserMappingComponent implements OnInit {
   }
 
   resetTable1(){
-    this.table1.data = {
-      headings: {},
-      columns: []
+    this.table1 = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
 
@@ -258,7 +272,9 @@ export class UserMappingComponent implements OnInit {
             action: null,
             icons: this.actionIcons1(campaign)
           };
-        } else {
+        }else if(key =='mobileno'){
+          column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -348,9 +364,14 @@ getElogistCompany(event){
 }
 
 resetTable2(){
-  this.table2.data = {
-    headings: {},
-    columns: []
+  this.table2 = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
   };
 }
 
@@ -394,7 +415,9 @@ getTableColumns2() {
           action: null,
           icons: this.actionIcons2(campaign)
         };
-      } else {
+      }else if(key =='mobileno'){
+        column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+      }else {
         column[key] = { value: campaign[key], class: 'black', action: '' };
       }
     }
@@ -527,9 +550,14 @@ companyMap(company){
   }
   
   resetTable3(){
-    this.table3.data = {
-      headings: {},
-      columns: []
+    this.table3 = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
   
@@ -573,7 +601,9 @@ companyMap(company){
             action: null,
             icons: this.actionIcons3(campaign)
           };
-        } else {
+        } else if(key =='mobileno'){
+          column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -670,9 +700,14 @@ companyMap(company){
     }
 
     resetTable4(){
-      this.table4.data = {
-        headings: {},
-        columns: []
+      this.table4 = {
+        data: {
+          headings: {},
+          columns: [],
+        },
+        settings: {
+          hideHeader: true
+        }
       };
     }
     
@@ -787,6 +822,15 @@ companyMap(company){
     addPartnerUser(){
       this.modalService.open(AddpartneruserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     }
+
+    showMobileNo(mobileno){
+      this.common.params=mobileno;
+      console.log("mobile no",this.common.params);
+      const activeModal = this.modalService.open(MobileNoComponent, {
+        size: "sm",
+        container: "nb-layout"
+      });
+   }
   
 
 }

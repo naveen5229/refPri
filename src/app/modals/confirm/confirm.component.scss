@@ -1,26 +1,28 @@
+@import '../../style.scss';
+
 .modal-header {
-    padding: 8px 15px;
-    background-color: #263238 !important;
+    padding: $padding-sm $padding-lg;
+    background-color:$secondary-17 !important;
     h5 {
         color: #fff;
     }
     button {
         font-size: 26px;
         color: #fff !important;
-        margin-top: 0px;
-        margin-bottom: 0px;
-        padding: 0px 15px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 0 $padding-lg;
         opacity: 1;
         outline: none;
     }
 }
 
 .modal-footer {
-    padding: 8px 15px;
+    padding: $padding-sm $padding-lg;
     #cancel {
         background-color: #D61414;
     }
     #submit {
-        background-color: #263238;
+        background-color:$secondary-17;
     }
 }

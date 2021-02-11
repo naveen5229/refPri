@@ -1,4 +1,5 @@
 @import "../@theme/styles/themes";
+@import '../style.scss';
 
 @include nb-install-component() {
   ::ng-deep router-outlet + * {
@@ -23,7 +24,7 @@
 ::-webkit-scrollbar {
   width: 2em !important;
   height: 2em !important;
-  background-color: #c1c1c1 !important;
+  background-color: $secondary-11 !important;
 }
 
 /* Track */
@@ -32,7 +33,7 @@
   /* background: #f1f1f1 !important; */
   box-shadow: none;
   border-radius: 0px;
-  background-color: #000;
+  background-color: $dark-1;
 }
 
 /* Handle */
@@ -40,7 +41,7 @@
 ::-webkit-scrollbar-thumb {
   /* background: #000 !important; */
   border-radius: 0px !important;
-  background-color: #c1c1c1 !important;
+  background-color: $secondary-11 !important;
   background-image: -webkit-linear-gradient(
     linear,
     40% 0%,
@@ -62,7 +63,7 @@
 }
 
 nb-card-body ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: $secondary-11;
   cursor: pointer;
   border-radius: 0px;
 }
@@ -121,3 +122,5 @@ nb-card-body ::-webkit-scrollbar-thumb {
     overflow: inherit !important;
   }
 }
+
+

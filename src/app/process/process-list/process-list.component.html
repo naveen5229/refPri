@@ -8,6 +8,9 @@
                 <button class="btn btn-primary btn-sm" id="button" (click)="addProcess(null)">
                     <i class="fa fa-plus"></i>
                 </button>
+                <!-- <button class="btn btn-primary btn-sm ml-2" id="addGlobalfield" (click)="addGlobalfield()">
+                    Add field
+                </button> -->
             </div>
         </div>
     </nb-card-header>
@@ -19,33 +22,4 @@
         </div>
 
     </nb-card-body>
-
-    <!-- start: cat modal -->
-    <!-- <div class="modal" id="catModal" #catModal>
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" style="color:#fff;">{{catFormTitle}}</h4>
-                    <button type="button" class="close" data-dismiss="modal" (click)="closeCatModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-1">
-                        <div class="col-3">
-                            <label>Name:</label>
-                        </div>
-                        <div class="col-6">
-                            <input type="text" class="form-control" placeholder="Enter Name" [(ngModel)]="catForm.name">
-                        </div>
-                        <div class="col-3 text-right">
-                            <button class="btn btn-primary btn-sm" (click)="addProcessCat()">Add</button>
-                        </div>
-                    </div>
-
-                    <smart-table [data]="tableCatList.data" [settings]="tableCatList.settings" id="tableCatList">
-                    </smart-table>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- end: cat modal -->
 </nb-card>

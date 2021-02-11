@@ -1,0 +1,32 @@
+fieldset {
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-image: initial;
+    margin-top:20px;
+  }
+  
+  legend {
+    display: block;
+    padding-inline-start: 2px;
+    padding-inline-end: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    padding: 10px;
+    border-image: initial;
+    color:black;
+    font-weight: bold;
+  }
+
+  .mrgn{
+    margin-top:10px;
+  }

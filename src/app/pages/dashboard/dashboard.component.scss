@@ -1,6 +1,7 @@
 @import '../../@theme/styles/themes';
 @import '~bootstrap/scss/mixins/breakpoints';
 @import '~@nebular/theme/styles/global/breakpoints';
+@import '../../style.scss';
 
 @include nb-install-component() {
   .solar-card nb-card-header {
@@ -15,44 +16,32 @@
   }
 }
 
-table{
+table {
   margin-bottom: 0rem;
-  thead{
-     display: table;
-     width: 100%;
-     table-layout: fixed;
-     th{
-      padding: 0.2rem!important;
-      background: #fff!important;
-      border: 6px solid #000000!important;
-      font-size: .80rem;
-     }
-     th:first-child{
-       width: 60px;
-     }
-     th:last-child{
+  @include fixed-table;
+  thead {
+
+    th{
+      border:6px solid $dark-1!important;
+      padding: .2rem!important;
+      background: $light-1!important
+    }
+    th:last-child {
       width: 160px;
     }
   }
 
-  tbody{
-      overflow-y: auto;
-      display: block;
-      width: 100%;
-      table-layout: fixed;
-      overflow: auto;
-      max-height: calc(100vh - 178px);
-      tr{
-        display: table;
-        table-layout: fixed;
-        width: 100%;
-        td:first-child{
-          width: 60px;
-        }
-        td:last-child{
-          width: 160px;
-        }
+  tbody {
+    max-height: calc(100vh - 178px);
+    tr {
+
+      td:first-child {
+        width: 60px;
       }
-  
+      td:last-child {
+        width: 160px;
+      }
+    }
+
   }
 }

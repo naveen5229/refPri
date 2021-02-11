@@ -14,6 +14,7 @@ export class FormDataTableComponent implements OnInit {
   tableHeader = null;
   isDisabled = false;
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
+    console.log('you are intable');
     this.additionalFields = this.common.params.additionalform;
     this.isDisabled = common.params.isDisabled;
     console.log("additionalFields:", this.additionalFields);

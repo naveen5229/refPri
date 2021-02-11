@@ -15,10 +15,14 @@ export class AddProjectComponent implements OnInit {
     projectId: 0,
     projectDesc: "",
     owner: {
-      id: '',
-      name: ''
+      id: null,
+      name: null
     },
-    users: []
+    users: [],
+    parentProject: {
+      id: null,
+      name: null
+    }
   };
   btn = 'Save';
   userList = [];
@@ -55,19 +59,23 @@ export class AddProjectComponent implements OnInit {
 
   saveProject() {
     if (this.project.projectDesc == '') {
-      return this.common.showError("Description is missing")
+      return this.common.showError("Description is missing");
     }
     else if (this.project.owner.id == '') {
-      return this.common.showError("Owner is missing")
+      return this.common.showError("Owner is missing");
     }
     else if (this.project.users.length == 0) {
-      return this.common.showError("Assign atleast one user")
+      return this.common.showError("Assign atleast one user");
+    }
+    else if (this.project.projectId > 0 && this.project.parentProject.id && this.project.projectId == this.project.parentProject.id) {
+      return this.common.showError("Add Parent Project");
     }
     else {
       const params = {
         projectId: this.project.projectId,
         projectDesc: this.project.projectDesc,
         ownerId: this.project.owner.id,
+        parentId: this.project.parentProject.id,
         users: JSON.stringify(this.project.users.map(user => { return { user_id: user.id } })),
       }
       this.common.loading++;
@@ -78,7 +86,7 @@ export class AddProjectComponent implements OnInit {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0].y_msg)
             // this.closeModal(true);
-            this.project = { projectId: 0, projectDesc: "", owner: { id: "", name: " " }, users: [] };
+            this.resetProject();
             this.getAllProjectList();
           } else {
             this.common.showError(res['data'][0].y_msg)
@@ -93,6 +101,16 @@ export class AddProjectComponent implements OnInit {
           console.log('Error: ', err);
         });
     }
+  }
+
+  resetProject() {
+    this.project = {
+      projectId: 0,
+      projectDesc: "",
+      owner: { id: null, name: null },
+      users: [],
+      parentProject: { id: null, name: null }
+    };
   }
 
   getAllProjectList() {
@@ -194,8 +212,8 @@ export class AddProjectComponent implements OnInit {
 
   editProject(project) {
     console.log("edit project:", project);
-    let userNames = project.userName.split(',');
-    let userIds = project._userids.split(',');
+    // let userNames = project.userName.split(',');
+    // let userIds = project._userids.split(',');
     this.project = {
       projectId: project._project_id,
       projectDesc: project.project_desc,
@@ -203,12 +221,17 @@ export class AddProjectComponent implements OnInit {
         id: project._owner_id,
         name: project.owner
       },
-      users: userIds.map((id, index) => {
-        return { id, name: userNames[index] }
-      })
+      parentProject: {
+        id: project._parent_project_id,
+        name: project.parent_project
+      },
+      users: project._users
+      // users: userIds.map((id, index) => {
+      //   return { id, name: userNames[index] }
+      // })
     };
 
-    console.log(this.project);
+    console.log("project:", this.project);
 
   }
 

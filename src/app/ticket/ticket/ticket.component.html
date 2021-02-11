@@ -81,6 +81,17 @@
                         (click)="getTicketByType(105)">Search</button>
                 </div>
             </div>
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; filterTicketBySubTab(105,0)">
+                    All
+                </li>
+                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; filterTicketBySubTab(105,1)">
+                    By Me
+                </li>
+                <li [ngClass]="activeSabTab==2?'active':''" (click)="activeSabTab=2; filterTicketBySubTab(105,2)">
+                    For Me
+                </li>
+            </ul>
             <smart-table [data]="tableCompletedTkt.data" [settings]="tableCompletedTkt.settings" id="tablecompletedTkt">
             </smart-table>
         </div>
@@ -135,8 +146,9 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
-                                    *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
+                                <!-- <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
+                                    *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
+                                    <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control" [(ngModel)]=oddArray[i].r_value rows="1"></textarea>
                                 <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value
                                     *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
                                 <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
@@ -162,7 +174,8 @@
                                 </auto-suggestion>
                                 <auto-suggestion
                                     *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'"
-                                    [data]="typeList" display="name" placeholder="Select Type" name="processType"
+                                    [data]="typeList" display="name" name="processType"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Type'"
                                     id="processType"
                                     (onSelected)="oddArray[i].r_value=($event.name);categoryIds.type=($event.id);"
                                     [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
@@ -183,13 +196,11 @@
                                 </select>
 
                                 <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
-                                    <span *ngIf="oddArray[i].r_url">
-                                        <a target="_blank" [href]="oddArray[i].r_url"
-                                            [download]="oddArray[i].r_doc_name">{{oddArray[i].r_doc_name}}</a>
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                                     </span>
-                                    <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i"
-                                        (change)="handleFileSelection($event,i)"> -->
-                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
                                 </label>
                             </div>
                         </div>
@@ -203,8 +214,9 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
-                                    *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
+                                <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
+                                    *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
+                                    <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control" [(ngModel)]=evenArray[i].r_value rows="1"></textarea>
                                 <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
                                     *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
                                 <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
@@ -214,21 +226,21 @@
 
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
-                                    [data]="priCatList" display="name" placeholder="Select Primary Category"
+                                    [data]="priCatList" display="name" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Primary Category'"
                                     name="secCat" id="secCat"
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'"
-                                    [data]="secCatList" display="name" placeholder="Select Secondary Category"
+                                    [data]="secCatList" display="name" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Secondary Category'"
                                     name="secCat" id="secCat"
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.secCat=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                                 </auto-suggestion>
                                 <auto-suggestion
                                     *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'"
-                                    [data]="typeList" display="name" placeholder="Select Type" name="processType"
+                                    [data]="typeList" display="name" name="processType" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Type'"
                                     id="processType"
                                     (onSelected)="evenArray[i].r_value=($event.name);categoryIds.type=($event.id);"
                                     [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
@@ -250,17 +262,13 @@
                                 </select>
 
                                 <!-- attachment -->
-                                <!-- <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
-                                    <span *ngIf="evenArray[i].r_url">
-                                        <a target="_blank" *ngIf="evenArray[i].r_url" [href]="evenArray[i].r_url"
-                                            [download]="evenArray[i].r_doc_name">{{evenArray[i].r_doc_name}}</a>
-                                    </span> -->
-                                <!-- <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i"
-                                        (change)="handleFileSelection($event,i)"> -->
-                                <!-- <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i> -->
-                                <!-- <button type="button" class="btn btn-primary btn-sm col-4"
-                                        (click)="uploadattachFile('evenArray',i)">Upload</button> -->
-                                <!-- </div> -->
+                                <label class="custom-file-upload p-0" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                                </label>
                             </div>
                         </span>
                     </div>
@@ -359,7 +367,7 @@
 <!--end: forward ticket -->
 
 <!--start: Ticket History -->
-<div class="modal" id="ticketHistory">
+<!-- <div class="modal" id="ticketHistory">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -374,7 +382,7 @@
 
         </div>
     </div>
-</div>
+</div> -->
 <!--end: Ticket History -->
 
 <!--start: Detailed Info -->
@@ -399,7 +407,14 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
+                                <uj-date-time-picker *ngIf="opening.r_coltype =='date'" [dateTimeValue]="opening.r_value" [isTime]="false" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="opening.r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="opening.r_value" readonly>
+                                <span *ngIf="opening.r_coltype == 'table'" (click)="AdditionalFormNew(opening._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(opening.r_coltype)" type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
+                                <div *ngIf="opening.r_coltype == 'text' && !opening.r_fixedvalues" class="form-control div-input" [textContent]=opening.r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="opening.r_coltype=='attachment' && opening.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(opening.r_url,opening.r_doc_name)">{{opening.r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -415,7 +430,14 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
+                                <uj-date-time-picker *ngIf="primary.r_coltype =='date'" [dateTimeValue]="primary.r_value" [isTime]="false" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="primary.r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="primary.r_value" readonly>
+                                <span *ngIf="primary.r_coltype == 'table'" (click)="AdditionalFormNew(primary._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(primary.r_coltype)" type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
+                                <div *ngIf="primary.r_coltype == 'text' && !primary.r_fixedvalues" class="form-control div-input" [textContent]=primary.r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="primary.r_coltype=='attachment' && primary.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(primary.r_url,primary.r_doc_name)">{{primary.r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -431,7 +453,14 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
+                                <uj-date-time-picker *ngIf="closing.r_coltype =='date'" [dateTimeValue]="closing.r_value" [isTime]="false" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="closing.r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="closing.r_value" readonly>
+                                <span *ngIf="closing.r_coltype == 'table'" (click)="AdditionalFormNew(closing._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(closing.r_coltype)" type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
+                                <div *ngIf="closing.r_coltype == 'text' && !closing.r_fixedvalues" class="form-control div-input" [textContent]=closing.r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="closing.r_coltype=='attachment' && closing.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(closing.r_url,opening.r_doc_name)">{{closing.r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -450,7 +479,14 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <uj-date-time-picker *ngIf="oddArray[i].r_coltype =='date'" [dateTimeValue]="oddArray[i].r_value" [isTime]="false" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="oddArray[i].r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalFormNew(oddArray[i]._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(oddArray[i].r_coltype)" type="text" class="form-control" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <div *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control div-input" [textContent]=oddArray[i].r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="oddArray[i].r_coltype=='attachment' && oddArray[i].r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -463,7 +499,14 @@
                             </div>
 
                             <div class="col-8">
-                                <input type="text" class="form-control" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <uj-date-time-picker *ngIf="evenArray[i].r_coltype =='date'" [dateTimeValue]="evenArray[i].r_value" [isTime]="false" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="evenArray[i].r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalFormNew(evenArray[i]._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(evenArray[i].r_coltype)" type="text" class="form-control" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <div *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control div-input" [textContent]=evenArray[i].r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="evenArray[i].r_coltype=='attachment' && evenArray[i].r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>

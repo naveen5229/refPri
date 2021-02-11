@@ -9,14 +9,19 @@
         <div class="col-4">
             <textarea row="2" cols="15" placeholder="Enter Description" id="dexcription" name="projectDesc" class="form-control" [(ngModel)]="project.projectDesc"></textarea>
         </div>
-        <div class="col-3">
-            <auto-suggestion (onSelected)="project.owner = $event" [data]="userList" display="name" seperator="-" placeholder="Search Owner" [preSelected]="project.owner.id ? { name: project.owner.name} : {name: ''}" autocomplete="off" name="ownerId" inputId="ownerId">
+        <div class="col-2">
+            <auto-suggestion (onSelected)="project.owner = $event" [data]="userList" display="name" seperator="-" placeholder="Select Owner" [preSelected]="project.owner.id ? { name: project.owner.name} : {name: ''}" autocomplete="off" name="ownerId" inputId="ownerId">
             </auto-suggestion>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Users" [preSelected]="project.users" (onSelected)="project.users = $event" inputId="users" name="users" isMultiSelect="true" autocomplete="off"></auto-suggestion>
         </div>
+        <div class="col-2">
+            <auto-suggestion [data]="projectList" display="project_desc" seperator="-" placeholder="Select Parent Project" (onSelected)="project.parentProject = {id:$event['_project_id'],name:$event['project_desc']}" [preSelected]="project.parentProject.id ? { project_desc: project.parentProject.name} : {project_desc: ''}" autocomplete="off" name="parentProject" inputId="parentProject">
+            </auto-suggestion>
+        </div>
         <div class="col-2 text-right">
+            <button class="btn btn-primary text-capitalize mr-2" id="button" (click)="resetProject()" *ngIf="project.projectId">reset</button>
             <button class="btn btn-primary text-capitalize" id="button" (click)="saveProject()">{{btn}}</button>
         </div>
     </div>

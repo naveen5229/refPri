@@ -67,10 +67,16 @@ export class TaskMessageComponent implements OnInit {
     id: null,
     name: ""
   };
-  attachmentFile = {
-    name: null,
-    file: null
+  showAssignerUserAuto = null;
+  newAssignerUser = {
+    id: null,
+    name: ""
   };
+  // attachmentFile = {
+  //   name: null,
+  //   file: null
+  // };
+  attachmentFile = [];
   attachmentList = [];
   isAttachmentShow = false;
   isSearchShow = false;
@@ -102,7 +108,11 @@ export class TaskMessageComponent implements OnInit {
   messageHistoryList = null;
   mentionUserIndex: number = 0;
   query_conversation = null;
-  searchTerm = null;
+  // searchTerm = null;
+
+  searchedIndex = [];
+  selectedIndex = 0;
+  searchCount = 0;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -190,6 +200,7 @@ export class TaskMessageComponent implements OnInit {
   }
   keyHandler(event) {
     const key = event.key.toLowerCase();
+    console.log(key)
     if (this.isMentionedUser) {
       if (key === 'arrowdown') {
         event.preventDefault();
@@ -212,6 +223,9 @@ export class TaskMessageComponent implements OnInit {
     if (key == 'escape') {
       this.closeModal(false);
     }
+    if (key == 'backspace') {
+      console.log(this.taskMessage.split('@'));
+    }
 
   }
 
@@ -225,7 +239,7 @@ export class TaskMessageComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104, 111, 112, 113, 114].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.taskId = [101, 102, 104, 111, 112, 113, 114, 115].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
           this.isChatFeature = this.ticketData._chat_feature;
           if (this.ticketType == 114) {
@@ -342,7 +356,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   saveTicketMessage() {
-    if (this.taskMessage == "" && !this.attachmentFile.file) {
+    if (this.taskMessage == "" && !this.attachmentFile) {
       return this.common.showError("Message is missing");
     } else {
       let formatedMsg = this.taskMessage.trim();
@@ -354,31 +368,41 @@ export class TaskMessageComponent implements OnInit {
       if (mentionedUsers && mentionedUsers.length > 0) {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
+
+      // const duplicatedGroup = _.groupBy(mentionedUsers,data => {return data.user_id});
+      // let finalMentionedUsers = [];
+      // Object.keys(duplicatedGroup).map(id =>{
+      //   console.log('id',id,duplicatedGroup[id][0])
+      //   finalMentionedUsers.push(duplicatedGroup[id][0]);
+      // })
       // console.log("formatedMsg:", formatedMsg);
-      // console.log("mentionedUsers:", mentionedUsers);
+      // console.log("mentionedUsers:", mentionedUsers,finalMentionedUsers);
       // return false;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
         message: formatedMsg,//this.taskMessage,
-        attachment: this.attachmentFile.file,
-        attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        // attachment: this.attachmentFile.file,
+        // attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        attachments: JSON.stringify(this.attachmentFile.map(attachments=> {return{name: attachments.name, file: attachments.file}})),
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
         users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
         requestId: null //(this.replyType > 0 && this.replyStatus === 0) ? this.parentCommentId : null
       }
-      // console.log("params:", params);
+      console.log("params:", params);
       // return false;
       this.common.loading++;
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
-          this.attachmentFile.file = null;
-          this.attachmentFile.name = null;
+          // this.attachmentFile.file = null;
+          // this.attachmentFile.name = null;
+          this.attachmentFile = [];
           this.resetQuotedMsg();
-          if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          // if (this.ticketData._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
+          if (this.userListByTask['taskUsers'] && this.userListByTask['taskUsers'][0]._assignee_user_id == this.loginUserId && this.statusId == 0 && this.msgListOfMine.length == 0) {
             console.log("msgListOfMine for update tkt:", this.msgListOfMine.length);
             this.updateTicketStatus(2, null);
           }
@@ -551,6 +575,7 @@ export class TaskMessageComponent implements OnInit {
         assigneeUserId: this.newAssigneeUser.id,
         status: this.statusId,
         isCCUpdate: isCCUpdate,
+        assigneeUserIdOld: (this.userListByTask['taskUsers'][0]._assignee_user_id) ? this.userListByTask['taskUsers'][0]._assignee_user_id : null,
         assigneeUserNameOld: this.userListByTask['taskUsers'][0].assignto,
         assigneeUserNameNew: this.newAssigneeUser.name
       }
@@ -572,6 +597,50 @@ export class TaskMessageComponent implements OnInit {
       });
     } else {
       this.common.showError("Select Assignee user");
+    }
+  }
+  
+  updateTaskAssignerUser() {
+    if (this.ticketId > 0 && this.newAssignerUser.id > 0) {
+      let isCCUpdate = 1;
+      if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
+        let findCC = this.userListByTask['ccUsers'].find(x => { return x._cc_user_id == this.loginUserId });
+        if (findCC) {
+          isCCUpdate = 0;
+        }
+      }
+      if (this.loginUserId == this.newAssignerUser.id) {
+        this.common.showError("Please assign a new user");
+        return false;
+      }
+      let params = {
+        ticketId: this.ticketId,
+        taskId: this.taskId,
+        ticketType: this.ticketType,
+        assignerUserId: this.newAssignerUser.id,
+        status: this.statusId,
+        isCCUpdate: isCCUpdate,
+        assignerUserNameOld: this.userListByTask['taskUsers'][0].assignby,
+        assignerUserNameNew: this.newAssignerUser.name
+      }
+      // console.log("updateTaskAssigneeUser params:", params);return false;
+      this.common.loading++;
+      this.api.post('AdminTask/updateTaskAssignerUser', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.getAllUserByTask();
+          this.getMessageList();
+          this.showAssignerUserAuto = null;
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Select Assigner user");
     }
   }
 
@@ -674,23 +743,28 @@ export class TaskMessageComponent implements OnInit {
 
   handleFileSelection(event) {
     this.common.loading++;
-    this.common.getBase64(event.target.files[0]).then((res: any) => {
-      this.common.loading--;
-      let file = event.target.files[0];
-      var ext = file.name.split('.').pop();
-      this.formatIcon(ext);
-      let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
-      if (formats.includes(ext.toLowerCase())) {
-      } else {
-        this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
-        return false;
-      }
-      this.attachmentFile.name = file.name;
-      this.attachmentFile.file = res;
-    }, err => {
-      this.common.loading--;
-      console.error('Base Err: ', err);
-    })
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.common.getBase64(event.target.files[i]).then((res: any) => {
+        console.log("🚀 ~ file: task-message.component.ts ~ line 697 ~ TaskMessageComponent ~ this.common.getBase64 ~ res", res)
+        let file = event.target.files[i];
+        var ext = file.name.split('.').pop();
+        let format = this.formatIcon(ext);
+        let formats = ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+        if (formats.includes(ext.toLowerCase())) {
+        } else {
+          this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
+          return false;
+        }
+        // this.attachmentFile.name = file.name;
+        // this.attachmentFile.file = res;
+        this.attachmentFile.push({ name: file.name, file: res, format:format });
+        console.log(this.attachmentFile);
+      }, err => {
+        this.common.loading--;
+        console.error('Base Err: ', err);
+      })
+    }
+    this.common.loading--;
   }
 
   formatIcon(ext) {
@@ -702,13 +776,20 @@ export class TaskMessageComponent implements OnInit {
       case 'csv': icon = 'fas fa-file-csv'; break;
       default: icon = null;
     }
+    return icon;
     this.fileType = icon;
   }
 
+  removeFile(i){
+    this.attachmentFile.splice(i,1);
+    console.log('after delete',this.attachmentFile);
+  }
+
   onPaste(event: any) {
-    // console.log('event', event);
+    console.log('event', event);
     const items = event.clipboardData.items;
     let selectedFile = { "target": { "files": [] } };
+    console.log("🚀 ~ file: task-message.component.ts ~ line 741 ~ TaskMessageComponent ~ onPaste ~ items", items)
     for (const item of items) {
       if (item.type.indexOf('image') === 0) {
         event.preventDefault();
@@ -719,10 +800,14 @@ export class TaskMessageComponent implements OnInit {
   }
 
   filesDropped(files: FileHandle[]) {
-    // console.log("ChatboxComponent -> filesDropped -> files", files)
+    console.log("ChatboxComponent -> filesDropped -> files", files)
     this.files = files;
     let selectedFile = { "target": { "files": [] } };
-    selectedFile.target.files.push(this.files[0].file);
+    // selectedFile.target.files.push(this.files[0].file);
+    this.files.map(files => {
+      selectedFile.target.files.push(files.file)
+    })
+    console.log("🚀 ~ file: task-message.component.ts ~ line 741 ~ TaskMessageComponent ~ filesDropped ~ selectedFile", selectedFile);
     this.handleFileSelection(selectedFile);
   }
 
@@ -787,12 +872,17 @@ export class TaskMessageComponent implements OnInit {
   }
 
   onSelectMenstionedUser(user) {
-    this.mentionedUsers.push({ id: user.id, name: user.name });
+    if (!this.mentionedUsers.find(x => x.id == user.id)) {
+      this.mentionedUsers.push({ id: user.id, name: user.name });
+    }
     // console.log("mentionedUsers2:", this.mentionedUsers);
     let splieted = this.taskMessage.split('@');
+    console.log(splieted);
     splieted.pop();
+    console.log(splieted, splieted.join('@'));
     this.taskMessage = splieted.join('@') + '@' + user.name + ' ';
     this.msgtextarea.nativeElement.focus();
+    console.log('mentioned users', this.mentionedUsers, this.taskMessage)
   }
 
   getScheduledMasterByTaskId() {
@@ -893,92 +983,100 @@ export class TaskMessageComponent implements OnInit {
     }, 0);
   }
 
-  searchedIndex = [];
-  selectedIndex = 0;
-  searchCount = 0;
   searchChat(value) {
-    this.searchTerm = value;
-    if (this.searchTerm) {
-      if (this.searchTerm.indexOf(' ') == 0) {
-        return;
-      }
-      this.searchedIndex = [];
-      let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
-      console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", this.searchTerm, messageList)
-      this.selectedIndex = 0;
-      let final = "";
-      let caseSensitive = false;
-      let splitFlag = null;
-      let matchFlag = null
-      if (!caseSensitive) {
-        splitFlag = "i";
-        matchFlag = "gi";
-      } else {
-        splitFlag = "";
-        matchFlag = "g";
-      }
-      let searchPattern = new RegExp(this.searchTerm, splitFlag);
-      let matchpattern = new RegExp(this.searchTerm, matchFlag);
+    // this.searchTerm = value;
+    // if (this.searchTerm) {
+    //   if (this.searchTerm.indexOf(' ') == 0) {
+    //     return;
+    //   }
+    //   this.searchedIndex = [];
+    //   let messageList = JSON.parse(JSON.stringify(this.messageListShow));//_.clone(this.messageListShow);
+    //   console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", this.searchTerm, messageList)
+    //   this.selectedIndex = 0;
+    //   let final = "";
+    //   let caseSensitive = false;
+    //   let splitFlag = null;
+    //   let matchFlag = null
+    //   if (!caseSensitive) {
+    //     splitFlag = "i";
+    //     matchFlag = "gi";
+    //   } else {
+    //     splitFlag = "";
+    //     matchFlag = "g";
+    //   }
+    //   let searchPattern = new RegExp(this.searchTerm, splitFlag);
+    //   let matchpattern = new RegExp(this.searchTerm, matchFlag);
 
-      for (let i = messageList.length - 1; i >= 0; i--) {
-        // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
-        let msg = messageList[i].comment;
-        console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, this.searchTerm)
-        if ((msg.toLowerCase()).match(this.searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
-          this.searchedIndex.push(i);
-          this.searchCount = this.searchedIndex.length;
-          let separatedText = msg.split(searchPattern);
-          let separatedSearchedText = msg.match(matchpattern);
-          if (
-            separatedSearchedText != null &&
-            separatedSearchedText.length > 0
-          ) {
-            for (let j = 0; j < separatedText.length; j++) {
-              if (j <= separatedSearchedText.length - 1) {
-                final +=
-                  separatedText[j] +
-                  `<span class="text-highlight" id="focusOn-${i}">` +
-                  separatedSearchedText[j] +
-                  `</span>`;
-              } else {
-                final += separatedText[j];
-              }
-            }
-          }
-          messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
-          this.messageList = messageList;
-          final = '';
-          setTimeout(() => {
-            this.focusOnSelectedIndex();
-          }, 500);
-          // break;
-        }
-      }
-    }
+    //   for (let i = messageList.length - 1; i >= 0; i--) {
+    //     // console.log("🚀 ~ file: task-message.component.ts ~ line 926 ~ TaskMessageComponent ~ searchChat ~ focusOn", this.focusOn)
+    //     let msg = messageList[i].comment;
+    //     console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, this.searchTerm)
+    //     if ((msg.toLowerCase()).match(this.searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+    //       this.searchedIndex.push(i);
+    //       this.searchCount = this.searchedIndex.length;
+    //       let separatedText = msg.split(searchPattern);
+    //       let separatedSearchedText = msg.match(matchpattern);
+    //       if (
+    //         separatedSearchedText != null &&
+    //         separatedSearchedText.length > 0
+    //       ) {
+    //         for (let j = 0; j < separatedText.length; j++) {
+    //           if (j <= separatedSearchedText.length - 1) {
+    //             final +=
+    //               separatedText[j] +
+    //               `<span class="text-highlight" id="focusOn-${i}">` +
+    //               separatedSearchedText[j] +
+    //               `</span>`;
+    //           } else {
+    //             final += separatedText[j];
+    //           }
+    //         }
+    //       }
+    //       messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+    //       this.messageList = messageList;
+    //       final = '';
+    //       setTimeout(() => {
+    //         this.focusOnSelectedIndex();
+    //       }, 500);
+    //       // break;
+    //     }
+    //   }
+    // }
+    // setTimeout(() => {
+    let messageList = JSON.parse(JSON.stringify(this.messageListShow));
+    this.common.searchString(value, messageList).then((res) => {
+      console.log("res:", res);
+      this.searchedIndex = res.searchedIndex;
+      this.searchCount = this.searchedIndex.length;
+      this.messageList = res.messageList;
+      setTimeout(() => {
+        this.searchCount > 0 ? this.focusOnSelectedIndex() : null;
+      }, 500);
+    });
+    // }, 500);
   }
 
   scrollToChat(focusOn) {
     try {
       setTimeout(() => {
-        document.getElementById("focusOn-" + focusOn).scrollIntoView();
+        let scrollIntoView = document.getElementById("focusOn-" + focusOn);
+        (scrollIntoView) ? scrollIntoView.scrollIntoView() : null;
       }, 100);
     } catch (err) { }
   }
 
   onchangeIndex(type) {
-    console.log('selectedIndex:', this.selectedIndex);
+    console.log('selectedIndex:', this.selectedIndex, this.searchedIndex.length);
     if (this.searchedIndex.length > 0) {
       if (type == "plus") {
         if (this.selectedIndex == this.searchedIndex.length - 1) {
-          // this.common.showError("error");
-          return;
+          return false;
         }
         this.selectedIndex++;
         this.searchCount--;
       } else {
         if (this.selectedIndex == 0) {
-          // this.common.showError("error");
-          return;
+          return false;
         }
         this.selectedIndex--;
         this.searchCount++;
@@ -996,7 +1094,9 @@ export class TaskMessageComponent implements OnInit {
       if (removeClass)
         removeClass.classList.remove('text-focus-highlight');
     }
-    document.getElementById("focusOn-" + focusOn).classList.add('text-focus-highlight');
+    let addClass = document.getElementById("focusOn-" + focusOn);
+    if (addClass)
+      addClass.classList.add('text-focus-highlight');
     this.scrollToChat(focusOn);
   }
 
@@ -1004,6 +1104,6 @@ export class TaskMessageComponent implements OnInit {
     this.messageList = JSON.parse(JSON.stringify(this.messageListShow));
     this.searchedIndex = [];
     this.searchCount = 0;
-    this.searchTerm = null;
+    // this.searchTerm = null;
   }
 }

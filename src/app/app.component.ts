@@ -14,7 +14,15 @@ import { ApiService } from './Service/Api/api.service';
   templateUrl: '../app/app.component.html',
 })
 export class AppComponent implements OnInit {
-
+  // @HostListener('contextmenu', ['$event'])
+  // onRightClick(event) {
+  //   console.log("contextmenu:",event,event.button);
+  //   // event.preventDefault();
+  // }
+  // @HostListener('document:keydown', ['$event'])
+  // handleKeyboardEvent(event) {
+  //   this.keyHandler(event);
+  // }
   constructor(private analytics: AnalyticsService,
     public common: CommonService,
     public user: UserService,
@@ -45,4 +53,20 @@ export class AppComponent implements OnInit {
         console.log('Error: ', err);
       })
   }
+
+  // keyHandler(event) {
+  //   if (event.keyCode == 123) {
+  //     alert("This function has been disabled to prevent you from stealing my code 123!");
+  //     // event.preventDefault();
+  //     return false;
+  //   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
+  //     alert("This function has been disabled to prevent you from stealing my code 73!");
+  //     // event.preventDefault();
+  //     return false;
+  //   } else if (event.ctrlKey && event.keyCode == 85) {
+  //     alert("This function has been disabled to prevent you from stealing my code 85!");
+  //     // event.preventDefault();
+  //     return false;
+  //   }
+  // }
 }

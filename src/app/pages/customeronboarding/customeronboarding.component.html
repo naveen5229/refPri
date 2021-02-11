@@ -1,0 +1,149 @@
+
+<nb-card>
+  <nb-card-header>
+      <div class="row m-0">
+              <h5 class="heading-design">Customer Onboarding</h5>
+      </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="container">
+      <div class="row">
+       <div class="tabs_style_main w-100">
+         <ul class="tabs_style text-left">
+             <li [ngClass]="activeTab=='foadminuser'?'active':''" (click)="activeTab='foadminuser';resetTable();" style="font-weight:600;font-size:14px;">
+                 FO Admin User
+             </li>
+             <li [ngClass]="activeTab=='department'?'active':''" (click)="activeTab='department';resetTable1();resetvar();" style="font-weight:600;font-size:14px;">
+                 Department
+             </li>
+             <li [ngClass]="activeTab=='office'?'active':''" (click)="activeTab='office';resetTable2();resetvar();" style="font-weight:600;font-size:14px;">
+                 Offices
+             </li>
+             <li [ngClass]="activeTab=='wifi'?'active':''" (click)="activeTab='wifi';resetTable3();getOfficeDataForWifi(null);resetvar();" style="font-weight:600;font-size:14px;">
+                 Wifi Necessity
+             </li>
+         </ul>
+        </div>
+      </div> 
+
+    <div class="row mrgn" *ngIf="activeTab == 'foadminuser'">
+      <div class="col-6">
+        <label class="col-4" style="display:inline-block;" >FO User</label>
+        <div class="col-8" style="display:inline-block">
+          <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+          placeholder="Fo User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+      <div class="col-6">
+        <button  (click)='addFoAdminUser()' style="float:right;" class="btn btn-primary">FO Admin User</button>
+      </div>
+      <div class="col-12">
+        <div class="mt-2">
+          <smart-table *ngIf="foDetailsData.length" [data]="table.data" [settings]="table.settings"></smart-table>
+      </div>
+      </div>
+    </div>
+
+    <div class="row mrgn" *ngIf="activeTab == 'department'">
+      <div class="col-6">
+        <div class="col-12" style="display:inline-block;">
+          <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+          placeholder="Fo User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="col-12">
+          <input type="text" style="width: 75%;border-color: lightgrey;border-style: solid;border-radius: 3px;"  id="departmentName" placeholder="Department" [(ngModel)]="departmentName">
+          <button  (click)='addDepartment()' style="float:right;" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="mt-2">
+          <smart-table *ngIf="departments.length" [data]="table1.data" [settings]="table1.settings"></smart-table>
+      </div>
+      </div>
+
+    </div>
+
+    <div class="row mrgn" *ngIf="activeTab == 'office'">
+      <div class="col-4">
+        <div class="col-12" style="display:inline-block;">
+          <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+          placeholder="FO User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="col-12" style="display: inline-block;padding:0;">
+          <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="location" name="location" placeholder="Location"
+               [preSelected]="null" [apiMethod]="'getBooster'" [apiBase]="'B'">
+          </auto-suggestion>
+      </div>
+      <!-- <div class="col-2" style="display: inline-block;padding: 0!important;">
+          <label class="btn-primary" style="padding:7px" (click)="searchString='----'; takeAction(null);"><i
+          class="fa fa-plus"></i></label>
+      </div> -->
+      </div>
+
+      <div class="col-4">
+        <div class="col-12">
+          <input type="text" style="border-color: lightgrey;border-style: solid;border-radius: 3px;"  id="officeName" placeholder="Office" [(ngModel)]="officeName">
+          <button  (click)='addOffice()' style="float:right;" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="mt-2">
+          <smart-table *ngIf="officeDatas.length" [data]="table2.data" [settings]="table2.settings"></smart-table>
+      </div>
+      </div>
+    </div>
+
+    <div class="row mrgn" *ngIf="activeTab == 'wifi'">
+      <div class="col-3">
+        <div class="col-12" style="display:inline-block;">
+          <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+          placeholder="FO User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="col-12" style="display:inline-block;">
+          <auto-suggestion (onSelected)="selectOffice($event)" [display]="['name']" [data]="officeDataForWifi"
+          placeholder="Office" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+
+      <div class="col-2">
+        <input type="text" style="border-color: lightgrey;border-style: solid;border-radius: 3px;"  id="ssid" placeholder="SSID" [(ngModel)]="ssid">
+      </div>
+
+      <div class="col-2">
+        <input type="text" style="border-color: lightgrey;border-style: solid;border-radius: 3px;"  id="bssid" placeholder="BSSID" [(ngModel)]="bssid">
+      </div>
+
+      <div class="col-2">
+        <input type="text" style="border-color: lightgrey;border-style: solid;border-radius: 3px;"  id="ip" placeholder="IP" [(ngModel)]="ip">
+      </div>
+
+      <div class="col-1">
+        <button  (click)='addwifi()' style="float:right;" class="btn btn-primary">Submit</button>
+      </div>
+
+      <div class="col-12">
+        <div class="mt-2">
+          <smart-table *ngIf="getWifiDataList.length" [data]="table3.data" [settings]="table3.settings"></smart-table>
+      </div>
+      </div>
+
+    </div>
+
+  </div>
+  </nb-card-body>
+</nb-card>

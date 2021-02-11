@@ -124,7 +124,7 @@ export class AddPagesComponent implements OnInit {
 
   actionIcons(request) {
     if (request.status != 'Active') {
-      let icons = [{ class: "icon fa fa-pencil-square-o red", action: this.editData.bind(this, request), }];
+      let icons = [{ class: "fa fa-edit", action: this.editData.bind(this, request), }];
       return icons;
     }
   }

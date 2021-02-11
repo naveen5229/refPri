@@ -1,5 +1,7 @@
+@import '../../style.scss';
+
 .wdth{
     width: 100%;
-    border: 1px solid lightgrey;
-    border-radius: 3px;
+    border: 1px solid $secondary-23;
+    border-radius: $radious-xxs;
 }

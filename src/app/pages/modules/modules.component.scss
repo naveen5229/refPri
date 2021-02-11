@@ -1,55 +1,42 @@
+@import '../../style.scss';
+
 .fa-trash-alt {
-    font-size: 12px;
-    margin-right: 10px;
-    color: red;
-    border-color: red;
-    padding: 8px;
-    border-radius: 3px;
+  font-size: $font-sm-xxl;
+  margin-right: $margin-md;
+  color: $danger-2;
+  border-color: $danger-2;
+  padding: 8px;
+  border-radius:$radious-xxs;
 }
 
 :host ::ng-deep .fa-edit {
-    // font-size: 12px;
-    margin-right: 10px;
-    //background-color: #3c6ac7;
-    color: #3c6ac7;
-    // border-color: #73a1ff;
-    padding: 2px;
-    border-radius: 3px;
-    cursor: pointer;
+  // font-size: 12px;
+  margin-right:$margin-md;
+  //background-color: #3c6ac7;
+  color: $primary-10;
+  // border-color: #73a1ff;
+  padding: 2px;
+  border-radius: $radious-xxs;
+  cursor: pointer;
 }
-table{
+
+table {
   margin-bottom: 0rem;
-    thead{
-       display: table;
-       width: 100%;
-       table-layout: fixed;
-       th{
-        padding: 0.2rem!important;
-        background: #fff!important;
-        border: 6px solid #000000!important;
-        font-size: .80rem;
-       }
-       th:first-child{
-         width: 60px;
-       }
-    }
-  
-    tbody{
-        overflow-y: auto;
-        display: block;
-        width: 100%;
-        table-layout: fixed;
-        overflow: auto;
-        max-height: calc(100vh - 218px);
-        tr{
-          display: table;
-          table-layout: fixed;
-          width: 100%;
-          td:first-child{
-            width: 60px;
-          }
-       
-        }
-    
+  @include fixed-table;
+  tbody {
+    max-height: calc(100vh - 218px);
+    tr {
+      td:first-child {
+        width: 60px;
+      }
     }
   }
+
+  thead{
+   th{
+
+      @include th-bordered;
+   
+   } 
+  }
+}

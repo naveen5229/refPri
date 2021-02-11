@@ -1,18 +1,22 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-basic-title">Assign Columns</h5>
+    <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
     <div class="clearfix">
-        <div *ngIf="fields.length>0">
-            <div class="row mt-2" *ngIf="refType==0">
-                <div class="col-12">
-                    <p style="font-size: 15px;"><span style="color:red">*</span>Use global field "contact name" and "mobile number" to add
+            <div class="row mt-2">
+                <div class="col-10">
+                    <p *ngIf="formType == 11 && refType==0" style="font-size: 15px;"><span style="color:red">*</span>Use global field "contact name" and "mobile number" to add
                         in contact into the contact list and to show on the dashboard of the ticket.</p>
                 </div>
+                <div *ngIf="formType != 11" class="col-2 text-right">
+                    <button class="btn btn-primary btn-sm" id="addGlobalfield" (click)="addGlobalfield()">Add Field</button>
+                </div>
             </div>
+            
+        <div *ngIf="fields.length>0">
             <div class="row mt-2">
                 <div class="col-4">
                     <div class="drag-container">

@@ -20,7 +20,8 @@ export class AddDashboardFieldComponent implements OnInit {
     refType: null,
     infoId: null,
     info: null,
-    order: null
+    order: null,
+    stateActionId: null
   }
   stateOrActionList = [];
   fieldDataList = [];
@@ -256,6 +257,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.form.refId = null;
     this.form.refType = null;
     this.form.infoId = null;
+    this.form.stateActionId = null;
     this.form.info = null;
     this.form.order = null;
     this.stateOrActionList = [];
@@ -266,6 +268,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.form.refId = null;
     this.form.refType = null;
     this.form.infoId = null;
+    this.form.stateActionId = null;
     this.stateOrActionList = [];
     this.fieldDataList = [];
     if (this.form.type == -1) {
@@ -316,9 +319,11 @@ export class AddDashboardFieldComponent implements OnInit {
     this.getFieldList();
   }
 
-  onSelectField() {
-    if (this.form.infoId) {
-      let selected = this.fieldDataList.find(x => { return x.id == this.form.infoId });
+  onSelectField(field) {
+    if (field) {//if (this.form.infoId) {
+      let selected = JSON.parse(field);
+      // let selected = this.fieldDataList.find(x => { return x.id == this.form.infoId });
+      // console.log("selected:",selected);
       if (selected) {
         this.form.refId = selected.refid;
         this.form.refType = selected.reftype;
@@ -391,10 +396,12 @@ export class AddDashboardFieldComponent implements OnInit {
     list = JSON.parse(list);
     this.fieldDataList = [];
     this.form.infoId = null;
+    this.form.info = null;
     let selectedFields = JSON.parse(list['children']);
     if(list && selectedFields && selectedFields.length>0){
       this.fieldDataList = selectedFields.map(x => { return { id: x.r_colid, name: x.r_coltitle, r_colid: x.r_colid, r_isdynamic: x.r_isdynamic, r_selected: x.r_selected,r_ismasterfield: x.r_ismasterfield,reftype:x.reftype,refid:x.refid } });
     }
+    console.log("fieldDataList:",this.fieldDataList);
   }
 
 }

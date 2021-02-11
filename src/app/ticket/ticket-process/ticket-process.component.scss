@@ -1,23 +1,26 @@
+@import '../../style';
 :host ::ng-deep .pri_cat {
-    color: deeppink;
+    color: $danger-9;
 }
 
 :host ::ng-deep .process_type {
-    color: lawngreen;
+    color: $success-6;
 }
 
 :host ::ng-deep .fa-grip-horizontal {
-    color: #07f8d4;
+    color: $success-4;
 }
 
 :host ::ng-deep .fa-handshake {
-    color: #00f;
+    color: $primary-3;
 }
 
+
 .smart-table {
-    display: block;
-    height: calc(100vh - 124px);
-    overflow: auto;
+  display: block;
+  height: calc(100vh - 124px);
+  overflow: auto;
+
 }
 
 .ksr-smrt {
@@ -31,3 +34,51 @@
         margin-bottom: 10px;
     }
 }
+
+
+// manish jangid 
+
+.modal-body .inner-heading{
+    font-size: 0.70rem;
+    text-transform: capitalize;
+    display: inline-block;
+    position: relative;
+    color: #a3a3a3;
+    transition: all linear 0.2s;
+    margin-bottom: 0;
+  
+  }
+  
+  
+  .modal-body .inner-heading:hover{
+  opacity: 0.9;
+  }
+  
+  
+  .modal-body .form-divider{
+  position: relative;
+  }
+  
+  .modal-body .form-divider-first {
+    margin-top: -15px;
+  }
+
+  
+  .inner-heading:before,
+  .inner-heading:after {
+    content: "";
+    position: absolute;
+    height: 5px;
+    border-top: 1px solid #e9e9e9;
+    top: 50%;
+    width: 1000px;
+  }
+  .inner-heading:before {
+    right: 100%;
+    margin-right: 15px;
+  }
+  
+  .inner-heading:after {
+    left: 100%;
+    margin-left: 15px;
+  }

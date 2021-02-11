@@ -7,8 +7,10 @@
 <div class="modal-header sub-title" *ngIf="subTitle">
     <span [innerHtml]="subTitle" style="white-space: pre-wrap;"></span>
     <div class="action-icon">
+        <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
+                (click)="search();isAttachmentShow=false"></i></span>
         <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
-                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow"></i></span>
+                aria-hidden="true" title="View Attachment" (click)="isAttachmentShow=!isAttachmentShow;isSearchShow=false"></i></span>
         <span><i class="fa fa-eye text-dark" title="View Transaction" (click)="viewTransaction()"></i></span>
         <span><i class="fas fa-plus-square text-primary" title="Primary Info Form"
                 (click)="openPrimaryInfoFormData()"></i></span>
@@ -21,7 +23,8 @@
             <ul *ngIf="attachmentList && attachmentList.length>0">
                 <li *ngFor="let a of attachmentList; let i =index">
                     <!-- <a target="_blank" [href]="a.url" alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
-                    <span class="blue cursor-pointer" (click)="common.getFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
+                    <span class="blue cursor-pointer" (click)="common.checkFile(a.url,a.name)">{{(a.name) ? a.name :
+                        a.url}}</span>
                 </li>
             </ul>
             <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
@@ -50,6 +53,36 @@
                     <li>No Data Found</li>
                 </ul>
             </ng-template>
+
+
+
+
+            <div *ngIf="isSearchShow" [@openClose]="isSearchShow" class="row search-style">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-8">
+                            <input id="searchChat" type="search" value="{{searchTerm}}"
+                                (change)="searchChat($event.target.value)" class="file-control"
+                                style="width: 100%;margin: 5px;">
+                        </div>
+                        <div class="col-4" style="padding: 5px;">
+                            <span>{{searchCount}}/{{searchedIndex.length}}</span>
+                            <span class="ml-2" (click)="onchangeIndex('minus')"><i
+                                    class="fas fa-arrow-circle-down"></i></span>
+                            <span class="ml-2" (click)="onchangeIndex('plus')"><i
+                                    class="fas fa-arrow-circle-up"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="close" aria-label="Close"
+                        (click)="isSearchShow=false;reduceFocusHandler()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+
             <div class="row mt-1 chat_block" #chat_block id="chat_block">
                 <div class="col-12" *ngFor="let msg of messageList;">
                     <div *ngIf="loginUserId == msg._userid" class="active_chat" lastMsgBy=msg.added_by>
@@ -121,7 +154,7 @@
                 <div class="col-1 pl-0 pr-0">
                     <label class="custom-file-upload">
                         <input type="file" class="file-control" id="chat-attachment"
-                            (change)="handleFileSelection($event)">
+                            (change)="handleFileSelection($event)" multiple>
                         <i class="fa fa-paperclip" aria-hidden="true" title="Attachment"></i>
                     </label>
                 </div>
@@ -132,18 +165,15 @@
                             class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
-            <div *ngIf="attachmentFile && attachmentFile.name" class="row">
-                <div class="col-9">
-                    <!-- {{attachmentFile.name}} -->
-                    <!-- <span><img height="50" width="50" src="{{attachmentFile.file}}"
-                            alt="{{attachmentFile.name}}"></span> -->
+            <div *ngIf="attachmentFile && attachmentFile.length > 0" class="row">
+                <div class="col-9" *ngFor="let attachment of attachmentFile;let i = index">
                     <span>
-                        <img height="25" width="25" src="{{attachmentFile.file}}" *ngIf="!fileType">
-                        <i class="{{fileType}}" *ngIf="fileType" aria-hidden="true" style="font-size: 22px;"></i>
-                        <span>{{attachmentFile.name}}</span>
+                        <img height="25" width="25" src="{{attachment.file}}" *ngIf="!attachment['format']">
+                        <i [class]="attachment['format']" *ngIf="attachment['format']" aria-hidden="true" style="font-size: 22px;"></i>
+                        <span>{{attachment.name}}</span>
                     </span>
-                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="Cancel"
-                        (click)="attachmentFile.name=null;attachmentFile.file=null"></i>
+                    <i class="fa fa-times-circle cursor-pointer text-danger" aria-hidden="true" title="remove"
+                        (click)="removeFile(i)"></i>
                 </div>
             </div>
         </div>
@@ -197,9 +227,9 @@
                     <td colspan="2" class="pt-2">
                         <div class="row">
                             <div class="col-9">
-                                <auto-suggestion (onSelected)="newCCUserId = $event" [data]="adminList"
-                                    display="name" seperator="-" placeholder="Search User" autocomplete="off"
-                                    isMultiSelect="true" name="ccUser" [preSelected]="newCCUserId" inputId="ccUser">
+                                <auto-suggestion (onSelected)="newCCUserId = $event" [data]="adminList" display="name"
+                                    seperator="-" placeholder="Search User" autocomplete="off" isMultiSelect="true"
+                                    name="ccUser" [preSelected]="newCCUserId" inputId="ccUser">
                                 </auto-suggestion>
                             </div>
                             <div class="col-3">

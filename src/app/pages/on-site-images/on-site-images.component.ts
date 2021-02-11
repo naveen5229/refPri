@@ -111,7 +111,7 @@ export class OnSiteImagesComponent implements OnInit {
     const params = `?startDate=${startDate}&endDate=${endDate}`;
     // return;
     this.common.loading++;
-    this.api.get('Admin/getOnSiteImagesByUser' + params, 'I').subscribe(res => {
+    this.api.get('Admin/getOnSiteImagesByUser' + params).subscribe(res => {
       this.common.loading--;
       if (res['code'] > 0) {
         if (res['data']) {
