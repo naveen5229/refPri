@@ -12,6 +12,7 @@ export class AddvehicleComponent implements OnInit {
 
   Foid = null;
   regno = null;
+  FoName = null;
   isDost = 1;
   vehicleList = [];
   constructor(public common:CommonService,
@@ -24,6 +25,7 @@ export class AddvehicleComponent implements OnInit {
 
   selectFoUser(user) {
     this.Foid = user.id;
+    this.FoName = user.regno
   }
   importDriverCsv() {
      this.modalSService.open(ImportbulkvehicleComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
