@@ -44,7 +44,7 @@
                                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                                     <div>{{item.r_blockname}}</div>
                                 </div>
-                                <div *ngIf="item && refType==0 && (item.param_type != 'attachment' && item.param_type != 'table')">
+                                <div *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && refType==0)) && (item.param_type != 'attachment' && item.param_type != 'table')">
                                     <i class="fa fa-star cursorOnStar"
                                         [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
                                         aria-hidden="true"
@@ -68,7 +68,7 @@
                                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                                     <div>{{item.r_blockname}}</div>
                                 </div>
-                                <div *ngIf="item && refType==0 && (item.param_type != 'attachment' && item.param_type != 'table')">
+                                <div *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && refType==0)) && (item.param_type != 'attachment' && item.param_type != 'table')">
                                     <i class="fa fa-star cursorOnStar"
                                         [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
                                         aria-hidden="true"
