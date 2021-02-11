@@ -207,7 +207,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   getProcessLeadByType(type, startDate = null, endDate = null) {
-    this.activeSabTab = 0;
     this.common.loading++;
     if ((type == 4 || type == 8 || type == 9) && this.searchData.startDate && this.searchData.endDate) {
       startDate = this.common.dateFormatter(this.searchData.startDate);
@@ -245,6 +244,7 @@ export class MyProcessComponent implements OnInit {
           this.processDashboardTitle = 'CC_Transaction'
           this.setTableCcLeads(type);
         } else if (type == 4) {
+          this.activeSabTab = 0;
           this.allCompletedLeads = res['data'] || [];
           this.completedLeadsForFilter = this.allCompletedLeads;
           this.processDashboardList = this.allCompletedLeads;
