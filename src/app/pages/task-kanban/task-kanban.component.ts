@@ -11,13 +11,12 @@ import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { NbSidebarService } from '@nebular/theme';
-import { LayoutService } from '../../@core/utils';
 @Component({
   selector: 'ngx-project-user-kanban',
-  templateUrl: './project-user-kanban.component.html',
-  styleUrls: ['./project-user-kanban.component.scss']
+  templateUrl: './task-kanban.component.html',
+  styleUrls: ['./task-kanban.component.scss']
 })
-export class ProjectUserKanbanComponent implements OnInit {
+export class TaskKanbanComponent implements OnInit {
   cardlength = null;
   loggedInUser = null;
   dashboardState = false;
@@ -74,7 +73,6 @@ export class ProjectUserKanbanComponent implements OnInit {
   callType = '';
 
   constructor(private sidebarService: NbSidebarService,
-    private layoutService: LayoutService,
     public common: CommonService,
     public api: ApiService,
     public chart: ChartService,

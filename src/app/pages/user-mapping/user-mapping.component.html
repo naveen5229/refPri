@@ -86,7 +86,7 @@
     <div class="col-6">
       <label class="col-4" style="display:inline-block;" >Company</label>
       <div class="col-8" style="display:inline-block">
-        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno','ax_company_name']" [data]="companyData"
+        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno','provider_name']" [data]="companyData"
         placeholder="Select Company" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
         </auto-suggestion>
       </div>
