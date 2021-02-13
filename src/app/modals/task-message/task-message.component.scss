@@ -118,7 +118,7 @@ $chat-width:calc(100% - #{$action-width});
 
 .bottom-block {
   background: $light-2;
-
+  position: relative;
   .button-box {
     display: inline-grid;
   }

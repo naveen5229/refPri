@@ -1027,7 +1027,7 @@ export class CommonService {
     });
   }
 
-  async setTimerrr(dateTime){
+  async setTimerrr(dateTime){// not in use
     let countDownDate = new Date(dateTime).getTime();
     let now = new Date().getTime();
     let distance = countDownDate - now; // Find the distance between now and the count down date
@@ -1042,6 +1042,10 @@ export class CommonService {
     result = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
     }
     return (distance < 0) ? null : result;
+  }
+
+  arrayUnique(list,key){
+    return [...new Map(list.map(item =>[item[key], item])).values()];
   }
 
 }

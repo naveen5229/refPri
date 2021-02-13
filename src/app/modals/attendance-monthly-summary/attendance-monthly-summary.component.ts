@@ -71,8 +71,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.groupList = (this.common.params.groupList) ? this.common.params.groupList : [];
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   closeModal(response) {
     this.activeModal.close();
@@ -83,9 +82,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.endTime = new Date(this.startTime.getFullYear(), this.startTime.getMonth() + 1, 0);
   }
 
-
   getAttendanceMonthySummary(type = null) {
-    console.log("selectedDates:", this.selectedDates);
     this.reportType = type;
     this.filteredAttendanceSummaryList = [];
     this.resetTableFinalAttendanceList();
@@ -109,7 +106,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
         "?startDate=" + startdate +
         "&endDate=" + enddate + "&groupId=" + this.selectedGroup;
     }
-    // console.log(params);
     let apiName;
     if (type && type == "final") {
       apiName = 'Admin/getAttendanceMonthlySummaryFinal';
@@ -120,56 +116,44 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     } else {
       apiName = 'Admin/getAttendanceMonthlySummary';
     }
-    // apiName = (type && type == "final") ? 'Admin/getAttendanceMonthlySummaryFinal' : 'Admin/getAttendanceMonthlySummary';
     this.common.loading++;
     this.api.get(apiName + params)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 3) {
           this.common.showError(res['data']);
-
         } else {
           if (type && type == "final") {
             this.finalAttendanceList = res['data'] || [];
-            console.log("finalAttendanceList:", this.finalAttendanceList);
             (this.finalAttendanceList.length > 0) ? this.setTableFinalAttendanceList() : this.resetTableFinalAttendanceList()
           } else if (type && type == "leave") {
             this.leaveRequestList = res['data'] || [];
-            console.log("leaveList:", this.leaveRequestList);
             (this.leaveRequestList.length > 0) ? this.setTableLeaveRequestList() : this.resetTableFinalAttendanceList()
           } else if (type && type == "weekly") {
             this.weeklyList = res['data'] || [];
-            console.log("leaveList:", this.weeklyList);
             (this.weeklyList.length > 0) ? this.setTableWeeklyList() : this.resetTableFinalAttendanceList()
           } else {
-
             this.attendanceSummaryList = res['data'] || [];
-            console.log('res:', res);
-            console.log('res:', this.attendanceSummaryList);
             this.filterData = _.groupBy(this.attendanceSummaryList, 'name');
-            console.log(this.filterData);
             Object.keys(this.filterData).map(key => {
               this.filteredAttendanceSummaryList.push({ name: key, data: _.sortBy(this.filterData[key], 'date') });
             })
-            console.log(this.filteredAttendanceSummaryList[0]['data']);
-            console.log(this.filteredAttendanceSummaryList);
           }
 
         }
       }, err => {
         this.common.loading--;
-        console.log(err);
+        this.common.showError();
       });
   }
 
   showShiftLogPopup(column) {
-    console.log("column:", column);
     let date = new Date(this.startTime);
     date.setDate(column.date);
     let currentTime = new Date();
     date.setHours(9);
     date.setMinutes(30);
-    let accessUserIds = [34, 125, 204, 120];
+    let accessUserIds = [34, 125, 236, 120];
     let accessFoUserIds = [12373];
     if (date <= this.common.getDate() && (!column.present || column.present == "") && ((this.userService._loggedInBy == 'admin' && accessUserIds.includes(this.userService._details.id)) || this.userService._loggedInBy != 'admin' && accessFoUserIds.includes(this.userService._details.id))) {
 
@@ -223,7 +207,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   deleteShiftLog(shift) {
-    console.log("dbl click event");
     this.isMarkUnpaidLeave = false;
     if (shift.date && shift._userid > 0) {
       let dateTemp = new Date(this.startTime);
@@ -258,7 +241,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
             }, err => {
               this.common.loading--;
-              console.log('Error: ', err);
+              this.common.showError();
             });
         }
       });
@@ -269,11 +252,9 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   isMarkUnpaidLeave = false;
   markUnpaidLeave(shift) {
-    console.log("single click event");
     this.isMarkUnpaidLeave = true;
     setTimeout(() => {
       if (this.isMarkUnpaidLeave) {
-        console.log("isMarkUnpaidLeave:", this.isMarkUnpaidLeave);
         this.isMarkUnpaidLeave = false;
         if (shift.date && shift._userid > 0) {
           let dateTemp = new Date(this.startTime);
@@ -308,7 +289,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
                 }, err => {
                   this.common.loading--;
-                  console.log('Error: ', err);
+                  this.common.showError();
                 });
             }
           });
@@ -352,7 +333,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
-    console.log("headings:", headings);
     return headings;
   }
 
@@ -387,7 +367,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
-    console.log("headings:", headings);
     return headings;
   }
 
@@ -440,7 +419,6 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
-    console.log("headings:", headings);
     return headings;
   }
 
