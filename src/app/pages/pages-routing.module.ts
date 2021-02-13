@@ -67,6 +67,7 @@ import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expens
 import { UserExpensesComponent } from './user-expenses/user-expenses.component';
 import { KanbanBoardComponent } from '../process/kanban-board/kanban-board.component';
 import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
+import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
 
 const routes: Routes = [{
   path: '',
@@ -405,6 +406,11 @@ const routes: Routes = [{
     {
       path: 'project-user-kanban-board',
       component: TaskKanbanComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'admin-kanban',
+      component: AdminKanbanComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

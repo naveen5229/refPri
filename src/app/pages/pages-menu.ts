@@ -98,6 +98,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Admin-Kanban',
+        icon: 'file-text-outline',
+        link: '/pages/admin-kanban',
+        home: true,
+      },
+      {
         title: 'User-Mapping',
         icon: 'file-text-outline',
         link: '/pages/user-mapping',
