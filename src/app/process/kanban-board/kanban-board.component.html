@@ -55,7 +55,56 @@
     </div>
 
     <div class="row" style="padding: 1rem;" *ngIf="dashboardState">
-      <div class="col-12 text-right">
+
+      <div class="col-6" *ngFor="let state of taskStatusBarData;let i = index">
+        <div class="row">
+          <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
+          <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
+            <span *ngIf="state.data[0]['log_start_time']"
+              (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
+                title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
+            <span *ngIf="!state.data[0]['log_start_time']"
+              (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)"><i title="Play"
+                class="fas fa-play-circle text-primary font-size-20 cursor-pointer"></i></span>
+          </div>
+
+          <div class="col-7 cardContainerProgress" cdkDropList [cdkDropListData]="state.data"
+            (cdkDropListDropped)="drop($event);" [id]="state.id">
+            <div class="row small ml-1 mr-1" *ngIf="!taskStatusBarData[0].data[0]">Drop your card here to start a
+              worklog</div>
+            <div class="row inprocessCardStyle" *ngFor="let data of state.data" (click)="transMessage(data,null)"
+              cdkDrag>
+              <div class="col-12 text-left title">
+                <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
+                  class="mb-0 cardTitleStyle">{{data.title}}</h5>
+              </div>
+              <!-- <div class="col-12 text-left">
+                <label class="cardTitleStyle font-weight-bold cursor-pointer" title="{{data._project_type}}" >{{data._project_type}}</label>
+              </div> -->
+            </div>
+            <!-- <div class="row align-items-center" *ngIf="taskStatusBarData[0].data[0]">
+              <div class="col-4 pr-0">
+                <button *ngIf="state.data[0]['log_start_time']" class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())">Pause</button>
+                <button *ngIf="!state.data[0]['log_start_time']" class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)">Start</button>
+              </div>
+              <div class="col-4 pr-0 pl-0 small" id="timer"><i class="far fa-clock"></i>  {{inprogressTimer}}</div>
+              <div class="col-4 pl-0 text-right"><button class="btn btn-primary timer-btn" (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())">Done</button></div>
+            </div> -->
+          </div>
+
+          <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
+            <span (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())"><i
+                title="Mark Done" class="fas fa-stop-circle text-primary font-size-20 cursor-pointer"></i></span>
+          </div>
+
+          <div class="col-3 pr-0 pl-0 small my-auto" id="timer"><i class="far fa-clock"
+              *ngIf="taskStatusBarData[0].data[0]"></i> {{inprogressTimer ? common.findRemainingTime(inprogressTimer) :
+            null}}</div>
+        </div>
+      </div>
+
+
+      <div class="col-6 text-right">
         <button class="btn btn-primary" (click)="issueSort(0)" *ngIf="issueCategory">My Issues</button>
         <button class="btn btn-primary" (click)="issueSort(1)" *ngIf="!issueCategory">All Issues</button>
       </div>

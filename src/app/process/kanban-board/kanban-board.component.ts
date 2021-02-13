@@ -38,7 +38,13 @@ export class KanbanBoardComponent implements OnInit {
   cardsUserGroup = [];
   cardsForFilterByUser = [];
   filterUserGroup = [];
-  
+  taskStatusBarData = [
+    {
+      id: 'workLog',
+      data: []
+    }
+  ];
+  inprogressTimer = null;
 
   constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
@@ -576,4 +582,54 @@ export class KanbanBoardComponent implements OnInit {
     this.issueSort(1);
   }
 
+  saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    // console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
+    // this.resetInterval();
+    // let params = {
+    //   requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
+    //   refid: ticket._tktid,
+    //   reftype: 0,
+    //   outcome: null,
+    //   spendHour: null,
+    //   startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
+    //   endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
+    //   isHold: isHold
+    // };
+    // console.log("params:", params);
+    // // this.assignTaskToProgress(ticket);
+    // //  return false;
+    // this.common.loading++;
+    // this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
+    //   (res) => {
+    //     this.common.loading--;
+    //     if (res["code"] > 0) {
+    //       if (res['data'][0]['y_id'] > 0) {
+    //         this.common.showToast(res['data'][0]['y_msg']);
+    //         if (!endTime) {
+    //           this.assignTaskToProgress(ticket);
+    //         } else {
+    //           this.taskStatusBarData[0].data = [];
+    //         }
+    //       } else {
+    //         this.common.showError(res['data'][0]['y_msg']);
+    //       }
+    //     } else {
+    //       this.common.showError(res["msg"]);
+    //     }
+    //     this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+    //   },
+    //   (err) => {
+    //     this.common.loading--;
+    //     this.common.showError();
+    //     console.log("Error: ", err);
+    //     this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+    //   }
+    // );
+  }
+
+  setTimer;
+  resetInterval() {
+    this.inprogressTimer = 0;
+    (this.setTimer) ? clearInterval(this.setTimer) : null;
+  }
 }
