@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../Service/user/user.service';
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import * as _ from 'lodash';
+import { NbSidebarService } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-kanban-board',
@@ -16,6 +17,7 @@ import * as _ from 'lodash';
   styleUrls: ['./kanban-board.component.scss']
 })
 export class KanbanBoardComponent implements OnInit {
+  cardlength = null;
   dashboardState = false;
   processList = [];
   processListTable = {
@@ -38,7 +40,7 @@ export class KanbanBoardComponent implements OnInit {
   filterUserGroup = [];
   
 
-  constructor(
+  constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
     public api: ApiService,
     public chart: ChartService,
@@ -60,6 +62,14 @@ export class KanbanBoardComponent implements OnInit {
       this.getProcessListByUser();
       this.getAllAdmin();
     }
+  }
+
+  toggleSidebar(type): boolean {
+    let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
+    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+      this.sidebarService.toggle(true, 'menu-sidebar');
+    }
+    return false;
   }
 
   getProcessListByUser() {
@@ -164,6 +174,7 @@ export class KanbanBoardComponent implements OnInit {
       this.placeCardLength(this.cards);
       this.getAllUserGroup(this.cards);
       this.dashboardState = true;
+      this.toggleSidebar('compact');
     }, (err) => {
       this.common.loading--;
       this.common.showError(err);
@@ -204,6 +215,7 @@ export class KanbanBoardComponent implements OnInit {
     this.processId = null;
     this.processName = null;
     this.getProcessListByUser();
+    this.toggleSidebar('expand');
   }
 
   onDragStarted(event: CdkDragStart<string[]>) {
