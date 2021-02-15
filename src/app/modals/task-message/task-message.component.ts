@@ -432,6 +432,14 @@ export class TaskMessageComponent implements OnInit {
         accessUsers.push(element._cc_user_id);
       });
     }
+    if (this.userListByTask['projectUsers'] && this.userListByTask['projectUsers'].length > 0) {
+      this.userListByTask['projectUsers'].forEach(element => {
+        accessUsers.push(element._pu_user_id);
+      });
+    }
+    if (this.userListByTask['taskUsers'][0]._po_id>0) {
+      accessUsers.push(this.userListByTask['taskUsers'][0]._po_id);
+    }
 
     if (!this.userListByTask['taskUsers'] || !accessUsers.includes(this.userService._details.id)) {
       this.common.showError("Not a valid user");
