@@ -75,7 +75,7 @@ export class AdminKanbanComponent implements OnInit {
     taskStatusButton = 'Hold';
     boardType: number = 0;
     callType = '';
-    SearchBy = "By Project";
+    SearchBy = "By User";
   
     constructor(private sidebarService: NbSidebarService,
       public common: CommonService,
@@ -111,6 +111,7 @@ export class AdminKanbanComponent implements OnInit {
     resetSearch(){
       this.project = {_id: null,project_desc: null,_parent_id: null,};
       this.user = {_id:null,name:null};
+      this.dashboardState = false;
     }
 
     toggleSidebar(type): boolean {

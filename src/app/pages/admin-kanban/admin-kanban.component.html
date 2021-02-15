@@ -10,19 +10,20 @@
           <div class="col-2">
               <select (change)="SearchBy = $event.target.value;resetSearch()" class="byselect">
                   <option>By Project</option>
-                  <option>By User</option>
+                  <option selected>By User</option>
               </select>
           </div>
           <div class="col-10">
               <span *ngIf="SearchBy === 'By Project'" style="display: flex;">
                 <auto-suggestion class="form-controls col-9 p-0 searchselect" id="project" [data]="projectList"
-                display="project_desc" (onSelected)="project = {_id: $event['_id'],project_desc: $event['project_desc']}" placeholder="Search Project" inputId="Project" name="Project"></auto-suggestion>
-                  <button class="btn btn-primary btn-sm" id="searchbutton" (click)="goToBoard(project,1,null)">Search</button>
+                display="project_desc" (onSelected)="project = {_id: $event['_id'],project_desc: $event['project_desc']};goToBoard(project,1,null)" placeholder="Search Project" inputId="Project" name="Project"></auto-suggestion>
+                  <!-- <button class="btn btn-primary btn-sm" id="searchbutton" (click)="goToBoard(project,1,null)">Search</button> -->
               </span>
               <span *ngIf="SearchBy === 'By User'" style="display: flex;">
                   <auto-suggestion class="form-controls col-9 p-0 searchselect" id="users" [data]="adminList"
-                   display="name" (onSelected)="user = {_id: $event['id'],name: $event['name']}" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
-                  <button class="btn btn-primary btn-sm" id="search" (click)="goToBoard(user,0,null)">Search</button>
+                   display="name" (onSelected)="user = {_id: $event['id'],name: $event['name']};goToBoard(user,0,null)" placeholder="Search Users"
+                    inputId="Users" name="Users" [preSelected]="user._id ? {name:user.name} : {name:''}"></auto-suggestion>
+                  <!-- <button class="btn btn-primary btn-sm" id="search" (click)="goToBoard(user,0,null)">Search</button> -->
               </span>
           </div>
       </div>
@@ -52,7 +53,7 @@
           <div class="row shadow-sm" [ngClass]="data._tktype === 103 ? 'ScheduledStyle' : 'NormalStyle'"
             *ngFor="let data of card.data;let i = index" cdkDrag (cdkDragStarted)="onDragStarted($event)"
             (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)"
-            (cdkDragEntered)="onDragEntered($event,i)" (click)="ticketMessage(data,null)"
+            (cdkDragEntered)="onDragEntered($event,i)" (click)="(data._tktid) ? ticketMessage(data,null) : null"
             [cdkDragDisabled]="project._id && data.userid != loggedInUser">
             <div class="col-12">
               <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
