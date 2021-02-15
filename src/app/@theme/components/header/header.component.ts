@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentTheme = 'default';
   userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
+  isNetConnected = true;
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -83,18 +84,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe(themeName => this.currentTheme = themeName);
 
-    setInterval(function () {
-      // console.log("navigator online:", navigator.onLine);
-      if (navigator.onLine) {
-        // if (!this.isNetConnected) {
-        //   window.location.reload();
-        // }
-        document.getElementById("noNetwork").style.display = "none";
-      } else {
-        this.isNetConnected = false;
-        document.getElementById("noNetwork").style.display = "block";
-      }
-    }, 10000);
+    this.checkNetConnection();
   }
 
   ngOnDestroy() {
@@ -179,6 +169,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+  
+  checkNetConnection(){
+    let thisVar = this;
+    setInterval(function () {
+      // console.log("navigator online:", navigator.onLine);
+      if (navigator.onLine) {
+        if (!thisVar.isNetConnected) {
+          thisVar.refresh();
+        }
+        thisVar.isNetConnected = true;
+        // document.getElementById("noNetwork").style.display = "none";
+      } else {
+        thisVar.isNetConnected = false;
+        // document.getElementById("noNetwork").style.display = "block";
+      }
+    }, 10000);
   }
 
 }

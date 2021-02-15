@@ -19,7 +19,7 @@
                 <option *ngFor="let g of groupList" [value]="g._id">{{g.name}}</option>
             </select>
         </div>
-        <div class="col-6 text-left">
+        <div class="col-7 text-right">
             <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)"
                 class="btn btn-primary btn-sm mr-2">Get Monthly Report</button>
             <button type="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get
@@ -28,11 +28,14 @@
                 Request</button>
             <button (click)="getAttendanceMonthySummary('weekly')" class="btn btn-primary btn-sm mr-2">Get Weekly
                 Request</button>
+            <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV()">
+                <i class="fas fa-file-excel"></i>
+            </button>
         </div>
-        <div class="col-1 text-right" style="margin-top: -15px;">
+        <!-- <div class="col-1 text-right" style="margin-top: -15px;">
             <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i
                     class="fas fa-file-excel"></i></span>
-        </div>
+        </div> -->
     </div>
 
 
