@@ -179,7 +179,7 @@
           <div class="row shadow-sm" [ngClass]="data._tktype === 103 ? 'ScheduledStyle' : 'NormalStyle'"
             *ngFor="let data of card.data;let i = index" cdkDrag (cdkDragStarted)="onDragStarted($event)"
             (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)"
-            (cdkDragEntered)="onDragEntered($event,i)" (click)="ticketMessage(data,null)"
+            (cdkDragEntered)="onDragEntered($event,i)" (click)="(data._tktid) ? ticketMessage(data,null) : null"
             [cdkDragDisabled]="project._id && data.userid != loggedInUser">
             <div class="col-12">
               <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
