@@ -176,7 +176,7 @@ export class AdminKanbanComponent implements OnInit {
   
     getProjectList() {
       this.common.loading++;
-      this.api.get("AdminTask/getProjectListByUser").subscribe(res => {
+      this.api.get("AdminTask/allProjectList").subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
           this.projectList = res['data'] || [];
