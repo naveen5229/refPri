@@ -109,6 +109,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessState?processId=" + this.transAction.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let stateDataList = res['data'];
       this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id } });
       this.checkNextStateList();
@@ -161,6 +162,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let actionDataList = res['data'] || [];
       this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
       this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
@@ -175,6 +177,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.transAction.process.id + "&stateId=" + this.transAction.state.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let actionDataList = res['data'] || [];
       this.nextActionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
@@ -188,6 +191,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessActionModeList?processId=" + this.transAction.process.id + "&actionId=" + this.transAction.action.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let modeList = res['data'] || [];
       this.modeList = modeList.map(x => { return { id: x.mode_id, name: x.name } });
     }, err => {
@@ -229,13 +233,9 @@ export class AddTransactionActionComponent implements OnInit {
     } else {
       isCompleted = -1;
     }
-    
-    console.log('condition Print', isCompleted);
-
     if (!this.transAction.state.id || !this.transAction.action.id) {
       this.common.showError('Please Fill All Mandatory Field');
-    }
-    else {
+    }else {
       const params = {
         requestId: this.transAction.requestId,
         transId: this.transAction.transId,
@@ -250,8 +250,7 @@ export class AddTransactionActionComponent implements OnInit {
         isCompleted: isCompleted,
         onSiteImageId: (this.transAction.onSiteImageId > 0) ? this.transAction.onSiteImageId : null
       };
-      console.log("saveTransAction:", params);
-      // return;
+      // console.log("saveTransAction:", params);return;
       this.common.loading++;
       this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
         this.common.loading--;
@@ -268,16 +267,13 @@ export class AddTransactionActionComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }
-    // }
-    // });
   }
-  // }
 
   saveTransNextAction() {
-    console.log("saveTransNextAction:", this.transAction);
     if (!this.transAction.state.id || !this.transAction.nextAction.id) {
       this.common.showError('Please Fill All Mandatory Field');
     }
@@ -296,7 +292,7 @@ export class AddTransactionActionComponent implements OnInit {
         isNextAction: true,
         isCompleted: false
       };
-      console.log("saveTransNextAction:", params);
+      // console.log("saveTransNextAction:", params);
       this.common.loading++;
       this.api.post("Processes/addTransactionAction", params).subscribe(res => {
         this.common.loading--;
@@ -313,6 +309,7 @@ export class AddTransactionActionComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }
@@ -336,7 +333,7 @@ export class AddTransactionActionComponent implements OnInit {
         isNextAction: null,
         isCompleted: false
       };
-      console.log("saveTransAction:", params);
+      // console.log("saveTransAction:", params);
       this.common.loading++;
       this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
         this.common.loading--;
@@ -348,7 +345,7 @@ export class AddTransactionActionComponent implements OnInit {
             let stateType = this.transAction.nextState.type;
             this.resetData();
             this.closeModal(true, 1);
-            console.log("on save nxt state:", this.isMarkTxnComplete, stateType);
+            // console.log("on save nxt state:", this.isMarkTxnComplete, stateType);
             if (this.isMarkTxnComplete == 1 && stateType == 2) {
               setTimeout(() => {
                 this.markTxnComplete(params.transId);
@@ -362,6 +359,7 @@ export class AddTransactionActionComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }

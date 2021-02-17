@@ -51,39 +51,39 @@ export class CampaignMasterPageComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getStateList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getStateList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.stateDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getActionList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.actionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
 
@@ -149,6 +149,7 @@ export class CampaignMasterPageComponent implements OnInit {
     this.common.loading++;
     this.api.get(this.url).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.productData = res['data'];
       this.productData.length ? this.setTable() : this.resetTable();
@@ -287,10 +288,12 @@ export class CampaignMasterPageComponent implements OnInit {
           this.api.post(this.deleteUrl, this.deleteParams)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getMasterDyanmicData();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -308,21 +311,17 @@ export class CampaignMasterPageComponent implements OnInit {
     this.common.loading++;
     this.api.post(url, params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data']);
-      if (res['success'] == true) {
+      if (res['code']>0) {
         this.common.showToast(res['msg']);
         this.getMasterDyanmicData();
-      }
-      else {
+      }else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   addCampaignState(url, params, req) {
@@ -331,19 +330,16 @@ export class CampaignMasterPageComponent implements OnInit {
     this.common.loading++;
     this.api.post(url, params).subscribe(res => {
       this.common.loading--;
-      if (res['success'] == true) {
+      if (res['code'] >0) {
         this.common.showToast(res['msg']);
         this.getMasterDyanmicData();
-      }
-      else {
+      }else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 }

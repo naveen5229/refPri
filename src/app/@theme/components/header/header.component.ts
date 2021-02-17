@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentTheme = 'default';
   userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
+  isNetConnected = true;
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -83,18 +84,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe(themeName => this.currentTheme = themeName);
 
-    setInterval(function () {
-      // console.log("navigator online:", navigator.onLine);
-      if (navigator.onLine) {
-        // if (!this.isNetConnected) {
-        //   window.location.reload();
-        // }
-        document.getElementById("noNetwork").style.display = "none";
-      } else {
-        this.isNetConnected = false;
-        document.getElementById("noNetwork").style.display = "block";
-      }
-    }, 10000);
+    this.checkNetConnection();
   }
 
   ngOnDestroy() {
@@ -131,27 +121,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.api.post(apiCall, params)
         .subscribe(res => {
           this.common.loading--;
-          if (res['success']) {
+          if (res['code']>0) {
             this.userService._token = '';
             this.userService._details = null;
-
             localStorage.removeItem('ITRM_USER_TOKEN');
             localStorage.removeItem('ITRM_USER_DETAILS');
             localStorage.removeItem('ITRM_LOGGED_IN_BY');
             localStorage.removeItem('ITRM_USER_PAGES');
-
             this.common.showToast(res['msg']);
             if (loggedInBy == 'customer') {
               this.router.navigate(['/auth/login']);
             } else {
               this.router.navigate(['/auth/login/admin']);
             }
+          }else{
+            this.common.showError(res['msg']);
           }
-        },
-          err => {
-            this.common.loading--;
-            this.common.showError();
-          });
+        },err => {
+          this.common.loading--;
+          this.common.showError();
+        });
     }
   }
   refresh() {
@@ -179,6 +168,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+  
+  checkNetConnection(){
+    let thisVar = this;
+    setInterval(function () {
+      // console.log("navigator online:", navigator.onLine);
+      if (navigator.onLine) {
+        if (!thisVar.isNetConnected) {
+          thisVar.refresh();
+        }
+        thisVar.isNetConnected = true;
+        // document.getElementById("noNetwork").style.display = "none";
+      } else {
+        thisVar.isNetConnected = false;
+        // document.getElementById("noNetwork").style.display = "block";
+      }
+    }, 10000);
   }
 
 }

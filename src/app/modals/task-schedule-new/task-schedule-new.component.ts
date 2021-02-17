@@ -235,10 +235,12 @@ export class TaskScheduleNewComponent implements OnInit {
           this.api.post('AdminTask/deleteTaskAction', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getScheduledTaskParam();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

@@ -27,19 +27,15 @@ export class SegmentStackReportComponent implements OnInit {
 
   segmentReport() {
     let params = "startDate=" + this.common.dateFormatter(this.startDate) + "&endDate=" + this.common.dateFormatter(this.endDate)
-
     this.common.loading++;
     this.api.get('Report/getStackSegmentWrtPeriod?' + params).subscribe(res => {
       this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.segmentData = res['data'];
-      console.log("dataaaaaaa", this.segmentData)
       this.arrangement()
-      this.common.showToast(res['msg'])
-
-    },
-      err => {
+      this.common.showToast(res['msg']);
+    },err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });

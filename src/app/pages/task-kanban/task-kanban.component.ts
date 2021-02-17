@@ -10,12 +10,13 @@ import * as _ from 'lodash';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+import { NbSidebarService } from '@nebular/theme';
 @Component({
   selector: 'ngx-project-user-kanban',
-  templateUrl: './project-user-kanban.component.html',
-  styleUrls: ['./project-user-kanban.component.scss']
+  templateUrl: './task-kanban.component.html',
+  styleUrls: ['./task-kanban.component.scss']
 })
-export class ProjectUserKanbanComponent implements OnInit {
+export class TaskKanbanComponent implements OnInit {
   cardlength = null;
   loggedInUser = null;
   dashboardState = false;
@@ -71,7 +72,7 @@ export class ProjectUserKanbanComponent implements OnInit {
   boardType: number = 0;
   callType = '';
 
-  constructor(
+  constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
     public api: ApiService,
     public chart: ChartService,
@@ -101,6 +102,14 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.getProjectList();
     this.getUserGroupList();
     this.getDepartmentList();
+  }
+
+  toggleSidebar(type): boolean {
+    let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
+    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+      this.sidebarService.toggle(true, 'menu-sidebar');
+    }
+    return false;
   }
 
   getDashboardByType(type) {
@@ -238,9 +247,8 @@ export class ProjectUserKanbanComponent implements OnInit {
 
   goToBoard(lead, type, callType) {
     this.callType = callType;
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 245 ~ ProjectUserKanbanComponent ~ goToBoard ~ lead", lead, this.callType)
-    this.childProject = this.projectList.filter((data) => lead._id === data._parent_id);
-    (this.callType === 'parent') ? this.subProject = { _id: null, project_desc: null, _parent_id: null } : null;
+
+    (this.callType === 'parent') ? (this.subProject = { _id: null, project_desc: null, _parent_id: null }, this.childProject = this.projectList.filter((data) => lead._id === data._parent_id)) : null;
     this.taskStatusBarData[0].data = [];
     let params = `projectId=${lead._id}&type=${type}&filter=null`;
     this.common.loading++;
@@ -265,6 +273,7 @@ export class ProjectUserKanbanComponent implements OnInit {
 
           console.log('inprogress:', this.taskStatusBarData[0].data);
         });
+
         this.cards = boardData;
         this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
         this.placeCardLength(this.cards);
@@ -272,7 +281,10 @@ export class ProjectUserKanbanComponent implements OnInit {
         this.cardlength = this.cards.length;
         this.dashboardState = true;
         (this.callType === 'parent') ? this.project = lead : this.subProject = lead;
-        console.log('sub:', this.subProject, 'parent:', this.project)
+        console.log('sub:', this.subProject, 'parent:', this.project);
+        this.toggleSidebar('compact');
+      }else{
+        this.common.showError(res['msg']);
       }
     }, (err) => {
       this.common.loading--;
@@ -306,10 +318,11 @@ export class ProjectUserKanbanComponent implements OnInit {
         }
       });
     }
-    let groupBy = _.groupBy(userGroup, data => { return data.id });
-    Object.keys(groupBy).map(key => {
-      this.cardsUserGroup.push(groupBy[key][0]);
-    });
+    let groupBy = _.orderBy(_.groupBy(userGroup, data => { return data.id }), data => data.length,'desc');
+    // Object.keys(groupBy).map(key => {
+    //   this.cardsUserGroup.push(groupBy[key][0]);
+    // });
+    groupBy.forEach(element => this.cardsUserGroup.push(element[0]));
     console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 255 ~ ProjectUserKanbanComponent ~ placeCardLength ~ boardData", this.cardsUserGroup)
   }
 
@@ -318,6 +331,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.project._id = null;
     this.project.project_desc = null;
     this.getProjectList();
+    this.toggleSidebar('expand');
   }
 
   onDragStarted(event: CdkDragStart<string[]>) {
@@ -653,7 +667,8 @@ export class ProjectUserKanbanComponent implements OnInit {
       this.api.post("AdminTask/getTaskByType", params)
         .subscribe((res) => {
           this.common.loading--;
-          console.log("data", res["data"]);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          // console.log("data", res["data"]);
           if (i === 0) {
             //task by me
             this.normalTaskByMeList = (res["data"] || [])
@@ -674,7 +689,7 @@ export class ProjectUserKanbanComponent implements OnInit {
           // if (this.completeOtherTask.length > 0) {
           //   document.getElementById('otherTaskModal').style.display = 'block';
           // }
-          console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
+          // console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
         },
           (err) => {
             this.common.loading--;

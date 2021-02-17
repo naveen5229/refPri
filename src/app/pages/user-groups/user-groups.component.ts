@@ -68,10 +68,12 @@ export class UserGroupsComponent implements OnInit {
     this.api.get('UserRole/getUserGroups')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.groupList = res['data'] || [];
         this.groupList.length ? this.setTable() : this.resetTable();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -169,6 +171,7 @@ export class UserGroupsComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       });
   }
@@ -209,6 +212,7 @@ export class UserGroupsComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }

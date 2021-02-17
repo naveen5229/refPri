@@ -204,30 +204,26 @@ export class TicketComponent implements OnInit {
   }
 
   getUserGroupList() {
-    this.api.get('UserRole/getUserGroups')
-      .subscribe(
-        (res) => {
-          console.log(" Group data", res["data"]);
-          if (res["code"] > 0) {
-            let groupList = res['data'] || [];
-            this.groupList = groupList.map((x) => {
-              return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
-            });
-          } else {
-            this.common.showError(res["msg"]);
-          }
-        },
-        (err) => {
-          this.common.showError();
-          console.log("Error: ", err);
+    this.api.get('UserRole/getUserGroups').subscribe(res => {
+      if (res["code"] > 0) {
+        let groupList = res['data'] || [];
+        this.groupList = groupList.map((x) => {
+          return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
         });
+      } else {
+        this.common.showError(res["msg"]);
+      }
+    },err => {
+      this.common.showError();
+      console.log("Error: ", err);
+    });
   }
 
   getTicketProcessList() {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
-      // if (!res['data']) return;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let tpList = res['data'] || [];
       this.tpList = tpList.filter(ele => {
         return (ele._is_active && ele._ticket_input > 0)
@@ -274,10 +270,11 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessProperty?tpId=' + this.ticketForm.tp.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.tpPropertyList = res['data'] || [];
-      // this.findPriCat();
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -382,6 +379,7 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.get("Ticket/getTicketProcessCatByType?" + param).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (type == 1) {
         let priCatList = res['data'];
         this.priCatList = priCatList.map(x => { return { id: x._id, name: x.name } });
@@ -1098,6 +1096,7 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/checkTicketReminderSeen", params).subscribe((res) => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res["msg"]);
       this.getTicketByType(type);
     }, (err) => {
@@ -1239,77 +1238,6 @@ export class TicketComponent implements OnInit {
       console.log("Error: ", err);
     });
   }
-
-  // ticketHistory(ticket, type) {
-  //   this.common.loading++;
-  //   this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
-  //     this.common.loading--;
-  //     if (res['code'] > 0) {
-  //       if (res['data']) {
-  //         this.ticketHistoryList = res['data'];
-  //         this.setTableTicketHistory();
-  //         document.getElementById('ticketHistory').style.display = 'block';
-  //       } else {
-  //         this.common.showError('No Data')
-  //       }
-  //     } else {
-  //       this.common.showError(res['msg']);
-  //     }
-  //   }, (err) => {
-  //     this.common.loading--;
-  //     this.common.showError();
-  //     console.log("Error: ", err);
-  //   });
-  // }
-
-  // closeTicketHistory() {
-  //   document.getElementById('ticketHistory').style.display = 'none';
-  // }
-
-  // setTableTicketHistory() {
-  //   this.tableTicketHistory.data = {
-  //     headings: this.generateHeadingsTicketHistory(),
-  //     columns: this.getTableColumnsTicketHistory()
-  //   };
-  //   return true;
-  // }
-
-  // generateHeadingsTicketHistory() {
-  //   let headings = {};
-  //   for (var key in this.ticketHistoryList[0]) {
-  //     if (key.charAt(0) != "_") {
-  //       headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-  //     }
-  //     if (key === "addtime" || key === "action_completed") {
-  //       headings[key]["type"] = "date";
-  //     }
-  //   }
-  //   return headings;
-  // }
-
-  // getTableColumnsTicketHistory() {
-  //   let columns = [];
-  //   this.ticketHistoryList.map(lead => {
-  //     let column = {};
-  //     for (let key in this.generateHeadingsTicketHistory()) {
-  //       if (key.toLowerCase() == 'action') {
-  //         // column[key] = {
-  //         //   value: "",
-  //         //   isHTML: true,
-  //         //   action: null,
-  //         //   icons: this.actionIcons(lead, type)
-  //         // };
-  //       } else if (key == "spent_time") {
-  //         column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-  //       } else {
-  //         column[key] = { value: lead[key], class: 'black', action: '' };
-  //       }
-
-  //     }
-  //     columns.push(column);
-  //   });
-  //   return columns;
-  // }
 
   ticketHistory(ticket, type) {
     let dataparams = {
@@ -1501,8 +1429,8 @@ export class TicketComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-      console.log("evenArray:::", this.evenArray[i]);
-      console.log("oddArray:::", this.oddArray[i]);
+      // console.log("evenArray:::", this.evenArray[i]);
+      // console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
       this.common.showError();

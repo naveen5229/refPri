@@ -40,7 +40,7 @@ export class HolidaysComponent implements OnInit {
     this.api.get('Admin/getHolidayCalendar')
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data']) {
           this.allHolidayList = res['data'] || [];
           this.holidayList = res['data'] || [];
@@ -48,6 +48,7 @@ export class HolidaysComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -138,10 +139,8 @@ export class HolidaysComponent implements OnInit {
         this.common.loading--;
         if (res["code"] > 0) {
           this.common.showToast(res["msg"]);
-
           let successData = res['data']['success'];
           let errorData = res['data']['fail'];
-          console.log("error: ", errorData);
           alert(res["msg"]);
           this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
           const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
@@ -157,6 +156,7 @@ export class HolidaysComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

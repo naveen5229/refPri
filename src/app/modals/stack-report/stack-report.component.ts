@@ -39,7 +39,7 @@ export class StackReportComponent implements OnInit {
     this.common.loading++
     this.api.post("Report/getWorkLogsWrtUserStack", params).subscribe(res => {
       this.common.loading--;
-      console.log("res", res['data']);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.stackDetail = res['data'];
     }, err => {
       this.common.loading--;

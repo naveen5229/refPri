@@ -40,7 +40,7 @@ export class EmployeePeriodReportComponent implements OnInit {
     this.api.get('Suggestion/getEmployeeList')
       .subscribe(res => {
         this.common.loading--;
-        console.log("res", res['data']);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.employeeList = res['data'];
       }, err => {
         this.common.loading--;
@@ -59,8 +59,8 @@ export class EmployeePeriodReportComponent implements OnInit {
     this.api.post('Report/getEmployeeReportWithPeriod', params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.stacks = [... new Set(Object.keys(_.groupBy(res['data'], 'stack')))];
-        console.log(this.stacks);
         let reports = _.groupBy(res['data'], 'date');
         this.reports = Object.keys(reports).map(date => {
           let stacks = _.groupBy(reports[date], 'stack');

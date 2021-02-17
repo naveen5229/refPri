@@ -134,12 +134,12 @@
 
       <div class="col-6 text-right my-auto" *ngIf="project._id">
         <div class="row">
-          <div class="col-8">
+          <div class="col-8" *ngIf="childProject.length > 0">
             <auto-suggestion display="project_desc" (onSelected)="goToBoard($event,1,'child')" [data]="childProject" placeholder="Select Sub Project" seperator="-"
               [preSelected]="{project_desc:subProject.project_desc}" className="borderStyle" inputId="_id">
             </auto-suggestion>
           </div>
-          <div class="col-4">
+          <div [ngClass]="childProject.length > 0 ? 'col-4' : 'col-12'">
             <button class="btn btn-primary" (click)="goToBoard({_id:null,project_desc:'All My Issues'},0,'parent')"
               (click)="activeButton = 'to'">My All
               Issues</button>
@@ -179,16 +179,18 @@
           <div class="row shadow-sm" [ngClass]="data._tktype === 103 ? 'ScheduledStyle' : 'NormalStyle'"
             *ngFor="let data of card.data;let i = index" cdkDrag (cdkDragStarted)="onDragStarted($event)"
             (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)"
-            (cdkDragEntered)="onDragEntered($event,i)" (click)="ticketMessage(data,null)"
+            (cdkDragEntered)="onDragEntered($event,i)" (click)="(data._tktid) ? ticketMessage(data,null) : null"
             [cdkDragDisabled]="project._id && data.userid != loggedInUser">
             <div class="col-12">
               <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
                 class="mb-0 cardTitleStyle">{{data.title}}</h5>
             </div>
+
             <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer"
                 title="{{data._project_type}}"
                 (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label>
             </div>
+            
             <div class="col-12"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
             </div>
             <!-- <div class="col-12">

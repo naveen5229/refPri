@@ -105,6 +105,7 @@ export class FormDataComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data']) {
         this.formField = res['data'];
         this.formatArray();

@@ -63,25 +63,21 @@ export class UserExpensesComponent implements OnInit {
         hideHeader: true
       }
     };
-
-
     this.common.loading++;
     let param = `date=${this.common.dateFormatter1(this.Date)}`
     this.api.get(`Admin/getOnSiteExpenses?${param}`)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.userwageslist = res['data'] || [];
-        console.log(this.userwageslist);
-
         this.userwageslist.length ? this.setTable() : this.resetTable();
-        // this.setTable() 
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
+
   setTable() {
     this.table.data = {
       headings: this.generateHeadings(),
@@ -151,19 +147,18 @@ export class UserExpensesComponent implements OnInit {
   }
 
   openImages(installer) {
-    console.log("🚀 ~ file: installer-wages.component.ts ~ line 127 ~ InstallerWagesComponent ~ openImages ~ installer", installer);
     this.common.loading++;
     let param = `userId=${installer._aduserid}&startDate=${this.common.dateFormatter1(this.Date)}&endDate=${this.common.dateFormatter1(this.Date)}`
     this.api.get(`Admin/getOnSiteImagesByUser?${param}`)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.imageList = res['data'] || [];
-        console.log(this.imageList);
         this.imageList.length ? this.setTableImages(installer) : this.resetTableImages();
         document.getElementById('imageListing').style.display = 'block';
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -250,7 +245,6 @@ export class UserExpensesComponent implements OnInit {
   }
 
   reject(img, installer) {
-    console.log("🚀 ~ file: installer-wages.component.ts ~ line 209 ~ InstallerWagesComponent ~ reject ~ img", img);
     this.common.params = {
       title: 'Reject Image',
       description: `<b>&nbsp;` + 'Are You Sure To Reject This Image' + `<b>`,
@@ -258,24 +252,22 @@ export class UserExpensesComponent implements OnInit {
     const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
       if (data.response) {
-        console.log("data", data);
         this.common.loading++;
         let params = {
           id: img._id,
           status: -1
         };
-        // console.log(params)
-        // return;
         this.api.post(`Admin/updateOnSiteImageStatus`, params).subscribe(res => {
           this.common.loading--;
           if (res['code'] == 1) {
             this.common.showToast(res['msg']);
             this.openImages(installer);
+          }else{
+            this.common.showError(res['msg']);
           }
-          console.log('res', res);
         }, err => {
-          console.log("🚀 ~ file: installer-wages.component.ts ~ line 216 ~ InstallerWagesComponent ~ this.api.post ~ err", err)
           this.common.loading--;
+          this.common.showError();
         });
       }
     });

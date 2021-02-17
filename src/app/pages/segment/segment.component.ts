@@ -44,10 +44,11 @@ export class SegmentComponent implements OnInit {
     this.api.get('Suggestion/getModules')
       .subscribe(res => {
         this.common.loading--;
-        console.log("list", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.moduleName = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -62,14 +63,13 @@ export class SegmentComponent implements OnInit {
 
   getSegment() {
     this.api.get("Segment/getAllSegments").subscribe(res => {
-
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.segmentData = res['data'] || [];
       this.filterItem();
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   saveSegment() {
@@ -122,6 +122,7 @@ export class SegmentComponent implements OnInit {
     this.common.loading++;
     this.api.post('Segment/updateSegment', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res['msg'])
       this.getSegment()
     },
@@ -160,10 +161,11 @@ export class SegmentComponent implements OnInit {
         this.api.post('Segment/deleteSegment', params)
           .subscribe(res => {
             this.common.loading--;
-            console.log("res", res);
             if (res['success']) {
               this.common.showToast(res['msg']);
               this.getSegment();
+            }else{
+              this.common.showError(res['msg']);
             }
           }, err => {
             this.common.loading--;

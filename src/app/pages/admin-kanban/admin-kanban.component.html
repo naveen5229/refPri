@@ -1,0 +1,95 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-4">
+        <h5 class="heading-design">Kanban Board <label *ngIf="project._id">({{project.project_desc}})</label><label *ngIf="user._id">({{user.name}})</label>
+        </h5>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-2">
+              <select (change)="SearchBy = $event.target.value;resetSearch()" class="byselect">
+                  <option>By Project</option>
+                  <option selected>By User</option>
+              </select>
+          </div>
+          <div class="col-10">
+              <span *ngIf="SearchBy === 'By Project'" style="display: flex;">
+                <auto-suggestion class="form-controls col-9 p-0 searchselect" id="project" [data]="projectList"
+                display="project_desc" (onSelected)="project = {_id: $event['_project_id'],project_desc: $event['project_desc']};goToBoard(project,1,null)" placeholder="Search Project" inputId="Project" name="Project"></auto-suggestion>
+                  <!-- <button class="btn btn-primary btn-sm" id="searchbutton" (click)="goToBoard(project,1,null)">Search</button> -->
+              </span>
+              <span *ngIf="SearchBy === 'By User'" style="display: flex;">
+                  <auto-suggestion class="form-controls col-9 p-0 searchselect" id="users" [data]="adminList"
+                   display="name" (onSelected)="user = {_id: $event['id'],name: $event['name']};goToBoard(user,0,null)" placeholder="Search Users"
+                    inputId="Users" name="Users" [preSelected]="user._id ? {name:user.name} : {name:''}"></auto-suggestion>
+                  <!-- <button class="btn btn-primary btn-sm" id="search" (click)="goToBoard(user,0,null)">Search</button> -->
+              </span>
+          </div>
+      </div>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    
+    <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
+      <div class="stateContainerStyle" [style.width.%]="100/cardlength" *ngFor="let card of cards;let i = index">
+        <div class="stateStatusBar" [style.background]="card.color"></div>
+        <!-- background: {{data.color}};-->
+        <div class="title">
+          <div class="strip" [style.background]="card.color">
+          </div>
+          <h5 class="stateTitleStyle" title="{{card.title}}">{{card.title}}<small
+              *ngIf="card.cardCount > 0">({{card.cardCount}})</small></h5>
+        </div>
+        <!-- <div class="stateTansActCountStyle">
+          <label>{{card.normalTaskCount}} Normal / {{card.scheduleTaskCount}} Schedule</label>
+        </div> -->
+
+        <div class="cardStyle" cdkDropList [cdkDropListData]="card.data" (cdkDropListDropped)="drop($event);"
+          [id]="card.title" >
+
+          <div class="row shadow-sm" [ngClass]="data._tktype === 103 ? 'ScheduledStyle' : 'NormalStyle'"
+            *ngFor="let data of card.data;let i = index" cdkDrag (cdkDragStarted)="onDragStarted($event)"
+            (cdkDragEnded)="onDragEnded($event)" (cdkDragMoved)="movedIn($event)"
+            (cdkDragEntered)="onDragEntered($event,i)" (click)="(data._tktid) ? ticketMessage(data,null) : null"
+            [cdkDragDisabled]="project._id && data.userid != loggedInUser">
+            <div class="col-12">
+              <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
+                class="mb-0 cardTitleStyle">{{data.title}}</h5>
+            </div>
+
+            <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer"
+                title="{{data._project_type}}"
+                (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label>
+            </div>
+            
+            <div class="col-12"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
+            </div>
+            <div class="col-12 pb-2">
+              <div class="row">
+                <div class="col-8">
+                  <i class="fas fa-arrow-up" [ngClass]="(data.priority)?'text-danger':'text-warning'"
+                    [title]="(data.priority)?'High Priority':'Low Priority'"></i>
+                  <i *ngIf="data._reply_demanded > 0" class="fa fa-comments text-danger pl-1" aria-hidden="true"
+                    title="Reply Demanded"></i>
+                  <i *ngIf="data._tktype === 103" class="far fa-clock text-warning pl-1" title="Schedule Task"></i>
+                  <label class="pl-1" style="font-size: 12px;">{{data.age}}</label>
+                  <div>{{data.status}}</div>
+                </div>
+                <div class="col-4">
+                  <div class="rounded-circle" [style.background]="project._id ? '#008000' : '#3366ff'"
+                    title="{{data.user_label}}">
+                    {{data.user}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </nb-card-body>
+</nb-card>
