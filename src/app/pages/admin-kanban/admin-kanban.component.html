@@ -16,7 +16,7 @@
           <div class="col-10">
               <span *ngIf="SearchBy === 'By Project'" style="display: flex;">
                 <auto-suggestion class="form-controls col-9 p-0 searchselect" id="project" [data]="projectList"
-                display="project_desc" (onSelected)="project = {_id: $event['_id'],project_desc: $event['project_desc']};goToBoard(project,1,null)" placeholder="Search Project" inputId="Project" name="Project"></auto-suggestion>
+                display="project_desc" (onSelected)="project = {_id: $event['_project_id'],project_desc: $event['project_desc']};goToBoard(project,1,null)" placeholder="Search Project" inputId="Project" name="Project"></auto-suggestion>
                   <!-- <button class="btn btn-primary btn-sm" id="searchbutton" (click)="goToBoard(project,1,null)">Search</button> -->
               </span>
               <span *ngIf="SearchBy === 'By User'" style="display: flex;">

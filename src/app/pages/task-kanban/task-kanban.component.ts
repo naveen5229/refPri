@@ -318,10 +318,11 @@ export class TaskKanbanComponent implements OnInit {
         }
       });
     }
-    let groupBy = _.groupBy(userGroup, data => { return data.id });
-    Object.keys(groupBy).map(key => {
-      this.cardsUserGroup.push(groupBy[key][0]);
-    });
+    let groupBy = _.orderBy(_.groupBy(userGroup, data => { return data.id }), data => data.length,'desc');
+    // Object.keys(groupBy).map(key => {
+    //   this.cardsUserGroup.push(groupBy[key][0]);
+    // });
+    groupBy.forEach(element => this.cardsUserGroup.push(element[0]));
     console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 255 ~ ProjectUserKanbanComponent ~ placeCardLength ~ boardData", this.cardsUserGroup)
   }
 
