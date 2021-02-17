@@ -180,7 +180,6 @@ export class MyProcessComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -196,9 +195,9 @@ export class MyProcessComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.processList = res['data'];
-
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -216,7 +215,6 @@ export class MyProcessComponent implements OnInit {
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
-      // console.log("data", res['data']);
       if (res['code'] == 1) {
         if (type == 1) {//for me pending
           this.leadsForMe = res['data'] || [];
@@ -901,7 +899,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   deletCallBack(lead, type) {
-
     let params = {
       transId: lead._transactionid
     }
@@ -1106,7 +1103,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   updateTransactionStatus(lead, type, status) {
-    // console.log("updateTransactionStatus");
     if (lead._transactionid) {
       let params = {
         transId: lead._transactionid,
@@ -1228,13 +1224,13 @@ export class MyProcessComponent implements OnInit {
   }
 
   checkReminderSeen(lead, type) {
-    // console.log("checkReminderSeen");
     let params = {
       ticketId: lead._transactionid
     };
     this.common.loading++;
     this.api.post('Processes/checkLeadReminderSeen', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res['msg']);
       this.getProcessLeadByType(type);
     }, err => {
@@ -1245,12 +1241,10 @@ export class MyProcessComponent implements OnInit {
   }
 
   ackLeadByCcUser(lead, type) {
-    // console.log("ackLeadByCcUser");
     if (lead._transactionid > 0) {
       let params = {
         transId: lead._transactionid
       }
-      // console.log("ackLeadByCcUser:", params);
       this.common.loading++;
       this.api.post('Processes/ackLeadByCcUser', params).subscribe(res => {
         this.common.loading--;
@@ -1275,7 +1269,6 @@ export class MyProcessComponent implements OnInit {
       let params = {
         transId: lead._transactionid
       }
-      // console.log("ackLeadByAssigner:", params);
       this.common.loading++;
       this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
         this.common.loading--;
@@ -1334,7 +1327,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   updateLeadPrimaryOwner(lead, type) {
-    console.log("🚀 ~ file: my-process.component.ts ~ line 1330 ~ MyProcessComponent ~ updateLeadPrimaryOwner ~ lead", lead)
     let apiBase = '';
     let params = {};
     if (lead.assigned_to == null) {
@@ -1358,9 +1350,6 @@ export class MyProcessComponent implements OnInit {
         isClaim: 1
       }
     }
-
-    console.log('here final data', params, apiBase)
-    // return;
     if (lead._transactionid > 0) {
       this.common.loading++;
       this.api.post(apiBase, params).subscribe(res => {

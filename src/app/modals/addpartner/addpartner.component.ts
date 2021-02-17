@@ -48,11 +48,12 @@ export class AddpartnerComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.partnerMapping = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError()
         console.log(err);
       });
   }
@@ -97,7 +98,11 @@ export class AddpartnerComponent implements OnInit {
     this.api.postTranstruck("Partners/addPartnerOrPartAdmin.json", params)
       .subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res['data'][0].y_msg);
+        if(res['code']>0){
+          this.common.showToast(res['data'][0].y_msg);
+        }else{
+          this.common.showError(res['msg']);
+        }
       }, err => {
         this.common.loading--;
         this.common.showError();

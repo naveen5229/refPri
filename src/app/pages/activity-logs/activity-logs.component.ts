@@ -52,6 +52,7 @@ export class ActivityLogsComponent implements OnInit {
     this.api.get("Admin/getDepartmentList", "I")
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.departments = res['data'] || [];
       }, err => {
         this.common.loading--;
@@ -81,15 +82,12 @@ export class ActivityLogsComponent implements OnInit {
       this.api.get('Admin/getActivityLogs')
         .subscribe(res => {
           this.common.loading--;
-          // console.log('res:', res);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.activityLogsist = res['data'] || [];
-          console.log(this.activityLogsist);
-  
           this.activityLogsist.length ? this.setTable() : this.resetTable();
-  
-  
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     } 
@@ -180,10 +178,12 @@ export class ActivityLogsComponent implements OnInit {
             this.api.get('Admin/deleteActivityLog'+ params)
               .subscribe(res => {
                 this.common.loading--;
+                if(res['code']===0) { this.common.showError(res['msg']); return false;};
                 this.common.showToast(res['msg']);
                 this.getActivityLogsist();
               }, err => {
                 this.common.loading--;
+                this.common.showError();
                 console.log('Error: ', err);
               });
           }

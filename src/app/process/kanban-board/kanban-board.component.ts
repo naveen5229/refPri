@@ -166,14 +166,13 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   goToBoard(lead) {
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 153 ~ KanbanBoardComponent ~ goToBoard ~ lead", lead)
     this.processId = lead._id;
     this.processName = lead.name;
-
     let params = `processId=${lead._id}&filter=null`
     this.common.loading++;
     this.api.get(`Processes/getProcessBoardView?` + params).subscribe((res) => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let boardData = res['data'] || [];
       this.cards = boardData;
       this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
@@ -469,6 +468,7 @@ export class KanbanBoardComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }

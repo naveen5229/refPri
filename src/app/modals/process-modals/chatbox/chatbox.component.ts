@@ -261,7 +261,7 @@ export class ChatboxComponent implements OnInit {
           this.common.fileLinkHandler('chat_block');
         }, 500);
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['msg'])
       }
     }, err => {
       this.showLoading = false;
@@ -282,16 +282,11 @@ export class ChatboxComponent implements OnInit {
       if (mentionedUsers && mentionedUsers.length > 0) {
         mentionedUsers = this.common.checkMentionedUser(mentionedUsers, this.taskMessage);
       }
-      // console.log("mentionedUsers:", mentionedUsers);
-      // console.log("formatedMsg:",formatedMsg);
-      // return false;
       this.common.loading++;
       let params = {
         ticketId: this.ticketId,
         status: this.statusId,
-        message: formatedMsg,//this.taskMessage,
-        // attachment: this.attachmentFile.file,
-        // attachmentName: (this.attachmentFile.file) ? this.attachmentFile.name : null,
+        message: formatedMsg,
         attachments: JSON.stringify(this.attachmentFile.map(attachments=> {return{name: attachments.name, file: attachments.file}})),
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
         users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
@@ -302,8 +297,6 @@ export class ChatboxComponent implements OnInit {
         this.common.loading--;
         if (res['code'] > 0) {
           this.taskMessage = "";
-          // this.attachmentFile.file = null;
-          // this.attachmentFile.name = null;
           this.attachmentFile = [];
           this.resetQuotedMsg();
           this.getLeadMessage();
@@ -395,7 +388,7 @@ export class ChatboxComponent implements OnInit {
       if (res['code'] == 1) {
         this.userListByTask = res['data'] || [];
       } else {
-        this.common.showError(res['data']);
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.showLoading = false;
@@ -421,7 +414,7 @@ export class ChatboxComponent implements OnInit {
           this.newCCUserId = [];
           this.getAllUserByLead();
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -513,9 +506,12 @@ export class ChatboxComponent implements OnInit {
       if (res['code'] == 1) {
         this.transActionData = res['data'] || [];
         this.transActionData.length ? this.setTable(type) : this.resetTable();
+      }else{
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -623,6 +619,7 @@ export class ChatboxComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -664,6 +661,7 @@ export class ChatboxComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -841,6 +839,7 @@ export class ChatboxComponent implements OnInit {
           }
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log('Error: ', err);
         });
     } else {

@@ -151,6 +151,7 @@ export class SaveadminComponent implements OnInit {
     this.common.loading++;
     this.api.get("Admin/getDepartmentList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.departments = res['data'] || [];
     }, err => {
       this.common.loading--;
@@ -185,9 +186,11 @@ export class SaveadminComponent implements OnInit {
     let response;
     this.api.post('FoAdmin/addUsers', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.activeModal.close();
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }

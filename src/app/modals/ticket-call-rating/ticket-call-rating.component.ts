@@ -69,17 +69,14 @@ export class TicketCallRatingComponent implements OnInit {
     console.log(params);
 if (this.currentRate != 0) {
   this.closeModal({rating: this.currentRate, remark: this.remark});
-
   this.common.loading++
   this.api.post('Users/setUserTicketRating', params).subscribe( res => {
       this.common.loading--
-
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast[res['msg']];
-      console.log(this.currentRate);
-
-      console.log(res);
   }, err => {
     this.common.loading--;
+    this.common.showError();
     console.log(err);
   });
 } else {

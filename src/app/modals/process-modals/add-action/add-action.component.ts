@@ -77,11 +77,13 @@ export class AddActionComponent implements OnInit {
     this.api.get('Processes/getProcessState?' + params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         let data = res['data'] || [];
         this.states = data.map(x => { return { id: x._state_id, name: x.name } });
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -104,6 +106,7 @@ export class AddActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignModules/getModes").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let modeList = res['data'];
       this.modeList = (modeList && modeList.length) ? modeList.map(x => { return { id: x._mode_id, name: x.name } }) : [];
     }, err => {
@@ -114,15 +117,6 @@ export class AddActionComponent implements OnInit {
   }
 
   saveProcessAction() {
-    // let autoStateChange = (this.actionForm.nextState.length == 1) ? this.actionForm.autoStateChange : null;
-
-    // let userMapped =[];
-    // if(this.actionForm.userMapping && this.actionForm.userMapping.length > 0){
-    //   userMapped = this.actionForm.userMapping.map(data => {
-    //     return {id:data.id,name:data.name}
-    //   });
-    // }
-
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');
     }
@@ -130,24 +124,14 @@ export class AddActionComponent implements OnInit {
       const params = {
         requestId: this.actionForm.rowId,
         processId: this.actionForm.process.id,
-        // stateId: (this.actionForm.states && this.actionForm.states.length) ? JSON.stringify(this.actionForm.states) : null,
         name: this.actionForm.name,
         modes: (this.actionForm.modes && this.actionForm.modes.length) ? JSON.stringify(this.actionForm.modes) : null,
         threshold: this.actionForm.threshold,
-        // claim: this.actionForm.claim,
         isRepeatable: this.actionForm.isRepeatable
-        // nextAction: (this.actionForm.nextAction && this.actionForm.nextAction.length) ? JSON.stringify(this.actionForm.nextAction) : null,
-        // nextState: (this.actionForm.nextState && this.actionForm.nextState.length) ? JSON.stringify(this.actionForm.nextState) : null,
-        // autoStateChange: autoStateChange,
-        // users:(userMapped && userMapped.length) ? JSON.stringify(userMapped) : null
-        // isDefault: this.actionForm.isDefault,
-        // defaultOwner: (this.actionForm.isDefault && this.actionForm.defaultOwner.id) ? this.actionForm.defaultOwner.id : null
       };
-      console.log("actionForm:", params);
       this.common.loading++;
       this.api.post("Processes/addProcessAction ", params).subscribe(res => {
         this.common.loading--;
-        console.log(res);
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
@@ -161,6 +145,7 @@ export class AddActionComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }
@@ -170,6 +155,7 @@ export class AddActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessAction?processId=" + this.actionForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.actionList = res['data'] || [];
       this.nextActionList = this.actionList.map(x => { return { id: x._action_id, name: x.name } });
       this.actionList.length ? this.setTable() : this.resetTable();
@@ -309,6 +295,7 @@ export class AddActionComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }

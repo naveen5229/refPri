@@ -47,12 +47,9 @@ export class AddActivityLogsComponent implements OnInit {
       date: this.common.dateFormatter(this.activity.date),
       spendHours: this.common.timeFormatter(this.activity.hour),
     }
-
-    console.log(params);
     if (this.activity.desc == null) {
       this.common.showError('Enter Description');
-    }
-    else if (this.activity.contact == null) {
+    }else if (this.activity.contact == null) {
       this.common.showError('Enter Contatc Person');
     } else if (this.activity.outcome == null) {
       this.common.showError('Enter Outcome');
@@ -61,11 +58,10 @@ export class AddActivityLogsComponent implements OnInit {
       this.api.post('Admin/saveActivityLog', params)
         .subscribe(res => {
           this.common.loading--;
-          console.log(res)
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.common.showToast('Success');
           this.isSubmit = true;
           this.refreshForm();
-
         }, err => {
           this.common.loading--;
           console.error(err);

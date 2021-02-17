@@ -103,12 +103,13 @@ export class UserMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.partnerMapping = res['data'];
         this.partnerMapping.length ? this.setTable() : this.resetTable();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -210,12 +211,13 @@ export class UserMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getElogistPartadminuser.json?elPartnerId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.partnerUserMappings = res['data'];
         this.partnerUserMappings.length ? this.setTable1() : this.resetTable1();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -322,11 +324,9 @@ partnerUserUnMap(partnerUser){
     let param={
       elPartAdminId:partnerUser.id
     }
-    console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/unmapPartadminuserMapping.json',param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (res['success']){
           this.common.showToast(res['msg']);
         }else{
@@ -334,6 +334,7 @@ partnerUserUnMap(partnerUser){
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
 }
@@ -353,12 +354,13 @@ getElogistCompany(event){
   this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId='+id)
     .subscribe(res => {
       this.common.loading--;
-      console.log("api data", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.companyMappings = res['data'];
       this.companyMappings.length ? this.setTable2() : this.resetTable2();
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
 }
@@ -461,11 +463,9 @@ companyMap(company){
       let param={
         elCompanyId:company.id
       }
-      console.log("PaRAM:",param);
       this.api.postTranstruck('AxesUserMapping/unmapCompanyMapping.json',param)
         .subscribe(res => {
           this.common.loading--;
-          console.log("api data", res);
           if (res['success']){
             this.common.showToast(res['msg']);
           }else{
@@ -473,6 +473,7 @@ companyMap(company){
           }
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
   }
@@ -495,11 +496,12 @@ companyMap(company){
     this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.companyData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -539,12 +541,13 @@ companyMap(company){
     this.api.getTranstruck('AxesUserMapping/getCompanyuser.json?elCompanyId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.companyUserMappings = res['data'];
         this.companyUserMappings.length ? this.setTable3() : this.resetTable3();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -647,11 +650,9 @@ companyMap(company){
         let param={
           elCompanyUserId:companyUser.id
         }
-        console.log("PaRAM:",param);
         this.api.postTranstruck('AxesUserMapping/unmapCompanyUserMapping.json',param)
           .subscribe(res => {
             this.common.loading--;
-            console.log("api data", res);
             if (res['success']){
               this.common.showToast(res['msg']);
             }else{
@@ -659,6 +660,7 @@ companyMap(company){
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log(err);
           });
     }
@@ -689,12 +691,13 @@ companyMap(company){
       this.api.getTranstruck('AxesUserMapping/getCompanyVehicles.json?elCompanyId='+id)
         .subscribe(res => {
           this.common.loading--;
-          console.log("api data", res);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           if (!res['data']) return;
           this.vehicleMapping = res['data'];
           this.vehicleMapping.length ? this.setTable4() : this.resetTable4();
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     }
@@ -795,11 +798,9 @@ companyMap(company){
         let param={
           elVehicleId:vehicle.id
         }
-        console.log("PaRAM:",param);
         this.api.postTranstruck('AxesUserMapping/unmapVehicleMapping.json',param)
           .subscribe(res => {
             this.common.loading--;
-            console.log("api data", res);
             if (res['success']){
               this.common.showToast(res['msg']);
             }else{
@@ -807,6 +808,7 @@ companyMap(company){
             }
           }, err => {
             this.common.loading--;
+            this.common.showError()
             console.log(err);
           });
     }

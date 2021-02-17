@@ -163,19 +163,18 @@ export class stateActionMapping implements OnInit {
     this.mappingForm.nextAction = [];
     console.log(this.mappingForm.nextState);
     if (this.mappingForm.nextState.length == 1) {
-      console.log('api call sucsess')
-      // return
       this.common.loading++;
       let params = "processId=" + this.mappingForm.processId + "&stateId=" + this.mappingForm.nextState[0].id;
       this.api.get('Processes/getProcessActionByState?' + params)
         .subscribe(res => {
-          console.log("🚀 ~ file: state-action-mapping.ts ~ line 147 ~ stateActionMapping ~ getNextActionList ~ res", res)
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           if (!res['data']) return;
           let data = res['data'] || [];
           this.nextActionList = data.map(x => { return { id: x._action_id, name: x.name } });
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     } else {
@@ -222,6 +221,7 @@ export class stateActionMapping implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     });
   }

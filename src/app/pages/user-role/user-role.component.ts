@@ -44,9 +44,7 @@ export class UserRoleComponent implements OnInit {
   }
 
   getAllAdmin() {
-    console.log('-------');
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         let adminList = res['data'] || [];
         this.adminList = adminList.map((x) => { return { id: x.id, name: x.name + " - " + x.department_name }; });
@@ -60,11 +58,11 @@ export class UserRoleComponent implements OnInit {
   }
 
   getPageData() {
-    console.log(this.user);
     this.common.loading++;
     const params = 'adminId=' + this.user['_details']['id'];
     this.api.get("UserRole/getAdminPages.json?" + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let pageList = res['data'] || [];
       this.pageList = pageList.map(x => { return { id: x._id, name: x.title } });
     }, err => {
@@ -76,22 +74,18 @@ export class UserRoleComponent implements OnInit {
 
   getAdminPagesDetails(adminId) {
     this.adminId = adminId;
-    console.log(adminId);
-    // this.formattedData = [];
-    // this.selectedUser.details = user;
     const params = 'adminId=' + adminId;
     this.common.loading++;
     this.api.get('UserRole/getUserPages?' + params)
       .subscribe(res => {
         this.isShow = true;
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.getAllPagesList = res['data'];
-        console.log(this.getAllPagesList);
         this.managedata();
-        console.log("Res Data:", this.getAllPagesList)
-        // this.selectedUser.oldPreferences = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       })
   }
@@ -198,18 +192,17 @@ export class UserRoleComponent implements OnInit {
       pages: JSON.stringify(jsonData),
       adminId: this.adminId
     };
-    console.log("Param:", params);
     this.common.loading++;
     this.api.post('UserRole/saveAdminRole.json', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log('Res: ', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res['msg']);
         // this.getUserDetails(this.userId);
         this.refresh();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       })
   }
@@ -228,7 +221,6 @@ export class UserRoleComponent implements OnInit {
       this.pageId = pageId;
       let param = 'pageId=' + pageId;
       this.api.get("UserRole/getPageAllocationByPageId?" + param).subscribe(res => {
-        console.log("data", res['data'])
         if (res['code'] > 0) {
           this.userListByPageId = res['data'] || [];
         } else {
@@ -249,18 +241,16 @@ export class UserRoleComponent implements OnInit {
       pageId: this.pageId,
       list: JSON.stringify(this.userListByPageId)
     };
-    console.log("Param:", params);
-    // return false;
     this.common.loading++;
     this.api.post('UserRole/savePageAllocationByPageId', params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res['msg']);
         this.getPageAllocationByPageId(this.pageId);
-        // this.refresh();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       });
   }

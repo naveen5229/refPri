@@ -40,19 +40,17 @@ export class OtManagementComponent implements OnInit {
   getOtList() {
     this.otList = [];
     this.resetTable();
-    // let params = "?date=" + this.common.dateFormatter(this.common.getDate());
     let params = "?date=" + this.common.dateFormatter(this.date);
     this.common.loading++;
     this.api.get('Admin/getOtList.json' + params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.otList = res['data'] || [];
-        console.log(this.otList);
         this.otList.length ? this.setTable() : this.resetTable();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -134,7 +132,7 @@ export class OtManagementComponent implements OnInit {
               this.common.showToast(res['msg']);
               this.getOtList();
             } else {
-              this.common.showError(res['data']);
+              this.common.showError(res['msg']);
             }
           }, err => {
             this.common.loading--;

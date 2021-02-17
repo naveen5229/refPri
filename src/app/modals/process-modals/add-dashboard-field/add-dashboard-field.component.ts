@@ -176,8 +176,6 @@ export class AddDashboardFieldComponent implements OnInit {
             params.tpId = row._tp_id;
             apiName = "Ticket/saveDynamicDashboardField";
           }
-          // console.log("apiName:",apiName);
-          // return false;
           this.common.loading++;
           this.api.post(apiName, params).subscribe(res => {
             this.common.loading--;
@@ -193,6 +191,7 @@ export class AddDashboardFieldComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -206,6 +205,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessState?processId=" + this.form.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let stateDataList = res['data'];
       this.stateOrActionList = stateDataList.map(x => { return { id: x._state_id, name: x.name } });
     }, err => {
@@ -219,6 +219,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessAction?processId=" + this.form.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let actionDataList = res['data'] || [];
       this.stateOrActionList = actionDataList.map(x => { return { id: x._action_id, name: x.name } });
     }, err => {
@@ -243,10 +244,12 @@ export class AddDashboardFieldComponent implements OnInit {
     this.common.loading++;
     this.api.get(apiName + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let fieldData = res['data'] || [];
       this.allFileds = fieldData;
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -348,9 +351,6 @@ export class AddDashboardFieldComponent implements OnInit {
       params.tpId = this.form.process.id;
       apiName = "Ticket/saveDynamicDashboardField";
     }
-    // console.log("params:", params);
-    // console.log("apiName:",apiName);
-    // return false;
     this.common.loading++;
     this.api.post(apiName, params).subscribe(res => {
       this.common.loading--;

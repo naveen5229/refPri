@@ -86,7 +86,7 @@ export class WorkLogComponent implements OnInit {
     this.api.get('Suggestion/getEmployeeList')
       .subscribe(res => {
         this.common.loading--;
-        console.log("res", res['data']);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.users = res['data'];
       }, err => {
         this.common.loading--;
@@ -100,9 +100,11 @@ export class WorkLogComponent implements OnInit {
     this.api.get('Projects/getAllStackChilds')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.stacks = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -129,36 +131,33 @@ export class WorkLogComponent implements OnInit {
     this.api.get("Task/getTaskWrtEmp")
       .subscribe(res => {
         this.common.loading--;
-        console.log("res", res['data'])
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.tasks = res['data'] || [];
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      },err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
   getComponents() {
     if (this.workLog.stackId) {
-
       this.common.loading++;
       this.api.get("Components/getAllComponents?stackChildId=" + this.workLog.stackId)
         .subscribe(res => {
           this.common.loading--;
-          console.log("res", res['data'])
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.components = res['data'] || [];
-        },
-          err => {
-            this.common.loading--;
-            this.common.showError();
-            console.log('Error: ', err);
-          });
+        },err => {
+          this.common.loading--;
+          this.common.showError();
+          console.log('Error: ', err);
+        });
     }
   }
 
   addWorkLog() {
-    console.log("min+>", (parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes))
+    // console.log("min+>", (parseInt(this.workLog.hrs) * 60) + parseInt(this.workLog.minutes))
     let params = {
       task_id: this.workLog.taskId,
       stack_child_id: this.workLog.stackId,
@@ -171,27 +170,23 @@ export class WorkLogComponent implements OnInit {
       componentId: this.workLog.componentId,
       workLogId: this.rowId
     }
-
     if (this.workLogStatus == '1') {
       this.workLog.reviewUserId = null;
-
     }
-
-    console.log("workLog", params);
     this.common.loading++;
     this.api.post('WorkLogs/addAndUpdateWorkLogs', params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].y_id > 0) {
           this.common.showToast(res['data'][0].y_msg);
           this.activeModal.close({ response: res['data'] });
         } else {
           this.common.showError(res['data'][0].y_msg)
         }
-        console.log("res", res['data']);
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

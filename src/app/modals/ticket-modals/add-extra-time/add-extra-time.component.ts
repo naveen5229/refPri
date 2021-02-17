@@ -41,15 +41,10 @@ export class AddExtraTimeComponent implements OnInit {
       ticketId: this.ticketId,
       time: this.common.timeToSecond(this.dataForm.time)
     }
-    console.log('buy time params', params);
-    // this.closeModal(true);
-    // return;
-
     this.common.loading++;
     let apiName = 'Ticket/buyTimeForTicket'
     this.api.post(apiName, params)
       .subscribe(res => {
-        console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
           this.closeModal(true);

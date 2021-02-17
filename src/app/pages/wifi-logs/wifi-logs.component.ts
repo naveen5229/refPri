@@ -45,21 +45,18 @@ export class WifiLogsComponent implements OnInit {
         hideHeader: true
       }
     };
-    // let date = this.common.dateFormatter(this.date);
-    // const params = '?date=' + date;
-    // console.log(params);
     this.common.loading++;
     this.api.get('Admin/getUserWifiLogs')
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data']) {
           this.wifiLogList = res['data'] || [];
           this.wifiLogList.length ? this.setTable() : this.resetTable();
-          console.log("wifiLogList:", this.wifiLogList);
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

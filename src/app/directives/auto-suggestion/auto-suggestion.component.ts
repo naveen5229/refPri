@@ -153,6 +153,7 @@ export class AutoSuggestionComponent implements OnInit {
     console.log('jrx:', this.apiMethod, this.url, this.apiBase);
     this.api[this.apiMethod](this.url + params, this.apiBase)
       .subscribe(res => {
+        if(res['code']===0){ this.common.showError(res['msg']); return false;}
         this.suggestions = res['data'];
         if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({
           search: this.searchText

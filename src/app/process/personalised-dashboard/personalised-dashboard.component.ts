@@ -66,7 +66,7 @@ export class PersonalisedDashboardComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -82,9 +82,9 @@ export class PersonalisedDashboardComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.processList = res['data'];
-
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -102,13 +102,10 @@ export class PersonalisedDashboardComponent implements OnInit {
     let processid = this.processId._id;
     let startDate = this.common.dateFormatter(this.searchData.startDate, null, false);
     let endDate = this.common.dateFormatter(this.searchData.endDate, null, false);
-
-    // return;
     this.resetSmartTableData();
     let params = "?processId=" + processid + "&type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getProcessDashboardData" + params).subscribe(res => {
       this.common.loading--;
-      // console.log("data", res['data']);
       if (res['code'] == 1) {
         if (type == 2) {//for me
           this.leadsForMe = res['data'] || [];
@@ -327,6 +324,7 @@ export class PersonalisedDashboardComponent implements OnInit {
     this.common.loading++;
     this.api.post('Processes/checkLeadReminderSeen', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res['msg']);
       this.getProcessLeadByType(type);
     }, err => {

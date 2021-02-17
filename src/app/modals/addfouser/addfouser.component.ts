@@ -72,10 +72,15 @@ export class AddfouserComponent implements OnInit {
     this.api.postTranstruck('AddFouser/addCompanyUsers.json?', params)
       .subscribe(res => {
         this.common.loading--;
-        this.common.showToast(res['msg']);
-        this.activeModal.close();
+        if(res['code']>0){
+          this.common.showToast(res['msg']);
+          this.activeModal.close();
+        }else{
+          this.common.showError(res['msg']);
+        }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

@@ -114,19 +114,17 @@ export class TravelDistanceComponent implements OnInit {
     if (!this.installer.id) {
       this.common.showError('Select Installer')
     } else {
-
       const params = '&installerId=' + this.installer.id + '&fromDate=' + this.common.dateFormatter1(this.startDate) + '&toDate=' + this.common.dateFormatter1(this.endDate);
       this.common.loading++;
       this.api.get("Location/getLatLongBtwTime.json?" + params).subscribe(res => {
         this.common.loading--;
-        console.log(res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.travelDistanceData = res['data'] || [];
         if (!this.travelDistanceData.length) {
           this.common.showError('No Data Found');
         } else {
           this.calcRoadDistance(this.travelDistanceData);
         }
-
       }, err => {
         this.common.loading--;
         this.common.showError();

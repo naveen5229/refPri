@@ -99,7 +99,7 @@ export class EmployeeMonitoringComponent implements OnInit {
     this.api.get('Admin/getEmployeeTrackingReports')
       .subscribe((res: any) => {
         this.common.loading--;
-        console.log('__res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.reports = res.data.map(record => {
           return {
             name: record.name,
@@ -116,11 +116,11 @@ export class EmployeeMonitoringComponent implements OnInit {
             addTime: record.addtime
           }
         });
-        console.log('Reports:', this.reports);
         this.setMarkers();
         this.setSmartTable();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.error('__err:', err);
       })
   }

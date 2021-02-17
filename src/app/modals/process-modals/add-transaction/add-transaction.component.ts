@@ -117,6 +117,7 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessPriCat?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let priCatList = res['data'];
       this.priCatList = priCatList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
@@ -159,6 +160,7 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessSecCat?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let secCatList = res['data'];
       this.secCatList = secCatList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
@@ -177,6 +179,7 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessType?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let typeList = res['data'];
       this.typeList = typeList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
@@ -195,8 +198,7 @@ export class AddTransactionComponent implements OnInit {
       }
       return copyDetails;
     });
-    console.log(details, 'updated details from add transaction')
-
+    // console.log(details, 'updated details from add transaction')
     const params = {
       processId: this.transForm.process.id,
       processName: this.transForm.process.name,
@@ -205,17 +207,9 @@ export class AddTransactionComponent implements OnInit {
       priOwnId: this.transForm.priOwn.id,
       mobileno: this.transForm.mobileno,
       email: this.transForm.emailStatic,
-      // priCatId: this.transForm.priCat.id,
-      // secCatId: this.transForm.secCat.id,
-      // typeId: this.transForm.type.id,
-      // locationId: this.transForm.location.id,
-      // address: this.transForm.address,
       additionalInfo: JSON.stringify(details),
       requestId: (this.transForm.requestId > 0) ? this.transForm.requestId : null,
     }
-    console.log("para......", params);
-
-    // return;
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;
@@ -258,13 +252,14 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
       this.common.loading--;
-      console.log("resss", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data']) {
         this.formField = res['data'];
         this.formatArray();
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.error('Api Error:', err);
     });
     // }
@@ -359,10 +354,11 @@ export class AddTransactionComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-      console.log("evenArray:::", this.evenArray[i]);
-      console.log("oddArray:::", this.oddArray[i]);
+      // console.log("evenArray:::", this.evenArray[i]);
+      // console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.error('Api Error:', err);
     });
 

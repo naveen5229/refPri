@@ -84,7 +84,7 @@ export class RouteMapperComponent implements OnInit {
     this.api.get('Admin/getLocationLogsWrtUser?' + params)
       .subscribe((res: any) => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.locations = res.data;
         if (this.locations && this.locations.length) {
           this.createCompleteRoute();
@@ -98,6 +98,7 @@ export class RouteMapperComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('err:', err);
       });
   }

@@ -52,17 +52,15 @@ export class AssignFieldsComponent implements OnInit {
     this.api.get(api + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("getFields", res['data']);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.fields = res['data'] || [];
         this.colinitialization();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
-
-
-
 
   drop(event: CdkDragDrop<string[]>) {
     console.log("drop", event);
@@ -131,19 +129,16 @@ export class AssignFieldsComponent implements OnInit {
 
   saveColumns() {
     let apiBase = this.formType == 11 ? 'Ticket/saveTicketMatrixCalAssign' : 'Processes/saveProcessMatrixCalAssign';
-    
     let params = {
       refId: this.refId,
       refType: this.refType,
       info: JSON.stringify(this.assignOrder()),
     }
-    console.log("Params", params)
+    // console.log("Params", params)
     this.common.loading++;
-
     this.api.post(apiBase, params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("saveColumns", res['data'][0].y_id);
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
@@ -156,6 +151,7 @@ export class AssignFieldsComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

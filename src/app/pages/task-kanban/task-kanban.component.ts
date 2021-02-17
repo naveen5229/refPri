@@ -283,6 +283,8 @@ export class TaskKanbanComponent implements OnInit {
         (this.callType === 'parent') ? this.project = lead : this.subProject = lead;
         console.log('sub:', this.subProject, 'parent:', this.project);
         this.toggleSidebar('compact');
+      }else{
+        this.common.showError(res['msg']);
       }
     }, (err) => {
       this.common.loading--;
@@ -653,6 +655,8 @@ export class TaskKanbanComponent implements OnInit {
       this.api.post("AdminTask/getTaskByType", params)
         .subscribe((res) => {
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          // console.log("data", res["data"]);
           if (i === 0) {
             //task by me
             this.normalTaskByMeList = (res["data"] || [])
@@ -673,6 +677,7 @@ export class TaskKanbanComponent implements OnInit {
           // if (this.completeOtherTask.length > 0) {
           //   document.getElementById('otherTaskModal').style.display = 'block';
           // }
+          // console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
         },
           (err) => {
             this.common.loading--;
