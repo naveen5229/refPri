@@ -399,6 +399,10 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   exportCSV() {
     if (this.reportType == 'final') {
       this.common.getCSVFromTableId('tableFinalAttendanceList')
+    }else if (this.reportType == 'leave') {
+      this.common.getCSVFromTableId('tableLeaveRequestList')
+    }else if (this.reportType == 'weekly') {
+      this.common.getCSVFromTableId('tableWeeklyList')
     } else {
       this.common.getCSVFromTableId('attendanceSummary')
     }
