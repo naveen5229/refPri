@@ -35,7 +35,7 @@
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <label>Assign To:<span class="text-danger">*</span></label>
+            <label>Assign To:<span *ngIf="isProject!='1'" class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="(userId>0) ? {name: normalTask.userName} : {name: ''}">
@@ -105,11 +105,19 @@
             </uj-date-time-picker>
         </div>
     </div>
+    <div class="row mt-2 " *ngIf="normalTask.parentTaskId">
+        <div class="col-4">
+            <label>Is Queue:</label>
+        </div>
+        <div class="col-1">
+            <input type="checkbox" [checked]="normalTask.isQueue" (change)="normalTask.isQueue = !normalTask.isQueue" />
+        </div>
+    </div>
 
     <div class="row mt-1">
         <div class="col-12 text-right">
             <button class="btn btn-primary btn-sm mr-2" id="button" (click)="saveTask()">{{btn}}</button>
-            <button class="btn btn-primary btn-sm" id="saveWithChat" (click)="saveTask(1)">Save With Chat</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" *ngIf="!normalTask.isQueue" (click)="saveTask(1)">Save With Chat</button>
         </div>
     </div>
     <!-- start: task mapping -->

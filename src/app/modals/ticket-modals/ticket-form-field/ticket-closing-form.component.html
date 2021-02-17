@@ -15,8 +15,8 @@
                 </div>
 
                 <div class="col-8">
-                    <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
-                    <!-- <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control" [(ngModel)]=oddArray[i].r_value rows="1"></textarea> -->
+                    <!-- <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
+                    <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control" [(ngModel)]="oddArray[i].r_value" rows="1"></textarea>
                     <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
                     <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
                     </uj-date-time-picker>
@@ -70,7 +70,8 @@
           </div>
 
           <div class="col-8">
-            <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
+            <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
+            <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control" [(ngModel)]="evenArray[i].r_value" rows="1"></textarea>
             <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
             <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
             </uj-date-time-picker>

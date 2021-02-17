@@ -29,25 +29,21 @@ export class FutureRefComponent implements OnInit {
   ngOnInit() {
   }
 
-  
-
   getFutureRefList() {
     let startDate = this.common.dateFormatter(this.startTime);
     let endDate = this.common.dateFormatter(this.endTime);
     const params = '?type=' + this.select_type + '&startDate=' + startDate + '&endDate=' + endDate;
     this.api.get("Users/getCustomerFeedback.json" + params).subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.futureRefList = res['data'] || [];
         this.setTableFutureRefList();
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   // start project task list

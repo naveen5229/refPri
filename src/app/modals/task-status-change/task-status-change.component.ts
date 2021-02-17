@@ -36,18 +36,16 @@ export class TaskStatusChangeComponent implements OnInit {
     }
     this.api.post('AdminTask/updateTicketStatus', params).subscribe(res => {
       this.common.loading--;
-      if (res['success']) {
+      if (res['code']>0) {
         // this.common.showToast("Task Created Successfully..!")
         this.closeModal(true);
+      }else {
+        this.common.showError(res['msg']);
       }
-      else {
-        this.common.showError(res['data'])
-      }
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 }

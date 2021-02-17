@@ -10,16 +10,18 @@ import * as _ from 'lodash';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
+import { NbSidebarService } from '@nebular/theme';
 @Component({
   selector: 'ngx-project-user-kanban',
-  templateUrl: './project-user-kanban.component.html',
-  styleUrls: ['./project-user-kanban.component.scss']
+  templateUrl: './task-kanban.component.html',
+  styleUrls: ['./task-kanban.component.scss']
 })
-export class ProjectUserKanbanComponent implements OnInit {
+export class TaskKanbanComponent implements OnInit {
   cardlength = null;
   loggedInUser = null;
   dashboardState = false;
   projectList = [];
+  childProject = [];
   projectListTable = {
     data: {
       headings: {},
@@ -33,8 +35,14 @@ export class ProjectUserKanbanComponent implements OnInit {
   cardsForFilter = [];
   adminList = [];
   project = {
-    projectId: null,
-    projectName: null
+    _id: null,
+    project_desc: null,
+    _parent_id: null,
+  }
+  subProject = {
+    _id: null,
+    project_desc: null,
+    _parent_id: null,
   }
   issueCategory = true;
   cardsUserGroup = [];
@@ -62,8 +70,9 @@ export class ProjectUserKanbanComponent implements OnInit {
   inprogressTimer = null;
   taskStatusButton = 'Hold';
   boardType: number = 0;
+  callType = '';
 
-  constructor(
+  constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
     public api: ApiService,
     public chart: ChartService,
@@ -81,10 +90,12 @@ export class ProjectUserKanbanComponent implements OnInit {
   }
 
   refresh() {
+    console.log(this.project, this.subProject);
     this.activeButton = 'to';
     this.taskStatusBarData[0].data = [];
+    console.log(this.project, this.subProject)
     if (this.dashboardState) {
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : 0);
+      this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : 0, this.callType);
     } else {
       this.getAllAdmin();
     }
@@ -93,9 +104,17 @@ export class ProjectUserKanbanComponent implements OnInit {
     this.getDepartmentList();
   }
 
+  toggleSidebar(type): boolean {
+    let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
+    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+      this.sidebarService.toggle(true, 'menu-sidebar');
+    }
+    return false;
+  }
+
   getDashboardByType(type) {
     this.boardType = type;
-    this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, type);
+    this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, type, this.callType);
   }
 
   showTaskPopup() {
@@ -219,16 +238,19 @@ export class ProjectUserKanbanComponent implements OnInit {
   actionIcons(lead) {
     let Icons = [{
       class: "btn btn-primary cursor-pointer",
-      action: this.goToBoard.bind(this, lead, 1),
+      action: this.goToBoard.bind(this, lead, 1, 'parent'),
       txt: "View Board",
       title: "View Board",
     }];
     return Icons
   }
 
-  goToBoard(lead, type) {
+  goToBoard(lead, type, callType) {
+    this.callType = callType;
+
+    (this.callType === 'parent') ? (this.subProject = { _id: null, project_desc: null, _parent_id: null }, this.childProject = this.projectList.filter((data) => lead._id === data._parent_id)) : null;
     this.taskStatusBarData[0].data = [];
-    let params = `projectId=${lead._id}&type=${type}&filter=null`
+    let params = `projectId=${lead._id}&type=${type}&filter=null`;
     this.common.loading++;
     this.api.get(`AdminTask/getTaskBoardView?` + params).subscribe((res) => {
       this.common.loading--;
@@ -251,14 +273,18 @@ export class ProjectUserKanbanComponent implements OnInit {
 
           console.log('inprogress:', this.taskStatusBarData[0].data);
         });
+
         this.cards = boardData;
         this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
         this.placeCardLength(this.cards);
         this.getAllUserGroup(this.cards);
         this.cardlength = this.cards.length;
         this.dashboardState = true;
-        this.project.projectId = lead._id;
-        this.project.projectName = lead.project_desc;
+        (this.callType === 'parent') ? this.project = lead : this.subProject = lead;
+        console.log('sub:', this.subProject, 'parent:', this.project);
+        this.toggleSidebar('compact');
+      }else{
+        this.common.showError(res['msg']);
       }
     }, (err) => {
       this.common.loading--;
@@ -292,18 +318,20 @@ export class ProjectUserKanbanComponent implements OnInit {
         }
       });
     }
-    let groupBy = _.groupBy(userGroup, data => { return data.id });
-    Object.keys(groupBy).map(key => {
-      this.cardsUserGroup.push(groupBy[key][0]);
-    });
+    let groupBy = _.orderBy(_.groupBy(userGroup, data => { return data.id }), data => data.length,'desc');
+    // Object.keys(groupBy).map(key => {
+    //   this.cardsUserGroup.push(groupBy[key][0]);
+    // });
+    groupBy.forEach(element => this.cardsUserGroup.push(element[0]));
     console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 255 ~ ProjectUserKanbanComponent ~ placeCardLength ~ boardData", this.cardsUserGroup)
   }
 
   goToList() {
     this.dashboardState = false;
-    this.project.projectId = null;
-    this.project.projectName = null;
+    this.project._id = null;
+    this.project.project_desc = null;
     this.getProjectList();
+    this.toggleSidebar('expand');
   }
 
   onDragStarted(event: CdkDragStart<string[]>) {
@@ -366,7 +394,7 @@ export class ProjectUserKanbanComponent implements OnInit {
         console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 391 ~ ProjectUserKanbanComponent ~ drop ~ containerIdTemp", containerIdTemp)
         if (this.taskStatusBarData[0].data[0]) {
           this.common.showError('A Task Already In Progress');
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
@@ -531,12 +559,12 @@ export class ProjectUserKanbanComponent implements OnInit {
         if (data.response) {
           this.updateTicketStatus(ticket, type, 0);
         } else {
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
         }
       });
     } else {
       this.common.showError("Ticket ID Not Available");
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+      this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
     }
   }
 
@@ -570,12 +598,12 @@ export class ProjectUserKanbanComponent implements OnInit {
           this.updateTicketStatus(ticket, type, status, data.remark);
         } else {
           console.log('project type', this.project)
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
         }
       });
     } else {
       this.common.showError("Task ID Not Available");
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+      this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
     }
   }
 
@@ -595,22 +623,23 @@ export class ProjectUserKanbanComponent implements OnInit {
         (res) => {
           this.common.loading--;
           if (res["code"] > 0) {
-            this.common.showToast(res["msg"]);
             // && status != 1 for moving in inprogress
-            if (status != 1 && !ticket.log_end_time) {
+            if (status != 1 && !ticket.log_end_time && ticket._last_logid > 0) {
               this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
               console.log('status with 1 working and end time is null');
+            } else {
+              this.common.showToast(res["msg"]);
             }
           } else {
             this.common.showError(res["msg"]);
           }
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
         },
         (err) => {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
-          this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+          this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
         }
       );
     } else {
@@ -638,7 +667,8 @@ export class ProjectUserKanbanComponent implements OnInit {
       this.api.post("AdminTask/getTaskByType", params)
         .subscribe((res) => {
           this.common.loading--;
-          console.log("data", res["data"]);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          // console.log("data", res["data"]);
           if (i === 0) {
             //task by me
             this.normalTaskByMeList = (res["data"] || [])
@@ -659,7 +689,7 @@ export class ProjectUserKanbanComponent implements OnInit {
           // if (this.completeOtherTask.length > 0) {
           //   document.getElementById('otherTaskModal').style.display = 'block';
           // }
-          console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
+          // console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 843 ~ ProjectUserKanbanComponent ~ getTaskByType ~ completeOtherTask", this.completeOtherTask)
         },
           (err) => {
             this.common.loading--;
@@ -756,7 +786,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     });
     console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
-      this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+      this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
     });
   }
 
@@ -779,7 +809,7 @@ export class ProjectUserKanbanComponent implements OnInit {
         this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
         console.log('ticket', ticket);
       } else {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }
@@ -818,13 +848,13 @@ export class ProjectUserKanbanComponent implements OnInit {
         } else {
           this.common.showError(res["msg"]);
         }
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       },
       (err) => {
         this.common.loading--;
         this.common.showError();
         console.log("Error: ", err);
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     );
   }
@@ -846,7 +876,7 @@ export class ProjectUserKanbanComponent implements OnInit {
     const activeModal = this.modalService.open(TaskNewComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
       if (data.response) {
-        this.goToBoard({ _id: this.project.projectId, project_desc: this.project.projectName }, (this.project.projectId) ? 1 : this.boardType);
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }

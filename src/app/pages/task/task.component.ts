@@ -232,7 +232,6 @@ export class TaskComponent implements OnInit {
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
       (res) => {
-        console.log("data", res["data"]);
         if (res["code"] > 0) {
           let adminList = res["data"] || [];
           this.adminList = adminList.map((x) => {
@@ -280,7 +279,6 @@ export class TaskComponent implements OnInit {
   getDepartmentList() {
     this.api.get("Admin/getDepartmentList.json").subscribe(
       (res) => {
-        console.log("data", res["data"]);
         if (res["code"] > 0) {
           this.departmentList = res["data"] || [];
         } else {
@@ -298,7 +296,7 @@ export class TaskComponent implements OnInit {
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = { userList: this.adminList };
     const activeModal = this.modalService.open(AddProjectComponent, {
-      size: "lg",
+      size: "xl",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -489,7 +487,7 @@ export class TaskComponent implements OnInit {
           this.common.showToast(res['msg']);
           this.getProcessLeadByType(type);
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -620,6 +618,7 @@ export class TaskComponent implements OnInit {
     this.api.post("AdminTask/getTaskByType", params).subscribe(
       (res) => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         console.log("data", res["data"]);
         this.resetSmartTableData();
         if (type == 101) {
@@ -1718,6 +1717,7 @@ export class TaskComponent implements OnInit {
           this.api.post("AdminTask/deleteTicket", params).subscribe(
             (res) => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res["msg"]);
               this.getTaskByType(type);
             },
@@ -1944,6 +1944,7 @@ export class TaskComponent implements OnInit {
     this.api.post("AdminTask/checkReminderSeen", params).subscribe(
       (res) => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res["msg"]);
         this.getTaskByType(type);
       },
@@ -2087,6 +2088,7 @@ export class TaskComponent implements OnInit {
       this.api.post("AdminTask/updateTodoTask", params).subscribe(
         (res) => {
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.common.showToast(res["msg"]);
           this.getTodoTaskList(0);
         },
@@ -2284,7 +2286,7 @@ export class TaskComponent implements OnInit {
     this.api.get("AdminTask/getScheduledTask?type=1").subscribe(
       (res) => {
         this.common.loading--;
-        console.log("data", res["data"]);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.resetSmartTableData();
         this.scheduleMasterList = res["data"] || [];
         this.setTableScheduleMaster();
@@ -2405,15 +2407,12 @@ export class TaskComponent implements OnInit {
   }
 
   getSearchTask(searchText, searchUserId) {
-    console.log("search:", searchText, "searchUseId:", searchUserId);
-
     let params = "?search=" + searchText + "&searchUserId=" + searchUserId;
     if ((searchText && searchText.trim != "") || searchUserId > 0) {
       this.common.loading++;
       this.api.get("AdminTask/searchTask" + params).subscribe(
         (res) => {
           this.common.loading--;
-          console.log("data", res);
           this.searchTaskList = res["data"];
           if (res["code"] == 1) {
             if (this.searchTaskList && this.searchTaskList.length > 0) {

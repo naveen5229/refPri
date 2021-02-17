@@ -7,8 +7,8 @@
 <div class="modal-body">
     <div class="row" style="margin-bottom:10px">
         <div class="col-4">
-            <label>Fo User</label>
-            <auto-suggestion (onSelected)="selectFoUserList($event)" url="Suggestion/getFoUsersList" apiBase="B" [display]="['name','mobileno']" placeholder="Fo User" seperator="-"></auto-suggestion>
+            <label>Company</label>
+            <auto-suggestion (onSelected)="selectFoUserList($event)" url="Suggestion/getFoUsersList" apiBase="B" [display]="['name','mobileno','provider_name']" placeholder="Name-mob-provider" seperator="-"></auto-suggestion>
         </div>
 
         <div class="col-4">

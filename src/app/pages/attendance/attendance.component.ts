@@ -44,19 +44,17 @@ export class AttendanceComponent implements OnInit {
   getAttendanceList() {
     this.attandanceList = [];
     this.resetTable();
-    // let params = "?date=" + this.common.dateFormatter(this.common.getDate());
     let params = "?date=" + this.common.dateFormatter(this.date) + "&groupId=" + this.selectedGroup;
     this.common.loading++;
     this.api.get('Admin/getAttendanceList.json' + params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.attandanceList = res['data'] || [];
-        console.log(this.attandanceList);
         this.attandanceList.length ? this.setTable() : this.resetTable();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -66,6 +64,7 @@ export class AttendanceComponent implements OnInit {
     this.api.get('UserRole/getUserGroups')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         let groupList = res['data'] || [];
         if (groupList.length) {
           this.groupList = groupList.filter(x => (!x._group_type));

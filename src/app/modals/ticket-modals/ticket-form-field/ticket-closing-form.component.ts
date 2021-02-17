@@ -44,7 +44,7 @@ export class TicketClosingFormComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketFormFieldById?' + params).subscribe(res => {
       this.common.loading--;
-      console.log("resss", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data']) {
         this.ticketFormFields = res['data'];
         this.formatArray();
@@ -193,8 +193,8 @@ export class TicketClosingFormComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-      console.log("evenArray:::", this.evenArray[i]);
-      console.log("oddArray:::", this.oddArray[i]);
+      // console.log("evenArray:::", this.evenArray[i]);
+      // console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
       this.common.showError();

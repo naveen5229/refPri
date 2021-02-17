@@ -63,11 +63,12 @@ export class AddcompanyComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.partnerData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -107,7 +108,6 @@ export class AddcompanyComponent implements OnInit {
     this.common.loading++;
     this.api.getTranstruck(subURL + params)
       .subscribe(res => {
-        console.log(res);
         this.common.loading--;
         if (res['responsecode'] == 1 && res['data'].length) {
           this.languages = res['data'];

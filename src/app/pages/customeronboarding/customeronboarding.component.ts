@@ -126,11 +126,12 @@ export class CustomeronboardingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.FoData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -150,12 +151,13 @@ export class CustomeronboardingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getCompanyuser.json?elCompanyId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.foDetailsData = res['data'];
         this.foDetailsData.length ? this.setTable():this.resetTable();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -249,8 +251,9 @@ export class CustomeronboardingComponent implements OnInit {
         this.common.loading--;
         if(res['success']){
           this.common.showToast(res['msg']);
+        }else{
+          this.common.showError(res['msg']);
         }
-        
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -368,6 +371,8 @@ addOffice(){
         this.common.loading--;
         if(res['success']){
           this.common.showToast(res['msg']);
+        }else{
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -458,11 +463,12 @@ addOffice(){
       this.api.getTranstruck('Admin/getOfficeList?foUserId='+id,'I')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.officeDataForWifi = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }
@@ -566,6 +572,8 @@ addOffice(){
             this.common.loading--;
             if(res['success']){
               this.common.showToast(res['msg']);
+            }else{
+              this.common.showError(res['msg']);
             }
           }, err => {
             this.common.loading--;

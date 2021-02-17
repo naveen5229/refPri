@@ -19,9 +19,9 @@
         }
       }
 
-      th:first-child {
-        width: 60px;
-      }
+      // th:first-child {
+      //   width: 60px;
+      // }
     }
 
     // tbody {
@@ -87,10 +87,13 @@
   input,
   select,
   textarea,
+  [contenteditable],
+  .div-input,
   .nb-theme-corporate nb-layout .layout {
     font-family: "Poppins", sans-serif !important;
     font-size: .8rem;
   }
+
 
   .table-bordered {
     border: 1px solid $light-7;
@@ -141,13 +144,17 @@
 
   input,
   select,
-  textarea {
+  textarea,[contenteditable],
+  .div-input {
     padding: $padding-xs !important;
     font-size: $font-sm-xxl !important;
     line-height: $lh-md !important;
-    height: auto !important;
+    height: auto;
   }
 
+textarea{
+min-height: 28px;  
+}
 
   input {
     &::placeholder {

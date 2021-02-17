@@ -34,7 +34,7 @@ export class WorklogsWithResUserComponent implements OnInit {
     this.common.loading++
     this.api.post("Report/getWorkLogsWrtUser", params).subscribe(res => {
       this.common.loading--;
-      console.log("res", res['data']);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.userWorkDetail = res['data'];
     }, err => {
       this.common.loading--;

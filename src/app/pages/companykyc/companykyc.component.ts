@@ -41,10 +41,11 @@ export class CompanykycComponent implements OnInit {
     this.api.get("Partners/getPartnerListWrtAxestrack.json",'I').subscribe(
       res => {
         this.common.loading--;
-        console.log("datA", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.partnerData = res['data'];
       },err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       }
     );
@@ -71,13 +72,14 @@ export class CompanykycComponent implements OnInit {
     this.api.get("CompanyKyc/getCompanyKycDetails.json?partnerId="+this.partnerid,'I').subscribe(
       res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.data = res['data'];
         this.data1 = this.data;
         this.data.length ? this.filterData() : '';
         this.data.length ? this.setTable() : this.resetTable();
-        console.log("datA", res);
       },err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       }
     );
@@ -223,7 +225,6 @@ export class CompanykycComponent implements OnInit {
     this.api.post("CompanyKyc/updateKycStatus.json",params,'I').subscribe(
     res => {
       this.common.loading--;
-      console.log("Update Kyc Status :", res);
       if(res['success']){
         this.common.showToast(res['msg']);
         this.getAllFoUserPendingKyc();
@@ -232,7 +233,7 @@ export class CompanykycComponent implements OnInit {
       }
     },err => {
       this.common.loading--;
-      
+      this.common.showError();
       console.log(err);
     }
   );
@@ -251,7 +252,6 @@ export class CompanykycComponent implements OnInit {
     this.api.post("CompanyKyc/updateKycStatus.json",params,'I').subscribe(
     res => {
       this.common.loading--;
-      console.log("Update Kyc Status :", res);
       if(res['success']){
         this.common.showToast(res['msg']);
         this.getAllFoUserPendingKyc();
@@ -260,9 +260,9 @@ export class CompanykycComponent implements OnInit {
       }
     },err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
-    }
-  );
+    });
   }
 
   showRc(req){

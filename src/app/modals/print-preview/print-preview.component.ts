@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
+import { CommonService } from '../../Service/common/common.service';
 
 @Component({
   selector: 'ngx-print-preview',
@@ -24,7 +25,7 @@ export class PrintPreviewComponent implements OnInit {
   };
   constructor(   
      public activeModal: NgbActiveModal,
-     public api: ApiService,
+     public api: ApiService, public common: CommonService,
     ) {this.getCampaignTargetData(),
       this.setTable() }
 
@@ -45,25 +46,23 @@ export class PrintPreviewComponent implements OnInit {
       headings: this.generateHeadings(),
       columns: this.getTableColumns()
     };
-    console.log(this.table);
     return true;
   }
    getCampaignTargetData() {
     const params = {campId: this.campaignid}
-    console.log('get camp id',params);
     // this.resetTable();
     // this.common.loading++;
     this.api.get('Campaigns/getCampTarget?campId='+15)
       .subscribe(res => {
         // this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.campaignTargetData = res['data'];
-        console.log(this.campaignTargetData);
         this.campaignTargetData.length ? this.setTable() : this.setTable();
 
       }, err => {
         // this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

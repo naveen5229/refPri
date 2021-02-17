@@ -47,11 +47,11 @@ export class SendmessageComponent implements OnInit {
     this.common.loading++;
     this.api.get('WhatsappWeb/getWhatsAppAdmin')
       .subscribe(res => {
+        this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.mesaageData.assigned = res['data'].map(user => {
           return { admin_name: user.admin_name, admin_id: user.admin_id, admin_mobileno: user.admin_mobileno }
         });
-        this.common.loading--;
-        console.log(res)
         this.messageDataList = res['data']
         console.log("pa", this.messageDataList)
       }, err => {

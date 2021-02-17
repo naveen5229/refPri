@@ -148,8 +148,6 @@ export class UserEsclationComponent implements OnInit {
   }
 
   saveEsclation() {
-    console.log(this.esclationMatrix);
-    // return;
     let params = {
       processId: this.esclationMatrix.processID,
       actionId: this.esclationMatrix.actionId,
@@ -176,6 +174,7 @@ export class UserEsclationComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     });
   }

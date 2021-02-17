@@ -75,6 +75,7 @@ export class TicketAdminComponent implements OnInit {
     this.api.get("Ticket/getTicketSummaryByType"+params).subscribe(res => {
       this.common.loading--;
       this.resetSmartTableData();
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if(type==999){
         this.currentTicketList = res['data'] || [];
         this.setTableCurrent(type);

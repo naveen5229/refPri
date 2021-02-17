@@ -86,7 +86,7 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Project User Kanban',
+        title: 'Task Kanban',
         icon: 'grid-outline',
         link: '/pages/project-user-kanban-board',
         home: true,
@@ -95,6 +95,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Task-Admin',
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',
+        home: true,
+      },
+      {
+        title: 'Admin-Kanban',
+        icon: 'file-text-outline',
+        link: '/pages/admin-kanban',
         home: true,
       },
       {

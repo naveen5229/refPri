@@ -72,7 +72,6 @@ export class ReminderComponent implements OnInit { //carefully change use on mul
       ticket_id: this.ticketId,
       remindtime: this.common.dateFormatter(this.reminder.date).split(' ')[0] + ' ' + (this.reminder.time < '10' ? '0' + this.reminder.time : this.reminder.time) + ":" + (this.reminder.minutes < 10 ? '0' + this.reminder.minutes : this.reminder.minutes)
     };
-    console.log('Params: ', params);
     if (!this.reminder.date) {
       this.common.showError('Select A Date!');
       return;
@@ -87,8 +86,6 @@ export class ReminderComponent implements OnInit { //carefully change use on mul
       this.closeModal(true);
       return;
     }
-
-    // return false;
     let apiName;
     if (this.fromPage && this.fromPage == "ticket") {
       apiName = 'Ticket/setTicketReminderTime.json';

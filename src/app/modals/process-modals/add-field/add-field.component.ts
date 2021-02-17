@@ -91,7 +91,7 @@ export class AddFieldComponent implements OnInit {
         { id: 'text', name: 'Text' },
         { id: 'number', name: 'Number' },
         { id: 'date', name: 'Date' },
-        // { id: 'table', name: 'Table' },
+        { id: 'table', name: 'Table' },
         { id: 'checkbox', name: 'Checkbox' },
         { id: 'attachment', name: 'Attachment' }
       ];
@@ -138,7 +138,6 @@ export class AddFieldComponent implements OnInit {
     this.common.loading++;
     this.api.get(api + params).subscribe(res => {
       this.common.loading--;
-      console.log("getGlobalFormField", res);
       if (res['code'] == 1) {
         this.globalFiledList = res['data'] || [];
       } else {
@@ -184,7 +183,6 @@ export class AddFieldComponent implements OnInit {
       order: this.order,
       param_child: childArray
     }
-    console.log("type:", this.typeId);
     let params = {
       refid: this.refId,
       refType: this.refType,
@@ -193,7 +191,6 @@ export class AddFieldComponent implements OnInit {
       requestId: (this.fieldId > 0) ? this.fieldId : null,
       isDelete: 0
     }
-    console.log("params", params);
 
     let error_count = false;
     if (tmpJson.type === 'table') {
@@ -218,16 +215,14 @@ export class AddFieldComponent implements OnInit {
     this.api.post(apiName, params)
       .subscribe(res => {
         this.common.loading--;
-        console.log(res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
           this.resetData();
           this.getFieldName();
-        }
-        else {
+        }else {
           this.common.showError(res['data'][0].y_msg);
         }
-
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -247,24 +242,14 @@ export class AddFieldComponent implements OnInit {
         this.resetTable();
         this.headings = [];
         this.valobj = {};
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
 
         if (!res['data']) return;
         this.data = res['data'];
         this.data.length ? this.setTable() : this.resetTable();
-        // let first_rec = this.data[0];
-        // for (var key in first_rec) {
-        //   if (key.charAt(0) != "_") {
-        //     this.headings.push(key);
-        //     let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
-        //     this.table.data.headings[key] = headerObj;
-        //   }
-        // }
-        // let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
-        // this.table.data.headings['action'] = action;
-        // this.table.data.columns = this.getTableColumns();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -345,9 +330,6 @@ export class AddFieldComponent implements OnInit {
 
   deleteRow(row) {
     if (row._matrixid) {
-      // let params = {
-      //   id: row._matrixid,
-      // }
       let params = {
         refid: this.refId,
         refType: this.refType,
@@ -363,7 +345,6 @@ export class AddFieldComponent implements OnInit {
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
-          // this.api.post('Processes/deleteProcessMatrix', params).subscribe(res => {
           let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
           // console.log("apiName:", apiName,params); return false;
           this.common.loading++;
@@ -381,6 +362,7 @@ export class AddFieldComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }

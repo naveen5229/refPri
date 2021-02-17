@@ -88,6 +88,7 @@ export class GenericModelComponent implements OnInit {
       this.api.getTranstruck(this.viewObj.api)
       .subscribe(res => {
         this.common.loading--;
+        // if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         this.data = res['data'];
         this.common.showToast(res['msg'])
         console.log(this.data);
@@ -112,6 +113,7 @@ export class GenericModelComponent implements OnInit {
     } else {
       this.api.get(this.viewObj.api)
       .subscribe(res => {
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['code'] == 3) {
           this.common.showError(res['data']);
           this.common.loading--;

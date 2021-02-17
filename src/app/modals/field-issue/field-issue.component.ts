@@ -116,6 +116,7 @@ export class FieldIssueComponent implements OnInit {
     this.api.get("Grid/getRequestType")
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.requestTypes = res['data'] || [];
         console.log(this.requestTypes);
       }, err => {
@@ -130,6 +131,7 @@ export class FieldIssueComponent implements OnInit {
     this.api.get("Grid/getDeviceModals")
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.deviceModals = res['data'] || [];
         console.log(this.requestTypes);
       }, err => {
@@ -164,7 +166,7 @@ export class FieldIssueComponent implements OnInit {
     this.requestData.company.name = '';
     if (event.id) {
       this.api.get("Suggestion/getCompanyName?search=&partnerId=" + event.id).subscribe(res => {
-        console.log("getCompanyName:", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.companyList = res['data'];
       }, err => {
         this.common.showError();
@@ -181,14 +183,10 @@ export class FieldIssueComponent implements OnInit {
     }
     let params = {
       requestId: this.requestData.requestId,
-      // driverName: this.requestData.driver_name,
-      // driverMobileno: this.requestData.driver_mobileno,
       supervisorName: this.requestData.supervisor_name,
       supervisorMobileno: this.requestData.supervisor_mobileno,
       requestTypeId: this.requestData.request_type.id,
       companyId: this.requestData.company.id,
-      // regno: this.requestData.regno,
-      // deviceModelId: this.requestData.device_model.id,
       simProviderId: this.requestData.sim_provider_id,
       location: this.requestData.location,
       lat: this.requestData.lat,
@@ -203,8 +201,6 @@ export class FieldIssueComponent implements OnInit {
         }
       }))
     }
-    console.log("params:", params);
-
     if (this.requestData.supervisor_name != '' && this.requestData.supervisor_mobileno != '' &&
       this.requestData.company.id && this.requestData.request_type.id != null
       && this.requestData.location != null) {
@@ -212,7 +208,6 @@ export class FieldIssueComponent implements OnInit {
       this.api.post('Grid/addFieldSupportRequest', params)
         .subscribe(res => {
           this.common.loading--;
-          console.log(res);
           if (res['code'] > 0) {
             if (res['data'][0]['y_id'] > 0) {
               this.common.showToast(res['data'][0].y_msg)

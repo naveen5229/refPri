@@ -69,11 +69,12 @@ export class ShowInstallerComponent implements OnInit {
     this.api.get('Installer/getAllInstallerLocationList.json?')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.installerList = res['data'] || [];
-        console.log('after get data call api', this.installerList);
         this.createInstallerMarkers();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -88,11 +89,12 @@ export class ShowInstallerComponent implements OnInit {
     this.api.post('Installer/getNearestInstallerList.json?', params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.installerList = res['data'] || [];
-        console.log('getNearestInstallerList:', this.installerList);
         this.createInstallerMarkers();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

@@ -64,8 +64,6 @@ export class AddProcessPropertyComponent implements OnInit {
   }
 
   savePropertyList(){
-    console.log(this.processPropertyForm);
-
     let params = {
       actionId:this.processPropertyForm.actionId,
       priCatId:this.processPropertyForm.priCatId.id,
@@ -99,6 +97,7 @@ export class AddProcessPropertyComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     });
   }

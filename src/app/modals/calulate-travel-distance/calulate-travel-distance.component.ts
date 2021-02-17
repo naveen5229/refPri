@@ -118,10 +118,12 @@ export class CalulateTravelDistanceComponent implements OnInit {
     this.api.get('Admin/getAllAdmin.json')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.adminList = res['data'] || [];
         console.log(this.adminList);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -136,7 +138,7 @@ export class CalulateTravelDistanceComponent implements OnInit {
       this.api.get("Location/getLatLongBtwTime.json?" + params)
         .subscribe(res => {
           this.common.loading--;
-          console.log(res);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           let travelDistanceLatLng = res['data'] || [];
           travelDistanceLatLng[0]['wayPoints'].forEach((element, index) => {
             element.label = index + 1;
@@ -316,7 +318,7 @@ export class CalulateTravelDistanceComponent implements OnInit {
     console.log('time:', id, lat, lng, time);
     const params = `userId=${id}&lat=${lat}&long=${lng}&time=${time}`;
     this.api.get("Admin/getImageOnClick?" + params).subscribe((res: any) => {
-      console.log('res:', res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.imageArrayonMap = res.data || []
       console.log('images:', this.imageArrayonMap);
       this.showImages(lat, lng);

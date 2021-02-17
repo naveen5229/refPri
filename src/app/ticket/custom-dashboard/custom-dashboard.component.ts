@@ -94,6 +94,7 @@ export class CustomDashboardComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let tpList = res['data'] || [];
       this.tpList = tpList.filter(ele => {
         return (ele._is_active)
@@ -278,6 +279,7 @@ export class CustomDashboardComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/checkTicketReminderSeen", params).subscribe((res) => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res["msg"]);
       this.getTicketByType(type);
     }, (err) => {

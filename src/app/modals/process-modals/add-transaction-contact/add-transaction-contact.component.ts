@@ -54,12 +54,13 @@ export class AddTransactionContactComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getTransactionContacts?' + params).subscribe(res => {
       this.common.loading--;
-      console.log("api data", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.transContactList = res['data'] || [];
       this.transContactList.length ? this.setTable() : this.resetTable();
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -119,7 +120,6 @@ export class AddTransactionContactComponent implements OnInit {
   }
 
   callSync(lead) {
-    console.log("callSync:", lead);
     let params = {
       mobileno: lead.mobile
     }
@@ -134,6 +134,7 @@ export class AddTransactionContactComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error: ', err);
     });
   }
@@ -162,6 +163,7 @@ export class AddTransactionContactComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -181,7 +183,6 @@ export class AddTransactionContactComponent implements OnInit {
     this.api.post("Processes/addTransactionContact ", params)
       .subscribe(res => {
         this.common.loading--;
-        console.log(res);
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['msg']);
@@ -195,6 +196,7 @@ export class AddTransactionContactComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

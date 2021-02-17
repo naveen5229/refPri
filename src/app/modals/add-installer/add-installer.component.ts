@@ -116,7 +116,6 @@ export class AddInstallerComponent implements OnInit {
       baseLat: this.installerData.baseLat,
       baseLong: this.installerData.baseLong
     }
-    console.log(params);
 
     if (this.installerData.name == '' || this.installerData.mobileno == '' ||
       this.installerData.partner.id == null || this.installerData.location == null || this.installerData.location == ''
@@ -128,7 +127,6 @@ export class AddInstallerComponent implements OnInit {
     this.api.post('Installer/addNewInstaller', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log(res);
         if (res['code'] > 0) {
           this.common.showToast(res['msg']);
           this.closeModal(true);

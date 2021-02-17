@@ -70,9 +70,8 @@ export class EmployeeMonthlyReportComponent implements OnInit {
     this.common.loading++;
     this.api.post('Report/getEmployeeMonthlyReport', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.attendances = res['data'];
-      //this.table = this.setTable();
-      console.log("++---++-+-+-+-+-+", this.attendances)
       this.formattData()
       this.common.showToast(res['msg'])
     },

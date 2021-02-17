@@ -86,6 +86,7 @@ export class OnSiteImagesComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.processList = res['data'];
     }, err => {
@@ -124,6 +125,7 @@ export class OnSiteImagesComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
