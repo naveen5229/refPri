@@ -314,7 +314,7 @@ export class TaskKanbanComponent implements OnInit {
         if (element.data) {
           element.data.forEach(data => {
             // userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title });
-            data['text_color'] = (this.common.getDate() > new Date(data.due_date)) ? "text-danger" : '';
+            data['text_color'] = ((![5,-1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
             let finduser = (userGroup && userGroup.length>0) ? userGroup.find(x=>{return x.id==data.userid}) : null;
             if(finduser){
               (!['complete','rejected','hold'].includes(element.title.toLowerCase()) ) ? finduser['count']++ : null;
