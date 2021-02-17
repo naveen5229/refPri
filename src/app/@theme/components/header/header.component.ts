@@ -121,27 +121,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.api.post(apiCall, params)
         .subscribe(res => {
           this.common.loading--;
-          if (res['success']) {
+          if (res['code']>0) {
             this.userService._token = '';
             this.userService._details = null;
-
             localStorage.removeItem('ITRM_USER_TOKEN');
             localStorage.removeItem('ITRM_USER_DETAILS');
             localStorage.removeItem('ITRM_LOGGED_IN_BY');
             localStorage.removeItem('ITRM_USER_PAGES');
-
             this.common.showToast(res['msg']);
             if (loggedInBy == 'customer') {
               this.router.navigate(['/auth/login']);
             } else {
               this.router.navigate(['/auth/login/admin']);
             }
+          }else{
+            this.common.showError(res['msg']);
           }
-        },
-          err => {
-            this.common.loading--;
-            this.common.showError();
-          });
+        },err => {
+          this.common.loading--;
+          this.common.showError();
+        });
     }
   }
   refresh() {

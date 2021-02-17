@@ -75,6 +75,7 @@ export class SettingsComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessState?processId=" + this.process_Info._id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let stateDataList = res['data'] || [];
       stateDataList = stateDataList.filter(x => (x._type_id == 1));
       if (stateDataList && stateDataList.length) {
@@ -92,6 +93,7 @@ export class SettingsComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessActionByState?processId=" + this.process_Info._id + "&stateId=" + event.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let actionDataList = res['data'] || [];
       this.actionDataList = actionDataList.map(x => { return { id: x._action_id, name: x.name, threshold: x._threshold } });
     }, err => {
@@ -105,6 +107,7 @@ export class SettingsComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessSetting?processId=" + this.process_Info._id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.PreFilledData = res['data'] || [];
       this.setData();
     }, err => {
@@ -121,16 +124,7 @@ export class SettingsComponent implements OnInit {
     this.transaction.isDeleted = { id: this.PreFilledData[0]._delete_txn, name: this.PreFilledData[0].delete_txn };
     this.transaction.txnNoti = { id: this.PreFilledData[0]._txn_notification, name: this.PreFilledData[0].txn_notification };
     this.transaction.isEndByActionOwn = { id: this.PreFilledData[0]._state_change, name: this.PreFilledData[0].state_change };
-    // if (this.PreFilledData[0]._to_mark_outstate == 0 || this.PreFilledData[0]._to_mark_outstate == null) {
-    //   this.transaction.isEndByActionOwn = { id: 0, name: 'only admin and PO' };
-    // } else if (this.PreFilledData[0]._to_mark_outstate == 1) {
-    //   this.transaction.isEndByActionOwn = { id: 1, name: 'admin, PO and Action owner' };
-    // } else if (this.PreFilledData[0]._to_mark_outstate == 2) {
-    //   this.transaction.isEndByActionOwn = { id: 2, name: 'admin, po and action owner with txn complete permission' };
-    // }
-
     if (this.transaction.default_State.id > 0) {
-      // this.showOtherFields = true;
       this.stateId = this.transaction.default_State;
       this.getActionList(this.stateId)
     }
@@ -176,8 +170,6 @@ export class SettingsComponent implements OnInit {
       isDeleted: this.transaction.isDeleted.id,
       txnNotification: this.transaction.txnNoti.id
     }
-    // console.log(params, 'params');
-
     this.common.loading++;
     this.api.post("Processes/addProcessSetting", params).subscribe(res => {
       this.common.loading--;
@@ -193,6 +185,7 @@ export class SettingsComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }

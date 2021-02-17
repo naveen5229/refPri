@@ -51,30 +51,24 @@ export class OnSiteImagesSummaryComponent implements OnInit {
     let startDate = this.common.dateFormatter(this.startDate);
     let endDate = this.common.dateFormatter(this.endDate);
     const params = `?startDate=${startDate}&endDate=${endDate}`;
-    console.log(params);
-    // return;
+    // console.log(params);return;
     this.common.loading++;
     this.api.get('Admin/getOnSiteImagesSummary' + params, 'I')
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
         if (res['code'] > 0) {
           if (res['data']) {
             this.adminReportList = res['data'] || [];
             this.adminReportList.length ? this.setTable() : this.setTable();
-            console.log(this.adminReportList);
           }
         } else {
           this.common.showError(res['msg']);
         }
-
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
-
-
   }
 
   setTable() {

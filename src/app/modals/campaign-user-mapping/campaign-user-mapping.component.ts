@@ -79,13 +79,10 @@ export class CampaignUserMappingComponent implements OnInit {
       campaignId: this.campaignId,
       users: JSON.stringify(this.selectedUserList),
     }
-    console.log(params);
     this.common.loading++;
     this.api.post('Campaigns/addCampUserMapping', params).subscribe(res => {
-      console.log(res);
       this.common.loading--;
       if (res['code'] == 1) {
-        // this.resetTask();
         if (res['data'][0]['y_id'] > 0) {
           this.common.showToast(res['data'][0].y_msg)
           this.closeModal();
@@ -95,12 +92,11 @@ export class CampaignUserMappingComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
 }

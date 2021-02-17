@@ -69,13 +69,14 @@ export class TaskAssignUserComponent implements OnInit {
     this.api.get('Segment/getAllSegments')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.moduleName = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
-
 
   changeSegment(event) {
     this.task.segmentId = event.id;
@@ -87,27 +88,28 @@ export class TaskAssignUserComponent implements OnInit {
     }
     this.api.post('Task/getAssigneeWrtTask', params)
       .subscribe(res => {
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.task.assigned = res['data'].map(user => {
           return { name: user.assigneename, id: user._empid }
         });
         this.task.assignedId = res['data'].map(user => { return { assignee_id: user._empid } });
-        console.log(this.task.assigned)
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
-
 
   assignerList() {
     this.common.loading++;
     this.api.get('Suggestion/getEmployeeList')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.assigneeLists = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -140,19 +142,13 @@ export class TaskAssignUserComponent implements OnInit {
     let endDate = this.common.dateFormatter(this.task.endDate);
     if (this.task.segmentId == null) {
       return this.common.showError("Segment name is missing")
-    }
-    else if (this.task.assignerId == null) {
+    }else if (this.task.assignerId == null) {
       return this.common.showError("Assigner name is missing")
-
-    }
-    else if (this.task.assignedId == []) {
+    }else if (this.task.assignedId == []) {
       return this.common.showError("Assigned name is missing")
-
-    }
-    else if (this.task.title == '') {
+    }else if (this.task.title == '') {
       return this.common.showError("Title is missing")
-    }
-    else if (this.task.id != null) {
+    }else if (this.task.id != null) {
       return this.updateData();
     }
     const params = {
@@ -165,24 +161,21 @@ export class TaskAssignUserComponent implements OnInit {
       reviewTime: endDate,
       status: 0
     }
-    console.log("params", params)
     this.common.loading++;
     this.api.post('Task/addTask', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data'][0]['y_id'] > 0) {
         this.common.showToast(res['data'][0].y_msg)
         this.closeModal(true);
-      }
-      else {
+      }else {
         this.common.showError(res['data'][0].y_msg)
       }
-
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   updateData() {
@@ -199,23 +192,20 @@ export class TaskAssignUserComponent implements OnInit {
       taskId: this.task.id,
       reviewTime: endDate
     }
-
-    console.log("params", params)
     this.common.loading++;
     this.api.post('Task/updateTask', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data'][0]['y_id'] > 0) {
         this.common.showToast(res['data'][0].y_msg)
         this.closeModal(true);
-      }
-      else {
+      }else {
         this.common.showError(res['data'][0].y_msg)
       }
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 }

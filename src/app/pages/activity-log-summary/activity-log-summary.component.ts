@@ -29,39 +29,30 @@ export class ActivityLogSummaryComponent implements OnInit {
 
   getActivityLogSummary() {
     this.filteredActivityLogSummaryList = [];
-
     let startdate = this.common.dateFormatter1(this.startTime);
     let enddate = this.common.dateFormatter1(this.endTime);
-
     const params =
       "?startDate=" + startdate +
       "&endDate=" + enddate;
-    // console.log(params);
     this.common.loading++;
     this.api.get('Admin/getActivityLogSummaryDepartmentwise' + params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['code'] == 3) {
           this.common.showError(res['data']);
-
         } else {
-        console.log('res:', res);
         this.activityLogSummaryList = res['data'] || [];
         this.filterData = _.groupBy(this.activityLogSummaryList, 'datetime');
-          console.log(this.filterData);
           Object.keys(this.filterData).map(key => {
             this.filteredActivityLogSummaryList.push({date: key, data: _.sortBy(this.filterData[key], 'name')});
           })
-          console.log(this.filteredActivityLogSummaryList[0]['data']);
-
       }
-    }
-      , err => {
+    }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
-
-
   }
 
 }

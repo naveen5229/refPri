@@ -122,10 +122,9 @@ export class AddGlobalFieldComponent implements OnInit {
     this.api.get('Entities/getEntityTypes')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.entityTypeList = res['data'] || [];
-
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -216,12 +215,11 @@ export class AddGlobalFieldComponent implements OnInit {
     if(this.fromPage==3){
       apiName = "Entities/addEntityGlobalField";
     }
-    console.log("apiName:", apiName,params); 
-    // return false;
+    // console.log("apiName:", apiName,params); return false;
     this.common.loading++;
     this.api.post(apiName, params).subscribe(res => {
         this.common.loading--;
-        console.log(res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
           this.getProcessGlobalField();
@@ -246,6 +244,7 @@ export class AddGlobalFieldComponent implements OnInit {
     this.common.loading++;
     this.api.get(apiName + params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.globalFieldList =  res['data'] || [];
         (this.globalFieldList && this.globalFieldList.length) ? this.setTable() : this.resetTable();
       }, err => {
@@ -351,8 +350,7 @@ export class AddGlobalFieldComponent implements OnInit {
           if(this.fromPage==3){
             apiName = "Entities/addEntityGlobalField";
           }
-          console.log("apiName:", apiName,params); 
-          // return false;
+          // console.log("apiName:", apiName,params); return false;
           this.common.loading++;
           this.api.post(apiName, params).subscribe(res => {
             this.common.loading--;
@@ -368,6 +366,7 @@ export class AddGlobalFieldComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -455,6 +454,7 @@ export class AddGlobalFieldComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       });
     } else {

@@ -45,11 +45,12 @@ export class AppComponent implements OnInit {
     console.log(params);
     this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
       .subscribe(res => {
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.user._pages = res['data'].filter(page => { return page._userid; });
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");
       }, err => {
+        this.common.showError();
         console.log('Error: ', err);
       })
   }

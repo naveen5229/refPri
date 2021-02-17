@@ -124,6 +124,7 @@ export class EntityDeatilsComponent implements OnInit {
     this.common.loading++;
     this.api.get('Entities/getEntityTypes').subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.entityTypeData = res['data'];
         let entityForManuplation = res['data'];
@@ -190,6 +191,7 @@ export class EntityDeatilsComponent implements OnInit {
     this.common.loading++;
     this.api.get('Entities/getEntities').subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.entitiesData = res['data'];
         this.entitiesData.length ? this.setEntitiesData() : this.resetEntitiesData();
@@ -301,6 +303,7 @@ export class EntityDeatilsComponent implements OnInit {
     this.api.get('Entities/getEntityContact' + param)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.contactDataList = res['data'];
         this.contactDataList.length ? this.setcontactData() : this.resetcontactData();
@@ -392,7 +395,7 @@ export class EntityDeatilsComponent implements OnInit {
         }
         this.closeEntityContactFields();
       } else {
-        this.common.showError(res['data']);
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.common.loading--;
@@ -445,6 +448,7 @@ export class EntityDeatilsComponent implements OnInit {
     this.common.loading++;
     this.api.get("Entities/getEntityGlobalField" + params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         let entityFormFields =  res['data'] || [];
         if(entityFormFields && entityFormFields.length){
           for(let i=0;i< entityFormFields.length;i++){

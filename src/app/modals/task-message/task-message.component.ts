@@ -282,7 +282,7 @@ export class TaskMessageComponent implements OnInit {
           this.common.fileLinkHandler('chat_block');
         }, 500);
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.showLoading = false;
@@ -685,6 +685,7 @@ export class TaskMessageComponent implements OnInit {
       this.common.loading++;
       this.api.post('AdminTask/checkReminderSeen', params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res['msg']);
         this.ticketData._isremind = 0;
       }, err => {
@@ -920,7 +921,7 @@ export class TaskMessageComponent implements OnInit {
         this.messageHistoryList = res['data'] || [];
         this.scrollHistoryChat();
       } else {
-        this.common.showError(res['data']);
+        this.common.showError(res['msg']);
       }
     }, err => {
       this.showLoading = false;

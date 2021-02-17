@@ -87,9 +87,8 @@ export class LoginComponent implements OnInit {
     if (this.user._loggedInBy == 'customer') {
       this.common.loading++;
       this.api.post('FoAdmin/login', params).subscribe(res => {
-        console.log("login res:", res);
         this.common.loading--;
-        if (res['success']) {
+        if (res['code']>0) {
           this.listenOTP = true;
           this.otpCount = 30;
           if (res['data'] && res['data']['login_type'] && res['data']['login_type'] > 0) {
@@ -113,7 +112,7 @@ export class LoginComponent implements OnInit {
       this.api.post('Login/login', params)
         .subscribe(res => {
           this.common.loading--;
-          if (res['success']) {
+          if (res['code']>0) {
             this.listenOTP = true;
             this.otpCount = 30;
             this.qrCodeRegenrate();
@@ -256,15 +255,15 @@ export class LoginComponent implements OnInit {
     this.common.loading++;
     this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
       .subscribe(res => {
-        console.log(res);
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.user._pages = res['data'].filter(page => { return page._userid; });
-        console.log("_pages:", this.user._pages);
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");
         this.router.navigate(['/pages/task']);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       })
   }

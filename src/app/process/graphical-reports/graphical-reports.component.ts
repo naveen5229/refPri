@@ -106,11 +106,12 @@ dropdownFilter = [];
     this.common.loading++;
     this.api.get('Processes/getProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.processList = res['data'];
-
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -130,6 +131,7 @@ dropdownFilter = [];
     this.common.loading++;
     this.api.get(`Processes/getAllReportFieldsForNav?processId=${this.processId['_id']}`).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.resetSidebarData();
       this.resetAssignForm();
@@ -141,10 +143,9 @@ dropdownFilter = [];
           }
         })
       })
-      console.log('Data:',this.sideBarData);
-
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -155,15 +156,13 @@ dropdownFilter = [];
       this.common.loading--;
       this.savedReports = [];
       if(res['code'] == 1){
-      // if (!res['data']) return;
-      this.savedReports = res['data']?res['data']:[];
+        this.savedReports = res['data']?res['data']:[];
       }else{
         this.common.showError(res['msg']);
       }
-      console.log('savedData:',this.savedReports);
-
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -299,12 +298,10 @@ dropdownFilter = [];
     document.getElementById('rowFilter').style.display = 'none';
     document.getElementById('basicFilter').style.display = 'block';
     this.filterObject = _.clone(data);
-    // console.log('filter_Object',this.filterObject)
     let params = {
       processId:this.processId['_id'],
       info:JSON.stringify(this.filterObject),
     }
-
     let checkCount = 0;
     this.dropdownFilter.map(ele=>{
       if(ele.status){
@@ -316,7 +313,6 @@ dropdownFilter = [];
     }else{
       this.checked= false
     }
-
     this.common.loading++;
     this.api.post('Processes/getFilterList',params).subscribe(res=>{
       this.common.loading--;
@@ -326,9 +322,9 @@ dropdownFilter = [];
       }else{
         this.common.showError(res['msg'])
       }
-      console.log(res['data'])
     },err=>{
       this.common.loading--;
+      this.common.showError();
       console.log('Error:',err)
     })
     
@@ -631,11 +627,11 @@ dropdownFilter = [];
           }
         
       }else{
-        this.common.loading--;
         this.common.showError(res['msg']);
       }
     },err=>{
       this.common.loading--;
+      this.common.showError();
       console.log('Error:',err)
     })
   }else{
@@ -649,8 +645,6 @@ dropdownFilter = [];
         ele.measure = 'Count';
       }
     });
-    // console.log('data to send',this.assign.data)
-    // return;
     let info = {x:this.assign.x,y:this.assign.y};
       let params = {
       processId:this.processId['_id'],
@@ -663,28 +657,25 @@ dropdownFilter = [];
       this.api.post('Processes/getPreviewGraphicalReport',params).subscribe(res=>{
           this.common.loading--;
           if(res['code'] == 1){
-            console.log('Response:',res);
             if(res['data']){
-            this.reportPreviewData = res['data'];
-            if(this.reportPreviewData.length>1){
-              this.active = 2;
-              this.selectedChart = 'bar';
+              this.reportPreviewData = res['data'];
+              if(this.reportPreviewData.length>1){
+                this.active = 2;
+                this.selectedChart = 'bar';
+              }else{
+                this.active = 1;
+                this.selectedChart = 'pie';}
+              this.getChartofType(this.selectedChart);
             }else{
-              this.active = 1;
-              this.selectedChart = 'pie';}
-            console.log('chart data',this.reportPreviewData)
-            // this.showChart(this.reportPreviewData,'pie');
-            this.getChartofType(this.selectedChart);
-          }else{
-            // this.resetAssignForm();
-            this.common.showError('No Data to Display');
-            this.graphPieCharts.forEach(ele => ele.destroy());
-          }
+              this.common.showError('No Data to Display');
+              this.graphPieCharts.forEach(ele => ele.destroy());
+            }
           }else{
             this.common.showError(res['msg'])
           }
       },err=>{
         this.common.loading--;
+        this.common.showError();
         console.log('Error:',err)
       })
     }else{

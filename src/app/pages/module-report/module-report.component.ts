@@ -39,9 +39,11 @@ export class ModuleReportComponent implements OnInit {
   getModuleList() {
     this.api.get('Suggestion/getModules')
       .subscribe(res => {
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.moduleList = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -66,11 +68,13 @@ export class ModuleReportComponent implements OnInit {
     this.api.post("Report/getModuleSegmentWrtPeriod", params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.moduleData = res['data'] || [];
         this.isSubmit = true;
         this.dataFormatted();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

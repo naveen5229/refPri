@@ -47,21 +47,14 @@ export class UserComponent implements OnInit {
   saveUser() {
     if (this.users.employee == null) {
       return this.common.showError("Employee name is missing")
-    } 
-    else if (this.users.mobile == '' ) {
+    }else if (this.users.mobile == '' ) {
       return this.common.showError("Employee mobile no. is missing")
-    }
-    else if(this.users.mobile.length!=10 ){
+    }else if(this.users.mobile.length!=10 ){
       console.log("inner console")
       return this.common.showError("Employee mobile no. is incorrect")
-
-    } 
-    
-    else if (this.department == '0') {
+    }else if (this.department == '0') {
       return this.common.showError("Choose any Department")
-    }
-    else if(this.id==null){
-      
+    }else if(this.id==null){ 
     const params = {
       emailid: this.users.email,
       mobileno: this.users.mobile,
@@ -78,15 +71,13 @@ export class UserComponent implements OnInit {
       };
       this.department = '0';
       if(res['success']==true){
-      this.getUser()
-      this.common.showToast("User Created")
+        this.getUser()
+        this.common.showToast("User Created")
       }else{
         this.common.showError(res['msg']);
       }
-    },
-      err => {
+    },err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
@@ -104,7 +95,6 @@ export class UserComponent implements OnInit {
          .subscribe(res => {
            this.common.loading--;
            this.common.showToast(res['msg']);
-           console.log("res", res);
            if (res['success']) {
             this. users = {
               email: null,
@@ -112,10 +102,10 @@ export class UserComponent implements OnInit {
               employee: null,
             };
             this.id=null;
-
             this.department = '0';
             this.getUser();
-
+           }else{
+             this.common.showError(res['msg']);
            }
          }, err => {
            this.common.loading--;
@@ -139,17 +129,14 @@ export class UserComponent implements OnInit {
 
   getUser() {
     this.common.loading++;
-
     this.api.get("Users/getAllUsers").subscribe(res => {
       this.common.loading--;
-
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.user = res['data'] || [];
-
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   deleteUser(userId, rowIndex) {
@@ -161,7 +148,6 @@ export class UserComponent implements OnInit {
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log('res', data);
       if (data.response) {
     let params = {
       user_id: userId
@@ -170,10 +156,11 @@ export class UserComponent implements OnInit {
     this.api.post('Users/deleteUser', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("res", res);
         if (res['success']) {
           this.common.showToast(" Sucessfully Delete the existing user");
           this.user.splice(rowIndex, 1);
+        }else{
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;

@@ -42,15 +42,15 @@ export class UserWiseExpensesComponent implements OnInit {
 
   getAdmin() {
     this.adminList = [];
-
     this.common.loading++;
     this.api.get('Admin/getAllAdmin.json')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.adminList = res['data'] || [];
-        console.log(this.adminList);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -72,17 +72,17 @@ export class UserWiseExpensesComponent implements OnInit {
     this.adminWiseList = [];
     this.api.get('Admin/getOnSiteExpensesByUser?' + param)
       .subscribe(res => {
+        this.common.loading--;
         if (res['code'] == 1) {
-          this.common.loading--;
           this.adminWiseList = res['data'] || [];
           this.setTree();
           this.updateExpenseArray();
         } else {
-          this.common.loading--;
           this.common.showError(res['msg']);
         }
       }, (err) => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -191,7 +191,11 @@ export class UserWiseExpensesComponent implements OnInit {
           this.common.showToast(res['data'][0]['y_msg']);
           this.showAdminWiseWagesList();
         }
+      }else{
+        this.common.showError(res['msg']);
       }
+    },err=>{
+      this.common.showError();
     })
   }
 

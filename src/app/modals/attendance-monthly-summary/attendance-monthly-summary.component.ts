@@ -120,6 +120,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.api.get(apiName + params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['code'] == 3) {
           this.common.showError(res['data']);
         } else {

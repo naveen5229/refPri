@@ -150,8 +150,7 @@ export class TicketProcessComponent implements OnInit {
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       if (res['code'] > 0) {
-        let data;
-        data = res['data'] || [];
+        let data = res['data'] || [];
         this.adminList = data.map(ele => { return { id: ele.id, name: ele.name } })
       } else {
         this.common.showError(res['msg']);
@@ -166,6 +165,7 @@ export class TicketProcessComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.ticketData = res['data'];
       this.ticketData.length ? this.setTable() : this.resetTable();
@@ -323,6 +323,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     });
   }
@@ -332,16 +333,16 @@ export class TicketProcessComponent implements OnInit {
     this.api.get(`Ticket/getTicketProcessProperty?tpId=${id}`).subscribe(res => {
       this.common.loading--;
       this.resetTicketPropertyTable();
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) {
         return;
       } else {
         this.ticketPropertyData = res['data'];
         this.setTicketPropertyTable();
-        // this.openTicketPropertyModal();
-        // console.log(res['data']);
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -550,6 +551,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
 
@@ -675,6 +677,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
   }
@@ -853,6 +856,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
   }
@@ -938,6 +942,7 @@ export class TicketProcessComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }

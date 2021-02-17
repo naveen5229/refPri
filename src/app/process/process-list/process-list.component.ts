@@ -83,11 +83,10 @@ export class ProcessListComponent implements OnInit {
     this.api.get('Processes/getProcessList')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.processData = res['data'];
         this.processData.length ? this.setTable() : this.resetTable();
-
       }, err => {
         this.common.loading--;
         this.common.showError();

@@ -20,18 +20,15 @@ export class EmployeeDaywiseReportComponent implements OnInit {
   ngOnInit() {
   }
 
-
-
   getDaywiseReport() {
     let params = {
       startDate: this.common.dateFormatter1(this.currentDate)
     }
-    console.log("test", params);
     this.common.loading++;
     this.api.post('Report/getEmpDayWiseReport', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("res", res['data']);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.employeeData = res['data'];
       }, err => {
         this.common.loading--;

@@ -193,7 +193,7 @@ export class FieldIssueRequestComponent implements OnInit {
     this.api.get('Grid/getFieldSupportRequestList' + param)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (type == 1) {
           this.issueReqList = res['data'] || [];
           this.issueReqList.length ? this.setTable() : this.resetSmartTableData();
@@ -213,6 +213,7 @@ export class FieldIssueRequestComponent implements OnInit {
         console.log(this.issueReqList);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -473,10 +474,12 @@ export class FieldIssueRequestComponent implements OnInit {
           this.api.post('Grid/deleteFieldSupportRequest', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getFieldSupportRequestByType(1);
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -530,7 +533,7 @@ export class FieldIssueRequestComponent implements OnInit {
     this.api.get('Installer/getInstallerRequestList' + param)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (type == 1) {
           this.pendingTicketList = res['data'] || [];
           this.pendingTicketList.length ? this.setTablePendingTicketTable() : this.resetSmartTableData();
@@ -547,6 +550,7 @@ export class FieldIssueRequestComponent implements OnInit {
         console.log(this.issueReqList);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

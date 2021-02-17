@@ -33,20 +33,19 @@ export class WwToolsComponent implements OnInit {
   }
 
   resetContacts(buttonType) {
-    console.log(buttonType);
     if (buttonType == 'reset') {
       let params = {
         contactId:this.selectedContact['contact_id'],
         type: 'single'
       }
-      console.log(params);
       this.common.loading++;
       this.api.post('WhatsappWeb/resetContacts', params)
         .subscribe(res => {
           this.common.loading--;
           if (res['success']) {
-            console.log(res);
             this.common.showToast(res['msg']);
+          }else{
+            this.common.showError(res['msg']);
           }
         }, err => {
           this.common.loading--;
@@ -55,7 +54,6 @@ export class WwToolsComponent implements OnInit {
         });
     }
     else if(buttonType == 'resetAll') {
-      
       this.common.params = {
         title: 'Confirm Model',
         description: 'Are you sure you want to reset all contacts?',
@@ -63,9 +61,7 @@ export class WwToolsComponent implements OnInit {
         btn1: 'Yes'
       };
       const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
-      console.log(activeModal);
       activeModal.result.then(data => {
-        console.log('res', data);
         if (data.response) {
           let params = {
             type: 'all'
@@ -74,9 +70,10 @@ export class WwToolsComponent implements OnInit {
           this.api.post('WhatsappWeb/resetContacts', params)
             .subscribe(res => {
               this.common.loading--;
-              console.log("res", res);
               if (res['success']) {
                 this.common.showToast(res['msg']);
+              }else{
+                this.common.showError(res['msg']);
               }
             }, err => {
               this.common.loading--;

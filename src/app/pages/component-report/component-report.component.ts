@@ -33,36 +33,32 @@ export class ComponentReportComponent implements OnInit {
     this.api.get("Components/getAllComponents")
       .subscribe(res => {
         this.common.loading--;
-        console.log("res", res['data'])
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.components = res['data'];
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      },err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
   }
 
 
 
   componentReport(){
-    let params ="componentId=" +this.componentId + "&startDate=" + this.common.dateFormatter(this.startDate) +"&endDate=" +this.common.dateFormatter(this.endDate)
-    
+    let params ="componentId=" +this.componentId + "&startDate=" + this.common.dateFormatter(this.startDate) +"&endDate=" +this.common.dateFormatter(this.endDate);
     this.common.loading++;
     this.api.get('Report/getReportWrtComponent?' + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.componentData = res['data'];
       this.componentDatas();
-        this.common.showToast(res['msg'])
-    
-    },
-      err => {
-        this.common.loading--;
-    
-        this.common.showError();
-        console.log('Error: ', err);
-      });
-      }
+      this.common.showToast(res['msg']);
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
 
 componentDatas(){
   this.stackData=[];

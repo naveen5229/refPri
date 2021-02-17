@@ -94,12 +94,11 @@ export class AddProjectComponent implements OnInit {
         } else {
           this.common.showError(res['msg']);
         }
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError();
-          console.log('Error: ', err);
-        });
+      },err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
 
@@ -254,10 +253,12 @@ export class AddProjectComponent implements OnInit {
           this.api.post('AdminTask/deleteProject.json', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getAllProjectList();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

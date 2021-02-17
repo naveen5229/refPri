@@ -46,12 +46,11 @@ export class DistanceCalculateComponent implements OnInit {
       this.api.get("Drivers/getDriverLatLong?" + params)
         .subscribe(res => {
           this.common.loading--;
-          console.log("res", res['data']);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.driverLatLong = res['data'];
           if (this.driverLatLong && this.driverLatLong.length) {
             this.travelStartDate = this.driverLatLong[0].location_fetch_time;
             this.travelEndDate = this.driverLatLong[this.driverLatLong.length - 1].location_fetch_time;
-            console.log("date1234", this.travelStartDate, this.travelEndDate);
             this.createrouteMarker();
             this.calculateDistance();
           }else{

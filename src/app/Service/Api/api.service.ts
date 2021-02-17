@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UserService } from '../user/user.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,29 +29,63 @@ export class ApiService {
   }
 
   post(subURL: string, body: any, apiBase: string = 'I') {
-    return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+    // return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+    return new Observable(observer => {
+      if (!navigator.onLine) {
+        observer.next({ success: false, msg: 'No internet connection', data: null,code: 0 });
+        observer.complete();
+        return;
+      }
+      this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+        .subscribe(res => {
+          observer.next(res);
+          observer.complete();
+        }, err => {
+          observer.error(err);
+          observer.complete();
+        });
+    })
   }
 
   get(subURL: string, apiBase: string = 'I') {
-    return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+    // return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+    return new Observable(observer => {
+      if (!navigator.onLine) {
+        observer.next({ success: false, msg: 'No internet connection', data: null,code: 0 });
+        observer.complete();
+        return;
+      }
+      this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+        .subscribe(res => {
+          observer.next(res);
+          observer.complete();
+        }, err => {
+          observer.error(err);
+          observer.complete();
+        });
+    })
   }
 
 
 
   postBooster(subURL: string, body: any, apiBase: string = 'B') {
-    return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+    // return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+    return this.post(subURL, body, apiBase);
   }
 
   getBooster(subURL: string, apiBase: string = 'B') {
-    return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+    // return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+    return this.get(subURL, apiBase);
   }
 
   postTranstruck(subURL: string, body: any, apiBase: string = 'T') {
-    return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+    // return this.http.post(this[apiBase + '_URL'] + subURL, body, { headers: this.setHeaders(apiBase) })
+    return this.post(subURL, body, apiBase);
   }
 
   getTranstruck(subURL: string, apiBase: string = 'T') {
-    return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+    // return this.http.get(this[apiBase + '_URL'] + subURL, { headers: this.setHeaders(apiBase) })
+    return this.get(subURL, apiBase);
   }
 
   setHeaders(apiBase = 'I') {

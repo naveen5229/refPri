@@ -53,6 +53,7 @@ export class AddTransactionStateComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessState?processId=" + this.transState.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let stateDataList = res['data'];
       this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name } });
     }, err => {
@@ -76,7 +77,7 @@ export class AddTransactionStateComponent implements OnInit {
         stateId: this.transState.state.id,
         nextStateId: (this.transState.nextState.id > 0) ? this.transState.nextState.id : null,
       };
-      console.log("saveTransNextAction:", params);
+      // console.log("saveTransNextAction:", params);
       this.common.loading++;
       this.api.post("Processes/addTransactionState ", params).subscribe(res => {
         this.common.loading--;
@@ -92,6 +93,7 @@ export class AddTransactionStateComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     }
