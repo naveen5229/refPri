@@ -10,6 +10,7 @@ import { UserService } from '../../Service/user/user.service';
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import * as _ from 'lodash';
 import { NbSidebarService } from '@nebular/theme';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-kanban-board',
@@ -45,6 +46,8 @@ export class KanbanBoardComponent implements OnInit {
     }
   ];
   inprogressTimer = null;
+  activityProgressStatus = 5;
+  activityHold = {ticket:null,isHold:null,startTime:new Date(),endTime:new Date()};
 
   constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
@@ -202,8 +205,15 @@ export class KanbanBoardComponent implements OnInit {
     let userGroup = [];
     if (boardData) {
       boardData.forEach(element => {
+      console.log("🚀 ~ file: kanban-board.component.ts ~ line 205 ~ KanbanBoardComponent ~ getAllUserGroup ~ element", element)
+
+        if(element.id === 'new'){
+          element.connectedto = ['workLog'];
+        }
+
         if (element.data) {
           element.data.forEach(data => {
+            data.log_start_time = new Date();
             userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff' });
           })
         }
@@ -250,6 +260,8 @@ export class KanbanBoardComponent implements OnInit {
 
 
   drop(event: CdkDragDrop<string[]>) {
+    let containerIdTemp = (event.container.id).toLowerCase();
+    let ticket = event.previousContainer.data[event.previousIndex];
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -263,6 +275,22 @@ export class KanbanBoardComponent implements OnInit {
       // if (event.container['_disabled']) {
       //   return;
       // }
+
+      
+      if (containerIdTemp === 'worklog') {
+        if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
+          ticket["_last_logid"] = null;
+        }
+        if (this.taskStatusBarData[0].data[0]) {
+          this.common.showError('A Task Already In Progress');
+          this.goToBoard({ _id: this.processId, name: this.processName });
+          return false;
+        }
+        // this.taskStatusBarData[0].data[0] = ticket;
+        this.saveActivityLog(ticket, 0, 0);
+      }
+
+      
       let moveFrom = this.cards.findIndex(data => data.id === event.previousContainer.id);
       let moveTo = this.cards.findIndex(data => data.id === event.container.id);
       let isComplete = moveTo > moveFrom ? true : false;
@@ -280,6 +308,8 @@ export class KanbanBoardComponent implements OnInit {
             let lead = event.previousContainer.data[event.previousIndex];
             lead['_state_id'] = this.cards[moveFrom]['_state_id'];
             lead['_state_name'] = this.cards[moveFrom]['title'];
+            lead['_next_state_id'] = this.cards[moveTo]['_state_id'];
+            lead['_next_state_name'] = this.cards[moveTo]['title'];
             this.openTransAction(lead, null, null, isComplete);
           } else {
             // this.openTransFormData(event.previousContainer.data[event.previousIndex],null,null);
@@ -291,7 +321,11 @@ export class KanbanBoardComponent implements OnInit {
               _next_state_name: this.cards[moveTo]['title'],
               _state_form: event.previousContainer.data[event.previousIndex]['_state_form']
             }
-            this.saveTransNextState(transaction);
+            if(transaction._state_form){
+              this.openTransFormData(transaction, null, 1);
+            }else{
+              this.saveTransNextState(transaction);
+            }
           }
         }
         setTimeout(() => {
@@ -314,6 +348,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   openTransAction(lead, type, formType = null, isComplete: Boolean = null) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 317 ~ KanbanBoardComponent ~ openTransAction ~ lead", lead)
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = 0;
@@ -326,7 +361,7 @@ export class KanbanBoardComponent implements OnInit {
       transId: lead._transaction_id,
       identity: null,
       formType: formTypeTemp,
-      requestId: (type == 1) ? lead._transaction_actionid : null,
+      requestId: (lead._is_action == 1) ? lead._transaction_actionid : null,
       actionId: (lead._action_id > 0) ? lead._action_id : null,
       actionName: (lead._action_id > 0) ? lead._action_name : '',
       stateId: (lead._state_id > 0) ? lead._state_id : null,
@@ -338,7 +373,7 @@ export class KanbanBoardComponent implements OnInit {
       isStateForm: lead._state_form,
       isActionForm: lead._action_form,
       isModeApplicable: (lead._is_mode_applicable) ? lead._is_mode_applicable : 0,
-      isMarkTxnComplete: (lead._state_change == 2 && type == 1) ? 1 : null
+      isMarkTxnComplete: (lead._state_change == 2 && lead._is_action == 1) ? 1 : null
     };
 
     // console.log('actionData',actionData);
@@ -408,7 +443,8 @@ export class KanbanBoardComponent implements OnInit {
       if (formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (formType == 1) {
-        this.openTransAction(lead, type, 2);
+        // this.openTransAction(lead, type, 2);
+        this.saveTransNextState(lead);
       } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
@@ -442,24 +478,26 @@ export class KanbanBoardComponent implements OnInit {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
-            transaction._state_id = transaction._next_state_id;
-            transaction.state_name = transaction._next_state_name;;
             this.common.showToast(res['data'][0].y_msg);
-            if (transaction._state_form == 1) {
-              this.openTransFormData(transaction, null, 1);
-            }
-            else {
-              // this.openTransAction(lead, type, 2);
-              this.goToBoard({ _id: this.processId, name: this.processName });
-            }
+            // transaction._state_id = transaction._next_state_id;
+            // transaction.state_name = transaction._next_state_name;
+            // if (transaction._state_form == 1) {
+            //   this.openTransFormData(transaction, null, 1);
+            // }else {
+            //   // this.openTransAction(lead, type, 2);
+            //   this.goToBoard({ _id: this.processId, name: this.processName });
+            // }
 
             // this.transAction.state = this.transAction.nextState;
             // this.isFormHere = this.nextStateForm;
-            // if (this.isMarkTxnComplete == 1 && stateType == 2) {
-            //   setTimeout(() => {
-            //     this.markTxnComplete(params.transId);
-            //   }, 1000);
-            // }
+            if (transaction._state_type == 2) {
+              setTimeout(() => {
+                this.markTxnComplete(params.transId);
+              }, 1000);
+            }else {
+              // this.openTransAction(lead, type, 2);
+              this.goToBoard({ _id: this.processId, name: this.processName });
+            }
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -471,6 +509,49 @@ export class KanbanBoardComponent implements OnInit {
         this.common.showError();
         console.log(err);
       });
+    }
+  }
+
+  markTxnComplete(transId) {
+    console.log("confrm transId:", transId);
+    this.common.params = {
+      title: 'Mark Txn Complete',
+      description: '<b>Are you sure to complete this Transaction ?<b>'
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.updateTransactionStatus(transId, 5);
+      }
+    });
+  }
+
+  
+  updateTransactionStatus(transId, status) {
+    if (transId) {
+      let params = {
+        transId: transId,
+        status: status
+      }
+      this.common.loading++;
+      this.api.post('Processes/updateTransactionStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Transaction ID Not Available");
     }
   }
 
@@ -582,54 +663,96 @@ export class KanbanBoardComponent implements OnInit {
     this.issueSort(1);
   }
 
-  saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-    // console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
-    // this.resetInterval();
-    // let params = {
-    //   requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
-    //   refid: ticket._tktid,
-    //   reftype: 0,
-    //   outcome: null,
-    //   spendHour: null,
-    //   startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
-    //   endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
-    //   isHold: isHold
-    // };
-    // console.log("params:", params);
-    // // this.assignTaskToProgress(ticket);
-    // //  return false;
-    // this.common.loading++;
-    // this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
-    //   (res) => {
-    //     this.common.loading--;
-    //     if (res["code"] > 0) {
-    //       if (res['data'][0]['y_id'] > 0) {
-    //         this.common.showToast(res['data'][0]['y_msg']);
-    //         if (!endTime) {
-    //           this.assignTaskToProgress(ticket);
-    //         } else {
-    //           this.taskStatusBarData[0].data = [];
-    //         }
-    //       } else {
-    //         this.common.showError(res['data'][0]['y_msg']);
-    //       }
-    //     } else {
-    //       this.common.showError(res["msg"]);
-    //     }
-    //     this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
-    //   },
-    //   (err) => {
-    //     this.common.loading--;
-    //     this.common.showError();
-    //     console.log("Error: ", err);
-    //     this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
-    //   }
-    // );
+  saveActivityLog(ticket, isHold = 0,progressPer=0, startTime = this.common.getDate(), endTime = null,) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 616 ~ KanbanBoardComponent ~ saveActivityLog ~ ticket", ticket)
+    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
+    this.resetInterval();
+    let params = {
+      requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
+      refid: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_id,
+      reftype: ticket._is_action === 1 ? 2 : 1,
+      outcome: null,
+      spendHour: null,
+      startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
+      endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
+      isHold: isHold,
+      progressPer:progressPer
+    };
+    console.log("params:", params);
+    this.assignTaskToProgress(ticket);
+     return false;
+    this.common.loading++;
+    this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
+      (res) => {
+        this.common.loading--;
+        if (res["code"] > 0) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0]['y_msg']);
+            document.getElementById('taskStatus').style.display = 'none'; 
+            this.resetProgressForm();
+            if (!endTime) {
+              this.assignTaskToProgress(ticket);
+            } else {
+              this.taskStatusBarData[0].data = [];
+            }
+          } else {
+            this.common.showError(res['data'][0]['y_msg']);
+          }
+        } else {
+          this.common.showError(res["msg"]);
+        }
+        this.goToBoard({ _id: this.processId, name: this.processName });
+      },
+      (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+        this.goToBoard({ _id: this.processId, name: this.processName });
+      }
+    );
   }
 
   setTimer;
   resetInterval() {
     this.inprogressTimer = 0;
     (this.setTimer) ? clearInterval(this.setTimer) : null;
+  }
+  assignTaskToProgress(ticket) {
+    this.resetInterval();
+    this.taskStatusBarData[0].data[0] = ticket;
+    let expdate = ticket['due_date'];
+    let starttime = ticket['log_start_time'];
+    this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
+    let thisVar = this;
+    if (ticket['log_start_time']) {
+      this.setTimer = setInterval(function () {
+        thisVar.inprogressTimer++;
+      }, 1000);
+    }
+  }
+
+  getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null){
+    this.activityHold = {
+      ticket:ticket,
+      isHold:isHold,
+      startTime:startTime,
+      endTime:endTime
+    }
+    document.getElementById('taskStatus').style.display = 'block';
+  }
+
+  onProgressSave(){
+    console.log(this.activityHold,this.activityProgressStatus);
+    this.saveActivityLog(this.activityHold.ticket, this.activityHold.isHold, this.activityProgressStatus, this.activityHold.startTime, this.activityHold.endTime,)
+  }
+
+  closeotherTaskStatus(){
+    document.getElementById('taskStatus').style.display = 'none';
+    this.resetProgressForm();
+  }
+
+  resetProgressForm(){
+    this.activityProgressStatus = 5;
+    this.activityHold = {ticket:null,isHold:null,startTime:new Date(),endTime:new Date()};
   }
 }
