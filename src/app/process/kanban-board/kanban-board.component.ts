@@ -321,11 +321,12 @@ export class KanbanBoardComponent implements OnInit {
               _next_state_name: this.cards[moveTo]['title'],
               _state_form: event.previousContainer.data[event.previousIndex]['_state_form']
             }
-            if(transaction._state_form){
-              this.openTransFormData(transaction, null, 1);
-            }else{
-              this.saveTransNextState(transaction);
-            }
+            this.saveTransNextState(transaction);
+            // if(transaction._state_form){
+            //   this.openTransFormData(transaction, null, 1);
+            // }else{
+            //   this.saveTransNextState(transaction);
+            // }
           }
         }
         setTimeout(() => {
@@ -440,12 +441,16 @@ export class KanbanBoardComponent implements OnInit {
     const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log("formData:", formType);
-      if (formType == 2) {
-        this.openTransAction(lead, type, 1);
-      } else if (formType == 1) {
-        // this.openTransAction(lead, type, 2);
-        this.saveTransNextState(lead);
-      } else {
+      if(data.response){
+        if (formType == 2) {
+          this.openTransAction(lead, type, 1);
+        } else if (formType == 1) {
+          // this.openTransAction(lead, type, 2);
+          this.goToBoard({ _id: this.processId, name: this.processName });
+        } else {
+          this.goToBoard({ _id: this.processId, name: this.processName });
+        }
+      }else{
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
     });
@@ -479,25 +484,20 @@ export class KanbanBoardComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            // transaction._state_id = transaction._next_state_id;
-            // transaction.state_name = transaction._next_state_name;
-            // if (transaction._state_form == 1) {
-            //   this.openTransFormData(transaction, null, 1);
-            // }else {
-            //   // this.openTransAction(lead, type, 2);
-            //   this.goToBoard({ _id: this.processId, name: this.processName });
-            // }
-
-            // this.transAction.state = this.transAction.nextState;
-            // this.isFormHere = this.nextStateForm;
-            if (transaction._state_type == 2) {
-              setTimeout(() => {
-                this.markTxnComplete(params.transId);
-              }, 1000);
+            if (transaction._state_form == 1) {
+              this.openTransFormData(transaction, null, 1);
             }else {
               // this.openTransAction(lead, type, 2);
               this.goToBoard({ _id: this.processId, name: this.processName });
             }
+            // if (transaction._state_type == 2) {
+            //   setTimeout(() => {
+            //     this.markTxnComplete(params.transId);
+            //   }, 1000);
+            // }else {
+            //   // this.openTransAction(lead, type, 2);
+            //   this.goToBoard({ _id: this.processId, name: this.processName });
+            // }
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
