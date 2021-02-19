@@ -152,6 +152,10 @@
     height: auto;
   }
 
+input[type="range"]{
+ padding: 0 !important; 
+}
+
 textarea{
 min-height: 28px;  
 }
