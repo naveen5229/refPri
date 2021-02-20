@@ -210,7 +210,7 @@ export class KanbanBoardComponent implements OnInit {
       boardData.forEach(element => {
         console.log("🚀 ~ file: kanban-board.component.ts ~ line 205 ~ KanbanBoardComponent ~ getAllUserGroup ~ element", element)
 
-        if (element.id === 'new') {
+        if (element._state_type != 2) {
           element.connectedto = ['workLog'];
           // if (element.data && element.data.length) {
           //   element.data.map(data => {
@@ -228,7 +228,7 @@ export class KanbanBoardComponent implements OnInit {
             }else{
               userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title,count: 1 });
             }
-            (element.id === 'new' && !data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
+            (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
           })
         }
       });
@@ -293,9 +293,9 @@ export class KanbanBoardComponent implements OnInit {
 
 
       if (containerIdTemp === 'worklog') {
-        if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
+        // if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
           ticket["_last_logid"] = null;
-        }
+        // }
         if (this.taskStatusBarData[0].data[0]) {
           this.common.showError('A Task Already In Progress');
           this.goToBoard({ _id: this.processId, name: this.processName });
@@ -319,8 +319,8 @@ export class KanbanBoardComponent implements OnInit {
             data.data = [];
           }
           data.data.push(JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex])));
+          let lead = event.previousContainer.data[event.previousIndex];
           if (event.previousContainer.data[event.previousIndex]['_is_action'] === 1) {
-            let lead = event.previousContainer.data[event.previousIndex];
             lead['_state_id'] = this.cards[moveFrom]['_state_id'];
             lead['_state_name'] = this.cards[moveFrom]['title'];
             lead['_next_state_id'] = this.cards[moveTo]['_state_id'];
@@ -336,7 +336,7 @@ export class KanbanBoardComponent implements OnInit {
               _next_state_name: this.cards[moveTo]['title'],
               _state_form: event.previousContainer.data[event.previousIndex]['_state_form']
             }
-            this.saveTransNextState(transaction);
+            this.saveTransNextState(transaction,lead);
             // if(transaction._state_form){
             //   this.openTransFormData(transaction, null, 1);
             // }else{
@@ -426,6 +426,7 @@ export class KanbanBoardComponent implements OnInit {
       } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
+      this.saveActivityLog(lead, 0,100, lead['log_start_time'], this.common.getDate());
     });
   }
 
@@ -472,7 +473,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
 
-  saveTransNextState(transaction) {
+  saveTransNextState(transaction,lead) {
     if (!transaction._next_state_id) {
       this.common.showError('Next state is missing');
       this.goToBoard({ _id: this.processId, name: this.processName });
@@ -513,6 +514,7 @@ export class KanbanBoardComponent implements OnInit {
             //   // this.openTransAction(lead, type, 2);
             //   this.goToBoard({ _id: this.processId, name: this.processName });
             // }
+            this.saveActivityLog(lead, 0,100, lead['log_start_time'], this.common.getDate());
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -680,7 +682,6 @@ export class KanbanBoardComponent implements OnInit {
 
   saveActivityLog(ticket, isHold = 0, progressPer = 0, startTime = this.common.getDate(), endTime = null,) {
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 616 ~ KanbanBoardComponent ~ saveActivityLog ~ ticket", ticket)
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
     this.resetInterval();
     let params = {
       requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
