@@ -37,7 +37,7 @@
       <div class="col-2 text-right" *ngIf="dashboardState">
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
-        <button class="btn btn-primary btn-sm mr-2" id="addLead"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-primary btn-sm mr-2" id="addLead" (click)="addTransaction()"><i class="fa fa-plus"></i></button>
         <button class="btn btn-primary" (click)="goToList()">Back</button>
       </div>
     </div>
@@ -169,23 +169,19 @@
           <button type="button" class="close" data-dismiss="modal" (click)="closeotherTaskStatus()">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="row m-2">
-            <div class="col-2 my-auto">
-              <button class="btn btn-sm" (click)="(activityProgressStatus > 0) ? activityProgressStatus = activityProgressStatus - 5 : null"><i class="fas fa-minus-square"></i></button>
+          <div class="row m-0">
+            <div class="col-12 p-0">
+              <!-- <label><progress max="100" min="0" [value]="activityProgressStatus" type="danger"></progress></label> -->
+              <input type="range" id="activityProgressStatus" class="col-12 p-0" name="activityProgressStatus" step="5" min="0" max="100" [(ngModel)]="activityProgressStatus">
             </div>
-            <div class="col-8 my-auto">
-              <label><progress max="100" min="0" [value]="activityProgressStatus" type="danger"></progress></label>
-            </div>
-            <div class="col-2 my-auto">
-              <button class="btn btn-sm" (click)="(activityProgressStatus < 100) ? activityProgressStatus = activityProgressStatus + 5 : null"><i class="fas fa-plus-square"></i></button>
-            </div>
+            
           </div>
 
-          <div class="row m-2">
-            <div class="col-6">
+          <div class="row m-0">
+            <div class="col-6 p-0">
               {{activityProgressStatus}}% Done
             </div>
-            <div class="col-6 text-right">
+            <div class="col-6 p-0 text-right">
               <button class="btn btn-primary" (click)="onProgressSave()">Confirm</button>
             </div>
           </div>

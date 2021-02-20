@@ -11,6 +11,7 @@ import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.co
 import * as _ from 'lodash';
 import { NbSidebarService } from '@nebular/theme';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
 
 @Component({
   selector: 'ngx-kanban-board',
@@ -35,6 +36,7 @@ export class KanbanBoardComponent implements OnInit {
   adminList = [];
   processId = null;
   processName = null;
+  defaultIdentity = null;
   issueCategory = true;
   cardsUserGroup = [];
   cardsForFilterByUser = [];
@@ -46,8 +48,8 @@ export class KanbanBoardComponent implements OnInit {
     }
   ];
   inprogressTimer = null;
-  activityProgressStatus = 5;
-  activityHold = {ticket:null,isHold:null,startTime:new Date(),endTime:new Date()};
+  activityProgressStatus = 50;
+  activityHold = { ticket: null, isHold: null, startTime: new Date(), endTime: new Date() };
 
   constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
@@ -75,7 +77,7 @@ export class KanbanBoardComponent implements OnInit {
 
   toggleSidebar(type): boolean {
     let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
-    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+    if ((type == "expand" && sideBarClassList.contains('compacted')) || (type == "compact" && !sideBarClassList.contains('compacted'))) {
       this.sidebarService.toggle(true, 'menu-sidebar');
     }
     return false;
@@ -171,11 +173,12 @@ export class KanbanBoardComponent implements OnInit {
   goToBoard(lead) {
     this.processId = lead._id;
     this.processName = lead.name;
+    this.defaultIdentity = lead._default_identity;
     let params = `processId=${lead._id}&filter=null`
     this.common.loading++;
     this.api.get(`Processes/getProcessBoardView?` + params).subscribe((res) => {
       this.common.loading--;
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       let boardData = res['data'] || [];
       this.cards = boardData;
       this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
@@ -205,9 +208,9 @@ export class KanbanBoardComponent implements OnInit {
     let userGroup = [];
     if (boardData) {
       boardData.forEach(element => {
-      console.log("🚀 ~ file: kanban-board.component.ts ~ line 205 ~ KanbanBoardComponent ~ getAllUserGroup ~ element", element)
+        console.log("🚀 ~ file: kanban-board.component.ts ~ line 205 ~ KanbanBoardComponent ~ getAllUserGroup ~ element", element)
 
-        if(element.id === 'new'){
+        if (element.id === 'new') {
           element.connectedto = ['workLog'];
         }
 
@@ -276,7 +279,7 @@ export class KanbanBoardComponent implements OnInit {
       //   return;
       // }
 
-      
+
       if (containerIdTemp === 'worklog') {
         if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
           ticket["_last_logid"] = null;
@@ -290,7 +293,7 @@ export class KanbanBoardComponent implements OnInit {
         this.saveActivityLog(ticket, 0, 0);
       }
 
-      
+
       let moveFrom = this.cards.findIndex(data => data.id === event.previousContainer.id);
       let moveTo = this.cards.findIndex(data => data.id === event.container.id);
       let isComplete = moveTo > moveFrom ? true : false;
@@ -476,7 +479,7 @@ export class KanbanBoardComponent implements OnInit {
         isNextAction: null,
         isCompleted: false
       };
-      console.log("saveTransNextState - saveTransAction:", params,transaction);
+      console.log("saveTransNextState - saveTransAction:", params, transaction);
       // return;
       this.common.loading++;
       this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
@@ -526,7 +529,7 @@ export class KanbanBoardComponent implements OnInit {
     });
   }
 
-  
+
   updateTransactionStatus(transId, status) {
     if (transId) {
       let params = {
@@ -663,7 +666,7 @@ export class KanbanBoardComponent implements OnInit {
     this.issueSort(1);
   }
 
-  saveActivityLog(ticket, isHold = 0,progressPer=0, startTime = this.common.getDate(), endTime = null,) {
+  saveActivityLog(ticket, isHold = 0, progressPer = 0, startTime = this.common.getDate(), endTime = null,) {
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 616 ~ KanbanBoardComponent ~ saveActivityLog ~ ticket", ticket)
     console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
     this.resetInterval();
@@ -676,11 +679,11 @@ export class KanbanBoardComponent implements OnInit {
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
       isHold: isHold,
-      progressPer:progressPer
+      progressPer: progressPer
     };
     console.log("params:", params);
     this.assignTaskToProgress(ticket);
-     return false;
+    return false;
     this.common.loading++;
     this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
       (res) => {
@@ -688,7 +691,7 @@ export class KanbanBoardComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
-            document.getElementById('taskStatus').style.display = 'none'; 
+            document.getElementById('taskStatus').style.display = 'none';
             this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
@@ -731,28 +734,47 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null){
+  getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
     this.activityHold = {
-      ticket:ticket,
-      isHold:isHold,
-      startTime:startTime,
-      endTime:endTime
+      ticket: ticket,
+      isHold: isHold,
+      startTime: startTime,
+      endTime: endTime
     }
     document.getElementById('taskStatus').style.display = 'block';
   }
 
-  onProgressSave(){
-    console.log(this.activityHold,this.activityProgressStatus);
-    this.saveActivityLog(this.activityHold.ticket, this.activityHold.isHold, this.activityProgressStatus, this.activityHold.startTime, this.activityHold.endTime,)
+  onProgressSave() {
+    console.log(this.activityHold, this.activityProgressStatus);
+    this.saveActivityLog(this.activityHold.ticket, this.activityHold.isHold, this.activityProgressStatus, this.activityHold.startTime, this.activityHold.endTime);
   }
 
-  closeotherTaskStatus(){
+  closeotherTaskStatus() {
     document.getElementById('taskStatus').style.display = 'none';
     this.resetProgressForm();
   }
 
-  resetProgressForm(){
+  resetProgressForm() {
     this.activityProgressStatus = 5;
-    this.activityHold = {ticket:null,isHold:null,startTime:new Date(),endTime:new Date()};
+    this.activityHold = { ticket: null, isHold: null, startTime: new Date(), endTime: new Date() };
+  }
+
+  addTransaction() {
+    let data = {
+      transId: null,
+      processId: this.processId,
+      processName: this.processName,
+      identity: null,
+      priOwnId: null,
+      isDisabled: false,
+      _default_identity: this.defaultIdentity,
+    }
+    this.common.params = { processList: this.processList, adminList: this.adminList, rowData: data, title: "Add Transaction ", button: "Add" }
+    const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.goToBoard({ _id: this.processId, name: this.processName });
+      }
+    });
   }
 }
