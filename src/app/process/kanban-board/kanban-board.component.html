@@ -126,7 +126,7 @@
           [id]="card.id" [cdkDropListConnectedTo]="card.connectedto">
 
           <div class="row shadow-sm cursor-pointer"
-            [ngClass]="data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle'" *ngFor="let data of card.data"
+            [ngClass]="[data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle', (data['log_start_time'] && !data['log_end_time']) ? 'backgroundActive' : '']" *ngFor="let data of card.data"
             cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
             (cdkDragMoved)="movedIn($event)" (click)="transMessage(data,null)">
             <div class="col-12">
