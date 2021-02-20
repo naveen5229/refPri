@@ -212,20 +212,32 @@ export class KanbanBoardComponent implements OnInit {
 
         if (element.id === 'new') {
           element.connectedto = ['workLog'];
+          // if (element.data && element.data.length) {
+          //   element.data.map(data => {
+          //     (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
+          //   })
+          // }
         }
 
-        if (element.data) {
+        if (element.data && element.data.length) {
           element.data.forEach(data => {
-            data.log_start_time = new Date();
-            userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff' });
+            // data['text_color'] = ((![5,-1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
+            let finduser = (userGroup && userGroup.length>0) ? userGroup.find(x=>{return x.id==data.userid}) : null;
+            if(finduser){
+              finduser['count']++;
+            }else{
+              userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title,count: 1 });
+            }
+            (element.id === 'new' && !data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
           })
         }
       });
     }
-    let groupBy = _.groupBy(userGroup, data => { return data.id });
-    Object.keys(groupBy).map(key => {
-      this.cardsUserGroup.push(groupBy[key][0]);
-    });
+    // let groupBy = _.groupBy(userGroup, data => { return data.id });
+    // Object.keys(groupBy).map(key => {
+    //   this.cardsUserGroup.push(groupBy[key][0]);
+    // });
+    this.cardsUserGroup = _.orderBy(userGroup, data => data.count,'desc');
   }
 
   goToList() {
@@ -682,8 +694,8 @@ export class KanbanBoardComponent implements OnInit {
       progressPer: progressPer
     };
     console.log("params:", params);
-    this.assignTaskToProgress(ticket);
-    return false;
+    // this.assignTaskToProgress(ticket);
+    // return false;
     this.common.loading++;
     this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
       (res) => {
@@ -755,7 +767,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   resetProgressForm() {
-    this.activityProgressStatus = 5;
+    this.activityProgressStatus = 50;
     this.activityHold = { ticket: null, isHold: null, startTime: new Date(), endTime: new Date() };
   }
 
