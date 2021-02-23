@@ -71,6 +71,8 @@ export class TaskKanbanComponent implements OnInit {
   taskStatusButton = 'Hold';
   boardType: number = 0;
   callType = '';
+  taskProgressStatus = 50;
+  taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
 
   constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
@@ -394,7 +396,7 @@ export class TaskKanbanComponent implements OnInit {
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0);
+        this.saveActivityLog(ticket, 0,0);
       }
 
 
@@ -614,7 +616,7 @@ export class TaskKanbanComponent implements OnInit {
           if (res["code"] > 0) {
             // && status != 1 for moving in inprogress
             if (status != 1 && !ticket.log_end_time && ticket._last_logid > 0) {
-              this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
+              this.saveActivityLog(ticket, 0, 0, ticket['log_start_time'], this.common.getDate());
               console.log('status with 1 working and end time is null');
             } else {
               this.common.showToast(res["msg"]);
@@ -790,14 +792,14 @@ export class TaskKanbanComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
-        this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
+        this.getUserPermission(ticket, 0, ticket['log_start_time'], this.common.getDate());
       } else {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }
 
-  saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+  saveActivityLog(ticket, isHold = 0,progressPer = 0, startTime = this.common.getDate(), endTime = null) {
     this.resetInterval();
     let params = {
       requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
@@ -807,7 +809,8 @@ export class TaskKanbanComponent implements OnInit {
       spendHour: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
-      isHold: isHold
+      isHold: isHold,
+      progressPer: progressPer
     };
     // this.assignTaskToProgress(ticket);
     //  return false;
@@ -818,6 +821,8 @@ export class TaskKanbanComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
+            document.getElementById('taskStatus').style.display = 'none';
+            this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
             } else {
@@ -859,6 +864,32 @@ export class TaskKanbanComponent implements OnInit {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
+  }
+
+  getUserPermission(task, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    this.taskHold = {
+      task: task,
+      isHold: isHold,
+      startTime: startTime,
+      endTime: endTime
+    }
+    document.getElementById('taskStatus').style.display = 'block';
+  }
+
+  onProgressSave() {
+    console.log(this.taskHold, this.taskProgressStatus);
+    this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
+  }
+
+  closeotherTaskStatus() {
+    document.getElementById('taskStatus').style.display = 'none';
+    this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+    this.resetProgressForm();
+  }
+
+  resetProgressForm() {
+    this.taskProgressStatus = 50;
+    this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
   }
 
 }
