@@ -90,10 +90,10 @@
           <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
             <span *ngIf="state.data[0]['log_start_time']"
-              (click)="getUserPermission(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
+              (click)="saveActivityLog(state.data[0], 1, 0,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
             <span *ngIf="!state.data[0]['log_start_time']"
-              (click)="saveActivityLog(state.data[0], 0,0,common.getDate(),null)"><i title="Play"
+              (click)="saveActivityLog(state.data[0], 0, 0, common.getDate(),null)"><i title="Play"
                 class="fas fa-play-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
@@ -122,7 +122,7 @@
           </div>
 
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
-            <span (click)="getUserPermission(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())"><i
+            <span (click)="saveActivityLog(state.data[0], 0, 0, state.data[0]['log_start_time'],common.getDate())"><i
                 title="Mark Done" class="fas fa-stop-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 

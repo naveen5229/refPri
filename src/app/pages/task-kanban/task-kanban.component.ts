@@ -792,7 +792,8 @@ export class TaskKanbanComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
-        this.getUserPermission(ticket, 0, ticket['log_start_time'], this.common.getDate());
+        // this.getUserPermission(ticket, 0, ticket['log_start_time'], this.common.getDate());
+        this.saveActivityLog(ticket, 0, 0, ticket['log_start_time'], this.common.getDate());
       } else {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
@@ -821,8 +822,8 @@ export class TaskKanbanComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
-            document.getElementById('taskStatus').style.display = 'none';
-            this.resetProgressForm();
+            // document.getElementById('taskStatus').style.display = 'none';
+            // this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
             } else {
@@ -866,30 +867,31 @@ export class TaskKanbanComponent implements OnInit {
     });
   }
 
-  getUserPermission(task, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-    this.taskHold = {
-      task: task,
-      isHold: isHold,
-      startTime: startTime,
-      endTime: endTime
-    }
-    document.getElementById('taskStatus').style.display = 'block';
-  }
+  // getUserPermission(task, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+  //   console.log("🚀 ~ file: task-kanban.component.ts ~ line 870 ~ TaskKanbanComponent ~ getUserPermission ~ task", task);
+  //   this.taskHold = {
+  //     task: task,
+  //     isHold: isHold,
+  //     startTime: startTime,
+  //     endTime: endTime
+  //   }
+  //   document.getElementById('taskStatus').style.display = 'block';
+  // }
 
-  onProgressSave() {
-    console.log(this.taskHold, this.taskProgressStatus);
-    this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
-  }
+  // onProgressSave() {
+  //   console.log(this.taskHold, this.taskProgressStatus);
+  //   this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
+  // }
 
-  closeotherTaskStatus() {
-    document.getElementById('taskStatus').style.display = 'none';
-    this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
-    this.resetProgressForm();
-  }
+  // closeotherTaskStatus() {
+  //   document.getElementById('taskStatus').style.display = 'none';
+  //   this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+  //   this.resetProgressForm();
+  // }
 
-  resetProgressForm() {
-    this.taskProgressStatus = 50;
-    this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
-  }
+  // resetProgressForm() {
+  //   this.taskProgressStatus = 50;
+  //   this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
+  // }
 
 }
