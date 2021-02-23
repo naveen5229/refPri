@@ -704,8 +704,8 @@ export class KanbanBoardComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
-            document.getElementById('taskStatus').style.display = 'none';
-            this.resetProgressForm();
+            // document.getElementById('taskStatus').style.display = 'none';
+            // this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
             } else {
@@ -747,15 +747,15 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-    this.activityHold = {
-      ticket: ticket,
-      isHold: isHold,
-      startTime: startTime,
-      endTime: endTime
-    }
-    document.getElementById('taskStatus').style.display = 'block';
-  }
+  // getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+  //   this.activityHold = {
+  //     ticket: ticket,
+  //     isHold: isHold,
+  //     startTime: startTime,
+  //     endTime: endTime
+  //   }
+  //   document.getElementById('taskStatus').style.display = 'block';
+  // }
 
   onProgressSave() {
     console.log(this.activityHold, this.activityProgressStatus);

@@ -37,7 +37,7 @@
       <div class="col-2 text-right" *ngIf="dashboardState">
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
-        <button class="btn btn-primary btn-sm mr-2" id="addLead" (click)="addTransaction()"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-primary btn-sm mr-2" id="addLead" (click)="addTransaction()">Add Transaction</button>
         <button class="btn btn-primary" (click)="goToList()">Back</button>
       </div>
     </div>
@@ -60,7 +60,7 @@
           <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
             <span *ngIf="state.data[0]['log_start_time']"
-              (click)="getUserPermission(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
+              (click)="saveActivityLog(state.data[0], 1, 0,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
             <span *ngIf="!state.data[0]['log_start_time']"
               (click)="saveActivityLog(state.data[0], 0,0,common.getDate(),null)"><i title="Play"
@@ -92,7 +92,7 @@
           </div>
 
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
-            <span (click)="getUserPermission(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())"><i
+            <span (click)="saveActivityLog(state.data[0], 0, 0, state.data[0]['log_start_time'],common.getDate())"><i
                 title="Mark Done" class="fas fa-stop-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
