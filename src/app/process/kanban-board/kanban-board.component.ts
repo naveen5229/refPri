@@ -213,7 +213,11 @@ export class KanbanBoardComponent implements OnInit {
         console.log("🚀 ~ file: kanban-board.component.ts ~ line 205 ~ KanbanBoardComponent ~ getAllUserGroup ~ element", element)
 
         if (element._state_type != 2) {
-          element.connectedto = ['workLog'];
+          if (element.connectedto && element.connectedto.length > 0) {
+            element.connectedto.push('workLog');
+          } else {
+            element.connectedto = ['workLog'];
+          }
           // if (element.data && element.data.length) {
           //   element.data.map(data => {
           //     (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
@@ -240,6 +244,7 @@ export class KanbanBoardComponent implements OnInit {
     //   this.cardsUserGroup.push(groupBy[key][0]);
     // });
     this.cardsUserGroup = _.orderBy(userGroup, data => data.count, 'desc');
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 262 ~ KanbanBoardComponent ~ getAllUserGroup ~ cardsUserGroup", this.cardsUserGroup)
   }
 
   goToList() {
@@ -774,7 +779,7 @@ export class KanbanBoardComponent implements OnInit {
       this.common.loading--;
       if (res['code'] > 0) {
         this.activityProgressStatus = res['data'][0].progress;
-      }else{
+      } else {
         this.common.showError(res['msg']);
       }
     })
