@@ -19,6 +19,7 @@ import { AddTransactionComponent } from '../../modals/process-modals/add-transac
   styleUrls: ['./kanban-board.component.scss']
 })
 export class KanbanBoardComponent implements OnInit {
+  loggedInUser = null;
   cardlength = null;
   dashboardState = false;
   processList = [];
@@ -60,6 +61,7 @@ export class KanbanBoardComponent implements OnInit {
     this.getProcessListByUser();
     this.getAllAdmin();
     this.common.refresh = this.refresh.bind(this);
+    this.loggedInUser = this.userService._details.id;
   }
 
   ngOnInit() {
@@ -222,11 +224,11 @@ export class KanbanBoardComponent implements OnInit {
         if (element.data && element.data.length) {
           element.data.forEach(data => {
             // data['text_color'] = ((![5,-1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
-            let finduser = (userGroup && userGroup.length>0) ? userGroup.find(x=>{return x.id==data.userid}) : null;
-            if(finduser){
+            let finduser = (userGroup && userGroup.length > 0) ? userGroup.find(x => { return x.id == data.userid }) : null;
+            if (finduser) {
               finduser['count']++;
-            }else{
-              userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title,count: 1 });
+            } else {
+              userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff', field: element.title, count: 1 });
             }
             (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
           })
@@ -237,7 +239,7 @@ export class KanbanBoardComponent implements OnInit {
     // Object.keys(groupBy).map(key => {
     //   this.cardsUserGroup.push(groupBy[key][0]);
     // });
-    this.cardsUserGroup = _.orderBy(userGroup, data => data.count,'desc');
+    this.cardsUserGroup = _.orderBy(userGroup, data => data.count, 'desc');
   }
 
   goToList() {
@@ -294,7 +296,7 @@ export class KanbanBoardComponent implements OnInit {
 
       if (containerIdTemp === 'worklog') {
         // if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
-          ticket["_last_logid"] = null;
+        ticket["_last_logid"] = null;
         // }
         if (this.taskStatusBarData[0].data[0]) {
           this.common.showError('A Task Already In Progress');
@@ -336,7 +338,7 @@ export class KanbanBoardComponent implements OnInit {
               _next_state_name: this.cards[moveTo]['title'],
               _state_form: event.previousContainer.data[event.previousIndex]['_state_form']
             }
-            this.saveTransNextState(transaction,lead);
+            this.saveTransNextState(transaction, lead);
             // if(transaction._state_form){
             //   this.openTransFormData(transaction, null, 1);
             // }else{
@@ -426,7 +428,7 @@ export class KanbanBoardComponent implements OnInit {
       } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
-      this.saveActivityLog(lead, 0,100, lead['log_start_time'], this.common.getDate());
+      this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
     });
   }
 
@@ -457,7 +459,7 @@ export class KanbanBoardComponent implements OnInit {
     const activeModal = this.modalService.open(FormDataComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log("formData:", formType);
-      if(data.response){
+      if (data.response) {
         if (formType == 2) {
           this.openTransAction(lead, type, 1);
         } else if (formType == 1) {
@@ -466,14 +468,14 @@ export class KanbanBoardComponent implements OnInit {
         } else {
           this.goToBoard({ _id: this.processId, name: this.processName });
         }
-      }else{
+      } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
     });
   }
 
 
-  saveTransNextState(transaction,lead) {
+  saveTransNextState(transaction, lead) {
     if (!transaction._next_state_id) {
       this.common.showError('Next state is missing');
       this.goToBoard({ _id: this.processId, name: this.processName });
@@ -503,7 +505,7 @@ export class KanbanBoardComponent implements OnInit {
             this.common.showToast(res['data'][0].y_msg);
             if (transaction._state_form == 1) {
               this.openTransFormData(transaction, null, 1);
-            }else {
+            } else {
               // this.openTransAction(lead, type, 2);
               this.goToBoard({ _id: this.processId, name: this.processName });
             }
@@ -515,7 +517,7 @@ export class KanbanBoardComponent implements OnInit {
             //   // this.openTransAction(lead, type, 2);
             //   this.goToBoard({ _id: this.processId, name: this.processName });
             // }
-            this.saveActivityLog(lead, 0,100, lead['log_start_time'], this.common.getDate());
+            this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -574,6 +576,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   transMessage(lead, type) {
+    lead['identity'] = lead.title.split('#')[0];
     if (lead._transaction_id > 0) {
       let editData = {
         transactionid: lead._transaction_id,
@@ -686,7 +689,7 @@ export class KanbanBoardComponent implements OnInit {
     this.resetInterval();
     let params = {
       requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
-      refid: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_id,
+      refid: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_state_id,
       reftype: ticket._is_action === 1 ? 2 : 1,
       outcome: null,
       spendHour: null,
@@ -705,8 +708,8 @@ export class KanbanBoardComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
-            // document.getElementById('taskStatus').style.display = 'none';
-            // this.resetProgressForm();
+            document.getElementById('taskStatus').style.display = 'none';
+            this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
             } else {
@@ -748,15 +751,34 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  // getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-  //   this.activityHold = {
-  //     ticket: ticket,
-  //     isHold: isHold,
-  //     startTime: startTime,
-  //     endTime: endTime
-  //   }
-  //   document.getElementById('taskStatus').style.display = 'block';
-  // }
+  getUserPermission(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    if (ticket.userid === this.loggedInUser) {
+      this.activityHold = {
+        ticket: ticket,
+        isHold: isHold,
+        startTime: startTime,
+        endTime: endTime
+      }
+      this.getCurrentProgress(ticket);
+      document.getElementById('taskStatus').style.display = 'block';
+    } else {
+      this.saveActivityLog(ticket, isHold, 0, startTime, endTime);
+    }
+  }
+
+  getCurrentProgress(ticket) {
+    let type = ticket._is_action === 1 ? 2 : 1;
+    let params = `refId=${ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_state_id}&type=${type}`;
+    this.common.loading++;
+    this.api.get(`Admin/getWorkProgressByRefid?` + params).subscribe((res) => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.activityProgressStatus = res['data'][0].progress;
+      }else{
+        this.common.showError(res['msg']);
+      }
+    })
+  }
 
   onProgressSave() {
     console.log(this.activityHold, this.activityProgressStatus);
@@ -766,6 +788,7 @@ export class KanbanBoardComponent implements OnInit {
   closeotherTaskStatus() {
     document.getElementById('taskStatus').style.display = 'none';
     this.resetProgressForm();
+    this.goToBoard({ _id: this.processId, name: this.processName });
   }
 
   resetProgressForm() {

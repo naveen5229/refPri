@@ -60,7 +60,7 @@
           <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
             <span *ngIf="state.data[0]['log_start_time']"
-              (click)="saveActivityLog(state.data[0], 1, 0,state.data[0]['log_start_time'],common.getDate())"><i
+              (click)="getUserPermission(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
             <span *ngIf="!state.data[0]['log_start_time']"
               (click)="saveActivityLog(state.data[0], 0,0,common.getDate(),null)"><i title="Play"
@@ -92,7 +92,7 @@
           </div>
 
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
-            <span (click)="saveActivityLog(state.data[0], 0, 0, state.data[0]['log_start_time'],common.getDate())"><i
+            <span (click)="getUserPermission(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Mark Done" class="fas fa-stop-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
@@ -129,6 +129,13 @@
             [ngClass]="[data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle', (data['log_start_time'] && !data['log_end_time']) ? 'backgroundActive' : '']" *ngFor="let data of card.data"
             cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
             (cdkDragMoved)="movedIn($event)" (click)="transMessage(data,null)">
+
+            <div class="progress progress-bar-vertical" title="{{data._progress}}">
+              <div class="progress-bar active" [style.background]="data.progress" [style.height]="(data._progress)?data._progress+'%':'3%'" role="progressbar"
+               aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" >
+              </div>
+            </div>
+
             <div class="col-12">
               <h5 [style.color]="data.type_color" class="mb-0 cardTitleStyle" style="margin-bottom:0">{{data.type}}</h5>
             </div>
@@ -144,6 +151,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="cardTitleStyle">{{data.status}}</div>
+                  <div class="dot"></div>
                 </div>
                 <div class="col-6">
                   <div class="rounded-circle" title="{{data.user_label}}">
