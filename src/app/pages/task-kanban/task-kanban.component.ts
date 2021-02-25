@@ -108,7 +108,7 @@ export class TaskKanbanComponent implements OnInit {
 
   toggleSidebar(type): boolean {
     let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
-    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+    if ((type == "expand" && sideBarClassList.contains('compacted')) || (type == "compact" && !sideBarClassList.contains('compacted'))) {
       this.sidebarService.toggle(true, 'menu-sidebar');
     }
     return false;
@@ -285,7 +285,7 @@ export class TaskKanbanComponent implements OnInit {
         (this.callType === 'parent') ? this.project = lead : this.subProject = lead;
         console.log('sub:', this.subProject, 'parent:', this.project);
         this.toggleSidebar('compact');
-      }else{
+      } else {
         this.common.showError(res['msg']);
       }
     }, (err) => {
@@ -316,19 +316,20 @@ export class TaskKanbanComponent implements OnInit {
         if (element.data) {
           element.data.forEach(data => {
             // userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title });
-            data['text_color'] = ((![5,-1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
-            let finduser = (userGroup && userGroup.length>0) ? userGroup.find(x=>{return x.id==data.userid}) : null;
-            if(finduser){
-              (!['complete','rejected','hold'].includes(element.title.toLowerCase()) ) ? finduser['count']++ : null;
-            }else{
-              let initCount = (!['complete','rejected','hold'].includes(element.title.toLowerCase()) ) ? 1 : 0;
-              userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title,count: initCount });
+            // data['statusColor'] = `linear-gradient(to right, ${data.progress} 75%,#ffffff 75%)`;
+            data['text_color'] = ((![5, -1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
+            let finduser = (userGroup && userGroup.length > 0) ? userGroup.find(x => { return x.id == data.userid }) : null;
+            if (finduser) {
+              (!['complete', 'rejected', 'hold'].includes(element.title.toLowerCase())) ? finduser['count']++ : null;
+            } else {
+              let initCount = (!['complete', 'rejected', 'hold'].includes(element.title.toLowerCase())) ? 1 : 0;
+              userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff', field: element.title, count: initCount });
             }
           })
         }
       });
     }
-    this.cardsUserGroup = _.orderBy(userGroup, data => data.count,'desc');
+    this.cardsUserGroup = _.orderBy(userGroup, data => data.count, 'desc');
   }
 
   goToList() {
@@ -396,7 +397,7 @@ export class TaskKanbanComponent implements OnInit {
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0,0);
+        this.saveActivityLog(ticket, 0, 0);
       }
 
 
@@ -657,7 +658,7 @@ export class TaskKanbanComponent implements OnInit {
       this.api.post("AdminTask/getTaskByType", params)
         .subscribe((res) => {
           this.common.loading--;
-          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           // console.log("data", res["data"]);
           if (i === 0) {
             //task by me
@@ -792,15 +793,14 @@ export class TaskKanbanComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
-        // this.getUserPermission(ticket, 0, ticket['log_start_time'], this.common.getDate());
-        this.saveActivityLog(ticket, 0, 0, ticket['log_start_time'], this.common.getDate());
+        this.getUserPermission(ticket, 0, ticket['log_start_time'], this.common.getDate());
       } else {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }
 
-  saveActivityLog(ticket, isHold = 0,progressPer = 0, startTime = this.common.getDate(), endTime = null) {
+  saveActivityLog(ticket, isHold = 0, progressPer = 0, startTime = this.common.getDate(), endTime = null) {
     this.resetInterval();
     let params = {
       requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
@@ -822,8 +822,8 @@ export class TaskKanbanComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
-            // document.getElementById('taskStatus').style.display = 'none';
-            // this.resetProgressForm();
+            document.getElementById('taskStatus').style.display = 'none';
+            this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
             } else {
@@ -867,31 +867,49 @@ export class TaskKanbanComponent implements OnInit {
     });
   }
 
-  // getUserPermission(task, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-  //   console.log("🚀 ~ file: task-kanban.component.ts ~ line 870 ~ TaskKanbanComponent ~ getUserPermission ~ task", task);
-  //   this.taskHold = {
-  //     task: task,
-  //     isHold: isHold,
-  //     startTime: startTime,
-  //     endTime: endTime
-  //   }
-  //   document.getElementById('taskStatus').style.display = 'block';
-  // }
+  getUserPermission(task, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    console.log("🚀 ~ file: task-kanban.component.ts ~ line 870 ~ TaskKanbanComponent ~ getUserPermission ~ task", task)
+    if (task._assignee === this.loggedInUser) {
+      this.taskHold = {
+        task: task,
+        isHold: isHold,
+        startTime: startTime,
+        endTime: endTime
+      }
+      this.getCurrentProgress(task);
+      document.getElementById('taskStatus').style.display = 'block';
+    } else {
+      this.saveActivityLog(task, isHold, 0, startTime, endTime);
+    }
+  }
 
-  // onProgressSave() {
-  //   console.log(this.taskHold, this.taskProgressStatus);
-  //   this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
-  // }
+  getCurrentProgress(task) {
+    let params = `refId=${task._tktid}&type=0`;
+    this.common.loading++;
+    this.api.get(`Admin/getWorkProgressByRefid?` + params).subscribe((res) => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+      this.taskProgressStatus = res['data'][0].progress;
+      }else{
+        this.common.showError(res['msg']);
+      }
+    })
+  }
 
-  // closeotherTaskStatus() {
-  //   document.getElementById('taskStatus').style.display = 'none';
-  //   this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
-  //   this.resetProgressForm();
-  // }
+  onProgressSave() {
+    console.log(this.taskHold, this.taskProgressStatus);
+    this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
+  }
 
-  // resetProgressForm() {
-  //   this.taskProgressStatus = 50;
-  //   this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
-  // }
+  closeotherTaskStatus() {
+    document.getElementById('taskStatus').style.display = 'none';
+    this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+    this.resetProgressForm();
+  }
+
+  resetProgressForm() {
+    this.taskProgressStatus = 50;
+    this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
+  }
 
 }
