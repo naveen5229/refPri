@@ -490,7 +490,8 @@ export class KanbanBoardComponent implements OnInit {
         modeId: null,
         actionOwnerId: null,
         isNextAction: null,
-        isCompleted: false
+        isCompleted: false,
+        stateTargetTime: null
       };
       console.log("saveTransNextState - saveTransAction:", params, transaction);
       // return;
