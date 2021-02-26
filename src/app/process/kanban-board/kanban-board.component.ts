@@ -433,7 +433,9 @@ export class KanbanBoardComponent implements OnInit {
       } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
-      this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
+      if(data.response){
+        this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
+      }
     });
   }
 
