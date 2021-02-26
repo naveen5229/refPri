@@ -37,9 +37,8 @@
       <div class="col-2 text-right" *ngIf="dashboardState">
         <!-- <button class="btn btn-primary mr-2" *ngIf="dashboardState"><i class="fa fa-filter"
             aria-hidden="true"></i>Filter</button> -->
-        <button class="btn btn-primary btn-sm mr-2" id="addLead" ><i
-            class="fa fa-plus"></i></button>
-        <button class="btn btn-primary" (click)="goToList()" >Back</button>
+        <button class="btn btn-primary btn-sm mr-2" id="addLead" (click)="addTransaction()">Add Txn</button>
+        <button class="btn btn-primary" (click)="goToList()">Back</button>
       </div>
     </div>
   </nb-card-header>
@@ -61,10 +60,10 @@
           <!-- <div class="col-4 font-weight-bold" style="vertical-align: center;">Currently Working</div> -->
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
             <span *ngIf="state.data[0]['log_start_time']"
-              (click)="saveActivityLog(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
+              (click)="getUserPermission(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
             <span *ngIf="!state.data[0]['log_start_time']"
-              (click)="saveActivityLog(state.data[0], 0,common.getDate(),null)"><i title="Play"
+              (click)="saveActivityLog(state.data[0], 0,0,common.getDate(),null)"><i title="Play"
                 class="fas fa-play-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
@@ -93,7 +92,7 @@
           </div>
 
           <div class="col-1 my-auto" *ngIf="taskStatusBarData[0].data[0]">
-            <span (click)="saveActivityLog(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())"><i
+            <span (click)="getUserPermission(state.data[0], 0,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Mark Done" class="fas fa-stop-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
@@ -111,7 +110,7 @@
     </div>
 
     <div class="row stateContainer" id="cardField" *ngIf="dashboardState">
-      <div class="stateContainerStyle ml-2"  [style.width.%]="100/cards.length" *ngFor="let card of cards;let i = index">
+      <div class="stateContainerStyle ml-2" [style.width.%]="100/cards.length" *ngFor="let card of cards;let i = index">
         <div class="stateStatusBar" [style.background]="card.color"></div>
         <!-- background: {{data.color}};-->
         <div class="title">
@@ -127,14 +126,22 @@
           [id]="card.id" [cdkDropListConnectedTo]="card.connectedto">
 
           <div class="row shadow-sm cursor-pointer"
-            [ngClass]="data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle'" *ngFor="let data of card.data"
+            [ngClass]="[data.type === 'Transaction' ? 'transactionStyle' : 'actionStyle', (data['log_start_time'] && !data['log_end_time']) ? 'backgroundActive' : '']" *ngFor="let data of card.data"
             cdkDrag (cdkDragStarted)="onDragStarted($event)" (cdkDragEnded)="onDragEnded($event)"
             (cdkDragMoved)="movedIn($event)" (click)="transMessage(data,null)">
+
+            <div class="progress progress-bar-vertical" title="{{data._progress}}">
+              <div class="progress-bar active" [style.background]="data.progress" [style.height]="(data._progress)?data._progress+'%':'3%'" role="progressbar"
+               aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" >
+              </div>
+            </div>
+
             <div class="col-12">
               <h5 [style.color]="data.type_color" class="mb-0 cardTitleStyle" style="margin-bottom:0">{{data.type}}</h5>
             </div>
 
-            <div class="col-12"><label class="cardTitleStyle font-weight-bold" title="{{data.title}}">{{data.title}}</label></div>
+            <div class="col-12"><label class="cardTitleStyle font-weight-bold"
+                title="{{data.title}}">{{data.title}}</label></div>
 
             <div class="col-12">
               <label class="cardTitleStyle" title="{{data.desc}}">{{data.desc}}</label>
@@ -144,6 +151,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="cardTitleStyle">{{data.status}}</div>
+                  <div class="dot"></div>
                 </div>
                 <div class="col-6">
                   <div class="rounded-circle" title="{{data.user_label}}">
@@ -158,4 +166,35 @@
     </div>
 
   </nb-card-body>
+
+
+
+  <div class="modal" id="taskStatus" #taskStatus>
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Task Status</h5>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeotherTaskStatus()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="row m-0">
+            <div class="col-12 p-0">
+              <!-- <label><progress max="100" min="0" [value]="activityProgressStatus" type="danger"></progress></label> -->
+              <input type="range" id="activityProgressStatus" class="col-12 p-0" name="activityProgressStatus" step="5" min="0" max="100" [(ngModel)]="activityProgressStatus">
+            </div>
+            
+          </div>
+
+          <div class="row m-0">
+            <div class="col-6 p-0">
+              {{activityProgressStatus}}% Done
+            </div>
+            <div class="col-6 p-0 text-right">
+              <button class="btn btn-primary" (click)="onProgressSave()">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </nb-card>

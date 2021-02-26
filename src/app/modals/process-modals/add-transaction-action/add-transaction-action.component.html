@@ -151,9 +151,18 @@
             <label>Next State : <span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
-            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="Select State" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;getNextActionList();" [preSelected]="{name:transAction.nextState.name}"
+            <auto-suggestion [data]="nextStateDataList" display="name" placeholder="Select State" name="nextStateName" inputId="nextStateId" (onSelected)="transAction.nextState=($event);nextStateForm=$event._state_form;onSelectNextState($event);getNextActionList();" [preSelected]="{name:transAction.nextState.name}"
                 autocomplete="off">
             </auto-suggestion>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-4">
+            <label>Target Time :</label>
+        </div>
+        <div class="col-8">
+            <uj-date-time-picker [mind]="currentDate" (onChanged)="transAction.stateTargetTime = $event" [dateTimeValue]="transAction.stateTargetTime" [isTime]="true">
+            </uj-date-time-picker>
         </div>
     </div>
 
