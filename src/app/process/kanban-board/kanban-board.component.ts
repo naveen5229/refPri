@@ -267,8 +267,15 @@ export class KanbanBoardComponent implements OnInit {
         // document.getElementById(e2).children[4].classList.add('dragStyle');
       });
     }
+
+    for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
+      document.getElementById(`state${i}`).classList.remove('stateContainerStyle');
+      document.getElementById(`state${i}`).classList.add('stateContainerStyleForScroll');
+    }
   };
+
   onDragEnded(event: CdkDragEnd<string[]>) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 272 ~ KanbanBoardComponent ~ onDragEnded ~ event", event)
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
       connTo.forEach(e2 => {
@@ -278,13 +285,21 @@ export class KanbanBoardComponent implements OnInit {
         // document.getElementById(e2).children[4].classList.remove('dragStyle');
       });
     }
+
+    for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
+      document.getElementById(`state${i}`).classList.add('stateContainerStyle');
+      document.getElementById(`state${i}`).classList.remove('stateContainerStyleForScroll');
+    }
   };
 
 
   drop(event: CdkDragDrop<string[]>) {
     let containerIdTemp = (event.container.id).toLowerCase();
     let ticket = event.previousContainer.data[event.previousIndex];
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event);
+    console.log('previousContainer', event.previousContainer);
+    console.log('container', event.container);
+
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -433,7 +448,7 @@ export class KanbanBoardComponent implements OnInit {
       } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
-      if(data.response){
+      if (data.response) {
         this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
       }
     });
@@ -584,6 +599,7 @@ export class KanbanBoardComponent implements OnInit {
 
   transMessage(lead, type) {
     lead['identity'] = lead.title.split('#')[0];
+    lead['_transactionid'] = lead._transaction_id;
     if (lead._transaction_id > 0) {
       let editData = {
         transactionid: lead._transaction_id,
