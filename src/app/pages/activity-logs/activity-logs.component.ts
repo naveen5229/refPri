@@ -202,7 +202,8 @@ export class ActivityLogsComponent implements OnInit {
             departmentId: this.department.id
           }
         },
-        title: "View Activity Log Summary"
+        title: "View Activity Log Summary",
+        isExcelDownload: true
       }
       // this.common.handleModalSize('class', 'modal-lg', '1100');
       this.common.params = { data: dataparams };
