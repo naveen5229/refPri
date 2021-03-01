@@ -20,7 +20,8 @@ export class AddGlobalFieldComponent implements OnInit {
     { id: 'date', name: 'Date', title:'Add any date type field', icon:'fas fa-calendar-week' },
     { id: 'attachment', name: 'Attachment', title:'Add any attachment type field', icon:'fas fa-paperclip' },
     { id: 'table', name: 'Table', title:'Add any table type field', icon:'fas fa-table' },
-    { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' }
+    { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' },
+    { id: 'pdf-versioning', name: 'PDF', title:'Add any PDF type field', icon:'fas fa-file-pdf' }
   ];
 
   restrictionForm = {

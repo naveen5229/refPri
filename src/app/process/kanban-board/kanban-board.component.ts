@@ -717,7 +717,7 @@ export class KanbanBoardComponent implements OnInit {
       refid: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_state_id,
       reftype: ticket._is_action === 1 ? 2 : 1,
       outcome: null,
-      spendHour: null,
+      spendHours: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
       isHold: isHold,
