@@ -113,14 +113,13 @@ export class GenericModelComponent implements OnInit {
     } else {
       this.api.get(this.viewObj.api)
       .subscribe(res => {
+        this.common.loading--;
         if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['code'] == 3) {
           this.common.showError(res['data']);
-          this.common.loading--;
           this.activeModal.close();
 
         } else {
-        this.common.loading--;
         this.data = res['data'];
         console.log(this.data);
         if (this.data == null) {

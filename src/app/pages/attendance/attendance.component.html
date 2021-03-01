@@ -1,37 +1,29 @@
 <nb-card>
     <nb-card-header>
         <div class="row m-0">
-            <h5 class="heading-design">Attendance</h5>
-        </div>
-    </nb-card-header>
-    <nb-card-body>
-        <div class="row">
-            <div class="col-1">
-                <label>Select Date</label>
+            <div class="col-2">
+                <h5 class="heading-design">Attendance</h5>
             </div>
             <div class="col-2">
                 <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false" [maxd]='today'>
                 </uj-date-time-picker>
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <select [(ngModel)]="selectedGroup">
                     <option value="-1">All</option>
                     <option *ngFor="let g of groupList" [value]="g._id">{{g.name}}</option>
                 </select>
+                <button type="submit" id="submit" (click)="getAttendanceList()" class="btn btn-primary ml-2 mr-2 btn-sm">Submit</button>
             </div>
-
-            <div class="col-2">
-                <button type="submit" id="submit" (click)="getAttendanceList()" class="btn btn-primary mr-2 btn-sm">Submit</button>
-            </div>
-
-            <div class="col-4 text-right">
+            <div class="col-5 text-right">
                 <button id="summary" (click)="getAttendanceMonthySummary()" class="btn btn-primary mr-2 btn-sm">Attendance Monthly Summary</button>
+                <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV()">
+                    <i class="fas fa-file-excel"></i>
+                </button>
             </div>
-            <div class="col-1 text-right">
-                <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
-            </div>
-
         </div>
+    </nb-card-header>
+    <nb-card-body>
         <div class="row mt-1">
             <div class="col-12">
                 <smart-table *ngIf="attandanceList.length!=0" [data]="tableAttandanceList.data" [settings]="tableAttandanceList.settings" id="attandanceList">
