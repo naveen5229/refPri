@@ -227,6 +227,7 @@ export class KanbanBoardComponent implements OnInit {
 
         if (element.data && element.data.length) {
           element.data.forEach(data => {
+            data['desctoshow'] = (data.desc && (data.desc.split(',')).length) ? (data.desc.split(',')) : data['desctoshow'] = [data.desc];
             // data['text_color'] = ((![5,-1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
             let finduser = (userGroup && userGroup.length > 0) ? userGroup.find(x => { return x.id == data.userid }) : null;
             if (finduser) {
@@ -294,6 +295,7 @@ export class KanbanBoardComponent implements OnInit {
 
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 297 ~ KanbanBoardComponent ~ drop ~ event", event)
     let containerIdTemp = (event.container.id).toLowerCase();
     let ticket = event.previousContainer.data[event.previousIndex];
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event);

@@ -143,7 +143,7 @@
             <div class="col-12" style="line-height: 1rem;padding-top: 4px;"><label [style.color]="data.type_color" class="cardTitleStyle font-weight-bold"
                 title="{{data.title}}">{{data.title}}</label></div>
 
-            <div class="col-12" style="line-height: 1rem;" *ngFor="let subdesc of data.desc.split(',')">
+            <div class="col-12" style="line-height: 1rem;" *ngFor="let subdesc of data.desctoshow">
               <label class="cardTitleStyle" title="{{subdesc}}">{{subdesc}}</label>
             </div>
 
