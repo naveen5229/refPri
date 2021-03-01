@@ -143,18 +143,20 @@
             <div class="col-12" style="line-height: 1rem;padding-top: 4px;"><label [style.color]="data.type_color" class="cardTitleStyle font-weight-bold"
                 title="{{data.title}}">{{data.title}}</label></div>
 
-            <div class="col-12" style="line-height: 1rem;" *ngFor="let subdesc of data.desc.split(',')">
+            <div class="col-12" style="line-height: 1rem;" *ngFor="let subdesc of data.desctoshow">
               <label class="cardTitleStyle" title="{{subdesc}}">{{subdesc}}</label>
             </div>
 
             <div class="col-12" style="padding-bottom:5px">
               <div class="row">
-                <div class="col-6 d-flex">
+                <div class="col-6">
                   <div class="cardTitleStyle">{{data.status}}</div>
+                </div>
+                <div class="col-3">
                   <div *ngIf="!data._is_action" title="Transaction"><i class="fas fa-exchange-alt"></i></div>
                   <div *ngIf="data._is_action" title="Action"><i class="fas fa-hand-pointer"></i></div>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                   <div class="rounded-circle" title="{{data.user_label}}">
                     {{data.user}}</div>
                 </div>
