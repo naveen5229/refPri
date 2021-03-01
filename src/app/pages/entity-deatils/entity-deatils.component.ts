@@ -32,6 +32,7 @@ export class EntityDeatilsComponent implements OnInit {
     name: null,
     contactNo: null,
     email: null,
+    association: null,
     requestId: null
   }
 
@@ -102,6 +103,7 @@ export class EntityDeatilsComponent implements OnInit {
       name: null,
       contactNo: null,
       email: null,
+      association: null,
       requestId: null
     }
   }
@@ -291,7 +293,7 @@ export class EntityDeatilsComponent implements OnInit {
         break;
       case 2: this.entityListForm.name = entity.name, this.entityListForm.entityType = { id: entity._entity_type_id, name: entity.entity_type }, this.entityListForm.requestId = entity._id
         break;
-      case 3: this.contactForm.name = entity._contact_name, this.contactForm.contactNo = entity._contact_no, this.contactForm.email = entity._email, this.contactForm.entityId = entity._entity_id,this.contactForm.requestId = entity._id
+      case 3: this.contactForm.name = entity._contact_name, this.contactForm.contactNo = entity._contact_no, this.contactForm.email = entity._email, this.contactForm.entityId = entity._entity_id,this.contactForm.requestId = entity._id,this.contactForm.association = entity._association
         break;
     }
   }

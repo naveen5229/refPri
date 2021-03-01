@@ -817,6 +817,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -890,6 +891,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -962,6 +964,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -1015,6 +1018,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -1091,6 +1095,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -1168,6 +1173,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -1321,6 +1327,7 @@ export class TaskComponent implements OnInit {
         column["style"] = {
           background: this.common.taskStatusBg(ticket._status),
         };
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -1406,6 +1413,7 @@ export class TaskComponent implements OnInit {
         } else {
           column["style"] = { background: "aliceblue" };
         }
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
       }
       columns.push(column);
     });
@@ -2516,7 +2524,6 @@ export class TaskComponent implements OnInit {
       }
       columns.push(column);
     });
-    console.log(columns);
     return columns;
   }
 

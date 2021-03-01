@@ -1189,7 +1189,7 @@ export class TicketComponent implements OnInit {
 
   AdditionalFormNew(data) {
     console.log('final data:',data);
-    this.common.params = { additionalform: (data > 0) ? data : null,isDisabled:true };
+    this.common.params = { additionalform: (data.length > 0) ? data : null,isDisabled:true };
     const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 

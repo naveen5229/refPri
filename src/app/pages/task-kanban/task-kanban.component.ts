@@ -71,6 +71,8 @@ export class TaskKanbanComponent implements OnInit {
   taskStatusButton = 'Hold';
   boardType: number = 0;
   callType = '';
+  taskProgressStatus = 50;
+  taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
 
   constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
@@ -106,7 +108,7 @@ export class TaskKanbanComponent implements OnInit {
 
   toggleSidebar(type): boolean {
     let sideBarClassList = document.querySelectorAll('.menu-sidebar')[0].classList;
-    if((type=="expand" && sideBarClassList.contains('compacted')) || (type=="compact" && !sideBarClassList.contains('compacted'))){
+    if ((type == "expand" && sideBarClassList.contains('compacted')) || (type == "compact" && !sideBarClassList.contains('compacted'))) {
       this.sidebarService.toggle(true, 'menu-sidebar');
     }
     return false;
@@ -283,7 +285,7 @@ export class TaskKanbanComponent implements OnInit {
         (this.callType === 'parent') ? this.project = lead : this.subProject = lead;
         console.log('sub:', this.subProject, 'parent:', this.project);
         this.toggleSidebar('compact');
-      }else{
+      } else {
         this.common.showError(res['msg']);
       }
     }, (err) => {
@@ -306,24 +308,28 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   getAllUserGroup(boardData) {
+    console.log("🚀 ~ file: task-kanban.component.ts ~ line 307 ~ TaskKanbanComponent ~ getAllUserGroup ~ boardData", boardData)
     this.cardsUserGroup = [];
     let userGroup = [];
     if (boardData) {
       boardData.forEach(element => {
         if (element.data) {
           element.data.forEach(data => {
-            userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff' });
-            data['text_color'] = (this.common.getDate() > new Date(data.due_date)) ? "text-danger" : '';
+            // userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff',field:element.title });
+            // data['statusColor'] = `linear-gradient(to right, ${data.progress} 75%,#ffffff 75%)`;
+            data['text_color'] = ((![5, -1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
+            let finduser = (userGroup && userGroup.length > 0) ? userGroup.find(x => { return x.id == data.userid }) : null;
+            if (finduser) {
+              (!['complete', 'rejected', 'hold'].includes(element.title.toLowerCase())) ? finduser['count']++ : null;
+            } else {
+              let initCount = (!['complete', 'rejected', 'hold'].includes(element.title.toLowerCase())) ? 1 : 0;
+              userGroup.push({ id: data.userid, name: data.user, user_label: data.user_label, color: '#3366ff', field: element.title, count: initCount });
+            }
           })
         }
       });
     }
-    let groupBy = _.orderBy(_.groupBy(userGroup, data => { return data.id }), data => data.length,'desc');
-    // Object.keys(groupBy).map(key => {
-    //   this.cardsUserGroup.push(groupBy[key][0]);
-    // });
-    groupBy.forEach(element => this.cardsUserGroup.push(element[0]));
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 255 ~ ProjectUserKanbanComponent ~ placeCardLength ~ boardData", this.cardsUserGroup)
+    this.cardsUserGroup = _.orderBy(userGroup, data => data.count, 'desc');
   }
 
   goToList() {
@@ -336,13 +342,11 @@ export class TaskKanbanComponent implements OnInit {
 
   onDragStarted(event: CdkDragStart<string[]>) {
     // let scrollWidth = document.getElementById('cardField').offsetWidth;
-    // console.log("🚀 ~ file: kanban-board.component.ts ~ line 157 ~ KanbanBoardComponent ~ onDragStarted ~ scrollWidth", scrollWidth)
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
       connTo.forEach(e2 => {
         document.getElementById(e2).style.border = 'inset';
         document.getElementById(e2).style.borderColor = 'gray';
-        // console.log(document.getElementById(e2).children[4]);
         // document.getElementById(e2).children[4].classList.add('dragStyle');
       });
     }
@@ -352,7 +356,6 @@ export class TaskKanbanComponent implements OnInit {
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
       connTo.forEach(e2 => {
-        console.log("connTo:", e2);
         document.getElementById(e2).style.border = null;
         document.getElementById(e2).style.borderColor = null;
         // document.getElementById(e2).children[4].classList.remove('dragStyle');
@@ -362,12 +365,11 @@ export class TaskKanbanComponent implements OnInit {
 
   onDragEntered(event, i) {
     if ((event.container.id).toLowerCase() === 'worklog') {
-      console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 327 ~ ProjectUserKanbanComponent ~ onDragEntered ~ event", event, i)
     }
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
+    console.log("🚀 ~ file: task-kanban.component.ts ~ line 372 ~ TaskKanbanComponent ~ drop ~ event", event)
     let containerIdTemp = (event.container.id).toLowerCase();
     let ticket = event.previousContainer.data[event.previousIndex];
     if (event.previousContainer === event.container) {
@@ -376,7 +378,6 @@ export class TaskKanbanComponent implements OnInit {
         this.markDoneActivityWithConfirm(ticket);
       }
     } else {
-      console.log('Pd', event.previousContainer.data)
       // transferArrayItem(event.previousContainer.data,
       //                   event.container.data,
       //                   event.previousIndex,
@@ -391,14 +392,13 @@ export class TaskKanbanComponent implements OnInit {
         if ((event.previousContainer.id).toLowerCase() === 'inprogress') {
           ticket["_last_logid"] = null;
         }
-        console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 391 ~ ProjectUserKanbanComponent ~ drop ~ containerIdTemp", containerIdTemp)
         if (this.taskStatusBarData[0].data[0]) {
           this.common.showError('A Task Already In Progress');
           this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0);
+        this.saveActivityLog(ticket, 0, 0);
       }
 
 
@@ -411,13 +411,11 @@ export class TaskKanbanComponent implements OnInit {
 
       this.cards.forEach((data, i) => {
         if (data.title === event.container.id) {
-          console.log('index', data, i);
           if (data.data === null) {
             data.data = [];
           }
 
           data.data.push(JSON.parse(JSON.stringify(ticket)));
-          console.log('data', event.container.id, containerIdTemp)
           switch (containerIdTemp) {
             case 'complete': this.changeTicketStatusWithConfirm(ticket, null, 5);
               break;
@@ -445,7 +443,6 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   movedIn(event) {
-    // console.log("🚀 ~ file: kanban-board.component.ts ~ line 223 ~ KanbanBoardComponent ~ movedIn ~ event", event)
     let scrollWidth = document.getElementById('cardField');
     if (event.delta.x == 1) {
       scrollWidth.scrollTo(scrollWidth.scrollLeft + 5, 0);
@@ -569,7 +566,6 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
-    console.log(status, ticket, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
       if (status === -1) {
@@ -593,11 +589,9 @@ export class TaskKanbanComponent implements OnInit {
         windowClass: "accountModalClass",
       });
       activeModal.result.then((data) => {
-        console.log("Confirm response:", data);
         if (data.response) {
           this.updateTicketStatus(ticket, type, status, data.remark);
         } else {
-          console.log('project type', this.project)
           this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
         }
       });
@@ -617,7 +611,6 @@ export class TaskKanbanComponent implements OnInit {
         taskId: ticket._refid,
         ticketType: ticket._tktype,
       };
-      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post("AdminTask/updateTicketStatus", params).subscribe(
         (res) => {
@@ -625,7 +618,7 @@ export class TaskKanbanComponent implements OnInit {
           if (res["code"] > 0) {
             // && status != 1 for moving in inprogress
             if (status != 1 && !ticket.log_end_time && ticket._last_logid > 0) {
-              this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
+              this.saveActivityLog(ticket, 0, 0, ticket['log_start_time'], this.common.getDate());
               console.log('status with 1 working and end time is null');
             } else {
               this.common.showToast(res["msg"]);
@@ -638,7 +631,6 @@ export class TaskKanbanComponent implements OnInit {
         (err) => {
           this.common.loading--;
           this.common.showError();
-          console.log("Error: ", err);
           this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
         }
       );
@@ -667,7 +659,7 @@ export class TaskKanbanComponent implements OnInit {
       this.api.post("AdminTask/getTaskByType", params)
         .subscribe((res) => {
           this.common.loading--;
-          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           // console.log("data", res["data"]);
           if (i === 0) {
             //task by me
@@ -728,7 +720,6 @@ export class TaskKanbanComponent implements OnInit {
     // }, 1000);
     let starttime = ticket['log_start_time'];
     this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
-    console.log("inprogressTimer:", this.inprogressTimer);
     let thisVar = this;
     if (ticket['log_start_time']) {
       this.setTimer = setInterval(function () {
@@ -746,7 +737,6 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    console.log("type:", type);
     let ticketEditData = {
       ticketData: {
         _chat_feature: null,
@@ -784,7 +774,6 @@ export class TaskKanbanComponent implements OnInit {
       container: "nb-layout",
       backdrop: "static",
     });
-    console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
       this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
     });
@@ -804,18 +793,15 @@ export class TaskKanbanComponent implements OnInit {
       windowClass: "accountModalClass",
     });
     activeModal.result.then((data) => {
-      console.log("Confirm response:", data);
       if (data.response) {
-        this.saveActivityLog(ticket, 0, ticket['log_start_time'], this.common.getDate());
-        console.log('ticket', ticket);
+        this.getUserPermission(ticket, 0, ticket['log_start_time'], this.common.getDate());
       } else {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }
 
-  saveActivityLog(ticket, isHold = 0, startTime = this.common.getDate(), endTime = null) {
-    console.log("🚀 ~ file: project-user-kanban.component.ts ~ line 767 ~ ProjectUserKanbanComponent ~ saveActivityLog ~ ticket", this.taskStatusBarData, ticket)
+  saveActivityLog(ticket, isHold = 0, progressPer = 0, startTime = this.common.getDate(), endTime = null) {
     this.resetInterval();
     let params = {
       requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
@@ -825,9 +811,9 @@ export class TaskKanbanComponent implements OnInit {
       spendHour: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
-      isHold: isHold
+      isHold: isHold,
+      progressPer: progressPer
     };
-    console.log("params:", params);
     // this.assignTaskToProgress(ticket);
     //  return false;
     this.common.loading++;
@@ -837,6 +823,8 @@ export class TaskKanbanComponent implements OnInit {
         if (res["code"] > 0) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
+            document.getElementById('taskStatus').style.display = 'none';
+            this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
             } else {
@@ -861,7 +849,6 @@ export class TaskKanbanComponent implements OnInit {
 
   openUpdateTaskProject(event, ticket) {
     event.stopPropagation();
-    console.log("ticket:", ticket);
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
@@ -879,6 +866,51 @@ export class TaskKanbanComponent implements OnInit {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
+  }
+
+  getUserPermission(task, isHold = 0, startTime = this.common.getDate(), endTime = null) {
+    console.log("🚀 ~ file: task-kanban.component.ts ~ line 870 ~ TaskKanbanComponent ~ getUserPermission ~ task", task)
+    if (task._assignee === this.loggedInUser) {
+      this.taskHold = {
+        task: task,
+        isHold: isHold,
+        startTime: startTime,
+        endTime: endTime
+      }
+      this.getCurrentProgress(task);
+      document.getElementById('taskStatus').style.display = 'block';
+    } else {
+      this.saveActivityLog(task, isHold, 0, startTime, endTime);
+    }
+  }
+
+  getCurrentProgress(task) {
+    let params = `refId=${task._tktid}&type=0`;
+    this.common.loading++;
+    this.api.get(`Admin/getWorkProgressByRefid?` + params).subscribe((res) => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+      this.taskProgressStatus = res['data'][0].progress;
+      }else{
+        this.common.showError(res['msg']);
+      }
+    })
+  }
+
+  onProgressSave() {
+    console.log(this.taskHold, this.taskProgressStatus);
+    this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
+  }
+
+  closeotherTaskStatus() {
+    document.getElementById('taskStatus').style.display = 'none';
+    this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+    this.resetProgressForm();
+  }
+
+  resetProgressForm() {
+    this.taskProgressStatus = 50;
+    this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
   }
 
 }

@@ -27,6 +27,7 @@ export class AddTransactionActionComponent implements OnInit {
     actionOwner: { id: null, name: "" },
     remark: null,
     targetTime: new Date(),
+    stateTargetTime: new Date(),
     transId: null,
     isCompleted: false,
     formType: 0, //0=action,1=state,2=next-action
@@ -54,6 +55,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.adminList = (this.common.params.adminList.length > 0) ? this.common.params.adminList : [];
     // let threashold = new Date();
     this.transAction.targetTime.setHours(23, 59);
+    this.transAction.stateTargetTime.setHours(23, 59);
     if (this.common.params && this.common.params.actionData) {
       this.transAction.requestId = (this.common.params.actionData.requestId > 0) ? this.common.params.actionData.requestId : null;
       this.transAction.formType = (this.common.params.actionData.formType) ? this.common.params.actionData.formType : 0;
@@ -111,7 +113,7 @@ export class AddTransactionActionComponent implements OnInit {
       this.common.loading--;
       if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let stateDataList = res['data'];
-      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id } });
+      this.stateDataList = stateDataList.map(x => { return { id: x._state_id, name: x.name, _nextstate: x._nextstate, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id, _threshold: x._threshold } });
       this.checkNextStateList();
     }, err => {
       this.common.loading--;
@@ -124,7 +126,7 @@ export class AddTransactionActionComponent implements OnInit {
     if (this.transAction.state.id > 0) {
       let selectedState = this.stateDataList.find(x => x.id == this.transAction.state.id);
       if (selectedState && selectedState._nextstate && selectedState._nextstate.length) {
-        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id } });
+        this.nextStateDataList = selectedState._nextstate.map(x => { return { id: x._state_id, name: x.name, _state_form: (x._state_form) ? x._state_form : 0, type: x._type_id, _threshold: x._threshold } });
       } else {
         this.nextStateDataList = this.stateDataList;
       }
@@ -154,6 +156,18 @@ export class AddTransactionActionComponent implements OnInit {
     } else {
       threashold.setHours(23, 59);
       this.transAction.targetTime = threashold;
+    }
+  }
+  
+  onSelectNextState(event) {
+    let threashold = new Date();
+    if (event._threshold > 0) {
+      let cHours = threashold.getHours();
+      threashold.setHours(cHours + event._threshold);
+      this.transAction.stateTargetTime = threashold;
+    } else {
+      threashold.setHours(23, 59);
+      this.transAction.stateTargetTime = threashold;
     }
   }
 
@@ -320,6 +334,7 @@ export class AddTransactionActionComponent implements OnInit {
       this.common.showError('Next state is missing');
     }
     else {
+      let targetTime = (this.transAction.stateTargetTime) ? this.common.dateFormatter(this.transAction.stateTargetTime) : null;
       const params = {
         requestId: null,
         transId: this.transAction.transId,
@@ -331,7 +346,8 @@ export class AddTransactionActionComponent implements OnInit {
         modeId: null,
         actionOwnerId: null,
         isNextAction: null,
-        isCompleted: false
+        isCompleted: false,
+        stateTargetTime: targetTime
       };
       // console.log("saveTransAction:", params);
       this.common.loading++;
@@ -373,6 +389,7 @@ export class AddTransactionActionComponent implements OnInit {
     this.transAction.actionOwner = { id: null, name: "" };
     this.transAction.remark = "";
     this.transAction.targetTime = new Date();
+    this.transAction.stateTargetTime = new Date();
     this.transAction.isCompleted = false;
     this.transAction.onSiteImageId = null;
     this.standards = [];
