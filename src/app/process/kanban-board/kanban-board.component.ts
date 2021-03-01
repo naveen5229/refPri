@@ -269,10 +269,10 @@ export class KanbanBoardComponent implements OnInit {
       });
     }
 
-    for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
-      document.getElementById(`state${i}`).classList.remove('stateContainerStyle');
-      document.getElementById(`state${i}`).classList.add('stateContainerStyleForScroll');
-    }
+    // for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
+    //   document.getElementById(`state${i}`).classList.remove('stateContainerStyle');
+    //   document.getElementById(`state${i}`).classList.add('stateContainerStyleForScroll');
+    // }
   };
 
   onDragEnded(event: CdkDragEnd<string[]>) {
@@ -287,10 +287,10 @@ export class KanbanBoardComponent implements OnInit {
       });
     }
 
-    for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
-      document.getElementById(`state${i}`).classList.add('stateContainerStyle');
-      document.getElementById(`state${i}`).classList.remove('stateContainerStyleForScroll');
-    }
+    // for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
+    //   document.getElementById(`state${i}`).classList.add('stateContainerStyle');
+    //   document.getElementById(`state${i}`).classList.remove('stateContainerStyleForScroll');
+    // }
   };
 
 
