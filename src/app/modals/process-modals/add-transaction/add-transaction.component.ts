@@ -318,6 +318,15 @@ export class AddTransactionComponent implements OnInit {
     })
   }
 
+  handleFileSelectionForPdf(event, i) {
+    this.common.handleFileSelection(event,["pdf"]).then(res=>{
+      console.log("handleFileSelection:",res);
+      this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+    },err=>{
+      this.common.showError();
+    });
+  }
+
   uploadattachFile(arrayType, i) {
     if (!this.attachmentFile[i] || !this.attachmentFile[i].file) {
       this.common.showError("Browse a file first");
