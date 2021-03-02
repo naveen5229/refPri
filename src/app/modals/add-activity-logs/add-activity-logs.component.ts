@@ -88,9 +88,9 @@ export class AddActivityLogsComponent implements OnInit {
     };
     if (this.activity.desc == null) {
       this.common.showError('Enter Description');
-    } else if (this.activity.contact == null) {
+    } else if (!this.timeValidity && this.activity.contact == null) {
       this.common.showError('Enter Contatc Person');
-    } else if (this.activity.outcome == null) {
+    } else if (!this.timeValidity && this.activity.outcome == null) {
       this.common.showError('Enter Outcome');
     } else if (this.timeValidity && this.activity.hour > this.oldTime) {
       this.common.showError('Spend Time Can Not Be Increased From The Last Saved Time');
@@ -106,6 +106,7 @@ export class AddActivityLogsComponent implements OnInit {
             if (res['data'][0]['y_id'] > 0) {
               this.common.showToast(res['data'][0]['y_msg']);
               // this.common.showToast('Success');
+              this.timeValidity = false;
               this.isSubmit = true;
               this.refreshForm();
             } else {

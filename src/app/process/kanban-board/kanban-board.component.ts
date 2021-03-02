@@ -245,6 +245,7 @@ export class KanbanBoardComponent implements OnInit {
     //   this.cardsUserGroup.push(groupBy[key][0]);
     // });
     this.cardsUserGroup = _.orderBy(userGroup, data => data.count, 'desc');
+    this.cardsForFilterByUser = JSON.parse(JSON.stringify(this.cards));
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 262 ~ KanbanBoardComponent ~ getAllUserGroup ~ cardsUserGroup", this.cardsUserGroup)
   }
 
@@ -634,13 +635,12 @@ export class KanbanBoardComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return (data.title.toLowerCase()).match(searchedKey) || (data.type.toLowerCase()).match(searchedKey)
+            return (data.title.toLowerCase()).match(searchedKey) || (data.type.toLowerCase()).match(searchedKey) || (data.desc.toLowerCase()).match(searchedKey)
           })
         }
       });
       this.cards = cardsForFilter;
     }
-    this.cardsForFilterByUser = JSON.parse(JSON.stringify(this.cards));
     this.placeCardLength(this.cards);
     this.getAllUserGroup(this.cards);
     this.filterUserGroup = [];
@@ -674,11 +674,13 @@ export class KanbanBoardComponent implements OnInit {
       allAssignedUser.push(ele.id);
     });
 
+    console.log('all Assigned user',allAssignedUser)
     if (this.filterUserGroup.includes(userId)) {
       this.filterUserGroup.splice(this.filterUserGroup.indexOf(userId), 1);
     } else {
       this.filterUserGroup.push(userId);
     }
+    console.log('filter user group',this.filterUserGroup)
 
     let cardsForFilter = this.cardsForFilterByUser.length ? JSON.parse(JSON.stringify(this.cardsForFilterByUser)) : JSON.parse(JSON.stringify(this.cardsForFilter));
     cardsForFilter.forEach(element => {
@@ -693,6 +695,7 @@ export class KanbanBoardComponent implements OnInit {
       }
     });
     this.cards = cardsForFilter;
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 698 ~ KanbanBoardComponent ~ getCardsByUser ~ cards", this.cards)
     this.placeCardLength(this.cards);
 
     allAssignedUser.map(ele => {
