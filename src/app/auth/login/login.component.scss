@@ -52,6 +52,10 @@ input {
     letter-spacing: 0.8px;
 }
 
+input::placeholder{
+    color: #ffffff;
+}
+
 .btn {
     border-radius: $radious-xs;
     background: $danger-4 !important;
