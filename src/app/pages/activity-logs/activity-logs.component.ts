@@ -67,7 +67,8 @@ export class ActivityLogsComponent implements OnInit {
     this.department.name = selectedDept.name;
   }
 
-  addActivityLog(){
+  addActivityLog(activity){
+    this.common.params = {isEdit: activity};
     const activeModal = this.modalService.open(AddActivityLogsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log(data);
@@ -156,7 +157,7 @@ export class ActivityLogsComponent implements OnInit {
 
     actionIcons(activity) {
       let icons = [
-        // { class: "fa fa-edit", action: this.editActiveAdmin.bind(this, activity) },
+        { class: "fa fa-edit", action: this.addActivityLog.bind(this, activity) },
         { class: "fa fa-trash", action: this.deleteActivity.bind(this, activity) },
       ];
       return icons;

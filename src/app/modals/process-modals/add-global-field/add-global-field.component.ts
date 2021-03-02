@@ -20,7 +20,8 @@ export class AddGlobalFieldComponent implements OnInit {
     { id: 'date', name: 'Date', title:'Add any date type field', icon:'fas fa-calendar-week' },
     { id: 'attachment', name: 'Attachment', title:'Add any attachment type field', icon:'fas fa-paperclip' },
     { id: 'table', name: 'Table', title:'Add any table type field', icon:'fas fa-table' },
-    { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' }
+    { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' },
+    { id: 'pdf-versioning', name: 'PDF', title:'Add any PDF type field', icon:'fas fa-file-pdf' }
   ];
 
   restrictionForm = {
@@ -164,12 +165,31 @@ export class AddGlobalFieldComponent implements OnInit {
     this.form.childArray = [];
     this.addBtn = "Add";
   }
+
   
-  AddField() {
+  addFieldConfirm() {
     if (((this.form.name.toLowerCase()).includes('mobile') || (this.form.name.toLowerCase()).includes('contact')) && this.form.typeId.includes('number')) {
       this.common.showError('Please use Global Fields to add contact name or contact number.');
       return false;
     }
+    if (this.form.typeId=='pdf-versioning') {
+      this.common.params = {
+        title: 'Confirmation  ',
+        description: `<b>&nbsp;` + 'This Field Showing On Transaction And Allow PDF File Only' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "pdfVersioningModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.AddField();
+        }
+      });
+    } else {
+      this.AddField();
+    }
+  }
+  
+  AddField() {
+    
     let childArray = (this.form.childArray && this.form.childArray.length > 0) ? this.form.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
     let tmpJson = {
       param: this.form.name,

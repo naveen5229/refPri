@@ -997,7 +997,7 @@ export class CommonService {
         result.name = file.name;
         result.file =  res;
       } else {
-        this.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf,csv");
+        this.showError("Valid Format Are : "+format.join(","));
         return false;
       }
       // console.log("attachmentFile:", file);

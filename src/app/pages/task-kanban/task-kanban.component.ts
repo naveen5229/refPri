@@ -808,7 +808,7 @@ export class TaskKanbanComponent implements OnInit {
       refid: ticket._tktid,
       reftype: 0,
       outcome: null,
-      spendHour: null,
+      spendHours: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
       isHold: isHold,
