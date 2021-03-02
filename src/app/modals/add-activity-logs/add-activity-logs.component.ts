@@ -8,25 +8,20 @@ import { CommonService } from '../../Service/common/common.service';
   styleUrls: ['./add-activity-logs.component.scss']
 })
 export class AddActivityLogsComponent implements OnInit {
-
-
-
   activity = {
     desc: null,
     contact: null,
     outcome: null,
     date: new Date(),
     hour: new Date(),
-    requestId: null
+    requestId: null,
+    refId: null
   }
-
   isSubmit = false;
-
   maxdate = new Date();
   mindate = new Date();
   timeValidity = false;
   oldTime = new Date()
-
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -34,10 +29,6 @@ export class AddActivityLogsComponent implements OnInit {
     public modalService: NgbModal) {
     this.mindate.setDate(this.mindate.getDate() - 2)
     let time = [];
-    // this.activity.hour.setHours(0);
-    // this.activity.hour.setMinutes(0);
-    // this.activity.hour.setSeconds(0);
-
     if (this.common.params.isEdit) {
       time = this.common.params.isEdit.spend_hour.split(':');
       this.timeValidity = true;
@@ -47,14 +38,14 @@ export class AddActivityLogsComponent implements OnInit {
         outcome: this.common.params.isEdit.outcome,
         date: new Date(this.common.params.isEdit.addtime),
         hour: new Date(),
-        requestId: this.common.params.isEdit._id
+        requestId: this.common.params.isEdit._id,
+        refId: (this.common.params.isEdit._refid>0) ? this.common.params.isEdit._refid : null
       }
     }
 
     this.activity.hour.setHours((time.length) ? parseInt(time[0]) : 0);
     this.activity.hour.setMinutes((time.length) ? parseInt(time[1]) : 0);
     this.activity.hour.setSeconds(0);
-
     this.oldTime.setHours(parseInt(time[0]));
     this.oldTime.setMinutes(parseInt(time[1]));
     this.oldTime.setSeconds(0);
@@ -88,9 +79,9 @@ export class AddActivityLogsComponent implements OnInit {
     };
     if (this.activity.desc == null) {
       this.common.showError('Enter Description');
-    } else if (!this.timeValidity && this.activity.contact == null) {
+    } else if (!this.activity.refId && this.activity.contact == null) {
       this.common.showError('Enter Contatc Person');
-    } else if (!this.timeValidity && this.activity.outcome == null) {
+    } else if (!this.activity.refId && this.activity.outcome == null) {
       this.common.showError('Enter Outcome');
     } else if (this.timeValidity && this.activity.hour > this.oldTime) {
       this.common.showError('Spend Time Can Not Be Increased From The Last Saved Time');
@@ -130,7 +121,8 @@ export class AddActivityLogsComponent implements OnInit {
       outcome: null,
       date: this.activity.date,
       hour: new Date(),
-      requestId: null
+      requestId: null,
+      refId: null
     };
     this.activity.hour.setHours(0);
     this.activity.hour.setMinutes(0);
