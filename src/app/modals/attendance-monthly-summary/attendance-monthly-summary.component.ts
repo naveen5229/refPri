@@ -461,7 +461,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   actionIcons(shift, type) {
     let icons = [
-      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "view detail", title: null,},
+      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "", title: "view detail",},
     ];
     return icons;
   }

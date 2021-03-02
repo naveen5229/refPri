@@ -16,13 +16,16 @@ export class AddActivityLogsComponent implements OnInit {
     contact: null,
     outcome: null,
     date: new Date(),
-    hour: new Date()
+    hour: new Date(),
+    requestId: null
   }
 
   isSubmit = false;
 
   maxdate = new Date();
   mindate = new Date();
+  timeValidity = false;
+  oldTime = new Date()
 
 
   constructor(public common: CommonService,
@@ -30,38 +33,87 @@ export class AddActivityLogsComponent implements OnInit {
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
     this.mindate.setDate(this.mindate.getDate() - 2)
-    this.activity.hour.setHours(0);
-    this.activity.hour.setMinutes(0);
+    let time = [];
+    // this.activity.hour.setHours(0);
+    // this.activity.hour.setMinutes(0);
+    // this.activity.hour.setSeconds(0);
+
+    if (this.common.params.isEdit) {
+      time = this.common.params.isEdit.spend_hour.split(':');
+      this.timeValidity = true;
+      this.activity = {
+        desc: this.common.params.isEdit.description,
+        contact: this.common.params.isEdit.contact_person,
+        outcome: this.common.params.isEdit.outcome,
+        date: new Date(this.common.params.isEdit.addtime),
+        hour: new Date(),
+        requestId: this.common.params.isEdit._id
+      }
+    }
+
+    this.activity.hour.setHours((time.length) ? parseInt(time[0]) : 0);
+    this.activity.hour.setMinutes((time.length) ? parseInt(time[1]) : 0);
     this.activity.hour.setSeconds(0);
 
+    this.oldTime.setHours(parseInt(time[0]));
+    this.oldTime.setMinutes(parseInt(time[1]));
+    this.oldTime.setSeconds(0);
   }
 
   ngOnInit() {
   }
 
   saveActivityLog() {
+    // let params = {
+    //   description: this.activity.desc,
+    //   contactPerson: this.activity.contact,
+    //   outcome: this.activity.outcome,
+    //   date: this.common.dateFormatter(this.activity.date),
+    //   spendHours: this.common.timeFormatter(this.activity.hour),
+    //   requestId: this.activity.requestId
+    // }
+
     let params = {
+      refid: null,
+      reftype: null,
+      endTime: null,
+      isHold: null,
+      progressPer: null,
+      requestId: this.activity.requestId,
+      startTime: (this.activity.date) ? this.common.dateFormatter(this.activity.date) : null,
+      outcome: this.activity.outcome,
+      spendHours: this.common.timeFormatter(this.activity.hour),
       description: this.activity.desc,
       contactPerson: this.activity.contact,
-      outcome: this.activity.outcome,
-      date: this.common.dateFormatter(this.activity.date),
-      spendHours: this.common.timeFormatter(this.activity.hour),
-    }
+    };
     if (this.activity.desc == null) {
       this.common.showError('Enter Description');
-    }else if (this.activity.contact == null) {
+    } else if (this.activity.contact == null) {
       this.common.showError('Enter Contatc Person');
     } else if (this.activity.outcome == null) {
       this.common.showError('Enter Outcome');
+    } else if (this.timeValidity && this.activity.hour > this.oldTime) {
+      this.common.showError('Spend Time Can Not Be Increased From The Last Saved Time');
+      this.activity.hour = this.oldTime;
     } else {
+      // return console.log('params', params);
       this.common.loading++;
-      this.api.post('Admin/saveActivityLog', params)
+      this.api.post('Admin/saveActivityLogByRefId', params)
         .subscribe(res => {
           this.common.loading--;
-          if(res['code']===0) { this.common.showError(res['msg']); return false;};
-          this.common.showToast('Success');
-          this.isSubmit = true;
-          this.refreshForm();
+          if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+          if (res["code"] > 0) {
+            if (res['data'][0]['y_id'] > 0) {
+              this.common.showToast(res['data'][0]['y_msg']);
+              // this.common.showToast('Success');
+              this.isSubmit = true;
+              this.refreshForm();
+            } else {
+              this.common.showError(res['data'][0]['y_msg']);
+            }
+          } else {
+            this.common.showError(res["msg"]);
+          }
         }, err => {
           this.common.loading--;
           console.error(err);
@@ -76,7 +128,8 @@ export class AddActivityLogsComponent implements OnInit {
       contact: null,
       outcome: null,
       date: this.activity.date,
-      hour: new Date()
+      hour: new Date(),
+      requestId: null
     };
     this.activity.hour.setHours(0);
     this.activity.hour.setMinutes(0);

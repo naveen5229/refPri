@@ -63,7 +63,7 @@
       </div>
       <div class="pt-4 text-right" [ngClass]="(['text','number','table'].includes(form.typeId)) ? 'col-3' : 'col-6'">
         <button class="btn btn-danger btn-sm mr-1" name="cancelBtn"(click)="closeAddGlobalFieldModal(true)">{{cancelBtn}}</button>
-        <button class="btn btn-primary btn-sm" name="submit" (click)="AddField()">{{addBtn}}</button>
+        <button class="btn btn-primary btn-sm" name="submit" (click)="addFieldConfirm()">{{addBtn}}</button>
       </div>
     </div>
     <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="row mb-2">

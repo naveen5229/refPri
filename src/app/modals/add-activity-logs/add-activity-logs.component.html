@@ -13,7 +13,7 @@
             <label>Select Date :-</label>
         </div>
         <div class="col-lg-8">
-            <uj-date-time-picker (onChanged)="activity.date=($event)" [dateTimeValue]="activity.date" [isTime]="false" [maxd]='maxdate' [mind]='mindate'>
+            <uj-date-time-picker (onChanged)="activity.date=($event)" [isDateDisabled]="timeValidity" [dateTimeValue]="activity.date" [isTime]="false" [maxd]='maxdate' [mind]='mindate'>
             </uj-date-time-picker>
         </div>
     </div>
@@ -23,7 +23,7 @@
             <label>Activity Description :-</label>
         </div>
         <div class="col-lg-8">
-            <textarea type="text" class="form-control " [(ngModel)]='activity.desc' placeholder="Activity Description" required></textarea>
+            <textarea type="text" class="form-control " [(ngModel)]='activity.desc' placeholder="Activity Description" required [readonly]="timeValidity"></textarea>
         </div>
     </div>
     <br>
@@ -32,7 +32,7 @@
             <label>Contact Person :-</label>
         </div>
         <div class="col-lg-8">
-            <textarea type="text" class="form-control " [(ngModel)]='activity.contact' placeholder="Contact Person" required></textarea>
+            <textarea type="text" class="form-control " [(ngModel)]='activity.contact' placeholder="Contact Person" required [readonly]="timeValidity"></textarea>
         </div>
     </div>
     <br>
@@ -41,7 +41,7 @@
             <label>Outcome :-</label>
         </div>
         <div class="col-lg-8">
-            <textarea type="text" class="form-control " [(ngModel)]='activity.outcome' placeholder="Outcome" required></textarea>
+            <textarea type="text" class="form-control " [(ngModel)]='activity.outcome' placeholder="Outcome" required [readonly]="timeValidity"></textarea>
 
         </div>
     </div>
@@ -52,7 +52,7 @@
             <label>Spend Time :-</label>
         </div>
         <div class="col-lg-8">
-            <uj-date-time-picker (onChanged)="activity.hour=($event)" [dateTimeValue]="activity.hour" [isTime]="true" [isDate]="false">
+            <uj-date-time-picker (onChanged)="activity.hour=($event)" [maxt]="timeValidity ? activity.hour : null" [dateTimeValue]="activity.hour" [isTime]="true" [isDate]="false">
             </uj-date-time-picker>
         </div>
     </div>
