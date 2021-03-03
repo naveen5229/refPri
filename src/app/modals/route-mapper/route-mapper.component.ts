@@ -32,8 +32,10 @@ interface Location {
 export class RouteMapperComponent implements OnInit {
   report: Report;
   userId = null;
-  startDate = new Date(this.common.getDate(-1));
-  endDate = new Date(this.common.getDate())
+  // startDate = new Date(this.common.getDate(-1));
+  // endDate = new Date(this.common.getDate())
+  startDate = this.common.getDate(-1);
+  endDate = this.common.getDate()
   locations: Location[] = [];
   isRouteTrakingOn: boolean = false;
   map = null;
@@ -62,6 +64,7 @@ export class RouteMapperComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal, private api: ApiService, private common: CommonService,
     private mapService: MapService) {
     this.report = this.common.params;
+    console.log("report:", this.common.params);
     this.userId = this.common.params.userId;
     this.startDate = this.common.params.startDate;
     this.endDate = this.common.params.endDate;
