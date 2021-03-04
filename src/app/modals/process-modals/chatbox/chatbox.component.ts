@@ -702,11 +702,13 @@ export class ChatboxComponent implements OnInit {
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
         if (data.nextFormType == 1) {
-          lead._state_id = data.state.id;
-          lead.state_name = data.state.name;
+          lead['_next_state_id'] = data.state.id;
+          lead['next_state_name'] = data.state.name;
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType, true);
           } else {
+            lead._state_id = data.state.id;
+            lead.state_name = data.state.name;
             this.openTransAction(lead, type, 2);
           }
         } else if (data.nextFormType == 2) {
@@ -753,6 +755,10 @@ export class ChatboxComponent implements OnInit {
       if (isNextForm && formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (isNextForm && formType == 1) {
+        if(lead._next_state_id){
+          lead._state_id = lead._next_state_id;
+          lead.state_name = lead.next_state_name;
+        }
         this.openTransAction(lead, type, 2);
       } else {
         this.getTargetActionData(type);
