@@ -345,7 +345,7 @@ export class OnSiteImagesComponent implements OnInit {
       if (lead._status == 5) {
         icons.push({ class: "fa fa-plus", action: this.mapOnSiteImageWithTransAction.bind(this, lead), txt: "", title: 'Map with on-site-image', });
       } else {
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Map and Mark Completed" });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type, null, true), txt: '', title: "Map and Mark Completed" });
       }
     } else if (type == 2) {
       if (lead._state_type == 2) {
@@ -476,7 +476,7 @@ export class OnSiteImagesComponent implements OnInit {
     });
   }
 
-  openTransAction(lead, type, formType = null) {
+  openTransAction(lead, type, formType = null, isComplete: Boolean = null) {
     let formTypeTemp = 0;
     if (!formType) {
       formTypeTemp = ([2, 6, 7].includes(type)) ? 1 : 0;
@@ -505,18 +505,20 @@ export class OnSiteImagesComponent implements OnInit {
       onSiteImageId: (this.selectedOnSiteImage.id > 0) ? this.selectedOnSiteImage.id : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
-    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
+    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add", isComplete: isComplete };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       // console.log("res data:", data, lead);
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
         if (data.nextFormType == 1) {
-          lead._state_id = data.state.id;
-          lead.state_name = data.state.name;
+          lead['_next_state_id'] = data.state.id;
+          lead['next_state_name'] = data.state.name;
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
+            lead._state_id = data.state.id;
+            lead.state_name = data.state.name;
             this.openTransAction(lead, type, 2);
           }
 
@@ -564,6 +566,10 @@ export class OnSiteImagesComponent implements OnInit {
       if (formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (formType == 1) {
+        if(lead._next_state_id){
+          lead._state_id = lead._next_state_id;
+          lead.state_name = lead.next_state_name;
+        }
         this.openTransAction(lead, type, 2);
       } else {
         this.closeAddTransactionModal();

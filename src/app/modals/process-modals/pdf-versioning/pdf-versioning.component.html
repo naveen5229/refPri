@@ -1,0 +1,64 @@
+<!--  Author by Hemant Singh Sisodia -->
+
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+  <div class="pdf-area">
+    <div id="my_pdf_viewer">
+        <div class="toolbar">
+            <select id="zoom" class="zoomsize" name="zoom-percent" [(ngModel)]="zoomPercent"
+                (ngModelChange)="handleZoom()">
+                <option [value]="1">100%</option>
+                <option [value]="1.5">150%</option>
+                <option [value]="1.75">175%</option>
+                <option [value]="2">200%</option>
+                <option [value]="3">300%</option>
+                <option [value]="4">400%</option>
+                <option [value]="5">500%</option>
+            </select>
+            <a class="edit" (click)="zoomOut()"> <i class="fas fa-search-minus"></i> </a>
+            <a class="edit" (click)="zoomIn()"> <i class="fas fa-search-plus"></i> </a>
+            <a class="edit" (click)="selectedAction = selectedAction == 'TX' ? '' : 'TX'">
+              <i class="fas fa-text-width" [style.color] = "(selectedAction != 'TX') ? '' : 'blue'"></i>
+                <!-- <img *ngIf="selectedAction != 'TX'" class="text" src="assets/img/text-symbol.svg" alt="">
+                <img *ngIf="selectedAction == 'TX'" class="text" src="assets/img/text-symbol-green.svg" alt=""> -->
+            </a>
+            <a class="edit" (click)="selectedAction = selectedAction == 'RA' ? '' : 'RA'">
+              <i class="far fa-square" [style.color] = "(selectedAction != 'RA') ? '' : 'blue'"></i>
+                <!-- <img *ngIf="selectedAction != 'RA'" src="assets/img/rect.svg" alt="">
+                <img *ngIf="selectedAction == 'RA'" src="assets/img/rect-green.svg" alt=""> -->
+            </a>
+            <a class="edit" (click)="selectedAction = selectedAction == 'CR' ? '' : 'CR'"> 
+              <i class="far fa-circle" [style.color] = "(selectedAction != 'CR') ? '' : 'blue'"></i>
+            </a>
+            <!-- <a class="edit"> 
+                <img src="assets/img/remove.svg" alt=""> 
+            </a> -->
+            <!-- <a class="edit"> 
+                <img src="assets/img/right-arrow.svg" alt=""> 
+            </a> -->
+        </div>
+        <div class="pdf-container">
+            <div id="xc" class="xc">
+                <div id="yyy">
+                    <div class="c-t" id="ct">
+                        <canvas id="c" width="612" height="792" style="z-index: 99;"></canvas>
+                        <div id="editor" class="editor" [hidden]="!isShow.textbox">
+                            <div id="editor-box" contenteditable="true"
+                                (input)="editorContent = $event.target.innerText"></div>
+                            <button (click)="saveContent($event)">Save</button>
+                            <button (click)="clearContents($event)">Cancel</button>
+                        </div>
+                        <div id="ctx"></div>
+                    </div>
+                    <canvas id="pdf_renderer" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

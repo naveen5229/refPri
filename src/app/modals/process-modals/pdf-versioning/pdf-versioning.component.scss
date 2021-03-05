@@ -1,0 +1,219 @@
+
+
+// button {
+//     border: 1px solid rgba(0, 0, 0, 0.5);
+//     background: #fff;
+// }
+
+// .xc {
+//     // width: 700px;
+
+//     height: 700px;
+//     margin: 0 auto;
+//     overflow: auto;
+//     position: relative;
+//     .xc::-webkit-scrollbar {
+//         width: 4px;
+//         height: 4px;
+//         position: absolute;
+//       }
+//       .xc::-webkit-scrollbar-thumb {
+//         background: rgba(0, 32, 65, 0.8);
+//         border-radius: 2px;
+//       }
+//       .xc::-webkit-scrollbar-track {
+//         background: #f3f3f3;
+//         border-radius: 2px;
+//       }
+//       .xc {
+//         scrollbar-face-color: rgba(0, 32, 65, 0.8);
+//         scrollbar-track-color: #f3f3f3;
+//       }
+//     //  @include scrollbars(4px, gray, rgb(243, 243, 243), 3px);
+//     //  @include scrollbars(4px, #0f2d4b, gray, 3px);
+   
+
+//     .fabric-canvas {
+//         border: 1px solid #ccc;
+//         position: absolute;
+//         left: 0;
+//         top: 0;
+//         width: 612px;
+//         height: 792px;
+//         z-index: 1;
+//     }
+// }
+
+
+
+// div#yyy {
+//     // width: 700px;
+//     margin: 0 auto;
+//     border: 1px solid rgba(0,0,0,0.2);
+// }
+
+// .canvas-container{
+//     width: 612px !important;
+//     height: 792px !important;
+//     user-select: none;
+//     position: absolute !important;
+//     top: 0 !important;
+//     left: 0 !important;
+// }
+// .c-t{
+//     // width: 2000px !important;
+//     height: 792px !important;
+//     user-select: none;
+//     position: absolute !important;
+//     top: 0 !important;
+//     left: 0 !important;
+//     z-index: 9999;
+// }
+// .x{
+//     position: absolute;
+//     left: 180px;
+//     top: 60px;
+//     font-size: 14px;
+// }
+// .editor{
+//     position: absolute;
+//     left: 0;
+//     top: 0;
+//     z-index: 99999;
+//     #editor-box{
+//         border: 1px solid #000;
+//     }
+// }
+
+
+// //  manish
+
+// #my_pdf_viewer,.xc,.c-t,div#yyy {
+//     width: 612px;
+//     margin: 0 auto;;   
+//    }
+
+//    .pdf-container {
+//     text-align: center;
+//     margin: 0 auto;
+// }
+
+//    .pdf-area {
+//     width: 100%;
+//     background: #e7ebef;
+//     position: absolute;
+//     left: 0;
+//     top: 0;
+// }
+
+//    .toolbar{
+//     display: flex;
+//     // background: #e7ebef;
+//     background: #002041;
+//     padding: 7px 0;
+//     border: 1px solid rgba(0,0,0,0.2); 
+//    }
+
+//    .edit{
+//     padding: 0;
+//     padding: 0 5px;
+//     margin: 0;
+//     font-size: 0;
+//     &:hover{
+//        cursor: pointer; 
+//     }
+
+// .text{
+//     width: 12px;
+//     position: relative;
+//     top: 2.5px;
+// }    
+
+// i{
+//     color:#868e96;
+
+//  }
+
+//  img{
+//     width: 17px; 
+//  }
+ 
+
+// }
+    
+
+// .zoom_controls {
+//  display:flex;
+//  align-items: center;
+//  margin-bottom: 25px;
+//     button{
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         width: 25px;
+//         height: 25px;
+//         font-size: 12px;
+//         font-weight: 500;
+//         color: rgba(0, 0, 0, 0.7);
+//         border: 1px solid rgba(0, 0, 0, 0.7); 
+//     }
+
+//   .zoom {
+//         width: 25px;
+//         height: 25px;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//     }
+// }
+
+// .zoomsize{
+//     background: #002041;
+//     color: #fff;
+//     border-radius: 0;
+//     height: 22px;
+//     line-height: 5px;
+//     font-size: 12px;
+//     margin-left: 10px;
+//     position: relative;
+//     top: -1px;
+//     border: 1px solid rgba(255, 255, 255,0.5);
+
+//     &:focus{
+// outline: none;
+// }
+
+// }
+
+// .dropdown.zoomsize button {
+//     background: #f88181a6;
+//     color: #fff;
+//     border-radius: 0;
+//     height: 20px;
+//     line-height: 5px;
+// }
+
+// .dropdown.zoomsize {
+//     padding: 0;
+//     margin: 0;
+//     height: 100%;
+//     position: relative;
+//     top: -5px;
+// }
+
+// .dropdown-menu{
+//     overflow: hidden;
+//     background: #fff;
+//     min-width: unset;
+//     width: 83px;
+//     border-radius: 0;
+//     top: -1px !important;
+
+// }
+
+// //    a.edit {
+// //     padding: 0;
+// //     margin: 0;
+// //     font-size: 0;
+// // }
+
