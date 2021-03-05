@@ -86,6 +86,7 @@ export class AddTransactionActionComponent implements OnInit {
       } else if (this.transAction.formType == 1) {
         this.title = 'Add Transaction Next State';
         this.isFormHere = 0;
+        this.nextStateForm = this.common.params.actionData.isStateForm;
       } else {
         this.title = 'Update Transaction Action';
         this.transAction.isCompleted = true;

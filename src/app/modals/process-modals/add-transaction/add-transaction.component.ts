@@ -4,6 +4,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
 import { ChatboxComponent } from '../chatbox/chatbox.component';
+import { GenericModelComponent } from '../../generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-add-transaction',
@@ -370,8 +371,24 @@ export class AddTransactionComponent implements OnInit {
       this.common.showError();
       console.error('Api Error:', err);
     });
+  }
 
-
+  getParamAllValues(row) {
+    if(this.transForm.requestId>0){
+      let dataparams = {
+        view: {
+          api: 'Processes/getParamAllValues',
+          param: {
+            transId: this.transForm.requestId,
+            colId: row.r_colid,
+            isDynamic: row.r_isdynamic
+          }
+        },
+        title: "Field Value History"
+      }
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
   }
 
 }
