@@ -78,7 +78,7 @@ export class PdfVersioningComponent implements OnInit {
     this.getPDF();
     this.freeCanvas = new fabric.Canvas('c', { selection: false });
     this.drawFree();
-  }
+  } 
 
   getPDF() {
     let url = 'https://elogist-prime.s3.ap-south-1.amazonaws.com/docs/202103/process_docs/194-attachment-1614664156.pdf';
