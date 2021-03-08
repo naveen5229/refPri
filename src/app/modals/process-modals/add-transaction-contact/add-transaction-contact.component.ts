@@ -30,17 +30,20 @@ export class AddTransactionContactComponent implements OnInit {
       hideHeader: true
     }
   };
+  fromPage = null; //null=process,1=>ticket
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
     this.title = this.common.params.title ? this.common.params.title : 'Transaction Contacts';
     this.button = this.common.params.button ? this.common.params.button : 'Add';
+    this.fromPage = this.common.params.fromPage ? this.common.params.fromPage : null;
     if (this.common.params && this.common.params.editData) {
       this.contactForm.transId = this.common.params.editData.transId;
     };
     this.getTransactionContact();
   }
+  // use from two module change carefully
 
   closeModal() {
     this.activeModal.close({ response: false });
@@ -50,9 +53,14 @@ export class AddTransactionContactComponent implements OnInit {
 
   getTransactionContact() {
     this.resetTable();
-    const params = "transId=" + this.contactForm.transId;
+    let params = "?transId=" + this.contactForm.transId;
+    let apiName = "Processes/getTransactionContacts";
+    if(this.fromPage==1){
+      params = "?ticketId=" + this.contactForm.transId;
+      apiName = "Ticket/getTicketContacts";
+    }
     this.common.loading++;
-    this.api.get('Processes/getTransactionContacts?' + params).subscribe(res => {
+    this.api.get(apiName + params).subscribe(res => {
       this.common.loading--;
       if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
@@ -149,11 +157,16 @@ export class AddTransactionContactComponent implements OnInit {
         title: 'Delete Record',
         description: '<b>Are Sure To Delete This Record<b>',
       }
+      let apiName = 'Processes/deleteTransactionContact';
+      if(this.fromPage==1){
+        apiName = 'Ticket/deleteTicketContact';
+      }
+      // console.log("deleteContact:",apiName,params);return false;
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
           this.common.loading++;
-          this.api.post('Processes/deleteTransactionContact', params).subscribe(res => {
+          this.api.post(apiName, params).subscribe(res => {
             this.common.loading--;
             if (res['code'] == 1) {
               this.common.showToast(res['msg']);
@@ -172,15 +185,22 @@ export class AddTransactionContactComponent implements OnInit {
   }
 
   addTransactionContact() {
-    console.log('params', this.contactForm);
-    const params = {
+    // console.log('params', this.contactForm);
+    let params = {
       transId: this.contactForm.transId,
       name: this.contactForm.name,
       mobileno: this.contactForm.mobile,
       email: this.contactForm.email,
+      ticketId: null
     };
+    let apiName = "Processes/addTransactionContact";
+    if(this.fromPage==1){
+      apiName = 'Ticket/addTicketContact';
+      params.ticketId = this.contactForm.transId;
+    }
+    // console.log("addTransactionContact:",apiName,params);return false;
     this.common.loading++;
-    this.api.post("Processes/addTransactionContact ", params)
+    this.api.post(apiName, params)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {

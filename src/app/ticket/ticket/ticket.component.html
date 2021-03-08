@@ -150,7 +150,7 @@
                                     *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
                                     <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control" [(ngModel)]=oddArray[i].r_value rows="1"></textarea>
                                 <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value
-                                    *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
+                                    *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues" [ngStyle]="((oddArray[i].r_coltitle).toLowerCase()=='latitude') ? {'width':'75%','display':'initial'} : ''">
                                 <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
                                     [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
                                     [isTime]="false">
@@ -202,6 +202,12 @@
                                     <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
                                     <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
                                 </label>
+
+                                <div *ngIf="oddArray[i].r_coltype =='number' && (oddArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(oddArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,7 +224,7 @@
                                     *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
                                     <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control" [(ngModel)]=evenArray[i].r_value rows="1"></textarea>
                                 <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
-                                    *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
+                                    *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues" [ngStyle]="((evenArray[i].r_coltitle).toLowerCase()=='latitude') ? {'width':'75%','display':'initial'} : ''">
                                 <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
                                     [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'"
                                     [isTime]="false">
@@ -269,6 +275,12 @@
                                     <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
                                     <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
                                 </label>
+
+                                <div *ngIf="evenArray[i].r_coltype =='number' && (evenArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(evenArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
                             </div>
                         </span>
                     </div>
@@ -415,6 +427,11 @@
                                 <span *ngIf="opening.r_coltype=='attachment' && opening.r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(opening.r_url,opening.r_doc_name)">{{opening.r_doc_name}}</span>
                                 </span>
+                                <div *ngIf="opening.r_coltype =='number' && (opening.r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(opening);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -487,6 +504,11 @@
                                 <span *ngIf="oddArray[i].r_coltype=='attachment' && oddArray[i].r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                                 </span>
+                                <div *ngIf="oddArray[i].r_coltype =='number' && (oddArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(oddArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -507,6 +529,11 @@
                                 <span *ngIf="evenArray[i].r_coltype=='attachment' && evenArray[i].r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
                                 </span>
+                                <div *ngIf="evenArray[i].r_coltype =='number' && (evenArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(evenArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

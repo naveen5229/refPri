@@ -1029,14 +1029,22 @@ export class MyProcessComponent implements OnInit {
           } else {
             lead._state_id = data.state.id;
             lead.state_name = data.state.name;
-            this.openTransAction(lead, type, 2);
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 2);
+            }
           }
 
         } else if (data.nextFormType == 2) {
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 1);
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 1);
+            }
           }
         }
       } else {

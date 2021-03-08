@@ -10,6 +10,8 @@ import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { LocationSelectionComponent } from '../../modals/location-selection/location-selection.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -893,6 +895,10 @@ export class TicketComponent implements OnInit {
         // }
       }
 
+      if([101,106].includes(type)){
+        icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, ticket, type), txt: '', title: "Address Book" });
+      }
+
       if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
       }
@@ -1330,6 +1336,17 @@ export class TicketComponent implements OnInit {
     }
   }
 
+  addTransContact(ticket, type) {
+    let editData = {
+      transId: ticket._ticket_id
+    };
+    this.common.params = { editData, title: "Ticket Contacts", button: "Add",fromPage: 1 };
+    const activeModal = this.modalService.open(AddTransactionContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getTicketByType(type);
+    });
+  }
+
   openTicketFormData(ticket, type, status) {
     let title = 'Ticket Closing Form';
     let actionData = {
@@ -1455,6 +1472,32 @@ export class TicketComponent implements OnInit {
       this.completedTkt = selectedList.length > 0 ? selectedList : [];
       this.setTablecompletedTkt(type);
     }
+  }
+
+  takeAction(row) {
+    let foundLong = this.oddArray.find(x=>{return (x.r_coltitle).toLowerCase()=='longitude'});
+    if(foundLong){
+    }else if(this.evenArray.length>0){
+      foundLong = this.evenArray.find(x=>{return (x.r_coltitle).toLowerCase()=='longitude'});
+    }
+    if(row.r_value && foundLong && foundLong.r_value){
+      let location = {"lat": row.r_value, "lng": foundLong.r_value};
+      this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation',location };
+    }else{
+      this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation' };
+    }
+    const activeModal = this.modalService.open(LocationSelectionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(res => {
+      if (res != null) {
+        console.log('new-response----', res, res.location);
+        if (res.location.lat) {
+          row.r_value = res.location.lat;
+          if(foundLong){
+            foundLong.r_value = res.location.lng;
+          }
+        }
+      }
+    })
   }
 
 }
