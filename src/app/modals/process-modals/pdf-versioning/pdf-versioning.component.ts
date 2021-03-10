@@ -112,7 +112,7 @@ export class PdfVersioningComponent implements OnInit {
               y: parseFloat(ele.y),
             }
           });
-          this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime));
+          this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime)); 
 
           this.getFilterFields(this.versioningDataInitTime);
           console.log("userTable", this.userTable, this.userFilter);
