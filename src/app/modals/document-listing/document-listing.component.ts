@@ -89,7 +89,7 @@ export class DocumentListingComponent implements OnInit {
           // column[key] = {isHTML: true, value: lead['_doc_url'] ? `<a href="${lead['_doc_url']}" target="_blank">${lead[key] || lead['_doc_url']}</a>` : lead[key] || lead['_doc_url'], class: 'black', action: '',}
           column[key] = { isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: this.getFiles.bind(this, lead['_doc_url'], lead[key]), }
         } else if (key == 'param_title') {
-          column[key] = { isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: this.getVersioning.bind(this, lead['_doc_url'], lead[key]), }
+          column[key] = { isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: this.getVersioning.bind(this, lead), }
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }
@@ -104,11 +104,15 @@ export class DocumentListingComponent implements OnInit {
     this.common.checkFile(url, name)
   }
 
-  getVersioning(url, name) {
+  getVersioning(lead) {
+    console.log("lead", lead)
+    let url = lead._doc_url;
+    let name = lead.name;
+    let docsId = lead._doc_id;
     var ext = url.split('.').pop();
     let formats = ['pdf'];
     console.log("ext:", ext);
-    let files = [{ name: name, url: url }];
+    let files = [{ name: name, url: url, docId: docsId }];
     if (formats.includes(ext.toLowerCase())) {
       this.openImageView(files);
     } else {
@@ -121,8 +125,8 @@ export class DocumentListingComponent implements OnInit {
     this.common.convertFileToBase64(files).then(res => {
       let getFiles: any = res;
       let img = getFiles.map(x => { return { image: x.base64, name: x.name } });
-      this.common.params = { images: files[0].url, title: 'Image' };
-      const activeModal = this.modalService.open(PdfVersioningComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      this.common.params = { images: files[0].url, title: 'Image', docId: files[0].docId };
+      const activeModal = this.modalService.open(PdfVersioningComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
       // activeModal.componentInstance.imageList = { images:img, title: 'Image' };
       // activeModal.componentInstance.isDownload = true;
       activeModal.result.then((data) => {

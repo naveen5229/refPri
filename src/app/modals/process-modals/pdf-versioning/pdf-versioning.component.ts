@@ -9,6 +9,7 @@ import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { literalMap } from '@angular/compiler';
 import { CommonService } from '../../../Service/common/common.service';
+import { ApiService } from '../../../Service/Api/api.service';
 
 @Component({
   selector: 'ngx-pdf-versioning',
@@ -56,32 +57,98 @@ export class PdfVersioningComponent implements OnInit {
   activeImage = '';
   title = '';
   url = '';
+  docId = null;
+  versioningData = [];
+  userTable = [];
+  collapse = 'user';
+  userFilter = [];
 
-  constructor(public activeModal: NgbActiveModal, public common: CommonService,) {
+  constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService,) {
     console.log('common service', this.common.params);
     this.url = this.common.params.images;
     this.title = this.common.params['title'];
+    this.docId = this.common.params['docId'];
     //this.activeImage = this.images[this.index];
-    console.log("🚀 ~ file: pdf-versioning.component.ts ~ line 68 ~ PdfVersioningComponent ~ constructor ~ images", this.images)
+    console.log("🚀 ~ file: pdf-versioning.component.ts ~ line 68 ~ PdfVersioningComponent ~ constructor ~ images", this.images);
+    this.getLoadedVersioning();
   }
 
   ngOnInit(): void {
-    if (JSON.parse(localStorage.getItem('contents')) || JSON.parse(localStorage.getItem('rectangles'))) {
-      localStorage.removeItem("contents");
-      localStorage.removeItem("rectangles");
-    }
-    this.contents = JSON.parse(localStorage.getItem('contents')) || [];
-    this.rectangles = JSON.parse(localStorage.getItem('rectangles')) || [];
+    // if (JSON.parse(localStorage.getItem('contents')) || JSON.parse(localStorage.getItem('rectangles'))) {
+    //   localStorage.removeItem("contents");
+    //   localStorage.removeItem("rectangles");
+    // }
+    // this.contents = JSON.parse(localStorage.getItem('contents')) || [];
+    // this.rectangles = JSON.parse(localStorage.getItem('rectangles')) || [];
   }
 
   ngAfterViewInit() {
     this.getPDF();
     this.freeCanvas = new fabric.Canvas('c', { selection: false });
     this.drawFree();
-  } 
+  }
+
+  getLoadedVersioning() {
+    this.api.get(`Admin/getPdfVersioningByDocId?docId=${this.docId}`).subscribe(res => {
+      if (res['code'] > 0) {
+        if (res['data'] && res['data'].length > 0) {
+          this.versioningData = res['data'].map(ele => {
+            return {
+              addtime: this.common.dateFormatter(ele.addtime),
+              aduser_id: ele.aduser_id,
+              entrymode: ele.entrymode,
+              height: parseFloat(ele.height),
+              id: ele.id,
+              radius: ele.radius ? parseFloat(ele.radius) : null,
+              text: ele.text,
+              type: ele.type,
+              updatetime: ele.updatetime,
+              user: ele.user,
+              width: parseFloat(ele.width),
+              x: parseFloat(ele.x),
+              y: parseFloat(ele.y),
+            }
+          });
+
+          this.versioningData.forEach(element => {
+            this.userTable.push({ userId: element.aduser_id, user: element.user, addTime: element.addtime, type: element.type });
+          });
+          this.userTable = this.common.arrayUnique(this.userTable, 'userId');
+          this.userTable.map(id => this.userFilter.push(id.userId));
+          console.log("userTable", this.userTable,this.userFilter);
+          this.distributeCanvas(this.versioningData);
+        }
+        console.log(this.contents, this.rectangles, this.circles);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  distributeCanvas(distributionArray) {
+    this.contents = [];
+    this.rectangles = [];
+    this.circles = [];
+    distributionArray.map(plotted => {
+      switch (plotted.type) {
+        case 'text': this.contents.push(plotted);
+          break;
+        case 'rectangle': this.rectangles.push(plotted);
+          break;
+        case 'circle': this.circles.push(plotted);
+          break;
+      }
+    });
+    this.drawCanwas();
+  }
 
   getPDF() {
-    let url = 'https://elogist-prime.s3.ap-south-1.amazonaws.com/docs/202103/process_docs/194-attachment-1614664156.pdf';
+    let url = this.url;
+    // console.log('me hu url', url);
+    // let url = 'https://elogist-prime.s3.ap-south-1.amazonaws.com/docs/202103/process_docs/194-attachment-1614664156.pdf';
     pdfjsLib.GlobalWorkerOptions.workerSrc = '/assets/pdf_worker/pdf.worker.js';
     // Asynchronous download of PDF
     let loadingTask = pdfjsLib.getDocument(url);
@@ -89,6 +156,8 @@ export class PdfVersioningComponent implements OnInit {
       console.log("🚀 ~ file: toolbar.component.ts ~ line 76 ~ ToolbarComponent ~ loadingTask.promise.then ~ pdf", pdf)
       this.pdf = pdf;
       this.render();
+    }, error => {
+      console.log("getPDF::", error);
     })
   }
 
@@ -163,28 +232,46 @@ export class PdfVersioningComponent implements OnInit {
     this.render();
   }
 
+
   drawFree() {
     let data = {
       x: 0,
       y: 0,
       width: 0,
       height: 0,
-      radius: null
+      radius: null,
+      type: null
     }
     var drowType, rect, isDown, origX, origY;
 
+
+
     this.freeCanvas.on('mouse:down', (o) => {
-      console.log("🚀 ~ file: toolbar.component.ts ~ line 162 ~ ToolbarComponent ~ this.freeCanvas.on ~ o", o)
-      if (!this.selectedAction) return;
+      // console.log('this.rectangles', this.rectangles);
+      console.log("mouse:down", o)
+      if (!this.selectedAction) { return; }
+      // return this.activeObj = { x: this.freeCanvas.getActiveObject().left, y: this.freeCanvas.getActiveObject().top, radius: this.freeCanvas.getActiveObject().radius };
+      // } else {
+      //   if (o.target)
+      //     return this.activeObj = { x: this.freeCanvas.getActiveObject().left, y: this.freeCanvas.getActiveObject().top, radius: this.freeCanvas.getActiveObject().radius };
+      // };
       console.log('seletecaction:', this.selectedAction)
       isDown = true;
       var pointer = this.freeCanvas.getPointer(o.e);
-      console.log("🚀 ~ file: toolbar.component.ts ~ line 167 ~ ToolbarComponent ~ this.freeCanvas.on ~ pointer", pointer)
       origX = pointer.x;
       origY = pointer.y;
-      var pointer = this.freeCanvas.getPointer(o.e);
+
       switch (this.selectedAction) {
-        case 'RA' && 'TX':
+        case 'TX':
+          data = {
+            x: origX,
+            y: origY,
+            width: pointer.x - origX,
+            height: pointer.y - origY,
+            radius: null,
+            type: 'text'
+          }
+
           drowType = new fabric.Rect({
             left: origX,
             top: origY,
@@ -199,16 +286,47 @@ export class PdfVersioningComponent implements OnInit {
             strokeWidth: 0.3,
           });
 
+
+          break;
+
+
+        case 'RA':
+          let id = 'index_' + this.rectangles.length;
           data = {
             x: origX,
             y: origY,
             width: pointer.x - origX,
             height: pointer.y - origY,
-            radius: null
+            radius: null,
+            type: 'rectangle'
+            // id: id
           }
+
+          drowType = new fabric.Rect({
+            left: origX,
+            top: origY,
+            originX: 'left',
+            originY: 'top',
+            width: pointer.x - origX,
+            height: pointer.y - origY,
+            angle: 0,
+            fill: 'rgba(255,255,255,0.1)',
+            transparentCorners: false,
+            stroke: 'black',
+            strokeWidth: 0.3,
+          });
+
           break;
 
         case 'CR':
+          data = {
+            x: origX,
+            y: origY,
+            width: pointer.x - origX,
+            height: pointer.y - origY,
+            radius: o.radius,
+            type: 'circle'
+          }
           drowType = new fabric.Circle({
             left: origX,
             top: origY,
@@ -219,16 +337,9 @@ export class PdfVersioningComponent implements OnInit {
             originY: 'center',
             stroke: 'black',
             strokeWidth: 0.3,
-            hasControls: false
+            hasControls: false,
           });
 
-          data = {
-            x: origX,
-            y: origY,
-            width: pointer.x - origX,
-            height: pointer.y - origY,
-            radius: o.radius
-          }
           drowType.hasRotatingPoint = true;
           console.log("🚀 ~ file: toolbar.component.ts ~ line 200 ~ ToolbarComponent ~ this.freeCanvas.on ~ drowType", drowType, data)
           break;
@@ -255,9 +366,24 @@ export class PdfVersioningComponent implements OnInit {
       if (!isDown || !this.selectedAction) return;
       var pointer = this.freeCanvas.getPointer(o.e);
 
-
       switch (this.selectedAction) {
-        case 'RA' && 'TX':
+        case 'TX':
+          if (origX > pointer.x) {
+            data.x = Math.abs(pointer.x);
+            drowType.set({ left: Math.abs(pointer.x) });
+          }
+          if (origY > pointer.y) {
+            data.y = Math.abs(pointer.y);
+            drowType.set({ top: Math.abs(pointer.y) });
+          }
+          data.width = Math.abs(origX - pointer.x);
+          data.height = Math.abs(origY - pointer.y);
+
+          drowType.set({ width: Math.abs(origX - pointer.x) });
+          drowType.set({ height: Math.abs(origY - pointer.y) });
+          break;
+
+        case 'RA':
           if (origX > pointer.x) {
             data.x = Math.abs(pointer.x);
             drowType.set({ left: Math.abs(pointer.x) });
@@ -285,8 +411,35 @@ export class PdfVersioningComponent implements OnInit {
       this.freeCanvas.renderAll();
     });
 
+
+    // this.freeCanvas.on("object:scaling", function (e) {
+    //   console.log("scaling", e)
+    //   console.log('this.rectangles', this.rectangles);
+
+    // });
+
+    // this.freeCanvas.on("object:moved", (e) => {
+    //   console.log("moved", e);
+    //   console.log('thi', this.freeCanvas.getActiveObject());
+
+    // });
+
+
+    this.freeCanvas.on("object:modified", (e) => {
+      console.log("modified", e)
+      if (!this.selectedAction) {
+        return ((e.target.data.radius) ? this.manageCircles(data, e) : this.manageRectangles(data, e));
+      };
+    });
+
     this.freeCanvas.on('mouse:up', (o) => {
-      if (!this.selectedAction) return;
+      // console.log("mouse:up", o)
+      // this.pushState = (o.target) ? false : true;
+      // if (!this.selectedAction) {
+      //   (data.radius) ? this.manageCircles(data, o) : this.manageRectangles(data, o);
+      //   return;
+      // };
+      if (!this.selectedAction || o.target) return;
       isDown = false;
       this.freeCanvas.clear();
       if (data.x) {
@@ -296,16 +449,13 @@ export class PdfVersioningComponent implements OnInit {
         data.height = data.height / this.zoom;
         data.radius = data.radius / this.zoom;
         this.cordinates = data;
-        this.handlerSelection(data);
+        this.handlerSelection(data, o);
       }
-      this.freeCanvas.off('mouse:down');
-      this.freeCanvas.off('mouse:move');
-      this.freeCanvas.off('mouse:up');
     });
   }
 
-  handlerSelection(data) {
-    console.log('____handlerSelection');
+  handlerSelection(data, updatePointer) {
+    console.log('____handlerSelection', data, updatePointer);
     if (this.selectedAction === 'TX') {
       let ele = document.getElementById('editor');
       this.isShow.textbox = true;
@@ -315,38 +465,76 @@ export class PdfVersioningComponent implements OnInit {
       ele2.style.width = this.cordinates.width * this.zoom + 'px';
       ele2.style.height = this.cordinates.height * this.zoom + 'px';
     } else if (this.selectedAction === 'RA') {
-      this.rectangles.push(data);
-      localStorage.setItem('rectangles', JSON.stringify(this.rectangles));
-      data = {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        radius: 0
-      }
+      this.manageRectangles(data, updatePointer);
     } else if (this.selectedAction === 'CR') {
-      this.circles.push(data);
-      console.log('circles', this.circles)
-      localStorage.setItem('circles', JSON.stringify(this.circles));
-      data = {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        radius: 0
-      }
+      this.manageCircles(data, updatePointer);
     }
     // this.drawRectangles();
     // this.drawCircles();
     this.drawCanwas();
   }
 
+  manageRectangles(data, updatePointer) {
+    // if (this.pushState) {
+    //   this.rectangles.push(data);
+    // } else {
+    var targetCanvas = updatePointer.target;
+    (this.rectangles.length && targetCanvas) ?
+      this.rectangles.forEach(ele => {
+        // var pointer = this.freeCanvas.getPointer(updatePointer.e);
+        // console.log("🚀 ~ file: pdf-versioning.component.ts ~ line 381 ~ PdfVersioningComponent ~ manageRectangles ~ pointer", updatePointer, this.activeObj, pointer)
+        console.log("targetCanvas", targetCanvas);
+        if (ele.x === targetCanvas.data.x && ele.y === targetCanvas.data.y) {
+          console.log('scale:', updatePointer.target.scaleX, updatePointer.target.scaleY)
+          ele.x = targetCanvas.left;
+          ele.y = targetCanvas.top;
+          ele.width = (targetCanvas.scaleX) ? (Math.abs(ele.width * targetCanvas.scaleX)) / this.zoom : ele.width;
+          ele.height = (targetCanvas.scaleY) ? (Math.abs(ele.height * targetCanvas.scaleY)) / this.zoom : ele.height;
+        }
+      }) :
+      this.rectangles.push(data);
+    // }
+    console.log('rectangles', this.rectangles);
+    localStorage.setItem('rectangles', JSON.stringify(this.rectangles));
+    data = {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      radius: 0
+    }
+  }
+
+  manageCircles(data, updatePointer) {
+    // if (this.pushState) {
+    //   this.circles.push(data);
+    // } else {
+    var targetCanvas = updatePointer.target;
+    (this.circles.length && targetCanvas) ? this.circles.forEach(ele => {
+      // var pointer = this.freeCanvas.getPointer(updatePointer.e);
+      if (targetCanvas && ele.x === targetCanvas.data.x && ele.y === targetCanvas.data.y && ele.radius === targetCanvas.data.radius) {
+        ele.x = targetCanvas.left;
+        ele.y = targetCanvas.top;
+      }
+    }) : this.circles.push(data);
+    // }
+    console.log('circles', this.circles);
+    localStorage.setItem('circles', JSON.stringify(this.circles));
+    data = {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      radius: 0
+    }
+  }
+
   drawCanwas() {
     this.freeCanvas.clear();
-    if (this.rectangles.length > 0) {
-      this.freeCanvas.setHeight(792 * this.zoom);
-      this.freeCanvas.setWidth(612 * this.zoom);
+    this.freeCanvas.setHeight(792 * this.zoom);
+    this.freeCanvas.setWidth(612 * this.zoom);
 
+    if (this.rectangles.length > 0) {
       this.rectangles.map(rectangle => {
         let rect = new fabric.Rect({
           left: rectangle.x * this.zoom,
@@ -357,7 +545,11 @@ export class PdfVersioningComponent implements OnInit {
           height: rectangle.height * this.zoom,
           angle: 0,
           fill: 'rgba(255,0,0,0.5)',
-          transparentCorners: false
+          transparentCorners: false,
+          data: rectangle,
+          // name: 'jrx',
+          // includeDefaultValues: true,
+          // id: 1
         });
 
         this.freeCanvas.add(rect);
@@ -366,9 +558,6 @@ export class PdfVersioningComponent implements OnInit {
 
 
     if (this.circles.length > 0) {
-      this.freeCanvas.setHeight(792 * this.zoom);
-      this.freeCanvas.setWidth(612 * this.zoom);
-
       this.circles.map(circle => {
         let crcl = new fabric.Circle({
           left: circle.x * this.zoom,
@@ -378,11 +567,14 @@ export class PdfVersioningComponent implements OnInit {
           fill: 'rgba(255,0,0,0.5)',
           radius: circle.radius * this.zoom,
           selectable: true,
+          data: circle,
         });
 
         this.freeCanvas.add(crcl);
       })
     }
+
+    (this.contents.length > 0) ? this.writeContents() : null;
   }
 
   // drawRectangles() {
@@ -455,8 +647,9 @@ export class PdfVersioningComponent implements OnInit {
       text: this.editorContent,
       x: this.cordinates.x,
       y: this.cordinates.y,
-      with: this.cordinates.width,
+      width: this.cordinates.width,
       height: this.cordinates.height,
+      type: 'text'
     };
     console.log('data:', data);
     this.contents.push(data);
@@ -494,5 +687,55 @@ export class PdfVersioningComponent implements OnInit {
 
   closeModal(res) {
     this.activeModal.close(res);
+  }
+
+
+  saveDocVersioning() {
+    if (this.docId) {
+      let params = {
+        docId: this.docId,
+        requestId: null,
+        info: JSON.stringify(this.contents.concat(this.circles, this.rectangles))
+      }
+      console.log("params", params);
+      // return;
+      this.common.loading++;
+      this.api.post('Admin/savePdfVersioningByDocId', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['msg']);
+            // this.getProcessLeadByType(type);
+          } else {
+            this.common.showError(res['msg']);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    } else {
+      this.common.showError("Document ID Not Available");
+    }
+  }
+
+  filterUserWise(user,isChecked) {
+    console.log("isChecked", isChecked)
+    if(isChecked){
+      this.userFilter.push(user.userId);
+    }else{
+      if(this.userFilter.length>0){
+        let findExist = this.userFilter.indexOf(user.userId);
+        if(findExist>=0){
+          this.userFilter.splice(findExist,1);
+        }
+      }
+    }
+    let filteredCanvas = this.versioningData.filter(ele => { return this.userFilter.includes(ele.aduser_id) });
+    console.log("filteredCanvas", filteredCanvas)
+    this.distributeCanvas(filteredCanvas);
   }
 }
