@@ -10,6 +10,7 @@ import html2canvas from 'html2canvas';
 import { literalMap } from '@angular/compiler';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
+import { UserService } from '../../../Service/user/user.service';
 
 @Component({
   selector: 'ngx-pdf-versioning',
@@ -63,12 +64,13 @@ export class PdfVersioningComponent implements OnInit {
   collapse = 'user';
   userFilter = [];
 
-  constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService,) {
+  constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public userService: UserService) {
     console.log('common service', this.common.params);
     this.url = this.common.params.images;
     this.title = this.common.params['title'];
     this.docId = this.common.params['docId'];
     //this.activeImage = this.images[this.index];
+    console.log('user_detail', this.userService._details)
     console.log("🚀 ~ file: pdf-versioning.component.ts ~ line 68 ~ PdfVersioningComponent ~ constructor ~ images", this.images);
     this.getLoadedVersioning();
   }
@@ -115,7 +117,7 @@ export class PdfVersioningComponent implements OnInit {
           });
           this.userTable = this.common.arrayUnique(this.userTable, 'userId');
           this.userTable.map(id => this.userFilter.push(id.userId));
-          console.log("userTable", this.userTable,this.userFilter);
+          console.log("userTable", this.userTable, this.userFilter);
           this.distributeCanvas(this.versioningData);
         }
         console.log(this.contents, this.rectangles, this.circles);
@@ -547,6 +549,8 @@ export class PdfVersioningComponent implements OnInit {
           fill: 'rgba(255,0,0,0.5)',
           transparentCorners: false,
           data: rectangle,
+          aduser_id: this.userService._details.id,
+          user: this.userService._details.name
           // name: 'jrx',
           // includeDefaultValues: true,
           // id: 1
@@ -568,6 +572,8 @@ export class PdfVersioningComponent implements OnInit {
           radius: circle.radius * this.zoom,
           selectable: true,
           data: circle,
+          aduser_id: this.userService._details.id,
+          user: this.userService._details.name
         });
 
         this.freeCanvas.add(crcl);
@@ -649,7 +655,9 @@ export class PdfVersioningComponent implements OnInit {
       y: this.cordinates.y,
       width: this.cordinates.width,
       height: this.cordinates.height,
-      type: 'text'
+      type: 'text',
+      aduser_id: this.userService._details.id,
+      user: this.userService._details.name
     };
     console.log('data:', data);
     this.contents.push(data);
@@ -722,15 +730,15 @@ export class PdfVersioningComponent implements OnInit {
     }
   }
 
-  filterUserWise(user,isChecked) {
+  filterUserWise(user, isChecked) {
     console.log("isChecked", isChecked)
-    if(isChecked){
+    if (isChecked) {
       this.userFilter.push(user.userId);
-    }else{
-      if(this.userFilter.length>0){
+    } else {
+      if (this.userFilter.length > 0) {
         let findExist = this.userFilter.indexOf(user.userId);
-        if(findExist>=0){
-          this.userFilter.splice(findExist,1);
+        if (findExist >= 0) {
+          this.userFilter.splice(findExist, 1);
         }
       }
     }

@@ -105,20 +105,22 @@
                 </ul> -->
                 <table class="table">
                     <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                      </tr>
+                        <tr>
+                            <th><i class="fas fa-filter" style="font-size: 10px;"></i></th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let user of versioningData">
-                        <td>{{user.user}}</td>
-                        <td>{{user.addtime}}</td>
-                        <td></td>
-                      </tr>
+                        <tr *ngFor="let user of versioningData">
+                            <td><input type="checkbox"></td>
+                            <td>{{user.user}}</td>
+                            <td>{{user.addtime}}</td>
+                            <td></td>
+                        </tr>
                     </tbody>
-                  </table>
+                </table>
             </div>
         </div>
     </div>
