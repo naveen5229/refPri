@@ -195,7 +195,7 @@ export class AddTransactionComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
       return copyDetails;
     });
@@ -211,6 +211,7 @@ export class AddTransactionComponent implements OnInit {
       additionalInfo: JSON.stringify(details),
       requestId: (this.transForm.requestId > 0) ? this.transForm.requestId : null,
     }
+    // console.log("params:",params);return false;
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;

@@ -1114,38 +1114,24 @@ export class TicketComponent implements OnInit {
   }
 
   saveTicket() {
-    console.log("ticketForm:", this.ticketForm);
-    // let selected = this.tpPropertyList.find(ele => {
-    //   return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
-    // });
-
-    // console.log("selected:", selected);
-
-    // if (selected) {
-    //   this.ticketForm.tpProperty.id = selected._id;
-    //   this.ticketForm.tpProperty.name = selected.name;
-    // } else {
-    //   this.ticketForm.tpProperty = { id: null, name: null }
-    // }
-
+    let detailsInfo = this.evenArray.concat(this.oddArray);
+    let details = detailsInfo.map(detail => {
+      let copyDetails = Object.assign({}, detail);
+      if (detail['r_coltype'] == 'date' && detail['r_value']) {
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
+      }
+      return copyDetails;
+    });
     let params = {
       priCatId: this.categoryIds.priCat,
       secCatId: this.categoryIds.secCat,
       typeId: this.categoryIds.type,
-      // tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
       tpId: this.ticketForm.tp.id ? this.ticketForm.tp.id : null,
-      // remark: this.ticketForm.remark,
-      info: JSON.stringify(this.evenArray.concat(this.oddArray)),
+      info: JSON.stringify(details),
       isAllocated: false,
       requestId: (this.ticketForm.requestId > 0) ? this.ticketForm.requestId : null
     }
-
-    // if (!params.tpPropId) {
-    //   this.common.showError('Combination mismatch: Primary Category, Secondary Category, Type');
-    //   return false;
-    // }
-
-    // return;
+    // console.log("ticketForm:", params); return false;
     this.common.loading++;
     this.api.post('Ticket/saveTicket', params).subscribe(res => {
       this.common.loading--;

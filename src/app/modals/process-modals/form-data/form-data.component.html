@@ -26,7 +26,7 @@
                                 [readonly]="isDisabled">
                             <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
                                 [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
-                                [isTime]="false" >
+                                [isTime]="true" >
                             </uj-date-time-picker>
 
                             <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
@@ -74,7 +74,7 @@
                                 [readonly]="isDisabled">
                             <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
                                 [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'"
-                                [isTime]="false">
+                                [isTime]="true">
                             </uj-date-time-picker>
 
                             <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"

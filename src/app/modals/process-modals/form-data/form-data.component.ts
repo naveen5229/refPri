@@ -68,7 +68,7 @@ export class FormDataComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
       return copyDetails;
     });
