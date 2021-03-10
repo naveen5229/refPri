@@ -374,7 +374,7 @@ export class SaveadminComponent implements OnInit {
         this.common.showError('Enter Name');
       } else if (this.Fouser.mobileNo == null) {
         this.common.showError('Enter Mobile Number');
-      } else if (this.Fouser.id > 0 && !params.isActive && !params.dol) {
+      } else if (!this.isOtherShow && this.Fouser.id > 0 && !params.isActive && !params.dol) {
         return this.common.showError("Date of leaving is missing");
       }
       else {

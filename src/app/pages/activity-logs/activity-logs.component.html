@@ -35,14 +35,69 @@
             </div>
         </div>
     </nb-card-header>
-
     <nb-card-body>
-
         <div class="row">
             <smart-table *ngIf="activityLogsist.length!=0" [data]="table.data" [settings]="table.settings" id="activityLogsist">
             </smart-table>
         </div>
-
     </nb-card-body>
-
 </nb-card>
+
+<!--start: Ticket History -->
+<div class="modal" id="viewSummary">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Activity Log Summary</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeViewSummary()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="responseve">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Activity Logs</th>
+                                <th>Total Hours</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="viewSummaryList && viewSummaryList.length>0">
+                            <tr *ngFor="let d of viewSummaryList">
+                                <td>{{d.name}}</td>
+                                <td>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>outcome</th>
+                                                <th>spend hour</th>
+                                                <th>description</th>
+                                                <th>contact person</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let dd of d.description_data">
+                                                <td>{{dd.outcome}}</td>
+                                                <td>{{dd['spend hour']}}</td>
+                                                <td>{{dd.description}}</td>
+                                                <td>{{dd['contact person']}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>{{d.total_spend_hour}}</td>
+                                <td>{{d.date}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="!viewSummaryList || !viewSummaryList.length">
+                            <tr>
+                                <td colspan="4">No Record Found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: Ticket History -->

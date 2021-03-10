@@ -194,21 +194,42 @@ export class ActivityLogsComponent implements OnInit {
       }
     }
   
+    viewSummaryList = [];
     viewSummary() {
-      let dataparams = {
-        view: {
-          api: 'Admin/getActivityLogSummary',
-          param: {
-            date: this.common.dateFormatter1(this.date),
-            departmentId: this.department.id
-          }
-        },
-        title: "View Activity Log Summary",
-        isExcelDownload: true
-      }
-      // this.common.handleModalSize('class', 'modal-lg', '1100');
-      this.common.params = { data: dataparams };
-      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      // let dataparams = {
+      //   view: {
+      //     api: 'Admin/getActivityLogSummary',
+      //     param: {
+      //       date: this.common.dateFormatter1(this.date),
+      //       departmentId: this.department.id
+      //     }
+      //   },
+      //   title: "View Activity Log Summary",
+      //   isExcelDownload: true
+      // }
+      // // this.common.handleModalSize('class', 'modal-lg', '1100');
+      // this.common.params = { data: dataparams };
+      // const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      this.viewSummaryList = [];
+      document.getElementById('viewSummary').style.display = 'block';
+      this.common.loading++;
+      let params = "?date="+this.common.dateFormatter1(this.date)+"&departmentId="+this.department.id;
+      this.api.get('Admin/getActivityLogSummary'+ params).subscribe(res => {
+        this.common.loading--;
+        if(res['code']>0) {
+          this.viewSummaryList = res['data'] || [];
+        }else{ 
+          this.common.showError(res['msg']);
+        };
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+
+    closeViewSummary() {
+      document.getElementById('viewSummary').style.display = 'none';
     }
 
 }
