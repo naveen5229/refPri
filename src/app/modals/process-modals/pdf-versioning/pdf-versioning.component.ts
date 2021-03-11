@@ -59,7 +59,8 @@ export class PdfVersioningComponent implements OnInit {
   title = '';
   url = '';
   docId = null;
-  versioningData = [];
+  versioningDataInitTime = [];
+  versioningDataModifiTime = [];
   userTable = [];
   collapse = 'user';
   userFilter = [];
@@ -94,7 +95,7 @@ export class PdfVersioningComponent implements OnInit {
     this.api.get(`Admin/getPdfVersioningByDocId?docId=${this.docId}`).subscribe(res => {
       if (res['code'] > 0) {
         if (res['data'] && res['data'].length > 0) {
-          this.versioningData = res['data'].map(ele => {
+          this.versioningDataInitTime = res['data'].map(ele => {
             return {
               addtime: this.common.dateFormatter(ele.addtime),
               aduser_id: ele.aduser_id,
@@ -111,14 +112,11 @@ export class PdfVersioningComponent implements OnInit {
               y: parseFloat(ele.y),
             }
           });
+          this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime)); 
 
-          this.versioningData.forEach(element => {
-            this.userTable.push({ userId: element.aduser_id, user: element.user, addTime: element.addtime, type: element.type });
-          });
-          this.userTable = this.common.arrayUnique(this.userTable, 'userId');
-          this.userTable.map(id => this.userFilter.push(id.userId));
+          this.getFilterFields(this.versioningDataInitTime);
           console.log("userTable", this.userTable, this.userFilter);
-          this.distributeCanvas(this.versioningData);
+          this.distributeCanvas(this.versioningDataInitTime);
         }
         console.log(this.contents, this.rectangles, this.circles);
       } else {
@@ -128,6 +126,16 @@ export class PdfVersioningComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  getFilterFields(versioningData) {
+    this.userTable = [];
+    this.userFilter = [];
+    versioningData.forEach(element => {
+      this.userTable.push({ userId: element.aduser_id, user: element.user, addTime: element.addtime, type: element.type });
+    });
+    this.userTable = this.common.arrayUnique(this.userTable, 'userId');
+    this.userTable.map(id => this.userFilter.push(id.userId));
   }
 
   distributeCanvas(distributionArray) {
@@ -242,7 +250,9 @@ export class PdfVersioningComponent implements OnInit {
       width: 0,
       height: 0,
       radius: null,
-      type: null
+      type: null,
+      aduser_id : null,
+      user:null
     }
     var drowType, rect, isDown, origX, origY;
 
@@ -271,7 +281,9 @@ export class PdfVersioningComponent implements OnInit {
             width: pointer.x - origX,
             height: pointer.y - origY,
             radius: null,
-            type: 'text'
+            type: 'text',
+            aduser_id: this.userService._details.id,
+            user : this.userService._details.name
           }
 
           drowType = new fabric.Rect({
@@ -300,7 +312,9 @@ export class PdfVersioningComponent implements OnInit {
             width: pointer.x - origX,
             height: pointer.y - origY,
             radius: null,
-            type: 'rectangle'
+            type: 'rectangle',
+            aduser_id: this.userService._details.id,
+            user : this.userService._details.name
             // id: id
           }
 
@@ -327,7 +341,9 @@ export class PdfVersioningComponent implements OnInit {
             width: pointer.x - origX,
             height: pointer.y - origY,
             radius: o.radius,
-            type: 'circle'
+            type: 'circle',
+            aduser_id: this.userService._details.id,
+            user : this.userService._details.name
           }
           drowType = new fabric.Circle({
             left: origX,
@@ -473,7 +489,7 @@ export class PdfVersioningComponent implements OnInit {
     }
     // this.drawRectangles();
     // this.drawCircles();
-    this.drawCanwas();
+    // this.drawCanwas();
   }
 
   manageRectangles(data, updatePointer) {
@@ -494,7 +510,10 @@ export class PdfVersioningComponent implements OnInit {
           ele.height = (targetCanvas.scaleY) ? (Math.abs(ele.height * targetCanvas.scaleY)) / this.zoom : ele.height;
         }
       }) :
-      this.rectangles.push(data);
+      // this.rectangles.push(data);
+      this.versioningDataModifiTime.push(data);
+    this.distributeCanvas(this.versioningDataModifiTime);
+    this.getFilterFields(this.versioningDataModifiTime);
     // }
     console.log('rectangles', this.rectangles);
     localStorage.setItem('rectangles', JSON.stringify(this.rectangles));
@@ -518,7 +537,11 @@ export class PdfVersioningComponent implements OnInit {
         ele.x = targetCanvas.left;
         ele.y = targetCanvas.top;
       }
-    }) : this.circles.push(data);
+    }) :
+      // this.circles.push(data);
+      this.versioningDataModifiTime.push(data);
+    this.distributeCanvas(this.versioningDataModifiTime);
+    this.getFilterFields(this.versioningDataModifiTime);
     // }
     console.log('circles', this.circles);
     localStorage.setItem('circles', JSON.stringify(this.circles));
@@ -549,8 +572,6 @@ export class PdfVersioningComponent implements OnInit {
           fill: 'rgba(255,0,0,0.5)',
           transparentCorners: false,
           data: rectangle,
-          aduser_id: this.userService._details.id,
-          user: this.userService._details.name
           // name: 'jrx',
           // includeDefaultValues: true,
           // id: 1
@@ -572,8 +593,6 @@ export class PdfVersioningComponent implements OnInit {
           radius: circle.radius * this.zoom,
           selectable: true,
           data: circle,
-          aduser_id: this.userService._details.id,
-          user: this.userService._details.name
         });
 
         this.freeCanvas.add(crcl);
@@ -660,7 +679,10 @@ export class PdfVersioningComponent implements OnInit {
       user: this.userService._details.name
     };
     console.log('data:', data);
-    this.contents.push(data);
+    // this.contents.push(data);
+    this.versioningDataModifiTime.push(data);
+    this.distributeCanvas(this.versioningDataModifiTime);
+    this.getFilterFields(this.versioningDataModifiTime);
     localStorage.setItem('contents', JSON.stringify(this.contents))
     this.writeContents();
     this.clearContents(event);
@@ -731,7 +753,7 @@ export class PdfVersioningComponent implements OnInit {
   }
 
   filterUserWise(user, isChecked) {
-    console.log("isChecked", isChecked)
+    console.log("isChecked", isChecked, this.versioningDataModifiTime)
     if (isChecked) {
       this.userFilter.push(user.userId);
     } else {
@@ -742,7 +764,8 @@ export class PdfVersioningComponent implements OnInit {
         }
       }
     }
-    let filteredCanvas = this.versioningData.filter(ele => { return this.userFilter.includes(ele.aduser_id) });
+    console.log('userFilter:',this.userFilter)
+    let filteredCanvas = this.versioningDataModifiTime.filter(ele => { return this.userFilter.includes(ele.aduser_id) });
     console.log("filteredCanvas", filteredCanvas)
     this.distributeCanvas(filteredCanvas);
   }
