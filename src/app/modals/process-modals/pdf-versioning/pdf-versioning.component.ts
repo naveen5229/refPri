@@ -91,6 +91,14 @@ export class PdfVersioningComponent implements OnInit {
     this.drawFree();
   }
 
+  selectAction(type: 'TX' | 'RA' | 'CR' | 'LN' | '') {
+    if (this.selectedAction == type) {
+      this.selectedAction = ''
+    } else {
+      this.selectedAction = type;
+    }
+  }
+
   getLoadedVersioning() {
     this.api.get(`Admin/getPdfVersioningByDocId?docId=${this.docId}`).subscribe(res => {
       if (res['code'] > 0) {
@@ -112,7 +120,7 @@ export class PdfVersioningComponent implements OnInit {
               y: parseFloat(ele.y),
             }
           });
-          this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime)); 
+          this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime));
 
           this.getFilterFields(this.versioningDataInitTime);
           console.log("userTable", this.userTable, this.userFilter);
@@ -251,8 +259,8 @@ export class PdfVersioningComponent implements OnInit {
       height: 0,
       radius: null,
       type: null,
-      aduser_id : null,
-      user:null
+      aduser_id: null,
+      user: null
     }
     var drowType, rect, isDown, origX, origY;
 
@@ -283,7 +291,7 @@ export class PdfVersioningComponent implements OnInit {
             radius: null,
             type: 'text',
             aduser_id: this.userService._details.id,
-            user : this.userService._details.name
+            user: this.userService._details.name
           }
 
           drowType = new fabric.Rect({
@@ -314,7 +322,7 @@ export class PdfVersioningComponent implements OnInit {
             radius: null,
             type: 'rectangle',
             aduser_id: this.userService._details.id,
-            user : this.userService._details.name
+            user: this.userService._details.name
             // id: id
           }
 
@@ -343,7 +351,7 @@ export class PdfVersioningComponent implements OnInit {
             radius: o.radius,
             type: 'circle',
             aduser_id: this.userService._details.id,
-            user : this.userService._details.name
+            user: this.userService._details.name
           }
           drowType = new fabric.Circle({
             left: origX,
@@ -764,7 +772,7 @@ export class PdfVersioningComponent implements OnInit {
         }
       }
     }
-    console.log('userFilter:',this.userFilter)
+    console.log('userFilter:', this.userFilter)
     let filteredCanvas = this.versioningDataModifiTime.filter(ele => { return this.userFilter.includes(ele.aduser_id) });
     console.log("filteredCanvas", filteredCanvas)
     this.distributeCanvas(filteredCanvas);
