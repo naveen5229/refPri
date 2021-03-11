@@ -28,12 +28,12 @@
                         <!-- <img *ngIf="selectedAction != 'TX'" class="text" src="assets/img/text-symbol.svg" alt="">
         <img *ngIf="selectedAction == 'TX'" class="text" src="assets/img/text-symbol-green.svg" alt=""> -->
                     </a>
-                    <a class="edit" (click)="selectedAction = selectedAction == 'RA' ? '' : 'RA'">
+                    <a class="edit" (click)="selectedAction = (selectedAction == 'RA' ? '' : 'RA')">
                         <i class="far fa-square" [style.color]="(selectedAction != 'RA') ? 'white' : 'blue'"></i>
                         <!-- <img *ngIf="selectedAction != 'RA'" src="assets/img/rect.svg" alt="">
         <img *ngIf="selectedAction == 'RA'" src="assets/img/rect-green.svg" alt=""> -->
                     </a>
-                    <a class="edit" (click)="selectedAction = selectedAction == 'CR' ? '' : 'CR'">
+                    <a class="edit" (click)="selectedAction = (selectedAction == 'CR' ? '' : 'CR')">
                         <i class="far fa-circle" [style.color]="(selectedAction != 'CR') ? 'white' : 'blue'"></i>
                     </a>
                     <!-- <a class="edit"> 
