@@ -167,7 +167,7 @@ export class PdfVersioningComponent implements OnInit {
     let url = this.url;
     // console.log('me hu url', url);
     // let url = 'https://elogist-prime.s3.ap-south-1.amazonaws.com/docs/202103/process_docs/194-attachment-1614664156.pdf';
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '/assets/pdf_worker/pdf.worker.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf_worker/pdf.worker.js';
     // Asynchronous download of PDF
     let loadingTask = pdfjsLib.getDocument(url);
     loadingTask.promise.then((pdf) => {
