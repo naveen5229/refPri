@@ -348,7 +348,7 @@
                     </div>
                     <div class="col-8">
                         <auto-suggestion [data]="adminList" display="name" placeholder="Ticket User" name="tpName"
-                            id="tpName" (onSelected)="forwardTicketObject.userId = $event"
+                            id="tpName" (onSelected)="forwardTicketObject.userId = $event;getUserPresence(forwardTicketObject.userId.id)"
                             [preSelected]="forwardTicketObject.userId.id ? {name: forwardTicketObject.userId.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
