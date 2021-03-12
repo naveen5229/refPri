@@ -54,13 +54,13 @@
             <div class="modal-body">
                 <div class="table-responsive view-activity-tb">
                     <table class="table table-bordered">
-                        <thead>
+                        <thead class="thead-light">
                             <tr>
                                 <th style="width: 100px;">Name</th>
-                                <th style="width: 200px;">Outcome</th>
-                                <th style="width: 100px;">Spend hour</th>
                                 <th style="width: 300px;">Description</th>
-                                <th style="width: 100px;">Contact person</th>
+                                <th style="width: 200px;">Outcome</th>
+                                <th style="width: 120px;">Contact person</th>
+                                <th style="width: 100px;">Spend hour</th>
                                 <th>Total Hours</th>
                                 <th>Date</th>
                             </tr>
@@ -72,10 +72,10 @@
                                     <table class="table table-bordered mb-0">
                                         <tbody>
                                             <tr *ngFor="let dd of d.description_data">
-                                                <td style="width: 200px;">{{dd.outcome}}</td>
-                                                <td style="width: 100px;">{{dd['spend hour']}}</td>
                                                 <td style="width: 300px;">{{dd.description}}</td>
-                                                <td style="width: 100px;">{{dd['contact person']}}</td>
+                                                <td style="width: 200px;">{{dd.outcome}}</td>
+                                                <td style="width: 120px;">{{dd['contact person']}}</td>
+                                                <td style="width: 100px;">{{dd['spend hour']}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -86,7 +86,7 @@
                         </tbody>
                         <tbody *ngIf="!viewSummaryList || !viewSummaryList.length">
                             <tr>
-                                <td colspan="4">No Record Found</td>
+                                <td colspan="7" class="text-center font-weight-bold text-danger">No Record Found</td>
                             </tr>
                         </tbody>
                     </table>
