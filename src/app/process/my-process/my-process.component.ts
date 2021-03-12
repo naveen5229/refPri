@@ -795,6 +795,7 @@ export class MyProcessComponent implements OnInit {
       if (lead._revert_action > 0) {
         icons.push({ class: "fa fa-thumbs-down text-primary", action: this.openTransAction.bind(this, lead, type, null, false), txt: '', title: "Inverse" });
       }
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
       if (lead._claim_txn) {

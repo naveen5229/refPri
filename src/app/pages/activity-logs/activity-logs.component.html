@@ -4,34 +4,16 @@
             <div class="col-3">
                 <h5 class="heading-design">Activity Logs</h5>
             </div>
-            <div class="col-3">
-                <div class="row">
-                    <div class="col-lg-5 p-0">
-                        <label>Select Date :-</label>
-                    </div>
-                    <div class="col-lg-7">
-                        <uj-date-time-picker (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false">
-                        </uj-date-time-picker>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="row">
-                    <div class="col-lg-5 p-0">
-                        <label>Department :-</label>
-                    </div>
-                    <div class="col-lg-7">
-                        <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(department.id>0)?{name:department.name}:{name:''}">
-                        </auto-suggestion>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 text-right p-0">
-                <button (click)="viewSummary()" class="btn btn-primary btn-sm mr-2">
-              View Summary
-          </button>
-                <button class="btn btn-primary text-capitalize btn-sm" id="button" (click)="addActivityLog(null)"><i
-                  class="fa fa-plus"></i></button>
+            <div class="col-9 text-right p-0">
+                <button (click)="openProcessWiseSummary()" class="btn btn-primary btn-sm mr-2">
+                    View Process Wise Summary
+                </button>
+                <button (click)="openViewSummary()" class="btn btn-primary btn-sm mr-2">
+                    View Summary
+                </button>
+                <button class="btn btn-primary text-capitalize btn-sm" id="button" (click)="addActivityLog(null)">
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
     </nb-card-header>
@@ -52,8 +34,30 @@
                 <button type="button" class="close" data-dismiss="modal" (click)="closeViewSummary()">&times;</button>
             </div>
             <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-2">
+                        <label>Select Date :</label>
+                    </div>
+                    <div class="col-2">
+                        <uj-date-time-picker (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-2">
+                        <label>Department :</label>
+                    </div>
+                    <div class="col-3">
+                        <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(department.id>0)?{name:department.name}:{name:''}">
+                        </auto-suggestion>
+                    </div>
+                    <div class="col-3 text-right">
+                        <button (click)="viewSummary()" class="btn btn-primary btn-sm mr-2">Submit</button>
+                        <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV()">
+                            <i class="fas fa-file-excel"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="table-responsive view-activity-tb">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="viewSummaryTable">
                         <thead class="thead-light">
                             <tr>
                                 <th style="width: 100px;">Name</th>
@@ -74,8 +78,8 @@
                                             <tr *ngFor="let dd of d.description_data">
                                                 <td style="width: 300px;">{{dd.description}}</td>
                                                 <td style="width: 200px;">{{dd.outcome}}</td>
-                                                <td style="width: 120px;">{{dd['contact person']}}</td>
-                                                <td style="width: 100px;">{{dd['spend hour']}}</td>
+                                                <td style="width: 120px;">{{dd['contact_person']}}</td>
+                                                <td style="width: 100px;">{{dd['spend_hour']}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -85,6 +89,93 @@
                             </tr>
                         </tbody>
                         <tbody *ngIf="!viewSummaryList || !viewSummaryList.length">
+                            <tr>
+                                <td colspan="7" class="text-center font-weight-bold text-danger">No Record Found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: Ticket History -->
+
+<!--start: Ticket History -->
+<div class="modal" id="viewProcessWiseSummary">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Process Wise Activity Log Summary</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeProcessWiseSummary()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-1">
+                        <label>Start Date :</label>
+                    </div>
+                    <div class="col-2">
+                        <uj-date-time-picker (onChanged)="processFrom.startDate=($event)" [dateTimeValue]="processFrom.startDate" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-1">
+                        <label>End Date :</label>
+                    </div>
+                    <div class="col-2">
+                        <uj-date-time-picker (onChanged)="processFrom.endDate=($event)" [dateTimeValue]="processFrom.endDate" [isTime]="false">
+                        </uj-date-time-picker>
+                    </div>
+                    <div class="col-1">
+                        <label>Process :</label>
+                    </div>
+                    <div class="col-3">
+                        <auto-suggestion (onSelected)="processFrom.process.id = $event._id;processFrom.process.name = $event.name" [data]="processList" display="name" placeholder="Select Process" inputId="selectProcess" name="selectProcess" [preSelected]="(processFrom.process.id>0)?{name:processFrom.process.name}:{name:''}">
+                        </auto-suggestion>
+                    </div>
+                    <div class="col-2 text-right">
+                        <button (click)="viewProcessWiseSummary()" class="btn btn-primary btn-sm mr-2">Submit</button>
+                        <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV(2)">
+                            <i class="fas fa-file-excel"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <smart-table [data]="processWiseActivityTable.data" [settings]="processWiseActivityTable.settings" id="processWiseActivityList">
+                    </smart-table>
+                </div> -->
+                <div class="table-responsive view-activity-tb">
+                    <table class="table table-bordered" id="viewSummaryTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="width: 100px;">Name</th>
+                                <th style="width: 300px;">Description</th>
+                                <th style="width: 200px;">Outcome</th>
+                                <th style="width: 120px;">Contact person</th>
+                                <th style="width: 100px;">Spend hour</th>
+                                <th>Total Hours</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="processWiseActivityList && processWiseActivityList.length>0">
+                            <tr *ngFor="let d of processWiseActivityList">
+                                <td style="width: 100px;">{{d.name}}</td>
+                                <td colspan="4" class="p-0">
+                                    <table class="table table-bordered mb-0">
+                                        <tbody>
+                                            <tr *ngFor="let dd of d.description_data">
+                                                <td style="width: 300px;">{{dd.description}}</td>
+                                                <td style="width: 200px;">{{dd.outcome}}</td>
+                                                <td style="width: 120px;">{{dd['contact_person']}}</td>
+                                                <td style="width: 100px;">{{dd['spend_hour']}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>{{d.total_spend_hour}}</td>
+                                <td>{{d.date}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="!processWiseActivityList || !processWiseActivityList.length">
                             <tr>
                                 <td colspan="7" class="text-center font-weight-bold text-danger">No Record Found</td>
                             </tr>
