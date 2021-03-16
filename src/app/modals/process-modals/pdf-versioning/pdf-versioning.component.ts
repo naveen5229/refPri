@@ -11,6 +11,7 @@ import { literalMap } from '@angular/compiler';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { UserService } from '../../../Service/user/user.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-pdf-versioning',
@@ -64,6 +65,7 @@ export class PdfVersioningComponent implements OnInit {
   userTable = [];
   collapse = 'user';
   userFilter = [];
+  choronolgyFilter = [];
 
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public userService: UserService) {
     console.log('common service', this.common.params);
@@ -118,6 +120,7 @@ export class PdfVersioningComponent implements OnInit {
               width: parseFloat(ele.width),
               x: parseFloat(ele.x),
               y: parseFloat(ele.y),
+              selectable:false
             }
           });
           this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime));
@@ -198,6 +201,7 @@ export class PdfVersioningComponent implements OnInit {
         viewport: viewport
       });
       // this.drawRectangles();
+      this.drawCanwas();
       this.writeContents();
     });
   }
@@ -260,7 +264,8 @@ export class PdfVersioningComponent implements OnInit {
       radius: null,
       type: null,
       aduser_id: null,
-      user: null
+      user: null,
+      selectable:true
     }
     var drowType, rect, isDown, origX, origY;
 
@@ -291,7 +296,8 @@ export class PdfVersioningComponent implements OnInit {
             radius: null,
             type: 'text',
             aduser_id: this.userService._details.id,
-            user: this.userService._details.name
+            user: this.userService._details.name,
+            selectable:true
           }
 
           drowType = new fabric.Rect({
@@ -322,7 +328,8 @@ export class PdfVersioningComponent implements OnInit {
             radius: null,
             type: 'rectangle',
             aduser_id: this.userService._details.id,
-            user: this.userService._details.name
+            user: this.userService._details.name,
+            selectable:true
             // id: id
           }
 
@@ -351,7 +358,8 @@ export class PdfVersioningComponent implements OnInit {
             radius: o.radius,
             type: 'circle',
             aduser_id: this.userService._details.id,
-            user: this.userService._details.name
+            user: this.userService._details.name,
+            selectable:true
           }
           drowType = new fabric.Circle({
             left: origX,
@@ -579,6 +587,7 @@ export class PdfVersioningComponent implements OnInit {
           angle: 0,
           fill: 'rgba(255,0,0,0.5)',
           transparentCorners: false,
+          selectable: rectangle.selectable,
           data: rectangle,
           // name: 'jrx',
           // includeDefaultValues: true,
@@ -599,7 +608,7 @@ export class PdfVersioningComponent implements OnInit {
           originY: 'center',
           fill: 'rgba(255,0,0,0.5)',
           radius: circle.radius * this.zoom,
-          selectable: true,
+          selectable: circle.selectable,
           data: circle,
         });
 
@@ -684,7 +693,7 @@ export class PdfVersioningComponent implements OnInit {
       height: this.cordinates.height,
       type: 'text',
       aduser_id: this.userService._details.id,
-      user: this.userService._details.name
+      user: this.userService._details.name,
     };
     console.log('data:', data);
     // this.contents.push(data);
@@ -729,11 +738,24 @@ export class PdfVersioningComponent implements OnInit {
 
 
   saveDocVersioning() {
+    if (this.versioningDataInitTime.length > 0) {
+      for (var i = this.versioningDataModifiTime.length - 1; i >= 0; i--) {
+        for (var j = 0; j < this.versioningDataInitTime.length; j++) {
+          if (this.versioningDataModifiTime[i] && (this.versioningDataModifiTime[i].id === this.versioningDataInitTime[j].id)) {
+            this.versioningDataModifiTime.splice(i, 1);
+          }
+        }
+      }
+    }
+    console.log(this.versioningDataModifiTime,'filtered');
+    // return;
+
     if (this.docId) {
       let params = {
         docId: this.docId,
         requestId: null,
-        info: JSON.stringify(this.contents.concat(this.circles, this.rectangles))
+        // info: JSON.stringify(this.contents.concat(this.circles, this.rectangles)),
+        info: JSON.stringify(this.versioningDataModifiTime)
       }
       console.log("params", params);
       // return;
@@ -744,6 +766,7 @@ export class PdfVersioningComponent implements OnInit {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['msg']);
             // this.getProcessLeadByType(type);
+            this.getLoadedVersioning();
           } else {
             this.common.showError(res['msg']);
           }
@@ -774,6 +797,33 @@ export class PdfVersioningComponent implements OnInit {
     }
     console.log('userFilter:', this.userFilter)
     let filteredCanvas = this.versioningDataModifiTime.filter(ele => { return this.userFilter.includes(ele.aduser_id) });
+    console.log("filteredCanvas", filteredCanvas)
+    this.distributeCanvas(filteredCanvas);
+  }
+
+  filterChronoligyWise(filterObj, isChecked) {
+    console.log("isChecked", filterObj, isChecked, this.versioningDataModifiTime)
+    if (isChecked) {
+      this.choronolgyFilter.push({ userId: filterObj.aduser_id, addtime: filterObj.addtime });
+    } else {
+      if (this.choronolgyFilter.length > 0) {
+        let findExist = this.choronolgyFilter.findIndex(ele => (ele.userId === filterObj.aduser_id && ele.addtime.match(filterObj.addtime)));
+        if (findExist >= 0) {
+          this.choronolgyFilter.splice(findExist, 1);
+        }
+      }
+    }
+    console.log('choronolgyFilter:', this.choronolgyFilter);
+    let filteredCanvas = [];
+    if (this.choronolgyFilter.length > 0) {
+      filteredCanvas = this.versioningDataModifiTime.filter(ele => {
+        return this.choronolgyFilter.some((fil) => {
+          return fil.userId === ele.aduser_id && fil.addtime === ele.addtime;
+        });
+      });
+    } else {
+      filteredCanvas = this.versioningDataModifiTime;
+    }
     console.log("filteredCanvas", filteredCanvas)
     this.distributeCanvas(filteredCanvas);
   }

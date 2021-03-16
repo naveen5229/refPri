@@ -114,7 +114,8 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let user of versioningDataModifiTime">
-                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox" 
+                                (change)="filterChronoligyWise(user,$event.target.checked)"></td>
                             <td>{{user.user}}</td>
                             <td>{{user.addtime}}</td>
                             <td></td>
