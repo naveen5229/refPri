@@ -1,0 +1,19 @@
+.display{display:inline-block};
+.mrgn{margin-top:5px;}
+.btnstyle{background-color: transparent;border: none;}
+.icon{ 
+    font-size: 30px !important;
+    padding-left: 34% !important;
+}
+// .fa-trash:before {
+//     content: "\f1f8";
+//     color: red!important;
+// }
+
+.tag{color:black;}
+:host ::ng-deep .no-search span{
+    color: black;
+}
+:host ::ng-deep .tableFixHead{
+    max-height: calc(100vh - 472px);
+}

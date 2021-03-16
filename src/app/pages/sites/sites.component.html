@@ -1,0 +1,86 @@
+<nb-card>
+  <nb-card-header>
+    <h5>Sites</h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="body-box">
+      <div class="row">
+        <div class="col-4"
+          style="border-left:solid;border-top:solid;border-bottom:solid;border-right:solid; border-width:2px;border-color:lightgrey;padding:10px;border-radius:3px;">
+          <div class="form-group">
+            <div class="col-4 display"><label>SiteName<span style="color:red;font-size:15px;">*</span></label></div>
+            <div class="col-8 display">
+              <input type="text" [(ngModel)]="site.sitename" placeholder="Site Name" style="width:100%" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-4 display">
+              <label>Location Name</label>
+            </div>
+            <div class="col-8 display">
+              <auto-suggestion (onSelected)="selectLocation($event)" [preSelected]="site.id ? { location:Location }:'' "
+                url="Location/getPlaceFromRedis?" display="location" inputId="location" placeholder="Location" apiBase="B">
+              </auto-suggestion>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-4 display">
+              <label>Site Type</label>
+            </div>
+            <div class="col-8 display">
+              <select class="form-control" [(ngModel)]="typeID">
+                <option *ngFor="let typeIdx of typeIds;" [value]="typeIdx.id">{{typeIdx.description}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-12" style="text-align:center;">
+              <button type="submit" class="btn btn-success mr-3"
+                 (click)="submitPolygon();">{{site.name}}</button>
+                 <!-- *ngIf="user.permission.add" -->
+              <button type="submit" *ngIf="site.name=='Update'"
+                class="btn btn-warning mr-3"
+                (click)="cancelMapServices()">Cancel</button>
+              <button type="submit" class="btn btn-danger mr-3"
+                (click)="clearMapServices()">Clear</button>
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <div class="col-4 display">
+              <label>Move To</label>
+            </div>
+            <div class="col-8 display">
+              <auto-suggestion (onSelected)="selectLocation($event)" [preSelected]="site.id ? { location:Location }:'' "
+                url="Location/getPlaceFromRedis?" apiBase="B" display="location" inputId="moveto" placeholder="Location" (focusout)="getLatLng()">
+              </auto-suggestion>
+            </div>
+          </div> -->
+
+          <div class="form-group">
+            <div class="col-12">
+              <hr style="background-color:#dad4d4;height:1px;width:100%" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-12">
+              <smart-table *ngIf="Sites.length>0" style="height:27vh!important;overflow-y:scroll!important;"
+                [data]="table.data" [settings]="table.settings" id="verifyState">
+              </smart-table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-8">
+          <div id="map" style="width: 100%; height:75vh">
+          </div>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
