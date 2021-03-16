@@ -407,7 +407,8 @@
                 <button type="button" class="close" data-dismiss="modal" (click)="closeInfo()">&times;</button>
             </div>
 
-            <div class="modal-body" *ngIf="activeTab=='completedTkt'">
+            <!-- <div class="modal-body" *ngIf="activeTab=='completedTkt'"> -->
+            <div class="modal-body">
 
                 <div class="row">
                     <div [class]="(primaryFormInfo.length > 0 && closingFormInfo.length > 0) ? 'col-4' : 'col-6'">
@@ -484,10 +485,8 @@
                 </div>
             </div>
 
-            <div class="modal-body" *ngIf="activeTab!='completedTkt'">
-                <!-- start:dyn field -->
+            <!-- <div class="modal-body" *ngIf="activeTab!='completedTkt'">
                 <div *ngFor="let dd of oddArray ; let i = index; " class="row">
-
                     <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
                         <div *ngIf="oddArray[i].r_colalias" class="row">
                             <div class="col-4">
@@ -538,8 +537,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- end: dyn field -->
-            </div>
+            </div> -->
 
         </div>
     </div>
