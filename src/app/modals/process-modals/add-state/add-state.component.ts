@@ -16,6 +16,7 @@ export class AddStateComponent implements OnInit {
   states = [];
   nextStates = [];
   userTag = { id: null, name: null }
+  stateUser = [];
   // nextState = null;
   typeId = null;
   stateName = null;
@@ -62,6 +63,7 @@ export class AddStateComponent implements OnInit {
   }
 
   Add() {
+    let stateUser = this.stateUser.map(ele => {return {user_id:ele.id}});
     let params = {
       processId: this.processId,
       name: this.stateName,
@@ -69,8 +71,11 @@ export class AddStateComponent implements OnInit {
       nextStates: (this.nextStates && this.nextStates.length) ? JSON.stringify(this.nextStates) : null,
       requestId: this.requestId,
       threshold: this.threshold,
-      stateOwnerId: this.userTag.id
+      stateOwnerId: this.userTag.id,
+      stateUsers: JSON.stringify(stateUser)
     }
+    // console.log(params)
+    // return;
     this.common.loading++;
     this.api.post('Processes/addProcessState', params).subscribe(res => {
         this.common.loading--;
@@ -237,10 +242,11 @@ export class AddStateComponent implements OnInit {
     this.requestId = data._state_id;
     this.threshold = (data._threshold) ? data._threshold : null;
     this.userTag = { id: data._state_owner_id, name: data.state_owner }
+    this.stateUser = data._state_users;
     // this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
-  }
+  } 
 
   resetData() {
     this.typeId = null;
@@ -249,7 +255,8 @@ export class AddStateComponent implements OnInit {
     // this.nextState = null;
     this.requestId = null;
     this.threshold = null;
-    this.userTag = { id: null, name: null }
+    this.userTag = { id: null, name: null };
+    this.stateUser = [];
     // this.isDefault = false;
     this.btn1 = "Add";
   }

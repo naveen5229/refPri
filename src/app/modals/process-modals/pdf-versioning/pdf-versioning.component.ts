@@ -12,6 +12,8 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { UserService } from '../../../Service/user/user.service';
 import { filter } from 'rxjs/operators';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+import _ from 'lodash';
 
 @Component({
   selector: 'ngx-pdf-versioning',
@@ -63,11 +65,12 @@ export class PdfVersioningComponent implements OnInit {
   versioningDataInitTime = [];
   versioningDataModifiTime = [];
   userTable = [];
+  chronologyTable = [];
   collapse = 'user';
   userFilter = [];
   choronolgyFilter = [];
 
-  constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public userService: UserService) {
+  constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public userService: UserService, public modalService: NgbModal) {
     console.log('common service', this.common.params);
     this.url = this.common.params.images;
     this.title = this.common.params['title'];
@@ -120,12 +123,13 @@ export class PdfVersioningComponent implements OnInit {
               width: parseFloat(ele.width),
               x: parseFloat(ele.x),
               y: parseFloat(ele.y),
-              selectable:false
+              selectable: false
             }
           });
           this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime));
 
-          this.getFilterFields(this.versioningDataInitTime);
+          this.getUserFilterFields(this.versioningDataInitTime);
+          this.getChronologyFilterFields(this.versioningDataInitTime);
           console.log("userTable", this.userTable, this.userFilter);
           this.distributeCanvas(this.versioningDataInitTime);
         }
@@ -139,7 +143,7 @@ export class PdfVersioningComponent implements OnInit {
     });
   }
 
-  getFilterFields(versioningData) {
+  getUserFilterFields(versioningData) {
     this.userTable = [];
     this.userFilter = [];
     versioningData.forEach(element => {
@@ -147,6 +151,21 @@ export class PdfVersioningComponent implements OnInit {
     });
     this.userTable = this.common.arrayUnique(this.userTable, 'userId');
     this.userTable.map(id => this.userFilter.push(id.userId));
+  }
+
+  getChronologyFilterFields(versioningData) {
+    console.log(" versioningData", versioningData)
+    this.chronologyTable = [];
+    // this.chronologyTable = versioningData.filter(a => {
+    //   var key = a.aduser_id + '|' + a.addtime;
+    //   console.log('here me key',key,this[key])
+    //   if (!this[key]) {
+    //     this[key] = true;
+    //     return true;
+    //   }
+    // }, Object.create(null));
+    this.chronologyTable = _.uniqBy(versioningData, (x) => x.aduser_id && x.addtime);
+    console.log('chronology filter:', this.chronologyTable);
   }
 
   distributeCanvas(distributionArray) {
@@ -264,8 +283,9 @@ export class PdfVersioningComponent implements OnInit {
       radius: null,
       type: null,
       aduser_id: null,
+      addtime: null,
       user: null,
-      selectable:true
+      selectable: true
     }
     var drowType, rect, isDown, origX, origY;
 
@@ -296,8 +316,9 @@ export class PdfVersioningComponent implements OnInit {
             radius: null,
             type: 'text',
             aduser_id: this.userService._details.id,
+            addtime: this.common.dateFormatter(this.common.getDate()),
             user: this.userService._details.name,
-            selectable:true
+            selectable: true
           }
 
           drowType = new fabric.Rect({
@@ -328,8 +349,9 @@ export class PdfVersioningComponent implements OnInit {
             radius: null,
             type: 'rectangle',
             aduser_id: this.userService._details.id,
+            addtime: this.common.dateFormatter(this.common.getDate()),
             user: this.userService._details.name,
-            selectable:true
+            selectable: true
             // id: id
           }
 
@@ -358,8 +380,9 @@ export class PdfVersioningComponent implements OnInit {
             radius: o.radius,
             type: 'circle',
             aduser_id: this.userService._details.id,
+            addtime: this.common.dateFormatter(this.common.getDate()),
             user: this.userService._details.name,
-            selectable:true
+            selectable: true
           }
           drowType = new fabric.Circle({
             left: origX,
@@ -529,7 +552,8 @@ export class PdfVersioningComponent implements OnInit {
       // this.rectangles.push(data);
       this.versioningDataModifiTime.push(data);
     this.distributeCanvas(this.versioningDataModifiTime);
-    this.getFilterFields(this.versioningDataModifiTime);
+    this.getUserFilterFields(this.versioningDataModifiTime);
+    this.getChronologyFilterFields(this.versioningDataModifiTime);
     // }
     console.log('rectangles', this.rectangles);
     localStorage.setItem('rectangles', JSON.stringify(this.rectangles));
@@ -557,8 +581,8 @@ export class PdfVersioningComponent implements OnInit {
       // this.circles.push(data);
       this.versioningDataModifiTime.push(data);
     this.distributeCanvas(this.versioningDataModifiTime);
-    this.getFilterFields(this.versioningDataModifiTime);
-    // }
+    this.getUserFilterFields(this.versioningDataModifiTime);
+    this.getChronologyFilterFields(this.versioningDataModifiTime);    // }
     console.log('circles', this.circles);
     localStorage.setItem('circles', JSON.stringify(this.circles));
     data = {
@@ -693,13 +717,15 @@ export class PdfVersioningComponent implements OnInit {
       height: this.cordinates.height,
       type: 'text',
       aduser_id: this.userService._details.id,
+      addtime: this.common.dateFormatter(this.common.getDate()),
       user: this.userService._details.name,
     };
     console.log('data:', data);
     // this.contents.push(data);
     this.versioningDataModifiTime.push(data);
     this.distributeCanvas(this.versioningDataModifiTime);
-    this.getFilterFields(this.versioningDataModifiTime);
+    this.getUserFilterFields(this.versioningDataModifiTime);
+    this.getChronologyFilterFields(this.versioningDataModifiTime);
     localStorage.setItem('contents', JSON.stringify(this.contents))
     this.writeContents();
     this.clearContents(event);
@@ -733,7 +759,22 @@ export class PdfVersioningComponent implements OnInit {
   }
 
   closeModal(res) {
-    this.activeModal.close(res);
+    if (this.versioningDataModifiTime.length > this.versioningDataInitTime.length) {
+      this.common.params = {
+        title: 'Save',
+        description: `<b>&nbsp;` + 'Would You Like To Save Changes' + `<b>`,
+        btn1:'Save',
+        btn2: 'Close'
+      }
+  
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        (data.response) ? this.saveDocVersioning() : this.activeModal.close(res);
+      });
+    } else {
+      this.activeModal.close(res);
+    }
+    // this.activeModal.close(res);
   }
 
 
@@ -747,7 +788,7 @@ export class PdfVersioningComponent implements OnInit {
         }
       }
     }
-    console.log(this.versioningDataModifiTime,'filtered');
+    console.log(this.versioningDataModifiTime, 'filtered');
     // return;
 
     if (this.docId) {
@@ -767,6 +808,7 @@ export class PdfVersioningComponent implements OnInit {
             this.common.showToast(res['msg']);
             // this.getProcessLeadByType(type);
             this.getLoadedVersioning();
+            this.activeModal.close(res);
           } else {
             this.common.showError(res['msg']);
           }
