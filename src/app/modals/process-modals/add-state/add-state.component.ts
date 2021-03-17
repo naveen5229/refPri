@@ -246,7 +246,7 @@ export class AddStateComponent implements OnInit {
     // this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
-  }
+  } 
 
   resetData() {
     this.typeId = null;
