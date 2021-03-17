@@ -113,7 +113,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let user of versioningDataModifiTime">
+                        <tr *ngFor="let user of chronologyTable">
                             <td><input type="checkbox" 
                                 (change)="filterChronoligyWise(user,$event.target.checked)"></td>
                             <td>{{user.user}}</td>
