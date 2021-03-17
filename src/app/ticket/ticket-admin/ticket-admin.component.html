@@ -21,6 +21,9 @@
                 <li [ngClass]="activeTab=='userWise'?'active':''" (click)="activeTab='userWise'; getAdminTicket(1)">
                     User Wise Ticket
                 </li>
+                <li [ngClass]="activeTab=='missedCall'?'active':''" (click)="activeTab='missedCall';resetSearchForm()">
+                    Process Call Logs
+                </li>
             </ul>
         </div>
         <div *ngIf="activeTab=='current'">
@@ -57,6 +60,29 @@
                 </div>
             </div>
             <smart-table [data]="userWiseTicketTable.data" [settings]="userWiseTicketTable.settings" id="userWiseTicketTable" class="sl-smart-table"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='missedCall'">
+            <div class="row" style="z-index: 999;">
+                <div class="col-2">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-2">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-3">
+                    <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="searchTask.tpId = $event._id" [data]="tpList" display="name" placeholder="Search Ticket Process" inputId="ProcessSearch" name="ProcessSearch"></auto-suggestion>
+                </div>
+                <div class="col-2">
+                    <input type="number" min="0" class="form-control" placeholder="Enter interval (minutes)" [(ngModel)]="searchTask.minutes">
+                </div>
+
+                <div class="col-3">
+                    <button class="btn btn-primary text-capitalize" (click)="getAdminTicket(2)">Search</button>
+                </div>
+            </div>
+            <smart-table [data]="missedCallTable.data" [settings]="missedCallTable.settings" id="missedCallTable" class="sl-smart-table"></smart-table>
         </div>
 
     </nb-card-body>

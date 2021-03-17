@@ -248,7 +248,7 @@ export class TicketComponent implements OnInit {
       if (res['code'] > 0) {
         if (res['data']) {
           this.ticketFormFields = res['data'];
-          if (this.activeTab == 'completedTkt') {
+          // if (this.activeTab == 'completedTkt') {
             if (refType == 1) {
               this.closingFormInfo = this.ticketFormFields;
             }else if(refType == 2){
@@ -256,7 +256,7 @@ export class TicketComponent implements OnInit {
             } else {
               this.openingFormInfo = this.ticketFormFields;
             }
-          }
+          // }
           this.formatArray();
         }
       } else {
@@ -304,22 +304,6 @@ export class TicketComponent implements OnInit {
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
   }
-
-  // findPriCat() {
-  //   if (this.tpPropertyList && this.tpPropertyList.length > 0) {
-  //     this.tpPropertyList.forEach(element => {
-  //       if (element._pri_cat_id && !this.priCatList.find(x => { return x.id == element._pri_cat_id })) {
-  //         this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
-  //       }
-  //       if (element._sec_cat_id && !this.secCatList.find(x => { return x.id == element._sec_cat_id })) {
-  //         this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
-  //       }
-  //       if (element._type_id && !this.typeList.find(x => { return x.id == element._type_id })) {
-  //         this.typeList.push({ id: element._type_id, name: element.type });
-  //       }
-  //     });
-  //   }
-  // }
 
   resetTicketForm() {
     this.tpPropertyList = [];
@@ -1355,11 +1339,11 @@ export class TicketComponent implements OnInit {
   }
 
   openInfoModal(ticket, type, refType) {
-    if (refType == 1) {
-      this.ticketDetailTitle = 'Closing Form Detail';
-    } else {
+    // if (refType == 1) {
+    //   this.ticketDetailTitle = 'Closing Form Detail';
+    // } else {
       this.ticketDetailTitle = 'Ticket Info';
-    }
+    // }
     this.ticketForm.tp.id = ticket._tpid;
     this.ticketForm.requestId = ticket._ticket_id;
     this.tpPropertyList = [];
@@ -1369,14 +1353,19 @@ export class TicketComponent implements OnInit {
     this.secCatList = [];
     this.typeList = [];
     this.ticketFormFields = null;
+    this.openingFormInfo = [];
+    this.closingFormInfo = [];
+    this.primaryFormInfo = [];
     setTimeout(async () => {
-      await this.getTicketFormField(refType);
+      // await this.getTicketFormField(refType);
+      await this.getTicketFormField(0);
+        await this.getTicketFormField(2);
     }, 500);
 
     if (this.activeTab == 'completedTkt') {
       setTimeout(async () => {
         await this.getTicketFormField(1);
-        await this.getTicketFormField(2);
+        // await this.getTicketFormField(2);
       }, 500);
     }
 
