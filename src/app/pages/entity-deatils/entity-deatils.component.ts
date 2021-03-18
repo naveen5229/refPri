@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddentityfieldsComponent } from '../../modals/addentityfields/addentityfields.component';
 import { EntityFormComponent } from '../../modals/entity-form/entity-form.component';
 import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
 import { ApiService } from '../../Service/Api/api.service';
@@ -120,6 +121,17 @@ export class EntityDeatilsComponent implements OnInit {
       default: this.entityContactFieldsTitle = '';
     }
     document.getElementById('entityContactFields').style.display = 'block';
+
+    // this.common.params = {
+    //   entityTypes: this.entityTypes,
+    //   entityContactFieldsTitle: this.entityContactFieldsTitle,
+    //   modalType: this.modalType
+    // }
+
+    // const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    // activeModal.result.then(data => {
+    // console.log("addEntity ~ data", data)
+    // });
   }
 
   getEntityType() {
