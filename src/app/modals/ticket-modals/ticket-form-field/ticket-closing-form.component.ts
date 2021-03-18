@@ -89,12 +89,10 @@ export class TicketClosingFormComponent implements OnInit {
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'],null,false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
-
       return copyDetails;
     });
-
     const params = {
       info: JSON.stringify(details),
       refId: this.refId,
@@ -102,8 +100,7 @@ export class TicketClosingFormComponent implements OnInit {
       ticketId: this.ticketId,
       requestId: null
     }
-    console.log("para......", params);
-
+    // console.log("para......", params);
     this.common.loading++;
     this.api.post('Ticket/saveTicketFormByRefId', params)
       .subscribe(res => {

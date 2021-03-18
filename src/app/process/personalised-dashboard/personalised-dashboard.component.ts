@@ -250,8 +250,9 @@ export class PersonalisedDashboardComponent implements OnInit {
 
     if (type == 2) {//for me
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
-      icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type), txt: '', title: "Mark Completed" });
+      icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type,null,true), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
 
     } else if (type == 1) { //by me or owned by me
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Lead" });
@@ -334,7 +335,7 @@ export class PersonalisedDashboardComponent implements OnInit {
     });
   }
 
-  openTransAction(lead, type, formType = null) {
+  openTransAction(lead, type, formType = null, isComplete: Boolean = null) {
     console.log("openTransAction");
     let formTypeTemp = 0;
     if (!formType) {
@@ -363,26 +364,36 @@ export class PersonalisedDashboardComponent implements OnInit {
       isMarkTxnComplete: ((lead._state_change == 2 && type == 1) || [1].includes(type)) ? 1 : null
     };
     let title = (actionData.formType == 0) ? 'Transaction Action' : 'Transaction Next State';
-    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add" };
+    this.common.params = { actionData, adminList: this.adminList, title: title, button: "Add", isComplete: isComplete };
     const activeModal = this.modalService.open(AddTransactionActionComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log("res data:", data, lead);
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
         if (data.nextFormType == 1) {
-          lead._state_id = data.state.id;
-          lead.state_name = data.state.name;
+          lead['_next_state_id'] = data.state.id;
+          lead['next_state_name'] = data.state.name;
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 2);
+            lead._state_id = data.state.id;
+            lead.state_name = data.state.name;
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 2);
+            }
           }
 
         } else if (data.nextFormType == 2) {
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 1);
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 1);
+            }
           }
         }
       } else {
@@ -422,6 +433,10 @@ export class PersonalisedDashboardComponent implements OnInit {
       if (formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (formType == 1) {
+        if(lead._next_state_id){
+          lead._state_id = lead._next_state_id;
+          lead.state_name = lead.next_state_name;
+        }
         this.openTransAction(lead, type, 2);
       } else {
         this.getProcessLeadByType(type);

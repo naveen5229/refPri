@@ -86,6 +86,7 @@ export class AddTransactionActionComponent implements OnInit {
       } else if (this.transAction.formType == 1) {
         this.title = 'Add Transaction Next State';
         this.isFormHere = 0;
+        this.nextStateForm = this.common.params.actionData.isStateForm;
       } else {
         this.title = 'Update Transaction Action';
         this.transAction.isCompleted = true;
@@ -255,6 +256,7 @@ export class AddTransactionActionComponent implements OnInit {
         transId: this.transAction.transId,
         stateId: this.transAction.state.id,
         actionId: this.transAction.action.id,
+        actionName: this.transAction.action.name,
         nexActId: null,
         nextActTarTime: null,
         remark: this.transAction.remark,
@@ -266,7 +268,7 @@ export class AddTransactionActionComponent implements OnInit {
       };
       // console.log("saveTransAction:", params);return;
       this.common.loading++;
-      this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
+      this.api.post("Processes/addTransactionAction", params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {

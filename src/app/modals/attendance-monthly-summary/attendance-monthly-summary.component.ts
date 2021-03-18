@@ -6,6 +6,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from "lodash";
 import { ShiftLogAddComponent } from '../shift-log-add/shift-log-add.component';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { GenericModelComponent } from '../generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-attendance-monthly-summary',
@@ -433,6 +434,12 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
       let column = {};
       for (let key in this.generateHeadingsWeeklyList()) {
         if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIcons(shift,0)
+          };
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
@@ -451,4 +458,28 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     return columns;
   }
   // end: weekly list
+
+  actionIcons(shift, type) {
+    let icons = [
+      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "", title: "view detail",},
+    ];
+    return icons;
+  }
+
+  viewWorkHourDetail(shift, type){
+    let dataparams = {
+      view: {
+        api: 'Admin/getWorkHourDetail',
+        param: {
+          startDate : (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
+          endDate : (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
+          userId: shift._aduserid
+        }
+      },
+      title: "Work Hour Detail",
+      isExcelDownload: true
+    }
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
 }

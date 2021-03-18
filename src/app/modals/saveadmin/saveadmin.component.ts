@@ -43,11 +43,13 @@ export class SaveadminComponent implements OnInit {
     },
     doj: null,
     dol: null,
+    reasonOfLeave: null,
     isNotify: 0,
     isCommentNotify: 0,
     isCallSync: false,
     locationRestrict: false,
-    wifiRestrict: false
+    wifiRestrict: false,
+    manualReadOtp: false
   };
   keepGoing = true;
   searchString = ''
@@ -120,6 +122,7 @@ export class SaveadminComponent implements OnInit {
       this.Fouser.isCallSync = (this.activeAdminDetails['_is_call_sync']) ? true : false;
       this.Fouser.locationRestrict = (this.activeAdminDetails['_location_restrict']) ? true : false;
       this.Fouser.wifiRestrict = (this.activeAdminDetails['_wifi_restrict']) ? true : false;
+      this.Fouser.manualReadOtp = (this.activeAdminDetails['_manual_read_otp']) ? true : false;
       if (this.activeAdminDetails['_atten_medium'] == '100') {
         this.selectedItems = 1;
       } else if (this.activeAdminDetails['_atten_medium'] == '010' || this.activeAdminDetails['_atten_medium'] == '020') {
@@ -223,6 +226,7 @@ export class SaveadminComponent implements OnInit {
     this.Fouser.isCallSync = (value._is_call_sync) ? true : false;
     this.Fouser.locationRestrict = (value._location_restrict) ? true : false;
     this.Fouser.wifiRestrict = (value._wifi_restrict) ? true : false;
+    this.Fouser.manualReadOtp = (value._manual_read_otp) ? true : false;
 
     // this.selectedItems = (value._atten_medium) ? (value._atten_medium).split("") : null;
     if (value._atten_medium == '100') {
@@ -257,7 +261,9 @@ export class SaveadminComponent implements OnInit {
         isCommentNotify: this.Fouser.isCommentNotify,
         isCallSync: this.Fouser.isCallSync,
         locationRestrict: this.Fouser.locationRestrict,
-        wifiRestrict: this.Fouser.wifiRestrict
+        wifiRestrict: this.Fouser.wifiRestrict,
+        reasonOfLeave: this.Fouser.reasonOfLeave,
+        manualReadOtp: (this.Fouser.manualReadOtp) ? true : false
 
       }
       console.log("params:", params);
@@ -272,8 +278,11 @@ export class SaveadminComponent implements OnInit {
         return this.common.showError("Date of joining must not be future date");
       } else if (this.isOtherShow && (!this.Fouser.attenMedium || this.Fouser.attenMedium == '000')) {
         return this.common.showError("Attendance medium is missing");
+      } else if (params.id > 0 && !params.isActive && !params.dol) {
+        return this.common.showError("Date of leaving is missing");
       }
       else {
+        // return false;
         this.common.loading++;
         this.api.post('Admin/save', params)
           .subscribe(res => {
@@ -289,7 +298,7 @@ export class SaveadminComponent implements OnInit {
                 }
                 this.common.showToast(this.data[0]['y_msg']);
                 this.isOtherShow = !this.isOtherShow;
-                if (!this.isOtherShow) {
+                if (!this.isOtherShow || this.Fouser.isActive == 'false') {
                   this.closeModal(true);
                 }
               }
@@ -321,7 +330,9 @@ export class SaveadminComponent implements OnInit {
         rowId: null,
         isActive: null,
         locationRestrict: null,
-        wifiRestrict: null
+        wifiRestrict: null,
+        reasonOfLeave: null,
+        manualReadOtp: false
       };
       let apiName = "AddFouser/addCompanyUsers.json";
       let apiType = "postTranstruck";
@@ -341,6 +352,7 @@ export class SaveadminComponent implements OnInit {
         params['isCallSync'] = this.Fouser.isCallSync;
         params['locationRestrict'] = this.Fouser.locationRestrict;
         params['wifiRestrict'] = this.Fouser.wifiRestrict;
+        params['reasonOfLeave'] = this.Fouser.reasonOfLeave;
         apiName = "FoAdmin/saveFoAdminInfo";
         apiType = "post";
 
@@ -352,6 +364,8 @@ export class SaveadminComponent implements OnInit {
         params['multipleAccounts'] = -1;
         params['rowId'] = (this.Fouser.id > 0) ? this.Fouser.id : null;
         params['isActive'] = (this.Fouser.id > 0) ? Boolean(JSON.parse(this.Fouser.isActive)) : true;
+        params['dol'] = (this.Fouser.dol) ? this.common.dateFormatter(this.Fouser.dol) : null;
+        params['manualReadOtp'] = (this.Fouser.manualReadOtp) ? true : false;
 
       }
       console.log("params:", params);
@@ -360,6 +374,8 @@ export class SaveadminComponent implements OnInit {
         this.common.showError('Enter Name');
       } else if (this.Fouser.mobileNo == null) {
         this.common.showError('Enter Mobile Number');
+      } else if (!this.isOtherShow && this.Fouser.id > 0 && !params.isActive && !params.dol) {
+        return this.common.showError("Date of leaving is missing");
       }
       else {
         this.common.loading++;
@@ -378,6 +394,10 @@ export class SaveadminComponent implements OnInit {
               this.isOtherShow = !this.isOtherShow;
               if (!this.isOtherShow) {
                 this.closeModal(true);
+              }
+              
+              if(this.Fouser.isActive == 'false' && this.isOtherShow){
+                this.saveAdmin();
               }
             }
           } else {

@@ -43,13 +43,13 @@
                 <div class="col-1">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="resetUser()">Reset</button>
                 </div>
-              </div> 
+              </div>
         </div>
 
         <table class="table table-bordered">
             <thead class="thead" style="background-color:lightgrey">
                 <tr>
-                    <th>#</th>
+                    <th style="width: 40px;">#</th>
                     <th>Name</th>
                     <th>Mobile</th>
                     <th>Email</th>
@@ -60,7 +60,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let user of user; let i=index;">
-                    <td>0{{i +1}}</td>
+                    <td style="width: 43px;">0{{i +1}}</td>
                     <td>{{user.name}}</td>
                     <td>{{user.mobileno}}</td>
                     <td>{{user.emailid }}</td>

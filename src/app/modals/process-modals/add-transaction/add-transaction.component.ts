@@ -4,6 +4,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
 import { ChatboxComponent } from '../chatbox/chatbox.component';
+import { GenericModelComponent } from '../../generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-add-transaction',
@@ -194,7 +195,7 @@ export class AddTransactionComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
       return copyDetails;
     });
@@ -210,6 +211,7 @@ export class AddTransactionComponent implements OnInit {
       additionalInfo: JSON.stringify(details),
       requestId: (this.transForm.requestId > 0) ? this.transForm.requestId : null,
     }
+    // console.log("params:",params);return false;
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;
@@ -318,6 +320,15 @@ export class AddTransactionComponent implements OnInit {
     })
   }
 
+  handleFileSelectionForPdf(event, i) {
+    this.common.handleFileSelection(event,["pdf"]).then(res=>{
+      console.log("handleFileSelection:",res);
+      this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+    },err=>{
+      this.common.showError();
+    });
+  }
+
   uploadattachFile(arrayType, i) {
     if (!this.attachmentFile[i] || !this.attachmentFile[i].file) {
       this.common.showError("Browse a file first");
@@ -361,8 +372,24 @@ export class AddTransactionComponent implements OnInit {
       this.common.showError();
       console.error('Api Error:', err);
     });
+  }
 
-
+  getParamAllValues(row) {
+    if(this.transForm.requestId>0){
+      let dataparams = {
+        view: {
+          api: 'Processes/getParamAllValues',
+          param: {
+            transId: this.transForm.requestId,
+            colId: row.r_colid,
+            isDynamic: row.r_isdynamic
+          }
+        },
+        title: "Field Value History"
+      }
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
   }
 
 }

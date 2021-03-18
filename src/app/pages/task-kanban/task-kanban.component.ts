@@ -369,6 +369,7 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log("🚀 ~ file: task-kanban.component.ts ~ line 372 ~ TaskKanbanComponent ~ drop ~ event", event)
     let containerIdTemp = (event.container.id).toLowerCase();
     let ticket = event.previousContainer.data[event.previousIndex];
     if (event.previousContainer === event.container) {
@@ -807,7 +808,7 @@ export class TaskKanbanComponent implements OnInit {
       refid: ticket._tktid,
       reftype: 0,
       outcome: null,
-      spendHour: null,
+      spendHours: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
       isHold: isHold,

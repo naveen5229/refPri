@@ -1,0 +1,128 @@
+<!--  Author by Hemant Singh Sisodia -->
+
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="pdf-area" style="display: flex;">
+        <div id="my_pdf_viewer" style="margin: 0;width: 70%;">
+            <div class="toolbar">
+                <select id="zoom" class="zoomsize" name="zoom-percent" [(ngModel)]="zoomPercent"
+                    (ngModelChange)="handleZoom()">
+                    <option [value]="1">100%</option>
+                    <option [value]="1.5">150%</option>
+                    <option [value]="1.75">175%</option>
+                    <option [value]="2">200%</option>
+                    <option [value]="3">300%</option>
+                    <option [value]="4">400%</option>
+                    <option [value]="5">500%</option>
+                </select>
+                <div class="toolbar">
+                    <a class="edit" (click)="zoomOut()" style="color: white;"> <i class="fas fa-search-minus"></i> </a>
+                    <a class="edit" (click)="zoomIn()" style="color: white;"> <i class="fas fa-search-plus"></i> </a>
+                    <a class="edit" (click)="selectedAction = selectedAction == 'TX' ? '' : 'TX'">
+                        <i class="fas fa-text-width" [style.color]="(selectedAction != 'TX') ? 'white' : 'blue'"></i>
+                        <!-- <img *ngIf="selectedAction != 'TX'" class="text" src="assets/img/text-symbol.svg" alt="">
+        <img *ngIf="selectedAction == 'TX'" class="text" src="assets/img/text-symbol-green.svg" alt=""> -->
+                    </a>
+                    <a class="edit" (click)="selectAction('RA')">
+                        <i class="far fa-square" [style.color]="(selectedAction != 'RA') ? 'white' : 'blue'"></i>
+                        <!-- <img *ngIf="selectedAction != 'RA'" src="assets/img/rect.svg" alt="">
+        <img *ngIf="selectedAction == 'RA'" src="assets/img/rect-green.svg" alt=""> -->
+                    </a>
+                    <a class="edit" (click)="selectAction('CR')">
+                        <i class="far fa-circle" [style.color]="(selectedAction != 'CR') ? 'white' : 'blue'"></i>
+                    </a>
+                    <!-- <a class="edit"> 
+        <img src="assets/img/remove.svg" alt=""> 
+    </a> -->
+                    <!-- <a class="edit"> 
+        <img src="assets/img/right-arrow.svg" alt=""> 
+    </a> -->
+                    <a class="edit" style="color: white;">
+                        <i class="fas fa-save" (click)="saveDocVersioning()"></i>
+                    </a>
+                </div>
+
+
+            </div>
+            <div class="pdf-container">
+                <div id="xc" class="xc">
+                    <div id="yyy">
+                        <div class="c-t" id="ct">
+                            <canvas id="c" width="612" height="792" style="z-index: 99;"></canvas>
+                            <div id="editor" class="editor" [hidden]="!isShow.textbox">
+                                <div id="editor-box" contenteditable="true"
+                                    (input)="editorContent = $event.target.innerText"></div>
+                                <button (click)="saveContent($event)">Save</button>
+                                <button (click)="clearContents($event)">Cancel</button>
+                            </div>
+                            <div id="ctx"></div>
+                        </div>
+                        <canvas id="pdf_renderer" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hoversidebar" style="margin: 0;width: 30%;">
+
+            <div class="toolbar" style="color: white;">
+                Filters
+            </div>
+
+            <div style="margin: 1rem;background: white;">
+                <div style="background:#002041;display: flex;"
+                    (click)="collapse = (collapse === 'user') ? collapse = '' : collapse = 'user'">
+                    <span style="color: white;"><i class="fas fa-filter" style="padding: 10px;"></i>User Filter</span>
+                    <div style="margin-left: 60%;">
+                        <i class="fas fa-sort-down" *ngIf="collapse === 'user'" style="color: white;"></i>
+                        <i class="fas fa-sort-up" *ngIf="collapse != 'user'" style="color: white;"></i>
+                    </div>
+                </div>
+                <div>
+                    <ul style="list-style: none;" *ngIf="collapse === 'user'">
+                        <li *ngFor="let user of userTable" style="display: flex;">
+                            <div style="width: 10%;"><input type="checkbox"
+                                    (change)="filterUserWise(user,$event.target.checked)"
+                                    [checked]="userFilter.includes(user.userId)"></div>
+                            <div style="width: 70%;">{{user.user}}</div>
+                            <!-- <div style="width: 70%;"><i class="far fa-trash-alt"></i></div> -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="hoversidebar" style="margin: 1rem;background: white;">
+                <div style="background:#002041">
+                    <span style="color: white;"><i class="fas fa-plus" style="padding: 10px;"></i></span>
+                </div>
+                <!-- <ul style="list-style: none;">
+                    <li *ngFor="let user of versioningData">{{user.user}} - {{user.addtime}}</li>
+                </ul> -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-filter" style="font-size: 10px;"></i></th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of chronologyTable">
+                            <td><input type="checkbox" 
+                                (change)="filterChronoligyWise(user,$event.target.checked)"></td>
+                            <td>{{user.user}}</td>
+                            <td>{{user.addtime}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -38,6 +38,7 @@ export class GenericModelComponent implements OnInit {
   };
   deleteParams = null;
   viewModalParams = null;
+  isExcelDownload = false;
   constructor(private activeModal: NgbActiveModal,
     public common: CommonService,
     private commonService: CommonService,
@@ -45,6 +46,7 @@ export class GenericModelComponent implements OnInit {
     public modalService: NgbModal) {
       if (this.common.params && this.common.params.data) {
         this.title = this.common.params.data.title ? this.common.params.data.title : '';
+        this.isExcelDownload = this.common.params.data.isExcelDownload ? true : false;
         if (this.common.params.data.view) {
           let str = "?";
           Object.keys(this.common.params.data.view.param).forEach(element => {
@@ -175,6 +177,14 @@ export class GenericModelComponent implements OnInit {
   }
   closeModal() {
     this.activeModal.close();
+  }
+
+  exportCSV(){
+    if (this.data.length > 0) {
+      this.common.getCSVFromDataArray(this.data, this.table.data.headings, this.title);
+    } else {
+      this.common.showError('No Data Found');
+    }
   }
 
 }

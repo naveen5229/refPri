@@ -192,6 +192,11 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/employee-monitoring',
       },
+      {
+        title: 'Sites',
+        icon: 'people-outline',
+        link: '/pages/site',
+      },
     ]
   },
   {

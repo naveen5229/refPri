@@ -68,6 +68,7 @@ import { UserExpensesComponent } from './user-expenses/user-expenses.component';
 import { KanbanBoardComponent } from '../process/kanban-board/kanban-board.component';
 import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
 import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
+import { SitesComponent } from './sites/sites.component';
 
 const routes: Routes = [{
   path: '',
@@ -411,6 +412,11 @@ const routes: Routes = [{
     {
       path: 'admin-kanban',
       component: AdminKanbanComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'site',
+      component: SitesComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

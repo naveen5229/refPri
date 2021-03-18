@@ -48,7 +48,7 @@
                     <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <div *ngIf="oddArray[i].r_coltitle" class="row">
                             <div class="col-4 pr-0">
-                                <label>{{oddArray[i].r_colalias}}<span style="color: red"
+                                <label (click)="getParamAllValues(oddArray[i])">{{oddArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="oddArray[i].r_required">*</span>
                                 </label>
                             </div>
@@ -56,7 +56,7 @@
                             <div class="col-8">
                                 <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
                                 <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
-                                <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
+                                <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="true">
                                 </uj-date-time-picker>
 
                                 <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="oddArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
@@ -98,6 +98,16 @@
                                     <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
                                     <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
                                 </div>
+
+
+                                <!-- pdf-versoning -->
+                                <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='pdf-versioning'">
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelectionForPdf($event,i)">
+                                    <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,14 +115,14 @@
                     <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
                         <span *ngIf="evenArray[i].r_coltitle" class="row">
                             <div class="col-4 pr-0">
-                                <label>{{evenArray[i].r_colalias}} <span style="color: red"
+                                <label (click)="getParamAllValues(evenArray[i])">{{evenArray[i].r_colalias}} <span style="color: red"
                                         *ngIf="evenArray[i].r_required">*</span></label>
                     </div>
 
                     <div class="col-8">
                         <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
                         <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
-                        <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="true">
                         </uj-date-time-picker>
 
                         <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="evenArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
@@ -152,6 +162,15 @@
                                 <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
                             </span>
                             <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
+                            <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                        </div>
+
+                         <!-- pdf-versoning -->
+                         <div class="input-group p-0" *ngIf="evenArray[i].r_coltype =='pdf-versioning'">
+                            <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                            </span>
+                            <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelectionForPdf($event,i)">
                             <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
                         </div>
                     </div>

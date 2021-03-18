@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
+import { GenericModelComponent } from '../../generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-form-data',
@@ -67,7 +68,7 @@ export class FormDataComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
       return copyDetails;
     });
@@ -225,5 +226,22 @@ export class FormDataComponent implements OnInit {
     });
   }
 
+  getParamAllValues(row) {
+    if(this.transId>0){
+      let dataparams = {
+        view: {
+          api: 'Processes/getParamAllValues',
+          param: {
+            transId: this.transId,
+            colId: row.r_colid,
+            isDynamic: row.r_isdynamic
+          }
+        },
+        title: "Field Value History"
+      }
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+  }
 
 }

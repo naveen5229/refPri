@@ -10,6 +10,8 @@ import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { LocationSelectionComponent } from '../../modals/location-selection/location-selection.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -246,7 +248,7 @@ export class TicketComponent implements OnInit {
       if (res['code'] > 0) {
         if (res['data']) {
           this.ticketFormFields = res['data'];
-          if (this.activeTab == 'completedTkt') {
+          // if (this.activeTab == 'completedTkt') {
             if (refType == 1) {
               this.closingFormInfo = this.ticketFormFields;
             }else if(refType == 2){
@@ -254,7 +256,7 @@ export class TicketComponent implements OnInit {
             } else {
               this.openingFormInfo = this.ticketFormFields;
             }
-          }
+          // }
           this.formatArray();
         }
       } else {
@@ -302,22 +304,6 @@ export class TicketComponent implements OnInit {
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
   }
-
-  // findPriCat() {
-  //   if (this.tpPropertyList && this.tpPropertyList.length > 0) {
-  //     this.tpPropertyList.forEach(element => {
-  //       if (element._pri_cat_id && !this.priCatList.find(x => { return x.id == element._pri_cat_id })) {
-  //         this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
-  //       }
-  //       if (element._sec_cat_id && !this.secCatList.find(x => { return x.id == element._sec_cat_id })) {
-  //         this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
-  //       }
-  //       if (element._type_id && !this.typeList.find(x => { return x.id == element._type_id })) {
-  //         this.typeList.push({ id: element._type_id, name: element.type });
-  //       }
-  //     });
-  //   }
-  // }
 
   resetTicketForm() {
     this.tpPropertyList = [];
@@ -893,6 +879,10 @@ export class TicketComponent implements OnInit {
         // }
       }
 
+      if([101,106].includes(type)){
+        icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, ticket, type), txt: '', title: "Address Book" });
+      }
+
       if (ticket._status == 2 && (type == 101 || type == 102)) {
         icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
       }
@@ -1108,38 +1098,24 @@ export class TicketComponent implements OnInit {
   }
 
   saveTicket() {
-    console.log("ticketForm:", this.ticketForm);
-    // let selected = this.tpPropertyList.find(ele => {
-    //   return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
-    // });
-
-    // console.log("selected:", selected);
-
-    // if (selected) {
-    //   this.ticketForm.tpProperty.id = selected._id;
-    //   this.ticketForm.tpProperty.name = selected.name;
-    // } else {
-    //   this.ticketForm.tpProperty = { id: null, name: null }
-    // }
-
+    let detailsInfo = this.evenArray.concat(this.oddArray);
+    let details = detailsInfo.map(detail => {
+      let copyDetails = Object.assign({}, detail);
+      if (detail['r_coltype'] == 'date' && detail['r_value']) {
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
+      }
+      return copyDetails;
+    });
     let params = {
       priCatId: this.categoryIds.priCat,
       secCatId: this.categoryIds.secCat,
       typeId: this.categoryIds.type,
-      // tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
       tpId: this.ticketForm.tp.id ? this.ticketForm.tp.id : null,
-      // remark: this.ticketForm.remark,
-      info: JSON.stringify(this.evenArray.concat(this.oddArray)),
+      info: JSON.stringify(details),
       isAllocated: false,
       requestId: (this.ticketForm.requestId > 0) ? this.ticketForm.requestId : null
     }
-
-    // if (!params.tpPropId) {
-    //   this.common.showError('Combination mismatch: Primary Category, Secondary Category, Type');
-    //   return false;
-    // }
-
-    // return;
+    // console.log("ticketForm:", params); return false;
     this.common.loading++;
     this.api.post('Ticket/saveTicket', params).subscribe(res => {
       this.common.loading--;
@@ -1330,6 +1306,17 @@ export class TicketComponent implements OnInit {
     }
   }
 
+  addTransContact(ticket, type) {
+    let editData = {
+      transId: ticket._ticket_id
+    };
+    this.common.params = { editData, title: "Ticket Contacts", button: "Add",fromPage: 1 };
+    const activeModal = this.modalService.open(AddTransactionContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getTicketByType(type);
+    });
+  }
+
   openTicketFormData(ticket, type, status) {
     let title = 'Ticket Closing Form';
     let actionData = {
@@ -1352,11 +1339,11 @@ export class TicketComponent implements OnInit {
   }
 
   openInfoModal(ticket, type, refType) {
-    if (refType == 1) {
-      this.ticketDetailTitle = 'Closing Form Detail';
-    } else {
+    // if (refType == 1) {
+    //   this.ticketDetailTitle = 'Closing Form Detail';
+    // } else {
       this.ticketDetailTitle = 'Ticket Info';
-    }
+    // }
     this.ticketForm.tp.id = ticket._tpid;
     this.ticketForm.requestId = ticket._ticket_id;
     this.tpPropertyList = [];
@@ -1366,14 +1353,19 @@ export class TicketComponent implements OnInit {
     this.secCatList = [];
     this.typeList = [];
     this.ticketFormFields = null;
+    this.openingFormInfo = [];
+    this.closingFormInfo = [];
+    this.primaryFormInfo = [];
     setTimeout(async () => {
-      await this.getTicketFormField(refType);
+      // await this.getTicketFormField(refType);
+      await this.getTicketFormField(0);
+        await this.getTicketFormField(2);
     }, 500);
 
     if (this.activeTab == 'completedTkt') {
       setTimeout(async () => {
         await this.getTicketFormField(1);
-        await this.getTicketFormField(2);
+        // await this.getTicketFormField(2);
       }, 500);
     }
 
@@ -1454,6 +1446,64 @@ export class TicketComponent implements OnInit {
       }
       this.completedTkt = selectedList.length > 0 ? selectedList : [];
       this.setTablecompletedTkt(type);
+    }
+  }
+
+  takeAction(row) {
+    let foundLong = this.oddArray.find(x=>{return (x.r_coltitle).toLowerCase()=='longitude'});
+    if(foundLong){
+    }else if(this.evenArray.length>0){
+      foundLong = this.evenArray.find(x=>{return (x.r_coltitle).toLowerCase()=='longitude'});
+    }
+    if(row.r_value && foundLong && foundLong.r_value){
+      let location = {"lat": row.r_value, "lng": foundLong.r_value};
+      this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation',location };
+    }else{
+      this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation' };
+    }
+    const activeModal = this.modalService.open(LocationSelectionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(res => {
+      if (res != null) {
+        console.log('new-response----', res, res.location);
+        if (res.location.lat) {
+          row.r_value = res.location.lat;
+          if(foundLong){
+            foundLong.r_value = res.location.lng;
+          }
+        }
+      }
+    })
+  }
+
+  getUserPresence(empId) {
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + empId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.adduserConfirm(userPresence)
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  adduserConfirm(userPresence) {
+    if (!userPresence) {
+      this.common.params = {
+        title: 'User Presence',
+        description: '<b>The user has not started the shift for today.<br> Are you sure to add this user ?<b>'
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (!data.response) {
+          this.forwardTicketObject.userId = {id: null,name: null};
+        }
+      });
     }
   }
 

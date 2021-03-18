@@ -13,7 +13,7 @@
                 <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'">
                     <div *ngIf="oddArray[i].r_coltitle" class="row">
                         <div class="col-4 pr-0">
-                            <label>{{oddArray[i].r_coltitle}}<span style="color: red"
+                            <label (click)="getParamAllValues(oddArray[i])">{{oddArray[i].r_coltitle}}<span style="color: red"
                                     *ngIf="oddArray[i].r_required">*</span></label>
                         </div>
 
@@ -26,7 +26,7 @@
                                 [readonly]="isDisabled">
                             <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
                                 [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
-                                [isTime]="false" >
+                                [isTime]="true" >
                             </uj-date-time-picker>
 
                             <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
@@ -61,7 +61,7 @@
                 <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
                     <div *ngIf="evenArray[i].r_coltitle" class="row">
                         <div class="col-4 pr-0">
-                            <label>{{evenArray[i].r_coltitle}} <span style="color: red"
+                            <label (click)="getParamAllValues(evenArray[i])">{{evenArray[i].r_coltitle}} <span style="color: red"
                                     *ngIf="evenArray[i].r_required">*</span></label>
                         </div>
 
@@ -74,7 +74,7 @@
                                 [readonly]="isDisabled">
                             <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
                                 [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'"
-                                [isTime]="false">
+                                [isTime]="true">
                             </uj-date-time-picker>
 
                             <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"

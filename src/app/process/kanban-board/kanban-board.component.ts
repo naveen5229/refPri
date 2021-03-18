@@ -227,6 +227,7 @@ export class KanbanBoardComponent implements OnInit {
 
         if (element.data && element.data.length) {
           element.data.forEach(data => {
+            data['desctoshow'] = (data.desc && (data.desc.split(',')).length) ? (data.desc.split(',')) : data['desctoshow'] = [data.desc];
             // data['text_color'] = ((![5,-1].includes(element._status_id)) && (this.common.getDate() > new Date(data.due_date))) ? "text-danger" : '';
             let finduser = (userGroup && userGroup.length > 0) ? userGroup.find(x => { return x.id == data.userid }) : null;
             if (finduser) {
@@ -244,6 +245,7 @@ export class KanbanBoardComponent implements OnInit {
     //   this.cardsUserGroup.push(groupBy[key][0]);
     // });
     this.cardsUserGroup = _.orderBy(userGroup, data => data.count, 'desc');
+    this.cardsForFilterByUser = JSON.parse(JSON.stringify(this.cards));
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 262 ~ KanbanBoardComponent ~ getAllUserGroup ~ cardsUserGroup", this.cardsUserGroup)
   }
 
@@ -267,8 +269,15 @@ export class KanbanBoardComponent implements OnInit {
         // document.getElementById(e2).children[4].classList.add('dragStyle');
       });
     }
+
+    // for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
+    //   document.getElementById(`state${i}`).classList.remove('stateContainerStyle');
+    //   document.getElementById(`state${i}`).classList.add('stateContainerStyleForScroll');
+    // }
   };
+
   onDragEnded(event: CdkDragEnd<string[]>) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 272 ~ KanbanBoardComponent ~ onDragEnded ~ event", event)
     let connTo = JSON.parse(JSON.stringify(event.source.dropContainer.connectedTo));
     if (connTo) {
       connTo.forEach(e2 => {
@@ -278,13 +287,22 @@ export class KanbanBoardComponent implements OnInit {
         // document.getElementById(e2).children[4].classList.remove('dragStyle');
       });
     }
+
+    // for (let i = 0; i < document.getElementById('cardField').childNodes.length; i++) {
+    //   document.getElementById(`state${i}`).classList.add('stateContainerStyle');
+    //   document.getElementById(`state${i}`).classList.remove('stateContainerStyleForScroll');
+    // }
   };
 
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 297 ~ KanbanBoardComponent ~ drop ~ event", event)
     let containerIdTemp = (event.container.id).toLowerCase();
     let ticket = event.previousContainer.data[event.previousIndex];
-    console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event)
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 232 ~ KanbanBoardComponent ~ drop ~ event", event);
+    console.log('previousContainer', event.previousContainer);
+    console.log('container', event.container);
+
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -433,7 +451,7 @@ export class KanbanBoardComponent implements OnInit {
       } else {
         this.goToBoard({ _id: this.processId, name: this.processName });
       }
-      if(data.response){
+      if (data.response) {
         this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
       }
     });
@@ -584,6 +602,7 @@ export class KanbanBoardComponent implements OnInit {
 
   transMessage(lead, type) {
     lead['identity'] = lead.title.split('#')[0];
+    lead['_transactionid'] = lead._transaction_id;
     if (lead._transaction_id > 0) {
       let editData = {
         transactionid: lead._transaction_id,
@@ -616,13 +635,12 @@ export class KanbanBoardComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return (data.title.toLowerCase()).match(searchedKey) || (data.type.toLowerCase()).match(searchedKey)
+            return (data.title.toLowerCase()).match(searchedKey) || (data.type.toLowerCase()).match(searchedKey) || (data.desc.toLowerCase()).match(searchedKey)
           })
         }
       });
       this.cards = cardsForFilter;
     }
-    this.cardsForFilterByUser = JSON.parse(JSON.stringify(this.cards));
     this.placeCardLength(this.cards);
     this.getAllUserGroup(this.cards);
     this.filterUserGroup = [];
@@ -656,11 +674,13 @@ export class KanbanBoardComponent implements OnInit {
       allAssignedUser.push(ele.id);
     });
 
+    console.log('all Assigned user',allAssignedUser)
     if (this.filterUserGroup.includes(userId)) {
       this.filterUserGroup.splice(this.filterUserGroup.indexOf(userId), 1);
     } else {
       this.filterUserGroup.push(userId);
     }
+    console.log('filter user group',this.filterUserGroup)
 
     let cardsForFilter = this.cardsForFilterByUser.length ? JSON.parse(JSON.stringify(this.cardsForFilterByUser)) : JSON.parse(JSON.stringify(this.cardsForFilter));
     cardsForFilter.forEach(element => {
@@ -675,6 +695,7 @@ export class KanbanBoardComponent implements OnInit {
       }
     });
     this.cards = cardsForFilter;
+    console.log("🚀 ~ file: kanban-board.component.ts ~ line 698 ~ KanbanBoardComponent ~ getCardsByUser ~ cards", this.cards)
     this.placeCardLength(this.cards);
 
     allAssignedUser.map(ele => {
@@ -699,7 +720,7 @@ export class KanbanBoardComponent implements OnInit {
       refid: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_state_id,
       reftype: ticket._is_action === 1 ? 2 : 1,
       outcome: null,
-      spendHour: null,
+      spendHours: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
       endTime: (endTime) ? this.common.dateFormatter(endTime) : null,
       isHold: isHold,

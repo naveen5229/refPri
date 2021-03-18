@@ -790,10 +790,12 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type, null, true), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
+      icons.push({ class: "fa fa-info-circle", action: this.editTransaction.bind(this, lead, type), txt: '', title: "View transaction" });
 
       if (lead._revert_action > 0) {
         icons.push({ class: "fa fa-thumbs-down text-primary", action: this.openTransAction.bind(this, lead, type, null, false), txt: '', title: "Inverse" });
       }
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
       if (lead._claim_txn) {
@@ -867,11 +869,12 @@ export class MyProcessComponent implements OnInit {
       processName: lead._processname,
       identity: lead.identity,
       priOwnId: lead._pri_own_id,
-      isDisabled: (lead._txn_editable) ? false : true,
+      isDisabled: (type==1) ? true : ((lead._txn_editable) ? false : true),
       _default_identity: (lead._default_identity) ? lead._default_identity : 0,
     }
+    let title = (type==1) ? "View Transaction" : "Add Transaction";
 
-    this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
+    this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: title, button: "Update" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -1020,19 +1023,29 @@ export class MyProcessComponent implements OnInit {
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
         if (data.nextFormType == 1) {
-          lead._state_id = data.state.id;
-          lead.state_name = data.state.name;
+          lead['_next_state_id'] = data.state.id;
+          lead['next_state_name'] = data.state.name;
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 2);
+            lead._state_id = data.state.id;
+            lead.state_name = data.state.name;
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 2);
+            }
           }
 
         } else if (data.nextFormType == 2) {
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 1);
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 1);
+            }
           }
         }
       } else {
@@ -1072,6 +1085,10 @@ export class MyProcessComponent implements OnInit {
       if (formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (formType == 1) {
+        if(lead._next_state_id){
+          lead._state_id = lead._next_state_id;
+          lead.state_name = lead.next_state_name;
+        }
         this.openTransAction(lead, type, 2);
       } else {
         this.getProcessLeadByType(type);
