@@ -89,7 +89,7 @@ export class DocumentListingComponent implements OnInit {
           // column[key] = {isHTML: true, value: lead['_doc_url'] ? `<a href="${lead['_doc_url']}" target="_blank">${lead[key] || lead['_doc_url']}</a>` : lead[key] || lead['_doc_url'], class: 'black', action: '',}
           column[key] = { isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: this.getFiles.bind(this, lead['_doc_url'], lead[key]), }
         } else if (key == 'param_title') {
-          column[key] = { isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: this.getVersioning.bind(this, lead), }
+          column[key] = { isHTML: true, value: lead['_doc_url'] ? `<span class="blue cursor-pointer">${lead[key] || lead['_doc_url']}</span>` : lead[key] || lead['_doc_url'], class: 'black', action: lead['_param_type'] === 'pdf-versioning' ?  this.getVersioning.bind(this, lead) : null, }
         } else {
           column[key] = { value: lead[key], class: 'black', action: '' };
         }

@@ -36,13 +36,13 @@
 
         <div class="col-4 pr-0">
             <label>State User</label>
-            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select state User" (onSelected)="stateUser" inputId="stateUser" name="stateUser" autocomplete="off" [preSelected]="stateUser" isMultiSelect="true"></auto-suggestion>
+            <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select state User" (onSelected)="stateUser = $event" inputId="stateUser" name="stateUser" autocomplete="off" [preSelected]="stateUser" isMultiSelect="true"></auto-suggestion>
         </div>
     </div>
     <div class="row mb-2">
         <div class="col-12 text-right">
-            <button class="btn btn-primary btn-sm mt-4" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
-            <button *ngIf="requestId" class="btn btn-danger btn-sm ml-2 mt-4" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
+            <button class="btn btn-primary btn-sm" name="submit" (click)="Add()" style="cursor:pointer;">{{btn1}}</button>
+            <button *ngIf="requestId" class="btn btn-danger btn-sm ml-2" name="reset" (click)="resetData()" style="cursor:pointer;">{{btn2}}</button>
         </div>
     </div>
     <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="addField"></smart-table>
