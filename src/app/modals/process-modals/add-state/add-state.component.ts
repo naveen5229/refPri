@@ -63,7 +63,7 @@ export class AddStateComponent implements OnInit {
   }
 
   Add() {
-    let stateUser = this.stateUser.map(ele => {return {user_id:ele.id}});
+    let stateUser = (this.stateUser && this.stateUser.length>0) ? this.stateUser.map(ele => {return {user_id:ele.id}}) : [];
     let params = {
       processId: this.processId,
       name: this.stateName,
@@ -74,7 +74,7 @@ export class AddStateComponent implements OnInit {
       stateOwnerId: this.userTag.id,
       stateUsers: JSON.stringify(stateUser)
     }
-    // console.log(params)
+    // console.log("addProcessState:",params,this.stateUser)
     // return;
     this.common.loading++;
     this.api.post('Processes/addProcessState', params).subscribe(res => {
