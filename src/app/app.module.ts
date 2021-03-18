@@ -119,6 +119,7 @@ import { LocationOnSiteImageComponent } from './modals/location-on-site-image/lo
 import { AddGlobalFieldComponent } from './modals/process-modals/add-global-field/add-global-field.component';
 import { EntityFormComponent } from './modals/entity-form/entity-form.component';
 import { PdfVersioningComponent } from './modals/process-modals/pdf-versioning/pdf-versioning.component';
+import { AddentityfieldsComponent } from './modals/addentityfields/addentityfields.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -206,6 +207,7 @@ const PAGE_COMPONENTS = [
   AddGlobalFieldComponent,
   EntityFormComponent,
   PdfVersioningComponent,
+  AddentityfieldsComponent
 ];
 
 @NgModule({
