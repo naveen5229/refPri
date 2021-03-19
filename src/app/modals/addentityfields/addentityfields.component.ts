@@ -38,23 +38,49 @@ export class AddentityfieldsComponent implements OnInit {
     public activeModal:NgbActiveModal,
     public modalSService:NgbModal,
     public user: UserService) {
-      console.log('data here:',this.common.params);
-      this.entityContactFieldsTitle = this.common.params.entityContactFieldsTitle;
-      this.modalType = this.common.params.modalType;
-      this.entityTypes = (this.common.params.entityTypes) ? this.common.params.entityTypes : [];
+      console.log('AddentityfieldsComponent:',this.common.params);
+      if(this.common.params){
+        this.entityContactFieldsTitle = this.common.params.entityContactFieldsTitle;
+        this.modalType = this.common.params.modalType;
+        this.entityTypes = (this.common.params.entityTypes) ? this.common.params.entityTypes : [];
+        if(this.common.params.editData.requestId>0){
+          if(this.modalType==1){
+            this.entityTypeForm = {
+              name: this.common.params.editData.typeName,
+              requestId: this.common.params.editData.requestId
+            }
+          }else if(this.modalType==2){
+            this.entityListForm = {
+              name: this.common.params.editData.entityName,
+              entityType: { id: this.common.params.editData.typeId, name: this.common.params.editData.typeName },
+              requestId: this.common.params.editData.requestId
+            }
+          }else if(this.modalType==3){
+            this.contactForm = {
+              entityId: this.common.params.editData.entityId,
+              name: this.common.params.editData.contactName,
+              contactNo: this.common.params.editData.contactNo,
+              email: this.common.params.editData.email,
+              association: this.common.params.editData.association,
+              requestId: this.common.params.editData.requestId
+            }
+          }
+        }
+        console.log('AddentityfieldsComponent form data:',this.entityTypeForm,this.entityListForm,this.contactForm);
+      }
+
      }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   closeModal(res) {
     this.activeModal.close(res);
   }
 
-  save(createType, type) {
+  save() {
     let params = {};
     let apiBase = '';
-    switch (type) {
+    switch (this.modalType) {
       case 1: apiBase = `Entities/saveEntityType`, params = this.entityTypeForm;
         break;
       case 2: apiBase = `Entities/saveEntity`, params = { name: this.entityListForm.name, entityTypeId: this.entityListForm.entityType.id, requestId: this.entityListForm.requestId };

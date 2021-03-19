@@ -872,6 +872,9 @@ export class TicketComponent implements OnInit {
             icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
           }
         }
+        if (ticket._allocated_user == this.loginUserId && ticket._status == 2 && ticket._check_status>0) {
+          icons.push({ class: "fas fa-clipboard-check", action: this.openCheckStatusModal.bind(this, ticket, type), txt: "", title: "Check Status", });
+        }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
         // if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
@@ -1505,6 +1508,31 @@ export class TicketComponent implements OnInit {
         }
       });
     }
+  }
+
+  openCheckStatusModal(ticket,type){
+    // console.log("openCheckStatusModal:",ticket);
+    this.common.loading++;
+    this.api.get("Ticket/checkTicketStatus?ticketId=" + ticket._ticket_id).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let checkStatus = "No data found";
+        if(res['data'] && res['data'].length){
+          checkStatus = res['data'][0]["status"];
+        }
+        this.common.params = {
+          title: 'Status',
+          description: '<b>'+checkStatus+'<b>',
+          btn1: 'Ok'
+        }
+        const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+    });
   }
 
 }
