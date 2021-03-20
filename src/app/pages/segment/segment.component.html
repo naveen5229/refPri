@@ -26,7 +26,7 @@
         <table class="table table-bordered mt-2">
             <thead class="thead" style="background-color:lightgrey">
                 <tr>
-                    <th>#</th>
+                    <th style="width:40px;">#</th>
                     <th>Module Name</th>
                     <th>Segment Name</th>
                     <th>Add By</th>
@@ -35,7 +35,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let segment of filteredItems; let i=index;">
-                    <td>0{{i +1 }}</td>
+                    <td style="width:40px;">0{{i +1 }}</td>
                     <td>{{segment.module_name}}({{segment.project_name}})</td>
                     <td>{{segment.name}}</td>
                     <td>{{segment.addedby}}</td>
