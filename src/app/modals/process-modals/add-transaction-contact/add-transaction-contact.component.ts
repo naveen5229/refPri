@@ -3,6 +3,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AddentityfieldsComponent } from '../../../modals/addentityfields/addentityfields.component';
 
 @Component({
   selector: 'ngx-add-transaction-contact',
@@ -97,6 +98,18 @@ export class AddTransactionContactComponent implements OnInit {
     return headings;
   }
 
+  addEntity(campaign){
+      this.common.params = {
+        data:campaign,
+        modalType:1
+      }
+
+      const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+      console.log("addEntity ~ data", data)
+      });
+    }
+
   getTableColumns() {
     let columns = [];
     this.transContactList.map(campaign => {
@@ -109,7 +122,11 @@ export class AddTransactionContactComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else {
+        }
+        // else if (key == 'mobile') {
+        //   column[key] = { isHTML: true, value: campaign[key] ? `<span class="blue cursor-pointer">${campaign[key]}</span>` : null, class: 'black', action: this.addEntity.bind(this, campaign), }
+        // } 
+         else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }

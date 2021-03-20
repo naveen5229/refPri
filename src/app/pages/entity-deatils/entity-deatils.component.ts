@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddentityfieldsComponent } from '../../modals/addentityfields/addentityfields.component';
 import { EntityFormComponent } from '../../modals/entity-form/entity-form.component';
 import { AddGlobalFieldComponent } from '../../modals/process-modals/add-global-field/add-global-field.component';
 import { ApiService } from '../../Service/Api/api.service';
@@ -113,13 +114,24 @@ export class EntityDeatilsComponent implements OnInit {
     switch (type) {
       case 'entityType': this.entityContactFieldsTitle = 'Add Entity Type', this.modalType = 1
         break;
-      case 'entityList': this.entityContactFieldsTitle = 'Add Entity List', this.modalType = 2
+      case 'entityList': this.entityContactFieldsTitle = 'Add Entity', this.modalType = 2
         break;
       case 'contact': this.entityContactFieldsTitle = 'Add Contact', this.modalType = 3
         break;
       default: this.entityContactFieldsTitle = '';
     }
     document.getElementById('entityContactFields').style.display = 'block';
+
+    // this.common.params = {
+    //   entityTypes: this.entityTypes,
+    //   entityContactFieldsTitle: this.entityContactFieldsTitle,
+    //   modalType: this.modalType,
+    //   editData: null
+    // }
+    // const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    // activeModal.result.then(data => {
+    // console.log("addEntity ~ data", data)
+    // });
   }
 
   getEntityType() {
@@ -288,14 +300,65 @@ export class EntityDeatilsComponent implements OnInit {
   }
 
   setData(storeType, entity) {
+    let editDataModal = {
+      typeName: null,
+      typeId: null,
+      entityName: null,
+      entityId: null,
+      contactName: null,
+      contactId: null,
+      contactNo: null,
+      email: null,
+      association: null,
+      requestId: null
+    }
     switch (storeType) {
-      case 1: this.entityTypeForm.name = entity.type, this.entityTypeForm.requestId = entity._id
+      case 1: 
+        this.entityTypeForm.name = entity.type;
+        this.entityTypeForm.requestId = entity._id;
+        
+        editDataModal.typeName = entity.type;
+        editDataModal.typeId = entity._id;
+        editDataModal.requestId = entity._id;
         break;
-      case 2: this.entityListForm.name = entity.name, this.entityListForm.entityType = { id: entity._entity_type_id, name: entity.entity_type }, this.entityListForm.requestId = entity._id
+      case 2: 
+        this.entityListForm.name = entity.name;
+        this.entityListForm.entityType = { id: entity._entity_type_id, name: entity.entity_type };
+        this.entityListForm.requestId = entity._id;
+
+        editDataModal.typeName = entity.entity_type;
+        editDataModal.typeId = entity._entity_type_id;  
+        editDataModal.entityName = entity.name;
+        editDataModal.entityId = entity._id;
+        editDataModal.requestId = entity._id;
         break;
-      case 3: this.contactForm.name = entity._contact_name, this.contactForm.contactNo = entity._contact_no, this.contactForm.email = entity._email, this.contactForm.entityId = entity._entity_id,this.contactForm.requestId = entity._id,this.contactForm.association = entity._association
+      case 3: 
+        this.contactForm.name = entity._contact_name;
+        this.contactForm.contactNo = entity._contact_no;
+        this.contactForm.email = entity._email;
+        this.contactForm.entityId = entity._entity_id;
+        this.contactForm.requestId = entity._id;
+        this.contactForm.association = entity._association;
+
+        editDataModal.entityId = entity._entity_id;  
+        editDataModal.contactName = entity._contact_name;
+        editDataModal.contactId = entity._id;  
+        editDataModal.contactNo = entity._contact_no;
+        editDataModal.email = entity._email;
+        editDataModal.association = entity._association;
+        editDataModal.requestId = entity._id;
         break;
     }
+    // this.common.params = {
+    //   entityTypes: this.entityTypes,
+    //   entityContactFieldsTitle: this.entityContactFieldsTitle,
+    //   modalType: this.modalType,
+    //   editData: editDataModal
+    // }
+    // const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    // activeModal.result.then(data => {
+    // console.log("addEntity ~ data", data)
+    // });
   }
 
   contact(entity) {

@@ -698,6 +698,8 @@ export class PdfVersioningComponent implements OnInit {
       div.style.width = content.width * this.zoom + 'px';
       div.style.height = content.height * this.zoom + 'px';
       div.style.fontSize = 12 * this.zoom + 'px';
+      // div.style.color = 'Yellow';
+      div.style.fontWeight = 'bold';
       // div.style.zIndex = '999999999';
       div.innerHTML = content.text;
       div.className = 'content-div';
@@ -763,13 +765,18 @@ export class PdfVersioningComponent implements OnInit {
       this.common.params = {
         title: 'Save',
         description: `<b>&nbsp;` + 'Would You Like To Save Changes' + `<b>`,
-        btn1:'Save',
+        btn1: 'Save',
         btn2: 'Close'
       }
-  
+
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
-        (data.response) ? this.saveDocVersioning() : this.activeModal.close(res);
+        console.log(data);
+        if (data.response) {
+          this.saveDocVersioning();
+        } else {
+          if (data.apiHit === 0) this.activeModal.close(res);
+        }
       });
     } else {
       this.activeModal.close(res);
