@@ -221,7 +221,7 @@ export class PdfVersioningComponent implements OnInit {
       });
       // this.drawRectangles();
       this.drawCanwas();
-      this.writeContents();
+      // this.writeContents();
     });
   }
 
@@ -485,8 +485,33 @@ export class PdfVersioningComponent implements OnInit {
     this.freeCanvas.on("object:modified", (e) => {
       console.log("modified", e)
       if (!this.selectedAction) {
-        return ((e.target.data.radius) ? this.manageCircles(data, e) : this.manageRectangles(data, e));
+        // return ((e.target.data.radius) ? this.manageCircles(data, e) : this.manageRectangles(data, e));
+        if (e.target.data.type === 'circle') {
+          this.manageCircles(data, e);
+        } else if (e.target.data.type === 'rectangle') {
+          this.manageRectangles(data, e);
+        } else if (e.target.data.type === 'text') {
+          this.manageText(data, e);
+        }
       };
+    });
+
+    this.freeCanvas.on('text:changed', (opt) => {
+      var t1 = opt.target;
+      console.log("t1", t1);
+      if (t1.data.aduser_id === this.userService._details.id) {
+        this.contents.forEach(ele => {
+          if (ele.x === t1.data.x && ele.y === t1.data.y) {
+            console.log('true match');
+            ele.text = t1.text;
+          }
+        });
+        console.log('content', this.contents);
+      }
+      // if (t1.width > t1.fixedWidth) {
+      //   t1.fontSize *= t1.fixedWidth / (t1.width + 1);
+      //   t1.width = t1.fixedWidth;
+      // }
     });
 
     this.freeCanvas.on('mouse:up', (o) => {
@@ -526,6 +551,7 @@ export class PdfVersioningComponent implements OnInit {
     } else if (this.selectedAction === 'CR') {
       this.manageCircles(data, updatePointer);
     }
+    this.drawCanwas();
     // this.drawRectangles();
     // this.drawCircles();
     // this.drawCanwas();
@@ -564,6 +590,23 @@ export class PdfVersioningComponent implements OnInit {
       height: 0,
       radius: 0
     }
+  }
+
+  manageText(data, updatePointer) {
+    var targetCanvas = updatePointer.target;
+    if(this.contents.length && targetCanvas){
+      this.contents.forEach(ele => {
+        console.log("targetCanvas", targetCanvas);
+        if (ele.x === targetCanvas.data.x && ele.y === targetCanvas.data.y) {
+          console.log('scale:', updatePointer.target.scaleX, updatePointer.target.scaleY)
+          ele.x = targetCanvas.left;
+          ele.y = targetCanvas.top;
+          ele.width = (targetCanvas.scaleX) ? (Math.abs(ele.width * targetCanvas.scaleX)) / this.zoom : ele.width;
+          ele.height = (targetCanvas.scaleY) ? (Math.abs(ele.height * targetCanvas.scaleY)) / this.zoom : ele.height;
+        }
+      })
+    }
+    console.log('contents', this.contents);
   }
 
   manageCircles(data, updatePointer) {
@@ -640,7 +683,24 @@ export class PdfVersioningComponent implements OnInit {
       })
     }
 
-    (this.contents.length > 0) ? this.writeContents() : null;
+    // (this.contents.length > 0) ? this.writeContents() : null;
+    if (this.contents.length > 0) {
+      this.contents.map(content => {
+        var textbox = new fabric.Textbox(content.text, {
+          height: content.height,
+          width: content.width,
+          editable: content.selectable,
+          selectable: content.selectable,
+          top: content.y,
+          left: content.x,
+          fontSize: 16,
+          textAlign: 'center',
+          data: content
+        });
+        this.freeCanvas.add(textbox);
+      });
+    }
+    this.selectedAction = '';
   }
 
   // drawRectangles() {
@@ -721,6 +781,7 @@ export class PdfVersioningComponent implements OnInit {
       aduser_id: this.userService._details.id,
       addtime: this.common.dateFormatter(this.common.getDate()),
       user: this.userService._details.name,
+      selectable: true
     };
     console.log('data:', data);
     // this.contents.push(data);
@@ -729,7 +790,8 @@ export class PdfVersioningComponent implements OnInit {
     this.getUserFilterFields(this.versioningDataModifiTime);
     this.getChronologyFilterFields(this.versioningDataModifiTime);
     localStorage.setItem('contents', JSON.stringify(this.contents))
-    this.writeContents();
+    // this.writeContents();
+    this.drawCanwas();
     this.clearContents(event);
   }
 
