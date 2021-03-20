@@ -205,7 +205,7 @@
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTaskByMe'">
-            <smart-table (action)="actionHandler($event)" *ngIf="unreadTaskForMeList.length!=0" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
+            <smart-table (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">

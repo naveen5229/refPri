@@ -75,6 +75,29 @@
     </div>
   </div>
 </div>
+<!-- <div class="modal-body" *ngIf="modalType == 4">
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Name:</label>
+    </div>
+    <div class="col-9">
+      <input type="text" class="form-control" maxlength="60" placeholder="Entity Name" [(ngModel)]="entityListForm.name">
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Entity:<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-9">
+      <auto-suggestion [data]="entitylist" display="name" seperator="-" placeholder="Select Entity"
+        (onSelected)="onSelectEntity($event)" inputId="entityType" name="entityType"
+        autocomplete="off"
+        [preSelected]="(entityListForm.entityType.id>0) ? {name: entityListForm.entityType.name} : {name: ''}">
+      </auto-suggestion>
+    </div>
+  </div>
+</div> -->
 
 <div class="row mb-2 mr-2">
   <div class="col-12 text-right">

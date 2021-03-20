@@ -43,7 +43,7 @@ export class AddentityfieldsComponent implements OnInit {
         this.entityContactFieldsTitle = this.common.params.entityContactFieldsTitle;
         this.modalType = this.common.params.modalType;
         this.entityTypes = (this.common.params.entityTypes) ? this.common.params.entityTypes : [];
-        if(this.common.params.editData.requestId>0){
+        if(this.common.params.editData && this.common.params.editData.requestId>0){
           if(this.modalType==1){
             this.entityTypeForm = {
               name: this.common.params.editData.typeName,
