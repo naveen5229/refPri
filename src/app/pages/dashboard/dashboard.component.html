@@ -7,7 +7,7 @@
         <table class="table table-bordered">
             <thead class="thead" style="background-color:lightgrey">
                 <tr>
-                    <th>#</th>
+                    <th style="width:40px;">#</th>
                     <th>Project</th>
                     <th>Start Date</th>
                     <th>End Date</th>
@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let dashboardData of dashboard; let i=index;">
-                    <td>0{{i + 1}}</td>
+                    <td style="width:40px;">0{{i + 1}}</td>
                     <td>{{dashboardData.project | titlecase}}</td>
                     <td>{{dashboardData.start_date | date :'dd MMM yyyy hh:mm a '}}</td>
                     <td>{{dashboardData.end_date | date :'dd MMM yyyy hh:mm a '}}</td>
