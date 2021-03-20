@@ -10,7 +10,10 @@
             <div class="row mb-2">
                 <div class="col-3 mr-0">
                     <label>Field Name</label>
-                    <input type="text" name="name" id="name" [(ngModel)]="name" class="form-control" maxlength="25">
+                    <input *ngIf="typeId !='entity'" type="text" name="name" id="name" [(ngModel)]="name" class="form-control" maxlength="25">
+                    <select *ngIf="typeId =='entity'" class="form-control" [(ngModel)]="name">
+                        <option *ngFor="let t of entityTypeList" [value]="t._id">{{t.type}}</option>
+                    </select>
                 </div>
                 <div class="col-3 mr-0">
                     <label>Type</label>

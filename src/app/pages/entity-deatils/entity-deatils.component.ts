@@ -120,18 +120,24 @@ export class EntityDeatilsComponent implements OnInit {
         break;
       default: this.entityContactFieldsTitle = '';
     }
-    document.getElementById('entityContactFields').style.display = 'block';
+    // document.getElementById('entityContactFields').style.display = 'block';
 
-    // this.common.params = {
-    //   entityTypes: this.entityTypes,
-    //   entityContactFieldsTitle: this.entityContactFieldsTitle,
-    //   modalType: this.modalType,
-    //   editData: null
-    // }
-    // const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-    // activeModal.result.then(data => {
-    // console.log("addEntity ~ data", data)
-    // });
+    this.common.params = {
+      entityTypes: this.entityTypes,
+      entityContactFieldsTitle: this.entityContactFieldsTitle,
+      modalType: this.modalType,
+      editData: null
+    }
+    const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (this.modalType == 1) {
+        this.getEntityType();
+      } else if (this.modalType == 2) {
+        this.getEntitiesList();
+      } else if (this.modalType == 3) {
+        this.contact({_id:this.contactForm.entityId});
+      }
+    });
   }
 
   getEntityType() {
@@ -292,7 +298,7 @@ export class EntityDeatilsComponent implements OnInit {
       this.entityContactFieldsTitle = '';
     }
     this.setData(this.modalType, entity);
-    document.getElementById('entityContactFields').style.display = 'block';
+    // document.getElementById('entityContactFields').style.display = 'block';
   }
 
   closeEntityContactFields() {
@@ -349,16 +355,22 @@ export class EntityDeatilsComponent implements OnInit {
         editDataModal.requestId = entity._id;
         break;
     }
-    // this.common.params = {
-    //   entityTypes: this.entityTypes,
-    //   entityContactFieldsTitle: this.entityContactFieldsTitle,
-    //   modalType: this.modalType,
-    //   editData: editDataModal
-    // }
-    // const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-    // activeModal.result.then(data => {
-    // console.log("addEntity ~ data", data)
-    // });
+    this.common.params = {
+      entityTypes: this.entityTypes,
+      entityContactFieldsTitle: this.entityContactFieldsTitle,
+      modalType: this.modalType,
+      editData: editDataModal
+    }
+    const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (this.modalType == 1) {
+        this.getEntityType();
+      } else if (this.modalType == 2) {
+        this.getEntitiesList();
+      } else if (this.modalType == 3) {
+        this.contact({_id:this.contactForm.entityId});
+      }
+    });
   }
 
   contact(entity) {

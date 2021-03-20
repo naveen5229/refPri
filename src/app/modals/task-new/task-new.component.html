@@ -117,7 +117,7 @@
     <div class="row mt-1">
         <div class="col-12 text-right">
             <button class="btn btn-primary btn-sm mr-2" id="button" (click)="saveTask()">{{btn}}</button>
-            <button class="btn btn-primary btn-sm" id="saveWithChat" *ngIf="!normalTask.isQueue" (click)="saveTask(1)">Save With Chat</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" *ngIf="(!normalTask.isQueue && !normalTask.isFuture)" (click)="saveTask(1)">Save With Chat</button>
         </div>
     </div>
     <!-- start: task mapping -->

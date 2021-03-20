@@ -64,6 +64,7 @@ export class AddFieldComponent implements OnInit {
   globalFiledList = [];
   headings = [];
   valobj = {};
+  entityTypeList = [];
 
   btn1 = "Add";
   btn2 = "Cancel";
@@ -93,8 +94,10 @@ export class AddFieldComponent implements OnInit {
         { id: 'date', name: 'Date' },
         { id: 'table', name: 'Table' },
         { id: 'checkbox', name: 'Checkbox' },
-        { id: 'attachment', name: 'Attachment' }
+        { id: 'attachment', name: 'Attachment' },
+        // { id: 'entity', name: 'Entity' }
       ];
+      // this.getEntityType();
     } else if (!this.refType) {
       this.title = "Add State Form Field";
     } else if (this.refType == 1) {
@@ -130,6 +133,21 @@ export class AddFieldComponent implements OnInit {
 
   closeModal(res) {
     this.activeModal.close({ response: res });
+  }
+
+  getEntityType() {
+    this.common.loading++;
+    this.api.get('Entities/getEntityTypes')
+      .subscribe(res => {
+        this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (!res['data']) return;
+        this.entityTypeList = res['data'] || [];
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
   getGlobalFormField(api) {

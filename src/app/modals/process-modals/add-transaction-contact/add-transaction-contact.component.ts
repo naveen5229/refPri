@@ -98,17 +98,30 @@ export class AddTransactionContactComponent implements OnInit {
     return headings;
   }
 
-  addEntity(campaign){
-      this.common.params = {
-        data:campaign,
-        modalType:1
-      }
-
-      const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
-      activeModal.result.then(data => {
-      console.log("addEntity ~ data", data)
-      });
+  addEntity(contact){
+    let editDataModal = {
+      typeName: null,
+      typeId: null,
+      entityName: null,
+      entityId: null,
+      contactName: (contact.name) ? contact.name : null,
+      contactId: null,
+      contactNo: contact.mobile,
+      email: (contact.email) ? contact.email : null,
+      association: null,
+      requestId: null
     }
+    this.common.params = {
+      entityTypes: null,
+      entityContactFieldsTitle: "Add contact on entity",
+      modalType: 4,
+      editData: editDataModal
+    }
+    const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      // console.log("addEntity ~ data", data)
+    });
+  }
 
   getTableColumns() {
     let columns = [];
@@ -123,9 +136,9 @@ export class AddTransactionContactComponent implements OnInit {
             icons: this.actionIcons(campaign)
           };
         }
-        // else if (key == 'mobile') {
-        //   column[key] = { isHTML: true, value: campaign[key] ? `<span class="blue cursor-pointer">${campaign[key]}</span>` : null, class: 'black', action: this.addEntity.bind(this, campaign), }
-        // } 
+        else if (key == 'mobile' && this.fromPage==1) {
+          column[key] = { value: campaign[key] ? campaign[key] : null, class: 'blue cursor-pointer', action: this.addEntity.bind(this, campaign), }
+        } 
          else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }

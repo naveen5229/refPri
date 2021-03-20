@@ -31,6 +31,15 @@ export class AddentityfieldsComponent implements OnInit {
     email: null,
     association: null,
     requestId: null
+  };
+
+  entityList = [];
+  ticketContactForm = {
+    type: 0,
+    entityId: null,
+    name: null,
+    contactNo: null,
+    email: null,
   }
 
   constructor(public common:CommonService,
@@ -42,7 +51,8 @@ export class AddentityfieldsComponent implements OnInit {
       if(this.common.params){
         this.entityContactFieldsTitle = this.common.params.entityContactFieldsTitle;
         this.modalType = this.common.params.modalType;
-        this.entityTypes = (this.common.params.entityTypes) ? this.common.params.entityTypes : [];
+        this.entityTypes = (this.common.params.entityTypes && this.common.params.entityTypes.length>0) ? this.common.params.entityTypes : [];
+        this.entityList = (this.common.params.entitylist && this.common.params.entitylist.length>0) ? this.common.params.entitylist : [];
         if(this.common.params.editData && this.common.params.editData.requestId>0){
           if(this.modalType==1){
             this.entityTypeForm = {
@@ -66,6 +76,17 @@ export class AddentityfieldsComponent implements OnInit {
             }
           }
         }
+        if(this.modalType==4){
+          this.ticketContactForm = {
+            type: 0,
+            entityId: null,
+            name: (this.common.params.editData.contactName) ? this.common.params.editData.contactName : null,
+            contactNo: (this.common.params.editData.contactNo) ? this.common.params.editData.contactNo : null,
+            email: (this.common.params.editData.email) ? this.common.params.editData.email : null,
+          }
+          this.getEntitiesList();
+          this.getEntityType();
+        }
         console.log('AddentityfieldsComponent form data:',this.entityTypeForm,this.entityListForm,this.contactForm);
       }
 
@@ -75,6 +96,42 @@ export class AddentityfieldsComponent implements OnInit {
 
   closeModal(res) {
     this.activeModal.close(res);
+  }
+
+  getEntityType() {
+    this.common.loading++;
+    this.api.get('Entities/getEntityTypes')
+      .subscribe(res => {
+        this.common.loading--;
+        if(res['code']>0) { 
+          if (!res['data']) return;
+          let entityTypes = res['data'] || [];
+          this.entityTypes = (entityTypes && entityTypes.length>0) ? entityTypes.map(data => { return { id: data._id, name: data.type } }) : [];
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  getEntitiesList() {
+    this.common.loading++;
+    this.api.get('Entities/getEntities').subscribe(res => {
+        this.common.loading--;
+        if(res['code']>0) {
+          if (!res['data']) return;
+          this.entityList = res['data'] || [];
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
   save() {
@@ -88,21 +145,22 @@ export class AddentityfieldsComponent implements OnInit {
       case 3: apiBase = `Entities/saveEntityContact`, params = this.contactForm;
         break;
     }
-    console.log('final data',apiBase,params);return;
+    // console.log('final data on save',apiBase,params);return;
     this.common.loading++;
     this.api.post(apiBase, params).subscribe(res => {
       this.common.loading--;
       if (res['code'] == 1) {
-        this.common.showToast(res['msg']);
-        // if (type == 1) {
-        //   this.getEntityType();
-        // } else if (type == 2) {
-        //   this.getEntitiesList();
-        // } else if (type == 3) {
-        //   this.contact({_id:this.contactForm.entityId});
-        // }
-        // this.closeEntityContactFields();
-        this.closeModal(true);
+        if(res['data'][0]['y_id']>0){
+          this.common.showToast(res['msg']);
+          if (this.modalType == 2 && this.ticketContactForm.contactNo) {
+            this.ticketContactForm.entityId = res['data'][0]['y_id'];
+            this.opentContactModal();
+          }else{
+            this.closeModal(true);
+          }
+        }else{
+          this.common.showError(res['msg']);
+        }
       } else {
         this.common.showError(res['msg']);
       }
@@ -111,6 +169,28 @@ export class AddentityfieldsComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
-    console.log(apiBase, params);
+  }
+
+  onNext(){
+    console.log("onSelectEntity:",this.ticketContactForm);
+    if(!this.ticketContactForm.type){
+      this.modalType = 2;
+    }else if(this.ticketContactForm.type==1 && this.ticketContactForm.entityId>0){
+      this.opentContactModal();
+    }else{
+      this.common.showError("Entity is missing");
+    }
+  }
+
+  opentContactModal(){
+    this.modalType = 3;
+    this.contactForm = {
+      entityId: this.ticketContactForm.entityId,
+      name: this.ticketContactForm.name,
+      contactNo: this.ticketContactForm.contactNo,
+      email: this.ticketContactForm.email,
+      association: null,
+      requestId: null
+    }
   }
 }
