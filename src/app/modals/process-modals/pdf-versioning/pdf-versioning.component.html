@@ -2,7 +2,7 @@
 
 <div class="modal-header">
     <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" aria-label="Close" style="border: none;" (click)="closeModal(false)">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -21,19 +21,19 @@
                     <option [value]="5">500%</option>
                 </select>
                 <div class="toolbar">
-                    <a class="edit" (click)="zoomOut()" style="color: white;"> <i class="fas fa-search-minus"></i> </a>
-                    <a class="edit" (click)="zoomIn()" style="color: white;"> <i class="fas fa-search-plus"></i> </a>
-                    <a class="edit" (click)="selectedAction = selectedAction == 'TX' ? '' : 'TX'">
+                    <a class="edit" (click)="zoomOut()" style="color: white;" title="Zoom Out"> <i class="fas fa-search-minus"></i> </a>
+                    <a class="edit" (click)="zoomIn()" style="color: white;" title="Zoom In"> <i class="fas fa-search-plus"></i> </a>
+                    <a class="edit" (click)="selectedAction = selectedAction == 'TX' ? '' : 'TX'" title="Text">
                         <i class="fas fa-text-width" [style.color]="(selectedAction != 'TX') ? 'white' : 'blue'"></i>
                         <!-- <img *ngIf="selectedAction != 'TX'" class="text" src="assets/img/text-symbol.svg" alt="">
         <img *ngIf="selectedAction == 'TX'" class="text" src="assets/img/text-symbol-green.svg" alt=""> -->
                     </a>
-                    <a class="edit" (click)="selectAction('RA')">
+                    <a class="edit" (click)="selectAction('RA')" title="Rectangle">
                         <i class="far fa-square" [style.color]="(selectedAction != 'RA') ? 'white' : 'blue'"></i>
                         <!-- <img *ngIf="selectedAction != 'RA'" src="assets/img/rect.svg" alt="">
         <img *ngIf="selectedAction == 'RA'" src="assets/img/rect-green.svg" alt=""> -->
                     </a>
-                    <a class="edit" (click)="selectAction('CR')">
+                    <a class="edit" (click)="selectAction('CR')" title="Circle">
                         <i class="far fa-circle" [style.color]="(selectedAction != 'CR') ? 'white' : 'blue'"></i>
                     </a>
                     <!-- <a class="edit"> 
@@ -42,8 +42,8 @@
                     <!-- <a class="edit"> 
         <img src="assets/img/right-arrow.svg" alt=""> 
     </a> -->
-                    <a class="edit" style="color: white;">
-                        <i class="fas fa-save" (click)="saveDocVersioning()"></i>
+                    <a class="edit" style="color: white;" title="save">
+                        <i class="fas fa-save" (click)="saveDocVersioning(false)"></i>
                     </a>
                 </div>
 
@@ -115,7 +115,8 @@
                     <tbody>
                         <tr *ngFor="let user of chronologyTable">
                             <td><input type="checkbox" 
-                                (change)="filterChronoligyWise(user,$event.target.checked)"></td>
+                                [checked]="user.isChecked"
+                                (change)="user.isChecked = !user.isChecked; filterChronoligyWise(user,$event.target.checked)"></td>
                             <td>{{user.user}}</td>
                             <td>{{user.addtime}}</td>
                             <td></td>

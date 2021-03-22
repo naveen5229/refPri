@@ -164,7 +164,7 @@ export class PdfVersioningComponent implements OnInit {
     //     return true;
     //   }
     // }, Object.create(null));
-    this.chronologyTable = _.uniqBy(versioningData, (x) => x.aduser_id && x.addtime);
+    this.chronologyTable = _.uniqBy(versioningData, (x) =>{x.isChecked = true; return x.aduser_id && x.addtime});
     console.log('chronology filter:', this.chronologyTable);
   }
 
@@ -835,7 +835,7 @@ export class PdfVersioningComponent implements OnInit {
       activeModal.result.then(data => {
         console.log(data);
         if (data.response) {
-          this.saveDocVersioning();
+          this.saveDocVersioning(true);
         } else {
           if (data.apiHit === 0) this.activeModal.close(res);
         }
@@ -847,7 +847,7 @@ export class PdfVersioningComponent implements OnInit {
   }
 
 
-  saveDocVersioning() {
+  saveDocVersioning(modalState) {
     if (this.versioningDataInitTime.length > 0) {
       for (var i = this.versioningDataModifiTime.length - 1; i >= 0; i--) {
         for (var j = 0; j < this.versioningDataInitTime.length; j++) {
@@ -858,6 +858,7 @@ export class PdfVersioningComponent implements OnInit {
       }
     }
     console.log(this.versioningDataModifiTime, 'filtered');
+    if(this.versioningDataModifiTime.length === 0)  return this.common.showError('No Data To Save');
     // return;
 
     if (this.docId) {
@@ -877,7 +878,7 @@ export class PdfVersioningComponent implements OnInit {
             this.common.showToast(res['msg']);
             // this.getProcessLeadByType(type);
             this.getLoadedVersioning();
-            this.activeModal.close(res);
+            (modalState) ? this.activeModal.close(res) : null;
           } else {
             this.common.showError(res['msg']);
           }
@@ -914,16 +915,23 @@ export class PdfVersioningComponent implements OnInit {
 
   filterChronoligyWise(filterObj, isChecked) {
     console.log("isChecked", filterObj, isChecked, this.versioningDataModifiTime)
-    if (isChecked) {
-      this.choronolgyFilter.push({ userId: filterObj.aduser_id, addtime: filterObj.addtime });
-    } else {
-      if (this.choronolgyFilter.length > 0) {
-        let findExist = this.choronolgyFilter.findIndex(ele => (ele.userId === filterObj.aduser_id && ele.addtime.match(filterObj.addtime)));
-        if (findExist >= 0) {
-          this.choronolgyFilter.splice(findExist, 1);
-        }
+    // if (isChecked) {
+    //   this.choronolgyFilter.push({ userId: filterObj.aduser_id, addtime: filterObj.addtime });
+    // } else {
+    //   if (this.choronolgyFilter.length > 0) {
+    //     let findExist = this.choronolgyFilter.findIndex(ele => (ele.userId === filterObj.aduser_id && ele.addtime.match(filterObj.addtime)));
+    //     if (findExist >= 0) {
+    //       this.choronolgyFilter.splice(findExist, 1);
+    //     }
+    //   }
+    // }
+    this.choronolgyFilter = [];
+    this.chronologyTable.forEach(element => {
+      if(element.isChecked){
+        this.choronolgyFilter.push({ userId: element.aduser_id, addtime: element.addtime });
       }
-    }
+    });
+    
     console.log('choronolgyFilter:', this.choronolgyFilter);
     let filteredCanvas = [];
     if (this.choronolgyFilter.length > 0) {
