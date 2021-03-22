@@ -88,7 +88,7 @@ export const MENU_ITEMS = JSON.stringify([
       {
         title: 'Task Kanban',
         icon: 'grid-outline',
-        link: '/pages/project-user-kanban-board',
+        link: '/pages/task-kanban',
         home: true,
       },
       {

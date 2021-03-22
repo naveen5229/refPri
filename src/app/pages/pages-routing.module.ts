@@ -405,7 +405,7 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
-      path: 'project-user-kanban-board',
+      path: 'task-kanban',
       component: TaskKanbanComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
