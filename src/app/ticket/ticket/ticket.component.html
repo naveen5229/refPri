@@ -25,10 +25,6 @@
                     (click)="activeTab='unassignedTkt'; getTicketByType(103)">
                     Unassigned
                 </li>
-                <li [ngClass]="activeTab=='unreadTkt'?'active':''"
-                    (click)="activeTab='unreadTkt'; getTicketByType(102)">
-                    Unread
-                </li>
                 <li [ngClass]="activeTab=='completedTkt'?'active':''"
                     (click)="activeTab='completedTkt';getTicketByType(105) ">
                     Completed
@@ -40,7 +36,10 @@
                     (click)="activeTab='addedByMeTkt'; getTicketByType(106)">
                     Added By Me
                 </li>
-
+                <li [ngClass]="activeTab=='unreadTkt'?'active':''"
+                    (click)="activeTab='unreadTkt'; getTicketByType(102)">
+                    Unread
+                </li>
                 <li [ngClass]="activeTab=='openTikcets'?'active':''"
                     (click)="activeTab='openTikcets'; getTicketByType(107)">
                     All Open Tickets
