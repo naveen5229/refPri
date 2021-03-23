@@ -110,7 +110,7 @@ export class PdfVersioningComponent implements OnInit {
         if (res['data'] && res['data'].length > 0) {
           this.versioningDataInitTime = res['data'].map(ele => {
             return {
-              addtime: this.common.dateFormatter(ele.addtime),
+              addtime: ele.addtime,
               aduser_id: ele.aduser_id,
               entrymode: ele.entrymode,
               height: parseFloat(ele.height),
@@ -164,7 +164,7 @@ export class PdfVersioningComponent implements OnInit {
     //     return true;
     //   }
     // }, Object.create(null));
-    this.chronologyTable = _.uniqBy(versioningData, (x) =>{x.isChecked = true; return x.aduser_id && x.addtime});
+    this.chronologyTable = _.uniqBy(versioningData, (x) => { x.isChecked = true; return x.aduser_id && x.addtime });
     console.log('chronology filter:', this.chronologyTable);
   }
 
@@ -209,6 +209,8 @@ export class PdfVersioningComponent implements OnInit {
 
       let viewport = page.getViewport({ scale: this.zoom });
 
+      this.freeCanvas.setHeight(viewport.height);
+      this.freeCanvas.setWidth(viewport.width);
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       this.cValues.width = viewport.width;
@@ -333,6 +335,7 @@ export class PdfVersioningComponent implements OnInit {
             transparentCorners: false,
             stroke: 'black',
             strokeWidth: 0.3,
+            hoverCursor: `${data.user}\n${data.addtime}`,
           });
 
 
@@ -367,6 +370,7 @@ export class PdfVersioningComponent implements OnInit {
             transparentCorners: false,
             stroke: 'black',
             strokeWidth: 0.3,
+            hoverCursor: `${data.user}\n${data.addtime}`,
           });
 
           break;
@@ -395,9 +399,10 @@ export class PdfVersioningComponent implements OnInit {
             stroke: 'black',
             strokeWidth: 0.3,
             hasControls: false,
+            hoverCursor: `${data.user}\n${data.addtime}`,
           });
 
-          drowType.hasRotatingPoint = true;
+          // drowType.hasRotatingPoint = true;
           console.log("🚀 ~ file: toolbar.component.ts ~ line 200 ~ ToolbarComponent ~ this.freeCanvas.on ~ drowType", drowType, data)
           break;
       }
@@ -416,6 +421,20 @@ export class PdfVersioningComponent implements OnInit {
       // });
 
       this.freeCanvas.add(drowType);
+    });
+
+    this.freeCanvas.on('mouse:over', (o) => {
+      let tooltipEle = document.getElementById('jrx-tooltip');
+
+      (o.target && o.target.hoverCursor) ? tooltipEle.innerHTML = o.target.hoverCursor : null;
+      tooltipEle.style.visibility = 'visible';
+      tooltipEle.style.top = o.e.offsetY + 'px';
+      tooltipEle.style.left = o.e.offsetX + 'px';
+    });
+
+    this.freeCanvas.on('mouse:out', (o) => {
+      let tooltipEle = document.getElementById('jrx-tooltip');
+      tooltipEle.style.visibility = 'hidden';
     });
 
     this.freeCanvas.on('mouse:move', (o) => {
@@ -594,7 +613,7 @@ export class PdfVersioningComponent implements OnInit {
 
   manageText(data, updatePointer) {
     var targetCanvas = updatePointer.target;
-    if(this.contents.length && targetCanvas){
+    if (this.contents.length && targetCanvas) {
       this.contents.forEach(ele => {
         console.log("targetCanvas", targetCanvas);
         if (ele.x === targetCanvas.data.x && ele.y === targetCanvas.data.y) {
@@ -639,8 +658,8 @@ export class PdfVersioningComponent implements OnInit {
 
   drawCanwas() {
     this.freeCanvas.clear();
-    this.freeCanvas.setHeight(792 * this.zoom);
-    this.freeCanvas.setWidth(612 * this.zoom);
+    // this.freeCanvas.setHeight(792 * this.zoom);
+    // this.freeCanvas.setWidth(612 * this.zoom);
 
     if (this.rectangles.length > 0) {
       this.rectangles.map(rectangle => {
@@ -656,10 +675,12 @@ export class PdfVersioningComponent implements OnInit {
           transparentCorners: false,
           selectable: rectangle.selectable,
           data: rectangle,
+          hoverCursor: `${rectangle.user}\n${rectangle.addtime}`,
           // name: 'jrx',
           // includeDefaultValues: true,
           // id: 1
         });
+
 
         this.freeCanvas.add(rect);
       })
@@ -677,6 +698,7 @@ export class PdfVersioningComponent implements OnInit {
           radius: circle.radius * this.zoom,
           selectable: circle.selectable,
           data: circle,
+          hoverCursor: `${circle.user}\n${circle.addtime}`,
         });
 
         this.freeCanvas.add(crcl);
@@ -695,7 +717,8 @@ export class PdfVersioningComponent implements OnInit {
           left: content.x,
           fontSize: 16,
           textAlign: 'center',
-          data: content
+          data: content,
+          hoverCursor: `${content.user}\n${content.addtime}`,
         });
         this.freeCanvas.add(textbox);
       });
@@ -858,7 +881,7 @@ export class PdfVersioningComponent implements OnInit {
       }
     }
     console.log(this.versioningDataModifiTime, 'filtered');
-    if(this.versioningDataModifiTime.length === 0)  return this.common.showError('No Data To Save');
+    if (this.versioningDataModifiTime.length === 0) return this.common.showError('No Data To Save');
     // return;
 
     if (this.docId) {
@@ -927,11 +950,11 @@ export class PdfVersioningComponent implements OnInit {
     // }
     this.choronolgyFilter = [];
     this.chronologyTable.forEach(element => {
-      if(element.isChecked){
+      if (element.isChecked) {
         this.choronolgyFilter.push({ userId: element.aduser_id, addtime: element.addtime });
       }
     });
-    
+
     console.log('choronolgyFilter:', this.choronolgyFilter);
     let filteredCanvas = [];
     if (this.choronolgyFilter.length > 0) {

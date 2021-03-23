@@ -53,6 +53,7 @@
                 <div id="xc" class="xc">
                     <div id="yyy">
                         <div class="c-t" id="ct">
+                            <span ref="toolTip" class="jrx-toolTip" id="jrx-tooltip"></span>
                             <canvas id="c" width="612" height="792" style="z-index: 99;"></canvas>
                             <div id="editor" class="editor" [hidden]="!isShow.textbox">
                                 <div id="editor-box" contenteditable="true"
@@ -118,7 +119,7 @@
                                 [checked]="user.isChecked"
                                 (change)="user.isChecked = !user.isChecked; filterChronoligyWise(user,$event.target.checked)"></td>
                             <td>{{user.user}}</td>
-                            <td>{{user.addtime}}</td>
+                            <td *ngIf="user.id">{{user.addtime}}</td>
                             <td></td>
                         </tr>
                     </tbody>
