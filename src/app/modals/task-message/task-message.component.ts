@@ -426,7 +426,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   addNewCCUserToTask() {
-    let accessUsers = [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid];
+    let accessUsers = [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id];
     if (this.userListByTask['ccUsers'].length > 0) {
       this.userListByTask['ccUsers'].forEach(element => {
         accessUsers.push(element._cc_user_id);
@@ -486,7 +486,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   removeCCUserWithConfirm(ccUserId, ccUserName) {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid, ccUserId].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id, ccUserId].includes(this.userService._details.id)) {
       this.common.params = {
         title: 'Remove CC User',
         description: '<b>Are You Sure To remove CC-user from This Task' + `<b>`,
@@ -644,7 +644,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(status) {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService._details.id)) {
       let preTitle = "Complete";
       if (status == 3) {
         preTitle = "Hold";
@@ -678,7 +678,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   checkReminderSeen() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService._details.id)) {
       let params = {
         ticket_id: this.ticketData._tktid
       };
@@ -698,7 +698,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   editTaskAssignDate() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService._details.id)) {
       this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
@@ -796,8 +796,8 @@ export class TaskMessageComponent implements OnInit {
     if (this.userListByTask['taskUsers'][0]._assignee_user_id != this.loginUserId) {
       accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assignee_user_id, name: this.userListByTask['taskUsers'][0].assignto });
     }
-    if (this.userListByTask['taskUsers'][0]._aduserid != this.loginUserId) {
-      accessUsers.push({ id: this.userListByTask['taskUsers'][0]._aduserid, name: this.userListByTask['taskUsers'][0].assignby });
+    if (this.userListByTask['taskUsers'][0]._assigner_id != this.loginUserId) {
+      accessUsers.push({ id: this.userListByTask['taskUsers'][0]._assigner_id, name: this.userListByTask['taskUsers'][0].assignby });
     }
     if (this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length > 0) {
       this.userListByTask['ccUsers'].forEach(element => {

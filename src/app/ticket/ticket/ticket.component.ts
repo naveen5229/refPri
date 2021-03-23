@@ -292,6 +292,14 @@ export class TicketComponent implements OnInit {
       if (dd.r_coltype == 'checkbox') {
         dd.r_value = (dd.r_value == "true") ? true : false;
       }
+      if (dd.r_coltype == 'entity'){
+        if(dd.r_value>0 && dd.r_fixedvalues && dd.r_fixedvalues.length) {
+          let entity_value = dd.r_fixedvalues.find(x=>{return x._id==dd.r_value});
+          dd['entity_value'] = (entity_value) ? entity_value.option : null;
+        }else{
+          dd['entity_value'] = null;
+        }
+      }
       if (dd.r_fixedvalues) {
         dd.r_fixedvalues = dd.r_fixedvalues;
       }

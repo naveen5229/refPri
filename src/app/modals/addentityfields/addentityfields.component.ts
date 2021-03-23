@@ -34,8 +34,10 @@ export class AddentityfieldsComponent implements OnInit {
   };
 
   entityList = [];
+  filterdEntityList = [];
   ticketContactForm = {
     type: 0,
+    entityType: null,
     entityId: null,
     name: null,
     contactNo: null,
@@ -47,7 +49,7 @@ export class AddentityfieldsComponent implements OnInit {
     public activeModal:NgbActiveModal,
     public modalSService:NgbModal,
     public user: UserService) {
-      console.log('AddentityfieldsComponent:',this.common.params);
+      // console.log('AddentityfieldsComponent:',this.common.params);
       if(this.common.params){
         this.entityContactFieldsTitle = this.common.params.entityContactFieldsTitle;
         this.modalType = this.common.params.modalType;
@@ -79,6 +81,7 @@ export class AddentityfieldsComponent implements OnInit {
         if(this.modalType==4){
           this.ticketContactForm = {
             type: 0,
+            entityType: null,
             entityId: null,
             name: (this.common.params.editData.contactName) ? this.common.params.editData.contactName : null,
             contactNo: (this.common.params.editData.contactNo) ? this.common.params.editData.contactNo : null,
@@ -87,7 +90,7 @@ export class AddentityfieldsComponent implements OnInit {
           this.getEntitiesList();
           this.getEntityType();
         }
-        console.log('AddentityfieldsComponent form data:',this.entityTypeForm,this.entityListForm,this.contactForm);
+        // console.log('AddentityfieldsComponent form data:',this.entityTypeForm,this.entityListForm,this.contactForm);
       }
 
      }
@@ -100,8 +103,7 @@ export class AddentityfieldsComponent implements OnInit {
 
   getEntityType() {
     this.common.loading++;
-    this.api.get('Entities/getEntityTypes')
-      .subscribe(res => {
+    this.api.get('Entities/getEntityTypes').subscribe(res => {
         this.common.loading--;
         if(res['code']>0) { 
           if (!res['data']) return;
@@ -172,7 +174,6 @@ export class AddentityfieldsComponent implements OnInit {
   }
 
   onNext(){
-    console.log("onSelectEntity:",this.ticketContactForm);
     if(!this.ticketContactForm.type){
       this.modalType = 2;
     }else if(this.ticketContactForm.type==1 && this.ticketContactForm.entityId>0){
@@ -193,4 +194,13 @@ export class AddentityfieldsComponent implements OnInit {
       requestId: null
     }
   }
+
+  onSelectContactEntityType(){
+    this.filterdEntityList = [];
+    this.ticketContactForm.entityId = null;
+    if(this.ticketContactForm.entityType>0 && this.entityList && this.entityList.length>0){
+      this.filterdEntityList = this.entityList.filter(x=>x._entity_type_id==this.ticketContactForm.entityType);
+    }
+  }
+
 }
