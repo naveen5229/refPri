@@ -17,6 +17,7 @@ export class TaskNewComponent implements OnInit {
   normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '',false);
   title = "New Task";
   btn = 'Save';
+  assigner = {id:null,name:null}
   userId = null;
   projectName = null;
   isProject = "";
@@ -69,6 +70,8 @@ export class TaskNewComponent implements OnInit {
     currentLast.setMinutes(59);
     this.normalTask.date = currentLast;
     // console.log(aaaaaa,'date from task new component')
+
+
     if (this.common.params != null) {
       console.log(this.common.params, 'groupList from task-new component');
       this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
@@ -109,6 +112,12 @@ export class TaskNewComponent implements OnInit {
         this.updateTaskForm.projectOldName = (this.common.params.project.id) ? this.common.params.project.name : null;
       }
     }
+
+    this.userList.map(user => { 
+      if(user.id === userService._details.id){
+        this.assigner = {id:user.id,name:user.name}
+      }});
+    // {id:userService._details.id,name:userService._details.name}
     this.getProjectList()
   }
 
@@ -165,6 +174,8 @@ export class TaskNewComponent implements OnInit {
     }
     else if (this.normalTask.isFuture && this.normalTask.futureDate > this.normalTask.date) {
       return this.common.showError("Last Date must be greater than future assign date");
+    }else if(this.assigner.id === this.userId){
+      return this.common.showError('Assiner and Assignee can not be same');
     }
     else {
       let CCUsers = [];
@@ -179,6 +190,7 @@ export class TaskNewComponent implements OnInit {
       });
 
       const params = {
+        assigner:this.assigner.id,
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
         subject: this.normalTask.subject,
@@ -191,6 +203,7 @@ export class TaskNewComponent implements OnInit {
         futureDate: this.common.dateFormatter(this.normalTask.futureDate),
         isQueued: this.normalTask.isQueue
       }
+      // return console.log(params);
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         this.common.loading--;
