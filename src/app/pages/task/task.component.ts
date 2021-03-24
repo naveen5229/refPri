@@ -1405,7 +1405,7 @@ export class TaskComponent implements OnInit {
           column["style"] = { background: "pink" };
         } else if (
           ticket._assignee_user_id == this.userService._details.id ||
-          ticket._aduserid == this.userService._details.id
+          ticket._assigned_user_id == this.userService._details.id
         ) {
           column["style"] = {
             background: this.common.taskStatusBg(ticket._status),
@@ -1489,7 +1489,7 @@ export class TaskComponent implements OnInit {
     } else if (type == 101 || type == 103 || type == -102) {
 
       if (ticket._status == 5 || ticket._status == -1) {
-        if ([104, 111, 112, 113, 114,115].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
+        if ([104, 111, 112, 113, 114,115].includes(ticket._tktype) && (ticket._status == -1 || ticket._assigned_user_id != this.userService._details.id)) {
 
         } else {
           icons.push({
@@ -1598,7 +1598,7 @@ export class TaskComponent implements OnInit {
           title: "Mark Ack as Project Task",
         });
       } else if (ticket._status == 5) {
-        if (ticket._aduserid == this.userService._details.id) {
+        if (ticket._assigned_user_id == this.userService._details.id) {
           icons.push({
             class: "fa fa-retweet",
             action: this.reactiveTicket.bind(this, ticket, type),

@@ -116,6 +116,7 @@ export class SmartTableComponent implements OnInit {
       if (search.includes('>')) this.sortColumn(key, 'asc')
       else this.sortColumn(key, 'desc')
     }
+    if(!search.length) this.setData();
   }
 
   sortColumn(key, sortType?) {
