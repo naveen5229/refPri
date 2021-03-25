@@ -1895,6 +1895,13 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
+      } else if ([101,102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) {
+        icons.push({
+          class: "fa fa-check-square text-warning",
+          action: this.ackTaskByAssignerBehalf.bind(this, ticket, type),
+          txt: "",
+          title: "Mark Ack as Assigner",
+        });
       } else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
@@ -2558,10 +2565,37 @@ export class TaskComponent implements OnInit {
             this.common.showToast(res["msg"]);
             this.getTaskByType(type);
           } else {
-            this.common.showError(res["data"]);
+            this.common.showError(res["msg"]);
           }
         },
         (err) => {
+          this.common.loading--;
+          this.common.showError();
+          console.log("Error: ", err);
+        }
+      );
+    } else {
+      this.common.showError("Task ID Not Available");
+    }
+  }
+
+  ackTaskByAssignerBehalf(ticket, type) {
+    if (ticket._tktid && ticket._refid) {
+      let params = {
+        ticketId: ticket._tktid,
+        taskId: ticket._refid,
+        ticketType: ticket._tktype,
+      };
+      this.common.loading++;
+      this.api.post("AdminTask/ackTaskByAssignerBehalf", params).subscribe(res => {
+          this.common.loading--;
+          if (res["code"] > 0) {
+            this.common.showToast(res["msg"]);
+            this.getTaskByType(type);
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },err => {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
