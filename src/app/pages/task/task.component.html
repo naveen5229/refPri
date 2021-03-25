@@ -257,8 +257,8 @@
                 [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
             <div class="tableTitle">PROCESS</div>
-            <smart-table style="height: auto;" *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data"
-                [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            <smart-table style="height: auto;" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings"
+                id="tableUnreadLeads">
             </smart-table>
             <div class="tableTitle">Ticket</div>
             <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
