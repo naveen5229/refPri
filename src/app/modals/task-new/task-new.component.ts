@@ -176,6 +176,8 @@ export class TaskNewComponent implements OnInit {
       return this.common.showError("Last Date must be greater than future assign date");
     }else if(this.assigner.id === this.userId){
       return this.common.showError('Assiner and Assignee can not be same');
+    }else if(![this.assigner.id,this.userId].includes(this.userService._details.id)){
+      return this.common.showError('You must be either in assign-by or assign-to.');
     }
     else {
       let CCUsers = [];

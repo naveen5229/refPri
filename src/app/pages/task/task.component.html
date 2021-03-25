@@ -14,28 +14,39 @@
                     </div>
                     <div class="col-10">
                         <span *ngIf="SearchBy === 'By Task'">
-                            <input type="text" class="form-controls col-9 searchbtn" id="searchtask" placeholder="Search Task" #searchTaskText>
-                            <button class="btn btn-primary btn-sm" id="searchbutton" (click)="getSearchTask(searchTaskText.value, null)">Search</button>
+                            <input type="text" class="form-controls col-9 searchbtn" id="searchtask"
+                                placeholder="Search Task" #searchTaskText>
+                            <button class="btn btn-primary btn-sm" id="searchbutton"
+                                (click)="getSearchTask(searchTaskText.value, null)">Search</button>
                         </span>
                         <span *ngIf="SearchBy === 'By User'" style="display: flex;">
                             <auto-suggestion class="form-controls col-9 p-0 searchselect" id="users" [data]="adminList"
-                             display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId></auto-suggestion>
-                            <button class="btn btn-primary btn-sm" id="search" (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
+                                display="name" placeholder="Search Users" inputId="Users" name="Users" #searchByUserId>
+                            </auto-suggestion>
+                            <button class="btn btn-primary btn-sm" id="search"
+                                (click)="getSearchTask(null,searchByUserId.selectedSuggestion.id)">Search</button>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="col-4 text-right">
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="addBroadcast" title="Add Broadcast" (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
-                <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave" (click)="applyLeave(null)"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task" (click)="openSchedukedTaskMasterModal()">
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="process"
+                    (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
+                        src="./assets/images/process.svg" alt="process"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="addBroadcast" title="Add Broadcast"
+                    (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
+                <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave"
+                    (click)="applyLeave(null)"><img src="./assets/images/leave.svg" alt="leave"></button>
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task"
+                    (click)="openSchedukedTaskMasterModal()">
                     <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
                 </button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="p" title="Add Project" (click)="showProjectPopup()">
+                <button class="btn btn-primary btn-sm mr-2 allicons" id="p" title="Add Project"
+                    (click)="showProjectPopup()">
                     <img src="./assets/images/addproject.svg" alt="Add Project">
                 </button>
-                <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task" (click)="showTaskPopup()">
+                <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task"
+                    (click)="showTaskPopup()">
                     <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
             </div>
         </div>
@@ -44,7 +55,8 @@
         <!-- Tabs      -->
         <div class="tabs_style_main">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='TasksForMe'?'active':''" (click)="activeTab='TasksForMe'; getTaskByType(101)">
+                <li [ngClass]="activeTab=='TasksForMe'?'active':''"
+                    (click)="activeTab='TasksForMe'; getTaskByType(101)">
                     Tasks For Me
                 </li>
                 <li [ngClass]="activeTab=='TasksByMe'?'active':''" (click)="activeTab='TasksByMe'; getTaskByType(-101)">
@@ -53,27 +65,36 @@
                 <li [ngClass]="activeTab=='ccTask'?'active':''" (click)="activeTab='ccTask'; getTaskByType(-5)">
                     CC Task
                 </li>
-                <li [ngClass]="activeTab=='projectTask'?'active':''" (click)="activeTab='projectTask'; getTaskByType(-6)">
+                <li [ngClass]="activeTab=='projectTask'?'active':''"
+                    (click)="activeTab='projectTask'; getTaskByType(-6)">
                     Project Task
                 </li>
-                <li [ngClass]="activeTab=='allCompletedTask'?'active':''" (click)="activeTab='allCompletedTask';resetSearchTask(); getTaskByType(-102)">
+                <li [ngClass]="activeTab=='allCompletedTask'?'active':''"
+                    (click)="activeTab='allCompletedTask';resetSearchTask(); getTaskByType(-102)">
                     Completed Task
                 </li>
-                <li [ngClass]="activeTab=='futureTaskByMe'?'active':''" (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
+                <li [ngClass]="activeTab=='futureTaskByMe'?'active':''"
+                    (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
                     Future Task
                 </li>
-                <li [ngClass]="activeTab=='todoList'?'active':''" (click)="activeTab='todoList';activeSabTab = 0;resetSearchTask(); getTodoTaskList(0)">
+                <li [ngClass]="activeTab=='todoList'?'active':''"
+                    (click)="activeTab='todoList';activeSabTab = 0;resetSearchTask(); getTodoTaskList(0)">
                     ToDo List
                 </li>
-                <li [ngClass]="activeTab=='scheduleMaster'?'active':''" (click)="activeTab='scheduleMaster'; getScheduledTask()">
+                <li [ngClass]="activeTab=='scheduleMaster'?'active':''"
+                    (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master
                 </li>
-                <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
+                <li [ngClass]="activeTab=='unreadLeads'?'active':''"
+                    (click)="activeTab='unreadLeads'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
+                    Unread
+                </li>
+                <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
                     Unread Task
                 </li>
                 <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
                     Unread Txn
-                </li>
+                </li> -->
             </ul>
         </div>
 
@@ -95,7 +116,8 @@
                     Leave
                 </li>
             </ul>
-            <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings" id="normalTaskList" class="sl-smart-table">
+            <smart-table *ngIf="normalTaskList.length!=0" [data]="tableNormal.data" [settings]="tableNormal.settings"
+                id="normalTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='TasksByMe'">
@@ -116,29 +138,34 @@
                     Leave
                 </li>
             </ul>
-            <smart-table *ngIf="normalTaskByMeList.length!=0" [data]="tableNormalTaskByMe.data" [settings]="tableNormalTaskByMe.settings" id="normalTaskByMeListx" class="sl-smart-table">
+            <smart-table *ngIf="normalTaskByMeList.length!=0" [data]="tableNormalTaskByMe.data"
+                [settings]="tableNormalTaskByMe.settings" id="normalTaskByMeListx" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='scheduleMaster'">
-            <smart-table *ngIf="scheduleMasterList.length!=0" [data]="tableScheduleMaster.data" [settings]="tableScheduleMaster.settings" id="scheduleMasterList">
+            <smart-table *ngIf="scheduleMasterList.length!=0" [data]="tableScheduleMaster.data"
+                [settings]="tableScheduleMaster.settings" id="scheduleMasterList">
             </smart-table>
         </div>
 
         <div *ngIf="activeTab=='allCompletedTask'">
             <div class="row" style="z-index: 999;">
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate"
+                        (onChanged)="searchTask.startDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate"
+                        (onChanged)="searchTask.endDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
                     <button class="btn btn-primary text-capitalize" (click)="searchAllCompletedTask()">Search</button>
                 </div>
             </div>
-            <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data" [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList" class="sl-smart-table">
+            <smart-table *ngIf="allCompletedTaskList.length!=0" [data]="tableAllCompleted.data"
+                [settings]="tableAllCompleted.settings" id="tableallCompletedTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='ccTask'">
@@ -150,30 +177,38 @@
                     Leave
                 </li>
             </ul>
-            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings" id="tableCCTaskList" class="sl-smart-table">
+            <smart-table *ngIf="ccTaskList.length!=0" [data]="tableCCTask.data" [settings]="tableCCTask.settings"
+                id="tableCCTaskList" class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='projectTask'">
-            <smart-table *ngIf="projectTaskList.length!=0" [data]="tableProjectTask.data" [settings]="tableProjectTask.settings" id="tableProjectTaskList">
+            <smart-table *ngIf="projectTaskList.length!=0" [data]="tableProjectTask.data"
+                [settings]="tableProjectTask.settings" id="tableProjectTaskList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='todoList'">
             <div class="row mb-1">
                 <div class="col-5">
-                    <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc" name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true" style="height: 40px!important;"></textarea>
+                    <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
+                        name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"
+                        style="height: 40px!important;"></textarea>
                 </div>
                 <div class="col-3" style="z-index: 999;">
-                    <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false" (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
+                    <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false"
+                        (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-2">
                     <label>
-                    <input type="checkbox" [checked]="taskTodoForm.isUrgent" (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" style="vertical-align: middle;"/>
-                    High-Priority</label>
+                        <input type="checkbox" [checked]="taskTodoForm.isUrgent"
+                            (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent" style="vertical-align: middle;" />
+                        High-Priority</label>
                 </div>
                 <div class="col-2">
-                    <button class="btn btn-primary btn-sm" id="savetodotask" (click)="saveTaskTodo()" title="Save ToDo">save</button>
-                    <button *ngIf="taskTodoForm.requestId>0" class="btn btn-primary btn-sm ml-2" id="resettodotask" (click)="resetTaskTodoForm()" title="Reset">Reset</button>
+                    <button class="btn btn-primary btn-sm" id="savetodotask" (click)="saveTaskTodo()"
+                        title="Save ToDo">save</button>
+                    <button *ngIf="taskTodoForm.requestId>0" class="btn btn-primary btn-sm ml-2" id="resettodotask"
+                        (click)="resetTaskTodoForm()" title="Reset">Reset</button>
                 </div>
             </div>
             <ul class="tabs_style text-left">
@@ -186,30 +221,47 @@
             </ul>
             <div *ngIf="activeSabTab==1" class="row" style="z-index: 999;">
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate"
+                        (onChanged)="searchTask.startDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate"
+                        (onChanged)="searchTask.endDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
                     <button class="btn btn-primary text-capitalize" (click)="getTodoTaskList(1)">Search</button>
                 </div>
             </div>
-            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList" class="sl-smart-table">
+            <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList"
+                class="sl-smart-table">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='futureTaskByMe'">
-            <smart-table *ngIf="futureTaskByMeList.length!=0" [data]="tableFutureTaskByMeList.data" [settings]="tableFutureTaskByMeList.settings" id="tableFutureTaskForMeList">
+            <smart-table *ngIf="futureTaskByMeList.length!=0" [data]="tableFutureTaskByMeList.data"
+                [settings]="tableFutureTaskByMeList.settings" id="tableFutureTaskForMeList">
             </smart-table>
         </div>
-        <div *ngIf="activeTab=='unreadTaskByMe'">
+        <!-- <div *ngIf="activeTab=='unreadTaskByMe'">
             <smart-table (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data" [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='unreadLeads'">
             <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            </smart-table>
+        </div> -->
+        <div *ngIf="activeTab=='unreadLeads'" class="multiTableHeight">
+            <div class="tableTitle">TASK</div>
+            <smart-table style="height: auto;" (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data"
+                [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
+            </smart-table>
+            <div class="tableTitle">PROCESS</div>
+            <smart-table style="height: auto;" *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data"
+                [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
+            </smart-table>
+            <div class="tableTitle">Ticket</div>
+            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
             </smart-table>
         </div>
 
@@ -222,11 +274,13 @@
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h5 class="modal-title">Searched Task</h5>
-                    <button type="button" class="close" data-dismiss="modal" (click)="closeSearchTaskModal()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="closeSearchTaskModal()">&times;</button>
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <smart-table [data]="tableSearchTaskList.data" [settings]="tableSearchTaskList.settings" id="tableSearchTaskList">
+                    <smart-table [data]="tableSearchTaskList.data" [settings]="tableSearchTaskList.settings"
+                        id="tableSearchTaskList">
                     </smart-table>
                 </div>
             </div>
