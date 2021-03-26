@@ -11,6 +11,7 @@ import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { NbSidebarService } from '@nebular/theme';
+import * as moment from 'moment';
 @Component({
   selector: 'ngx-project-user-kanban',
   templateUrl: './task-kanban.component.html',
@@ -718,8 +719,13 @@ export class TaskKanbanComponent implements OnInit {
     //     (!res) ? clearInterval(x) : null;
     //   });
     // }, 1000);
-    let starttime = ticket['log_start_time'];
-    this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
+    // let starttime = ticket['log_start_time'];
+    let starttime = ticket['log_start_time'] ? moment(ticket['log_start_time']) : null;
+    let currentTime = moment();
+    console.log("time",starttime, currentTime)
+    // this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
+    this.inprogressTimer = (starttime) ? currentTime.diff(starttime,'seconds') : 0;
+    console.log(" inprogressTimer", this.inprogressTimer)
     let thisVar = this;
     if (ticket['log_start_time']) {
       this.setTimer = setInterval(function () {

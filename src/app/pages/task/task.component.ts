@@ -531,11 +531,11 @@ export class TaskComponent implements OnInit {
           icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeenTicket.bind(this, ticket, type), txt: "", title: 'Reminder', });
         }
       }
-      icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
+      // icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
 
-      if (ticket._status == 2) {
-        icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
-      }
+      // if (ticket._status == 2) {
+      //   icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
+      // }
 
       if (ticket._allocated_user == this.userService._details.id) {
         if (!ticket._status) {
@@ -546,7 +546,7 @@ export class TaskComponent implements OnInit {
         }
       }
 
-      icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
+      // icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
 
     }
     // icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type, 0), txt: '', title: "Ticket Info" });

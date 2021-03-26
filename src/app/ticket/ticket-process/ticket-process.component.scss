@@ -82,3 +82,12 @@
     left: 100%;
     margin-left: 15px;
   }
+
+  .linkStyle{
+    color: blue;
+    text-decoration: underline;
+  }
+
+  .linkStyle:hover{
+    cursor: pointer;
+  }
