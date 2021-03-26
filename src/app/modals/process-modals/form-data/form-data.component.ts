@@ -174,9 +174,11 @@ export class FormDataComponent implements OnInit {
     // console.log("oddArray", this.oddArray);
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.handleFileSelection(event,null).then(res=>{
+      console.log("res", res)
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i);
     },err=>{
       this.common.showError();
     });
@@ -198,6 +200,8 @@ export class FormDataComponent implements OnInit {
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
+    // console.log('params',params);
+    // return;
     this.common.loading++;
     this.api.post('Processes/uploadAttachment', params).subscribe(res => {
       this.common.loading--;
