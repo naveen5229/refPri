@@ -1388,10 +1388,11 @@ export class TicketComponent implements OnInit {
     this.resetTicketForm();
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.handleFileSelection(event,null).then(res=>{
       console.log("handleFileSelection:",res);
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i);
     },err=>{
       this.common.showError();
     });
