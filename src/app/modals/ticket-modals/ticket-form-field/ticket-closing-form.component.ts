@@ -180,8 +180,8 @@ export class TicketClosingFormComponent implements OnInit {
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
-    console.log('params',params);
-    return;
+    // console.log('params',params);
+    // return;
     this.common.loading++;
     this.api.post('Ticket/uploadAttachment', params).subscribe(res => {
       this.common.loading--;
