@@ -6,7 +6,7 @@ button {
 .xc {
   // width: 700px;
 
-  height: 700px;
+  height: calc(100vh - 200px);
   margin: 0 auto;
   overflow: auto;
   position: relative;
@@ -108,7 +108,6 @@ div#yyy {
   // background: #e7ebef;
   background: #002041;
   padding: 7px 0;
-  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 //    .edit{
@@ -214,16 +213,14 @@ div#yyy {
 .toolbar {
   display: flex;
   align-items: center;
-  padding: 5px 15px;
+  padding: 5px 15px;  
+  height: 50px;
 }
 
 .toolbar a {
   margin-left: 10px;
 }
 
-.hoversidebar:hover {
-  cursor: pointer;
-}
 
 .jrx-toolTip{
   position: absolute;
@@ -236,3 +233,24 @@ div#yyy {
   color: #ffffff;
   visibility: hidden;
 }
+
+
+
+// kavita
+.hoversidebar{
+  table{
+  max-height: 300px;
+  overflow: auto;
+}
+}
+.hoversidebar:hover {
+  cursor: pointer;
+}
+.userfltr{
+  list-style: none;
+  max-height: 300px;
+  overflow: auto;
+}
+// canvas#pdf_renderer {
+//   width: 100%;
+// }

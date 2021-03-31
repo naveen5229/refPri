@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <div class="hoversidebar" style="margin: 0;width: 30%;">
+        <div style="margin: 0;width: 30%;">
 
             <div class="toolbar" style="color: white;">
                 Filters
@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <div>
-                    <ul style="list-style: none;" *ngIf="collapse === 'user'">
+                    <ul class="userfltr" *ngIf="collapse === 'user'">
                         <li *ngFor="let user of userTable" style="display: flex;">
                             <div style="width: 10%;"><input type="checkbox"
                                     (change)="filterUserWise(user,$event.target.checked)"
