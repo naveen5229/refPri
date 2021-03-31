@@ -47,17 +47,20 @@
                     <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
 
                     <!-- dynamic dropdown -->
-                    <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues">
+                    <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'">
                       <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                         {{fixValue.option}}</option>
                     </select>
+                    <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
+                        name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
+                    </auto-suggestion>
 
                     <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
                       <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
                           <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                       </span>
-                      <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
-                      <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                      <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i,'oddArray')">
+                      <!-- <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
                     </div>
                 </div>
         </div>
@@ -103,18 +106,21 @@
               aria-hidden="true"></i></span>
 
             <!-- dynamic data array -->
-            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues">
+            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'">
               <option [value]="fixValue.option" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                 {{fixValue.option}}</option>
             </select>
+            <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
+                name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
+            </auto-suggestion>
 
             <!-- attachment -->
             <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
               <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
                   <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
               </span>
-                <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
-                <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i,'evenArray')">
+                <!-- <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button> -->
             </div>
           </div>
         </span>

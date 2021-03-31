@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { ApiService } from '../../../Service/Api/api.service';
 import { CommonService } from '../../../Service/common/common.service';
-import { UserService } from '../../../Service/user/user.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AssignFieldsComponent } from '../assign-fields/assign-fields.component';
 import { AddFieldTableComponent } from '../add-field-table/add-field-table.component';
@@ -95,9 +94,9 @@ export class AddFieldComponent implements OnInit {
         { id: 'table', name: 'Table' },
         { id: 'checkbox', name: 'Checkbox' },
         { id: 'attachment', name: 'Attachment' },
-        // { id: 'entity', name: 'Entity' }
+        { id: 'entity', name: 'Entity' }
       ];
-      // this.getEntityType();
+      this.getEntityType();
     } else if (!this.refType) {
       this.title = "Add State Form Field";
     } else if (this.refType == 1) {
@@ -115,21 +114,7 @@ export class AddFieldComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-  }
-
-  // AddTable(child_name) {
-  //   if (child_name.length == 0) {
-
-  //   } else {
-  //     this.childArray.push({
-  //       param: '',
-  //       type: '',
-  //       is_required: false,
-  //     });
-  //   }
-  //   console.log(this.childArray, 'childArray')
-  // }
+  ngOnInit() {}
 
   closeModal(res) {
     this.activeModal.close({ response: res });
@@ -228,19 +213,21 @@ export class AddFieldComponent implements OnInit {
       return false;
     }
     let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
-    // console.log("apiName:", apiName); return false;
+    // console.log("apiName:", apiName,params); return false;
     this.common.loading++;
-    this.api.post(apiName, params)
-      .subscribe(res => {
+    this.api.post(apiName, params).subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
-        if (res['data'][0].y_id > 0) {
-          this.common.showToast("Successfully added");
-          this.resetData();
-          this.getFieldName();
+        if(res['code']>0) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast("Successfully added");
+            this.resetData();
+            this.getFieldName();
+          }else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         }else {
-          this.common.showError(res['data'][0].y_msg);
-        }
+          this.common.showError(res['msg']);
+        };
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -260,11 +247,13 @@ export class AddFieldComponent implements OnInit {
         this.resetTable();
         this.headings = [];
         this.valobj = {};
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
-
-        if (!res['data']) return;
-        this.data = res['data'];
-        this.data.length ? this.setTable() : this.resetTable();
+        if(res['code']>0) {
+          if (!res['data']) return;
+          this.data = res['data'];
+          this.data.length ? this.setTable() : this.resetTable();
+          }else{
+            this.common.showError(res['msg']); return false;
+          };
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -294,8 +283,6 @@ export class AddFieldComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
       }
     }
-    // let action = { title: this.common.formatTitle('action'), placeholder: this.common.formatTitle('action'), hideHeader: true };
-    // this.table.data.headings['action'] = action;
     return headings;
   }
 
@@ -391,34 +378,16 @@ export class AddFieldComponent implements OnInit {
   }
 
   addFixValue() {
-
     if (this.fixValues[this.fixValues.length - 1].option) {
       this.fixValues.push({ option: '' })
     } else {
       this.common.showError('Enter Value First')
     }
-    // if (fixvalue.length == 0) {
-
-    // } else {
-    //   this.fixValues.push({
-    //     option: ''
-    //   });
-    // }
   }
 
   setData(data) {
-    // this.typeId = data.col_type;
-    // this.name = data.col_title;
-    // this.fixValues = data.newvalues ? JSON.parse(data.newvalues) : this.fixValues;
-    // this.isFixedValue = data.is_active;
-    // this.isRequired = data.is_autocalculate;
-    // this.btn1 = "Update";
-    console.log("data edit:", data);
     this.typeId = data.param_type;
-    this.name = data.param_name;
-    // for (let i = 1; i < data._param_child.length; i++) {
-    //   this.childArray.push({ param: '', type: '', is_required: false, })
-    // }
+    this.name = data._param_name;
     if (data._param_child && data._param_child.length > 0) {
       data._param_child.map((ele, index) => {
         this.childArray.push({ param: '', type: '', order: null, is_required: false, _param_info: null, _param_id: null, _used_in: null });
@@ -436,8 +405,6 @@ export class AddFieldComponent implements OnInit {
     this.isRequired = data.is_required;
     this.fieldId = data._matrixid;
     this.btn1 = "Update";
-    console.log("isFixedValue:", this.isFixedValue);
-    console.log("fixValues:", this.fixValues);
   }
 
   resetData() {
@@ -473,18 +440,9 @@ export class AddFieldComponent implements OnInit {
     activeModal.result.then(data => {
       if (data.response) {
         this.childArray = (data.data && data.data.length > 0) ? data.data : [];
-        console.log("AddFieldTableComponent:", data);
       }
     });
   }
-
-  // closeOptionModal() {
-  //   document.getElementById("optionModal").style.display = "none";
-  // }
-
-  // openOptionModal(row) {
-  //   document.getElementById("optionModal").style.display = "block";
-  // }
 
 }
 

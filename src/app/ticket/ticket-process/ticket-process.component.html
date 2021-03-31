@@ -66,7 +66,7 @@
                     <div class="col-4">
                         <label>Pri Category Alias</label>
                     </div>
-                   
+
                     <div class="col-7">
                         <input type="text" class="form-control" name="priCatAlias" placeholder="Primary Category Alias"
                             [(ngModel)]="ticketForm.priCatAlias">
@@ -121,6 +121,48 @@
                             [preSelected]="(ticketForm.ticketInput.id>=0) ? {name: ticketForm.ticketInput.name}:{name:''}"
                             autocomplete="off">
                         </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row form-group" *ngIf="displayAdvance">
+                    <div class="col-4">
+                        <label>Check Status Url</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="url" class="form-control" [(ngModel)]="ticketForm.url.checkStatus">
+                    </div>
+                </div>
+
+                <div class="row form-group" *ngIf="displayAdvance">
+                    <div class="col-4">
+                        <label>Update Status Url</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="url" class="form-control" [(ngModel)]="ticketForm.url.updateStatus">
+                    </div>
+                </div>
+
+                <div class="row form-group" *ngIf="displayAdvance">
+                    <div class="col-4">
+                        <label>Live Feed Url</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="url" class="form-control" [(ngModel)]="ticketForm.url.liveFeed">
+                    </div>
+                </div>
+
+                <div class="row form-group" *ngIf="displayAdvance">
+                    <div class="col-4">
+                        <label>Add User To CC On Ticket Forward</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="checkbox" [(ngModel)]="ticketForm.ccUserPresense">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4"><label class="linkStyle"
+                            (click)="optionLink = (optionLink === 'Advance..') ? 'Less..' : 'Advance..';displayAdvance = (displayAdvance) ? false : true">{{optionLink}}</label>
                     </div>
                 </div>
             </div>
@@ -253,7 +295,7 @@
 <!--end: Ticket Property -->
 
 <!--start:add Ticket Property -->
-<div class="modal" id="addTicketProperty" >
+<div class="modal" id="addTicketProperty">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -264,14 +306,14 @@
             <div class="modal-body height-adjust" style="max-height: calc(80vh - 50px);
             overflow-y: auto;overflow-x: hidden;">
                 <div class="row form-group">
-                   
+
                     <div class="form-divider form-divider-first col-md-12">
                         <div class="row">
                             <div class="col-md-12  text-center">
                                 <h3 class="inner-heading"> Category </h3>
                             </div>
                         </div>
-                       
+
                     </div>
 
 
@@ -291,7 +333,7 @@
                     <div class="col-4">
                         <label>Secondary Category</label>
                     </div>
-                   
+
                     <div class="col-8">
                         <auto-suggestion [data]="secondaryCategoryListForProperty" display="name"
                             placeholder="Secondary Category" name="defaultOwn" id="defaultOwn"
@@ -300,7 +342,7 @@
                             autocomplete="off">
                         </auto-suggestion>
                     </div>
-                   
+
                 </div>
                 <div class="row form-group">
                     <div class="form-divider col-md-12">
@@ -309,9 +351,9 @@
                                 <h3 class="inner-heading"> Properties </h3>
                             </div>
                         </div>
-                       
+
                     </div>
-                    
+
                     <div class="col-4">
                         <label>Type</label>
                     </div>
@@ -381,7 +423,7 @@
                         <input type="checkbox" [(ngModel)]="ticketPropertyForm.isUrgent">
                     </div>
                 </div>
-                
+
                 <div class="row form-group">
                     <div class="col-4">
                         <label>isActive</label>
@@ -398,7 +440,7 @@
                         <input type="checkbox" [(ngModel)]="ticketPropertyForm.callRequired">
                     </div>
                 </div>
-                
+
                 <div class="row form-group">
                     <div class="col-4">
                         <label>Claim</label>
@@ -408,16 +450,16 @@
                             [disabled]="ticketPropertyForm.allocationAuto.id==1">
                     </div>
                 </div>
-                
+
                 <div class="row form-group">
-                   
+
                     <div class="form-divider col-md-12">
                         <div class="row">
                             <div class="col-md-12  text-center">
                                 <h3 class="inner-heading"> Benchmark </h3>
                             </div>
                         </div>
-                       
+
                     </div>
 
                     <div class="col-4">

@@ -187,19 +187,21 @@
                                         class="fa fa-table" aria-hidden="true"></i></span>
 
                                 <!-- dynamic dropdown -->
-                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12"
-                                    *ngIf="oddArray[i].r_fixedvalues">
+                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'">
                                     <option [value]="fixValue.option"
                                         *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
+                                    name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
+                                </auto-suggestion>
 
                                 <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
                                     <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
                                         <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
                                     </span>
-                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i)">
-                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i,'oddArray')">
+                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
                                 </label>
 
                                 <div *ngIf="oddArray[i].r_coltype =='number' && (oddArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
@@ -259,20 +261,22 @@
                                         aria-hidden="true"></i></span>
 
                                 <!-- dynamic data array -->
-                                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
-                                    *ngIf="evenArray[i].r_fixedvalues">
+                                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'">
                                     <option [value]="fixValue.option"
                                         *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+                                <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
+                                    name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
+                                </auto-suggestion>
 
                                 <!-- attachment -->
                                 <label class="custom-file-upload p-0" *ngIf="evenArray[i].r_coltype =='attachment'">
                                     <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
                                         <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
                                     </span>
-                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i)">
-                                    <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i,'evenArray')">
+                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button> -->
                                 </label>
 
                                 <div *ngIf="evenArray[i].r_coltype =='number' && (evenArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
@@ -424,6 +428,7 @@
                                 <span *ngIf="opening.r_coltype == 'table'" (click)="AdditionalFormNew(opening._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
                                 <input *ngIf="['number','auto'].includes(opening.r_coltype)" type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
                                 <div *ngIf="opening.r_coltype == 'text'" class="form-control div-input" [textContent]=opening.r_value  style="height: auto;" readonly></div>
+                                <div *ngIf="opening.r_coltype == 'entity'" class="form-control div-input" [textContent]=opening.entity_value  style="height: auto;" readonly></div>
                                 <span *ngIf="opening.r_coltype=='attachment' && opening.r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(opening.r_url,opening.r_doc_name)">{{opening.r_doc_name}}</span>
                                 </span>
@@ -452,6 +457,7 @@
                                 <span *ngIf="primary.r_coltype == 'table'" (click)="AdditionalFormNew(primary._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
                                 <input *ngIf="['number','auto'].includes(primary.r_coltype)" type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
                                 <div *ngIf="primary.r_coltype == 'text'" class="form-control div-input" [textContent]=primary.r_value  style="height: auto;" readonly></div>
+                                <div *ngIf="primary.r_coltype == 'entity'" class="form-control div-input" [textContent]=primary.entity_value  style="height: auto;" readonly></div>
                                 <span *ngIf="primary.r_coltype=='attachment' && primary.r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(primary.r_url,primary.r_doc_name)">{{primary.r_doc_name}}</span>
                                 </span>
@@ -475,6 +481,7 @@
                                 <span *ngIf="closing.r_coltype == 'table'" (click)="AdditionalFormNew(closing._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
                                 <input *ngIf="['number','auto'].includes(closing.r_coltype)" type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
                                 <div *ngIf="closing.r_coltype == 'text'" class="form-control div-input" [textContent]=closing.r_value  style="height: auto;" readonly></div>
+                                <div *ngIf="closing.r_coltype == 'entity'" class="form-control div-input" [textContent]=closing.entity_value  style="height: auto;" readonly></div>
                                 <span *ngIf="closing.r_coltype=='attachment' && closing.r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(closing.r_url,opening.r_doc_name)">{{closing.r_doc_name}}</span>
                                 </span>

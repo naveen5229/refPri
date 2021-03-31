@@ -79,6 +79,8 @@ export class TicketProcessComponent implements OnInit {
     Supervisor: { id: null, name: '' },
     ticketInput: { id: 0, name: 'Auto' },
     isActive: true,
+    url: { checkStatus: '', updateStatus: '', liveFeed: '' },
+    ccUserPresense: true
   }
 
   formRefType = {
@@ -133,6 +135,8 @@ export class TicketProcessComponent implements OnInit {
   }
 
   adminList = [];
+  optionLink = 'Advance..';
+  displayAdvance = false;
 
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
@@ -165,7 +169,7 @@ export class TicketProcessComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (!res['data']) return;
       this.ticketData = res['data'];
       this.ticketData.length ? this.setTable() : this.resetTable();
@@ -202,6 +206,8 @@ export class TicketProcessComponent implements OnInit {
       Supervisor: { id: null, name: '' },
       isActive: true,
       ticketInput: { id: 0, name: 'Auto' },
+      url: { checkStatus: '', updateStatus: '', liveFeed: '' },
+      ccUserPresense: true
     }
   }
 
@@ -298,13 +304,26 @@ export class TicketProcessComponent implements OnInit {
       typeInfo: JSON.stringify(this.ticketForm.typeList),
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
-      ticketInput: this.ticketForm.ticketInput.id
+      ticketInput: this.ticketForm.ticketInput.id,
+      checkStatusUrl: this.ticketForm.url.checkStatus,
+      updateStatusUrl: this.ticketForm.url.updateStatus,
+      liveFeedUrl: this.ticketForm.url.liveFeed,
+      ccUserPresense: this.ticketForm.ccUserPresense
       // supervisorId: this.ticketForm.Supervisor.id
     }
+    console.log('params', params);
     if (!params.name) {
       this.common.showError('Please enter Process Name');
       return false;
     }
+    if (this.displayAdvance) {
+      if ((this.ticketForm.url.checkStatus.length && (this.ticketForm.url.checkStatus).slice(0, 5) !== 'https') ||
+        (this.ticketForm.url.updateStatus.length && (this.ticketForm.url.updateStatus).slice(0, 5) !== 'https') ||
+        (this.ticketForm.url.liveFeed.length && (this.ticketForm.url.liveFeed).slice(0, 5) !== 'https')) {
+        return this.common.showError('Please enter valid url: Should start with https.');
+      }
+    }
+
     this.common.loading++;
     this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
       this.common.loading--;
@@ -333,7 +352,7 @@ export class TicketProcessComponent implements OnInit {
     this.api.get(`Ticket/getTicketProcessProperty?tpId=${id}`).subscribe(res => {
       this.common.loading--;
       this.resetTicketPropertyTable();
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (!res['data']) {
         return;
       } else {
@@ -571,6 +590,8 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.secCatList = [{ name: '' }];
       this.ticketForm.typeList = [{ name: '' }];
       this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input };
+      this.ticketForm.url = { checkStatus: ticket._check_status_url, updateStatus: ticket._update_status_url, liveFeed: ticket._live_feed_url };
+      this.ticketForm.ccUserPresense = ticket._default_cc_user;
     }
     document.getElementById('addTicket').style.display = 'block';
   }

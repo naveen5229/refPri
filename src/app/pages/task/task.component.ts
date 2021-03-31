@@ -12,6 +12,10 @@ import { TaskScheduleNewComponent } from "../../modals/task-schedule-new/task-sc
 import { TaskScheduleMasterComponent } from "../../modals/task-schedule-master/task-schedule-master.component";
 import { ChatboxComponent } from '../../modals/process-modals/chatbox/chatbox.component';
 import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
+import { TicketChatboxComponent } from "../../modals/ticket-modals/ticket-chatbox/ticket-chatbox.component";
+import { GenericModelComponent } from "../../modals/generic-model/generic-model.component";
+import { AddExtraTimeComponent } from "../../modals/ticket-modals/add-extra-time/add-extra-time.component";
+import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component";
 
 @Component({
   selector: "ngx-task",
@@ -19,7 +23,8 @@ import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.compon
   styleUrls: ["./task.component.scss"],
 })
 export class TaskComponent implements OnInit {
-  activeTab = "unreadTaskByMe";
+  // activeTab = "unreadTaskByMe";
+  activeTab = "unreadLeads";
   task_type = 1;
   userId = null;
   primaryId = null;
@@ -142,7 +147,8 @@ export class TaskComponent implements OnInit {
     },
     settings: {
       hideHeader: true,
-      arrow: true
+      arrow: true,
+      tableHeight: 'auto'
     },
   };
 
@@ -153,6 +159,18 @@ export class TaskComponent implements OnInit {
     },
     settings: {
       hideHeader: true,
+      tableHeight: 'auto'
+    }
+  };
+
+  tableUnreadTkt = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true,
+      tableHeight: 'auto'
     }
   };
 
@@ -184,6 +202,7 @@ export class TaskComponent implements OnInit {
   };
   activeSabTab = 0;
   unreadLeads = [];
+  unreadTkt = [];
   selectedRow = -1;
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
@@ -196,6 +215,8 @@ export class TaskComponent implements OnInit {
     public userService: UserService
   ) {
     this.getTaskByType(-8);
+    this.getProcessLeadByType(5);
+    this.getTicketByType(102);
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
@@ -205,8 +226,11 @@ export class TaskComponent implements OnInit {
   ngOnInit() { }
 
   refresh() {
-    this.activeTab = "unreadTaskByMe";
+    // this.activeTab = "unreadTaskByMe";
+    this.activeTab = "unreadLeads";
     this.getTaskByType(-8);
+    this.getProcessLeadByType(5);
+    this.getTicketByType(102);
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
@@ -249,7 +273,7 @@ export class TaskComponent implements OnInit {
   }
   actionHandler(event) {
     console.log('row data again:', event);
-    this.selectedRow = (event.smartId=='undefined') ? event.rowcount : event.smartId;//event.rowcount;
+    this.selectedRow = (event.smartId == 'undefined') ? event.rowcount : event.smartId;//event.rowcount;
     let activeId = document.activeElement.id;
     if ((!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
       this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
@@ -365,6 +389,26 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  getTicketByType(type, startDate = null, endDate = null) {
+    this.common.loading++;
+    this.resetSmartTableData();
+    let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
+    this.api.get("Ticket/getTicketByType" + params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (type == 102) {
+          this.unreadTkt = res['data'] || [];
+          this.setTableUnreadTkt(type);
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
   // start unread lead
   setTableUnreadLeads(type) {
     this.tableUnreadLeads.data = {
@@ -373,6 +417,7 @@ export class TaskComponent implements OnInit {
     };
     return true;
   }
+
 
   generateHeadingsUnreadLeads() {
     let headings = {};
@@ -410,6 +455,278 @@ export class TaskComponent implements OnInit {
     });
     return columns;
   }
+
+
+  // start: UnreadTkt
+  setTableUnreadTkt(type) {
+    this.tableUnreadTkt.data = {
+      headings: this.generateHeadingsUnreadTkt(),
+      columns: this.getTableColumnsUnreadTkt(type)
+    };
+    return true;
+  }
+
+  generateHeadingsUnreadTkt() {
+    let headings = {};
+    for (var key in this.unreadTkt[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      }
+      if (key === "addtime" || key === "action_completed") {
+        headings[key]["type"] = "date";
+      }
+    }
+    return headings;
+  }
+
+  getTableColumnsUnreadTkt(type) {
+    let columns = [];
+    this.unreadTkt.map(lead => {
+      let column = {};
+      for (let key in this.generateHeadingsUnreadTkt()) {
+        if (key.toLowerCase() == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsForTicketUnread(lead, type)
+          };
+        } else if (key == "remaining_time") {
+          column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
+        } else {
+          column[key] = { value: lead[key], class: 'black', action: '' };
+        }
+
+        column['style'] = { 'background': this.common.taskStatusBg(lead._status) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+
+  actionIconsForTicketUnread(ticket, type) {
+    console.log("actionIcons:", ticket);
+    let icons = [];
+    if (type == 102) {
+      icons.push({ class: "fas fa-comments", action: this.ticketMessageChat.bind(this, ticket, type), txt: "", title: 'Chat Box', },
+      // { class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" }
+      );
+
+      // if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
+      //   icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
+      // }
+      if (ticket._allocated_user == this.userService._details.id && ticket._status == 2 && ticket._check_status > 0) {
+        icons.push({ class: "fas fa-clipboard-check", action: this.openCheckStatusModal.bind(this, ticket, type), txt: "", title: "Check Status", });
+      }
+
+      if (ticket._unreadcount > 0) {
+        icons = [{ class: "fas fa-comments new-comment", action: this.ticketMessageChat.bind(this, ticket, type), txt: ticket._unreadcount, title: 'Chat Box', },];
+      } else if (ticket._unreadcount == -1) {
+        icons = [{ class: "fas fa-comments no-comment", action: this.ticketMessageChat.bind(this, ticket, type), txt: "", title: 'Chat Box', },];
+      }
+
+      if (ticket._status == 5 || ticket._status == -1) {
+      } else {
+        if (ticket._isremind == 1 && type == 102) {
+          icons.push({ class: "fa fa-bell isRemind", action: this.checkReminderSeenTicket.bind(this, ticket, type), txt: "", title: 'Reminder', });
+        }
+      }
+      // icons.push({ class: "fas fa-history", action: this.ticketHistory.bind(this, ticket, type), txt: '', title: "History" });
+
+      // if (ticket._status == 2) {
+      //   icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
+      // }
+
+      if (ticket._allocated_user == this.userService._details.id) {
+        if (!ticket._status) {
+          icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirmUnread.bind(this, ticket, type, -1), txt: "", title: "Mark Rejected", });
+          icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirmUnread.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
+        } else if (ticket._status == 2) {
+          icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
+        }
+      }
+
+      // icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
+
+    }
+    // icons.push({ class: "fa fa-info-circle", action: this.openInfoModal.bind(this, ticket, type, 0), txt: '', title: "Ticket Info" });
+
+    return icons;
+  }
+
+  updatePrimaryInfo(ticket,type){
+    let title = 'Primary Info Fields';
+    let actionData = {
+      ticketId: ticket._ticket_id,
+      refId: ticket._tpid,
+      refType: 2,
+    };
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data, 'response');
+        // if(data.isContinue){
+        //   this.updateTicketStatus(ticket, type, status, null);
+        // }else{
+        //   this.changeTicketStatusWithConfirm(ticket, type, status)
+        // }
+      }
+    });
+  }
+  
+  openTicketFormData(ticket, type, status) {
+    let title = 'Ticket Closing Form';
+    let actionData = {
+      ticketId: ticket._ticket_id,
+      refId: ticket._tpid,
+      refType: 1,
+    };
+    this.common.params = { actionData, title: title, button: "Save" };
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log(data, 'response');
+        if(data.isContinue){
+          this.updateTicketStatus(ticket, type, status, null);
+        }else{
+          this.changeTicketStatusWithConfirm(ticket, type, status)
+        }
+      }
+    });
+  }
+
+  changeTicketStatusWithConfirmUnread(ticket, type, status) {
+    console.log(ticket, 'status');
+    if (ticket._ticket_id) {
+      let preTitle = "Complete";
+      if (status === -1) {
+        preTitle = "Reject";
+      } else if (status == 2) {
+        preTitle = "Acknowledge";
+      } else if (ticket._status == 2) {
+        preTitle = "Completed";
+      } else if (status == 0) {
+        preTitle = "Re-Active";
+      }
+      this.common.params = {
+        title: preTitle + " Ticket ",
+        description:
+          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Ticket" + `<b>`,
+        isRemark: status == -1 ? true : false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+      activeModal.result.then((data) => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          this.updateTicketStatus(ticket, type, status, data.remark);
+        }
+      });
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  addTime(ticket, type) {
+    this.common.params = {
+      ticketId: ticket._ticket_allocation_id,
+      title: "Add Extra Time",
+      btn: "Add Time",
+    };
+    const activeModal = this.modalService.open(AddExtraTimeComponent, {
+      size: "md",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.getTicketByType(type);
+      }
+    });
+  }
+
+  ticketHistory(ticket, type) {
+    let dataparams = {
+      view: {
+        api: 'Ticket/getTicketHistory',
+        param: {
+          tktId: ticket._ticket_id
+        }
+      },
+      title: "Ticket History"
+    }
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  ticketMessageChat(ticket, type) {
+    console.log("type:", type, ticket, this.adminList);
+    let ticketEditData = {
+      ticketData: ticket,
+      ticketId: ticket._ticket_id,
+      statusId: ticket._status,
+      lastSeenId: ticket._lastreadid,
+      tabType: type,
+    };
+
+    let subTitle = ticket.identity;
+    this.common.params = {
+      ticketEditData,
+      title: "Ticket Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.adminList,
+      groupList: this.groupList
+    };
+    const activeModal = this.modalService.open(TicketChatboxComponent, { size: "lg", container: "nb-layout", backdrop: "static", });
+    activeModal.result.then((data) => {
+      type ? this.getTicketByType(type) : null;
+    });
+  }
+
+  openCheckStatusModal(ticket,type){
+    // console.log("openCheckStatusModal:",ticket);
+    this.common.loading++;
+    this.api.get("Ticket/checkTicketStatus?ticketId=" + ticket._ticket_id).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let checkStatus = "No data found";
+        if(res['data'] && res['data'].length){
+          checkStatus = res['data'][0]["status"];
+        }
+        this.common.params = {
+          title: 'Status',
+          description: '<b>'+checkStatus+'<b>',
+          btn1: 'Ok'
+        }
+        const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+    });
+  }
+
+  checkReminderSeenTicket(ticket, type) {
+    let params = {
+      ticketId: ticket._ticket_id,
+    };
+    this.common.loading++;
+    this.api.post("Ticket/checkTicketReminderSeen", params).subscribe((res) => {
+      this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      this.common.showToast(res["msg"]);
+      this.getTicketByType(type);
+    }, (err) => {
+      this.common.loading--;
+      this.common.showError();
+      console.log("Error: ", err);
+    }
+    );
+  }
+  // end: unreadTkt
 
   actionIconsForLeads(lead, type) {
 
@@ -618,7 +935,7 @@ export class TaskComponent implements OnInit {
     this.api.post("AdminTask/getTaskByType", params).subscribe(
       (res) => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         console.log("data", res["data"]);
         this.resetSmartTableData();
         if (type == 101) {
@@ -883,7 +1200,7 @@ export class TaskComponent implements OnInit {
             class: "text-center",
           };
         } else if (key == "project") {
-          column[key] = {value: ticket[key], class:[101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null,};
+          column[key] = { value: ticket[key], class: [101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null, };
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -956,7 +1273,7 @@ export class TaskComponent implements OnInit {
             class: "text-center",
           };
         } else if (key == "project") {
-          column[key] = {value: ticket[key], class:[101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null,};
+          column[key] = { value: ticket[key], class: [101, 102].includes(ticket._tktype) ? "blue" : "black", action: [101, 102].includes(ticket._tktype) ? this.editTask.bind(this, ticket, type, true) : null, };
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -1405,7 +1722,7 @@ export class TaskComponent implements OnInit {
           column["style"] = { background: "pink" };
         } else if (
           ticket._assignee_user_id == this.userService._details.id ||
-          ticket._aduserid == this.userService._details.id
+          ticket._assigned_user_id == this.userService._details.id
         ) {
           column["style"] = {
             background: this.common.taskStatusBg(ticket._status),
@@ -1452,7 +1769,7 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == -101) {
-      if ([101, 102, 104, 111, 112, 113, 114,115].includes(ticket._tktype)) {
+      if ([101, 102, 104, 111, 112, 113, 114, 115].includes(ticket._tktype)) {
         icons.push({
           class: "fas fa-trash-alt",
           action: this.deleteTicket.bind(this, ticket, type),
@@ -1489,7 +1806,7 @@ export class TaskComponent implements OnInit {
     } else if (type == 101 || type == 103 || type == -102) {
 
       if (ticket._status == 5 || ticket._status == -1) {
-        if ([104, 111, 112, 113, 114,115].includes(ticket._tktype) && (ticket._status == -1 || ticket._aduserid != this.userService._details.id)) {
+        if ([104, 111, 112, 113, 114,115].includes(ticket._tktype) && (ticket._status == -1 || ticket._assigned_user_id != this.userService._details.id)) {
 
         } else {
           icons.push({
@@ -1527,7 +1844,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if ([104, 111, 112, 113,115].includes(ticket._tktype)) {//leave reject
+        if ([104, 111, 112, 113, 115].includes(ticket._tktype)) {//leave reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -1578,6 +1895,13 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
+      } else if ([101,102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) {
+        icons.push({
+          class: "fa fa-check-square text-warning",
+          action: this.ackTaskByAssignerBehalf.bind(this, ticket, type),
+          txt: "",
+          title: "Mark Ack as Assigner",
+        });
       } else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
@@ -1598,7 +1922,7 @@ export class TaskComponent implements OnInit {
           title: "Mark Ack as Project Task",
         });
       } else if (ticket._status == 5) {
-        if (ticket._aduserid == this.userService._details.id) {
+        if (ticket._assigned_user_id == this.userService._details.id) {
           icons.push({
             class: "fa fa-retweet",
             action: this.reactiveTicket.bind(this, ticket, type),
@@ -1665,17 +1989,23 @@ export class TaskComponent implements OnInit {
         }
       }
 
-      if (ticket._is_star_mark) {
-        icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
-      } else {
-        icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
-      }
+      // if (ticket._is_star_mark) {
+      //   icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
+      // } else {
+      //   icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
+      // }
+    }
+
+    if (ticket._is_star_mark) {
+      icons.push({ class: "fa fa-star text-warning", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star unmark", });
+    } else {
+      icons.push({ class: "fa fa-star text-muted", action: this.starMarkOnTicket.bind(this, ticket, type), txt: "", title: "Star mark", });
     }
 
     return icons;
   }
 
-  editTask(ticket, type,isProject=false) {
+  editTask(ticket, type, isProject = false) {
     console.log("type:", type);
     this.common.params = {
       userList: this.adminList,
@@ -1686,9 +2016,9 @@ export class TaskComponent implements OnInit {
       editData: ticket,
       ticketId: ticket._tktid,
       ticketType: ticket._tktype,
-      project:{id: (ticket.project.toLowerCase()!='standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase()!='standalone') ? ticket.project : null}
+      project: { id: (ticket.project.toLowerCase() != 'standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase() != 'standalone') ? ticket.project : null }
     };
-    
+
     const activeModal = this.modalService.open(TaskNewComponent, {
       size: "md",
       container: "nb-layout",
@@ -1725,7 +2055,7 @@ export class TaskComponent implements OnInit {
           this.api.post("AdminTask/deleteTicket", params).subscribe(
             (res) => {
               this.common.loading--;
-              if(res['code']===0) { this.common.showError(res['msg']); return false;};
+              if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
               this.common.showToast(res["msg"]);
               this.getTaskByType(type);
             },
@@ -1886,7 +2216,7 @@ export class TaskComponent implements OnInit {
       type ? this.getTaskByType(type) : null;
       this.tableUnreadTaskForMeList.settings.arrow = true;
       // if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) { } else
-       if (ticket._cc_user_id && !ticket._cc_status) {
+      if (ticket._cc_user_id && !ticket._cc_status) {
         this.ackTaskByCcUser(ticket, type);
       } else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
         this.ackTaskByProjectUser(ticket, type);
@@ -1952,7 +2282,7 @@ export class TaskComponent implements OnInit {
     this.api.post("AdminTask/checkReminderSeen", params).subscribe(
       (res) => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.common.showToast(res["msg"]);
         this.getTaskByType(type);
       },
@@ -2096,7 +2426,7 @@ export class TaskComponent implements OnInit {
       this.api.post("AdminTask/updateTodoTask", params).subscribe(
         (res) => {
           this.common.loading--;
-          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           this.common.showToast(res["msg"]);
           this.getTodoTaskList(0);
         },
@@ -2235,10 +2565,37 @@ export class TaskComponent implements OnInit {
             this.common.showToast(res["msg"]);
             this.getTaskByType(type);
           } else {
-            this.common.showError(res["data"]);
+            this.common.showError(res["msg"]);
           }
         },
         (err) => {
+          this.common.loading--;
+          this.common.showError();
+          console.log("Error: ", err);
+        }
+      );
+    } else {
+      this.common.showError("Task ID Not Available");
+    }
+  }
+
+  ackTaskByAssignerBehalf(ticket, type) {
+    if (ticket._tktid && ticket._refid) {
+      let params = {
+        ticketId: ticket._tktid,
+        taskId: ticket._refid,
+        ticketType: ticket._tktype,
+      };
+      this.common.loading++;
+      this.api.post("AdminTask/ackTaskByAssignerBehalf", params).subscribe(res => {
+          this.common.loading--;
+          if (res["code"] > 0) {
+            this.common.showToast(res["msg"]);
+            this.getTaskByType(type);
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },err => {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
@@ -2294,7 +2651,7 @@ export class TaskComponent implements OnInit {
     this.api.get("AdminTask/getScheduledTask?type=1").subscribe(
       (res) => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.resetSmartTableData();
         this.scheduleMasterList = res["data"] || [];
         this.setTableScheduleMaster();

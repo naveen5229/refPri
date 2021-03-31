@@ -67,6 +67,14 @@ export class TicketClosingFormComponent implements OnInit {
       if (dd.r_coltype == 'checkbox') {
         dd.r_value = (dd.r_value == "true") ? true : false;
       }
+      if (dd.r_coltype == 'entity'){
+        if(dd.r_value>0 && dd.r_fixedvalues && dd.r_fixedvalues.length) {
+          let entity_value = dd.r_fixedvalues.find(x=>{return x._id==dd.r_value});
+          dd['entity_value'] = (entity_value) ? entity_value.option : null;
+        }else{
+          dd['entity_value'] = null;
+        }
+      }
       if (dd.r_fixedvalues) {
         dd.r_fixedvalues = dd.r_fixedvalues;
       }
@@ -146,10 +154,11 @@ export class TicketClosingFormComponent implements OnInit {
     });
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.handleFileSelection(event,null).then(res=>{
       console.log("handleFileSelection:",res);
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i)
     },err=>{
       this.common.showError();
     });
@@ -171,6 +180,8 @@ export class TicketClosingFormComponent implements OnInit {
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
+    // console.log('params',params);
+    // return;
     this.common.loading++;
     this.api.post('Ticket/uploadAttachment', params).subscribe(res => {
       this.common.loading--;

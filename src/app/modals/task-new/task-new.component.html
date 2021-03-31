@@ -33,6 +33,17 @@
             </auto-suggestion>
         </div>
     </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Assign By:<span *ngIf="isProject!='1'" class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="assigner = $event" [data]="userList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="{name: assigner.name}">
+            </auto-suggestion>
+        </div>
+    </div>
+
     <div class="row mt-2">
         <div class="col-4">
             <label>Assign To:<span *ngIf="isProject!='1'" class="text-danger">*</span></label>
