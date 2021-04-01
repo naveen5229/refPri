@@ -160,8 +160,11 @@
         <div class="col-4">
             <label>Target Time :</label>
         </div>
-        <div class="col-8">
-            <uj-date-time-picker [mind]="currentDate" (onChanged)="transAction.stateTargetTime = $event" [dateTimeValue]="transAction.stateTargetTime" [isTime]="true">
+        <div class="col-4">
+            <input type="number" min="0" [(ngModel)]="transAction.stateTargetDays" placeholder="days">
+        </div>
+        <div class="col-4">
+            <uj-date-time-picker [mind]="currentDate" (onChanged)="transAction.stateTargetTime = $event" [dateTimeValue]="transAction.stateTargetTime" [isDate]="false" [isTime]="true">
             </uj-date-time-picker>
         </div>
     </div>
