@@ -80,9 +80,16 @@ export class UserMappingComponent implements OnInit {
     public modalService: NgbModal) { 
       this.getPartnerMappingData();
       this.getCompanyMappingData(null);
+      this.common.refresh = this.refresh.bind(this);
     }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  refresh() {
+    this.resetTable();
+    this.activeTab='partnerMapping';
+    this.getPartnerMappingData();
+    this.getCompanyMappingData(null);
   }
 
   addFODetail(){
