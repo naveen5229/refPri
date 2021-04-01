@@ -709,13 +709,13 @@ export class PdfVersioningComponent implements OnInit {
     if (this.contents.length > 0) {
       this.contents.map(content => {
         var textbox = new fabric.Textbox(content.text, {
-          height: content.height,
-          width: content.width,
+          height: content.height  * this.zoom,
+          width: content.width  * this.zoom,
           editable: content.selectable,
           selectable: content.selectable,
-          top: content.y,
-          left: content.x,
-          fontSize: 16,
+          top: content.y  * this.zoom,
+          left: content.x  * this.zoom,
+          fontSize: 16 * this.zoom,
           textAlign: 'center',
           data: content,
           hoverCursor: `${content.user}\n${content.addtime}`,
