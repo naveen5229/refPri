@@ -299,7 +299,7 @@ export class AddTransactionComponent implements OnInit {
     console.log("oddArray", this.oddArray);
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
@@ -313,6 +313,7 @@ export class AddTransactionComponent implements OnInit {
         return false;
       }
       this.attachmentFile[i] = { name: file.name, file: res };
+      this.uploadattachFile(arrayType,i);
       console.log("attachmentFile-" + i + " :", this.attachmentFile)
     }, err => {
       this.common.loading--;
@@ -320,10 +321,11 @@ export class AddTransactionComponent implements OnInit {
     })
   }
 
-  handleFileSelectionForPdf(event, i) {
+  handleFileSelectionForPdf(event, i, arrayType) {
     this.common.handleFileSelection(event,["pdf"]).then(res=>{
       console.log("handleFileSelection:",res);
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i);
     },err=>{
       this.common.showError();
     });

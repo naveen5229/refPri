@@ -104,7 +104,9 @@ export class TicketProcessComponent implements OnInit {
     callRequired: false,
     callingBenchmark: null,
     completionBenchmark: null,
-    requestId: null
+    requestId: null,
+    repeatDuration: 0,
+    uniqueFields: []
   }
 
   esclationMatrix = {
@@ -137,6 +139,7 @@ export class TicketProcessComponent implements OnInit {
   adminList = [];
   optionLink = 'Advance..';
   displayAdvance = false;
+  ticketFormFields = [];
 
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
@@ -417,6 +420,7 @@ export class TicketProcessComponent implements OnInit {
   openTicketPropertyModal(id) {
     this.ticketPropertyForm.tpId = id;
     this.getTicketProcessProperty(id);
+    this.getTicketFormField(0);
     document.getElementById('ticketPropertyList').style.display = 'block';
   }
 
@@ -424,6 +428,38 @@ export class TicketProcessComponent implements OnInit {
     document.getElementById('ticketPropertyList').style.display = 'none';
     this.getTicketList();
     this.resetForm();
+  }
+
+
+
+  getTicketFormField(refType) {
+    if (!this.ticketPropertyForm.tpId) {
+      this.common.showError("Ticket Process is missing");
+      return false;
+    }
+    this.ticketFormFields = [];
+    let params = "?refId=" + this.ticketPropertyForm.tpId + "&refType=" + refType + "&ticketId=null";
+    this.api.get("Ticket/getTicketFormFieldById" + params).subscribe(res => {
+      if (res['code'] > 0) {
+        if (res['data']) {
+          this.ticketFormFields = res['data'].map(data => {
+            return {
+              refid: this.ticketPropertyForm.tpId,
+              r_colid: data.r_colid,
+              reftype: 0,
+              r_coltype: data.r_coltype,
+              r_coltitle: data.r_coltitle,
+              r_isdynamic: data.r_isdynamic,
+            }
+          });
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   actionIcons(ticket) {
@@ -653,7 +689,9 @@ export class TicketProcessComponent implements OnInit {
       callRequired: false,
       callingBenchmark: null,
       completionBenchmark: null,
-      requestId: null
+      requestId: null,
+      repeatDuration: 0,
+      uniqueFields: []
     }
   }
 
@@ -680,8 +718,12 @@ export class TicketProcessComponent implements OnInit {
       callingBenchmark: this.ticketPropertyForm.callingBenchmark,
       completionBenchmark: this.ticketPropertyForm.completionBenchmark,
       requestId: reqId,
+      repeatDuration: this.ticketPropertyForm.repeatDuration,
+      uniqueFields: (this.ticketPropertyForm.uniqueFields.length > 0) ? JSON.stringify(this.ticketPropertyForm.uniqueFields) : null
     }
 
+    console.log('params', params);
+    // return;
     this.common.loading++;
     this.api.post('Ticket/saveTicketProcessProperty', params).subscribe(res => {
       this.common.loading--;
@@ -731,6 +773,8 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.callRequired = property.is_call_required;
       this.ticketPropertyForm.callingBenchmark = property.calling_benchmark;
       this.ticketPropertyForm.completionBenchmark = property.completion_benchmark;
+      this.ticketPropertyForm.uniqueFields = property._unique_fields;
+      this.ticketPropertyForm.repeatDuration = property._repeat_duplicay_duration;
     }
     document.getElementById('addTicketProperty').style.display = 'block';
     if (!this.ticketPropertyForm.tpId) {

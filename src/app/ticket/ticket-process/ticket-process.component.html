@@ -407,6 +407,30 @@
                         <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.complRemTime">
                     </div>
                 </div>
+
+                
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Unique Fields</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="ticketFormFields" display="r_coltitle" placeholder="Unique Fields"
+                            name="uniqueFields" id="uniqueFields" (onSelected)="ticketPropertyForm.uniqueFields=$event;"
+                            [preSelected]="ticketPropertyForm.uniqueFields" [isMultiSelect]="true">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Repeat Duration</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" min="0" [(ngModel)]="ticketPropertyForm.repeatDuration">
+                    </div>
+                </div>
+
                 <div class="row form-group">
                     <div class="col-4">
                         <label>Esclation time for tkt complete</label>
@@ -450,6 +474,7 @@
                             [disabled]="ticketPropertyForm.allocationAuto.id==1">
                     </div>
                 </div>
+
 
                 <div class="row form-group">
 
