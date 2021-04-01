@@ -27,6 +27,7 @@ export class AddTransactionActionComponent implements OnInit {
     actionOwner: { id: null, name: "" },
     remark: null,
     targetTime: new Date(),
+    stateTargetDays: null,
     stateTargetTime: new Date(),
     transId: null,
     isCompleted: false,
@@ -336,7 +337,8 @@ export class AddTransactionActionComponent implements OnInit {
       this.common.showError('Next state is missing');
     }
     else {
-      let targetTime = (this.transAction.stateTargetTime) ? this.common.dateFormatter(this.transAction.stateTargetTime) : null;
+      // let targetTime = (this.transAction.stateTargetTime) ? this.common.dateFormatter(this.transAction.stateTargetTime) : null;
+      let targetTime = (this.transAction.stateTargetTime) ? this.common.timeFormatter(this.transAction.stateTargetTime) : null;
       const params = {
         requestId: null,
         transId: this.transAction.transId,
@@ -349,9 +351,10 @@ export class AddTransactionActionComponent implements OnInit {
         actionOwnerId: null,
         isNextAction: null,
         isCompleted: false,
-        stateTargetTime: targetTime
+        stateTargetTime: (this.transAction.stateTargetDays > 0) ? (JSON.stringify(this.transAction.stateTargetDays) + ' ' + 'days' + ' ' + targetTime) : ('0' + ' ' + 'days' + ' ' + targetTime)
       };
       // console.log("saveTransAction:", params);
+      // return;
       this.common.loading++;
       this.api.post("Processes/addTransactionAction ", params).subscribe(res => {
         this.common.loading--;
