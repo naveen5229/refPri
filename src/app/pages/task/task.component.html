@@ -256,12 +256,12 @@
             <smart-table style="height: auto;" (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data"
                 [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
-            <div class="tableTitle">PROCESS</div>
-            <smart-table style="height: auto;" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings"
+            <div class="tableTitle" *ngIf="unreadLeads.length > 0">PROCESS</div>
+            <smart-table style="height: auto;" *ngIf="unreadLeads.length > 0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings"
                 id="tableUnreadLeads">
             </smart-table>
-            <div class="tableTitle">Ticket</div>
-            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
+            <div class="tableTitle" *ngIf="unreadTkt.length > 0">Ticket</div>
+            <smart-table *ngIf="unreadTkt.length > 0" [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
             </smart-table>
         </div>
 
