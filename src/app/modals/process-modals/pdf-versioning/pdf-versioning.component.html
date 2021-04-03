@@ -12,29 +12,30 @@
             <div class="toolbar">
                 <select id="zoom" class="zoomsize" name="zoom-percent" [(ngModel)]="zoomPercent"
                     (ngModelChange)="handleZoom()">
+                    <option [value]="0.5">50%</option>
                     <option [value]="1">100%</option>
                     <option [value]="1.5">150%</option>
-                    <option [value]="1.75">175%</option>
                     <option [value]="2">200%</option>
+                    <!-- <option [value]="2.5">250%</option>
                     <option [value]="3">300%</option>
-                    <option [value]="4">400%</option>
-                    <option [value]="5">500%</option>
+                    <option [value]="3.5">350%</option>
+                    <option [value]="4">400%</option> -->
                 </select>
                 <div class="toolbar">
-                    <a class="edit" (click)="zoomOut()" style="color: white;" title="Zoom Out"> <i class="fas fa-search-minus"></i> </a>
-                    <a class="edit" (click)="zoomIn()" style="color: white;" title="Zoom In"> <i class="fas fa-search-plus"></i> </a>
+                    <a class="edit" (click)="zoomOut()" style="color: white;" title="Zoom Out"> <i class="fas fa-search-minus iconStyle"></i> </a>
+                    <a class="edit" (click)="zoomIn()" style="color: white;" title="Zoom In"> <i class="fas fa-search-plus iconStyle"></i> </a>
                     <a class="edit" (click)="selectedAction = selectedAction == 'TX' ? '' : 'TX'" title="Text">
-                        <i class="fas fa-text-width" [style.color]="(selectedAction != 'TX') ? 'white' : 'blue'"></i>
+                        <i class="fas fa-text-width iconStyle" [style.color]="(selectedAction != 'TX') ? 'white' : 'blue'"></i>
                         <!-- <img *ngIf="selectedAction != 'TX'" class="text" src="assets/img/text-symbol.svg" alt="">
         <img *ngIf="selectedAction == 'TX'" class="text" src="assets/img/text-symbol-green.svg" alt=""> -->
                     </a>
                     <a class="edit" (click)="selectAction('RA')" title="Rectangle">
-                        <i class="far fa-square" [style.color]="(selectedAction != 'RA') ? 'white' : 'blue'"></i>
+                        <i class="far fa-square iconStyle" [style.color]="(selectedAction != 'RA') ? 'white' : 'blue'"></i>
                         <!-- <img *ngIf="selectedAction != 'RA'" src="assets/img/rect.svg" alt="">
         <img *ngIf="selectedAction == 'RA'" src="assets/img/rect-green.svg" alt=""> -->
                     </a>
                     <a class="edit" (click)="selectAction('CR')" title="Circle">
-                        <i class="far fa-circle" [style.color]="(selectedAction != 'CR') ? 'white' : 'blue'"></i>
+                        <i class="far fa-circle iconStyle" [style.color]="(selectedAction != 'CR') ? 'white' : 'blue'"></i>
                     </a>
                     <!-- <a class="edit"> 
         <img src="assets/img/remove.svg" alt=""> 
@@ -43,7 +44,15 @@
         <img src="assets/img/right-arrow.svg" alt=""> 
     </a> -->
                     <a class="edit" style="color: white;" title="save">
-                        <i class="fas fa-save" (click)="saveDocVersioning(false)"></i>
+                        <i class="fas fa-save iconStyle" (click)="saveDocVersioning(false,false)"></i>
+                    </a>
+
+                    <a class="edit" style="color: white;" title="Previous">
+                        <i class="fas fa-backward" (click)="goPrevious()"></i>
+                    </a>
+
+                    <a class="edit" style="color: white;" title="Next">
+                        <i class="fas fa-forward" (click)="goNext()"></i>
                     </a>
                 </div>
 
@@ -61,7 +70,7 @@
                                 <button (click)="saveContent($event)">Save</button>
                                 <button (click)="clearContents($event)">Cancel</button>
                             </div>
-                            <div id="ctx"></div>
+                            <!-- <div id="ctx"></div> -->
                         </div>
                         <canvas id="pdf_renderer" width="400" height="400"></canvas>
                     </div>
