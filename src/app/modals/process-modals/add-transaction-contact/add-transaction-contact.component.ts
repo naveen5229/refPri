@@ -235,11 +235,11 @@ export class AddTransactionContactComponent implements OnInit {
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
-            this.common.showToast(res['msg']);
+            this.common.showToast(res['data'][0].y_msg);
             this.reserForm();
             this.getTransactionContact();
           } else {
-            this.common.showError(res['msg']);
+            this.common.showError(res['data'][0].y_msg);
           }
         } else {
           this.common.showError(res['msg']);
