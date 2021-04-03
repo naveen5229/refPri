@@ -118,12 +118,12 @@
                 <label>Base Location :-</label>
             </div>
             <div class="col-lg-8">
-                <div class="col-10" style="display: inline-block;padding:0;">
+                <div class="col-11" style="display: inline-block;padding:0;">
                     <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="location" name="location" placeholder="Location"
                         [value]="Fouser.location" [preSelected]="(Fouser.location!='')?{location:Fouser.location}:{location:''}" [apiMethod]="'getBooster'" [apiBase]="'B'">
                     </auto-suggestion>
                 </div>
-                <div class="col-2" style="display: inline-block;padding: 0!important;">
+                <div class="col-1" style="display: inline-block;padding: 0!important;">
                     <label class="btn-primary" style="padding:7px" (click)="searchString='----'; takeAction(null);"><i
             class="fa fa-plus"></i></label>
                 </div>
@@ -134,7 +134,7 @@
                 <label>Allow Radius (meter) :-</label>
             </div>
             <div class="col-lg-8">
-                <input type="number" placeholder="Radius" [(ngModel)]='Fouser.allowRadius'>
+                <input type="number" class="form-control" placeholder="Radius" [(ngModel)]='Fouser.allowRadius'>
             </div>
         </div>
 
