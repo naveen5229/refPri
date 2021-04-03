@@ -82,9 +82,15 @@ export class CustomeronboardingComponent implements OnInit {
     public api: ApiService,
     public modalService: NgbModal) { 
       this.getFoData(null);
+      this.common.refresh = this.refresh.bind(this);
     }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  refresh() {
+    this.resetTable();
+    this.activeTab='foadminuser';
+    this.getFoData(null);
   }
 
   resetvar(){
@@ -92,8 +98,8 @@ export class CustomeronboardingComponent implements OnInit {
       this.departmentName=null;
     } else if(this.activeTab=="wifi"){
       this.ssid=null;
-    this.bssid=null;
-    this.ip=null;
+      this.bssid=null;
+      this.ip=null;
     } else if(this.activeTab=="office"){
       this.officeName=null;
     }

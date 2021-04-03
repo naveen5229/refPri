@@ -63,6 +63,7 @@ div#yyy {
   top: 0 !important;
   left: 0 !important;
   z-index: 9999;
+  width: 100%;
 }
 .x {
   position: absolute;
@@ -92,7 +93,7 @@ div#yyy {
 
 .pdf-container {
   text-align: center;
-  margin: 0 auto;
+  margin: auto !important;
 }
 
 .pdf-area {
@@ -213,7 +214,7 @@ div#yyy {
 .toolbar {
   display: flex;
   align-items: center;
-  padding: 5px 15px;  
+  padding: 5px 15px;
   height: 50px;
 }
 
@@ -221,8 +222,7 @@ div#yyy {
   margin-left: 10px;
 }
 
-
-.jrx-toolTip{
+.jrx-toolTip {
   position: absolute;
   z-index: 1;
   background: #000;
@@ -234,19 +234,19 @@ div#yyy {
   visibility: hidden;
 }
 
-
-
 // kavita
-.hoversidebar{
-  table{
+.hoversidebar {
   max-height: 300px;
   overflow: auto;
-}
+  // table {
+  //   max-height: 300px;
+  //   overflow: auto;
+  // }
 }
 .hoversidebar:hover {
   cursor: pointer;
 }
-.userfltr{
+.userfltr {
   list-style: none;
   max-height: 300px;
   overflow: auto;
@@ -254,3 +254,14 @@ div#yyy {
 // canvas#pdf_renderer {
 //   width: 100%;
 // }
+
+::ng-deep {
+  .canvas-container {
+    margin: auto !important;
+  }
+}
+
+.iconStyle {
+  font-size: 16px;
+  vertical-align: middle;
+}

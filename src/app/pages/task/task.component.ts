@@ -588,7 +588,7 @@ export class TaskComponent implements OnInit {
       if (data.response) {
         console.log(data, 'response');
         if(data.isContinue){
-          this.updateTicketStatus(ticket, type, status, null);
+          this.updateTicketStatusForTicket(ticket, type, status, null);
         }else{
           this.changeTicketStatusWithConfirm(ticket, type, status)
         }
@@ -597,7 +597,6 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirmUnread(ticket, type, status) {
-    console.log(ticket, 'status');
     if (ticket._ticket_id) {
       let preTitle = "Complete";
       if (status === -1) {
@@ -617,13 +616,37 @@ export class TaskComponent implements OnInit {
       };
       const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
       activeModal.result.then((data) => {
-        console.log("Confirm response:", data);
         if (data.response) {
-          this.updateTicketStatus(ticket, type, status, data.remark);
+          this.updateTicketStatusForTicket(ticket, type, status, data.remark);
         }
       });
     } else {
       this.common.showError("Ticket ID Not Available");
+    }
+  }
+  
+  updateTicketStatusForTicket(ticket, type, status, remark = null) {
+    if (ticket._ticket_allocation_id) {
+      let params = {
+        ticketId: ticket._ticket_allocation_id,
+        statusId: status,
+        statusOld: ticket._status,
+        remark: remark,
+      }
+      this.common.loading++;
+      this.api.post('Ticket/updateTicketStatus', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          this.common.showToast(res['msg']);
+          this.getTicketByType(type);
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
     }
   }
 

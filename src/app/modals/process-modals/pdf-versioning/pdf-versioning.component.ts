@@ -62,6 +62,7 @@ export class PdfVersioningComponent implements OnInit {
   title = '';
   url = '';
   docId = null;
+  allPageVersioning = [];
   versioningDataInitTime = [];
   versioningDataModifiTime = [];
   userTable = [];
@@ -108,30 +109,8 @@ export class PdfVersioningComponent implements OnInit {
     this.api.get(`Admin/getPdfVersioningByDocId?docId=${this.docId}`).subscribe(res => {
       if (res['code'] > 0) {
         if (res['data'] && res['data'].length > 0) {
-          this.versioningDataInitTime = res['data'].map(ele => {
-            return {
-              addtime: ele.addtime,
-              aduser_id: ele.aduser_id,
-              entrymode: ele.entrymode,
-              height: parseFloat(ele.height),
-              id: ele.id,
-              radius: ele.radius ? parseFloat(ele.radius) : null,
-              text: ele.text,
-              type: ele.type,
-              updatetime: ele.updatetime,
-              user: ele.user,
-              width: parseFloat(ele.width),
-              x: parseFloat(ele.x),
-              y: parseFloat(ele.y),
-              selectable: false
-            }
-          });
-          this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime));
-
-          this.getUserFilterFields(this.versioningDataInitTime);
-          this.getChronologyFilterFields(this.versioningDataInitTime);
-          console.log("userTable", this.userTable, this.userFilter);
-          this.distributeCanvas(this.versioningDataInitTime);
+          this.allPageVersioning = res['data'];
+          this.getPageVersioning();
         }
         console.log(this.contents, this.rectangles, this.circles);
       } else {
@@ -141,6 +120,38 @@ export class PdfVersioningComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  getPageVersioning() {
+    this.versioningDataInitTime = [];
+    this.allPageVersioning.map(ele => {
+      if (ele.page === this.currentPage) {
+        this.versioningDataInitTime = ele.data.map(data => {
+          return {
+            addtime: data.addtime,
+            aduser_id: data.aduser_id,
+            entrymode: data.entrymode,
+            height: parseFloat(data.height),
+            id: data.id,
+            radius: data.radius ? parseFloat(data.radius) : null,
+            text: data.text,
+            type: data.type,
+            updatetime: data.updatetime,
+            user: data.user,
+            width: parseFloat(data.width),
+            x: parseFloat(data.x),
+            y: parseFloat(data.y),
+            selectable: false
+          }
+        })
+      }
+    });
+    this.versioningDataModifiTime = JSON.parse(JSON.stringify(this.versioningDataInitTime));
+
+    this.getUserFilterFields(this.versioningDataInitTime);
+    this.getChronologyFilterFields(this.versioningDataInitTime);
+    console.log("userTable", this.userTable, this.userFilter);
+    this.distributeCanvas(this.versioningDataInitTime);
   }
 
   getUserFilterFields(versioningData) {
@@ -173,6 +184,7 @@ export class PdfVersioningComponent implements OnInit {
     this.rectangles = [];
     this.circles = [];
     distributionArray.map(plotted => {
+      // plotted.pageNo = this.currentPage;
       switch (plotted.type) {
         case 'text': this.contents.push(plotted);
           break;
@@ -227,19 +239,49 @@ export class PdfVersioningComponent implements OnInit {
     });
   }
 
-
+  pageSwitchState = '';
   goPrevious() {
-    if (this.pdf == null || this.currentPage == 1)
-      return;
-    this.currentPage -= 1;
-    this.render();
+    if (this.pdf == null || this.currentPage == 1) return;
+    // this.currentPage -= 1;
+    // this.render();
+    // this.getPageVersioning();
+    this.pageSwitchState = 'prev';
+    this.pageSwitchMethod(false);
   }
 
   goNext() {
-    if (this.pdf == null || this.currentPage > this.pdf._pdfInfo.numPages)
-      return;
-    this.currentPage += 1;
-    this.render();
+    if (this.pdf == null || this.currentPage >= this.pdf._pdfInfo.numPages) return;
+    this.pageSwitchMethod(true);
+    this.pageSwitchState = 'next';
+  }
+
+  pageSwitchMethod(pos) {
+    if (this.versioningDataModifiTime.length > this.versioningDataInitTime.length) {
+      this.common.params = {
+        title: 'Save',
+        description: `<b>&nbsp;` + 'Would You Like To Save Changes On Current Page.' + `<b>`,
+        btn1: 'Yes',
+        btn2: 'No'
+      }
+
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        console.log(data);
+        if (data.response) {
+          this.saveDocVersioning(true, true);
+        } else {
+          if (data.apiHit === 0) {
+            (pos) ? this.currentPage += 1 : this.currentPage -= 1;
+            this.render();
+            this.getPageVersioning();
+          }
+        }
+      });
+    } else {
+      (pos) ? this.currentPage += 1 : this.currentPage -= 1;
+      this.render();
+      this.getPageVersioning();
+    }
   }
 
   currentPageHandling(e) {
@@ -261,7 +303,8 @@ export class PdfVersioningComponent implements OnInit {
 
   zoomIn() {
     if (this.pdf == null) return;
-    this.zoom += 0.50;
+    (this.zoom < 2) ? this.zoom += 0.50 : null;
+    this.zoomPercent = JSON.stringify(this.zoom);
     this.zoom = parseFloat(this.zoom.toFixed(2));
     this.counter++;
     this.render();
@@ -269,7 +312,8 @@ export class PdfVersioningComponent implements OnInit {
 
   zoomOut() {
     if (this.pdf == null) return;
-    this.zoom -= 0.50;
+    (this.zoom >= 1) ? this.zoom -= 0.50 : null;
+    this.zoomPercent = JSON.stringify(this.zoom);
     this.zoom = parseFloat(this.zoom.toFixed(2));
     this.counter--;
     this.render();
@@ -335,7 +379,7 @@ export class PdfVersioningComponent implements OnInit {
             transparentCorners: false,
             stroke: 'black',
             strokeWidth: 0.3,
-            hoverCursor: `${data.user}\n${data.addtime}`,
+            // hoverCursor: `${data.user}\n${data.addtime}`,
           });
 
 
@@ -370,7 +414,7 @@ export class PdfVersioningComponent implements OnInit {
             transparentCorners: false,
             stroke: 'black',
             strokeWidth: 0.3,
-            hoverCursor: `${data.user}\n${data.addtime}`,
+            // hoverCursor: `${data.user}\n${data.addtime}`,
           });
 
           break;
@@ -399,7 +443,7 @@ export class PdfVersioningComponent implements OnInit {
             stroke: 'black',
             strokeWidth: 0.3,
             hasControls: false,
-            hoverCursor: `${data.user}\n${data.addtime}`,
+            // hoverCursor: `${data.user}\n${data.addtime}`,
           });
 
           // drowType.hasRotatingPoint = true;
@@ -426,10 +470,13 @@ export class PdfVersioningComponent implements OnInit {
     this.freeCanvas.on('mouse:over', (o) => {
       let tooltipEle = document.getElementById('jrx-tooltip');
 
-      (o.target && o.target.hoverCursor) ? tooltipEle.innerHTML = o.target.hoverCursor : null;
-      tooltipEle.style.visibility = 'visible';
-      tooltipEle.style.top = o.e.offsetY + 'px';
-      tooltipEle.style.left = o.e.offsetX + 'px';
+      // (o.target && o.target.hoverCursor) ? tooltipEle.innerHTML = o.target.hoverCursor : null;
+      if (o.target && o.target.hoverCursor) {
+        tooltipEle.innerHTML = o.target.hoverCursor
+        tooltipEle.style.visibility = 'visible';
+        tooltipEle.style.top = o.e.offsetY + 'px';
+        tooltipEle.style.left = o.e.offsetX + 'px';
+      }
     });
 
     this.freeCanvas.on('mouse:out', (o) => {
@@ -504,6 +551,9 @@ export class PdfVersioningComponent implements OnInit {
     this.freeCanvas.on("object:modified", (e) => {
       console.log("modified", e)
       if (!this.selectedAction) {
+        this.zoom = 1;
+        this.zoomPercent = '1';
+        this.render();
         // return ((e.target.data.radius) ? this.manageCircles(data, e) : this.manageRectangles(data, e));
         if (e.target.data.type === 'circle') {
           this.manageCircles(data, e);
@@ -675,7 +725,7 @@ export class PdfVersioningComponent implements OnInit {
           transparentCorners: false,
           selectable: rectangle.selectable,
           data: rectangle,
-          hoverCursor: `${rectangle.user}\n${rectangle.addtime}`,
+          hoverCursor: (rectangle.id) ? `${rectangle.user}\n${rectangle.addtime}` : '',
           // name: 'jrx',
           // includeDefaultValues: true,
           // id: 1
@@ -698,7 +748,7 @@ export class PdfVersioningComponent implements OnInit {
           radius: circle.radius * this.zoom,
           selectable: circle.selectable,
           data: circle,
-          hoverCursor: `${circle.user}\n${circle.addtime}`,
+          hoverCursor: (circle.id) ? `${circle.user}\n${circle.addtime}` : '',
         });
 
         this.freeCanvas.add(crcl);
@@ -709,16 +759,16 @@ export class PdfVersioningComponent implements OnInit {
     if (this.contents.length > 0) {
       this.contents.map(content => {
         var textbox = new fabric.Textbox(content.text, {
-          height: content.height,
-          width: content.width,
+          height: content.height * this.zoom,
+          width: content.width * this.zoom,
           editable: content.selectable,
           selectable: content.selectable,
-          top: content.y,
-          left: content.x,
-          fontSize: 16,
+          top: content.y * this.zoom,
+          left: content.x * this.zoom,
+          fontSize: 16 * this.zoom,
           textAlign: 'center',
           data: content,
-          hoverCursor: `${content.user}\n${content.addtime}`,
+          hoverCursor: (content.id) ? `${content.user}\n${content.addtime}` : '',
         });
         this.freeCanvas.add(textbox);
       });
@@ -769,27 +819,27 @@ export class PdfVersioningComponent implements OnInit {
   //   })
   // }
 
-  writeContents() {
-    let ele = document.getElementById('ctx');
-    ele.innerHTML = '';
+  // writeContents() {
+  //   let ele = document.getElementById('ctx');
+  //   ele.innerHTML = '';
 
-    this.contents.map(content => {
-      let div = document.createElement('div');
-      div.style.position = 'absolute';
-      div.style.top = content.y * this.zoom + 'px';
-      div.style.left = content.x * this.zoom + 'px';
-      div.style.width = content.width * this.zoom + 'px';
-      div.style.height = content.height * this.zoom + 'px';
-      div.style.fontSize = 12 * this.zoom + 'px';
-      // div.style.color = 'Yellow';
-      div.style.fontWeight = 'bold';
-      // div.style.zIndex = '999999999';
-      div.innerHTML = content.text;
-      div.className = 'content-div';
-      // div.style.background = "#fff";
-      ele.appendChild(div);
-    });
-  }
+  //   this.contents.map(content => {
+  //     let div = document.createElement('div');
+  //     div.style.position = 'absolute';
+  //     div.style.top = content.y * this.zoom + 'px';
+  //     div.style.left = content.x * this.zoom + 'px';
+  //     div.style.width = content.width * this.zoom + 'px';
+  //     div.style.height = content.height * this.zoom + 'px';
+  //     div.style.fontSize = 12 * this.zoom + 'px';
+  //     // div.style.color = 'Yellow';
+  //     div.style.fontWeight = 'bold';
+  //     // div.style.zIndex = '999999999';
+  //     div.innerHTML = content.text;
+  //     div.className = 'content-div';
+  //     // div.style.background = "#fff";
+  //     ele.appendChild(div);
+  //   });
+  // }
 
   saveContent(event) {
     event.preventDefault();
@@ -858,7 +908,7 @@ export class PdfVersioningComponent implements OnInit {
       activeModal.result.then(data => {
         console.log(data);
         if (data.response) {
-          this.saveDocVersioning(true);
+          this.saveDocVersioning(true, false);
         } else {
           if (data.apiHit === 0) this.activeModal.close(res);
         }
@@ -870,7 +920,7 @@ export class PdfVersioningComponent implements OnInit {
   }
 
 
-  saveDocVersioning(modalState) {
+  saveDocVersioning(modalState, pageSwitch) {
     if (this.versioningDataInitTime.length > 0) {
       for (var i = this.versioningDataModifiTime.length - 1; i >= 0; i--) {
         for (var j = 0; j < this.versioningDataInitTime.length; j++) {
@@ -888,6 +938,7 @@ export class PdfVersioningComponent implements OnInit {
       let params = {
         docId: this.docId,
         requestId: null,
+        pageNo: this.currentPage,
         // info: JSON.stringify(this.contents.concat(this.circles, this.rectangles)),
         info: JSON.stringify(this.versioningDataModifiTime)
       }
@@ -901,7 +952,16 @@ export class PdfVersioningComponent implements OnInit {
             this.common.showToast(res['msg']);
             // this.getProcessLeadByType(type);
             this.getLoadedVersioning();
-            (modalState) ? this.activeModal.close(res) : null;
+            if (!pageSwitch) {
+              (modalState) ? this.activeModal.close(res) : null;
+            } else {
+              if (this.pageSwitchState === 'prev') {
+                this.currentPage -= 1
+              } else if (this.pageSwitchState === 'next') {
+                this.currentPage += 1
+              }
+              this.render();
+            }
           } else {
             this.common.showError(res['msg']);
           }

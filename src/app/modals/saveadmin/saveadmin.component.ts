@@ -198,7 +198,7 @@ export class SaveadminComponent implements OnInit {
     });
   }
   selectFoUser(value) {
-    console.log("selectFoUser:", value);
+    // console.log("selectFoUser:", value);
     this.Fouser.id = value.id;
     this.Fouser.name = value.name;
     this.Fouser.mobileNo = value.mobileno;
@@ -209,7 +209,7 @@ export class SaveadminComponent implements OnInit {
     this.preSelected.mobileno = value.report_user_mobile;
     this.preSelectedManager.name = value.report_user_name;
     this.preSelectedManager.mobileno = value.report_user_mobile;
-    console.log(this.preSelectedManager);
+    // console.log(this.preSelectedManager);
     if (value.dept_id > 0) {
       this.Fouser.department.id = value.dept_id;
       this.Fouser.department.name = this.departments.find(e => e.id == value.dept_id).name;
@@ -236,13 +236,12 @@ export class SaveadminComponent implements OnInit {
     } else if (value._atten_medium == '001') {
       this.selectedItems = 3;
     }
-    console.log("selectedItems:", this.selectedItems, this.Fouser);
+    // console.log("selectedItems:", this.selectedItems, this.Fouser);
     // this.getAddressBylatlong();
 
   }
 
   saveAdmin() {
-    // console.log("Fouser:", this.Fouser);
     if (this.user._loggedInBy == 'admin') {
       let params = {
         id: (this.Fouser.id > 0) ? this.Fouser.id : null,
@@ -266,8 +265,7 @@ export class SaveadminComponent implements OnInit {
         manualReadOtp: (this.Fouser.manualReadOtp) ? true : false
 
       }
-      console.log("params:", params);
-      // return false;
+      // console.log("params:", params);return false;
       if (this.Fouser.name == null) {
         this.common.showError('Enter Name');
       } else if (this.Fouser.mobileNo == null) {
@@ -368,8 +366,7 @@ export class SaveadminComponent implements OnInit {
         params['manualReadOtp'] = (this.Fouser.manualReadOtp) ? true : false;
 
       }
-      console.log("params:", params);
-      // return false;
+      // console.log("params:", params);return false;
       if (this.Fouser.name == null) {
         this.common.showError('Enter Name');
       } else if (this.Fouser.mobileNo == null) {
@@ -385,17 +382,15 @@ export class SaveadminComponent implements OnInit {
           if (res['code'] == 1) {
             if (this.data[0]['y_id'] <= 0) {
               this.common.showError(this.data[0]['y_msg']);
-
             } else {
               this.common.showToast(this.data[0]['y_msg']);
-              if (!this.isOtherShow && this.Fouser.id!>0) {
+              if (!this.isOtherShow && !this.Fouser.id) {
                 this.Fouser.id = this.data[0]['y_id'];
               }
               this.isOtherShow = !this.isOtherShow;
               if (!this.isOtherShow) {
                 this.closeModal(true);
               }
-              
               if(this.Fouser.isActive == 'false' && this.isOtherShow){
                 this.saveAdmin();
               }

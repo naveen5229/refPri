@@ -320,9 +320,9 @@ export class TicketProcessComponent implements OnInit {
       return false;
     }
     if (this.displayAdvance) {
-      if ((this.ticketForm.url.checkStatus.length && (this.ticketForm.url.checkStatus).slice(0, 5) !== 'https') ||
-        (this.ticketForm.url.updateStatus.length && (this.ticketForm.url.updateStatus).slice(0, 5) !== 'https') ||
-        (this.ticketForm.url.liveFeed.length && (this.ticketForm.url.liveFeed).slice(0, 5) !== 'https')) {
+      if ((this.ticketForm.url.checkStatus && (this.ticketForm.url.checkStatus).slice(0, 5) !== 'https') ||
+        (this.ticketForm.url.updateStatus && (this.ticketForm.url.updateStatus).slice(0, 5) !== 'https') ||
+        (this.ticketForm.url.liveFeed && (this.ticketForm.url.liveFeed).slice(0, 5) !== 'https')) {
         return this.common.showError('Please enter valid url: Should start with https.');
       }
     }
