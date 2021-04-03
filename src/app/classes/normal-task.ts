@@ -10,6 +10,7 @@ export class NormalTask {
         public parentTaskId: any,
         public isFuture: boolean,
         public futureDate: any,
-        public subject: any
+        public subject: any,
+        public isQueue:boolean
     ) { }
 }

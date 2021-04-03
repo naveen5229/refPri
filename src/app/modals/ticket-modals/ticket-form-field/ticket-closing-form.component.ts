@@ -44,7 +44,7 @@ export class TicketClosingFormComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketFormFieldById?' + params).subscribe(res => {
       this.common.loading--;
-      console.log("resss", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data']) {
         this.ticketFormFields = res['data'];
         this.formatArray();
@@ -66,6 +66,14 @@ export class TicketClosingFormComponent implements OnInit {
       }
       if (dd.r_coltype == 'checkbox') {
         dd.r_value = (dd.r_value == "true") ? true : false;
+      }
+      if (dd.r_coltype == 'entity'){
+        if(dd.r_value>0 && dd.r_fixedvalues && dd.r_fixedvalues.length) {
+          let entity_value = dd.r_fixedvalues.find(x=>{return x._id==dd.r_value});
+          dd['entity_value'] = (entity_value) ? entity_value.option : null;
+        }else{
+          dd['entity_value'] = null;
+        }
       }
       if (dd.r_fixedvalues) {
         dd.r_fixedvalues = dd.r_fixedvalues;
@@ -89,12 +97,10 @@ export class TicketClosingFormComponent implements OnInit {
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'],null,false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
-
       return copyDetails;
     });
-
     const params = {
       info: JSON.stringify(details),
       refId: this.refId,
@@ -102,8 +108,7 @@ export class TicketClosingFormComponent implements OnInit {
       ticketId: this.ticketId,
       requestId: null
     }
-    console.log("para......", params);
-
+    // console.log("para......", params);
     this.common.loading++;
     this.api.post('Ticket/saveTicketFormByRefId', params)
       .subscribe(res => {
@@ -149,10 +154,11 @@ export class TicketClosingFormComponent implements OnInit {
     });
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.handleFileSelection(event,null).then(res=>{
       console.log("handleFileSelection:",res);
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i)
     },err=>{
       this.common.showError();
     });
@@ -174,6 +180,8 @@ export class TicketClosingFormComponent implements OnInit {
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
+    // console.log('params',params);
+    // return;
     this.common.loading++;
     this.api.post('Ticket/uploadAttachment', params).subscribe(res => {
       this.common.loading--;
@@ -193,8 +201,8 @@ export class TicketClosingFormComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-      console.log("evenArray:::", this.evenArray[i]);
-      console.log("oddArray:::", this.oddArray[i]);
+      // console.log("evenArray:::", this.evenArray[i]);
+      // console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
       this.common.showError();

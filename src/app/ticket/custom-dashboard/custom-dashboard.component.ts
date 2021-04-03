@@ -94,6 +94,7 @@ export class CustomDashboardComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let tpList = res['data'] || [];
       this.tpList = tpList.filter(ele => {
         return (ele._is_active)
@@ -278,6 +279,7 @@ export class CustomDashboardComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/checkTicketReminderSeen", params).subscribe((res) => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res["msg"]);
       this.getTicketByType(type);
     }, (err) => {
@@ -459,6 +461,38 @@ export class CustomDashboardComponent implements OnInit {
       userId: { id: null, name: null },
       remark: null,
       tabType: null
+    }
+  }
+  
+  getUserPresence(empId) {
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + empId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.adduserConfirm(userPresence)
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  adduserConfirm(userPresence) {
+    if (!userPresence) {
+      this.common.params = {
+        title: 'User Presence',
+        description: '<b>The user has not started the shift for today.<br> Are you sure to add this user ?<b>'
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (!data.response) {
+          this.forwardTicketObject.userId = {id: null,name: null};
+        }
+      });
     }
   }
 

@@ -20,7 +20,8 @@ export class AddGlobalFieldComponent implements OnInit {
     { id: 'date', name: 'Date', title:'Add any date type field', icon:'fas fa-calendar-week' },
     { id: 'attachment', name: 'Attachment', title:'Add any attachment type field', icon:'fas fa-paperclip' },
     { id: 'table', name: 'Table', title:'Add any table type field', icon:'fas fa-table' },
-    { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' }
+    { id: 'checkbox', name: 'Checkbox', title:'Add any checkbox type field', icon:'fas fa-check-square' },
+    { id: 'pdf-versioning', name: 'PDF', title:'Add any PDF type field', icon:'fas fa-file-pdf' }
   ];
 
   restrictionForm = {
@@ -122,10 +123,9 @@ export class AddGlobalFieldComponent implements OnInit {
     this.api.get('Entities/getEntityTypes')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.entityTypeList = res['data'] || [];
-
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -165,12 +165,31 @@ export class AddGlobalFieldComponent implements OnInit {
     this.form.childArray = [];
     this.addBtn = "Add";
   }
+
   
-  AddField() {
+  addFieldConfirm() {
     if (((this.form.name.toLowerCase()).includes('mobile') || (this.form.name.toLowerCase()).includes('contact')) && this.form.typeId.includes('number')) {
       this.common.showError('Please use Global Fields to add contact name or contact number.');
       return false;
     }
+    if (this.form.typeId=='pdf-versioning') {
+      this.common.params = {
+        title: 'Confirmation  ',
+        description: `<b>&nbsp;` + 'This Field Showing On Transaction And Allow PDF File Only' + `<b>`,
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "pdfVersioningModalClass" });
+      activeModal.result.then(data => {
+        if (data.response) {
+          this.AddField();
+        }
+      });
+    } else {
+      this.AddField();
+    }
+  }
+  
+  AddField() {
+    
     let childArray = (this.form.childArray && this.form.childArray.length > 0) ? this.form.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
     let tmpJson = {
       param: this.form.name,
@@ -216,12 +235,11 @@ export class AddGlobalFieldComponent implements OnInit {
     if(this.fromPage==3){
       apiName = "Entities/addEntityGlobalField";
     }
-    console.log("apiName:", apiName,params); 
-    // return false;
+    // console.log("apiName:", apiName,params); return false;
     this.common.loading++;
     this.api.post(apiName, params).subscribe(res => {
         this.common.loading--;
-        console.log(res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].y_id > 0) {
           this.common.showToast("Successfully added");
           this.getProcessGlobalField();
@@ -246,6 +264,7 @@ export class AddGlobalFieldComponent implements OnInit {
     this.common.loading++;
     this.api.get(apiName + params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.globalFieldList =  res['data'] || [];
         (this.globalFieldList && this.globalFieldList.length) ? this.setTable() : this.resetTable();
       }, err => {
@@ -351,8 +370,7 @@ export class AddGlobalFieldComponent implements OnInit {
           if(this.fromPage==3){
             apiName = "Entities/addEntityGlobalField";
           }
-          console.log("apiName:", apiName,params); 
-          // return false;
+          // console.log("apiName:", apiName,params); return false;
           this.common.loading++;
           this.api.post(apiName, params).subscribe(res => {
             this.common.loading--;
@@ -368,6 +386,7 @@ export class AddGlobalFieldComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }
@@ -455,6 +474,7 @@ export class AddGlobalFieldComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       });
     } else {

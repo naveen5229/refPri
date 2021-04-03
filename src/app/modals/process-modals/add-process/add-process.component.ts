@@ -101,7 +101,6 @@ export class AddProcessComponent implements OnInit {
     this.common.loading++;
     this.api.post("Processes/addProcess", params).subscribe(res => {
       this.common.loading--;
-      console.log(res);
       if (res['code'] == 1) {
         if (res['data'][0]['y_id'] > 0) {
           this.common.showToast(res['msg']);
@@ -114,6 +113,7 @@ export class AddProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }

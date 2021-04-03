@@ -60,6 +60,7 @@ export class EmployeeMonitoringComponent implements OnInit {
   ]
 
   constructor(private api: ApiService, private common: CommonService, private mapService: MapService, public modalService: NgbModal) {
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
@@ -67,6 +68,10 @@ export class EmployeeMonitoringComponent implements OnInit {
 
   ngAfterViewInit() {
     this.map = this.mapService.mapIntialize("map", 8, 26.9124336, 75.78727090000007);
+    this.getReport();
+  }
+
+  refresh(){
     this.getReport();
   }
 
@@ -99,7 +104,7 @@ export class EmployeeMonitoringComponent implements OnInit {
     this.api.get('Admin/getEmployeeTrackingReports')
       .subscribe((res: any) => {
         this.common.loading--;
-        console.log('__res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.reports = res.data.map(record => {
           return {
             name: record.name,
@@ -116,11 +121,11 @@ export class EmployeeMonitoringComponent implements OnInit {
             addTime: record.addtime
           }
         });
-        console.log('Reports:', this.reports);
         this.setMarkers();
         this.setSmartTable();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.error('__err:', err);
       })
   }
@@ -215,6 +220,8 @@ export class EmployeeMonitoringComponent implements OnInit {
   };
 
   viewRoute(report) {
+    report['startDate'] = (report.addTime) ? new Date(report.addTime) : new Date();
+    report['endDate'] = (report.addTime) ? new Date(report.addTime) : new Date();
     this.common.params = report;
     this.modalService.open(RouteMapperComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     this.common.handleModalSize('class', 'modal-lg', '1200');

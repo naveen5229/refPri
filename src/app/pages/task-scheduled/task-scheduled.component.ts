@@ -213,7 +213,7 @@ export class TaskScheduledComponent implements OnInit {
     this.common.loading++;
     this.api.get("AdminTask/getScheduledTask").subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.resetSmartTableData();
       this.scheduledTaskList = res['data'] || [];
       this.setTableSchedule();
@@ -233,6 +233,7 @@ export class TaskScheduledComponent implements OnInit {
     this.api.get("AdminTask/userReport" + params).subscribe(res => {
       this.common.loading--;
       this.resetSmartTableData();
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (type == 1) {
         this.scheduledUserReportList = res['data'] || [];
         this.setTableScheduledUserReportList();
@@ -255,7 +256,7 @@ export class TaskScheduledComponent implements OnInit {
     }
     this.api.post("AdminTask/getTaskByType", params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data']);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.resetSmartTableData();
       if (type == -1) {
         this.allTaskList = res['data'] || [];
@@ -873,10 +874,12 @@ export class TaskScheduledComponent implements OnInit {
     this.api.post('AdminTask/checkReminderSeen', params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res['msg']);
         this.getAllTask(type);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       });
   }
@@ -904,9 +907,8 @@ export class TaskScheduledComponent implements OnInit {
             if (res['code'] > 0) {
               this.common.showToast(res['msg']);
               this.getAllTask(type);
-            }
-            else {
-              this.common.showError(res['data']);
+            }else {
+              this.common.showError(res['msg']);
             }
           }, err => {
             this.common.loading--;

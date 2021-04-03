@@ -84,6 +84,7 @@ export class CallKpiComponent implements OnInit {
         this.common.loading--;
         this.departments = [];
         this.departments.push({ "id": null, "name": "All Departments" });
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data'].length > 0) {
           for (let i = 0; i < res['data'].length; i++) {
             this.departments.push({ "id": res['data'][i]["id"], "name": res['data'][i]["name"] });
@@ -98,7 +99,6 @@ export class CallKpiComponent implements OnInit {
   }
 
   getCallKpi() {
-    console.log(this.startTime, this.endTime);
     this.callKpiList = [];
     this.table = {
       data: {
@@ -120,24 +120,18 @@ export class CallKpiComponent implements OnInit {
       "&shiftStart=" + shiftStart +
       "&shiftEnd=" + shiftEnd +
       "&departmentId=" + this.selectedDept.id;
-    console.log(params);
-    console.log(shiftStart);
-    console.log(typeof (shiftStart));
     this.common.loading++;
     this.api.get('Users/getAdminCallKpis.json?' + params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.callKpiList = res['data'] || [];
-        // console.log(this.callKpiList);
         this.showChart(this.callKpiList[0]);
-
         this.callKpiList.length ? this.setTable() : this.resetTable();
         return this.callKpiList[0];
-        console.log(this.callKpiList);
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

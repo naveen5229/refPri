@@ -45,6 +45,7 @@ export class AdminToolComponent implements OnInit {
     this.common.loading++;
     this.api.get('Admin/getAllAdmin').subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.activeAdminUserList = res['data'] || [];
         this.activeAdminUserList.length ? this.setTable() : this.resetTable();
       }, err => {

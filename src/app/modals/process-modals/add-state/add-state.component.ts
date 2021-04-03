@@ -16,6 +16,7 @@ export class AddStateComponent implements OnInit {
   states = [];
   nextStates = [];
   userTag = { id: null, name: null }
+  stateUser = [];
   // nextState = null;
   typeId = null;
   stateName = null;
@@ -62,8 +63,7 @@ export class AddStateComponent implements OnInit {
   }
 
   Add() {
-    console.log("type:", this.typeId);
-    // let ns = [];
+    let stateUser = (this.stateUser && this.stateUser.length>0) ? this.stateUser.map(ele => {return {user_id:ele.id}}) : [];
     let params = {
       processId: this.processId,
       name: this.stateName,
@@ -71,16 +71,14 @@ export class AddStateComponent implements OnInit {
       nextStates: (this.nextStates && this.nextStates.length) ? JSON.stringify(this.nextStates) : null,
       requestId: this.requestId,
       threshold: this.threshold,
-      stateOwnerId: this.userTag.id
-      // isDefault: this.isDefault,
+      stateOwnerId: this.userTag.id,
+      stateUsers: JSON.stringify(stateUser)
     }
-    // console.log("params", params);
-    // return
+    // console.log("addProcessState:",params,this.stateUser)
+    // return;
     this.common.loading++;
-    this.api.post('Processes/addProcessState', params)
-      .subscribe(res => {
+    this.api.post('Processes/addProcessState', params).subscribe(res => {
         this.common.loading--;
-        // console.log(res);
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
@@ -117,24 +115,15 @@ export class AddStateComponent implements OnInit {
         };
         this.headings = [];
         this.valobj = {};
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
 
         if (!res['data']) return;
         this.data = res['data'];
         this.states = (this.data && this.data.length) ? this.data.map(x => { return { id: x._state_id, name: x.name } }) : [];
         this.data.length ? this.setTable() : this.resetTable();
-        // let first_rec = this.data[0];
-        // for (var key in first_rec) {
-        //   if (key.charAt(0) != "_") {
-        //     this.headings.push(key);
-        //     let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
-        //     this.table.data.headings[key] = headerObj;
-        //   }
-        // }
-        // let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
-        // this.table.data.headings['action'] = action;
-        // this.table.data.columns = this.getTableColumns();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -229,16 +218,15 @@ export class AddStateComponent implements OnInit {
           this.api.post('Processes/deleteProcessState', params)
             .subscribe(res => {
               this.common.loading--;
-              console.log("Result:", res['data'][0].y_msg);
               if (res['data'][0].y_id > 0) {
                 this.common.showToast("Delete SuccessFully");
                 this.getStates();
               } else {
                 this.common.showError(res['data'][0].y_msg);
               }
-
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -254,10 +242,11 @@ export class AddStateComponent implements OnInit {
     this.requestId = data._state_id;
     this.threshold = (data._threshold) ? data._threshold : null;
     this.userTag = { id: data._state_owner_id, name: data.state_owner }
+    this.stateUser = data._state_users;
     // this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
-  }
+  } 
 
   resetData() {
     this.typeId = null;
@@ -266,7 +255,8 @@ export class AddStateComponent implements OnInit {
     // this.nextState = null;
     this.requestId = null;
     this.threshold = null;
-    this.userTag = { id: null, name: null }
+    this.userTag = { id: null, name: null };
+    this.stateUser = [];
     // this.isDefault = false;
     this.btn1 = "Add";
   }

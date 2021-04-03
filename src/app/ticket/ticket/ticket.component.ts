@@ -10,6 +10,8 @@ import { AddExtraTimeComponent } from '../../modals/ticket-modals/add-extra-time
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TicketClosingFormComponent } from '../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { AddTransactionContactComponent } from '../../modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { LocationSelectionComponent } from '../../modals/location-selection/location-selection.component';
 // import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
@@ -204,30 +206,26 @@ export class TicketComponent implements OnInit {
   }
 
   getUserGroupList() {
-    this.api.get('UserRole/getUserGroups')
-      .subscribe(
-        (res) => {
-          console.log(" Group data", res["data"]);
-          if (res["code"] > 0) {
-            let groupList = res['data'] || [];
-            this.groupList = groupList.map((x) => {
-              return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
-            });
-          } else {
-            this.common.showError(res["msg"]);
-          }
-        },
-        (err) => {
-          this.common.showError();
-          console.log("Error: ", err);
+    this.api.get('UserRole/getUserGroups').subscribe(res => {
+      if (res["code"] > 0) {
+        let groupList = res['data'] || [];
+        this.groupList = groupList.map((x) => {
+          return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
         });
+      } else {
+        this.common.showError(res["msg"]);
+      }
+    },err => {
+      this.common.showError();
+      console.log("Error: ", err);
+    });
   }
 
   getTicketProcessList() {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
-      // if (!res['data']) return;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let tpList = res['data'] || [];
       this.tpList = tpList.filter(ele => {
         return (ele._is_active && ele._ticket_input > 0)
@@ -250,7 +248,7 @@ export class TicketComponent implements OnInit {
       if (res['code'] > 0) {
         if (res['data']) {
           this.ticketFormFields = res['data'];
-          if (this.activeTab == 'completedTkt') {
+          // if (this.activeTab == 'completedTkt') {
             if (refType == 1) {
               this.closingFormInfo = this.ticketFormFields;
             }else if(refType == 2){
@@ -258,7 +256,7 @@ export class TicketComponent implements OnInit {
             } else {
               this.openingFormInfo = this.ticketFormFields;
             }
-          }
+          // }
           this.formatArray();
         }
       } else {
@@ -274,10 +272,11 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessProperty?tpId=' + this.ticketForm.tp.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.tpPropertyList = res['data'] || [];
-      // this.findPriCat();
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -293,6 +292,14 @@ export class TicketComponent implements OnInit {
       if (dd.r_coltype == 'checkbox') {
         dd.r_value = (dd.r_value == "true") ? true : false;
       }
+      if (dd.r_coltype == 'entity'){
+        if(dd.r_value>0 && dd.r_fixedvalues && dd.r_fixedvalues.length) {
+          let entity_value = dd.r_fixedvalues.find(x=>{return x._id==dd.r_value});
+          dd['entity_value'] = (entity_value) ? entity_value.option : null;
+        }else{
+          dd['entity_value'] = null;
+        }
+      }
       if (dd.r_fixedvalues) {
         dd.r_fixedvalues = dd.r_fixedvalues;
       }
@@ -305,22 +312,6 @@ export class TicketComponent implements OnInit {
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
   }
-
-  // findPriCat() {
-  //   if (this.tpPropertyList && this.tpPropertyList.length > 0) {
-  //     this.tpPropertyList.forEach(element => {
-  //       if (element._pri_cat_id && !this.priCatList.find(x => { return x.id == element._pri_cat_id })) {
-  //         this.priCatList.push({ id: element._pri_cat_id, name: element.primary_category });
-  //       }
-  //       if (element._sec_cat_id && !this.secCatList.find(x => { return x.id == element._sec_cat_id })) {
-  //         this.secCatList.push({ id: element._sec_cat_id, name: element.secondary_category });
-  //       }
-  //       if (element._type_id && !this.typeList.find(x => { return x.id == element._type_id })) {
-  //         this.typeList.push({ id: element._type_id, name: element.type });
-  //       }
-  //     });
-  //   }
-  // }
 
   resetTicketForm() {
     this.tpPropertyList = [];
@@ -382,6 +373,7 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.get("Ticket/getTicketProcessCatByType?" + param).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (type == 1) {
         let priCatList = res['data'];
         this.priCatList = priCatList.map(x => { return { id: x._id, name: x.name } });
@@ -888,11 +880,18 @@ export class TicketComponent implements OnInit {
             icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
           }
         }
+        if (ticket._allocated_user == this.loginUserId && ticket._status == 2 && ticket._check_status>0) {
+          icons.push({ class: "fas fa-clipboard-check", action: this.openCheckStatusModal.bind(this, ticket, type), txt: "", title: "Check Status", });
+        }
       } else if (type == 105) {
         icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
         // if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
         //   icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
         // }
+      }
+
+      if([101,106].includes(type)){
+        icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, ticket, type), txt: '', title: "Address Book" });
       }
 
       if (ticket._status == 2 && (type == 101 || type == 102)) {
@@ -1098,6 +1097,7 @@ export class TicketComponent implements OnInit {
     this.common.loading++;
     this.api.post("Ticket/checkTicketReminderSeen", params).subscribe((res) => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res["msg"]);
       this.getTicketByType(type);
     }, (err) => {
@@ -1109,38 +1109,24 @@ export class TicketComponent implements OnInit {
   }
 
   saveTicket() {
-    console.log("ticketForm:", this.ticketForm);
-    // let selected = this.tpPropertyList.find(ele => {
-    //   return (ele._pri_cat_id == this.ticketForm.priCat.id && ele._sec_cat_id == this.ticketForm.secCat.id && ele._type_id == this.ticketForm.type.id)
-    // });
-
-    // console.log("selected:", selected);
-
-    // if (selected) {
-    //   this.ticketForm.tpProperty.id = selected._id;
-    //   this.ticketForm.tpProperty.name = selected.name;
-    // } else {
-    //   this.ticketForm.tpProperty = { id: null, name: null }
-    // }
-
+    let detailsInfo = this.evenArray.concat(this.oddArray);
+    let details = detailsInfo.map(detail => {
+      let copyDetails = Object.assign({}, detail);
+      if (detail['r_coltype'] == 'date' && detail['r_value']) {
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
+      }
+      return copyDetails;
+    });
     let params = {
       priCatId: this.categoryIds.priCat,
       secCatId: this.categoryIds.secCat,
       typeId: this.categoryIds.type,
-      // tpPropId: this.ticketForm.tpProperty.id ? this.ticketForm.tpProperty.id : null,
       tpId: this.ticketForm.tp.id ? this.ticketForm.tp.id : null,
-      // remark: this.ticketForm.remark,
-      info: JSON.stringify(this.evenArray.concat(this.oddArray)),
+      info: JSON.stringify(details),
       isAllocated: false,
       requestId: (this.ticketForm.requestId > 0) ? this.ticketForm.requestId : null
     }
-
-    // if (!params.tpPropId) {
-    //   this.common.showError('Combination mismatch: Primary Category, Secondary Category, Type');
-    //   return false;
-    // }
-
-    // return;
+    // console.log("ticketForm:", params); return false;
     this.common.loading++;
     this.api.post('Ticket/saveTicket', params).subscribe(res => {
       this.common.loading--;
@@ -1190,7 +1176,7 @@ export class TicketComponent implements OnInit {
 
   AdditionalFormNew(data) {
     console.log('final data:',data);
-    this.common.params = { additionalform: (data > 0) ? data : null,isDisabled:true };
+    this.common.params = { additionalform: (data.length > 0) ? data : null,isDisabled:true };
     const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
@@ -1239,77 +1225,6 @@ export class TicketComponent implements OnInit {
       console.log("Error: ", err);
     });
   }
-
-  // ticketHistory(ticket, type) {
-  //   this.common.loading++;
-  //   this.api.get("Ticket/getTicketHistory?tktId=" + ticket._ticket_id).subscribe((res) => {
-  //     this.common.loading--;
-  //     if (res['code'] > 0) {
-  //       if (res['data']) {
-  //         this.ticketHistoryList = res['data'];
-  //         this.setTableTicketHistory();
-  //         document.getElementById('ticketHistory').style.display = 'block';
-  //       } else {
-  //         this.common.showError('No Data')
-  //       }
-  //     } else {
-  //       this.common.showError(res['msg']);
-  //     }
-  //   }, (err) => {
-  //     this.common.loading--;
-  //     this.common.showError();
-  //     console.log("Error: ", err);
-  //   });
-  // }
-
-  // closeTicketHistory() {
-  //   document.getElementById('ticketHistory').style.display = 'none';
-  // }
-
-  // setTableTicketHistory() {
-  //   this.tableTicketHistory.data = {
-  //     headings: this.generateHeadingsTicketHistory(),
-  //     columns: this.getTableColumnsTicketHistory()
-  //   };
-  //   return true;
-  // }
-
-  // generateHeadingsTicketHistory() {
-  //   let headings = {};
-  //   for (var key in this.ticketHistoryList[0]) {
-  //     if (key.charAt(0) != "_") {
-  //       headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-  //     }
-  //     if (key === "addtime" || key === "action_completed") {
-  //       headings[key]["type"] = "date";
-  //     }
-  //   }
-  //   return headings;
-  // }
-
-  // getTableColumnsTicketHistory() {
-  //   let columns = [];
-  //   this.ticketHistoryList.map(lead => {
-  //     let column = {};
-  //     for (let key in this.generateHeadingsTicketHistory()) {
-  //       if (key.toLowerCase() == 'action') {
-  //         // column[key] = {
-  //         //   value: "",
-  //         //   isHTML: true,
-  //         //   action: null,
-  //         //   icons: this.actionIcons(lead, type)
-  //         // };
-  //       } else if (key == "spent_time") {
-  //         column[key] = { value: this.common.findRemainingTime(lead[key]), class: "black", action: "", };
-  //       } else {
-  //         column[key] = { value: lead[key], class: 'black', action: '' };
-  //       }
-
-  //     }
-  //     columns.push(column);
-  //   });
-  //   return columns;
-  // }
 
   ticketHistory(ticket, type) {
     let dataparams = {
@@ -1402,6 +1317,17 @@ export class TicketComponent implements OnInit {
     }
   }
 
+  addTransContact(ticket, type) {
+    let editData = {
+      transId: ticket._ticket_id
+    };
+    this.common.params = { editData, title: "Ticket Contacts", button: "Add",fromPage: 1 };
+    const activeModal = this.modalService.open(AddTransactionContactComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getTicketByType(type);
+    });
+  }
+
   openTicketFormData(ticket, type, status) {
     let title = 'Ticket Closing Form';
     let actionData = {
@@ -1424,11 +1350,11 @@ export class TicketComponent implements OnInit {
   }
 
   openInfoModal(ticket, type, refType) {
-    if (refType == 1) {
-      this.ticketDetailTitle = 'Closing Form Detail';
-    } else {
+    // if (refType == 1) {
+    //   this.ticketDetailTitle = 'Closing Form Detail';
+    // } else {
       this.ticketDetailTitle = 'Ticket Info';
-    }
+    // }
     this.ticketForm.tp.id = ticket._tpid;
     this.ticketForm.requestId = ticket._ticket_id;
     this.tpPropertyList = [];
@@ -1438,14 +1364,19 @@ export class TicketComponent implements OnInit {
     this.secCatList = [];
     this.typeList = [];
     this.ticketFormFields = null;
+    this.openingFormInfo = [];
+    this.closingFormInfo = [];
+    this.primaryFormInfo = [];
     setTimeout(async () => {
-      await this.getTicketFormField(refType);
+      // await this.getTicketFormField(refType);
+      await this.getTicketFormField(0);
+        await this.getTicketFormField(2);
     }, 500);
 
     if (this.activeTab == 'completedTkt') {
       setTimeout(async () => {
         await this.getTicketFormField(1);
-        await this.getTicketFormField(2);
+        // await this.getTicketFormField(2);
       }, 500);
     }
 
@@ -1457,10 +1388,11 @@ export class TicketComponent implements OnInit {
     this.resetTicketForm();
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.handleFileSelection(event,null).then(res=>{
       console.log("handleFileSelection:",res);
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i);
     },err=>{
       this.common.showError();
     });
@@ -1501,8 +1433,8 @@ export class TicketComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-      console.log("evenArray:::", this.evenArray[i]);
-      console.log("oddArray:::", this.oddArray[i]);
+      // console.log("evenArray:::", this.evenArray[i]);
+      // console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -1527,6 +1459,89 @@ export class TicketComponent implements OnInit {
       this.completedTkt = selectedList.length > 0 ? selectedList : [];
       this.setTablecompletedTkt(type);
     }
+  }
+
+  takeAction(row) {
+    let foundLong = this.oddArray.find(x=>{return (x.r_coltitle).toLowerCase()=='longitude'});
+    if(foundLong){
+    }else if(this.evenArray.length>0){
+      foundLong = this.evenArray.find(x=>{return (x.r_coltitle).toLowerCase()=='longitude'});
+    }
+    if(row.r_value && foundLong && foundLong.r_value){
+      let location = {"lat": row.r_value, "lng": foundLong.r_value};
+      this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation',location };
+    }else{
+      this.common.params = { placeholder: 'selectLocation', title: 'SelectLocation' };
+    }
+    const activeModal = this.modalService.open(LocationSelectionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(res => {
+      if (res != null) {
+        console.log('new-response----', res, res.location);
+        if (res.location.lat) {
+          row.r_value = res.location.lat;
+          if(foundLong){
+            foundLong.r_value = res.location.lng;
+          }
+        }
+      }
+    })
+  }
+
+  getUserPresence(empId) {
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + empId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.adduserConfirm(userPresence)
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  adduserConfirm(userPresence) {
+    if (!userPresence) {
+      this.common.params = {
+        title: 'User Presence',
+        description: '<b>The user has not started the shift for today.<br> Are you sure to add this user ?<b>'
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (!data.response) {
+          this.forwardTicketObject.userId = {id: null,name: null};
+        }
+      });
+    }
+  }
+
+  openCheckStatusModal(ticket,type){
+    // console.log("openCheckStatusModal:",ticket);
+    this.common.loading++;
+    this.api.get("Ticket/checkTicketStatus?ticketId=" + ticket._ticket_id).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let checkStatus = "No data found";
+        if(res['data'] && res['data'].length){
+          checkStatus = res['data'][0]["status"];
+        }
+        this.common.params = {
+          title: 'Status',
+          description: '<b>'+checkStatus+'<b>',
+          btn1: 'Ok'
+        }
+        const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+    });
   }
 
 }

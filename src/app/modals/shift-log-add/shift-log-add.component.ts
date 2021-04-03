@@ -82,7 +82,6 @@ export class ShiftLogAddComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         let adminList = res["data"] || [];
         this.adminList = adminList.map((x) => {
@@ -180,7 +179,6 @@ export class ShiftLogAddComponent implements OnInit {
     };
     let param = "?date=" + this.common.dateFormatter(this.common.getDate()) + "&userId=" + this.shiftForm.user.id;
     this.api.get("Admin/getUserShiftDetailByDate" + param).subscribe(res => {
-      console.log("data", res['data']);
       if (res['code'] > 0) {
         this.shiftLogList = res['data'] || [];
         this.setTableShiftLog();
@@ -195,7 +193,6 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   saveUserShift() {
-    console.log("saveUserShift", this.shiftForm);
     if (!this.shiftForm.user.id) {
       return this.common.showError("User is missing");
     } else if (!this.shiftForm.startTime) {
@@ -219,9 +216,7 @@ export class ShiftLogAddComponent implements OnInit {
         attendanceType: this.shiftForm.attendanceType,
         remark: this.shiftForm.remark
       };
-      // this.api.post("Admin/saveUserShift", params).subscribe(res => {
       this.api.post("Admin/saveUserShiftV2", params).subscribe(res => {
-        console.log("data", res['data'])
         this.common.loading--;
         if (res['code'] > 0) {
           if (res['data'][0]['y_id'] > 0) {
@@ -269,10 +264,12 @@ export class ShiftLogAddComponent implements OnInit {
           this.api.get('Admin/deleteUserShiftById' + params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getUserShiftDetailByDate();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

@@ -57,8 +57,10 @@ import { CustomeronboardingComponent } from './customeronboarding/customeronboar
 import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 import { UserExpensesComponent } from './user-expenses/user-expenses.component';
-import { ProjectUserKanbanComponent } from './project-user-kanban/project-user-kanban.component';
+import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
+import { SitesComponent } from './sites/sites.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -122,7 +124,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EntityDeatilsComponent,
     UserWiseExpensesComponent,
     UserExpensesComponent,
-    ProjectUserKanbanComponent
+    TaskKanbanComponent,
+    AdminKanbanComponent,
+    SitesComponent
   ],
 })
 export class PagesModule {

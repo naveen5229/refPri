@@ -51,10 +51,12 @@ export class AddNewCampaignComponent implements OnInit {
     this.api.get('CampaignSuggestion/getProductList')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.productTypeLis = res['data'];
         console.log(this.productTypeLis);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -66,7 +68,6 @@ export class AddNewCampaignComponent implements OnInit {
   }
 
   savecampaign() {
-    console.log(this.campaignAdd);
     let url = "Campaigns/addCampaign";
     if (this.campaignAdd.endTime) {
       if (this.campaignAdd.endTime < this.campaignAdd.startTime) {
@@ -90,10 +91,8 @@ export class AddNewCampaignComponent implements OnInit {
         endTime: endDate
 
       };
-      console.log(params);
       url = "Campaigns/updateCampaign";
-    }
-     else {
+    }else {
       params = {
         campaignName: this.campaignAdd.name,
         productType: this.campaignAdd.typeId,
@@ -101,23 +100,19 @@ export class AddNewCampaignComponent implements OnInit {
         endTime: endDate
       }
       url = "Campaigns/addCampaign";
-
     }
-
     this.common.loading++;
-    this.api.post(url, params)
-      .subscribe(res => {
+    this.api.post(url, params).subscribe(res => {
         this.common.loading--;
-        console.log(res);
-        if (res['success'] == true) {
+        if (res['code'] >0) {
           this.common.showToast(res['msg']);
           this.activeModal.close({ response: true });
         } else {
           this.common.showError(res['msg']);
-
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

@@ -91,34 +91,31 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
 
 
   getCampaignSummary() {
-
     let startDate = this.common.dateFormatter(this.startDate);
     let endDate = this.common.dateFormatter(this.endDate);
-
     const params = 'campaignId=' + this.campaignid + '&startDate=' + startDate + '&endDate=' + endDate;
     this.common.loading++;
     this.api.get("Campaigns/getCampDashboardSummary?" + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignSummaryData = res['data'];
-
       this.userCount = JSON.parse(this.campaignSummaryData['userwisecount']);
       this.poCount = JSON.parse(this.campaignSummaryData['pocccount']);
       this.callCount = JSON.parse(this.campaignSummaryData['callcount']);
       this.totalLeadCount = JSON.parse(this.campaignSummaryData['totalleadcount']);
       this.stateWiseCount = JSON.parse(this.campaignSummaryData['statewisecount']);
-
       this.showdata(this.totalLeadCount, this.stateWiseCount);
       if (this.totalLeadCount) {
         this.totalLeadsetTable();
@@ -129,12 +126,11 @@ export class CampaignSummaryComponent implements OnInit, AfterViewInit {
       this.showTable = true;
       this.activeTab = 'stateSummary';
       this.getSummary(1);
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getSummary(type) {

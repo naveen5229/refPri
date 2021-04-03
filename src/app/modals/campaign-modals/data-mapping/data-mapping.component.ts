@@ -58,6 +58,7 @@ export class DataMappingComponent implements OnInit {
     this.api.get(this.apiUrl)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.listOfData = res['data'];
         this.listOfData.filter(ele => {
           if (this.typeId == "priCatId") {
@@ -79,9 +80,10 @@ export class DataMappingComponent implements OnInit {
           }
 
         })
-        console.log("APi ", this.listOfData);
+        // console.log("APi ", this.listOfData);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -150,21 +152,19 @@ export class DataMappingComponent implements OnInit {
     } else {
       this.updateParams.actionIdList = this.checkedList;
     }
-    console.log("selected Data", this.checkedList);
     this.common.loading++;
     this.api.post(this.updateUrl, this.updateParams)
       .subscribe(res => {
         this.common.loading--;
-        if (res['success'] == true) {
+        if (res['code'] >0) {
           this.common.showToast(res['msg']);
           this.activeModal.close({ response: true });
         } else {
           this.common.showError(res['msg']);
-
         }
-        console.log("APi data ", res['data']);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

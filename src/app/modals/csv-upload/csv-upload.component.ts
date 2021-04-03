@@ -57,15 +57,14 @@ export class CsvUploadComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
-
 
   handleFileSelection(event) {
     this.common.loading++;
@@ -133,11 +132,6 @@ export class CsvUploadComponent implements OnInit {
   uploadCsv() {
     let params = null;
     let apiPath = null;
-    // const params = {
-    //   CmpTarCsv: this.upload.csv,
-    //   campaignId: this.upload.campaignId,
-    //   campaignType: this.upload.campaignType
-    // };
     if (this.typeFrom == 'installer') {
       params = {
         partnerId: this.selectedPartner.id,
@@ -168,10 +162,6 @@ export class CsvUploadComponent implements OnInit {
         return this.common.showError("Select Option First");
       }
     }
-    console.log("upload params:", params, apiPath);
-    // if (!params.CmpTarCsv && !params.campaignId) {
-    //   return this.common.showError("Select Option First");
-    // }
     if (!apiPath) {
       return this.common.showError("Something went wrong, please try again");
     }
@@ -179,11 +169,10 @@ export class CsvUploadComponent implements OnInit {
     this.api.post(apiPath, params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res["msg"]);
-
         let successData = res['data']['success'];
         let errorData = res['data']['fail'];
-        console.log("error: ", errorData);
         alert(res["msg"]);
         let title = 'Csv Uploaded Data';
         if (this.typeFrom == "process" && this.processForm.isValidationCheck == 1) {
@@ -194,7 +183,6 @@ export class CsvUploadComponent implements OnInit {
         activeModal.result.then(data => {
           if (data.response) {
             if (this.typeFrom == "process" && this.processForm.isValidationCheck == 1) {
-
             } else {
               this.activeModal.close({ response: true });
             }

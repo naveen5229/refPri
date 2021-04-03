@@ -83,6 +83,9 @@ export class LocationSelectionComponent implements OnInit {
     google.maps.event.addListener(this.map, 'click', evt => { this.updateLocationByClick(evt) });
     this.createMarker(lat, lng);
     setTimeout(() => {
+      if (this.common.params['location']) {
+        this.geocoder.geocode({ 'location': this.marker.getPosition() }, this.getAddress.bind(this));
+      }
       this.autoSuggestion();
     }, 2000);
   }
@@ -180,8 +183,8 @@ export class LocationSelectionComponent implements OnInit {
   }
 
   getAddress(results, status) {
-    console.log('results', results);
-    console.log(status);
+    console.log('results,marker position:', results,this.marker.getPosition());
+    console.log("status:",status);
     if (results[0]) {
       this.location.lat = this.marker.getPosition().lat();
       this.location.lng = this.marker.getPosition().lng();

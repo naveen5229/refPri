@@ -4,7 +4,6 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { AddActivityLogsComponent } from '../../modals/add-activity-logs/add-activity-logs.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
-import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-activity-logs',
@@ -25,11 +24,20 @@ export class ActivityLogsComponent implements OnInit {
     }
   };
 
+  processWiseActivityList = [];
+  processList = [];
+  processFrom = {
+    startDate: this.common.getDate(-2),
+    endDate: this.common.getDate(),
+    process: {id: null, name: null}
+  }
+
   date = new Date();
   department = {
     id: null,
     name: ''
   };
+  viewSummaryList = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -52,6 +60,7 @@ export class ActivityLogsComponent implements OnInit {
     this.api.get("Admin/getDepartmentList", "I")
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.departments = res['data'] || [];
       }, err => {
         this.common.loading--;
@@ -60,13 +69,28 @@ export class ActivityLogsComponent implements OnInit {
       });
   }
 
+  getProcessList() {
+    this.common.loading++;
+    this.api.get('Processes/getProcessList').subscribe(res => {
+      this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (!res['data']) return;
+      this.processList = res['data'];
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
+  }
+
   selectedDepartment(selectedDept) {
     console.log(selectedDept);
     this.department.id = selectedDept.id;
     this.department.name = selectedDept.name;
   }
 
-  addActivityLog(){
+  addActivityLog(activity){
+    this.common.params = {isEdit: activity};
     const activeModal = this.modalService.open(AddActivityLogsComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log(data);
@@ -74,22 +98,19 @@ export class ActivityLogsComponent implements OnInit {
         this.getActivityLogsist();
       }
     })
-     }
+  }
 
     getActivityLogsist() {
       this.common.loading++;
       this.api.get('Admin/getActivityLogs')
         .subscribe(res => {
           this.common.loading--;
-          // console.log('res:', res);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.activityLogsist = res['data'] || [];
-          console.log(this.activityLogsist);
-  
           this.activityLogsist.length ? this.setTable() : this.resetTable();
-  
-  
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     } 
@@ -100,30 +121,6 @@ export class ActivityLogsComponent implements OnInit {
         columns: []
       };
     }
-    generateHeadings() {
-      // console.log(this.dailyReportList);
-      let headings = {};
-      for (var key in this.activityLogsist[0]) {
-        // console.log(key.charAt(0));
-  
-        if (key.charAt(0) != "_") {
-          headings[key] = { title: key, placeholder: this.formatTitle(key) };
-          if(key == 'addtime'){
-            headings[key]["type"] = "date";
-          }
-        }
-      }
-      return headings;
-    }
-  
-    formatTitle(strval) {
-      let pos = strval.indexOf('_');
-      if (pos > 0) {
-        return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
-      } else {
-        return strval.charAt(0).toUpperCase() + strval.substr(1);
-      }
-    }
   
     setTable() {
       this.table.data = {
@@ -132,9 +129,21 @@ export class ActivityLogsComponent implements OnInit {
       };
       return true;
     }
+
+    generateHeadings() {
+      let headings = {};
+      for (var key in this.activityLogsist[0]) {
+        if (key.charAt(0) != "_") {
+          headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+          if(key == 'addtime'){
+            headings[key]["type"] = "date";
+          }
+        }
+      }
+      return headings;
+    }
   
     getTableColumns() {
-      console.log(this.generateHeadings());
       let columns = [];
       this.activityLogsist.map(activity => {
         let column = {};
@@ -153,12 +162,11 @@ export class ActivityLogsComponent implements OnInit {
         columns.push(column);
       });
       return columns;
-  
     }
 
     actionIcons(activity) {
       let icons = [
-        // { class: "fa fa-edit", action: this.editActiveAdmin.bind(this, activity) },
+        { class: "fa fa-edit", action: this.addActivityLog.bind(this, activity) },
         { class: "fa fa-trash", action: this.deleteActivity.bind(this, activity) },
       ];
       return icons;
@@ -180,10 +188,12 @@ export class ActivityLogsComponent implements OnInit {
             this.api.get('Admin/deleteActivityLog'+ params)
               .subscribe(res => {
                 this.common.loading--;
+                if(res['code']===0) { this.common.showError(res['msg']); return false;};
                 this.common.showToast(res['msg']);
                 this.getActivityLogsist();
               }, err => {
                 this.common.loading--;
+                this.common.showError();
                 console.log('Error: ', err);
               });
           }
@@ -193,20 +203,100 @@ export class ActivityLogsComponent implements OnInit {
       }
     }
   
+    openViewSummary(){
+      this.viewSummaryList = [];
+      document.getElementById('viewSummary').style.display = 'block';
+    }
+
+    closeViewSummary() {
+      document.getElementById('viewSummary').style.display = 'none';
+    }
+
     viewSummary() {
-      let dataparams = {
-        view: {
-          api: 'Admin/getActivityLogSummary',
-          param: {
-            date: this.common.dateFormatter1(this.date),
-            departmentId: this.department.id
-          }
-        },
-        title: "View Activity Log Summary"
+      this.common.loading++;
+      let params = "?date="+this.common.dateFormatter1(this.date)+"&departmentId="+this.department.id;
+      this.api.get('Admin/getActivityLogSummary'+ params).subscribe(res => {
+        this.common.loading--;
+        if(res['code']>0) {
+          this.viewSummaryList = res['data'] || [];
+        }else{ 
+          this.common.showError(res['msg']);
+        };
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+
+    openProcessWiseSummary(){
+      this.processWiseActivityList = [];
+      this.processFrom = {
+        startDate: this.common.getDate(-2),
+        endDate: this.common.getDate(),
+        process: {id: null, name: null}
       }
-      // this.common.handleModalSize('class', 'modal-lg', '1100');
-      this.common.params = { data: dataparams };
-      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      this.getProcessList();
+      document.getElementById('viewProcessWiseSummary').style.display = 'block';
+    }
+
+    closeProcessWiseSummary() {
+      document.getElementById('viewProcessWiseSummary').style.display = 'none';
+    }
+
+    viewProcessWiseSummary() {
+      this.common.loading++;
+      let params = "?processId="+this.processFrom.process.id+"&startDate="+this.common.dateFormatter1(this.processFrom.startDate)+"&endDate="+this.common.dateFormatter1(this.processFrom.endDate);
+      this.api.get('Admin/getActivityLogSummaryProcessWise'+ params).subscribe(res => {
+        this.common.loading--;
+        if(res['code']>0) {
+          this.processWiseActivityList = res['data'] || [];
+        }else{ 
+          this.common.showError(res['msg']);
+        };
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log('Error: ', err);
+      });
+    }
+
+    exportCSV(type=null){
+      let dataList = this.viewSummaryList;
+      let title = 'View-activity-log-summary';
+      if(type==2){
+        dataList = this.processWiseActivityList;
+        title = 'View-Processwise-activity-log-summary';
+      }
+      if (dataList.length > 0) {
+        let headings = {"Name":{title:"Name"},"Description":{title:"Description"},"Outcome":{title:"Outcome"},"Contact person":{title:"Contact person"},"Spend hour":{title:"Spend hour"},"Total hours":{title:"Total hours"},"Date":{title:"Date"}};
+        let columns = [];
+        dataList.map((row,index) => {
+          let column = {};
+          column['Name'] = row['name'];
+          column['Total hours'] = row['total_spend_hour'];
+          column['Date'] = row['date'];
+          row.description_data.map((row2,index2) => {
+            console.log("index2",index2);
+            console.log("row",row);
+            if(index2>0){
+              column = {};
+              column['Name'] = "";
+              column['Total hours'] = "";
+              column['Date'] = "";
+            }
+            column['Spend hour'] = row2['spend_hour'];
+            column['Description'] = row2['description'];
+            column['Outcome'] = row2['outcome'];
+            column['Contact person'] = row2['contact_person'];
+            columns.push(column);
+          });
+        });
+        // console.log("heading columns:",headings,columns,);
+        this.common.getCSVFromDataArray(columns, headings, title);
+      } else {
+        this.common.showError('No Data Found');
+      }
     }
 
 }

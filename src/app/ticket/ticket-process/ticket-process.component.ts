@@ -79,6 +79,8 @@ export class TicketProcessComponent implements OnInit {
     Supervisor: { id: null, name: '' },
     ticketInput: { id: 0, name: 'Auto' },
     isActive: true,
+    url: { checkStatus: '', updateStatus: '', liveFeed: '' },
+    ccUserPresense: true
   }
 
   formRefType = {
@@ -102,7 +104,9 @@ export class TicketProcessComponent implements OnInit {
     callRequired: false,
     callingBenchmark: null,
     completionBenchmark: null,
-    requestId: null
+    requestId: null,
+    repeatDuration: 0,
+    uniqueFields: []
   }
 
   esclationMatrix = {
@@ -133,6 +137,9 @@ export class TicketProcessComponent implements OnInit {
   }
 
   adminList = [];
+  optionLink = 'Advance..';
+  displayAdvance = false;
+  ticketFormFields = [];
 
   constructor(public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
@@ -150,8 +157,7 @@ export class TicketProcessComponent implements OnInit {
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
       if (res['code'] > 0) {
-        let data;
-        data = res['data'] || [];
+        let data = res['data'] || [];
         this.adminList = data.map(ele => { return { id: ele.id, name: ele.name } })
       } else {
         this.common.showError(res['msg']);
@@ -166,6 +172,7 @@ export class TicketProcessComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketProcessList').subscribe(res => {
       this.common.loading--;
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (!res['data']) return;
       this.ticketData = res['data'];
       this.ticketData.length ? this.setTable() : this.resetTable();
@@ -202,6 +209,8 @@ export class TicketProcessComponent implements OnInit {
       Supervisor: { id: null, name: '' },
       isActive: true,
       ticketInput: { id: 0, name: 'Auto' },
+      url: { checkStatus: '', updateStatus: '', liveFeed: '' },
+      ccUserPresense: true
     }
   }
 
@@ -298,13 +307,26 @@ export class TicketProcessComponent implements OnInit {
       typeInfo: JSON.stringify(this.ticketForm.typeList),
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
-      ticketInput: this.ticketForm.ticketInput.id
+      ticketInput: this.ticketForm.ticketInput.id,
+      checkStatusUrl: this.ticketForm.url.checkStatus,
+      updateStatusUrl: this.ticketForm.url.updateStatus,
+      liveFeedUrl: this.ticketForm.url.liveFeed,
+      ccUserPresense: this.ticketForm.ccUserPresense
       // supervisorId: this.ticketForm.Supervisor.id
     }
+    console.log('params', params);
     if (!params.name) {
       this.common.showError('Please enter Process Name');
       return false;
     }
+    if (this.displayAdvance) {
+      if ((this.ticketForm.url.checkStatus && (this.ticketForm.url.checkStatus).slice(0, 5) !== 'https') ||
+        (this.ticketForm.url.updateStatus && (this.ticketForm.url.updateStatus).slice(0, 5) !== 'https') ||
+        (this.ticketForm.url.liveFeed && (this.ticketForm.url.liveFeed).slice(0, 5) !== 'https')) {
+        return this.common.showError('Please enter valid url: Should start with https.');
+      }
+    }
+
     this.common.loading++;
     this.api.post('Ticket/saveTicketProcess', params).subscribe(res => {
       this.common.loading--;
@@ -323,6 +345,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     });
   }
@@ -332,16 +355,16 @@ export class TicketProcessComponent implements OnInit {
     this.api.get(`Ticket/getTicketProcessProperty?tpId=${id}`).subscribe(res => {
       this.common.loading--;
       this.resetTicketPropertyTable();
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (!res['data']) {
         return;
       } else {
         this.ticketPropertyData = res['data'];
         this.setTicketPropertyTable();
-        // this.openTicketPropertyModal();
-        // console.log(res['data']);
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -397,6 +420,7 @@ export class TicketProcessComponent implements OnInit {
   openTicketPropertyModal(id) {
     this.ticketPropertyForm.tpId = id;
     this.getTicketProcessProperty(id);
+    this.getTicketFormField(0);
     document.getElementById('ticketPropertyList').style.display = 'block';
   }
 
@@ -404,6 +428,38 @@ export class TicketProcessComponent implements OnInit {
     document.getElementById('ticketPropertyList').style.display = 'none';
     this.getTicketList();
     this.resetForm();
+  }
+
+
+
+  getTicketFormField(refType) {
+    if (!this.ticketPropertyForm.tpId) {
+      this.common.showError("Ticket Process is missing");
+      return false;
+    }
+    this.ticketFormFields = [];
+    let params = "?refId=" + this.ticketPropertyForm.tpId + "&refType=" + refType + "&ticketId=null";
+    this.api.get("Ticket/getTicketFormFieldById" + params).subscribe(res => {
+      if (res['code'] > 0) {
+        if (res['data']) {
+          this.ticketFormFields = res['data'].map(data => {
+            return {
+              refid: this.ticketPropertyForm.tpId,
+              r_colid: data.r_colid,
+              reftype: 0,
+              r_coltype: data.r_coltype,
+              r_coltitle: data.r_coltitle,
+              r_isdynamic: data.r_isdynamic,
+            }
+          });
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   actionIcons(ticket) {
@@ -550,6 +606,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
 
@@ -569,6 +626,8 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.secCatList = [{ name: '' }];
       this.ticketForm.typeList = [{ name: '' }];
       this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input };
+      this.ticketForm.url = { checkStatus: ticket._check_status_url, updateStatus: ticket._update_status_url, liveFeed: ticket._live_feed_url };
+      this.ticketForm.ccUserPresense = ticket._default_cc_user;
     }
     document.getElementById('addTicket').style.display = 'block';
   }
@@ -630,7 +689,9 @@ export class TicketProcessComponent implements OnInit {
       callRequired: false,
       callingBenchmark: null,
       completionBenchmark: null,
-      requestId: null
+      requestId: null,
+      repeatDuration: 0,
+      uniqueFields: []
     }
   }
 
@@ -657,8 +718,12 @@ export class TicketProcessComponent implements OnInit {
       callingBenchmark: this.ticketPropertyForm.callingBenchmark,
       completionBenchmark: this.ticketPropertyForm.completionBenchmark,
       requestId: reqId,
+      repeatDuration: this.ticketPropertyForm.repeatDuration,
+      uniqueFields: (this.ticketPropertyForm.uniqueFields.length > 0) ? JSON.stringify(this.ticketPropertyForm.uniqueFields) : null
     }
 
+    console.log('params', params);
+    // return;
     this.common.loading++;
     this.api.post('Ticket/saveTicketProcessProperty', params).subscribe(res => {
       this.common.loading--;
@@ -675,6 +740,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
   }
@@ -707,6 +773,8 @@ export class TicketProcessComponent implements OnInit {
       this.ticketPropertyForm.callRequired = property.is_call_required;
       this.ticketPropertyForm.callingBenchmark = property.calling_benchmark;
       this.ticketPropertyForm.completionBenchmark = property.completion_benchmark;
+      this.ticketPropertyForm.uniqueFields = property._unique_fields;
+      this.ticketPropertyForm.repeatDuration = property._repeat_duplicay_duration;
     }
     document.getElementById('addTicketProperty').style.display = 'block';
     if (!this.ticketPropertyForm.tpId) {
@@ -853,6 +921,7 @@ export class TicketProcessComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error:', err)
     })
   }
@@ -938,6 +1007,7 @@ export class TicketProcessComponent implements OnInit {
             }
           }, err => {
             this.common.loading--;
+            this.common.showError();
             console.log('Error: ', err);
           });
         }

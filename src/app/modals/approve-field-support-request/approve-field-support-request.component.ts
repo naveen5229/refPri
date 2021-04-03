@@ -91,14 +91,11 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
   approveFieldSupportRequest() {
     if (this.approveForm.requestId == '') {
       return this.common.showError("Request Id is missing")
-    }
-    else if (!(this.approveForm.installer.id > 0)) {
+    }else if (!(this.approveForm.installer.id > 0)) {
       return this.common.showError("Installer is missing")
-    }
-    else if (!(this.approveForm.partner.id > 0)) {
+    }else if (!(this.approveForm.partner.id > 0)) {
       return this.common.showError("Partner is missing")
-    }
-    else {
+    }else {
       const params = {
         requestId: this.approveForm.requestId,
         installerId: this.approveForm.installer.id,
@@ -106,10 +103,8 @@ export class ApproveFieldSupportRequestComponent implements OnInit {
         status: this.approveForm.status,
         remark: this.approveForm.remark
       }
-      // console.log("params:", params); return false;
       this.common.loading++;
       this.api.post('Grid/approvedFieldSupportRequestByPartner', params).subscribe(res => {
-        console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
           this.common.showToast(res['msg'])

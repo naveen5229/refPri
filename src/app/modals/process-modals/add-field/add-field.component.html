@@ -9,14 +9,17 @@
         <div [ngClass]="(refType == 2 && !formType) || (refType == 0 && formType == 11) ? 'col-10' : 'col-12' ">
             <div class="row mb-2">
                 <div class="col-3 mr-0">
-                    <label>Field Name</label>
-                    <input type="text" name="name" id="name" [(ngModel)]="name" class="form-control" maxlength="25">
-                </div>
-                <div class="col-3 mr-0">
                     <label>Type</label>
                     <select class="form-control" [(ngModel)]="typeId">
                         <option *ngFor="let type of types;" [value]="type.id" class="form-control">{{type.name}}
                         </option>
+                    </select>
+                </div>
+                <div class="col-3 mr-0">
+                    <label>Field Name</label>
+                    <input *ngIf="typeId !='entity'" type="text" name="name" id="name" [(ngModel)]="name" class="form-control" maxlength="25">
+                    <select *ngIf="typeId =='entity'" class="form-control" [(ngModel)]="name">
+                        <option *ngFor="let t of entityTypeList" [value]="t._id">{{t.type}}</option>
                     </select>
                 </div>
                 <!-- <div class="col-3 mr-0">
@@ -35,7 +38,6 @@
                         (click)="openAddFieldTable()"><i class="fa fa-table" aria-hidden="true"></i></span>
                 </div>
             </div>
-
 
             <div class="row mb-2">
                 <div class="col-9">
@@ -94,27 +96,3 @@
     </div>
 
 </div>
-
-<!-- start: cat modal -->
-<!-- <div class="modal" id="optionModal" #optionModal>
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Option</h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeOptionModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row" *ngFor="let fixValue of fixValues; let i = index">
-                    <div class="col-8">
-                        <input type="text" [(ngModel)]="fixValue.option" class="form-control">
-                    </div>
-                    <div class="col-4">
-                        <i class="fa fa-plus" *ngIf="i == fixValues.length-1" (click)="addFixValue()"></i>
-                        <i class="fa fa-trash" (click)="fixValues.splice(i,1)" *ngIf="i !== 0"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-<!-- end: cat modal -->

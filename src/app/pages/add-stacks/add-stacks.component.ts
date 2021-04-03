@@ -38,10 +38,11 @@ export class AddStacksComponent implements OnInit {
     this.api.get('Projects/getAllStack')
       .subscribe(res => {
         this.common.loading--;
-        console.log("list", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.stacks = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -65,6 +66,8 @@ export class AddStacksComponent implements OnInit {
             this.common.showToast(res['msg']);
             this.stackchildId=null;
             this.getStacksChilds();
+          }else{
+            this.common.showError(res['msg']);
           }
         }, err => {
           this.common.loading--;
@@ -79,9 +82,11 @@ export class AddStacksComponent implements OnInit {
     this.api.get('Projects/getAllStackChilds')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.stackChilds=res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -95,7 +100,6 @@ export class AddStacksComponent implements OnInit {
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log('res', data);
       if (data.response) {
         let params = {
           stackChildId:stackchildId
@@ -104,10 +108,11 @@ export class AddStacksComponent implements OnInit {
         this.api.post('Projects/deleteStackChild', params)
           .subscribe(res => {
             this.common.loading--;
-            console.log("res", res);
             if (res['success']) {
               this.common.showToast(res['msg']);
               this.stackChilds.splice(rowId,1);
+            }else{
+              this.common.showError(res['msg']);
             }
           }, err => {
             this.common.loading--;

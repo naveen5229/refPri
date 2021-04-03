@@ -86,15 +86,21 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Project User Kanban',
+        title: 'Task Kanban',
         icon: 'grid-outline',
-        link: '/pages/project-user-kanban-board',
+        link: '/pages/task-kanban',
         home: true,
       },
       {
         title: 'Task-Admin',
         icon: 'file-text-outline',
         link: '/pages/task-scheduled',
+        home: true,
+      },
+      {
+        title: 'Admin-Kanban',
+        icon: 'file-text-outline',
+        link: '/pages/admin-kanban',
         home: true,
       },
       {
@@ -185,6 +191,11 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Employee Monitoring',
         icon: 'people-outline',
         link: '/pages/employee-monitoring',
+      },
+      {
+        title: 'Sites',
+        icon: 'people-outline',
+        link: '/pages/site',
       },
     ]
   },

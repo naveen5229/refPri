@@ -14,9 +14,10 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 })
 export class TaskNewComponent implements OnInit {
   currentDate = this.common.getDate();
-  normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
+  normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '',false);
   title = "New Task";
   btn = 'Save';
+  assigner = {id:null,name:null}
   userId = null;
   projectName = null;
   isProject = "";
@@ -69,6 +70,8 @@ export class TaskNewComponent implements OnInit {
     currentLast.setMinutes(59);
     this.normalTask.date = currentLast;
     // console.log(aaaaaa,'date from task new component')
+
+
     if (this.common.params != null) {
       console.log(this.common.params, 'groupList from task-new component');
       this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
@@ -93,10 +96,10 @@ export class TaskNewComponent implements OnInit {
         this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
       } else if (this.common.params.editType == 2) {
         // console.log("🚀 ~ file: task-new.component.ts ~ line 90 ~ TaskNewComponent ~ this.normalTask.projectId", this.normalTask.projectId)
-        if(this.common.params.project.projectId){
+        if(this.common.params.project._id){
           this.isProject = '1';
-          this.projectName = this.common.params.project.projectName;
-          this.normalTask.projectId = this.common.params.project.projectId;
+          this.projectName = this.common.params.project.project_desc;
+          this.normalTask.projectId = this.common.params.project._id;
         }
       } else if (this.common.params.editType == 3) {
         this.title = "Update Task Project";
@@ -109,6 +112,12 @@ export class TaskNewComponent implements OnInit {
         this.updateTaskForm.projectOldName = (this.common.params.project.id) ? this.common.params.project.name : null;
       }
     }
+
+    this.userList.map(user => { 
+      if(user.id === userService._details.id){
+        this.assigner = {id:user.id,name:user.name}
+      }});
+    // {id:userService._details.id,name:userService._details.name}
     this.getProjectList()
   }
 
@@ -142,14 +151,14 @@ export class TaskNewComponent implements OnInit {
 
   saveTask(isChat = null) {
     // console.log("normalTask:", this.normalTask);
-    if (this.normalTask.userName == '') {
-      return this.common.showError("User Name is missing");
+    if (!this.normalTask.projectId && (this.normalTask.userName == '' || !this.userId)) {
+      return this.common.showError("User is missing");
     }
+    // else if (!this.normalTask.projectId && !this.userId) {
+    //   return this.common.showError("Please assign a user");
+    // }
     else if (this.normalTask.subject == '') {
       return this.common.showError("subject is missing");
-    }
-    else if (!this.userId) {
-      return this.common.showError("Please assign a user");
     }
     else if (!this.normalTask.isFuture && !this.normalTask.date) {
       return this.common.showError("Expected date is missing");
@@ -165,6 +174,10 @@ export class TaskNewComponent implements OnInit {
     }
     else if (this.normalTask.isFuture && this.normalTask.futureDate > this.normalTask.date) {
       return this.common.showError("Last Date must be greater than future assign date");
+    }else if(this.assigner.id === this.userId){
+      return this.common.showError('Assiner and Assignee can not be same');
+    }else if(![this.assigner.id,this.userId].includes(this.userService._details.id)){
+      return this.common.showError('You must be either in assign-by or assign-to.');
     }
     else {
       let CCUsers = [];
@@ -179,6 +192,7 @@ export class TaskNewComponent implements OnInit {
       });
 
       const params = {
+        assigner:this.assigner.id,
         userId: this.userId,
         date: this.common.dateFormatter(this.normalTask.date),
         subject: this.normalTask.subject,
@@ -188,16 +202,18 @@ export class TaskNewComponent implements OnInit {
         ccUsers: JSON.stringify(CCUsers),
         parentTaskId: this.normalTask.parentTaskId,
         isFuture: this.normalTask.isFuture,
-        futureDate: this.common.dateFormatter(this.normalTask.futureDate)
+        futureDate: this.common.dateFormatter(this.normalTask.futureDate),
+        isQueued: this.normalTask.isQueue
       }
+      // return console.log(params);
       this.common.loading++;
       this.api.post('AdminTask/createNormalTask', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
-          this.resetTask();
           // this.common.showToast(res['data'][0].y_msg);
-          this.closeModal(true);
           if (res['data'][0]['y_id'] > 0) {
+            this.resetTask();
+            this.closeModal(true);
             this.common.showToast(res['data'][0].y_msg);
             if (isChat == 1) {
               let ticketEditData = {
@@ -229,7 +245,7 @@ export class TaskNewComponent implements OnInit {
   }
 
   resetTask() {
-    this.normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '');
+    this.normalTask = new NormalTask('', this.common.getDate(2), '', false, null, [], null, false, new Date(), '',false);
   }
 
   // start task mapping list

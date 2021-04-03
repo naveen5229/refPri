@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
+import { GenericModelComponent } from '../../generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-form-data',
@@ -67,7 +68,7 @@ export class FormDataComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
       return copyDetails;
     });
@@ -105,6 +106,7 @@ export class FormDataComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data']) {
         this.formField = res['data'];
         this.formatArray();
@@ -172,9 +174,11 @@ export class FormDataComponent implements OnInit {
     // console.log("oddArray", this.oddArray);
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.handleFileSelection(event,null).then(res=>{
+      console.log("res", res)
       this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i);
     },err=>{
       this.common.showError();
     });
@@ -196,6 +200,8 @@ export class FormDataComponent implements OnInit {
       name: this.attachmentFile[i].name,
       attachment: this.attachmentFile[i].file
     }
+    // console.log('params',params);
+    // return;
     this.common.loading++;
     this.api.post('Processes/uploadAttachment', params).subscribe(res => {
       this.common.loading--;
@@ -224,5 +230,22 @@ export class FormDataComponent implements OnInit {
     });
   }
 
+  getParamAllValues(row) {
+    if(this.transId>0){
+      let dataparams = {
+        view: {
+          api: 'Processes/getParamAllValues',
+          param: {
+            transId: this.transId,
+            colId: row.r_colid,
+            isDynamic: row.r_isdynamic
+          }
+        },
+        title: "Field Value History"
+      }
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+  }
 
 }

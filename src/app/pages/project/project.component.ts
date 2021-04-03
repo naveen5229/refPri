@@ -45,6 +45,7 @@ export class ProjectComponent implements OnInit {
       this.common.loading++;
       this.api.post('Projects/addProject', params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].z_id > 0) {
           this.common.showToast(res['data'][0].z_msg);
           this.getProject();
@@ -70,6 +71,7 @@ export class ProjectComponent implements OnInit {
       this.common.loading++;
       this.api.post('Projects/addProject', params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].z_id > 0) {
           this.common.showToast(res['data'][0].z_msg);
           this.getProject();
@@ -93,14 +95,14 @@ export class ProjectComponent implements OnInit {
     this.common.loading++;
     this.api.get("Projects/getAllProject").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.projects = res['data'] || [];
       this.filterItem();
-    },
-      err => {
+    },err => {
       this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   deleteProject(projectId, rowIndex) {
@@ -121,7 +123,7 @@ export class ProjectComponent implements OnInit {
         this.api.post('Projects/deleteProject', params)
           .subscribe(res => {
             this.common.loading--;
-            console.log("res", res);
+            if(res['code']===0) { this.common.showError(res['msg']); return false;};
             if (res['data'][0].z_id > 0) {
               this.common.showToast(res['data'][0].z_msg);
               this.getProject();

@@ -33,27 +33,19 @@ export class DashboardComponent implements OnDestroy {
 
   dashboardDetail(){
     this.common.loading++;
-
-      this.api.get("Projects/getProjectsWrtStatus").subscribe(res =>{
-        this.common.loading--;
-        this.dashboard=res['data'] || [];
-        console.log("data",this.dashboard);
-
-      },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
+    this.api.get("Projects/getProjectsWrtStatus").subscribe(res =>{
+      this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      this.dashboard=res['data'] || [];
+    },err => {
+      this.common.loading--;
+      this.common.showError();
       console.log('Error: ', err);
-      });
-    }
+    });
+  }
 
-    
-
-    countWorkingEmployee(){
-      this.modalService.open( ListOfEmployeeComponent,{size:'lg',container:'nb-layout' ,backdrop:'static'})
-    }
-  
-
+  countWorkingEmployee(){
+    this.modalService.open( ListOfEmployeeComponent,{size:'lg',container:'nb-layout' ,backdrop:'static'})
+  }
   
 }

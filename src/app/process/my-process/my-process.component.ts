@@ -20,6 +20,7 @@ import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component
   styleUrls: ['./my-process.component.scss']
 })
 export class MyProcessComponent implements OnInit {
+  loginUserId = this.userService._details.id;
   activeSabTab = 0;
   activeSabTab1 = 0;
   activeTab = 'leadsForMe';
@@ -27,6 +28,7 @@ export class MyProcessComponent implements OnInit {
   processList = [];
   leadsForMe = [];
   leadsByMe = [];
+  completedLeadsForFilter = [];
   allCompletedLeads = [];
   unreadLeads = [];
   ccLeads = [];
@@ -144,6 +146,7 @@ export class MyProcessComponent implements OnInit {
     this.getAllAdmin();
     this.getProcessList();
     this.activeTab = 'leadsForMe';
+    this.activeSabTab = 0;
   }
 
   ngOnInit() { }
@@ -177,7 +180,6 @@ export class MyProcessComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.adminList = res['data'] || [];
       } else {
@@ -193,9 +195,9 @@ export class MyProcessComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getProcessList').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.processList = res['data'];
-
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -213,7 +215,6 @@ export class MyProcessComponent implements OnInit {
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
       this.common.loading--;
-      // console.log("data", res['data']);
       if (res['code'] == 1) {
         if (type == 1) {//for me pending
           this.leadsForMe = res['data'] || [];
@@ -241,7 +242,9 @@ export class MyProcessComponent implements OnInit {
           this.processDashboardTitle = 'CC_Transaction'
           this.setTableCcLeads(type);
         } else if (type == 4) {
+          this.activeSabTab = 0;
           this.allCompletedLeads = res['data'] || [];
+          this.completedLeadsForFilter = this.allCompletedLeads;
           this.processDashboardList = this.allCompletedLeads;
           this.processDashboardTitle = 'Completed_Transaction'
           this.setTableAllCompletedLeads(type);
@@ -787,10 +790,12 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: 'fas fa-address-book s-4', action: this.addTransContact.bind(this, lead, type), txt: '', title: "Address Book" });
       icons.push({ class: "fa fa-thumbs-up text-success", action: this.openTransAction.bind(this, lead, type, null, true), txt: '', title: "Mark Completed" });
       icons.push({ class: "fas fa-plus-square text-primary", action: this.openPrimaryInfoFormData.bind(this, lead, type), txt: '', title: "Primary Info Form" });
+      icons.push({ class: "fa fa-info-circle", action: this.editTransaction.bind(this, lead, type), txt: '', title: "View transaction" });
 
       if (lead._revert_action > 0) {
         icons.push({ class: "fa fa-thumbs-down text-primary", action: this.openTransAction.bind(this, lead, type, null, false), txt: '', title: "Inverse" });
       }
+      icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
       if (lead._claim_txn) {
@@ -864,11 +869,12 @@ export class MyProcessComponent implements OnInit {
       processName: lead._processname,
       identity: lead.identity,
       priOwnId: lead._pri_own_id,
-      isDisabled: (lead._txn_editable) ? false : true,
+      isDisabled: (type==1) ? true : ((lead._txn_editable) ? false : true),
       _default_identity: (lead._default_identity) ? lead._default_identity : 0,
     }
+    let title = (type==1) ? "View Transaction" : "Add Transaction";
 
-    this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: "Add Transaction ", button: "Update" }
+    this.common.params = { rowData, processList: this.processList, adminList: this.adminList, title: title, button: "Update" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
@@ -896,7 +902,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   deletCallBack(lead, type) {
-
     let params = {
       transId: lead._transactionid
     }
@@ -1018,19 +1023,29 @@ export class MyProcessComponent implements OnInit {
       if (data.response && data.nextFormType) {
         // nextFormType: 1 = fromstate, 2=fromaction
         if (data.nextFormType == 1) {
-          lead._state_id = data.state.id;
-          lead.state_name = data.state.name;
+          lead['_next_state_id'] = data.state.id;
+          lead['next_state_name'] = data.state.name;
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 2);
+            lead._state_id = data.state.id;
+            lead.state_name = data.state.name;
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 2);
+            }
           }
 
         } else if (data.nextFormType == 2) {
           if (data.isFormHere == 1) {
             this.openTransFormData(lead, type, data.nextFormType);
           } else {
-            this.openTransAction(lead, type, 1);
+            if(lead._auto_assign_na>0){
+              this.getProcessLeadByType(type);
+            }else{
+              this.openTransAction(lead, type, 1);
+            }
           }
         }
       } else {
@@ -1070,6 +1085,10 @@ export class MyProcessComponent implements OnInit {
       if (formType == 2) {
         this.openTransAction(lead, type, 1);
       } else if (formType == 1) {
+        if(lead._next_state_id){
+          lead._state_id = lead._next_state_id;
+          lead.state_name = lead.next_state_name;
+        }
         this.openTransAction(lead, type, 2);
       } else {
         this.getProcessLeadByType(type);
@@ -1101,7 +1120,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   updateTransactionStatus(lead, type, status) {
-    // console.log("updateTransactionStatus");
     if (lead._transactionid) {
       let params = {
         transId: lead._transactionid,
@@ -1223,13 +1241,13 @@ export class MyProcessComponent implements OnInit {
   }
 
   checkReminderSeen(lead, type) {
-    // console.log("checkReminderSeen");
     let params = {
       ticketId: lead._transactionid
     };
     this.common.loading++;
     this.api.post('Processes/checkLeadReminderSeen', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res['msg']);
       this.getProcessLeadByType(type);
     }, err => {
@@ -1240,12 +1258,10 @@ export class MyProcessComponent implements OnInit {
   }
 
   ackLeadByCcUser(lead, type) {
-    // console.log("ackLeadByCcUser");
     if (lead._transactionid > 0) {
       let params = {
         transId: lead._transactionid
       }
-      // console.log("ackLeadByCcUser:", params);
       this.common.loading++;
       this.api.post('Processes/ackLeadByCcUser', params).subscribe(res => {
         this.common.loading--;
@@ -1270,7 +1286,6 @@ export class MyProcessComponent implements OnInit {
       let params = {
         transId: lead._transactionid
       }
-      // console.log("ackLeadByAssigner:", params);
       this.common.loading++;
       this.api.post('Processes/updateTransactionStatusByAdduser', params).subscribe(res => {
         this.common.loading--;
@@ -1329,7 +1344,6 @@ export class MyProcessComponent implements OnInit {
   }
 
   updateLeadPrimaryOwner(lead, type) {
-    console.log("🚀 ~ file: my-process.component.ts ~ line 1330 ~ MyProcessComponent ~ updateLeadPrimaryOwner ~ lead", lead)
     let apiBase = '';
     let params = {};
     if (lead.assigned_to == null) {
@@ -1353,9 +1367,6 @@ export class MyProcessComponent implements OnInit {
         isClaim: 1
       }
     }
-
-    console.log('here final data', params, apiBase)
-    // return;
     if (lead._transactionid > 0) {
       this.common.loading++;
       this.api.post(apiBase, params).subscribe(res => {
@@ -1383,4 +1394,26 @@ export class MyProcessComponent implements OnInit {
     }
   }
 
+  filterTicketBySubTab(type, subTabType) {
+    if (type == 4) {
+      let selectedList = [];
+      if (subTabType == 1) {//by me
+        selectedList = this.completedLeadsForFilter.filter((x) => {
+          return x._aduserid == this.loginUserId;
+        });
+      } else if (subTabType == 2) {//owned by me
+        selectedList = this.completedLeadsForFilter.filter((x) => {
+          return x._pri_own_id == this.loginUserId;
+        });
+      } else if (subTabType == 3) {//admin
+        selectedList = this.completedLeadsForFilter.filter((x) => {
+          return x._admin_id == this.loginUserId;
+        });
+      } else {//all
+        selectedList = this.completedLeadsForFilter;
+      }
+      this.allCompletedLeads = selectedList.length > 0 ? selectedList : [];
+      this.setTableAllCompletedLeads(type);
+    }
+  }
 }

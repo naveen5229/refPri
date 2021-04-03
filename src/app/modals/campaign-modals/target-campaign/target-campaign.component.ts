@@ -117,37 +117,37 @@ export class TargetCampaignComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   getLocationList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getLocation").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.locationDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   getPrimaryOwnerList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getPrimaryOwner").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.primaryownerDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   onSelectCampaign(campaignId) {
@@ -166,6 +166,7 @@ export class TargetCampaignComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getPrimaryCatList?campaignId=" + this.target.campaignId).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.priCatList = res['data'];
     }, err => {
       this.common.loading--;
@@ -183,6 +184,7 @@ export class TargetCampaignComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getSecondaryCatList?campaignId=" + this.target.campaignId).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.secCatList = res['data'];
     }, err => {
       this.common.loading--;
@@ -199,9 +201,7 @@ export class TargetCampaignComponent implements OnInit {
   }
 
   saveCampaignTarget() {
-
     if (!this.target.campaignId || !this.target.name || !this.target.mobile) return this.common.showError("Please Fill Require Field");
-
     const params = {
       campTargetId: this.target.rowId ? this.target.rowId : null,
       campaignId: this.target.campaignId,
@@ -218,13 +218,10 @@ export class TargetCampaignComponent implements OnInit {
       priCatId: this.target.priCat.id,
       secCatId: this.target.secCat.id
     }
-    console.log(params);
-
     this.common.loading++;
     this.api.post("Campaigns/addCampaignTarget", params)
       .subscribe(res => {
         this.common.loading--;
-        console.log(res);
         if (res['code'] == 1) {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
@@ -237,10 +234,9 @@ export class TargetCampaignComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
-
-
 
 }

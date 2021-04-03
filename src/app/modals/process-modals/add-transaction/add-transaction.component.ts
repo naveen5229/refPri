@@ -4,6 +4,7 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { FormDataTableComponent } from '../../../modals/process-modals/form-data-table/form-data-table.component';
 import { ChatboxComponent } from '../chatbox/chatbox.component';
+import { GenericModelComponent } from '../../generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-add-transaction',
@@ -117,6 +118,7 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessPriCat?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let priCatList = res['data'];
       this.priCatList = priCatList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
@@ -159,6 +161,7 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessSecCat?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let secCatList = res['data'];
       this.secCatList = secCatList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
@@ -177,6 +180,7 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get("Processes/getProcessType?processId=" + this.transForm.process.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       let typeList = res['data'];
       this.typeList = typeList.map(x => { return { id: x._id, name: x.name } });
     }, err => {
@@ -191,12 +195,11 @@ export class AddTransactionComponent implements OnInit {
     let details = this.Details.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
-        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value'], null, false);
+        copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
       }
       return copyDetails;
     });
-    console.log(details, 'updated details from add transaction')
-
+    // console.log(details, 'updated details from add transaction')
     const params = {
       processId: this.transForm.process.id,
       processName: this.transForm.process.name,
@@ -205,17 +208,10 @@ export class AddTransactionComponent implements OnInit {
       priOwnId: this.transForm.priOwn.id,
       mobileno: this.transForm.mobileno,
       email: this.transForm.emailStatic,
-      // priCatId: this.transForm.priCat.id,
-      // secCatId: this.transForm.secCat.id,
-      // typeId: this.transForm.type.id,
-      // locationId: this.transForm.location.id,
-      // address: this.transForm.address,
       additionalInfo: JSON.stringify(details),
       requestId: (this.transForm.requestId > 0) ? this.transForm.requestId : null,
     }
-    console.log("para......", params);
-
-    // return;
+    // console.log("params:",params);return false;
     this.common.loading++;
     this.api.post('Processes/addTransaction', params).subscribe(res => {
       this.common.loading--;
@@ -258,13 +254,14 @@ export class AddTransactionComponent implements OnInit {
     this.common.loading++;
     this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
       this.common.loading--;
-      console.log("resss", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data']) {
         this.formField = res['data'];
         this.formatArray();
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.error('Api Error:', err);
     });
     // }
@@ -302,7 +299,7 @@ export class AddTransactionComponent implements OnInit {
     console.log("oddArray", this.oddArray);
   }
 
-  handleFileSelection(event, i) {
+  handleFileSelection(event, i,arrayType) {
     this.common.loading++;
     this.common.getBase64(event.target.files[0]).then((res: any) => {
       this.common.loading--;
@@ -316,11 +313,22 @@ export class AddTransactionComponent implements OnInit {
         return false;
       }
       this.attachmentFile[i] = { name: file.name, file: res };
+      this.uploadattachFile(arrayType,i);
       console.log("attachmentFile-" + i + " :", this.attachmentFile)
     }, err => {
       this.common.loading--;
       console.error('Base Err: ', err);
     })
+  }
+
+  handleFileSelectionForPdf(event, i, arrayType) {
+    this.common.handleFileSelection(event,["pdf"]).then(res=>{
+      console.log("handleFileSelection:",res);
+      this.attachmentFile[i]= { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType,i);
+    },err=>{
+      this.common.showError();
+    });
   }
 
   uploadattachFile(arrayType, i) {
@@ -359,14 +367,31 @@ export class AddTransactionComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-      console.log("evenArray:::", this.evenArray[i]);
-      console.log("oddArray:::", this.oddArray[i]);
+      // console.log("evenArray:::", this.evenArray[i]);
+      // console.log("oddArray:::", this.oddArray[i]);
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.error('Api Error:', err);
     });
+  }
 
-
+  getParamAllValues(row) {
+    if(this.transForm.requestId>0){
+      let dataparams = {
+        view: {
+          api: 'Processes/getParamAllValues',
+          param: {
+            transId: this.transForm.requestId,
+            colId: row.r_colid,
+            isDynamic: row.r_isdynamic
+          }
+        },
+        title: "Field Value History"
+      }
+      this.common.params = { data: dataparams };
+      const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
   }
 
 }

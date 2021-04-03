@@ -42,39 +42,81 @@ export class TicketAdminComponent implements OnInit {
       hideHeader: true
     }
   };
+  missedCallList = [];
+  missedCallTable = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
 
   searchTask = {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate(),
+    tpId: null,
+    minutes: null
   };
+  tpList = [];
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAdminTicket(999);
+    this.getTicketProcessList();
     this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
 
   refresh() {
+    this.resetSearchForm();
+    this.activeTab = "current";
+    this.getAdminTicket(999);
+    this.getTicketProcessList();
+  }
+
+  resetSearchForm(){
     this.searchTask = {
       startDate: <any>this.common.getDate(-2),
       endDate: <any>this.common.getDate(),
+      tpId: null,
+      minutes: null
     };
-    this.activeTab = "current";
-    this.getAdminTicket(999);
+  }
+
+  getTicketProcessList() {
+    this.common.loading++;
+    this.api.get('Ticket/getTicketProcessList').subscribe(res => {
+      this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      let tpList = res['data'] || [];
+      this.tpList = tpList.filter(ele => {
+        return (ele._is_active)
+      })
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
   }
 
   getAdminTicket(type) {
-    let startDate,endDate = null;
-    if(type===0 || type===1) {
+    let startDate, endDate, tpId, minutes = null;
+    if(type===0 || type===1 || type==2) {
       startDate = (this.searchTask.startDate) ? this.common.dateFormatter(this.searchTask.startDate) : null;
       endDate = (this.searchTask.endDate) ? this.common.dateFormatter(this.searchTask.endDate) : null;
     }
-    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate;
+    if(type==2) {
+      tpId = (this.searchTask.tpId) ? this.searchTask.tpId : null;
+      minutes = (this.searchTask.minutes) ? this.searchTask.minutes : null;
+    }
+    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate+"&tpId="+tpId+"&minutes="+minutes;
     this.common.loading++;
     this.api.get("Ticket/getTicketSummaryByType"+params).subscribe(res => {
       this.common.loading--;
       this.resetSmartTableData();
+      if(res['code']<=0) { this.common.showError(res['msg']); return false;};
       if(type==999){
         this.currentTicketList = res['data'] || [];
         this.setTableCurrent(type);
@@ -84,6 +126,9 @@ export class TicketAdminComponent implements OnInit {
       }else if(type===1){
         this.userWiseTicketList = res['data'] || [];
         this.setTableUserWise(type);
+      }else if(type===2){
+        this.missedCallList = res['data'] || [];
+        this.setTableMissedCall(type);
       }
     }, err => {
       this.common.loading--;
@@ -102,6 +147,10 @@ export class TicketAdminComponent implements OnInit {
       columns: []
     };
     this.userWiseTicketTable.data = {
+      headings: {},
+      columns: []
+    };
+    this.missedCallTable.data = {
       headings: {},
       columns: []
     };
@@ -246,6 +295,48 @@ getTableColumnsUserWiseTicket(type) {
   return columns;
 }
 // end: userwise
+// start: missedCall
+setTableMissedCall(type) {
+  this.missedCallTable.data = {
+    headings: this.generateHeadingsMissedCall(),
+    columns: this.getTableColumnsMissedCall(type)
+  };
+  return true;
+}
+generateHeadingsMissedCall() {
+  let headings = {};
+  for (var key in this.missedCallList[0]) {
+    if (key.charAt(0) != "_") {
+      headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      if (key == 'expdate' || key == 'addtime') {
+        headings[key]["type"] = "date";
+      }
+    }
+  }
+  return headings;
+}
+
+getTableColumnsMissedCall(type) {
+  let columns = [];
+  this.missedCallList.map(ticket => {
+    let column = {};
+    for (let key in this.generateHeadingsMissedCall()) {
+      if (key.toLowerCase() == 'action') {
+        column[key] = {
+          value: "",
+          isHTML: true,
+          action: null,
+          // icons: this.actionIcons(ticket, type)
+        };
+      } else {
+        column[key] = { value: ticket[key], class: 'black', action: '' };
+      }
+    }
+    columns.push(column);
+  });
+  return columns;
+}
+// end: missedCall
 
 callDetails(ticket,type,isDate=false) {
   let params = {

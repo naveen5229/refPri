@@ -252,7 +252,7 @@ export class TicketChatboxComponent implements OnInit {
           this.common.fileLinkHandler('chat_block');
         }, 500);
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['msg'])
       }
     }, err => {
       this.showLoading = false;
@@ -619,10 +619,12 @@ export class TicketChatboxComponent implements OnInit {
     this.common.loading++;
     this.api.post('Ticket/checkTicketReminderSeen', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.common.showToast(res['msg']);
       this.ticketData._isremind = 0;
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error: ', err);
     });
   }

@@ -66,7 +66,9 @@ import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.componen
 import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
 import { UserExpensesComponent } from './user-expenses/user-expenses.component';
 import { KanbanBoardComponent } from '../process/kanban-board/kanban-board.component';
-import { ProjectUserKanbanComponent } from './project-user-kanban/project-user-kanban.component';
+import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
+import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
+import { SitesComponent } from './sites/sites.component';
 
 const routes: Routes = [{
   path: '',
@@ -403,8 +405,18 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
-      path: 'project-user-kanban-board',
-      component: ProjectUserKanbanComponent,
+      path: 'task-kanban',
+      component: TaskKanbanComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'admin-kanban',
+      component: AdminKanbanComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'site',
+      component: SitesComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
