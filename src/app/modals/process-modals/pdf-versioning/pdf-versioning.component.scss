@@ -64,7 +64,6 @@ div#yyy {
   left: 0 !important;
   z-index: 9999;
   width: 100%;
-
 }
 .x {
   position: absolute;
@@ -215,7 +214,7 @@ div#yyy {
 .toolbar {
   display: flex;
   align-items: center;
-  padding: 5px 15px;  
+  padding: 5px 15px;
   height: 50px;
 }
 
@@ -223,8 +222,7 @@ div#yyy {
   margin-left: 10px;
 }
 
-
-.jrx-toolTip{
+.jrx-toolTip {
   position: absolute;
   z-index: 1;
   background: #000;
@@ -234,23 +232,21 @@ div#yyy {
   font-size: 13px;
   color: #ffffff;
   visibility: hidden;
-
- 
 }
-
-
 
 // kavita
-.hoversidebar{
-  table{
+.hoversidebar {
   max-height: 300px;
   overflow: auto;
-}
+  // table {
+  //   max-height: 300px;
+  //   overflow: auto;
+  // }
 }
 .hoversidebar:hover {
   cursor: pointer;
 }
-.userfltr{
+.userfltr {
   list-style: none;
   max-height: 300px;
   overflow: auto;
@@ -259,9 +255,13 @@ div#yyy {
 //   width: 100%;
 // }
 
-
-::ng-deep{
-  .canvas-container{
+::ng-deep {
+  .canvas-container {
     margin: auto !important;
   }
+}
+
+.iconStyle {
+  font-size: 16px;
+  vertical-align: middle;
 }
