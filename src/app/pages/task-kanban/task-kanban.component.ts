@@ -291,7 +291,7 @@ export class TaskKanbanComponent implements OnInit {
       }
     }, (err) => {
       this.common.loading--;
-      this.common.showError(err);
+      this.common.showError();
     });
   }
 
