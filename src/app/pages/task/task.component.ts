@@ -369,11 +369,11 @@ export class TaskComponent implements OnInit {
   }
 
   getProcessLeadByType(type, startDate = null, endDate = null) {
-    this.common.loading++;
+    // this.common.loading++;
     this.resetSmartTableData();
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Processes/getMyProcessByType" + params).subscribe(res => {
-      this.common.loading--;
+      // this.common.loading--;
       if (res['code'] == 1) {
         if (type == 5) {
           this.unreadLeads = res['data'] || [];
@@ -383,18 +383,18 @@ export class TaskComponent implements OnInit {
         this.common.showError(res['msg']);
       }
     }, err => {
-      this.common.loading--;
+      // this.common.loading--;
       this.common.showError();
       console.log('Error: ', err);
     });
   }
 
   getTicketByType(type, startDate = null, endDate = null) {
-    this.common.loading++;
+    // this.common.loading++;
     this.resetSmartTableData();
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Ticket/getTicketByType" + params).subscribe(res => {
-      this.common.loading--;
+      // this.common.loading--;
       if (res['code'] == 1) {
         if (type == 102) {
           this.unreadTkt = res['data'] || [];
@@ -404,7 +404,7 @@ export class TaskComponent implements OnInit {
         }
       }
     }, err => {
-      this.common.loading--;
+      // this.common.loading--;
       this.common.showError();
       console.log('Error: ', err);
     });

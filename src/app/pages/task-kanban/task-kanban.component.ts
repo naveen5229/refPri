@@ -72,7 +72,7 @@ export class TaskKanbanComponent implements OnInit {
   taskStatusButton = 'Hold';
   boardType: number = 0;
   callType = '';
-  taskProgressStatus = 50;
+  taskProgressStatus = 0;
   taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
 
   constructor(private sidebarService: NbSidebarService,
@@ -291,7 +291,7 @@ export class TaskKanbanComponent implements OnInit {
       }
     }, (err) => {
       this.common.loading--;
-      this.common.showError(err);
+      this.common.showError();
     });
   }
 

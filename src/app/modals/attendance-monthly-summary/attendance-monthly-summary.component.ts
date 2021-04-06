@@ -72,7 +72,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.groupList = (this.common.params.groupList) ? this.common.params.groupList : [];
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   closeModal(response) {
     this.activeModal.close();
@@ -121,7 +121,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.api.get(apiName + params)
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         if (res['code'] == 3) {
           this.common.showError(res['data']);
         } else {
@@ -400,13 +400,40 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   exportCSV() {
     if (this.reportType == 'final') {
       this.common.getCSVFromTableId('tableFinalAttendanceList')
-    }else if (this.reportType == 'leave') {
+    } else if (this.reportType == 'leave') {
       this.common.getCSVFromTableId('tableLeaveRequestList')
-    }else if (this.reportType == 'weekly') {
+    } else if (this.reportType == 'weekly') {
       this.common.getCSVFromTableId('tableWeeklyList')
     } else {
       this.common.getCSVFromTableId('attendanceSummary')
     }
+  }
+
+  downloadAttendanceExcel() {
+    let params = {
+      startDate: (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
+      endDate: (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
+      userId: -1
+    }
+    this.common.loading++;
+    this.api.get(`Admin/getWorkHourDetail?startDate=${params.startDate}&endDate=${params.endDate}&userId=${params.userId}`)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          if (res['data'] && res['data'].length > 0) {
+            let headings = {};
+            for (var key in res['data'][0]) {
+              if (key.charAt(0) != "_") {
+                headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+              }
+            }
+            this.common.getCSVFromDataArray(res['data'], headings, 'Work Hour Report')
+          }else{
+            this.common.showError('No Data Available');
+          }
+        };
+        console.log('download res:', res)
+      })
   }
 
   // start: weekly list
@@ -438,7 +465,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(shift,0)
+            icons: this.actionIcons(shift, 0)
           };
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
@@ -461,18 +488,18 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   actionIcons(shift, type) {
     let icons = [
-      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "", title: "view detail",},
+      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "", title: "view detail", },
     ];
     return icons;
   }
 
-  viewWorkHourDetail(shift, type){
+  viewWorkHourDetail(shift, type) {
     let dataparams = {
       view: {
         api: 'Admin/getWorkHourDetail',
         param: {
-          startDate : (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
-          endDate : (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
+          startDate: (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
+          endDate: (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
           userId: shift._aduserid
         }
       },
