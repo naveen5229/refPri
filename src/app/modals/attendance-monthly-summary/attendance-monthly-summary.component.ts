@@ -156,7 +156,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     date.setHours(9);
     date.setMinutes(30);
     let accessUserIds = [34, 125, 236, 257, 120];
-    let accessFoUserIds = [12373];
+    let accessFoUserIds = [12373,27780];
     if (date <= this.common.getDate() && (!column.present || column.present == "") && ((this.userService._loggedInBy == 'admin' && accessUserIds.includes(this.userService._details.id)) || this.userService._loggedInBy != 'admin' && accessFoUserIds.includes(this.userService._details.id))) {
 
       this.common.params = { isAttendanceType: true, date: date, userId: column._userid, userName: column.name };

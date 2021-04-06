@@ -752,7 +752,6 @@ export class TaskComponent implements OnInit {
   // end: unreadTkt
 
   actionIconsForLeads(lead, type) {
-
     let icons = [
       { class: "fas fa-comments no-comment", action: this.transMessage.bind(this, lead, type), txt: '', title: "Lead Comment" }
     ];
@@ -771,14 +770,10 @@ export class TaskComponent implements OnInit {
     }
 
     if (type == 5) {//unread
-      if (lead._cc_user_id > 0) {
-        if (!lead._cc_status) {
-          icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
-        }
-      } else if (lead._is_action == 1) {
-        if (lead._status == 0) {
-          icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
-        }
+      if (lead._cc_user_id > 0 && !lead._cc_status) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
+      } else if (lead._is_action == 1 && !lead._action_status) {
+        icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
       } else if (lead._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
       } else if (lead._status == 2 && lead._state_type == 2) {
@@ -791,7 +786,6 @@ export class TaskComponent implements OnInit {
   }
 
   transMessage(lead, type) {
-    console.log("transMessage:", lead);
     if (lead._transactionid > 0) {
       let editData = {
         transactionid: lead._transactionid,
@@ -866,7 +860,6 @@ export class TaskComponent implements OnInit {
       this.common.showError("Lead ID Not Available");
     }
   }
-
 
   updateTransactionStatusWithConfirm(lead, type, status) {
     let preText = "Complete";
