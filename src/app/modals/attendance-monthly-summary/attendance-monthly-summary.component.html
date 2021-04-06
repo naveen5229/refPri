@@ -26,8 +26,10 @@
                 Final Report</button>
             <button (click)="getAttendanceMonthySummary('leave')" class="btn btn-primary btn-sm mr-2">Get Leave
                 Request</button>
-            <button (click)="getAttendanceMonthySummary('weekly')" class="btn btn-primary btn-sm mr-2">Get Work Hour Report</button>
-            <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV()">
+            <button (click)="getAttendanceMonthySummary('weekly')" class="btn btn-primary btn-sm mr-2">Get Work Hour
+                Report</button>
+            <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel"
+                (click)="exportCSV()">
                 <i class="fas fa-file-excel"></i>
             </button>
         </div>
@@ -91,9 +93,13 @@
                         (onChanged)="weekdate.endDate=$event" [maxd]="currentDate">
                     </uj-date-time-picker>
                 </div>
-                <div class="col-4">
+                <div class="col-2">
                     <button class="btn btn-primary text-capitalize"
                         (click)="getAttendanceMonthySummary('weekly')">Search</button>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-sm ml-2" style="float: right;" (click)="downloadAttendanceExcel()"
+                        title="Download Detailed Report"><i class="fas fa-download"></i></button>
                 </div>
             </div>
         </div>
