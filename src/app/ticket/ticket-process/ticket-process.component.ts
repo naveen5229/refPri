@@ -78,6 +78,7 @@ export class TicketProcessComponent implements OnInit {
     typeList: [{ name: '' }],
     Supervisor: { id: null, name: '' },
     ticketInput: { id: 0, name: 'Auto' },
+    ticketClosure: { id: 0, name: 'Auto' },
     isActive: true,
     url: { checkStatus: '', updateStatus: '', liveFeed: '' },
     ccUserPresense: true
@@ -192,6 +193,8 @@ export class TicketProcessComponent implements OnInit {
   closeaddticketModal() {
     document.getElementById('addTicket').style.display = 'none';
     // this.resetForm();
+    this.optionLink = 'Advance..';
+    this.displayAdvance = false;
   }
 
 
@@ -209,6 +212,7 @@ export class TicketProcessComponent implements OnInit {
       Supervisor: { id: null, name: '' },
       isActive: true,
       ticketInput: { id: 0, name: 'Auto' },
+      ticketClosure: { id: 0, name: 'Auto' },
       url: { checkStatus: '', updateStatus: '', liveFeed: '' },
       ccUserPresense: true
     }
@@ -308,6 +312,7 @@ export class TicketProcessComponent implements OnInit {
       isActive: this.ticketForm.isActive,
       requestId: (this.ticketForm.id > 0) ? this.ticketForm.id : null,
       ticketInput: this.ticketForm.ticketInput.id,
+      ticketClosure: this.ticketForm.ticketClosure.id,
       checkStatusUrl: this.ticketForm.url.checkStatus,
       updateStatusUrl: this.ticketForm.url.updateStatus,
       liveFeedUrl: this.ticketForm.url.liveFeed,
@@ -626,8 +631,13 @@ export class TicketProcessComponent implements OnInit {
       this.ticketForm.secCatList = [{ name: '' }];
       this.ticketForm.typeList = [{ name: '' }];
       this.ticketForm.ticketInput = { id: ticket._ticket_input, name: ticket.ticket_input };
+      this.ticketForm.ticketClosure = { id: ticket._ticket_closure, name: ticket.ticket_closure };
       this.ticketForm.url = { checkStatus: ticket._check_status_url, updateStatus: ticket._update_status_url, liveFeed: ticket._live_feed_url };
       this.ticketForm.ccUserPresense = ticket._default_cc_user;
+    }
+    if (ticket._check_status_url || ticket._update_status_url || ticket._live_feed_url) {
+      this.optionLink = 'Less..';
+      this.displayAdvance = true;
     }
     document.getElementById('addTicket').style.display = 'block';
   }
