@@ -124,6 +124,19 @@
                     </div>
                 </div>
 
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Ticket Closure</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="ticketInputValues" display="name" placeholder="Ticket Input"
+                            name="ticketInput" id="ticketInput" (onSelected)="ticketForm.ticketClosure=$event;"
+                            [preSelected]="(ticketForm.ticketClosure.id>=0) ? {name: ticketForm.ticketClosure.name}:{name:''}"
+                            autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
                 <div class="row form-group" *ngIf="displayAdvance">
                     <div class="col-4">
                         <label>Check Status Url</label>
@@ -408,7 +421,14 @@
                     </div>
                 </div>
 
-                
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Esclation time for tkt complete</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" [(ngModel)]="ticketPropertyForm.complEscTime">
+                    </div>
+                </div>
 
                 <div class="row form-group">
                     <div class="col-4">
@@ -428,15 +448,6 @@
                     </div>
                     <div class="col-8">
                         <input type="number" min="0" [(ngModel)]="ticketPropertyForm.repeatDuration">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Esclation time for tkt complete</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.complEscTime">
                     </div>
                 </div>
                 <div class="row form-group">
