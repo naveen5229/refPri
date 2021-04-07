@@ -136,9 +136,10 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             (this.weeklyList.length > 0) ? this.setTableWeeklyList() : this.resetTableFinalAttendanceList()
           } else {
             this.attendanceSummaryList = res['data'] || [];
-            this.filterData = _.groupBy(this.attendanceSummaryList, 'name');
+            this.filterData = _.groupBy(this.attendanceSummaryList, '_userid');
+            console.log("this.filterData", this.filterData)
             Object.keys(this.filterData).map(key => {
-              this.filteredAttendanceSummaryList.push({ name: key, data: _.sortBy(this.filterData[key], 'date') });
+              this.filteredAttendanceSummaryList.push({ name: this.filterData[key][0].name, data: _.sortBy(this.filterData[key], 'date') });
             })
           }
 
@@ -155,8 +156,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let currentTime = new Date();
     date.setHours(9);
     date.setMinutes(30);
-    let accessUserIds = [34, 125, 236, 257, 120];
-    let accessFoUserIds = [12373,27780];
+    let accessUserIds = [34, 125, 236, 257, 120, 194];
+    let accessFoUserIds = [12373, 27780];
     if (date <= this.common.getDate() && (!column.present || column.present == "") && ((this.userService._loggedInBy == 'admin' && accessUserIds.includes(this.userService._details.id)) || this.userService._loggedInBy != 'admin' && accessFoUserIds.includes(this.userService._details.id))) {
 
       this.common.params = { isAttendanceType: true, date: date, userId: column._userid, userName: column.name };
@@ -428,7 +429,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
               }
             }
             this.common.getCSVFromDataArray(res['data'], headings, 'Work Hour Report')
-          }else{
+          } else {
             this.common.showError('No Data Available');
           }
         };
