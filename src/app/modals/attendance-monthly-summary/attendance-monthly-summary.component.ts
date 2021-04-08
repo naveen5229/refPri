@@ -18,7 +18,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   weekdate = { startDate: this.common.getDate(-6), endDate: this.common.getDate() }
   endTime = new Date();
   startTime = new Date();
-  attendanceSummaryList = [];
+  // attendanceSummaryList = [];
   filterData: any;
   filteredAttendanceSummaryList = [];
   selectedDates = {
@@ -135,12 +135,13 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             this.weeklyList = res['data'] || [];
             (this.weeklyList.length > 0) ? this.setTableWeeklyList() : this.resetTableFinalAttendanceList()
           } else {
-            this.attendanceSummaryList = res['data'] || [];
-            this.filterData = _.groupBy(this.attendanceSummaryList, '_userid');
-            console.log("this.filterData", this.filterData)
+            // this.attendanceSummaryList = res['data'] || [];
+            this.filterData = (res['data'] && res['data'].length > 0) ? _.groupBy(res['data'], '_userid') : [];
             Object.keys(this.filterData).map(key => {
               this.filteredAttendanceSummaryList.push({ name: this.filterData[key][0].name, data: _.sortBy(this.filterData[key], 'date') });
-            })
+            });
+            this.filteredAttendanceSummaryList = _.sortBy(this.filteredAttendanceSummaryList,'name');
+            console.log('greeneffect',this.filteredAttendanceSummaryList)
           }
 
         }
