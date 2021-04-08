@@ -41,6 +41,7 @@ export class TaskComponent implements OnInit {
   projectTaskList = [];
   holdTaskList = [];
   SearchBy = "By Task";
+  fabAction=false;
 
   tableNormal = {
     data: {
@@ -3027,5 +3028,6 @@ export class TaskComponent implements OnInit {
     }
     );
   }
+
 
 }

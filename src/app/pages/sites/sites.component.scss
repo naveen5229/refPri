@@ -15,5 +15,10 @@
     color: black;
 }
 :host ::ng-deep .tableFixHead{
-    max-height: calc(100vh - 472px);
+    max-height: calc(100vh - 486px);
+}
+input{
+    border: 0;
+    outline: 0;
+    box-shadow: none;
 }

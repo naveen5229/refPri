@@ -1,0 +1,23 @@
+<nb-card style="border: 0px;">
+  <!-- <nb-card-header>
+   
+  </nb-card-header> -->
+  <nb-card-body style="background: #f5f3f7;padding: 1rem 1rem;">
+    <div class="out-topnav">
+    <div>
+      <p class="dirbtn"><i class="fa fa-backward" (click)="backwardMove()"></i></p>
+    </div>
+    <div class="toptab">
+      <div class="hiddenby">
+        <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'" (click)="selectedDashboard='Tmg-Task'">
+          <b>Task DashBoard</b>
+        </p>
+      </div>
+    </div>
+    <div>
+      <p class="dirbtn"><i class="fa fa-forward" (click)="forwardMove()"></i></p>
+    </div>
+   </div>
+   <tmg-task *ngIf="selectedDashboard=='Tmg-Task'"></tmg-task>
+  </nb-card-body>
+</nb-card>
