@@ -41,6 +41,7 @@ export class TaskComponent implements OnInit {
   projectTaskList = [];
   holdTaskList = [];
   SearchBy = "By Task";
+  fabAction=false;
 
   tableNormal = {
     data: {
@@ -772,7 +773,7 @@ export class TaskComponent implements OnInit {
     if (type == 5) {//unread
       if (lead._cc_user_id > 0 && !lead._cc_status) {
         icons.push({ class: "fa fa-check-square text-warning", action: this.ackLeadByCcUser.bind(this, lead, type), txt: '', title: "Mark Ack as CC Lead" });
-      } else if (lead._is_action == 1 && !lead._status) {
+      } else if (lead._is_action == 1 && !lead._action_status) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateLeadActionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack As Action" });
       } else if (lead._status == 0) {
         icons.push({ class: "fa fa-thumbs-up text-warning", action: this.updateTransactionStatus.bind(this, lead, type, 2), txt: '', title: "Mark Ack" });
@@ -3027,5 +3028,6 @@ export class TaskComponent implements OnInit {
     }
     );
   }
+
 
 }

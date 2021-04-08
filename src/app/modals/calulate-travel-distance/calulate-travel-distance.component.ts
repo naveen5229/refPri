@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { constructor, info, time } from 'console';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { range } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -118,7 +117,7 @@ export class CalulateTravelDistanceComponent implements OnInit {
     this.api.get('Admin/getAllAdmin.json')
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.adminList = res['data'] || [];
         console.log(this.adminList);
       }, err => {
@@ -138,14 +137,20 @@ export class CalulateTravelDistanceComponent implements OnInit {
       this.api.get("Location/getLatLongBtwTime.json?" + params)
         .subscribe(res => {
           this.common.loading--;
-          if(res['code']===0) { this.common.showError(res['msg']); return false;};
+          if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           let travelDistanceLatLng = res['data'] || [];
-          travelDistanceLatLng[0]['wayPoints'].forEach((element, index) => {
-            element.label = index + 1;
-          });
-          travelDistanceLatLng[1]['wayPointsLive'].forEach((element, index) => {
-            element.label = index + 1;
-          });
+
+          if (travelDistanceLatLng[0]['wayPoints'] && travelDistanceLatLng[0]['wayPoints'].length > 0) {
+            travelDistanceLatLng[0]['wayPoints'].forEach((element, index) => {
+              element.label = index + 1;
+            });
+          }
+
+          if (travelDistanceLatLng[1]['wayPointsLive'] && travelDistanceLatLng[1]['wayPointsLive'].length > 0) {
+            travelDistanceLatLng[1]['wayPointsLive'].forEach((element, index) => {
+              element.label = index + 1;
+            });
+          }
           this.travelDistanceData = travelDistanceLatLng || [];
           console.log("🚀 ~ file: calulate-travel-distance.component.ts ~ line 132 ~ CalulateTravelDistanceComponent ~ getTravelDistance ~ this.travelDistanceData", this.travelDistanceData)
           if (!this.travelDistanceData) {
@@ -318,7 +323,7 @@ export class CalulateTravelDistanceComponent implements OnInit {
     console.log('time:', id, lat, lng, time);
     const params = `userId=${id}&lat=${lat}&long=${lng}&time=${time}`;
     this.api.get("Admin/getImageOnClick?" + params).subscribe((res: any) => {
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       this.imageArrayonMap = res.data || []
       console.log('images:', this.imageArrayonMap);
       this.showImages(lat, lng);
