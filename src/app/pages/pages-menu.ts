@@ -7,6 +7,12 @@ export const MENU_ITEMS = JSON.stringify([
     home: true,
     children: [
       {
+        title: 'TMG Dashboard',
+        // icon: 'fa-chart-pie',
+        link: '/pages/tmg-dashboard',
+        home: true,
+      },
+      {
         title: 'User Role',
         icon: 'people-outline',
         link: '/pages/user-role',

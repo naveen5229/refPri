@@ -30,6 +30,10 @@ export class CommonService {
     reject: "red",
     hold: "antiquewhite",
   }
+
+  chartData: any;
+  chartOptions: any;
+
   constructor(private toastrService: NbToastrService,public modalService: NgbModal,
     private datePipe: DatePipe,public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
@@ -1047,7 +1051,97 @@ export class CommonService {
   arrayUnique(list,key){
     return [...new Map(list.map(item =>[item[key], item])).values()];
   }
+  chartScaleLabelAndGrid(arr) {
+    let chartObj = {
+      yaxisLabel: '',
+      scaleData: null,
+      gridSize: null,
+      minValue: 0
+    }
+    var max = 0;
+    if (arr.length) {
+      max = arr.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
+    }
+    //--y axis scale data
+    if (max > 1000 && max < 90000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 100;
+      });
+      chartObj.yaxisLabel = "(in '00)"
+    }
+    else if (max > 90000 && max < 900000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 1000;
+      });
+      chartObj.yaxisLabel = "(in '000)";
+    }
+    else if (max > 900000 && max < 9000000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 100000;
+      });
+      chartObj.yaxisLabel = "(in Lacs)";
+    }
+    else if (max > 9000000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 10000000;
+      });
+      chartObj.yaxisLabel = "(in Cr.)";
+    }
+    else {
+      chartObj.scaleData = arr;
+    }
 
+    //-----grid size
+    var max1 = chartObj.scaleData.reduce(function (a, b) {
+      return Math.max(a, b);
+    });
+    var min1 = chartObj.scaleData.reduce(function (a, b) {
+      return Math.min(a, b);
+    });
+    console.log("max1", max1, min1);
+    chartObj.gridSize = Math.round(((max1 - min1) / 5) / 10) * 10;
+    return chartObj;
+  }
+  
+  pieChart(labels, data, colors) {
+    let chartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: data,
+          backgroundColor: colors
+        }
+      ]
+    };
+
+    let chartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            display: false
+          }
+        ],
+        yAxes: [
+          {
+            display: false
+          }
+        ]
+      },
+      legend: false
+    };
+
+    // setTimeout(() => {
+    //   console.log(document.getElementsByTagName("canvas")[0]);
+    //   document.getElementsByTagName("canvas")[0].style.width = "80px";
+    //   document.getElementsByTagName("canvas")[0].style.height = "180px";
+    // }, 10);
+
+    return { chartData, chartOptions };
+  }
 }
 
 
