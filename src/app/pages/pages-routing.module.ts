@@ -69,6 +69,7 @@ import { KanbanBoardComponent } from '../process/kanban-board/kanban-board.compo
 import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
 import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
 import { SitesComponent } from './sites/sites.component';
+import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 
 const routes: Routes = [{
   path: '',
@@ -417,6 +418,11 @@ const routes: Routes = [{
     {
       path: 'site',
       component: SitesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'tmg-dashboard',
+      component: TmgDashboardComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

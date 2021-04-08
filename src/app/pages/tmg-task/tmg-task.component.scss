@@ -1,0 +1,74 @@
+.thead{
+    background-color: #363232;
+    color: #ffffff;
+    font-size: 12px;
+}
+:host::ng-deep.table{
+    font-size : 11px;
+    font-weight: 600;
+}
+:host::ng-deep.table tr td{   
+    padding: 2px 2px !important;
+}
+:host::ng-deep.table thead th{
+    padding : 2px !important;
+    font-size : 11px !important;
+}
+.outer{
+    padding: 5px 5px;
+    background: white; box-shadow: 0 0.66875rem 2.3875rem rgba(31,10,6,0.03), 0 1.1375rem 1.60625rem rgba(31,10,6,0.03), 0 0.45rem 0.73125rem rgba(31,10,6,0.05), 0 0.325rem 0.3875rem rgba(31,10,6,0.03);
+   
+
+}
+.outer:hover{
+    padding: 5px 5px;
+}
+.charthead{
+    font-weight: bold;
+    font-family: sans-serif;
+    color: black;
+    text-shadow: 1px 1px 4px #cac1c1;
+}
+.table{
+    margin-bottom: 0rem!important;
+    font-family: "Poppins", sans-serif !important;
+    .thead{
+        background-color: #c9c2de;
+        color: #000000;
+        font-size: 12px;
+        text-align: center;
+        th{
+            padding: 10px 2px !important;
+
+        }
+        
+}
+}
+.table tr td {
+    text-align: center !important;
+    background-color: #fff !important;
+}
+.table-bordered th, .table-bordered td {
+    border: 1px solid #ffffff!important;
+}
+.contentsection{
+    height: calc(100vh - 110px);
+    overflow: auto;
+    margin-top: 10px;
+}
+.link{
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+
+:host::ng-deep.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    position: relative;
+    left: calc(50% - 20px);;
+  }
