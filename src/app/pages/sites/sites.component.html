@@ -1,13 +1,13 @@
 <nb-card>
   <nb-card-header>
-    <h5>Sites</h5>
+    <h5 class="heading-design">Sites</h5>
   </nb-card-header>
 
   <nb-card-body>
     <div class="body-box">
       <div class="row">
         <div class="col-4"
-          style="border-left:solid;border-top:solid;border-bottom:solid;border-right:solid; border-width:2px;border-color:lightgrey;padding:10px;border-radius:3px;">
+          style="background: #f9f9f9;">
           <div class="form-group">
             <div class="col-4 display"><label>SiteName<span style="color:red;font-size:15px;">*</span></label></div>
             <div class="col-8 display">
@@ -63,15 +63,13 @@
 
           <div class="form-group">
             <div class="col-12">
-              <hr style="background-color:#dad4d4;height:1px;width:100%" />
+              <hr style="background-color:#dad4d4;width:100%" />
             </div>
           </div>
 
           <div class="form-group">
             <div class="col-12">
-              <smart-table *ngIf="Sites.length>0" style="height:27vh!important;overflow-y:scroll!important;"
-                [data]="table.data" [settings]="table.settings" id="verifyState">
-              </smart-table>
+              <smart-table *ngIf="Sites.length>0" [data]="table.data" [settings]="table.settings" id="verifyState"></smart-table>
             </div>
           </div>
         </div>
