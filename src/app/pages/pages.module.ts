@@ -61,6 +61,9 @@ import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
 import { SitesComponent } from './sites/sites.component';
+import { ChartModule } from 'angular2-chartjs';
+import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
+import { TmgTaskComponent } from './tmg-task/tmg-task.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -73,7 +76,8 @@ import { SitesComponent } from './sites/sites.component';
     CampaignModule,
     ProcessModule,
     TicketModule,
-    DragDropModule
+    DragDropModule,
+    ChartModule
   ],
   declarations: [
     PagesComponent,
@@ -126,7 +130,9 @@ import { SitesComponent } from './sites/sites.component';
     UserExpensesComponent,
     TaskKanbanComponent,
     AdminKanbanComponent,
-    SitesComponent
+    SitesComponent,
+    TmgDashboardComponent,
+    TmgTaskComponent
   ],
 })
 export class PagesModule {
