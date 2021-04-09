@@ -93,8 +93,8 @@
                     (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master
                 </li>
-                <li [ngClass]="activeTab=='unreadLeads'?'active':''"
-                    (click)="activeTab='unreadLeads'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
+                <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''"
+                    (click)="activeTab='unreadTaskByMe'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
                     Unread
                 </li>
                 <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
@@ -259,7 +259,7 @@
             <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
             </smart-table>
         </div> -->
-        <div *ngIf="activeTab=='unreadLeads'" class="multiTableHeight">
+        <div *ngIf="activeTab=='unreadTaskByMe'" class="multiTableHeight">
             <div class="tableTitle">TASK</div>
             <smart-table style="height: auto;" (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data"
                 [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">

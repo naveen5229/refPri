@@ -23,8 +23,8 @@ import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-fo
   styleUrls: ["./task.component.scss"],
 })
 export class TaskComponent implements OnInit {
-  // activeTab = "unreadTaskByMe";
-  activeTab = "unreadLeads";
+  activeTab = "unreadTaskByMe";
+  // activeTab = "unreadLeads";
   task_type = 1;
   userId = null;
   primaryId = null;
@@ -227,8 +227,8 @@ export class TaskComponent implements OnInit {
   ngOnInit() { }
 
   refresh() {
-    // this.activeTab = "unreadTaskByMe";
-    this.activeTab = "unreadLeads";
+    this.activeTab = "unreadTaskByMe";
+    // this.activeTab = "unreadLeads";
     this.getTaskByType(-8);
     this.getProcessLeadByType(5);
     this.getTicketByType(102);
@@ -247,8 +247,8 @@ export class TaskComponent implements OnInit {
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
-    //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
-    //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
+    // activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
+    // console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
     // if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
     //   this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
     // }
