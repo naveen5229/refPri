@@ -94,7 +94,7 @@
 
   .fa,
   .fas {
-    font-size: 18px;
+    font-size: 22px;
     cursor: pointer;
   }
 
@@ -193,7 +193,7 @@ smart-table {
 .allicons,
 .fab {
   height: 40px !important;
-  padding: 1px 0px 1px 1px !important;
+  padding: 3px 0px 1px 1px !important;
   width: 40px;
   background: #3366ff;
   border-radius: 50px;
@@ -230,10 +230,10 @@ smart-table {
   display: flex;
   flex-direction: column;
   position: absolute;
-  right: 15px;
+  right: 0;
   z-index: 999;
   width: 50px;
-  top: -8px;
+  top: -2px;
 
   .fab {
     height: 44px !important;
@@ -270,6 +270,65 @@ smart-table {
     }
   }
 
- 
-
+}
+.outerbtn{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  .noticon{
+    position: relative;
+    .count{
+      width: 20px;
+      height: 20px;
+      background: red;
+      position: absolute;
+      border-radius: 50px;
+      z-index: 9;
+      left: 29px;
+      top: -6px;
+    }
+    .allicons{
+      height: 35px !important;
+      width: 35px;
+      img{
+        width: 22px;
+    }
+    .fab{
+      font-size: 18px;
+  }
+    }
+  }
+  
+}
+.blink {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  opacity: .25;
+}
+.orange {
+  background-color: orange;
+  border: orange;
+  -webkit-animation: up-right 1s infinite;
+  -moz-animation: up-right 1s infinite;
+  -o-animation: up-right 1s infinite;
+  animation: up-right 1s infinite;
+}
+.green{
+  background-color: green;
+  border: green;
+}
+@keyframes up-right {
+  0% {
+      transform: scale(1);
+      opacity: .25
+  }
+  50% {
+      transform: scale (1, 5);
+      opacity: 1;
+  }
+  100% {
+      transform: scale(1);
+      opacity: .25;
+  }
 }
