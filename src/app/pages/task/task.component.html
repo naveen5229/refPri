@@ -32,7 +32,7 @@
             <div class="col-4">
              <div  class="fabsection">
                 <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction"><i class="fas fa-ellipsis-v"></i></button>
-                <div class="text-right"  [ngClass]="{'y': fabAction, 'z': !fabAction}">
+                <div class="text-right"  [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
                 <button class="btn btn-primary btn-sm allicons" id="process"
                     (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
                         src="./assets/images/process.svg" alt="process"></button>
