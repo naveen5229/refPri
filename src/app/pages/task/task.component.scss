@@ -280,12 +280,15 @@ smart-table {
     .count{
       width: 20px;
       height: 20px;
-      background: red;
+      background: #524963;
       position: absolute;
       border-radius: 50px;
       z-index: 9;
-      left: 29px;
+      left: 23px;
       top: -6px;
+      text-align: center;
+      color: #fff;
+      font-size: 10px;
     }
     .allicons{
       height: 35px !important;

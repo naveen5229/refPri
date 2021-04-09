@@ -23,8 +23,8 @@ import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-fo
   styleUrls: ["./task.component.scss"],
 })
 export class TaskComponent implements OnInit {
-  // activeTab = "unreadTaskByMe";
-  activeTab = "unreadLeads";
+  activeTab = "unreadTaskByMe";
+  // activeTab = "unreadLeads";
   task_type = 1;
   userId = null;
   primaryId = null;
@@ -42,12 +42,7 @@ export class TaskComponent implements OnInit {
   holdTaskList = [];
   SearchBy = "By Task";
   fabAction = false;
-  processTicketNotiSts = {
-    pCount: 1,
-    pOverdue: 1,
-    tCount:1,
-    tOverdue:1
-  };
+  processTicketNotiSts = {};
 
   tableNormal = {
     data: {
@@ -227,21 +222,22 @@ export class TaskComponent implements OnInit {
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
-    // this.getProcessTicketCount();
+    this.getProcessTicketCount();
     this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() { }
 
   refresh() {
-    // this.activeTab = "unreadTaskByMe";
-    this.activeTab = "unreadLeads";
+    this.activeTab = "unreadTaskByMe";
+    // this.activeTab = "unreadLeads";
     this.getTaskByType(-8);
     this.getProcessLeadByType(5);
     this.getTicketByType(102);
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
+    this.getProcessTicketCount();
   }
 
   resetSearchTask() {
@@ -254,8 +250,8 @@ export class TaskComponent implements OnInit {
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
-    //activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
-    //console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
+    // activeId = (!activeId)?document.getElementById('table').querySelector('tbody').children[0].id:activeId;
+    // console.log('res',document.getElementById('table').querySelector('tbody').children[0].id);
     // if (key == 'enter' && (!activeId) && this.unreadTaskForMeList.length && this.selectedRow != -1 && this.activeTab == 'unreadTaskByMe') {
     //   this.ticketMessage(this.unreadTaskForMeList[this.selectedRow], -8);
     // }
@@ -324,23 +320,22 @@ export class TaskComponent implements OnInit {
     );
   }
 
-  // getProcessTicketCount() {
-  //   this.api.get("Ticket/getOpenTicketCount").subscribe(
-  //     (res) => {
-  //       if (res["code"] > 0) {
-  //         this.processTicketNotiSts = res["data"];
-  //         console.log("data", this.processTicketNotiSts);
-  //         // this.departmentList = res["data"] || [];
-  //       } else {
-  //         this.common.showError(res["msg"]);
-  //       }
-  //     },
-  //     (err) => {
-  //       this.common.showError();
-  //       console.log("Error: ", err);
-  //     }
-  //   );
-  // }
+  getProcessTicketCount() {
+    this.api.get("Ticket/getOpenTicketCount").subscribe(
+      (res) => {
+        if (res["code"] > 0) {
+          console.log("data", res["data"] );
+          this.processTicketNotiSts = res['data'];
+        } else {
+          this.common.showError(res["msg"]);
+        }
+      },
+      (err) => {
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
+  }
 
   showProjectPopup() {
     this.tableUnreadTaskForMeList.settings.arrow = false;
