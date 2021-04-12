@@ -91,7 +91,6 @@
 }
 
 :host ::ng-deep {
-
   .fa,
   .fas {
     font-size: 18px;
@@ -236,18 +235,18 @@ smart-table {
   top: 0px;
 
   .fab {
-    height:40px !important;
+    height: 40px !important;
     width: 40px;
-    transition: .1s;
+    transition: 0.1s;
   }
 
   .fab:hover {
-    transition: .1s;
+    transition: 0.1s;
     transform: translate(0px, 2px);
   }
 
   div {
-    transition: .1s;
+    transition: 0.1s;
     display: flex;
     flex-direction: column-reverse;
     justify-content: space-around;
@@ -255,29 +254,28 @@ smart-table {
   }
   .fhide {
     opacity: 0;
-    transition: opacity .9s;
-    button{
+    transition: opacity 0.9s;
+    button {
       display: none;
-      transition: display .9s;
+      transition: display 0.9s;
     }
   }
   .fshow {
     opacity: 1;
-    transition: opacity .9s;
-    button{
+    transition: opacity 0.9s;
+    button {
       display: block;
-      transition: display .9s;
+      transition: display 0.9s;
     }
   }
-
 }
-.outerbtn{
+.outerbtn {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  .noticon{
+  .noticon {
     position: relative;
-    .count{
+    .count {
       width: 26px;
       height: 26px;
       background: #cb0606;
@@ -292,23 +290,21 @@ smart-table {
       color: #fff;
       font-size: 12px;
     }
-    .allicons{
-     
-      img{
+    .allicons {
+      img {
         width: 18px;
+      }
+      .fab {
+        font-size: 18px;
+      }
     }
-    .fab{
-      font-size: 18px;
   }
-    }
-  }
-  
 }
 .blink {
   border-radius: 50%;
   width: 80px;
   height: 80px;
-  opacity: .25;
+  opacity: 0.25;
 }
 .orange {
   background-color: orange;
@@ -318,21 +314,67 @@ smart-table {
   -o-animation: up-right 1s infinite;
   animation: up-right 1s infinite;
 }
-.green{
+.green {
   background-color: green;
   border: green;
 }
 @keyframes up-right {
   0% {
-      transform: scale(1);
-      opacity: .25
+    transform: scale(1);
+    opacity: 0.25;
   }
   50% {
-      transform: scale (1, 5);
-      opacity: 1;
+    transform: scale (1, 5);
+    opacity: 1;
   }
   100% {
-      transform: scale(1);
-      opacity: .25;
+    transform: scale(1);
+    opacity: 0.25;
+  }
+}
+
+.todolayout {
+  position: absolute;
+  right: 17px;
+  top: 170px;
+  height: 472px;
+  width: 250px;
+  z-index: 999;
+  background: white;
+
+  .addtodo {
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    background: beige;
+
+    div{
+      padding-top: 2px;
+    }
+  }
+
+  .todolist {
+    text-align: center;
+    height: 30px;
+    background: #263238;
+    margin-top: 2px;
+    color: white;
+    display: flex;
+  }
+
+  .todoTitle {
+    width: 70%;
+  }
+
+  .todoAction {
+    width: 30%;
+  }
+
+  .todoHeading {
+    text-align: center;
+    font-weight: bold;
+    background: #3366ff;
+    color: white;
+    height: 30px;
   }
 }
