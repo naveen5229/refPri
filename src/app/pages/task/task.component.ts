@@ -43,7 +43,6 @@ export class TaskComponent implements OnInit {
   SearchBy = "By Task";
   fabAction = false;
   processTicketNotiSts = {};
-
   tableNormal = {
     data: {
       headings: {},
@@ -2218,8 +2217,8 @@ export class TaskComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
+    console.log("ticketMessage:", ticket, type);
     this.tableUnreadTaskForMeList.settings.arrow = false;
-    console.log("type:", type);
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -2247,9 +2246,25 @@ export class TaskComponent implements OnInit {
       container: "nb-layout",
       backdrop: "static",
     });
-    console.log('reszponse', activeModal, type);
     activeModal.result.then((data) => {
-      console.log('reszponse 2nd', activeModal, type);
+      // if (type == -8) {
+      //   if (this.unreadTaskForMeList && this.unreadTaskForMeList.length <= 3) {
+      //     this.getTaskByType(type);
+      //   } else {
+      //     if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id)){
+      //       ticket
+      //     }else{
+      //       let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
+      //       if (ticket._cc_user_id && !ticket._cc_status) {
+      //         activeRowData._cc_status = 1;
+      //       } else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+      //         activeRowData._pu_status = 1;
+      //       }
+      //       this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+      //       this.setTableUnreadTaskForMe(type);
+      //     }
+      //   }
+      // }
       type ? this.getTaskByType(type) : null;
       this.tableUnreadTaskForMeList.settings.arrow = true;
       // if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) { } else
