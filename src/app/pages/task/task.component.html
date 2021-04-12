@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="col-4 text-right">
-                <div class="mr-5 outerbtn">
+                <div class="mr-4 outerbtn">
                     <div  class="noticon">
                     <button class="btn btn-primary btn-sm allicons mr-3" [ngClass]="{'orange': processTicketNotiSts['p_overdue'] || (processTicketNotiSts['p_overdue'] && processTicketNotiSts['p_count']), 'green': !processTicketNotiSts['p_overdue'] && processTicketNotiSts['p_count']}"  id="process"
                 (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
@@ -39,7 +39,7 @@
                 <span class="count" *ngIf="processTicketNotiSts['p_count']">{{processTicketNotiSts['p_count']}}</span>
             </div>                                       
                 <div class="noticon">
-                 <button class="btn btn-primary btn-sm allicons mr-3" [ngClass]="{'orange': processTicketNotiSts['overdue'] || (processTicketNotiSts['overdue'] && processTicketNotiSts['count']), 'green': !processTicketNotiSts['overdue'] && processTicketNotiSts['count']}" id="ticket"
+                 <button class="btn btn-primary btn-sm allicons mr-4" [ngClass]="{'orange': processTicketNotiSts['overdue'] || (processTicketNotiSts['overdue'] && processTicketNotiSts['count']), 'green': !processTicketNotiSts['overdue'] && processTicketNotiSts['count']}" id="ticket"
                     (click)="common.gotoPage('/pages/ticket')" title="Go To Ticket"><i class="fas fa-ticket-alt"></i></button>
                     <span class="count" *ngIf="processTicketNotiSts['count']">{{processTicketNotiSts['count']}}</span>
                 </div>
