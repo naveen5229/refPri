@@ -13,10 +13,14 @@
 :host::ng-deep.table thead th{
     padding : 2px !important;
     font-size : 11px !important;
+    background: #3f6ad8;
+    color: #fff;
 }
 .outer{
     padding: 5px 5px;
-    background: white; box-shadow: 0 0.66875rem 2.3875rem rgba(31,10,6,0.03), 0 1.1375rem 1.60625rem rgba(31,10,6,0.03), 0 0.45rem 0.73125rem rgba(31,10,6,0.05), 0 0.325rem 0.3875rem rgba(31,10,6,0.03);
+    background: #f5faff;
+    border: 1px solid #e7eaf2;
+     box-shadow: 0 0.66875rem 2.3875rem rgba(31,10,6,0.03), 0 1.1375rem 1.60625rem rgba(31,10,6,0.03), 0 0.45rem 0.73125rem rgba(31,10,6,0.05), 0 0.325rem 0.3875rem rgba(31,10,6,0.03);
    
 
 }
@@ -45,20 +49,20 @@
 }
 }
 .table tr td {
-    text-align: center !important;
-    background-color: #fff !important;
+   
+    //background-color: #fff !important;
 }
 .table-bordered th, .table-bordered td {
     border: 1px solid #ffffff!important;
 }
 .contentsection{
-    height: calc(100vh - 110px);
+    height: calc(100vh - 114px);
     overflow: auto;
     margin-top: 10px;
 }
 .link{
     text-decoration: underline;
-    color: blue;
+    color: #8f9bb3;
     cursor: pointer;
 }
 
