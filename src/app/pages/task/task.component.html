@@ -29,13 +29,26 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 text-right">
+                <div class="mr-4 outerbtn">
+                    <div  class="noticon">
+                    <button class="btn btn-primary btn-sm allicons mr-3" [ngClass]="{'orange': processTicketNotiSts['p_overdue'] || (processTicketNotiSts['p_overdue'] && processTicketNotiSts['p_count']), 'green': !processTicketNotiSts['p_overdue'] && processTicketNotiSts['p_count']}"  id="process"
+                (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
+                    src="./assets/images/process.svg" alt="process">
+                </button>
+                <span class="count" *ngIf="processTicketNotiSts['p_count']">{{processTicketNotiSts['p_count']}}</span>
+            </div>                                       
+                <div class="noticon">
+                 <button class="btn btn-primary btn-sm allicons mr-4" [ngClass]="{'orange': processTicketNotiSts['overdue'] || (processTicketNotiSts['overdue'] && processTicketNotiSts['count']), 'green': !processTicketNotiSts['overdue'] && processTicketNotiSts['count']}" id="ticket"
+                    (click)="common.gotoPage('/pages/ticket')" title="Go To Ticket"><i class="fas fa-ticket-alt"></i></button>
+                    <span class="count" *ngIf="processTicketNotiSts['count']">{{processTicketNotiSts['count']}}</span>
+                </div>
+                </div>
              <div  class="fabsection">
                 <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="text-right"  [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
-                <button class="btn btn-primary btn-sm allicons" id="process"
-                    (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
-                        src="./assets/images/process.svg" alt="process"></button>
+               
+                    
                 <button class="btn btn-primary btn-sm allicons" id="addBroadcast" title="Add Broadcast"
                     (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
                 <button class="btn btn-primary btn-sm leave allicons" id="applyleave" title="Apply Leave"
@@ -93,8 +106,8 @@
                     (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master
                 </li>
-                <li [ngClass]="activeTab=='unreadLeads'?'active':''"
-                    (click)="activeTab='unreadLeads'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
+                <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''"
+                    (click)="activeTab='unreadTaskByMe'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
                     Unread
                 </li>
                 <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
@@ -259,7 +272,7 @@
             <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
             </smart-table>
         </div> -->
-        <div *ngIf="activeTab=='unreadLeads'" class="multiTableHeight">
+        <div *ngIf="activeTab=='unreadTaskByMe'" class="multiTableHeight">
             <div class="tableTitle">TASK</div>
             <smart-table style="height: auto;" (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data"
                 [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
