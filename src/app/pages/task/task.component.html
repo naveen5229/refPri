@@ -293,13 +293,16 @@
             </smart-table>
         </div>
 
-        <div style="text-align: end;">
+        <div class="todosec">
             <div class="todolayout" *ngIf="todoVisi">
-                <div class="todoHeading">To Do List</div>
-                <div class="right">
+                <div class="todoHeading">
+                    <p>To Do List  </p>
+                     <div class="right">
                     <i class="fas fa-plus" *ngIf="!todoAddList" (click)="todoAddList = true"></i>
                     <i class="fas fa-times" *ngIf="todoAddList" (click)="todoAddList = false" (click)="resetTaskTodoForm()"></i>
                 </div>
+             </div>
+              
                 <div class="addtodo" *ngIf="todoAddList">
                     <div class="columnGap">
                         <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
@@ -325,16 +328,20 @@
                             (click)="resetTaskTodoForm()" title="Reset">Reset</button>
                     </div>
                 </div>
+                <div class="todoouter">
                 <div class="todolist" *ngFor="let todo of taskTodoList">
                     <div class="todoTitle"> {{todo.task_desc}} </div>
                     <div class="todoAction"><i class="fas fa-edit success"
                             (click)="todoAddList=true;editTodoTask(todo)"></i></div>
                 </div>
             </div>
+            </div>
+            <div class="todobtns">
             <button class="btn btn-primary btn-sm" title="Todo List" (click)="todoVisi = !todoVisi">
                 <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
                 <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
             </button>
+            </div>
         </div>
 
     </nb-card-body>
