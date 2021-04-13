@@ -205,6 +205,9 @@ export class TaskComponent implements OnInit {
   unreadLeads = [];
   unreadTkt = [];
   selectedRow = -1;
+  todoVisi = false;
+  todoAddList = false;
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
     this.keyHandler(event);
@@ -222,6 +225,7 @@ export class TaskComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getProcessTicketCount();
+    this.getTodoTaskList(0);
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -237,6 +241,7 @@ export class TaskComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getProcessTicketCount();
+    this.getTodoTaskList(0);
   }
 
   resetSearchTask() {
@@ -958,6 +963,7 @@ export class TaskComponent implements OnInit {
 
   getTaskByType(type, startDate = null, endDate = null) {
     this.activeSabTab = 0;
+    this.todoVisi = false;
     this.common.loading++;
     if (type == -102 && this.searchTask.startDate && this.searchTask.endDate) {
       startDate = this.common.dateFormatter(this.searchTask.startDate);
@@ -2518,6 +2524,7 @@ export class TaskComponent implements OnInit {
         if (res["code"] > 0) {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
+            this.todoAddList = false;
             this.getTodoTaskList(0);
             this.resetTaskTodoForm();
           } else {

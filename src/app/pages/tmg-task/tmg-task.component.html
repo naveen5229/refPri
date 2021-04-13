@@ -13,7 +13,7 @@
         <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
         </chart>
       </div>
-      <div class="outer" style="min-height: 300px;">
+      <div class="outer mt-3" style="min-height: 300px;">
         <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
         <p style="text-align: right; margin-top: -25px;" class="link"
         (click)="getDetials('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -24,8 +24,8 @@
       </div>
     </div>
     <div class="col-6 pl-0 pr-0">
-      <div class="row mt-3 mr-0">
-        <div class="col-6 p-1">
+      <div class="row mr-0">
+        <div class="col-6 pl-1 pr-1">
           <div class="outer" style="min-height: 130px;">
             <h6 style="text-align:center"><b class="charthead">SnapShot(Live)</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
