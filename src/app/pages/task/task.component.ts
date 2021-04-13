@@ -2273,8 +2273,8 @@ export class TaskComponent implements OnInit {
           if(ticket._unreadcount>0){
             activeRowData._unreadcount = 0;
           }
-          if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id)){
-            ticket
+          if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1){
+            
           }else{
             this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
           }
