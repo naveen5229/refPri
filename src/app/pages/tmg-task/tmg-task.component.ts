@@ -114,8 +114,11 @@ ngOnInit() {
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.uncomplete.push(val);
+          }else{
+        this.hideLoader(index);
+            return false;
           }
-          
+          console.log('index1',index1);
         });
         
         this.hideLoader(index);
