@@ -296,13 +296,14 @@
         <div class="todosec">
             <div class="todolayout" *ngIf="todoVisi">
                 <div class="todoHeading">
-                    <p>To Do List  </p>
-                     <div class="right">
-                    <i class="fas fa-plus" *ngIf="!todoAddList" (click)="todoAddList = true"></i>
-                    <i class="fas fa-times" *ngIf="todoAddList" (click)="todoAddList = false" (click)="resetTaskTodoForm()"></i>
+                    <p>To Do List </p>
+                    <div class="right">
+                        <i class="fas fa-plus" *ngIf="!todoAddList" (click)="todoAddList = true"></i>
+                        <i class="fas fa-times" *ngIf="todoAddList" (click)="todoAddList = false"
+                            (click)="resetTaskTodoForm()"></i>
+                    </div>
                 </div>
-             </div>
-              
+
                 <div class="addtodo" *ngIf="todoAddList">
                     <div class="columnGap">
                         <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
@@ -329,18 +330,20 @@
                     </div>
                 </div>
                 <div class="todoouter">
-                <div class="todolist" *ngFor="let todo of taskTodoList">
-                    <div class="todoTitle"> {{todo.task_desc}} </div>
-                    <div class="todoAction"><i class="fas fa-edit success"
-                            (click)="todoAddList=true;editTodoTask(todo)"></i></div>
+                    <div class="todolist" *ngFor="let todo of taskTodoList">
+                        <div class="todoTitle" title="Due On:{{todo.due_date}}" [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> {{todo.task_desc}} </div>
+                        <div class="todoAction">
+                            <i class="fas fa-check success" style="padding-right: 10px;" title="Mark Complete" *ngIf="!todo._status" (click)="updateTodoTask(todo)"></i>
+                            <i class="fas fa-edit success" *ngIf="!todo._status" title="Edit" (click)="todoAddList=true;editTodoTask(todo)"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
             <div class="todobtns">
-            <button class="btn btn-primary btn-sm" title="Todo List" (click)="todoVisi = !todoVisi">
-                <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
-                <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
-            </button>
+                <button class="btn btn-primary btn-sm" title="Todo List" (click)="todoVisi = !todoVisi">
+                    <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
+                    <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
+                </button>
             </div>
         </div>
 
