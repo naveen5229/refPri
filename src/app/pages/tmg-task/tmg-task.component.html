@@ -1,9 +1,9 @@
 
 
 <div class="contentsection">
-  <div class="row mb-0 mr-0 pt-2">
+  <div class="row mb-0 mr-0" style="height: 100%;">
     <div class="col-6 pl-0">
-      <div class="outer" style="min-height: 300px;">
+      <div class="outer" style="height: 44%;">
         <h6 style="text-align:center"><b class="charthead"> Task Trends</b></h6>
         <p style="text-align: right; margin-top: -25px;" class="link"
         (click)="getDetials('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -13,7 +13,7 @@
         <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
         </chart>
       </div>
-      <div class="outer mt-3" style="min-height: 300px;">
+      <div class="outer mt-3" style="height: 51.8%;">
         <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
         <p style="text-align: right; margin-top: -25px;" class="link"
         (click)="getDetials('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -23,15 +23,19 @@
         </chart> -->
       </div>
     </div>
-    <div class="col-6 pl-0 pr-0">
+    <div class="col-6 pl-0 pr-0 right">
       <div class="row mr-0">
         <div class="col-6 pl-1 pr-1">
-          <div class="outer" style="min-height: 130px;">
+          <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">SnapShot(Live)</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
             (click)="getDetials('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i title="More Details" class="fa fa-list"></i>
           </p>
             <table class="table" *ngIf="TaskSnapchat">
+              <thead class="thead">
+                <th>Status</th>
+                <th>Count</th>               
+              </thead>
               <tbody class="tbody">
                   <tr>
                     <td>Open</td>
@@ -49,8 +53,8 @@
             </table>
           </div>
         </div>
-        <div class="col-6 p-1">
-          <div class="outer" style="min-height:130px;">
+        <div class="col-6 pl-1 pr-1">
+          <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Uncomplete(90 Days)</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
             (click)="getDetials('AdminTask/getDashboardTaskUserwiseUncomplete',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -74,9 +78,9 @@
         </div>
    
       </div>
-      <div class="row mt-3 mr-0" style="min-height: 130px;">
+      <div class="row mt-3 mr-0">
         <div class="col-6 p-1">
-          <div class="outer" style="min-height: 130px;">
+          <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">HOLD(Last 90 Days))</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
             (click)="getDetials('AdminTask/getDashboardTaskUserwisehold',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -101,7 +105,7 @@
           </div>
         </div>
         <div class="col-6 p-1">
-          <div class="outer" style="min-height:130px;">
+          <div class="outer" style="height: 100%;">
             <h6 style="text-align:center"><b class="charthead">Overdue-(Worst 3 Users) - Live</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
             (click)="getDetials('AdminTask/getDashboardTaskUserwiseOverduelive',{totalrecord: 3,stepno: -1})"><i title="More Details" class="fa fa-list"></i>
@@ -126,9 +130,9 @@
           </div>
         </div>
       </div>
-      <div  class="row mt-3 mr-0" style="min-height: 130px;">
+      <div  class="row mt-3 mr-0">
         <div class="col-6 p-1">
-          <div class="outer" style="min-height: 130px;">
+          <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Longest Unread Hours User Wise(Live)</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
             (click)="getDetials('AdminTask/getDashboardTaskLongestUnreadhour',{totalrecord: 3,stepno: -1},15,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -148,7 +152,7 @@
           </div>
         </div>
         <div class="col-6 p-1">
-          <div class="outer" style="min-height:130px;">
+          <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Userwise Read Avg Hr TAT(30 Days)</b></h6>
             <p style="text-align: right; margin-top: -25px;" class="link"
             (click)="getDetials('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
