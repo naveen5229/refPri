@@ -150,7 +150,7 @@ smart-table {
 }
 
 .sl-smart-table {
-  height: calc(100vh - 228px);
+  height: calc(100vh - 239px);
 }
 
 .searchbtn {
@@ -254,14 +254,17 @@ smart-table {
   }
   .fhide {
     opacity: 0;
+    height: 0;
     transition: opacity 0.9s;
     button {
       display: none;
+      
       transition: display 0.9s;
     }
   }
   .fshow {
     opacity: 1;
+    height: 320px;
     transition: opacity 0.9s;
     button {
       display: block;
@@ -337,20 +340,28 @@ smart-table {
 
 .todosec{
   text-align: end;
-  position: relative;
-  height: 33px;
+  position: absolute;
+  right: 15px;
+  bottom: 0px;
   .todobtns{
-    position: absolute;
-    right: 0;
-    bottom: 0;
+        button{
+    border: 0;
+    background: #3366ff;
+    color: #fff;
+    border-radius: 3px;
+
+    }
+    button:focus{
+      outline: 0;
+      }
   }
 
 .todolayout {
   position: absolute;
   right: 0;
-  bottom: 40px;
+  bottom: 26px;
   height: 430px;
-  width: 370px;
+  width: 330px;
   z-index: 999;
   background: white;
   box-shadow: 0px 1px 9px #c5c5c5;
