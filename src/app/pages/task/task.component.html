@@ -340,10 +340,10 @@
                 </div>
             </div>
             <div class="todobtns">
-                <button class="btn btn-primary btn-sm" title="Todo List" (click)="todoVisi = !todoVisi">
-                    <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
-                    <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
-                </button>
+            <button title="Todo List" (click)="todoVisi = !todoVisi">
+                <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
+                <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
+            </button>
             </div>
         </div>
 
