@@ -50,12 +50,12 @@ ngOnInit() {
   refresh() {
     this.xAxisData = [];
     this.getChallansMonthGraph(0);
-     this.getTaskSnapchat(1);
-     this.getuncomplete(2);
+    this.getuserwisereadtat(1);
+     this.getTaskSnapchat(2);
+     this.getuncomplete(3);
      this.getHoldTask(4);
      this.getoverduetask(5);
-     this.getlongestunreadhours(3);
-     this.getuserwisereadtat(6);
+     this.getlongestunreadhours(6);
      
   }
 
@@ -98,7 +98,7 @@ ngOnInit() {
       });
   }
 
-  getuncomplete(index) {
+  getuncomplete(numindex) {
     this.uncomplete = [];
     let days = 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
@@ -107,23 +107,23 @@ ngOnInit() {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-     this.showLoader(index);
+     this.showLoader(numindex);
     this.api.get('AdminTask/getDashboardTaskUserwiseUncomplete?startDate='+params.fromdate+'&endDate='+params.todate)
       .subscribe(res => {
-        console.log('uncomplete:', res['data']);
+        console.log('uncomplete:',numindex, res['data']);
+        this.hideLoader(numindex);
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.uncomplete.push(val);
           }else{
-        this.hideLoader(index);
             return false;
           }
           console.log('index1',index1);
         });
         
-        this.hideLoader(index);
+       // this.hideLoader(index);
       }, err => {
-         this.hideLoader(index);
+         this.hideLoader(numindex);
         console.log('Err:', err);
       });
   }
