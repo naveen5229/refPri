@@ -146,11 +146,11 @@
 }
 
 smart-table {
-  height: calc(100vh - 168px);
+  height: calc(100vh - 184px);
 }
 
 .sl-smart-table {
-  height: calc(100vh - 212px);
+  height: calc(100vh - 228px);
 }
 
 .searchbtn {
@@ -214,7 +214,7 @@ smart-table {
 }
 
 .multiTableHeight {
-  height: calc(100vh - 154px);
+  height: calc(100vh - 190px);
   overflow: auto;
 }
 
@@ -333,48 +333,90 @@ smart-table {
   }
 }
 
+
+
+.todosec{
+  text-align: end;
+  position: relative;
+  height: 33px;
+  .todobtns{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
 .todolayout {
   position: absolute;
-  right: 17px;
-  top: 170px;
-  height: 472px;
-  width: 250px;
+  right: 0;
+  bottom: 40px;
+  height: 430px;
+  width: 370px;
   z-index: 999;
   background: white;
+  box-shadow: 0px 1px 9px #c5c5c5;
+  border-radius: 20px;
+  overflow: hidden;
 
   .addtodo {
     margin: 5px;
     padding: 10px;
     text-align: center;
-    background: beige;
+    background: #fff;
+    border-radius: 5px;    
+    border: 1px solid #d6d6d6;
+    box-shadow: 0px 0px 10px #bbbbbb;
+
 
     div{
       padding-top: 2px;
+      text-align: end;
     }
   }
-
+.todoouter{
+  overflow: auto;
+  height: 100%;
   .todolist {
     text-align: center;
-    height: 30px;
-    background: #263238;
+    background: #000;
     margin-top: 2px;
-    color: white;
     display: flex;
+    margin: 7px 5px;
+    border-radius: 5px;
   }
-
+}
   .todoTitle {
     width: 70%;
+    text-align: left;
+    padding: 0 10px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
   }
 
   .todoAction {
     width: 30%;
+    text-align: end;
+    padding: 10px 10px 0 0;
+
   }
 
   .todoHeading {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
     font-weight: bold;
     background: #3366ff;
     color: white;
-    height: 30px;
+    height: 38px;
+    border-radius: 15px;
+    border-bottom-left-radius: 0;
+    padding: 0 20px;
+    align-items: center;
+    p{
+      margin: 0;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600
+    }
   }
+}
 }

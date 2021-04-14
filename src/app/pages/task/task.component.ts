@@ -2223,7 +2223,7 @@ export class TaskComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    console.log("ticketMessage:", ticket, type);
+    // console.log("ticketMessage:", ticket, type);
     this.tableUnreadTaskForMeList.settings.arrow = false;
     let ticketEditData = {
       ticketData: ticket,
@@ -2253,39 +2253,38 @@ export class TaskComponent implements OnInit {
       backdrop: "static",
     });
     activeModal.result.then((data) => {
-      // console.log("ticketMessage2:", ticket, type);
+      if (ticket._cc_user_id && !ticket._cc_status) {
+        this.ackTaskByCcUser(ticket, type);
+      } 
+      if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+        this.ackTaskByProjectUser(ticket, type);
+      }
       // if (type == -8) {
-      //   if (this.unreadTaskForMeList && this.unreadTaskForMeList.length <= 3) {
-      //     type ? this.getTaskByType(type) : null;
-      //   } else {
-      //     if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id)){
-      //       ticket
-      //     }else{
-      //       let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
-      //       if (ticket._cc_user_id && !ticket._cc_status) {
-      //         activeRowData._cc_status = 1;
-      //       }
-      //       if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
-      //         activeRowData._pu_status = 1;
-      //       }
-      //       if(ticket._unreadcount>0){
-      //         activeRowData._unreadcount = -1;
-      //       }
-      //       this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
-      //       this.setTableUnreadTaskForMe(type);
-      //     }
-      //   }
+        if (type !== -8 || (type == -8 && this.unreadTaskForMeList && this.unreadTaskForMeList.length <= 3)) {
+          type ? this.getTaskByType(type) : null;
+        } else {
+          let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
+          if (ticket._cc_user_id && !ticket._cc_status) {
+            activeRowData._cc_status = 1;
+          }
+          if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+            activeRowData._pu_status = 1;
+          }
+          if(ticket._unreadcount>0){
+            activeRowData._unreadcount = 0;
+          }
+          if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1){
+            
+          }else{
+            this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+          }
+          this.setTableUnreadTaskForMe(type);
+        }
       // }else{
       //   type ? this.getTaskByType(type) : null;
       // }
-      type ? this.getTaskByType(type) : null;
+      // type ? this.getTaskByType(type) : null;
       this.tableUnreadTaskForMeList.settings.arrow = true;
-      // if (ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) { } else
-      if (ticket._cc_user_id && !ticket._cc_status) {
-        this.ackTaskByCcUser(ticket, type);
-      } else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
-        this.ackTaskByProjectUser(ticket, type);
-      }
     });
   }
 
@@ -2569,7 +2568,7 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            (type!==-8) ? this.getTaskByType(type) : this.getTaskByType(type);
+            (type!==-8) ? this.getTaskByType(type) : null;
           } else {
             this.common.showError(res["data"]);
           }
@@ -2599,7 +2598,7 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            (type!==-8) ? this.getTaskByType(type) : this.getTaskByType(type);
+            (type!==-8) ? this.getTaskByType(type) : null;
           } else {
             this.common.showError(res["data"]);
           }

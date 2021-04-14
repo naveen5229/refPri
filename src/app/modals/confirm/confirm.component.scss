@@ -21,8 +21,35 @@
     padding: $padding-sm $padding-lg;
     #cancel {
         background-color: #D61414;
+        border: 1px solid #D61414;
+    }
+    #cancel:active {
+        box-shadow: 5px 5px 5px #858585;
+        transform: translateY(-3px);
+        border: 1px solid #000;
     }
     #submit {
         background-color:$secondary-17;
+        border: 1px solid $secondary-17;
     }
+    #submit:active {
+        box-shadow: 5px 5px 5px #858585;
+        transform: translateY(-3px);
+        border: 1px solid #000;
+    }
+}
+.modal-footer {
+.btn-primary:active,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-danger:active,
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-secondary:focus,
+.btn-secondary:hover,
+.btn-secondary:active {
+  box-shadow: 5px 5px 5px #858585;
+  transform: translateY(-4px);
+  border: 1px solid #000;
+}
 }
