@@ -2480,7 +2480,7 @@ export class TaskComponent implements OnInit {
     };
   }
 
-  updateTodoTask(task) {
+  updateTodoTask(task,type=0) {
     if (task._id) {
       let params = {
         todoTaskId: task._id,
@@ -2492,9 +2492,8 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           this.common.showToast(res["msg"]);
-          this.getTodoTaskList(0);
-        },
-        (err) => {
+          this.getTodoTaskList(type);
+        },(err) => {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
@@ -2505,7 +2504,8 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  saveTaskTodo() {
+  saveTaskTodo(type=0) {
+    console.log("saveTaskTodo:",type);
     if (this.taskTodoForm.desc == "") {
       return this.common.showError("Description is missing");
     } else {
@@ -2524,7 +2524,8 @@ export class TaskComponent implements OnInit {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
             this.todoAddList = false;
-            this.getTodoTaskList(0);
+            console.log("saveTaskTodo2:",type);
+            this.getTodoTaskList(type);
             this.resetTaskTodoForm();
           } else {
             this.common.showError(res["msg"]);

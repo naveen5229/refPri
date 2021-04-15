@@ -36,6 +36,7 @@
 .table{
     margin-bottom: 0rem!important;
     font-family: "Poppins", sans-serif !important;
+    height: 70%;
     .thead{
         background-color: #c9c2de;
         color: #000000;
@@ -50,7 +51,7 @@
 }
 .table tr td {
    
-    //background-color: #fff !important;
+    vertical-align: middle;
 }
 .table-bordered th, .table-bordered td {
     border: 1px solid #ffffff!important;
@@ -64,6 +65,8 @@
     text-decoration: underline;
     color: #8f9bb3;
     cursor: pointer;
+    text-align: right;
+    margin-top: -30px;
 }
 
 :host::ng-deep.loader {
@@ -78,6 +81,17 @@
   }
   .right{
       .row{
-          height: 31.5%;
+        height: calc(33.33% - .7rem);
       }
+  }
+
+
+  @media (max-width: 1441px){
+  .table tr td {font-size: 10px !important; font-weight: 500;}
+   h6, .h6 { font-size: .8rem!important;}
+  .table thead th {font-size: 10px !important; font-weight: 500;}
+  .charthead { font-weight: 500;    font-size: .8rem;}
+  .table{height: auto;}
+  .table .thead th {    padding: 0px 2px !important;}
+  .link {    margin-bottom: 0;}
   }
