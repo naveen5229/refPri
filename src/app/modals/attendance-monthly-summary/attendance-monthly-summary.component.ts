@@ -176,9 +176,9 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let typeColor = "black";
     if (presetType == "P" && e._aduserid < 0) {
       typeColor = "springgreen";
-    } else if (presetType == "PH" && e._aduserid < 0) {
+    } else if (['PH','PH1','PH2'].includes(presetType) && e._aduserid < 0) {
       typeColor = "greenyellow";
-    } else if ((presetType == "P" || presetType == "PH") && !(e._aduserid == e._userid)) {
+    } else if (['P','PH','PH1','PH2'].includes(presetType) && !(e._aduserid == e._userid)) {
       typeColor = "blue";
     } else if (presetType == "L") {
       typeColor = "red";
