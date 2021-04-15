@@ -57,7 +57,7 @@
 }
 
 :host ::ng-deep .fa-edit {
-  color: $success-3;
+  //color: $success-3;
   font-size: 18px;
   cursor: pointer;
 }
@@ -150,7 +150,7 @@ smart-table {
 }
 
 .sl-smart-table {
-  height: calc(100vh - 239px);
+  height: calc(100vh - 277px);
 }
 
 .searchbtn {
@@ -394,6 +394,7 @@ smart-table {
     border-bottom: 1px solid #d0d0d0;
     display: flex;
   }
+ 
 }
   .todoTitle {
     width: 78%;
