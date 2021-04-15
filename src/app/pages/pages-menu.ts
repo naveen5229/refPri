@@ -8,7 +8,7 @@ export const MENU_ITEMS = JSON.stringify([
     children: [
       {
         title: 'TMG Dashboard',
-        // icon: 'fa-chart-pie',
+        //icon: 'fa-dashcube',
         link: '/pages/tmg-dashboard',
         home: true,
       },

@@ -315,16 +315,15 @@
                             (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
                         </uj-date-time-picker>
                     </div>
+                  
                     <div>
-                        <label>
+                        <label class="pr-5">
                             <input type="checkbox" [checked]="taskTodoForm.isUrgent"
                                 (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent"
                                 style="vertical-align: middle;" />
                             High-Priority</label>
-                    </div>
-                    <div>
                         <button class="btn btn-primary btn-sm" id="savetodotask" (click)="saveTaskTodo(2)"
-                            title="Save ToDo"><i class="fas fa-save"></i></button>
+                            title="Save ToDo">Save</button>
                         <button *ngIf="taskTodoForm.requestId>0" class="btn btn-primary btn-sm ml-2" id="resettodotask"
                             (click)="resetTaskTodoForm()" title="Reset">Reset</button>
                     </div>
@@ -334,7 +333,7 @@
                         <div class="todoTitle" title="Due On:{{todo.due_date}}" [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> {{todo.task_desc}} </div>
                         <div class="todoAction">
                             <button *ngIf="!todo._status" title="Mark Complete"><i class="fa fa-thumbs-up text-success"  (click)="updateTodoTask(todo,2)"></i></button>
-                            <button *ngIf="!todo._status" title="Edit" > <i class="fas fa-pencil-alt" (click)="todoAddList=true;editTodoTask(todo)"></i></button>
+                            <button *ngIf="!todo._status" title="Edit" > <i class="fa fa-edit" (click)="todoAddList=true;editTodoTask(todo)"></i></button>
                         </div>
                     </div>
                 </div>
