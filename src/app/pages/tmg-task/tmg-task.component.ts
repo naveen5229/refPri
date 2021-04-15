@@ -325,7 +325,7 @@ ngOnInit() {
           xAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Completed (yello line)  ' + 'Added (Blue line)' 
+              labelString: 'Completed (yellow line)  ' + 'Added (Blue line)' 
               
             },
             ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
