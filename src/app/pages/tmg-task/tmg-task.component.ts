@@ -284,32 +284,37 @@ ngOnInit() {
       labels: xaxis,
       datasets: [
         {
-          //label: 'Time (in Hrs.)',
+          label: 'Completed',
           data: yaxisObj.scaleData,
-          borderColor: '#3d6fc9',
           backgroundColor: '#3d6fc9',
+          borderColor: '#3d6fc9',
           fill: false,
           pointHoverRadius: 8,
           pointHoverBackgroundColor: '#FFEB3B',
+          borderWidth: 3,
         },
         {
-         // label: 'Time (in Hrs.)',
+          label: 'Added',
           data: zaxisObj.scaleData,
-          borderColor: '#FFA500',
           backgroundColor: '#FFA500',
+          borderColor: '#FFA500',
           fill: false,
           pointHoverRadius: 8,
           pointHoverBackgroundColor: '#FFA500',
-        },
+          borderWidth: 3,
+        }
       ]
     },
       this.chart1.options = {
         responsive: true,
         legend: {
           position: 'bottom',
-          display: false
+          display: true
         },
-
+        scaleLabel: {
+          display: true,
+          fontSize: 17,
+        },
         maintainAspectRatio: false,
         title: {
           display: true,
@@ -320,27 +325,27 @@ ngOnInit() {
             tension: 0
           }
         },
-        scales: {
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Time (in Hrs.)' + yaxisObj.yaxisLabel
-            },
-            ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
-            suggestedMin: yaxisObj.minValue,
-          }
-          ],
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Completed (yello line)  ' + 'Added (Blue line)' 
+        // scales: {
+        //   yAxes: [{
+        //     scaleLabel: {
+        //       display: true,
+        //       labelString: 'Time (in Hrs.)' + yaxisObj.yaxisLabel
+        //     },
+        //     ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
+        //     suggestedMin: yaxisObj.minValue,
+        //   }
+        //   ],
+        //   xAxes: [{
+        //     scaleLabel: {
+        //       display: true,
+        //       labelString: 'Completed (yello line)  ' + 'Added (Blue line)' 
               
-            },
-            ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
-            suggestedMin: yaxisObj.minValue,
-          }
-          ]
-        },
+        //     },
+        //     ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
+        //     suggestedMin: yaxisObj.minValue,
+        //   }
+        //   ]
+        // },
         tooltips: {
           enabled: true,
           mode: 'single',
