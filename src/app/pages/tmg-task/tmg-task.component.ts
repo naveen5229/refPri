@@ -112,6 +112,7 @@ ngOnInit() {
       .subscribe(res => {
         console.log('uncomplete:',numindex, res['data']);
         this.hideLoader(numindex);
+        if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.uncomplete.push(val);
@@ -120,6 +121,7 @@ ngOnInit() {
           }
           console.log('index1',index1);
         });
+      }
         
        // this.hideLoader(index);
       }, err => {
@@ -141,7 +143,7 @@ ngOnInit() {
      this.showLoader(index);
     this.api.get('AdminTask/getDashboardTaskUserwisehold?startDate='+params.fromdate+'&endDate='+params.todate)
       .subscribe(res => {
-       
+        if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.holdtask.push(val);
@@ -149,6 +151,7 @@ ngOnInit() {
           
 
         });
+      }
         console.log('holdtask:', this.holdtask);
         this.hideLoader(index);
       }, err => {
@@ -163,11 +166,13 @@ ngOnInit() {
      this.showLoader(index);
     this.api.get('AdminTask/getDashboardTaskUserwiseOverduelive')
       .subscribe(res => {
+        if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.overduetaskdata.push(val);
           }
         });
+      }
         console.log('holdtask:', this.overduetaskdata);
 
         this.hideLoader(index);
@@ -190,12 +195,14 @@ ngOnInit() {
     this.api.get('AdminTask/getDashboardTaskUserwiseUnreadtat?startDate='+params.fromdate+'&endDate='+params.todate)
       .subscribe(res => {
         this.userwisereadavgtatfulldata= res['data'];
+        if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.userwisereadavgtat.push(val);
           }
           
         });
+      }
         this.hideLoader(index);
           this.getsecondlabelValue();
         console.log('holdtask:', this.userwisereadavgtat);
@@ -226,7 +233,7 @@ ngOnInit() {
     this.api.get('AdminTask/getDashboardTaskLongestUnreadhour')
       .subscribe(res => {
        
-
+        if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.longestunreadhoursdata.push(val);
@@ -234,6 +241,7 @@ ngOnInit() {
          
 
         });
+      }
         console.log('holdtask:', this.longestunreadhoursdata);
 
         this.hideLoader(index);
@@ -325,7 +333,7 @@ ngOnInit() {
           xAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Completed (yello line)  ' + 'Added (Blue line)' 
+              labelString: 'Completed (yellow line)  ' + 'Added (Blue line)' 
               
             },
             ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
