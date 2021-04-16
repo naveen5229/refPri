@@ -150,11 +150,11 @@
     <div class="row mrgn" *ngIf="activeTab == 'userRole'">
       <div class="col-5" style="display:inline-block;">
           <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
-          placeholder="Fo User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          placeholder="Select Fo User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
           </auto-suggestion>
       </div>
       <div class="col-5">
-          <auto-suggestion (onSelected)="getAdminPagesDetails($event.id)" [data]="adminList" seperator="-" display="name" placeholder="Admin" [preSelected]="null" inputId="adminName"></auto-suggestion>
+          <auto-suggestion (onSelected)="getAdminPagesDetails($event.id)" [data]="adminList" seperator="-" display="name" placeholder="Select Fo Admin User" [preSelected]="null" inputId="adminName"></auto-suggestion>
       </div>
       <div class="col-2">
         <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Save</button>

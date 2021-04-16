@@ -728,8 +728,7 @@ export class CustomeronboardingComponent implements OnInit {
         this.common.loading--;
         if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.common.showToast(res['msg']);
-        // this.getUserDetails(this.userId);
-        this.refresh();
+        this.getAdminPagesDetails(this.adminId);
       }, err => {
         this.common.loading--;
         this.common.showError();
