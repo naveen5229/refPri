@@ -70,6 +70,7 @@ import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
 import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
 import { SitesComponent } from './sites/sites.component';
 import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [{
   path: '',
@@ -423,6 +424,11 @@ const routes: Routes = [{
     {
       path: 'tmg-dashboard',
       component: TmgDashboardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'settings',
+      component: SettingsComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

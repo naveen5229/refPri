@@ -1,0 +1,76 @@
+<nb-card>
+  <nb-card-header>
+    <h5 class="heading-design">Settings</h5>
+  </nb-card-header>
+  <nb-card-body>
+
+    <!--start: setting types -->
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="row settingTypeFields">
+          <div class="col-3" *ngFor="let type of settingMediumOptions">
+            <input type="checkbox" [(ngModel)]="type.checked"> <label class="text-white pl-2">{{type.type}}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end: setting types -->
+
+    <!--start: setting types enable -->
+    <div class="row mr-2 ml-2 typeAddFields">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="row">
+          <div class="col-6">
+            <auto-suggestion [data]="settingTypeOptions" display="type" seperator="-" autocomplete="off"
+              name="settingTypeOptions" inputId="settingTypeOptions">
+            </auto-suggestion>
+          </div>
+
+          <div class="col-6">
+            <auto-suggestion [data]="settingTypeOptions" display="type" seperator="-" autocomplete="off"
+              name="settingTypeOptions" inputId="settingTypeOptions">
+            </auto-suggestion>
+          </div>
+        </div>
+      </div>
+      <div class="col-1 text-center"><button class="btn btn-primary">Add</button></div>
+    </div>
+    <!--end: setting types enable -->
+
+    <!--start: setting Area -->
+    <div class="row mr-2 ml-2 settingsArea">
+      <div class="col-12">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th style="color: white;" scope="col">#</th>
+              <th style="color: white;" scope="col">Setting</th>
+              <th style="color: white;" scope="col">AM</th>
+              <th style="color: white;" scope="col">Call Sync</th>
+              <th style="color: white;" scope="col">Overdue</th>
+              <th style="color: white;" scope="col">Open</th>
+              <th style="color: white;" scope="col">Claim</th>
+              <th style="color: white;" scope="col">Unread</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Name Here</td>
+              <td><select></select></td>
+              <td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--end: setting Area -->
+  </nb-card-body>
+</nb-card>

@@ -64,6 +64,7 @@ import { SitesComponent } from './sites/sites.component';
 import { ChartModule } from 'angular2-chartjs';
 import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 import { TmgTaskComponent } from './tmg-task/tmg-task.component';
+import { SettingsComponent } from './settings/settings.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -132,7 +133,8 @@ import { TmgTaskComponent } from './tmg-task/tmg-task.component';
     AdminKanbanComponent,
     SitesComponent,
     TmgDashboardComponent,
-    TmgTaskComponent
+    TmgTaskComponent,
+    SettingsComponent
   ],
 })
 export class PagesModule {
