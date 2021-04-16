@@ -798,7 +798,10 @@ export class MyProcessComponent implements OnInit {
       icons.push({ class: "fa fa-files-o", action: this.openDocList.bind(this, lead), txt: '', title: "All Document" });
     } else if (!type) {
       icons.push({ class: "far fa-edit", action: this.editTransaction.bind(this, lead, type), txt: '', title: "Edit Txn" });
-      if (lead._claim_txn) {
+      // if(lead._pri_own_id>0){
+      //   icons.push({ class: "fa fa-grip-horizontal", action: this.openTransAction.bind(this, lead, type, 1), txt: '', title: "Add Next State" });
+      // }else 
+      if(lead._claim_txn) {
         icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.updateLeadPrimaryOwner.bind(this, lead, type), txt: '', title: "Claim Txn" });
       }
     } else if (type == 2 || type == 6 || type == 7) { //by me or owned by me
