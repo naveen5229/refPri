@@ -154,7 +154,7 @@
           </auto-suggestion>
       </div>
       <div class="col-5">
-          <auto-suggestion (onSelected)="getAdminPagesDetails($event.id)" [data]="adminList" seperator="-" display="name" placeholder="Select Fo Admin User" [preSelected]="null" inputId="adminName"></auto-suggestion>
+          <auto-suggestion (onSelected)="getAdminPagesDetails($event)" [data]="adminList" seperator="-" display="name" placeholder="Select Fo Admin User" [preSelected]="(adminId.id>0) ? {'name':adminId.name} : {'name':null}" inputId="adminName"></auto-suggestion>
       </div>
       <div class="col-2">
         <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Save</button>

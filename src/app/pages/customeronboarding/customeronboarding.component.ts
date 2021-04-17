@@ -78,7 +78,7 @@ export class CustomeronboardingComponent implements OnInit {
     }
   };
   foId = { id: null, name: null };
-  adminId = null;
+  adminId = { id: null, name: null };
   adminList = [];
   getAllPagesList = [];
   formattedData = [];
@@ -109,7 +109,7 @@ export class CustomeronboardingComponent implements OnInit {
     } else if (this.activeTab == "office") {
       this.officeName = null;
     } else if (this.activeTab == 'userRole') {
-      this.adminId = null;
+      this.adminId = { id: null, name: null };
       this.getAllPagesList = [];
       this.formattedData = [];
       this.isShow = false;
@@ -138,6 +138,9 @@ export class CustomeronboardingComponent implements OnInit {
     } else if (this.activeTab == 'userRole') {
       this.foId = event;
       this.adminList = [];
+      this.adminId = {id:null, name:null};
+      this.getAllPagesList = [];
+      this.formattedData = [];
       this.getFoDetails(event.id, 1);
     }
   }
@@ -611,7 +614,7 @@ export class CustomeronboardingComponent implements OnInit {
   // start: userrole-----------------------------
   getAdminPagesDetails(adminId) {
     this.adminId = adminId;
-    const params = 'adminId=' + adminId + '&entrymode=3';
+    const params = 'adminId=' + adminId.id + '&entrymode=3';
     this.common.loading++;
     this.api.get('UserRole/getUserPages?' + params)
       .subscribe(res => {
@@ -640,8 +643,6 @@ export class CustomeronboardingComponent implements OnInit {
     this.formattedData.map(module => {
       let isMasterAllSelected = true;
       let pageGroup = _.groupBy(module.groups, 'group_name');
-      console.log(pageGroup);
-      console.log(Object.keys(pageGroup));
       module.groups = Object.keys(pageGroup).map(key => {
         let isAllSelected = true;
         let pages = pageGroup[key].map(page => {
@@ -661,24 +662,20 @@ export class CustomeronboardingComponent implements OnInit {
       });
       module.isSelected = isMasterAllSelected;
     });
-    console.log(this.formattedData);
 
     this.formattedData = _.sortBy(this.formattedData, ['name'], ['asc']).map(module => {
       module.groups = _.sortBy(module.groups, ['name'], ['asc']).map(groups => {
         groups.pages = _.sortBy(groups.pages, ['title'], ['asc']);
         return groups;
       });
-      this.formattedData[0].name = 'Pages'
-      console.log(this.formattedData);
+      this.formattedData[0].name = 'Pages';
       return module;
     });
   }
 
   checkOrUnCheckAll(details, type) {
     if (type === 'group') {
-      console.log('details.isSelected:', details.isSelected);
       details.pages.map(page => {
-        console.log('details.isSelected:', details.isSelected);
         page.isSelected = details.isSelected
       });
     } else if (type === 'module') {
@@ -699,7 +696,6 @@ export class CustomeronboardingComponent implements OnInit {
   findSelectedPages() {
     console.log(this.formattedData);
     let data = [];
-    console.log('formattedData: ', this.formattedData);
     this.formattedData.map(module => {
       module.groups.map(group => {
         group.pages.map(page => {
@@ -716,10 +712,14 @@ export class CustomeronboardingComponent implements OnInit {
   }
 
   saveUserRole() {
+    if(!this.adminId.id){
+      this.common.showError("Missing Fo admin user");
+      return false;
+    }
     let jsonData = this.findSelectedPages();
     const params = {
       pages: JSON.stringify(jsonData),
-      adminId: this.adminId,
+      adminId: this.adminId.id,
       entrymode: 3
     };
     this.common.loading++;
