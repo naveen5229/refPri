@@ -20,12 +20,12 @@
                 </li>
                 <li [ngClass]="activeTab=='unallocatedTkt'?'active':''"
                     (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
-                    Claim
+                    Claim & Unassigned
                 </li>
-                <li [ngClass]="activeTab=='unassignedTkt'?'active':''"
+                <!-- <li [ngClass]="activeTab=='unassignedTkt'?'active':''"
                     (click)="activeTab='unassignedTkt'; getTicketByType(103)">
                     Unassigned
-                </li>
+                </li> -->
                 <li [ngClass]="activeTab=='completedTkt'?'active':''"
                     (click)="activeTab='completedTkt';getTicketByType(105) ">
                     Completed

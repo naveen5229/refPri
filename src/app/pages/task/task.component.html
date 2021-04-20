@@ -104,10 +104,10 @@
                     (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
                     Future Task
                 </li>
-                <li [ngClass]="activeTab=='todoList'?'active':''"
+                <!-- <li [ngClass]="activeTab=='todoList'?'active':''"
                     (click)="activeTab='todoList';activeSabTab = 0;resetSearchTask(); getTodoTaskList(0)">
                     ToDo List
-                </li>
+                </li> -->
                 <li [ngClass]="activeTab=='scheduleMaster'?'active':''"
                     (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master

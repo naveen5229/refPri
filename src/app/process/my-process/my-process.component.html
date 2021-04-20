@@ -52,12 +52,12 @@
                 </li>
                 <li [ngClass]="activeTab=='missingOwnLeads'?'active':''"
                     (click)="activeTab='missingOwnLeads'; getProcessLeadByType(0)">
-                    Missing Owner Txn
+                    Claim & Unassigned Txn
                 </li>
-                <li [ngClass]="activeTab=='unassignedLeads'?'active':''"
+                <!-- <li [ngClass]="activeTab=='unassignedLeads'?'active':''"
                     (click)="activeTab='unassignedLeads'; getProcessLeadByType(-1)">
                     Unassigned Txn
-                </li>
+                </li> -->
                 <li [ngClass]="activeTab=='unreadLeads'?'active':''"
                     (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
                     Unread Txn
