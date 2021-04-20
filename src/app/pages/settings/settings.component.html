@@ -3,9 +3,16 @@
     <h5 class="heading-design">Settings</h5>
   </nb-card-header>
   <nb-card-body>
+    <div class="tabs_style_main">
+      <ul class="tabs_style text-left">
+        <li [ngClass]="activeTab==1?'active':''" (click)="activeTab=1;getUserSettings(1);">
+          Attendance
+        </li>
+      </ul>
+    </div>
 
     <!--start: setting types -->
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-2"></div>
       <div class="col-8">
         <div class="row settingTypeFields">
@@ -14,7 +21,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!--end: setting types -->
 
     <!--start: setting types enable -->
@@ -23,21 +30,32 @@
       <div class="col-10">
         <div class="row">
           <div class="col-6">
-            <auto-suggestion [data]="settingTypeOptions" display="type" seperator="-" autocomplete="off"
-              name="settingTypeOptions" inputId="settingTypeOptions">
+            <auto-suggestion [data]="settingTypeOptions" display="type" [placeholder]="'Select Type'" seperator="-"
+              autocomplete="off" [preSelected]="{type:'Company'}" name="settingTypeOptions" inputId="settingTypeOptions"
+              (onSelected)="setSettingType($event)">
             </auto-suggestion>
           </div>
 
           <div class="col-6">
-            <auto-suggestion [data]="settingTypeOptions" display="type" seperator="-" autocomplete="off"
-              name="settingTypeOptions" inputId="settingTypeOptions">
+            <auto-suggestion [data]="selectedListing" display="name" [placeholder]="displaySelectionText.name"
+              seperator="-" autocomplete="off"
+              [preSelected]="selectedSettingType ? {name:selectedSettingType.name} : {name:''}"
+              name="settingTypeOptions" inputId="settingTypeOptions" (onSelected)="selectedSettingType = $event">
             </auto-suggestion>
           </div>
         </div>
       </div>
-      <div class="col-1 text-center"><button class="btn btn-primary">Add</button></div>
+      <div class="col-1 text-center"><button class="btn btn-primary" (click)="addSetting()">Add</button></div>
     </div>
     <!--end: setting types enable -->
+
+    <!--start: save setting Area -->
+    <!-- <div class="row mr-2 ml-2 mt-2">
+      <div class="col-12" style="text-align: end;">
+        <button class="btn btn-primary" (click)="saveSettings()">Save</button>
+      </div>
+    </div> -->
+    <!--end: save setting Area -->
 
     <!--start: setting Area -->
     <div class="row mr-2 ml-2 settingsArea">
@@ -47,25 +65,31 @@
             <tr>
               <th style="color: white;" scope="col">#</th>
               <th style="color: white;" scope="col">Setting</th>
-              <th style="color: white;" scope="col">AM</th>
-              <th style="color: white;" scope="col">Call Sync</th>
-              <th style="color: white;" scope="col">Overdue</th>
-              <th style="color: white;" scope="col">Open</th>
-              <th style="color: white;" scope="col">Claim</th>
-              <th style="color: white;" scope="col">Unread</th>
+              <th style="color: white;" scope="col">Type</th>
+              <th style="color: white;" scope="col" *ngFor="let headings of settingProfileHeader">{{headings}}</th>
+              <th style="color: white;">Actions</th>
             </tr>
           </thead>
 
-          <tbody>
+          <tbody *ngFor="let setting of allSettings;let i = index">
             <tr>
-              <th scope="row">1</th>
-              <td>Name Here</td>
-              <td><select></select></td>
-              <td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
+              <th scope="row">{{i+1}}</th>
+              <td>{{setting.name}}</td>
+              <td>{{setting.settingType}}</td>
+              <td *ngFor="let data of setting.data">
+                <select [(ngModel)]="data.profile_value">
+                  <option *ngFor="let option of data.info">{{option.option}}</option>
+                </select>
+                <!-- <auto-suggestion [data]="data.info" display="option"
+                  (onSelected)="data.profile_value = $event['option']" [preSelected]="{option:data.profile_value}"
+                  name="{{data.profile_id}}" inputId="{{data.profile_id}}" seperator="-" autocomplete="off">
+                </auto-suggestion> -->
+              </td>
+              <td>
+                <i class="fas fa-save text-success" (click)="saveSettings(setting)"></i>
+                <!-- <i class="fas fa-edit"></i> -->
+                <i class="fas fa-trash-alt text-danger"></i>
+              </td>
             </tr>
           </tbody>
         </table>
