@@ -431,7 +431,10 @@ ngOnInit() {
               display: true,
               labelString: 'Hour' + yaxisObj.yaxisLabel
             },
-            ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0, 
+            ticks: { 
+                      beginAtZero: true,
+                      stepSize: yaxisObj.gridSize 
+                  },//beginAtZero: true,min:0, 
             suggestedMin: yaxisObj.minValue,
           },
 
