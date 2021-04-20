@@ -202,11 +202,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Sites',
         icon: 'people-outline',
         link: '/pages/site',
-      },{
-        title: 'Settings',
-        // icon: 'people-outline',
-        link: '/pages/settings',
       },
+      // {
+      //   title: 'Settings',
+      //   // icon: 'people-outline',
+      //   link: '/pages/settings',
+      // },
     ]
   },
   {

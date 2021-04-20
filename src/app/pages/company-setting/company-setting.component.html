@@ -36,7 +36,11 @@
             </auto-suggestion>
           </div>
 
-          <div class="col-6">
+          <div class="col-6 text-center font-weight-bold" *ngIf="displaySelectionText.id === 1">
+            <label>{{selectedSettingType.name}}</label>
+          </div>
+
+          <div class="col-6" *ngIf="displaySelectionText.id !== 1">
             <auto-suggestion [data]="selectedListing" display="name" [placeholder]="displaySelectionText.name"
               seperator="-" autocomplete="off"
               [preSelected]="selectedSettingType ? {name:selectedSettingType.name} : {name:''}"
