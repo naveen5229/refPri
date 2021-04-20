@@ -75,7 +75,7 @@
             <tr>
               <th scope="row">{{i+1}}</th>
               <td>{{setting.name}}</td>
-              <td>{{setting.settingType}}</td>
+              <td>{{setting.entity_type}}</td>
               <td *ngFor="let data of setting.data">
                 <select [(ngModel)]="data.profile_value">
                   <option *ngFor="let option of data.info">{{option.option}}</option>
@@ -86,9 +86,9 @@
                 </auto-suggestion> -->
               </td>
               <td>
-                <i class="fas fa-save text-success" (click)="saveSettings(setting)"></i>
+                <i class="fas fa-save text-success" (click)="saveSettings(setting,1)"></i>
                 <!-- <i class="fas fa-edit"></i> -->
-                <i class="fas fa-trash-alt text-danger"></i>
+                <i class="fas fa-trash-alt text-danger" (click)="deleteSetting(setting,i)"></i>
               </td>
             </tr>
           </tbody>

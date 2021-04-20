@@ -6,8 +6,8 @@ import _ from 'lodash';
 
 @Component({
   selector: 'ngx-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  templateUrl: './company-setting.component.html',
+  styleUrls: ['./company-setting.component.scss']
 })
 export class SettingsComponent implements OnInit {
   loggedInUser = null;
@@ -36,7 +36,7 @@ export class SettingsComponent implements OnInit {
     public userService: UserService) {
     this.loggedInUser = userService._details;
     console.log('loggedIn user:', this.loggedInUser);
-    this.selectedSettingType = {id:this.loggedInUser.foid,name:this.loggedInUser.companyName};
+    this.selectedSettingType = { id: this.loggedInUser.foid, name: this.loggedInUser.companyName };
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
@@ -83,12 +83,6 @@ export class SettingsComponent implements OnInit {
         if (this.activeTab === settings.type) {
           settings.data.map(data => {
             this.settingProfileHeader.push(data.profile_name);
-            // this.settingFormat.push({
-            //   profile_id: data.profile_id,
-            //   profile_name: data.profile_name,
-            //   profile_value: data.profile_value,
-            //   info: data.info
-            // })
             this.settingFormat.push(data);
           });
         }
@@ -176,7 +170,7 @@ export class SettingsComponent implements OnInit {
     console.log("displaySelectionText", this.displaySelectionText)
     this.selectedSettingType = null;
     switch (settingType.id) {
-      case 1: { this.selectedListing = [];this.selectedSettingType = {id:this.loggedInUser.foid,name:this.loggedInUser.companyName}; }
+      case 1: { this.selectedListing = []; this.selectedSettingType = { id: this.loggedInUser.foid, name: this.loggedInUser.companyName }; }
         break;
       case 2: { this.selectedListing = this.departmentList; }
         break;
@@ -195,7 +189,7 @@ export class SettingsComponent implements OnInit {
       _group_id: null,
       _user_id: null,
       name: '',
-      settingType: '',
+      entity_type: '',
       profile_type: '',
       data: JSON.parse(JSON.stringify(this.settingFormat))
     }
@@ -204,37 +198,57 @@ export class SettingsComponent implements OnInit {
       if (this.displaySelectionText.id === 1) {
         settingFormat._foid = this.selectedSettingType.id;
         settingFormat.name = this.selectedSettingType.name;
-        settingFormat.settingType = 'Company';
+        settingFormat.entity_type = 'Company';
       } else if (this.displaySelectionText.id === 2) {
         settingFormat._dept_id = this.selectedSettingType.id;
         settingFormat.name = this.selectedSettingType.name;
-        settingFormat.settingType = 'Department';
+        settingFormat.entity_type = 'Department';
       } else if (this.displaySelectionText.id === 3) {
         settingFormat._group_id = this.selectedSettingType.id;
         settingFormat.name = this.selectedSettingType.name;
-        settingFormat.settingType = 'Group';
+        settingFormat.entity_type = 'Group';
       } else if (this.displaySelectionText.id === 4) {
         settingFormat._user_id = this.selectedSettingType.id;
         settingFormat.name = this.selectedSettingType.name;
-        settingFormat.settingType = 'User';
+        settingFormat.entity_type = 'User';
       }
-    }else{
+    } else {
       this.common.showError(`Please ${this.displaySelectionText.name}`);
     }
 
+  //start : directly adding rows to db section
 
-    this.allSettings.push(settingFormat);
-    this.allSettings = _.uniqBy(this.allSettings, (x) => { return x._dept_id || x._foid || x._group_id || x._user_id });
-    console.log("this.allSettings", this.allSettings);
+    console.log('to compare:',settingFormat)
+    let settingExistance = this.allSettings.find(x => {
+      return x._dept_id === settingFormat._dept_id &&
+        x._group_id === settingFormat._group_id &&
+        x._user_id === settingFormat._user_id
+    });
+    console.log('existance:', settingExistance);
+
+    if(settingExistance){
+      this.common.showError('Can not add duplicate settings');
+    }else{
+      this.saveSettings(settingFormat,0);
+    }
+
+    //end : directly adding rows to db section
+
+    // this.allSettings.push(settingFormat);
+    // this.allSettings = _.uniqBy(this.allSettings, (x) => { return x._dept_id || x._foid || x._group_id || x._user_id });
+    // console.log("this.allSettings", this.allSettings);
   }
 
 
-  saveSettings(setting) {
+  saveSettings(setting,operationType) {
     console.log('settings', setting);
     let params = {
+      operationType:operationType,
       type: this.activeTab,
       info: setting
     }
+    console.log("params:",params)
+    return;
     this.common.loading++;
     this.api.post('UserRole/saveCompanySetting', params).subscribe(res => {
       this.common.loading--;
@@ -243,7 +257,7 @@ export class SettingsComponent implements OnInit {
           this.common.showToast(res['msg']);
           this.getUserSettings(this.activeTab);
         } else {
-          this.common.showError(res['msg']);
+          this.common.showError(res['data'][0].y_msg);
         }
       } else {
         this.common.showError(res['msg']);
@@ -253,5 +267,16 @@ export class SettingsComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
+  }
+
+  deleteSetting(setting, index) {
+    console.log("type", setting.data[0].id);
+    if (setting.data[0].id) {
+      // delete through api block
+      this.saveSettings(setting,2);
+    } else {
+      console.log('index:', index)
+      this.allSettings.splice(index,1);
+    }
   }
 }

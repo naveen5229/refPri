@@ -70,7 +70,7 @@ import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
 import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
 import { SitesComponent } from './sites/sites.component';
 import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
-import { SettingsComponent } from './settings/settings.component';
+import { SettingsComponent } from './company-setting/company-setting.component';
 
 const routes: Routes = [{
   path: '',
