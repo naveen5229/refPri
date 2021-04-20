@@ -248,7 +248,7 @@ export class SettingsComponent implements OnInit {
       info: setting
     }
     console.log("params:",params)
-    return;
+    // return;
     this.common.loading++;
     this.api.post('UserRole/saveCompanySetting', params).subscribe(res => {
       this.common.loading--;
@@ -274,9 +274,10 @@ export class SettingsComponent implements OnInit {
     if (setting.data[0].id) {
       // delete through api block
       this.saveSettings(setting,2);
-    } else {
-      console.log('index:', index)
-      this.allSettings.splice(index,1);
-    }
+    } 
+    // else {
+    //   console.log('index:', index)
+    //   this.allSettings.splice(index,1);
+    // }
   }
 }
