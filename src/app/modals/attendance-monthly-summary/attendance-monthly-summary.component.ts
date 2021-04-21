@@ -531,9 +531,10 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   markWeekDay() {
     let params = {
-      startDate: this.startTime,
-      endDate: this.endTime
+      startDate: this.common.dateFormatter2(this.startTime),
+      endDate: this.common.dateFormatter2(this.endTime)
     }
+    console.log('params for sat sun att. mark',params);
     this.common.loading++;
     this.api.post('Admin/markSaturdayAttendance', params).subscribe(res => {
       this.common.loading--;
