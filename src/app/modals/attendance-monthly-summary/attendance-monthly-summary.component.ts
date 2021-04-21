@@ -193,7 +193,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   checkHolidayTypeColor(hType) {
-    let typeColor = "initial";
+    let typeColor = "#c0b2b2";
     if (hType == "2") {
       typeColor = "red";
     } else if (hType == "1") {
