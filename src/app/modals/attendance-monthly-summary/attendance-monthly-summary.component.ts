@@ -18,7 +18,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   weekdate = { startDate: this.common.getDate(-6), endDate: this.common.getDate() }
   endTime = new Date();
   startTime = new Date();
-  attendanceSummaryList = [];
+  // attendanceSummaryList = [];
   filterData: any;
   filteredAttendanceSummaryList = [];
   selectedDates = {
@@ -72,7 +72,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.groupList = (this.common.params.groupList) ? this.common.params.groupList : [];
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   closeModal(response) {
     this.activeModal.close();
@@ -121,7 +121,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.api.get(apiName + params)
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         if (res['code'] == 3) {
           this.common.showError(res['data']);
         } else {
@@ -135,11 +135,13 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             this.weeklyList = res['data'] || [];
             (this.weeklyList.length > 0) ? this.setTableWeeklyList() : this.resetTableFinalAttendanceList()
           } else {
-            this.attendanceSummaryList = res['data'] || [];
-            this.filterData = _.groupBy(this.attendanceSummaryList, 'name');
+            // this.attendanceSummaryList = res['data'] || [];
+            this.filterData = (res['data'] && res['data'].length > 0) ? _.groupBy(res['data'], '_userid') : [];
             Object.keys(this.filterData).map(key => {
-              this.filteredAttendanceSummaryList.push({ name: key, data: _.sortBy(this.filterData[key], 'date') });
-            })
+              this.filteredAttendanceSummaryList.push({ name: this.filterData[key][0].name, data: _.sortBy(this.filterData[key], 'date') });
+            });
+            this.filteredAttendanceSummaryList = _.sortBy(this.filteredAttendanceSummaryList,'name');
+            console.log('greeneffect',this.filteredAttendanceSummaryList)
           }
 
         }
@@ -155,8 +157,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let currentTime = new Date();
     date.setHours(9);
     date.setMinutes(30);
-    let accessUserIds = [34, 125, 236, 257, 120];
-    let accessFoUserIds = [12373];
+    let accessUserIds = [34, 125, 236, 257, 120, 194];
+    let accessFoUserIds = [12373, 27780];
     if (date <= this.common.getDate() && (!column.present || column.present == "") && ((this.userService._loggedInBy == 'admin' && accessUserIds.includes(this.userService._details.id)) || this.userService._loggedInBy != 'admin' && accessFoUserIds.includes(this.userService._details.id))) {
 
       this.common.params = { isAttendanceType: true, date: date, userId: column._userid, userName: column.name };
@@ -174,9 +176,9 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let typeColor = "black";
     if (presetType == "P" && e._aduserid < 0) {
       typeColor = "springgreen";
-    } else if (presetType == "PH" && e._aduserid < 0) {
+    } else if (['PH','PH1','PH2'].includes(presetType) && e._aduserid < 0) {
       typeColor = "greenyellow";
-    } else if ((presetType == "P" || presetType == "PH") && !(e._aduserid == e._userid)) {
+    } else if (['P','PH','PH1','PH2'].includes(presetType) && !(e._aduserid == e._userid)) {
       typeColor = "blue";
     } else if (presetType == "L") {
       typeColor = "red";
@@ -400,13 +402,40 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   exportCSV() {
     if (this.reportType == 'final') {
       this.common.getCSVFromTableId('tableFinalAttendanceList')
-    }else if (this.reportType == 'leave') {
+    } else if (this.reportType == 'leave') {
       this.common.getCSVFromTableId('tableLeaveRequestList')
-    }else if (this.reportType == 'weekly') {
+    } else if (this.reportType == 'weekly') {
       this.common.getCSVFromTableId('tableWeeklyList')
     } else {
       this.common.getCSVFromTableId('attendanceSummary')
     }
+  }
+
+  downloadAttendanceExcel() {
+    let params = {
+      startDate: (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
+      endDate: (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
+      userId: -1
+    }
+    this.common.loading++;
+    this.api.get(`Admin/getWorkHourDetail?startDate=${params.startDate}&endDate=${params.endDate}&userId=${params.userId}`)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] > 0) {
+          if (res['data'] && res['data'].length > 0) {
+            let headings = {};
+            for (var key in res['data'][0]) {
+              if (key.charAt(0) != "_") {
+                headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+              }
+            }
+            this.common.getCSVFromDataArray(res['data'], headings, 'Work Hour Report')
+          } else {
+            this.common.showError('No Data Available');
+          }
+        };
+        console.log('download res:', res)
+      })
   }
 
   // start: weekly list
@@ -438,7 +467,7 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            icons: this.actionIcons(shift,0)
+            icons: this.actionIcons(shift, 0)
           };
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
@@ -461,18 +490,18 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
 
   actionIcons(shift, type) {
     let icons = [
-      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "", title: "view detail",},
+      { class: "fas fa-info-circle", action: this.viewWorkHourDetail.bind(this, shift, type), txt: "", title: "view detail", },
     ];
     return icons;
   }
 
-  viewWorkHourDetail(shift, type){
+  viewWorkHourDetail(shift, type) {
     let dataparams = {
       view: {
         api: 'Admin/getWorkHourDetail',
         param: {
-          startDate : (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
-          endDate : (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
+          startDate: (this.weekdate.startDate) ? this.common.dateFormatter(this.weekdate.startDate) : null,
+          endDate: (this.weekdate.endDate) ? this.common.dateFormatter(this.weekdate.endDate) : null,
           userId: shift._aduserid
         }
       },

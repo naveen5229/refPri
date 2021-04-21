@@ -72,9 +72,15 @@ export class CallKpiComponent implements OnInit {
     // this.endTime.setDate(this.endTime.getDate()-1)
     // console.log(this.shiftStart.getTime());
     this.getDepartments();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.getCallKpi();
+    this.getDepartments();
   }
 
   getDepartments() {
@@ -213,6 +219,7 @@ export class CallKpiComponent implements OnInit {
   }
 
   showChartForAdmin(doc) {
+    console.log("doc", doc)
     this.temCharts.forEach(ele => ele.destroy());
     console.log(doc);
 
@@ -238,6 +245,7 @@ export class CallKpiComponent implements OnInit {
       bgColor: [doc['Tk. Dur.']['class'], doc['FO Dur.']['class'], doc['Pt. Dur.']['class'], doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
       showLegend: false
     }
+    console.log(chartData1,chartData2,chartData3);
     this.temCharts = this.chart.generatePieChartforCall([chartData1, chartData2, chartData3]);
 
     this.showLabel = true;

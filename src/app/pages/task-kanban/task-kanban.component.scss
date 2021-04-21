@@ -37,6 +37,7 @@
   height: 494px;
   overflow: auto;
   background: #f8f8ff;
+  height: calc(100% - 50px);
 }
 
 // .dragStyle{
@@ -103,7 +104,8 @@
 .stateContainer {
   width: 100%;
   overflow-x: auto;
-  flex-wrap: inherit;
+  flex-wrap: inherit;  
+  height: calc(100vh - 164px);
 }
 
 .stateStatusBar {

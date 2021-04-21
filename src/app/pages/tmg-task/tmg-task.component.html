@@ -1,0 +1,179 @@
+
+
+<div class="contentsection">
+  <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-6 pl-0"  style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Task Trends</b></h6>
+        <p  class="link"
+        (click)="getDetials('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+        <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;min-height: 350px;max-height: 350px;"
+        [options]="chart.options"></chart> -->
+        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart>
+      </div>
+      <div class="outer mt-3" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+        (click)="getDetials('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+        <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart.options"></chart>
+        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+        </chart> -->
+      </div>
+    </div>
+    <div class="col-6 pl-0 pr-0 right">
+      <div class="row mr-0">
+        <div class="col-6 pl-1 pr-1" style="height: 100%;">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">SnapShot(Live)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="TaskSnapchat">
+              <thead class="thead">
+                <th>Status</th>
+                <th>Count</th>               
+              </thead>
+              <tbody class="tbody">
+                  <tr>
+                    <td>Open</td>
+                    <td>{{TaskSnapchat['Open']}}</td>
+                  </tr>
+                  <tr>
+                    <td>Hold</td>
+                    <td>{{TaskSnapchat['Hold']}}</td>
+                  </tr>
+                  <tr>
+                    <td>OverDue</td>
+                    <td>{{TaskSnapchat['Overdue']}}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-6 pl-1 pr-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Uncomplete(90 Days)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getDashboardTaskUserwiseUncomplete',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Total Task</th>
+                <th>Uncomplete Task</th>
+               
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let un of uncomplete">
+                  <td>{{un['name']}}</td>
+                  <td>{{un['Total Task']}}</td>
+                  <td>{{un['Uncomplete Task']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+   
+      </div>
+      <div class="row mt-3 mr-0">
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">HOLD (Last 90 Days)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getDashboardTaskUserwisehold',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="holdtask">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Open Task</th>
+                <th>Hold Task</th>
+                <th>% Hold</th>
+               
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let ho of holdtask">
+                  <td>{{ho['name']}}</td>
+                  <td>{{ho['open_task']}}</td>
+                  <td>{{ho['hold_task']}}</td>
+                  <td>{{ho['Hold %']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%;">
+            <h6 style="text-align:center"><b class="charthead">Overdue-(Worst 3 Users) - Live</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getDashboardTaskUserwiseOverduelive',{totalrecord: 3,stepno: -1})"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Open Task</th>
+                <th>Overdue</th>
+                <th>Overdue%</th>
+               
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let ov of overduetaskdata">
+                  <td>{{ov['name']}}</td>
+                  <td>{{ov['open']}}</td>
+                  <td>{{ov['Overdue']}}</td>
+                  <td>{{ov['overdue %']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div  class="row mt-3 mr-0">
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Longest Unread Hours User Wise(Live)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getDashboardTaskLongestUnreadhour',{totalrecord: 3,stepno: -1},15,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="longestunreadhoursdata">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Hour</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let lo of longestunreadhoursdata">
+                  <td>{{lo['name']}}</td>
+                  <td>{{lo['hour']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Userwise Read Avg Hr TAT(30 Days)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Hour</th>
+               
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let uw of userwisereadavgtat">
+                  <td>{{uw['name']}}</td>
+                  <td>{{uw['hour']}}</td>
+                  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

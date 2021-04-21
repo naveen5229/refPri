@@ -7,6 +7,12 @@ export const MENU_ITEMS = JSON.stringify([
     home: true,
     children: [
       {
+        title: 'TMG Dashboard',
+        //icon: 'fa-dashcube',
+        link: '/pages/tmg-dashboard',
+        home: true,
+      },
+      {
         title: 'User Role',
         icon: 'people-outline',
         link: '/pages/user-role',
@@ -197,6 +203,11 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/site',
       },
+      // {
+      //   title: 'Settings',
+      //   // icon: 'people-outline',
+      //   link: '/pages/settings',
+      // },
     ]
   },
   {

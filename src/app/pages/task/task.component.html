@@ -30,24 +30,51 @@
                 </div>
             </div>
             <div class="col-4 text-right">
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="process"
-                    (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
-                        src="./assets/images/process.svg" alt="process"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="addBroadcast" title="Add Broadcast"
-                    (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
-                <button class="btn btn-primary btn-sm mr-2 leave" id="applyleave" title="Apply Leave"
-                    (click)="applyLeave(null)"><img src="./assets/images/leave.svg" alt="leave"></button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="st" title="Add Schedule Task"
-                    (click)="openSchedukedTaskMasterModal()">
-                    <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
-                </button>
-                <button class="btn btn-primary btn-sm mr-2 allicons" id="p" title="Add Project"
-                    (click)="showProjectPopup()">
-                    <img src="./assets/images/addproject.svg" alt="Add Project">
-                </button>
-                <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task"
-                    (click)="showTaskPopup()">
-                    <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
+                <div class="mr-4 outerbtn">
+                    <div class="noticon">
+                        <button class="btn btn-primary btn-sm allicons mr-3"
+                            [ngClass]="{'orange': processTicketNotiSts['p_overdue'] || (processTicketNotiSts['p_overdue'] && processTicketNotiSts['p_count']), 'green': !processTicketNotiSts['p_overdue'] && processTicketNotiSts['p_count']}"
+                            id="process" (click)="common.gotoPage('/pages/my-process')" title="Go To Process"><img
+                                src="./assets/images/process.svg" alt="process">
+                        </button>
+                        <span class="count"
+                            *ngIf="processTicketNotiSts['p_count']">{{processTicketNotiSts['p_count']}}</span>
+                    </div>
+                    <div class="noticon">
+                        <button class="btn btn-primary btn-sm allicons mr-4"
+                            [ngClass]="{'orange': processTicketNotiSts['overdue'] || (processTicketNotiSts['overdue'] && processTicketNotiSts['count']), 'green': !processTicketNotiSts['overdue'] && processTicketNotiSts['count']}"
+                            id="ticket" (click)="common.gotoPage('/pages/ticket')" title="Go To Ticket"><i
+                                class="fas fa-ticket-alt"></i></button>
+                        <span class="count"
+                            *ngIf="processTicketNotiSts['count']">{{processTicketNotiSts['count']}}</span>
+                    </div>
+                </div>
+                <div class="fabsection">
+                    <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction"><i
+                            class="fas fa-ellipsis-v"></i></button>
+                    <div class="text-right" [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
+
+
+                        <button class="btn btn-primary btn-sm allicons" id="addBroadcast" title="Add Broadcast"
+                            (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
+                        <button class="btn btn-primary btn-sm leave allicons" id="applyleave" title="Apply Leave"
+                            (click)="applyLeave(null)"><img src="./assets/images/leave.svg" alt="leave"></button>
+                        <button class="btn btn-primary btn-sm allicons" id="st" title="Add Schedule Task"
+                            (click)="openSchedukedTaskMasterModal()">
+                            <img src="./assets/images/seduletask.svg" alt="Add Schedule Task">
+                        </button>
+                        <button class="btn btn-primary btn-sm allicons" id="p" title="Add Project"
+                            (click)="showProjectPopup()">
+                            <img src="./assets/images/addproject.svg" alt="Add Project">
+                        </button>
+                        <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task"
+                            (click)="showTaskPopup()">
+                            <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
+                    </div>
+
+                </div>
+
+
             </div>
         </div>
     </nb-card-header>
@@ -77,16 +104,16 @@
                     (click)="activeTab='futureTaskByMe'; getTaskByType(-7)">
                     Future Task
                 </li>
-                <li [ngClass]="activeTab=='todoList'?'active':''"
+                <!-- <li [ngClass]="activeTab=='todoList'?'active':''"
                     (click)="activeTab='todoList';activeSabTab = 0;resetSearchTask(); getTodoTaskList(0)">
                     ToDo List
-                </li>
+                </li> -->
                 <li [ngClass]="activeTab=='scheduleMaster'?'active':''"
                     (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master
                 </li>
-                <li [ngClass]="activeTab=='unreadLeads'?'active':''"
-                    (click)="activeTab='unreadLeads'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
+                <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''"
+                    (click)="activeTab='unreadTaskByMe'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
                     Unread
                 </li>
                 <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
@@ -251,18 +278,72 @@
             <smart-table *ngIf="unreadLeads.length!=0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
             </smart-table>
         </div> -->
-        <div *ngIf="activeTab=='unreadLeads'" class="multiTableHeight">
+        <div *ngIf="activeTab=='unreadTaskByMe'" class="multiTableHeight">
             <div class="tableTitle">TASK</div>
             <smart-table style="height: auto;" (action)="actionHandler($event)" [data]="tableUnreadTaskForMeList.data"
                 [settings]="tableUnreadTaskForMeList.settings" id="tableUnreadTaskForMeList">
             </smart-table>
             <div class="tableTitle" *ngIf="unreadLeads.length > 0">PROCESS</div>
-            <smart-table style="height: auto;" *ngIf="unreadLeads.length > 0" [data]="tableUnreadLeads.data" [settings]="tableUnreadLeads.settings"
-                id="tableUnreadLeads">
+            <smart-table style="height: auto;" *ngIf="unreadLeads.length > 0" [data]="tableUnreadLeads.data"
+                [settings]="tableUnreadLeads.settings" id="tableUnreadLeads">
             </smart-table>
-            <div class="tableTitle" *ngIf="unreadTkt.length > 0">Ticket</div>
-            <smart-table *ngIf="unreadTkt.length > 0" [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
+            <div class="tableTitle" *ngIf="unreadTkt.length > 0">TICKET</div>
+            <smart-table *ngIf="unreadTkt.length > 0" [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings"
+                id="tableUnreadTkt">
             </smart-table>
+        </div>
+
+        <div class="todosec">
+            <div class="todolayout" *ngIf="todoVisi">
+                <div class="todoHeading">
+                    <p>To Do List </p>
+                    <div class="right">
+                        <i class="fas fa-plus" *ngIf="!todoAddList" (click)="todoAddList = true"></i>
+                        <i class="fas fa-times" *ngIf="todoAddList" (click)="todoAddList = false"
+                            (click)="resetTaskTodoForm()"></i>
+                    </div>
+                </div>
+
+                <div class="addtodo" *ngIf="todoAddList">
+                    <div class="columnGap">
+                        <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
+                            name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"
+                            style="height: 40px!important;"></textarea>
+                    </div>
+                    <div>
+                        <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false"
+                            (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
+                        </uj-date-time-picker>
+                    </div>
+                  
+                    <div>
+                        <label class="pr-5">
+                            <input type="checkbox" [checked]="taskTodoForm.isUrgent"
+                                (change)="taskTodoForm.isUrgent = !taskTodoForm.isUrgent"
+                                style="vertical-align: middle;" />
+                            High-Priority</label>
+                        <button class="btn btn-primary btn-sm" id="savetodotask" (click)="saveTaskTodo(2)"
+                            title="Save ToDo">Save</button>
+                        <button *ngIf="taskTodoForm.requestId>0" class="btn btn-primary btn-sm ml-2" id="resettodotask"
+                            (click)="resetTaskTodoForm()" title="Reset">Reset</button>
+                    </div>
+                </div>
+                <div class="todoouter">
+                    <div class="todolist" *ngFor="let todo of taskTodoList">
+                        <div class="todoTitle" title="Due On:{{todo.due_date}}" [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> {{todo.task_desc}} </div>
+                        <div class="todoAction">
+                            <button *ngIf="!todo._status" title="Mark Complete"><i class="fa fa-thumbs-up text-success"  (click)="updateTodoTask(todo,2)"></i></button>
+                            <button *ngIf="!todo._status" title="Edit" > <i class="fa fa-edit" (click)="todoAddList=true;editTodoTask(todo)"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="todobtns">
+            <button title="Todo List" (click)="todoVisi = !todoVisi; (todoVisi) ? getTodoTaskList(2) : null">
+                <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
+                <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
+            </button>
+            </div>
         </div>
 
     </nb-card-body>

@@ -22,6 +22,9 @@
              <li [ngClass]="activeTab=='wifi'?'active':''" (click)="activeTab='wifi';resetTable3();getOfficeDataForWifi(null);resetvar();" style="font-weight:600;font-size:14px;">
                  Wifi Necessity
              </li>
+             <li [ngClass]="activeTab=='userRole'?'active':''" (click)="activeTab='userRole';resetvar();" style="font-weight:600;font-size:14px;">
+              User Role
+          </li>
          </ul>
         </div>
       </div> 
@@ -140,6 +143,36 @@
         <div class="mt-2">
           <smart-table *ngIf="getWifiDataList.length" [data]="table3.data" [settings]="table3.settings"></smart-table>
       </div>
+      </div>
+
+    </div>
+
+    <div class="row mrgn" *ngIf="activeTab == 'userRole'">
+      <div class="col-5" style="display:inline-block;">
+          <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+          placeholder="Select Fo User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+      </div>
+      <div class="col-5">
+          <auto-suggestion (onSelected)="getAdminPagesDetails($event)" [data]="adminList" seperator="-" display="name" placeholder="Select Fo Admin User" [preSelected]="(adminId.id>0) ? {'name':adminId.name} : {'name':null}" inputId="adminName"></auto-suggestion>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Save</button>
+    </div>
+
+      <div class="container">
+        <div *ngFor="let module of formattedData; let i = index;">
+            <div class="module-container">
+                <input type="checkbox" [ngClass]="module.isSelected? 'module-box' : 'module-box'" [name]="'section-' + i" [(ngModel)]="module.isSelected" (change)="checkOrUnCheckAll(module, 'module')"> <span class="module-name">{{module.name | uppercase }}</span>
+            </div>
+            <div class="group-container" *ngFor="let group of module.groups; let j = index">
+                <div class="group-head"><input type="checkbox" [ngClass]="group.isSelected? 'group-box' : 'group-box'" [name]="'group-' + j" [(ngModel)]="group.isSelected" (change)="checkOrUnCheckAll(group, 'group')"> {{group.name}}
+                </div>
+                <div class="col-2 page-container" *ngFor="let page of group.pages; let k = index">
+                    <input type="checkbox" class=" page-box" [name]="'page-' + k" [(ngModel)]="page.isSelected" (change)="checkOrUnCheckAll(page, 'page')"> {{page.title}}
+                </div>
+            </div>
+        </div>
       </div>
 
     </div>

@@ -5,7 +5,8 @@
                 <h5 class="heading-design">My Ticket</h5>
             </div>
             <div class="col-3 text-right">
-                <button class="btn btn-primary btn-sm" id="addTicket" (click)="openAddTicketModal()"><i
+                <button class="btn btn-primary btn-sm" id="gototask" title="Go To Task" (click)="common.gotoPage('/pages/task')"><i class="fas fa-tasks"></i></button>
+                <button class="btn btn-primary btn-sm ml-2" id="addTicket" (click)="openAddTicketModal()"><i
                         class="fa fa-plus"></i></button>
             </div>
         </div>
@@ -19,12 +20,12 @@
                 </li>
                 <li [ngClass]="activeTab=='unallocatedTkt'?'active':''"
                     (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
-                    Claim
+                    Claim & Unassigned
                 </li>
-                <li [ngClass]="activeTab=='unassignedTkt'?'active':''"
+                <!-- <li [ngClass]="activeTab=='unassignedTkt'?'active':''"
                     (click)="activeTab='unassignedTkt'; getTicketByType(103)">
                     Unassigned
-                </li>
+                </li> -->
                 <li [ngClass]="activeTab=='completedTkt'?'active':''"
                     (click)="activeTab='completedTkt';getTicketByType(105) ">
                     Completed
@@ -49,18 +50,18 @@
 
         <div *ngIf="activeTab=='allocatedTkt'">
             <smart-table [data]="tableAllocatedTkt.data" [settings]="tableAllocatedTkt.settings" id="tableAllocatedTkt"
-                class="sl-smart-table"></smart-table>
+                class="smart1"></smart-table>
         </div>
         <div *ngIf="activeTab=='unallocatedTkt'">
             <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings"
-                id="tableUnallocatedTkt"></smart-table>
+                id="tableUnallocatedTkt" class="smart1"></smart-table>
         </div>
         <div *ngIf="activeTab=='unassignedTkt'">
             <smart-table [data]="tableUnassignedTkt.data" [settings]="tableUnassignedTkt.settings"
-                id="tableUnassignedTkt"></smart-table>
+                id="tableUnassignedTkt" class="smart1"></smart-table>
         </div>
         <div *ngIf="activeTab=='unreadTkt'">
-            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt">
+            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt" class="smart1">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='completedTkt'">
@@ -91,19 +92,18 @@
                     For Me
                 </li>
             </ul>
-            <smart-table [data]="tableCompletedTkt.data" [settings]="tableCompletedTkt.settings" id="tablecompletedTkt">
+            <smart-table [data]="tableCompletedTkt.data" [settings]="tableCompletedTkt.settings" id="tablecompletedTkt" class="smart2">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='ccTkt'">
-            <smart-table [data]="tableCcTkt.data" [settings]="tableCcTkt.settings" id="tableCcTkt"></smart-table>
+            <smart-table [data]="tableCcTkt.data" [settings]="tableCcTkt.settings" id="tableCcTkt"  class="smart2"></smart-table>
         </div>
         <div *ngIf="activeTab=='addedByMeTkt'">
-            <smart-table [data]="tableAddedByMeTkt.data" [settings]="tableAddedByMeTkt.settings" id="tableAddedByMeTkt">
+            <smart-table [data]="tableAddedByMeTkt.data" [settings]="tableAddedByMeTkt.settings" id="tableAddedByMeTkt"  class="smart2">
             </smart-table>
         </div>
         <div *ngIf="activeTab=='openTikcets'">
-            <smart-table [data]="tableAllOpenTkt.data" [settings]="tableAllOpenTkt.settings" id="tableAllOpenTkt"
-                class="sl-smart-table"></smart-table>
+            <smart-table [data]="tableAllOpenTkt.data" [settings]="tableAllOpenTkt.settings" id="tableAllOpenTkt" class="smart2"></smart-table>
         </div>
     </nb-card-body>
 </nb-card>

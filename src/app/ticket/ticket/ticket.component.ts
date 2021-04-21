@@ -867,9 +867,9 @@ export class TicketComponent implements OnInit {
       } else if (type == 101 || type == 102 || type == 107) {
         icons.push({ class: "fas fa-share", action: this.openForwardTicket.bind(this, ticket, type), txt: '', title: "Forward Ticket" });
         if (type == 107) {
-          if (ticket._allocated_user == this.loginUserId && !ticket._status) {
+          if (ticket._allocated_user == this.loginUserId  && !ticket._status) {
             icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
-          } else if (ticket._allocated_user == this.loginUserId && ticket._status == 2) {
+          } else if (ticket._allocated_user == this.loginUserId && ticket._ticket_closure > 0 &&  ticket._status == 2) {
             icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
           }
           if ((ticket._allocated_user == -1 && ticket._status == 0) || ticket._status === null) {
@@ -902,7 +902,7 @@ export class TicketComponent implements OnInit {
         if (!ticket._status && (type == 101 || type == 102)) {
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark Rejected", });
           icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
-        } else if (ticket._status == 2 && (type == 101 || type == 102)) {
+        } else if (ticket._status == 2 && ticket._ticket_closure > 0 && (type == 101 || type == 102)) {
           icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket._close_form > 0) ? this.openTicketFormData.bind(this, ticket, type, 5) : this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed", });
         }
       }
@@ -910,7 +910,11 @@ export class TicketComponent implements OnInit {
       icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
       
     } else if (type == 100) {
-      icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
+      if(ticket._claim_ticket==1){
+        icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
+      }else{
+        icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
+      }
     } else if (type == 103) {
       icons.push({ class: "fas fa-user-plus", action: this.openAssignUserModal.bind(this, ticket, type), txt: '', title: "Assign User" });
     }
