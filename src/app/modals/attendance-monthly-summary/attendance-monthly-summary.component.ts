@@ -84,7 +84,11 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   getAttendanceMonthySummary(type = null) {
-    this.reportType = type;
+    if (!type) {
+      this.reportType = 'summary';
+    } else {
+      this.reportType = type;
+    }
     this.filteredAttendanceSummaryList = [];
     this.resetTableFinalAttendanceList();
     let startdate = this.common.dateFormatter(this.startTime);
@@ -140,8 +144,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
             Object.keys(this.filterData).map(key => {
               this.filteredAttendanceSummaryList.push({ name: this.filterData[key][0].name, data: _.sortBy(this.filterData[key], 'date') });
             });
-            this.filteredAttendanceSummaryList = _.sortBy(this.filteredAttendanceSummaryList,'name');
-            console.log('greeneffect',this.filteredAttendanceSummaryList)
+            this.filteredAttendanceSummaryList = _.sortBy(this.filteredAttendanceSummaryList, 'name');
+            console.log('greeneffect', this.filteredAttendanceSummaryList)
           }
 
         }
@@ -176,9 +180,9 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     let typeColor = "black";
     if (presetType == "P" && e._aduserid < 0) {
       typeColor = "springgreen";
-    } else if (['PH','PH1','PH2'].includes(presetType) && e._aduserid < 0) {
+    } else if (['PH', 'PH1', 'PH2'].includes(presetType) && e._aduserid < 0) {
       typeColor = "greenyellow";
-    } else if (['P','PH','PH1','PH2'].includes(presetType) && !(e._aduserid == e._userid)) {
+    } else if (['P', 'PH', 'PH1', 'PH2'].includes(presetType) && !(e._aduserid == e._userid)) {
       typeColor = "blue";
     } else if (presetType == "L") {
       typeColor = "red";
@@ -510,5 +514,42 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     }
     this.common.params = { data: dataparams };
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  markAltSat() {
+    this.common.params = {
+      title: 'Confirm',
+      description: `<b>` + 'Are you sure to mark 2 & 4 Saturday attendance of all IT Employees',
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.markWeekDay()
+      }
+    });
+  }
+
+  markWeekDay() {
+    let params = {
+      startDate: this.startTime,
+      endDate: this.endTime
+    }
+    this.common.loading++;
+    this.api.post('Admin/markSaturdayAttendance', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.getAttendanceMonthySummary(null);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }), err => {
+      this.common.loading--;
+      this.common.showError();
+    }
   }
 }
