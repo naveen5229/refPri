@@ -7,6 +7,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { LocationSelectionComponent } from '../location-selection/location-selection.component';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { MapService } from '../../Service/map/map.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'saveadmin',
@@ -141,9 +142,9 @@ export class SaveadminComponent implements OnInit {
     this.activeModal.close(response);
   }
 
-  getAddressBylatlong(){
-    if(this.Fouser.baseLat && this.Fouser.baseLong){
-      this.map.getAddressByLatLng({lat:Number(this.Fouser.baseLat),lng:Number(this.Fouser.baseLong)}).then(res=>{
+  getAddressBylatlong() {
+    if (this.Fouser.baseLat && this.Fouser.baseLong) {
+      this.map.getAddressByLatLng({ lat: Number(this.Fouser.baseLat), lng: Number(this.Fouser.baseLong) }).then(res => {
         console.log("results2:", res);
         this.Fouser.location = res;
       });
@@ -154,7 +155,7 @@ export class SaveadminComponent implements OnInit {
     this.common.loading++;
     this.api.get("Admin/getDepartmentList").subscribe(res => {
       this.common.loading--;
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       this.departments = res['data'] || [];
     }, err => {
       this.common.loading--;
@@ -189,7 +190,7 @@ export class SaveadminComponent implements OnInit {
     let response;
     this.api.post('FoAdmin/addUsers', params).subscribe(res => {
       this.common.loading--;
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       this.activeModal.close();
     }, err => {
       this.common.loading--;
@@ -391,7 +392,7 @@ export class SaveadminComponent implements OnInit {
               if (!this.isOtherShow) {
                 this.closeModal(true);
               }
-              if(this.Fouser.isActive == 'false' && this.isOtherShow){
+              if (this.Fouser.isActive == 'false' && this.isOtherShow) {
                 this.saveAdmin();
               }
             }
@@ -488,5 +489,32 @@ export class SaveadminComponent implements OnInit {
     } else if (this.selectedItems == 3) {
       this.Fouser.attenMedium = '001';
     }
+  }
+
+  getRMStatus() {
+    this.common.loading++;
+    this.api.get("Admin/adminExistAsRm?adminId=" + this.Fouser.id).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        if (res['data'] && res['data'].length > 0) {
+          this.openConfirmBox();
+        }
+      };
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
+  }
+
+  openConfirmBox() {
+    this.common.params = {
+      title: 'Confirm',
+      description: `<b>` + 'Please, remove this user as a reporting manager to other active users first.',
+    }
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      this.Fouser.isActive = 'true';
+    });
   }
 }
