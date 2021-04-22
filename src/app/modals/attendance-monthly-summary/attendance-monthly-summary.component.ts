@@ -72,7 +72,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
     this.groupList = (this.common.params.groupList) ? this.common.params.groupList : [];
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   closeModal(response) {
     this.activeModal.close();
@@ -517,6 +518,9 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
   }
 
   markAltSat() {
+    let validMonths = [new Date().getMonth(), new Date().getMonth() + 1];
+    if (!validMonths.includes(this.startTime.getMonth() + 1)) return this.common.showError('You can mark attendance of Current and Previous Month Only.');
+
     this.common.params = {
       title: 'Confirm',
       description: `<b>` + 'Are you sure to mark 2 & 4 Saturday attendance of all IT Employees',
@@ -534,7 +538,8 @@ export class AttendanceMonthlySummaryComponent implements OnInit {
       startDate: this.common.dateFormatter2(this.startTime),
       endDate: this.common.dateFormatter2(this.endTime)
     }
-    console.log('params for sat sun att. mark',params);
+
+    console.log('params for sat sun att. mark', params);
     this.common.loading++;
     this.api.post('Admin/markSaturdayAttendance', params).subscribe(res => {
       this.common.loading--;
