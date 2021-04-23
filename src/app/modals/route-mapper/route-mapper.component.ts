@@ -88,16 +88,19 @@ export class RouteMapperComponent implements OnInit {
       .subscribe((res: any) => {
         this.common.loading--;
         if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
-        let locations = res.data.filter(item => {
-          return new Date(item.location_fetch_time).getTime() >= new Date(this.startDate).getTime() &&
-            new Date(item.location_fetch_time).getTime() <= new Date(this.endDate).getTime();
-        });
-        this.locations = locations;
+        if (res.data && res.data.length > 0) {
+          this.locations = res.data.filter(item => {
+            return new Date(item.location_fetch_time).getTime() >= new Date(this.startDate).getTime() &&
+              new Date(item.location_fetch_time).getTime() <= new Date(this.endDate).getTime();
+          });
+        }
+        // this.locations = locations;
         console.log("locations", this.locations)
         if (this.locations && this.locations.length) {
           this.createCompleteRoute();
           this.setMarker(this.locations[0]);
           if (!this.routeMapperPolyline) this.initPolyline();
+          if (this.isRouteTrakingOn) this.stopRouteTracking();
         } else {
           if (this.completeRoutePolyline) {
             this.completeRoutePolyline.setMap(null);
@@ -177,6 +180,7 @@ export class RouteMapperComponent implements OnInit {
     });
     this.routeMapperPolyline.setMap(this.map);
     this.routeMapperPolylinePath = this.routeMapperPolyline.getPath();
+    console.log("routeMapperPolylinePath", this.routeMapperPolylinePath)
   }
 
 
