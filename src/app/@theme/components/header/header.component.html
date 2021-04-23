@@ -23,7 +23,7 @@
             <nb-search type="rotate-layout" title="Search"></nb-search>
         </nb-action>
         <nb-action *ngIf="isShowFoAdmin" class="foadmin_icon">
-            <button class="form-control action-btn refresh" (click)="openFoAdminModal()" title="Search Fo-Admin"><i class="fas fa-user-plus small"></i></button>
+            <button class="form-control action-btn refresh" (click)="openFoAdminSearchModal()" title="Search Fo-Admin"><i class="fas fa-user-plus small"></i></button>
         </nb-action>
         <nb-action class="refresh_icon">
             <button class="form-control action-btn refresh" (click)="refresh()" title="Refresh"><i class="icon ion-refresh"></i></button>
@@ -37,3 +37,20 @@
         </nb-action>
     </nb-actions>
 </div>
+
+<!--start: foadminsearch modal -->
+<div class="modal" id="foadminSearchModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search FO Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeFoadminSearchModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: foadminsearch modal -->
