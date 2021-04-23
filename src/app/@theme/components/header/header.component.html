@@ -46,9 +46,11 @@
                 <h5 class="modal-title">Search FO Admin</h5>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeFoadminSearchModal()">&times;</button>
             </div>
-
             <div class="modal-body">
-                
+                <div class="row">
+                    <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Suggestion/searchAllFoAdminUser" [display]="['name','mobileno','company_name']" seperator="-" placeholder="Search By Mobile No. / Name">
+                    </auto-suggestion>
+                </div>
             </div>
         </div>
     </div>

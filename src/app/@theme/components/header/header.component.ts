@@ -189,10 +189,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   openFoAdminSearchModal(){
-    this.common.showError("Working...");
+    document.getElementById("foadminSearchModal").style.display = "block";
   }
 
   closeFoadminSearchModal(){
+    document.getElementById("foadminSearchModal").style.display = "none";
+  }
+  selectFoUser(e){
 
   }
 }
