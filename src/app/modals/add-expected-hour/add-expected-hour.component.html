@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h6 style="color: white;" class="modal-title p-1" id="modal-basic-title">{{title}}</h6>
+  <div class="col-md-3 text-right">
+      <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false,null)">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+</div>
+
+<div class="modal-body">
+    <div class="row mb-2">
+        <div class="col-lg-4">
+            <label>Expected Hours :</label>
+        </div>
+        <div class="col-lg-8">
+            <uj-date-time-picker (onChanged)="addForm.expectedHour=($event)" [dateTimeValue]="addForm.expectedHour" [isTime]="true" [isDate]="false">
+            </uj-date-time-picker>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-lg-4">
+            <label>Remark :</label>
+        </div>
+        <div class="col-lg-8">
+            <textarea type="text" class="form-control " [(ngModel)]='addForm.remark' placeholder="Enter Remark" required></textarea>
+        </div>
+    </div>
+    <div class="text-right">
+        <button class="btn btn-primary brn-sm" (click)="saveUserExpectedHour()">Save</button>
+    </div>
+</div>

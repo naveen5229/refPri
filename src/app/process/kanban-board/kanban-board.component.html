@@ -146,6 +146,8 @@
             <div class="col-12" style="line-height: 1rem;" *ngFor="let subdesc of data.desctoshow">
               <label class="cardTitleStyle" title="{{subdesc}}">{{subdesc}}</label>
             </div>
+            <div class="col-12 text-right"><label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="expected hour" (click)="(data.expected_hour) ? null : openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour : '-:-:-'}}</label>
+            </div>
 
             <div class="col-12" style="padding-bottom:5px">
               <div class="row">

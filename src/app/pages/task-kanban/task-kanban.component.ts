@@ -12,6 +12,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { NbSidebarService } from '@nebular/theme';
 import * as moment from 'moment';
+import { AddExpectedHourComponent } from '../../modals/add-expected-hour/add-expected-hour.component';
 @Component({
   selector: 'ngx-project-user-kanban',
   templateUrl: './task-kanban.component.html',
@@ -891,6 +892,7 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   getCurrentProgress(task) {
+    event.stopPropagation();
     let params = `refId=${task._tktid}&type=0`;
     this.common.loading++;
     this.api.get(`Admin/getWorkProgressByRefid?` + params).subscribe((res) => {
@@ -915,8 +917,24 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   resetProgressForm() {
-    this.taskProgressStatus = 50;
+    this.taskProgressStatus = 0;
     this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
+  }
+
+  openExpectedHourModal(event,task){
+    event.stopPropagation();
+    this.common.params = {
+      refType: 0,
+      refId: task._tktid,
+      requestId: null,
+      title: 'Add Expected Hours'
+    };
+    const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        task.expected_hour = data.expectedHour;
+      }
+    });
   }
 
 }

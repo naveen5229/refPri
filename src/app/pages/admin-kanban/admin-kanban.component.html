@@ -65,7 +65,9 @@
                 (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label>
             </div>
             
-            <div class="col-12"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
+            <div class="col-8"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
+            </div>
+            <div class="col-4 text-right"><label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="expected hour" (click)="(data.expected_hour) ? null : openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour : '-:-:-'}}</label>
             </div>
             <div class="col-12 pb-2">
               <div class="row">

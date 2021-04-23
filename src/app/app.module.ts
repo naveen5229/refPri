@@ -120,6 +120,7 @@ import { AddGlobalFieldComponent } from './modals/process-modals/add-global-fiel
 import { EntityFormComponent } from './modals/entity-form/entity-form.component';
 import { PdfVersioningComponent } from './modals/process-modals/pdf-versioning/pdf-versioning.component';
 import { AddentityfieldsComponent } from './modals/addentityfields/addentityfields.component';
+import { AddExpectedHourComponent } from './modals/add-expected-hour/add-expected-hour.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -207,7 +208,8 @@ const PAGE_COMPONENTS = [
   AddGlobalFieldComponent,
   EntityFormComponent,
   PdfVersioningComponent,
-  AddentityfieldsComponent
+  AddentityfieldsComponent,
+  AddExpectedHourComponent
 ];
 
 @NgModule({
