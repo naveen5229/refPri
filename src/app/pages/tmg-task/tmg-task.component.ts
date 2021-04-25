@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -33,6 +33,10 @@ export class TmgTaskComponent implements OnInit {
     options: {},
   };
 
+  @Input() pageType: string = "Tmg-Task";
+  deptId = 9;
+  TaskSnapchatTop3 = [];
+
   constructor(public api: ApiService,
     public common: CommonService,
     private modalService: NgbModal) {
@@ -40,12 +44,17 @@ export class TmgTaskComponent implements OnInit {
   }
 
   ngOnDestroy(){}
-ngOnInit() {
-  }
+  ngOnInit() {}
+
   ngAfterViewInit() {
-    this.refresh();
+    console.log("ngAfterViewInit");
+    // this.refresh();
   }
 
+  ngOnChanges(changes) {
+    console.log("ngOnChanges");
+    this.refresh();
+  }
 
   refresh() {
     this.xAxisData = [];
@@ -56,7 +65,6 @@ ngOnInit() {
      this.getHoldTask(4);
      this.getoverduetask(5);
      this.getlongestunreadhours(6);
-     
   }
 
   getChallansMonthGraph(index) {
@@ -69,7 +77,11 @@ ngOnInit() {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.api.get('AdminTask/getDashboardTaskMonthgraph?startDate='+params.fromdate+'&endDate='+params.todate)
+    let apiname ='AdminTask/getDashboardTaskMonthgraph?startDate='+params.fromdate+'&endDate='+params.todate;
+    if(this.pageType=="Tmg-worklog"){
+      apiname ='AdminTask/getTmgWorkhourMonthgraph?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+    }
+    this.api.get(apiname)
       .subscribe(res => {
         console.log('challansMonthGraph:', res);
         this.challansMonthGraph = res['data'];
@@ -84,13 +96,32 @@ ngOnInit() {
 
   getTaskSnapchat(index) {
     this.TaskSnapchat = [];
-     this.showLoader(index);
-    let params = { totalrecord: 3 };
-    this.api.get('AdminTask/getDashboardTaskSnapshot')
+    this.TaskSnapchatTop3 = [];
+    this.showLoader(index);
+    // let params = { totalrecord: 3 };
+    let days = 120;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    let apiname ='AdminTask/getDashboardTaskSnapshot';
+    if(this.pageType=="Tmg-worklog"){
+      apiname ='AdminTask/getTmgUserwiseWorkAvail?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+    }
+    this.api.get(apiname)
       .subscribe(res => {
         this.TaskSnapchat = res['data'][0];
-        console.log('challansMostAged:',res['data']);
-
+        if(res['data']){
+          res['data'].map((val,index1)=>{
+            if(index1 < 3){
+            this.TaskSnapchatTop3.push(val);
+            }else{
+              return false;
+            }
+          });
+        }
         this.hideLoader(index);
       }, err => {
          this.hideLoader(index);
@@ -108,7 +139,11 @@ ngOnInit() {
       todate: this.common.dateFormatter1(endDate)
     };
      this.showLoader(numindex);
-    this.api.get('AdminTask/getDashboardTaskUserwiseUncomplete?startDate='+params.fromdate+'&endDate='+params.todate)
+     let apiname ='AdminTask/getDashboardTaskUserwiseUncomplete?startDate='+params.fromdate+'&endDate='+params.todate;
+    if(this.pageType=="Tmg-worklog"){
+      apiname ='AdminTask/getTmgWosrtThreeUserwisePh?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+    }
+    this.api.get(apiname)
       .subscribe(res => {
         console.log('uncomplete:',numindex, res['data']);
         this.hideLoader(numindex);
@@ -139,17 +174,18 @@ ngOnInit() {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-   
      this.showLoader(index);
-    this.api.get('AdminTask/getDashboardTaskUserwisehold?startDate='+params.fromdate+'&endDate='+params.todate)
+     let apiname ='AdminTask/getDashboardTaskUserwisehold?startDate='+params.fromdate+'&endDate='+params.todate;
+    if(this.pageType=="Tmg-worklog"){
+      apiname ='AdminTask/getTmgWorklogDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+    }
+    this.api.get(apiname)
       .subscribe(res => {
         if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.holdtask.push(val);
           }
-          
-
         });
       }
         console.log('holdtask:', this.holdtask);
@@ -162,9 +198,19 @@ ngOnInit() {
 
   getoverduetask(index) {
     this.overduetaskdata = [];
-   
-     this.showLoader(index);
-    this.api.get('AdminTask/getDashboardTaskUserwiseOverduelive')
+    this.showLoader(index);
+    let days = 90;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    let apiname ='AdminTask/getDashboardTaskUserwiseOverduelive';
+    if(this.pageType=="Tmg-worklog"){
+      apiname ='AdminTask/getTmgWosrtThreeDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+    }
+    this.api.get(apiname)
       .subscribe(res => {
         if(res['data']){
         res['data'].map((val,index1)=>{
@@ -192,21 +238,23 @@ ngOnInit() {
       todate: this.common.dateFormatter1(endDate)
     };
      this.showLoader(index);
-    this.api.get('AdminTask/getDashboardTaskUserwiseUnreadtat?startDate='+params.fromdate+'&endDate='+params.todate)
+    let apiname ='AdminTask/getDashboardTaskUserwiseUnreadtat?startDate='+params.fromdate+'&endDate='+params.todate;
+    if(this.pageType=="Tmg-worklog"){
+      apiname ='AdminTask/getTmgAttenDefaultergraph?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+    }
+    this.api.get(apiname)
       .subscribe(res => {
         this.userwisereadavgtatfulldata= res['data'];
         if(res['data']){
-        res['data'].map((val,index1)=>{
-          if(index1 < 3){
-          this.userwisereadavgtat.push(val);
-          }
-          
-        });
-      }
+          res['data'].map((val,index1)=>{
+            if(index1 < 3){
+            this.userwisereadavgtat.push(val);
+            }
+          });
+        }
         this.hideLoader(index);
-          this.getsecondlabelValue();
+        this.getsecondlabelValue();
         console.log('holdtask:', this.userwisereadavgtat);
-
       }, err => {
          this.hideLoader(index);
         console.log('Err:', err);
@@ -226,24 +274,29 @@ ngOnInit() {
   }
 
   getlongestunreadhours(index) {
-    
     this.longestunreadhoursdata = [];
-     this.showLoader(index);
-   
-    this.api.get('AdminTask/getDashboardTaskLongestUnreadhour')
+    this.showLoader(index);
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+     let apiname ='AdminTask/getDashboardTaskLongestUnreadhour';
+     if(this.pageType=="Tmg-worklog"){
+       apiname ='AdminTask/getTmgActivitylogDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+     }
+    this.api.get(apiname)
       .subscribe(res => {
-       
         if(res['data']){
         res['data'].map((val,index1)=>{
           if(index1 < 3){
           this.longestunreadhoursdata.push(val);
           }
-         
-
         });
       }
         console.log('holdtask:', this.longestunreadhoursdata);
-
         this.hideLoader(index);
       }, err => {
          this.hideLoader(index);
@@ -266,25 +319,39 @@ ngOnInit() {
     let yaxis = [];
     let xaxis = [];
     let zaxis = [];
+    let zaxis2 = [];
+    let lable1 = "Completed";
+    let lable2 = "Added";
+    let lable3 = null;
+    if(this.pageType=="Tmg-worklog"){
+      lable1 = "Present";
+      lable2 = "Activitylog";
+      lable3 = "Worklog";
+    }
     this.challansMonthGraph.map(tlt => {
       xaxis.push(tlt['Month']);
-      yaxis.push(tlt['Completed']);
-      zaxis.push(tlt['Added']);
+      if(this.pageType=="Tmg-worklog"){
+        yaxis.push(tlt['Present']);
+        zaxis.push((tlt['Activitylog'])?tlt['Activitylog']:0);
+        zaxis2.push((tlt['Worklog'])?tlt['Worklog'] : 0);
+      }else{
+        yaxis.push(tlt['Completed']);
+        zaxis.push(tlt['Added']);
+      }
     });
-
-
     console.log('trip loading time : ', this.challansMonthGraph);
     console.log('y axis data:', yaxis);
 
     let yaxisObj = this.common.chartScaleLabelAndGrid(yaxis);
     let zaxisObj = this.common.chartScaleLabelAndGrid(zaxis);
+    let zaxis2Obj = (zaxis2 && zaxis2.length) ? this.common.chartScaleLabelAndGrid(zaxis2) : null;
     console.log("handleChart1", xaxis, yaxis);
     this.chart1.type = 'line'
     this.chart1.data = {
       labels: xaxis,
       datasets: [
         {
-          label: 'Completed',
+          label: lable1,
           data: yaxisObj.scaleData,
           backgroundColor: '#3d6fc9',
           borderColor: '#3d6fc9',
@@ -294,7 +361,7 @@ ngOnInit() {
           borderWidth: 3,
         },
         {
-          label: 'Added',
+          label: lable2,
           data: zaxisObj.scaleData,
           backgroundColor: '#FFA500',
           borderColor: '#FFA500',
@@ -304,7 +371,19 @@ ngOnInit() {
           borderWidth: 3,
         }
       ]
-    },
+    };
+    if(this.pageType=="Tmg-worklog"){
+      this.chart1.data['datasets'].push({
+        label: lable3,
+        data: zaxis2Obj.scaleData,
+        backgroundColor: '#c9c2de',
+        borderColor: '#c9c2de',
+        fill: false,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: '#c9c2de',
+        borderWidth: 3,
+      })
+    }
       this.chart1.options = {
         responsive: true,
         legend: {
@@ -381,9 +460,18 @@ ngOnInit() {
   handleChart() {
     let yaxis = [];
     let xaxis = [];
+    let label = "Hour";
+    if(this.pageType=="Tmg-worklog"){
+      label = "Defaulter %";
+    }
     this.userwisereadavgtat.map(tlt => {
-      xaxis.push(tlt['name']);
-      yaxis.push(tlt['hour']);
+      if(this.pageType=="Tmg-worklog"){
+        xaxis.push(tlt['Month']);
+        yaxis.push(tlt['Defaulter %']);
+      }else{
+        xaxis.push(tlt['name']);
+        yaxis.push(tlt['hour']);
+      }
     });
     let yaxisObj = this.common.chartScaleLabelAndGrid(yaxis);
     console.log("handleChart", xaxis, yaxis);
@@ -392,7 +480,7 @@ ngOnInit() {
       labels: xaxis,
       datasets: [
         {
-          label: 'Hour',
+          label: label,
           data: yaxisObj.scaleData,
           borderColor: '#3d6fc9',
           backgroundColor: '#3d6fc9',
@@ -540,6 +628,7 @@ ngOnInit() {
       let endDate = new Date();
       dataparams.view.param['startDate'] = this.common.dateFormatter(startDate);
       dataparams.view.param['endDate'] = this.common.dateFormatter(endDate);
+      dataparams.view.param['deptId'] = this.deptId;
     }
     console.log("dataparams=", dataparams);
     this.common.handleModalSize('class', 'modal-lg', '1100');

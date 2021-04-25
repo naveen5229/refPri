@@ -13,11 +13,16 @@
           <b>Task DashBoard</b>
         </p>
       </div>
+      <div class="hiddenby">
+        <p [class]="selectedDashboard=='Tmg-worklog'?'active':'default'" (click)="selectedDashboard='Tmg-worklog'">
+          <b>WorkLog DashBoard</b>
+        </p>
+      </div>
     </div>
     <div>
       <p class="dirbtn"><i class="fas fa-chevron-right" (click)="forwardMove()"></i></p>
     </div>
    </div>
-   <tmg-task *ngIf="selectedDashboard=='Tmg-Task'"></tmg-task>
+   <tmg-task *ngIf="['Tmg-Task','Tmg-worklog'].includes(selectedDashboard)" [pageType]="selectedDashboard"></tmg-task>
   </nb-card-body>
 </nb-card>

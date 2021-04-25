@@ -1,6 +1,5 @@
-
-
-<div class="contentsection">
+<!-- start: tmg-task -->
+<div *ngIf="pageType=='Tmg-Task'" class="contentsection">
   <div class="row mb-0 mr-0" style="height: 100%;">
     <div class="col-6 pl-0"  style="height: 100%; overflow: hidden;">
       <div class="outer" style="height: calc(50% - 10px);">
@@ -177,3 +176,167 @@
     </div>
   </div>
 </div>
+<!-- end: tmg-task -->
+
+<!-- start: tmg-worklog -->
+<div *ngIf="pageType=='Tmg-worklog'" class="contentsection">
+  <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-6 pl-0" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead">WorkLog Defaulters</b></h6>
+        <p  class="link"
+        (click)="getDetials('AdminTask/getTmgWorkhourMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart>
+      </div>
+      <div class="outer mt-3" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead">Attendance Defaulter</b></h6>
+        <p class="link"
+        (click)="getDetials('AdminTask/getTmgAttenDefaultergraph',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+        <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart.options"></chart>
+      </div>
+    </div>
+    <div class="col-6 pl-0 pr-0 right">
+      <div class="row mr-0">
+        <div class="col-6 pl-1 pr-1" style="height: 100%;">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Userwise Work Avail</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgUserwiseWorkAvail',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="TaskSnapchat">
+              <thead class="thead">
+                <th>User</th>
+                <th>No of Open Task</th>
+                <th>Remaining Allocated Time</th>
+              </thead>
+              <tbody class="tbody">
+                  <tr *ngFor="let s of TaskSnapchatTop3">
+                    <td>{{s['name']}}</td>
+                    <td>{{s['Task count']}}</td>
+                    <td>{{s['Remaining Allocated Time']}}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-6 pl-1 pr-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Wosrt Three Userwise Ph</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgWosrtThreeUserwisePh',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <th>User</th>
+                <th>Spent Hours</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let un of uncomplete">
+                  <td>{{un['name']}}</td>
+                  <td>{{un['Present Hour']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+   
+      </div>
+      <div class="row mt-3 mr-0">
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Worklog Defaulters</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgWorklogDefaulters',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="holdtask">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Present Hour</th>
+                <th>Work Log</th>
+                <th>% Default</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let ho of holdtask">
+                  <td>{{ho['name']}}</td>
+                  <td>{{ho['present_hour']}}</td>
+                  <td>{{ho['work_log']}}</td>
+                  <td>{{ho['%default']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%;">
+            <h6 style="text-align:center"><b class="charthead">Worst Three Defaulters</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgWosrtThreeDefaulters',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Present %</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let ov of overduetaskdata">
+                  <td>{{ov['name']}}</td>
+                  <td>{{ov['Present%']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div  class="row mt-3 mr-0">
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Activity Log Defaulters</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgActivitylogDefaulters',{totalrecord: 3,stepno: -1},15,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="longestunreadhoursdata">
+              <thead class="thead">
+                <th>Name</th>
+                <th>present_hour</th>
+                <th>activity_log</th>
+                <th>% Default</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let lo of longestunreadhoursdata">
+                  <td>{{lo['name']}}</td>
+                  <td>{{lo['present_hour']}}</td>
+                  <td>{{lo['activity_log']}}</td>
+                  <td>{{lo['%default']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Attendance Defaulters Graph</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgAttenDefaultergraph',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <th>Month</th>
+                <th>Defaulter %</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let uw of userwisereadavgtat">
+                  <td>{{uw['Month']}}</td>
+                  <td>{{uw['Defaulter %']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end: tmg-worklog -->

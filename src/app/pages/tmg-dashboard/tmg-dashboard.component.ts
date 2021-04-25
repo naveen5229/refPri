@@ -6,15 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tmg-dashboard.component.scss']
 })
 export class TmgDashboardComponent  implements OnInit {
-  seletionsArray = ['Tmg-Task'];
+  seletionsArray = ['Tmg-Task','Tmg-worklog'];
   selectedDashboard = 'Tmg-Task';
   constructor() {
 
   }
 
   ngOnDestroy(){}
-ngOnInit() {
-  }
+
+  ngOnInit() { }
+  
   getIndex() {
     for (let i = 0; i <= this.seletionsArray.length; i++) {
       if (this.seletionsArray[i] == this.selectedDashboard) {
@@ -22,6 +23,7 @@ ngOnInit() {
       }
     }
   }
+  
   forwardMove() {
     let index = this.getIndex();
     if (index == this.seletionsArray.length-1) {
@@ -30,6 +32,7 @@ ngOnInit() {
       this.selectedDashboard = this.seletionsArray[index + 1];
     }
   }
+  
   backwardMove() {
     let index = this.getIndex();
     if (index == 0) {
