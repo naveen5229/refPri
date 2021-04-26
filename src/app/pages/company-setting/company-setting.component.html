@@ -63,21 +63,21 @@
 
     <!--start: setting Area -->
     <div class="row mr-2 ml-2 settingsArea">
-      <div class="col-12">
+      <div class="table-responsive">
         <table class="table">
           <thead class="thead-dark">
             <tr>
-              <th style="color: white;" scope="col">#</th>
-              <th style="color: white;" scope="col">Setting</th>
-              <th style="color: white;" scope="col">Type</th>
-              <th style="color: white;" scope="col" *ngFor="let headings of settingProfileHeader">{{headings}}</th>
-              <th style="color: white;">Actions</th>
+              <th scope="col stlye">#</th>
+              <th scope="col">Setting</th>
+              <th scope="col">Type</th>
+              <th scope="col" *ngFor="let headings of settingProfileHeader">{{headings}}</th>
+              <th >Actions</th>
             </tr>
           </thead>
 
-          <tbody *ngFor="let setting of allSettings;let i = index">
-            <tr>
-              <th scope="row">{{i+1}}</th>
+          <tbody >
+            <tr *ngFor="let setting of allSettings;let i = index">
+              <td scope="row">{{i+1}}</td>
               <td>{{setting.name}}</td>
               <td>{{setting.entity_type}}</td>
               <td *ngFor="let data of setting.data">
