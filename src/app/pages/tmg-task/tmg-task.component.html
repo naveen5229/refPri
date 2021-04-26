@@ -211,7 +211,7 @@
           <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Work Availability (Early 3)</b></h6>
             <p class="link"
-            (click)="getDetials('AdminTask/getTmgUserwiseWorkAvail',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+            (click)="getDetials('AdminTask/getTmgUserwiseWorkAvail',{totalrecord: 3,stepno: -1},300,'days')"><i title="More Details" class="fa fa-list"></i>
           </p>
             <table class="table" *ngIf="TaskSnapchat">
               <thead class="thead">
@@ -235,7 +235,7 @@
           <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Work Log Hour defaults (Worst 3 User -Last 30 Days)</b></h6>
             <p class="link"
-            (click)="getDetials('AdminTask/getTmgWorklogDefaulters',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
+            (click)="getDetials('AdminTask/getTmgWorklogDefaulters',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
           </p>
             <table class="table" *ngIf="uncomplete">
               <thead class="thead">
@@ -262,7 +262,7 @@
           <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Worst 3 User - Last 30 Days</b></h6>
             <p class="link"
-            (click)="getDetials('AdminTask/getTmgWosrtThreeDefaulters',{totalrecord: 3,stepno: -1},90,'days')"><i title="More Details" class="fa fa-list"></i>
+            (click)="getDetials('AdminTask/getTmgWosrtThreeDefaulters',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
           </p>
             <table class="table" *ngIf="holdtask">
               <thead class="thead">
@@ -282,7 +282,7 @@
           <div class="outer" style="height: 100%;">
             <h6 style="text-align:center"><b class="charthead">Avarage Present Hours</b></h6>
             <p class="link"
-            (click)="getDetials('AdminTask/getTmgWosrtThreeUserwisePh',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+            (click)="getDetials('AdminTask/getTmgWosrtThreeUserwisePh',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
           </p>
             <table class="table">
               <thead class="thead">
@@ -304,7 +304,7 @@
           <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Productivity (Worst 3 User - Last 30 Days)</b></h6>
             <p class="link"
-            (click)="getDetials('AdminTask/getTmgUserwiseProductivity',{totalrecord: 3,stepno: -1},15,'days')"><i title="More Details" class="fa fa-list"></i>
+            (click)="getDetials('AdminTask/getTmgUserwiseProductivity',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
           </p>
             <table class="table" *ngIf="longestunreadhoursdata">
               <thead class="thead">
