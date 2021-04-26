@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
+import { ApiService } from '../../Service/Api/api.service';
+import { CommonService } from '../../Service/common/common.service';
 
 @Component({
   selector: 'ngx-tmg-dashboard',
@@ -8,8 +10,11 @@ import { Component, OnInit } from '@angular/core';
 export class TmgDashboardComponent  implements OnInit {
   seletionsArray = ['Tmg-Task','Tmg-worklog'];
   selectedDashboard = 'Tmg-Task';
-  constructor() {
-
+  selectedDept = {id:null,name:null};
+  departments = [];
+  constructor(public api: ApiService,
+    public common: CommonService) {
+    this.getDepartments();
   }
 
   ngOnDestroy(){}
@@ -40,6 +45,22 @@ export class TmgDashboardComponent  implements OnInit {
     } else {
       this.selectedDashboard = this.seletionsArray[index - 1];
     }
+  }
+
+  getDepartments() {
+    this.common.loading++;
+    this.api.get("Admin/getDepartmentList").subscribe(res => {
+      this.common.loading--;
+      if (res['code'] >= 0) {
+      this.departments = res['data'] || [];
+      } else{
+        this.common.showError(res['msg']);
+      };
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
   }
 
 }

@@ -32,9 +32,20 @@ export class TmgTaskComponent implements OnInit {
     data: {},
     options: {},
   };
+  chart2 = {
+    type: '',
+    data: {},
+    options: {},
+  };
+  chart3 = {
+    type: '',
+    data: {},
+    options: {},
+  };
 
   @Input() pageType: string = "Tmg-Task";
-  deptId = 9;
+  @Input() deptId: string = null;
+  // deptId = 9;
   TaskSnapchatTop3 = [];
 
   constructor(public api: ApiService,
@@ -52,22 +63,26 @@ export class TmgTaskComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    console.log("ngOnChanges");
+    console.log("ngOnChanges deptId:",this.deptId);
     this.refresh();
   }
 
   refresh() {
     this.xAxisData = [];
-    this.getChallansMonthGraph(0);
+    this.getChallansMonthGraph(0,1);
     this.getuserwisereadtat(1);
-     this.getTaskSnapchat(2);
-     this.getuncomplete(3);
-     this.getHoldTask(4);
-     this.getoverduetask(5);
-     this.getlongestunreadhours(6);
+    this.getTaskSnapchat(2);
+    this.getuncomplete(3);
+    this.getHoldTask(4);
+    this.getoverduetask(5);
+    this.getlongestunreadhours(6);
+    if(this.pageType=="Tmg-worklog"){
+      this.getChallansMonthGraph(7,2);
+      this.getChallansMonthGraph(8,3);
+    }
   }
 
-  getChallansMonthGraph(index) {
+  getChallansMonthGraph(index,chrtIndex=1) {
     this.challansMonthGraph = [];
      this.showLoader(index);
      let days = 120;
@@ -79,15 +94,21 @@ export class TmgTaskComponent implements OnInit {
     };
     let apiname ='AdminTask/getDashboardTaskMonthgraph?startDate='+params.fromdate+'&endDate='+params.todate;
     if(this.pageType=="Tmg-worklog"){
-      apiname ='AdminTask/getTmgWorkhourMonthgraph?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+      if(chrtIndex==1){
+        apiname ='AdminTask/getTmgWorkhourMonthgraph?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;
+      }else if(chrtIndex==2){
+        apiname ='AdminTask/getTmgAttenDefaultergraph?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;
+      }else if(chrtIndex==3){
+        apiname ='AdminTask/getTmgMonthwiseProductivity?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;
+      }
+
     }
     this.api.get(apiname)
       .subscribe(res => {
         console.log('challansMonthGraph:', res);
         this.challansMonthGraph = res['data'];
         this.hideLoader(index);
-        this.getlabelValue();
-        
+        this.getlabelValue(this.challansMonthGraph,chrtIndex);
       }, err => {
          this.hideLoader(index);
         console.log('Err:', err);
@@ -99,7 +120,7 @@ export class TmgTaskComponent implements OnInit {
     this.TaskSnapchatTop3 = [];
     this.showLoader(index);
     // let params = { totalrecord: 3 };
-    let days = 120;
+    let days = (this.pageType=="Tmg-worklog") ? 30 : 120;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -131,7 +152,7 @@ export class TmgTaskComponent implements OnInit {
 
   getuncomplete(numindex) {
     this.uncomplete = [];
-    let days = 90;
+    let days = (this.pageType=="Tmg-worklog") ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -141,7 +162,7 @@ export class TmgTaskComponent implements OnInit {
      this.showLoader(numindex);
      let apiname ='AdminTask/getDashboardTaskUserwiseUncomplete?startDate='+params.fromdate+'&endDate='+params.todate;
     if(this.pageType=="Tmg-worklog"){
-      apiname ='AdminTask/getTmgWosrtThreeUserwisePh?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+      apiname ='AdminTask/getTmgWorklogDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -167,7 +188,7 @@ export class TmgTaskComponent implements OnInit {
 
   getHoldTask(index) {
     this.holdtask = [];
-    let days = 90;
+    let days = (this.pageType=="Tmg-worklog") ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -177,7 +198,7 @@ export class TmgTaskComponent implements OnInit {
      this.showLoader(index);
      let apiname ='AdminTask/getDashboardTaskUserwisehold?startDate='+params.fromdate+'&endDate='+params.todate;
     if(this.pageType=="Tmg-worklog"){
-      apiname ='AdminTask/getTmgWorklogDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+      apiname ='AdminTask/getTmgWosrtThreeDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -199,7 +220,7 @@ export class TmgTaskComponent implements OnInit {
   getoverduetask(index) {
     this.overduetaskdata = [];
     this.showLoader(index);
-    let days = 90;
+    let days = (this.pageType=="Tmg-worklog") ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -208,7 +229,7 @@ export class TmgTaskComponent implements OnInit {
     };
     let apiname ='AdminTask/getDashboardTaskUserwiseOverduelive';
     if(this.pageType=="Tmg-worklog"){
-      apiname ='AdminTask/getTmgWosrtThreeDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+      apiname ='AdminTask/getTmgWosrtThreeUserwisePh?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -220,7 +241,6 @@ export class TmgTaskComponent implements OnInit {
         });
       }
         console.log('holdtask:', this.overduetaskdata);
-
         this.hideLoader(index);
       }, err => {
          this.hideLoader(index);
@@ -240,7 +260,7 @@ export class TmgTaskComponent implements OnInit {
      this.showLoader(index);
     let apiname ='AdminTask/getDashboardTaskUserwiseUnreadtat?startDate='+params.fromdate+'&endDate='+params.todate;
     if(this.pageType=="Tmg-worklog"){
-      apiname ='AdminTask/getTmgAttenDefaultergraph?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+      apiname ='AdminTask/getTmgActivitylogDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -253,7 +273,9 @@ export class TmgTaskComponent implements OnInit {
           });
         }
         this.hideLoader(index);
-        this.getsecondlabelValue();
+        if(this.pageType=="Tmg-Task"){
+          this.getsecondlabelValue();
+        }
         console.log('holdtask:', this.userwisereadavgtat);
       }, err => {
          this.hideLoader(index);
@@ -285,7 +307,7 @@ export class TmgTaskComponent implements OnInit {
     };
      let apiname ='AdminTask/getDashboardTaskLongestUnreadhour';
      if(this.pageType=="Tmg-worklog"){
-       apiname ='AdminTask/getTmgActivitylogDefaulters?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;;
+       apiname ='AdminTask/getTmgUserwiseProductivity?startDate='+params.fromdate+'&endDate='+params.todate+'&deptId='+this.deptId;
      }
     this.api.get(apiname)
       .subscribe(res => {
@@ -304,50 +326,65 @@ export class TmgTaskComponent implements OnInit {
       });
   }
 
-  getlabelValue() {
-    if (this.challansMonthGraph) {
+  getlabelValue(dataList=null,type=1) {
+    if (dataList && dataList.length) {
       // this.challansMonthGraph.forEach((cmg) => {
       //   this.chart.data.line.push(cmg['Month']);
       //   this.chart.data.bar.push(cmg['Completed']);
       //   this.xAxisData.push(cmg['Added']);
       // });
 
-      this.handleChart1();
+      this.handleChart1(dataList,type);
     }
   }
-  handleChart1() {
+  handleChart1(dataList,type) {
     let yaxis = [];
     let xaxis = [];
     let zaxis = [];
     let zaxis2 = [];
     let lable1 = "Completed";
     let lable2 = "Added";
-    let lable3 = null;
+    let lable3 = "";
     if(this.pageType=="Tmg-worklog"){
-      lable1 = "Present";
-      lable2 = "Activitylog";
-      lable3 = "Worklog";
+      if(type==1){
+        lable1 = "Present";
+        lable2 = "Activitylog";
+        lable3 = "Worklog";
+      }else{
+        lable1 = "";
+        lable2 = "";
+        lable3 = "";
+      }
     }
-    this.challansMonthGraph.map(tlt => {
+    // challansMonthGraph
+    dataList.map(tlt => {
       xaxis.push(tlt['Month']);
       if(this.pageType=="Tmg-worklog"){
-        yaxis.push(tlt['Present']);
-        zaxis.push((tlt['Activitylog'])?tlt['Activitylog']:0);
-        zaxis2.push((tlt['Worklog'])?tlt['Worklog'] : 0);
+        if(type==1){
+          yaxis.push(tlt['Present']);
+          zaxis.push((tlt['Activitylog'])?tlt['Activitylog']:0);
+          zaxis2.push((tlt['Worklog'])?tlt['Worklog'] : 0);
+        }else if(type==2){
+          yaxis.push((tlt['Defaulter %']) ? tlt['Defaulter %'] : 0);
+        }else if(type==3){
+          yaxis.push((tlt['productivity']) ? tlt['productivity'] : 0);
+        }
       }else{
         yaxis.push(tlt['Completed']);
         zaxis.push(tlt['Added']);
       }
     });
-    console.log('trip loading time : ', this.challansMonthGraph);
+    console.log('trip loading time : ', dataList);
     console.log('y axis data:', yaxis);
 
     let yaxisObj = this.common.chartScaleLabelAndGrid(yaxis);
-    let zaxisObj = this.common.chartScaleLabelAndGrid(zaxis);
+    let zaxisObj = (zaxis && zaxis.length) ? this.common.chartScaleLabelAndGrid(zaxis) : null;
     let zaxis2Obj = (zaxis2 && zaxis2.length) ? this.common.chartScaleLabelAndGrid(zaxis2) : null;
     console.log("handleChart1", xaxis, yaxis);
-    this.chart1.type = 'line'
-    this.chart1.data = {
+    // this.chart1.type = chartType
+    // this.chart1.data = chartData;
+    let chartType = 'line'
+    let chartData = {
       labels: xaxis,
       datasets: [
         {
@@ -360,20 +397,32 @@ export class TmgTaskComponent implements OnInit {
           pointHoverBackgroundColor: '#FFEB3B',
           borderWidth: 3,
         },
-        {
-          label: lable2,
-          data: zaxisObj.scaleData,
-          backgroundColor: '#FFA500',
-          borderColor: '#FFA500',
-          fill: false,
-          pointHoverRadius: 8,
-          pointHoverBackgroundColor: '#FFA500',
-          borderWidth: 3,
-        }
+        // {
+        //   label: lable2,
+        //   data: zaxisObj.scaleData,
+        //   backgroundColor: '#FFA500',
+        //   borderColor: '#FFA500',
+        //   fill: false,
+        //   pointHoverRadius: 8,
+        //   pointHoverBackgroundColor: '#FFA500',
+        //   borderWidth: 3,
+        // }
       ]
     };
-    if(this.pageType=="Tmg-worklog"){
-      this.chart1.data['datasets'].push({
+    if(zaxisObj && zaxisObj.scaleData.length){
+      chartData['datasets'].push({
+        label: lable2,
+        data: zaxisObj.scaleData,
+        backgroundColor: '#FFA500',
+        borderColor: '#FFA500',
+        fill: false,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: '#FFA500',
+        borderWidth: 3,
+      })
+    }
+    if(zaxis2Obj && zaxis2Obj.scaleData.length){
+      chartData['datasets'].push({
         label: lable3,
         data: zaxis2Obj.scaleData,
         backgroundColor: '#c9c2de',
@@ -384,11 +433,11 @@ export class TmgTaskComponent implements OnInit {
         borderWidth: 3,
       })
     }
-      this.chart1.options = {
+    let chartOptions = {
         responsive: true,
         legend: {
           position: 'bottom',
-          display: true
+          display: (type==1) ? true : false
         },
         scaleLabel: {
           display: true,
@@ -455,6 +504,20 @@ export class TmgTaskComponent implements OnInit {
         //  },
 
       };
+
+      if(type==1){
+        this.chart1.type = chartType
+        this.chart1.data = chartData;
+        this.chart1.options = chartOptions;
+      }else if(type==2){
+        this.chart2.type = chartType
+        this.chart2.data = chartData;
+        this.chart2.options = chartOptions;
+      }else if(type==3){
+        this.chart3.type = chartType
+        this.chart3.data = chartData;
+        this.chart3.options = chartOptions;
+      }
 
   }
   handleChart() {
