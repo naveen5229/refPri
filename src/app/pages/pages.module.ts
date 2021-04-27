@@ -65,6 +65,7 @@ import { ChartModule } from 'angular2-chartjs';
 import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 import { TmgTaskComponent } from './tmg-task/tmg-task.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
+import { CallLogsComponent } from './call-logs/call-logs.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -134,7 +135,8 @@ import { SettingsComponent } from './company-setting/company-setting.component';
     SitesComponent,
     TmgDashboardComponent,
     TmgTaskComponent,
-    SettingsComponent
+    SettingsComponent,
+    CallLogsComponent
   ],
 })
 export class PagesModule {
