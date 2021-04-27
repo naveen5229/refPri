@@ -57,15 +57,13 @@
 }
 .out-topnav{
     margin-top: -15px;
-    margin-left: -14px;
-    margin-right: -14px;
     padding: 0 2px;
     z-index: 5;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-   
+    width: 100%;
     // -webkit-box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
     //  box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
    
@@ -75,12 +73,12 @@
     margin: 0px 10px;
    display: flex;
    flex-direction: row;
-   justify-content: space-between;
+   justify-content: flex-start;
    align-items: center;
 //    background: white;
 //    -webkit-box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
 //     box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
-max-width: calc(100vw - 210px);
+  width: calc(100vw - 600px);
   overflow-y: auto;
 }
 .toptab::-webkit-scrollbar {
