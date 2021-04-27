@@ -1,0 +1,32 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-8">
+        <h5 class="heading-design">Call Logs</h5>
+      </div>
+      <div class="col-4 text-right">
+      </div>
+    </div>
+
+
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-2">
+        <label>Select Date</label>
+      </div>
+      <div class="col-3">
+        <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false"
+          [maxd]='today'>
+        </uj-date-time-picker>
+      </div>
+      <div class="col-7">
+        <button type="submit" id="submit" (click)="getCallLogs()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+      </div>
+    </div>
+    <div class="mt-1">
+      <smart-table *ngIf="callLogList && callLogList.length>0" [data]="table.data" [settings]="table.settings"
+        id="entries"></smart-table>
+    </div>
+  </nb-card-body>
+</nb-card>
