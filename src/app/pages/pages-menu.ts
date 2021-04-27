@@ -158,6 +158,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Call-Logs',
+        icon: 'file-text-outline',
+        link: '/pages/call-logs',
+        home: true,
+      },
+      {
         title: 'OT-Management',
         icon: 'file-text-outline',
         link: '/pages/ot-management',
