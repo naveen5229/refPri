@@ -9,12 +9,12 @@
     </div>
     <div class="toptab">
       <div class="hiddenby">
-        <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'" (click)="selectedDashboard='Tmg-Task';selectedDeptId = null">
+        <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'" (click)="selectedDashboard='Tmg-Task';selectedDept = {id:null,name:null}">
           <b>Task DashBoard</b>
         </p>
       </div>
       <div class="hiddenby">
-        <p [class]="selectedDashboard=='Tmg-worklog'?'active':'default'" (click)="selectedDashboard='Tmg-worklog';selectedDeptId = null">
+        <p [class]="selectedDashboard=='Tmg-worklog'?'active':'default'" (click)="selectedDashboard='Tmg-worklog';selectedDept = {id:null,name:null}">
           <b>WorkLog DashBoard</b>
         </p>
       </div>
