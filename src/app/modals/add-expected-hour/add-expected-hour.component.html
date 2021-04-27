@@ -1,10 +1,10 @@
 <div class="modal-header">
-  <h6 style="color: white;" class="modal-title p-1" id="modal-basic-title">{{title}}</h6>
-  <div class="col-md-3 text-right">
-      <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false,null)">
-          <span aria-hidden="true">&times;</span>
-      </button>
-  </div>
+    <h6 style="color: white;" class="modal-title p-1" id="modal-basic-title">{{title}}</h6>
+    <div class="col-md-3 text-right">
+        <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false,null)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 </div>
 
 <div class="modal-body">
@@ -13,16 +13,25 @@
             <label>Expected Hours :</label>
         </div>
         <div class="col-lg-8">
-            <uj-date-time-picker (onChanged)="addForm.expectedHour=($event)" [dateTimeValue]="addForm.expectedHour" [isTime]="true" [isDate]="false">
+            <uj-date-time-picker (onChanged)="addForm.expectedHour=($event);activeTime=null" [dateTimeValue]="addForm.expectedHour"
+                [isTime]="true" [isDate]="false">
             </uj-date-time-picker>
         </div>
     </div>
+
+    <div class="row mb-2">
+        <div class="col-2"></div>
+        <div class="col-2 text-center ml-2 defaultTimeTabs" [ngClass]="activeTime === i ? 'active' : ''" *ngFor="let time of ['00:30', '01:00', '03:00', '05:00'];let i = index"  (click)="setExptTime($event.target.innerText);activeTime = i">{{time}}</div>
+    </div>
+
+
     <div class="row mb-2">
         <div class="col-lg-4">
             <label>Remark :</label>
         </div>
         <div class="col-lg-8">
-            <textarea type="text" class="form-control " [(ngModel)]='addForm.remark' placeholder="Enter Remark" required></textarea>
+            <textarea type="text" class="form-control " [(ngModel)]='addForm.remark' placeholder="Enter Remark"
+                required></textarea>
         </div>
     </div>
     <div class="text-right">
