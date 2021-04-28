@@ -31,8 +31,10 @@ export class TmgDashboardComponent  implements OnInit {
   
   forwardMove() {
     let index = this.getIndex();
+    console.log("index", index);
     if (index == this.seletionsArray.length-1) {
-      this.selectedDashboard = this.seletionsArray[0];
+      // this.selectedDashboard = this.seletionsArray[0];
+      return;
     } else {
       this.selectedDashboard = this.seletionsArray[index + 1];
     }
@@ -40,8 +42,10 @@ export class TmgDashboardComponent  implements OnInit {
   
   backwardMove() {
     let index = this.getIndex();
+    console.log("index", index);
     if (index == 0) {
-      this.selectedDashboard = this.seletionsArray[this.seletionsArray.length-1];
+      // this.selectedDashboard = this.seletionsArray[this.seletionsArray.length-1];
+      return;
     } else {
       this.selectedDashboard = this.seletionsArray[index - 1];
     }
