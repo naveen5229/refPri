@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../@core/mock/users.service';
+import { AddentityfieldsComponent } from '../../modals/addentityfields/addentityfields.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { MapService } from '../../Service/map/map.service';
@@ -120,7 +121,9 @@ export class CallLogsComponent implements OnInit {
             action: null,
             // icons: this.actionIcons(inventory)
           };
-        } else {
+        } else if (key == 'mobileno') {
+          column[key] = { value: shift[key] ? shift[key] : null, class: 'blue cursor-pointer', action: this.addEntity.bind(this, shift), }
+        }  else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
       }
@@ -129,5 +132,30 @@ export class CallLogsComponent implements OnInit {
     console.log(columns);
     return columns;
 
+  }
+
+  addEntity(contact){
+    let editDataModal = {
+      typeName: null,
+      typeId: null,
+      entityName: null,
+      entityId: null,
+      contactName: (contact.name) ? contact.name : null,
+      contactId: null,
+      contactNo: contact.mobileno,
+      email: (contact.email) ? contact.email : null,
+      association: null,
+      requestId: null
+    }
+    this.common.params = {
+      entityTypes: null,
+      entityContactFieldsTitle: "Add contact on entity",
+      modalType: 4,
+      editData: editDataModal
+    }
+    const activeModal = this.modalService.open(AddentityfieldsComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      // console.log("addEntity ~ data", data)
+    });
   }
 }
