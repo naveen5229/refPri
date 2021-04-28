@@ -18,11 +18,12 @@
           <b>WorkLog DashBoard</b>
         </p>
       </div>
+      <div *ngIf="selectedDashboard=='Tmg-worklog'">
+        <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
+        </auto-suggestion>
+      </div>
     </div>
-    <div *ngIf="selectedDashboard=='Tmg-worklog'">
-      <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
-      </auto-suggestion>
-    </div>
+   
     <div>
       <p class="dirbtn" (click)="forwardMove()"><i class="fas fa-chevron-right" ></i></p>
     </div>
