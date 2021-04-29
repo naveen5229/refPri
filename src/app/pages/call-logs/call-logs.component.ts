@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '../../@core/mock/users.service';
+import { UserService } from '../../Service/user/user.service';
 import { AddentityfieldsComponent } from '../../modals/addentityfields/addentityfields.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
@@ -15,6 +15,10 @@ export class CallLogsComponent implements OnInit {
   callLogList: any;
   date = new Date();
   today = new Date();
+  adminList = [];
+  userListForRM = [];
+  loggedInUser = null;
+  activeLogs = { id: null, name: null };
 
   table = {
     data: {
@@ -28,8 +32,11 @@ export class CallLogsComponent implements OnInit {
 
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
+    this.loggedInUser = this.user._details;
+    this.activeLogs = { id: this.loggedInUser.id, name: this.loggedInUser.name };
     this.common.refresh = this.refresh.bind(this);
     this.getCallLogs();
+    this.getAllAdmin();
   }
 
   ngOnInit() {
@@ -37,9 +44,44 @@ export class CallLogsComponent implements OnInit {
 
   refresh() {
     this.getCallLogs();
+    this.getAllAdmin();
+  }
+
+  getAllAdmin() {
+    this.api.get("Admin/getAllAdmin.json").subscribe(
+      (res) => {
+        console.log("data", res["data"]);
+        if (res["code"] > 0) {
+          let adminList = res["data"] || [];
+          this.filterUserForRM(adminList);
+          this.adminList = adminList.map((x) => {
+            return { id: x.id, name: x.name + " - " + x.department_name };
+          });
+        } else {
+          this.common.showError(res["msg"]);
+        }
+        console.log('adminList', this.adminList)
+      },
+      (err) => {
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
+  }
+
+  filterUserForRM(adminList) {
+    let userListForRM = adminList.filter(users => {
+      return this.loggedInUser.id === users._reporting_user_id;
+    });
+    this.userListForRM = userListForRM.map(user => { return { id: user.id, name: user.name } });
+    if (this.userListForRM && this.userListForRM.length > 0) {
+      this.userListForRM.splice(0, 0, { id: this.loggedInUser.id, name: this.loggedInUser.name });
+    }
+    console.log('userListForRM', this.userListForRM);
   }
 
   getCallLogs() {
+    console.log(this.activeLogs);
     this.table = {
       data: {
         headings: {},
@@ -51,7 +93,7 @@ export class CallLogsComponent implements OnInit {
     };
 
     let date = this.common.dateFormatternew(this.date);
-    const params = '?Date=' + date;
+    const params = '?Date=' + date + '&aduserId=' + this.activeLogs.id;
     console.log(params);
     this.common.loading++;
     this.api.get('UserCallLogs/getUserCallLog' + params)
@@ -61,7 +103,7 @@ export class CallLogsComponent implements OnInit {
         if (res['code'] > 0) {
           this.callLogList = res['data'] || [];
           this.callLogList.length ? this.setTable() : this.resetTable();
-        }else{
+        } else {
           this.common.showError(res['msg']);
         }
       }, err => {
@@ -123,7 +165,7 @@ export class CallLogsComponent implements OnInit {
           };
         } else if (key == 'mobileno') {
           column[key] = { value: shift[key] ? shift[key] : null, class: 'blue cursor-pointer', action: this.addEntity.bind(this, shift), }
-        }  else {
+        } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
       }
@@ -134,7 +176,7 @@ export class CallLogsComponent implements OnInit {
 
   }
 
-  addEntity(contact){
+  addEntity(contact) {
     let editDataModal = {
       typeName: null,
       typeId: null,

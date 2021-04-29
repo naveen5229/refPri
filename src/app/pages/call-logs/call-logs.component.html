@@ -20,7 +20,13 @@
           [maxd]='today'>
         </uj-date-time-picker>
       </div>
-      <div class="col-7">
+      <div class="col-3" *ngIf="userListForRM && userListForRM.length > 0">
+        <auto-suggestion (onSelected)="activeLogs = $event" [data]="userListForRM" display="name" seperator="-"
+          placeholder="Search User" autocomplete="off" name="userId" inputId="userId"
+          [preSelected]="activeLogs.id ? {name:activeLogs.name} : {name:''}">
+        </auto-suggestion>
+      </div>
+      <div class="col-4">
         <button type="submit" id="submit" (click)="getCallLogs()" class="btn btn-primary mr-2 btn-sm">Submit</button>
       </div>
     </div>
