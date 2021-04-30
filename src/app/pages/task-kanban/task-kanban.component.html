@@ -183,11 +183,12 @@
             (cdkDragMoved)="movedIn($event)" (cdkDragEntered)="onDragEntered($event,i)"
             (click)="(data._tktid) ? ticketMessage(data,null) : null"
             [cdkDragDisabled]="project._id && data.userid != loggedInUser">
-            
+
 
             <div class="progress progress-bar-vertical" title="{{data._progress}}%">
-              <div class="progress-bar active" [style.background]="data.progress" [style.height]="(data._progress)?data._progress+'%':'3%'" role="progressbar"
-               aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" >
+              <div class="progress-bar active" [style.background]="data.progress"
+                [style.height]="(data._progress)?data._progress+'%':'3%'" role="progressbar" aria-valuenow="100"
+                aria-valuemin="0" aria-valuemax="100">
               </div>
             </div>
 
@@ -197,14 +198,21 @@
                 class="mb-0 cardTitleStyle">{{data.title}}</h5>
             </div>
 
-            <div class="col-12"><label class="cardTitleStyle font-weight-bold cursor-pointer"
+            <div class="col-8"><label class="cardTitleStyle font-weight-bold cursor-pointer"
                 title="{{data._project_type}}"
                 (click)="[101,102].includes(data._tktype) ? openUpdateTaskProject($event,data) : null">{{data._project_type}}</label>
+            </div>
+            <div class="col-4 text-right">
+              <label class="cardTitleStyle" title="Spent Hour">{{(data.total_wh) ? data.total_wh : '-:-'}}</label>
             </div>
 
             <div class="col-8"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
             </div>
-            <div class="col-4 text-right"><label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="expected hour" (click)="(data.expected_hour) ? null : openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour : '-:-:-'}}</label>
+            <div class="col-4 text-right">
+              <!-- <label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="expected hour" (click)="(data.expected_hour) ? null : openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour : '-:-'}}</label> -->
+              <label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="Expected Hour"
+                (click)="openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour :
+                '-:-'}}</label>
             </div>
             <!-- <div class="col-12">
               <label class="cardTitleStyle" title="{{data._task_desc}}">{{dat a._task_desc}}</label>

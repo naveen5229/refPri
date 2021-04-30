@@ -79,7 +79,8 @@
                                 <td colspan="4" class="p-0">
                                     <table class="table table-bordered mb-0">
                                         <tbody>
-                                            <tr *ngFor="let dd of d.description_data">
+                                            <tr *ngFor="let dd of d.description_data"
+                                                [ngStyle]="{background:dd.background}">
                                                 <td style="width: 300px;">{{dd.description}}</td>
                                                 <td style="width: 200px;">{{dd.outcome}}</td>
                                                 <td style="width: 120px;">{{dd['contact_person']}}</td>

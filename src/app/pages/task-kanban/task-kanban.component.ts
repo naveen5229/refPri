@@ -723,9 +723,9 @@ export class TaskKanbanComponent implements OnInit {
     // let starttime = ticket['log_start_time'];
     let starttime = ticket['log_start_time'] ? moment(ticket['log_start_time']) : null;
     let currentTime = moment();
-    console.log("time",starttime, currentTime)
+    console.log("time", starttime, currentTime)
     // this.inprogressTimer = (starttime) ? Math.floor((new Date().getTime() - new Date(starttime).getTime()) / 1000) : 0;
-    this.inprogressTimer = (starttime) ? currentTime.diff(starttime,'seconds') : 0;
+    this.inprogressTimer = (starttime) ? currentTime.diff(starttime, 'seconds') : 0;
     console.log(" inprogressTimer", this.inprogressTimer)
     let thisVar = this;
     if (ticket['log_start_time']) {
@@ -898,8 +898,8 @@ export class TaskKanbanComponent implements OnInit {
     this.api.get(`Admin/getWorkProgressByRefid?` + params).subscribe((res) => {
       this.common.loading--;
       if (res['code'] > 0) {
-      this.taskProgressStatus = res['data'][0].progress;
-      }else{
+        this.taskProgressStatus = res['data'][0].progress;
+      } else {
         this.common.showError(res['msg']);
       }
     })
@@ -921,18 +921,20 @@ export class TaskKanbanComponent implements OnInit {
     this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
   }
 
-  openExpectedHourModal(event,task){
+  openExpectedHourModal(event, task) {
     event.stopPropagation();
     this.common.params = {
       refType: 0,
       refId: task._tktid,
-      requestId: null,
+      requestId: (task.exp_hour_id) ? task.exp_hour_id : null,
+      data: task,
       title: 'Add Expected Hours'
     };
     const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
       if (data.response) {
-        task.expected_hour = data.expectedHour;
+        // task.expected_hour = data.expectedHour;
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }
