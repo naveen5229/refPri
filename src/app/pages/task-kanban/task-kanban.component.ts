@@ -96,6 +96,7 @@ export class TaskKanbanComponent implements OnInit {
   refresh() {
     console.log(this.project, this.subProject);
     this.activeButton = 'to';
+    this.boardType = 0;
     this.taskStatusBarData[0].data = [];
     console.log(this.project, this.subProject)
     if (this.dashboardState) {

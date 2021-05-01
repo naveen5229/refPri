@@ -206,7 +206,7 @@
               <label class="cardTitleStyle" title="Spent Hour">{{(data.total_wh) ? data.total_wh : '-:-'}}</label>
             </div>
 
-            <div class="col-8"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
+            <div class="col-8" title="Expected delivery date"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
             </div>
             <div class="col-4 text-right">
               <!-- <label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="expected hour" (click)="(data.expected_hour) ? null : openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour : '-:-'}}</label> -->
@@ -225,7 +225,7 @@
                   <i *ngIf="data._reply_demanded > 0" class="fa fa-comments text-danger pl-1" aria-hidden="true"
                     title="Reply Demanded"></i>
                   <i *ngIf="data._tktype === 103" class="far fa-clock text-warning pl-1" title="Schedule Task"></i>
-                  <label class="pl-1" style="font-size: 12px;">{{data.age}}</label>
+                  <label class="pl-1" style="font-size: 12px;" title="Created {{data.age}} ago">{{data.age}}</label>
                   <div>{{data.status}}</div>
                 </div>
                 <div class="col-4">
