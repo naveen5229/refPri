@@ -19,6 +19,8 @@ export class AddExpectedHourComponent implements OnInit {
     remark: null,
     requestId: null,
   }
+  customTargetTime = ['00:30', '01:00', '03:00', '05:00'];
+
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -27,6 +29,7 @@ export class AddExpectedHourComponent implements OnInit {
     this.addForm.refType = this.common.params.refType;
     this.addForm.refId = this.common.params.refId;
     this.addForm.requestId = (this.common.params.requestId > 0) ? this.common.params.requestId : null;
+    if(this.common.params.data.expected_hour) this.setExptTime(this.common.params.data.expected_hour,this.customTargetTime.indexOf(this.common.params.data.expected_hour));
   }
 
   ngOnInit() { }
@@ -69,7 +72,8 @@ export class AddExpectedHourComponent implements OnInit {
       });
   }
 
-  setExptTime(event) {
+  setExptTime(event,index) {
+    this.activeTime = index;
     let time = event.split(':');
     let date = new Date();
     date.setHours(time[0]);
