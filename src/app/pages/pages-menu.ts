@@ -13,6 +13,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Continuity Report',
+        //icon: 'fa-dashcube',
+        link: '/pages/continuity-report',
+        home: true,
+      },
+      {
         title: 'User Role',
         icon: 'people-outline',
         link: '/pages/user-role',
