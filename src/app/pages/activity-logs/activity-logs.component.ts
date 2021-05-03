@@ -76,7 +76,7 @@ export class ActivityLogsComponent implements OnInit {
   }
 
   getProcessProjectList() {
-    this.processProjectFrom.processProject = { id: null, name: null};
+    this.processProjectFrom.processProject = { id: null, name: null };
     let api = '';
     if (this.selectedWorkLogType == 1) {
       api = 'Processes/getProcessList';
@@ -236,7 +236,14 @@ export class ActivityLogsComponent implements OnInit {
     this.api.get('Admin/getActivityLogSummary' + params).subscribe(res => {
       this.common.loading--;
       if (res['code'] > 0) {
-        this.viewSummaryList = res['data'] || [];
+        let viewSummaryList = res['data'] || [];
+        this.viewSummaryList = viewSummaryList.map(activity => {
+          activity.description_data.map(data => {
+            (data.refid) ? data.background = '' : data.background = 'antiquewhite';
+          });
+          return activity;
+        });
+        console.log(this.viewSummaryList);
       } else {
         this.common.showError(res['msg']);
       };
