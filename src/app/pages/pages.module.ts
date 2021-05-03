@@ -66,6 +66,7 @@ import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 import { TmgTaskComponent } from './tmg-task/tmg-task.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
+import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -136,7 +137,8 @@ import { CallLogsComponent } from './call-logs/call-logs.component';
     TmgDashboardComponent,
     TmgTaskComponent,
     SettingsComponent,
-    CallLogsComponent
+    CallLogsComponent,
+    ContinuityReportComponent
   ],
 })
 export class PagesModule {
