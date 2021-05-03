@@ -267,7 +267,8 @@
             <table class="table" *ngIf="holdtask">
               <thead class="thead">
                 <th>Name</th>
-                <th>Apr (%)</th>
+                <!-- <th>Apr (%)</th> -->
+                <th>Default (%)</th>
               </thead>
               <tbody class="tbody">
                 <tr *ngFor="let ho of holdtask">
@@ -332,14 +333,16 @@
           </p>
             <table class="table">
               <thead class="thead">
-                <th>Month</th>
+                <!-- <th>Month</th> -->
+                <th>Name</th>
                 <th>Present Hour</th>
                 <th>Activity Log</th>
                 <th>Default (%)</th>
               </thead>
               <tbody class="tbody">
                 <tr *ngFor="let uw of userwisereadavgtat">
-                  <td>{{uw['Month']}}</td>
+                  <!-- <td>{{uw['Month']}}</td> -->
+                  <td>{{uw['name']}}</td>
                   <td>{{uw['present_hour']}}</td>
                   <td>{{uw['activity_log']}}</td>
                   <td>{{uw['%default']}}</td>
