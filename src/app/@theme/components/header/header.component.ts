@@ -123,12 +123,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.common.loading--;
           if (res['code']>0) {
-            this.userService._token = '';
-            this.userService._details = null;
-            localStorage.removeItem('ITRM_USER_TOKEN');
-            localStorage.removeItem('ITRM_USER_DETAILS');
-            localStorage.removeItem('ITRM_LOGGED_IN_BY');
-            localStorage.removeItem('ITRM_USER_PAGES');
+            // this.userService._token = '';
+            // this.userService._details = null;
+            // localStorage.removeItem('ITRM_USER_TOKEN');
+            // localStorage.removeItem('ITRM_USER_DETAILS');
+            // localStorage.removeItem('ITRM_LOGGED_IN_BY');
+            // localStorage.removeItem('ITRM_USER_PAGES');
+            this.userService.reset();
+            this.userService.clearStorage();
             this.common.showToast(res['msg']);
             if (loggedInBy == 'customer') {
               this.router.navigate(['/auth/login']);
@@ -195,7 +197,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   closeFoadminSearchModal(){
     document.getElementById("foadminSearchModal").style.display = "none";
   }
-  selectFoUser(e){
-
+  selectFoUser(fouser){
+    console.log("selectFoUser:",fouser);
+    if(fouser && fouser.foid>0){
+      localStorage.setItem('FO_USER_DETAILS', JSON.stringify(fouser));
+      this.userService._fouser = fouser;
+    }
   }
 }

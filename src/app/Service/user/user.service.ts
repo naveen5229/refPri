@@ -12,6 +12,7 @@ const COLLECTION = {
 export class UserService {
   _token = '';
   _details = null;
+  _fouser = null;
 
   _menu = {
     pages: []
@@ -28,6 +29,9 @@ export class UserService {
     if (localStorage.getItem("ITRM_USER_PAGES")) {
       this._pages = JSON.parse(localStorage.getItem("ITRM_USER_PAGES"));
       this.filterMenu("pages", "pages");
+    }
+    if(localStorage.getItem('FO_USER_DETAILS')){
+      this._fouser = JSON.parse(localStorage.getItem('FO_USER_DETAILS'));
     }
 
     if (this._token && !this._loggedInBy) {
@@ -85,6 +89,7 @@ export class UserService {
     };
     this._loggedInBy = '';
     this._pages = [];
+    this._fouser = null;
   }
 
   clearStorage() {
@@ -92,6 +97,7 @@ export class UserService {
     localStorage.removeItem('ITRM_USER_DETAILS');
     localStorage.removeItem('ITRM_LOGGED_IN_BY');
     localStorage.removeItem('ITRM_USER_PAGES');
+    localStorage.removeItem('FO_USER_DETAILS');
   }
 
 
