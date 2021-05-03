@@ -21,7 +21,7 @@
 
     <div class="row mb-2">
         <div class="col-2"></div>
-        <div class="col-2 text-center ml-2 defaultTimeTabs" [ngClass]="activeTime === i ? 'active' : ''" *ngFor="let time of ['00:30', '01:00', '03:00', '05:00'];let i = index"  (click)="setExptTime($event.target.innerText);activeTime = i">{{time}}</div>
+        <div class="col-2 text-center ml-2 defaultTimeTabs" [ngClass]="activeTime === i ? 'active' : ''" *ngFor="let time of customTargetTime;let i = index"  (click)="setExptTime($event.target.innerText,i)">{{time}}</div>
     </div>
 
 
