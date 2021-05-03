@@ -132,6 +132,7 @@ export class TaskKanbanComponent implements OnInit {
     activeModal.result.then((data) => {
       if (data.response) {
         this.getProjectList();
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
   }

@@ -72,6 +72,7 @@ import { SitesComponent } from './sites/sites.component';
 import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
+import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 
 const routes: Routes = [{
   path: '',
@@ -435,6 +436,11 @@ const routes: Routes = [{
     {
       path: 'call-logs',
       component: CallLogsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'continuity-report',
+      component: ContinuityReportComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 
