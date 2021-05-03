@@ -62,7 +62,7 @@
               <thead class="thead">
                 <th>Name</th>
                 <th>Total Task</th>
-                <th>Uncomplete Task</th>
+                <th>Incomplete Task</th>
                
               </thead>
               <tbody class="tbody">
@@ -164,9 +164,9 @@
               </thead>
               <tbody class="tbody">
                 <tr *ngFor="let uw of userwisereadavgtat">
-                  <td>{{uw['name']}}</td>
+                  <!-- <td>{{uw['name']}}</td> -->
+                  <td>{{uw['Month']}}</td>
                   <td>{{uw['hour']}}</td>
-                  
                 </tr>
               </tbody>
             </table>
