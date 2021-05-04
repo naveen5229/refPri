@@ -57,6 +57,7 @@ export class TmgDashboardComponent  implements OnInit {
       this.common.loading--;
       if (res['code'] >= 0) {
       this.departments = res['data'] || [];
+      // this.selectedDept = this.departments[0];
       } else{
         this.common.showError(res['msg']);
       };
