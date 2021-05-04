@@ -29,6 +29,24 @@
     </div>
    
    </div>
+
+   <!-- <div class="out-topnav">
+    <div>
+      <p class="dirbtn"><i class="fas fa-chevron-left"  ></i></p>
+    </div>
+    <div class="toptab" *ngFor="let dept of departments">
+      <div class="hiddenby">
+        <p [class]="selectedDept.id==dept.id?'active':'default'" (click)="selectedDept=dept">
+          <b>{{dept.name}}</b>
+        </p>
+      </div>
+    </div>
+   
+    <div>
+      <p class="dirbtn" ><i class="fas fa-chevron-right" ></i></p>
+    </div>
+   </div> -->
+
    <tmg-task *ngIf="['Tmg-Task','Tmg-worklog'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
   </nb-card-body>
 </nb-card>
