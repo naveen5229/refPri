@@ -24,6 +24,9 @@
                 <li [ngClass]="activeTab=='missedCall'?'active':''" (click)="activeTab='missedCall';resetSearchForm()">
                     Process Call Logs
                 </li>
+                <li [ngClass]="activeTab=='completedTicket'?'active':''" (click)="activeTab='completedTicket';resetSearchForm()">
+                    Completed Ticket
+                </li>
             </ul>
         </div>
         <div *ngIf="activeTab=='current'">
@@ -83,6 +86,25 @@
                 </div>
             </div>
             <smart-table [data]="missedCallTable.data" [settings]="missedCallTable.settings" id="missedCallTable" class="sl-smart-table"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='completedTicket'">
+            <div class="row" style="z-index: 999;">
+                <div class="col-3">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-3">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-3">
+                    <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="searchTask.tpId = $event._id" [data]="tpList" display="name" placeholder="Search Ticket Process" inputId="ProcessSearch2" name="ProcessSearch"></auto-suggestion>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-primary text-capitalize" (click)="getAdminTicket(3)">Search</button>
+                </div>
+            </div>
+            <smart-table [data]="completedTicketTable.data" [settings]="completedTicketTable.settings" id="completedTicketTable" class="sl-smart-table"></smart-table>
         </div>
 
     </nb-card-body>

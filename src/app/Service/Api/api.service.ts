@@ -111,6 +111,10 @@ export class ApiService {
       'apptype': 'dashboard',
       'authkey': authKey
     });
+    // if(this.user._fouser && this.user._fouser.foid>0){
+    //   headers = headers.append('viewfoid', JSON.stringify(this.user._fouser.foid));
+    //   headers = headers.append('viewfoaid', JSON.stringify(this.user._fouser.id));
+    // }
     return headers;
   }
 
