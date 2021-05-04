@@ -16,6 +16,7 @@
     top: -6px;left: 4px;" [ngClass]="(userService._details && userService._details.present) ? 'fas fa-check-circle text-success' : 'far fa-circle'" [ngStyle]="(userService._details && userService._details.present) ? {'font-size':'13px'} : {'font-size':'10px'}"
         [title]="(userService._details && userService._details.present) ? 'Present' : 'Absent'" aria-hidden="true" (click)="getUserPresence()"></i>
 </h6>
+<span *ngIf="userService._fouser && userService._fouser.foid">{{userService._fouser.name}}</span>
 
 <div class="header-container">
     <nb-actions size="small">
