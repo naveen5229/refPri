@@ -23,6 +23,7 @@ export class TmgTaskComponent implements OnInit {
   yaxisObj2 = null;
   userwisereadavgtat = [];
   userwisereadavgtatfulldata = [];
+  readingTatGraphData = [];
   chart = {
     type: '',
     data: {},
@@ -64,7 +65,7 @@ export class TmgTaskComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    console.log("ngOnChanges deptId:", this.deptId);
+    console.log("ngOnChanges deptId:", this.deptId,changes);
     this.refresh();
   }
 
@@ -72,6 +73,7 @@ export class TmgTaskComponent implements OnInit {
     this.xAxisData = [];
     this.getChallansMonthGraph(0, 1);
     this.getuserwisereadtat(1);
+    this.getreadingtatgraphdata(1);
     this.getTaskSnapchat(2);
     this.getuncomplete(3);
     this.getHoldTask(4);
@@ -263,8 +265,8 @@ export class TmgTaskComponent implements OnInit {
       todate: this.common.dateFormatter1(endDate)
     };
     this.showLoader(index);
-    // let apiname = 'AdminTask/getDashboardTaskUserwiseUnreadtat?startDate=' + params.fromdate + '&endDate=' + params.todate;
-    let apiname = 'AdminTask/getDashboardTaskMonthwiseUnreadTat?startDate=' + params.fromdate + '&endDate=' + params.todate;
+    let apiname = 'AdminTask/getDashboardTaskUserwiseUnreadtat?startDate=' + params.fromdate + '&endDate=' + params.todate;
+    // let apiname = 'AdminTask/getDashboardTaskMonthwiseUnreadTat?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgActivitylogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
@@ -278,12 +280,44 @@ export class TmgTaskComponent implements OnInit {
             }
           });
         }
-        this.userwisereadavgtat = _.uniqBy(this.userwisereadavgtat, 'Month');
+        this.userwisereadavgtat = _.uniqBy(this.userwisereadavgtat, 'name');
         this.hideLoader(index);
         if (this.pageType == "Tmg-Task") {
           this.getsecondlabelValue();
         }
         console.log('holdtask:', this.userwisereadavgtat);
+      }, err => {
+        this.hideLoader(index);
+        console.log('Err:', err);
+      });
+  }
+
+  getreadingtatgraphdata(index) {
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(index);
+    let apiname = 'AdminTask/getDashboardTaskMonthwiseUnreadTat?startDate=' + params.fromdate + '&endDate=' + params.todate;
+    this.api.get(apiname)
+      .subscribe(res => {
+        let readingTatGraphData = res['data'];
+        if (readingTatGraphData) {
+          readingTatGraphData.map((val, index1) => {
+            if (index1 < 3) {
+              this.readingTatGraphData.push(val);
+            }
+          });
+        }
+        this.readingTatGraphData = _.uniqBy(this.readingTatGraphData, 'Month');
+        this.hideLoader(index);
+        if (this.pageType == "Tmg-Task") {
+          this.handleChart();
+        }
+        console.log('holdtask:', this.readingTatGraphData);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -535,17 +569,30 @@ export class TmgTaskComponent implements OnInit {
     if (this.pageType == "Tmg-worklog") {
       label = "Defaulter %";
     }
-    console.log(this.userwisereadavgtat)
-    this.userwisereadavgtat.map(tlt => {
-      if (this.pageType == "Tmg-worklog") {
-        xaxis.push(tlt['Month']);
-        yaxis.push(tlt['Defaulter %']);
-      } else {
-        // xaxis.push(tlt['name']);
-        xaxis.push(tlt['Month']);
-        yaxis.push(tlt['hour']);
-      }
-    });
+    console.log(this.userwisereadavgtat,this.readingTatGraphData)
+    // this.userwisereadavgtat.map(tlt => {
+    //   if (this.pageType == "Tmg-worklog") {
+    //     xaxis.push(tlt['Month']);
+    //     yaxis.push(tlt['Defaulter %']);
+    //   } else {
+    //     xaxis.push(tlt['name']);
+    //     yaxis.push(tlt['hour']);
+    //   }
+    // });
+
+    if (this.pageType == "Tmg-worklog") {
+      this.userwisereadavgtat.map(tlt => {
+      xaxis.push(tlt['Month']);
+      yaxis.push(tlt['Defaulter %']);
+      });
+    } else {
+      this.readingTatGraphData.map(tlt => {
+      xaxis.push(tlt['Month']);
+      yaxis.push(tlt['hour']);
+      });
+    }
+
+
     let yaxisObj = this.common.chartScaleLabelAndGrid(yaxis);
     console.log("handleChart", xaxis, yaxis);
     // this.chart.type = 'bar'
