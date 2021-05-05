@@ -4,6 +4,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../Service/user/user.service';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'ngx-ticket-admin',
@@ -44,6 +45,16 @@ export class TicketAdminComponent implements OnInit {
   };
   missedCallList = [];
   missedCallTable = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+  completedTicketList = [];
+  completedTicketTable = {
     data: {
       headings: {},
       columns: []
@@ -103,11 +114,11 @@ export class TicketAdminComponent implements OnInit {
 
   getAdminTicket(type) {
     let startDate, endDate, tpId, minutes = null;
-    if(type===0 || type===1 || type==2) {
+    if(type===0 || type===1 || type==2 || type==3) {
       startDate = (this.searchTask.startDate) ? this.common.dateFormatter(this.searchTask.startDate) : null;
       endDate = (this.searchTask.endDate) ? this.common.dateFormatter(this.searchTask.endDate) : null;
     }
-    if(type==2) {
+    if(type==2 || type==3) {
       tpId = (this.searchTask.tpId) ? this.searchTask.tpId : null;
       minutes = (this.searchTask.minutes) ? this.searchTask.minutes : null;
     }
@@ -129,6 +140,9 @@ export class TicketAdminComponent implements OnInit {
       }else if(type===2){
         this.missedCallList = res['data'] || [];
         this.setTableMissedCall(type);
+      }else if(type===3){
+        this.completedTicketList = res['data'] || [];
+        this.setTableCompletedTicket(type);
       }
     }, err => {
       this.common.loading--;
@@ -151,6 +165,10 @@ export class TicketAdminComponent implements OnInit {
       columns: []
     };
     this.missedCallTable.data = {
+      headings: {},
+      columns: []
+    };
+    this.completedTicketTable.data = {
       headings: {},
       columns: []
     };
@@ -337,6 +355,112 @@ getTableColumnsMissedCall(type) {
   return columns;
 }
 // end: missedCall
+// start: completedTicket
+setTableCompletedTicket(type) {
+  this.completedTicketTable.data = {
+    headings: this.generateHeadingsCompletedTicket(),
+    columns: this.getTableColumnsCompletedTicket(type)
+  };
+  return true;
+}
+generateHeadingsCompletedTicket() {
+  let headings = {};
+  for (var key in this.completedTicketList[0]) {
+    if (key.charAt(0) != "_") {
+      headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+      if (key == 'expdate' || key == 'addtime') {
+        headings[key]["type"] = "date";
+      }
+    }
+  }
+  return headings;
+}
+
+getTableColumnsCompletedTicket(type) {
+  let columns = [];
+  this.completedTicketList.map(ticket => {
+    let column = {};
+    for (let key in this.generateHeadingsCompletedTicket()) {
+      if (key.toLowerCase() == 'action') {
+        column[key] = {
+          value: "",
+          isHTML: true,
+          action: null,
+          icons: this.actionIcons(ticket, type)
+        };
+      } else {
+        column[key] = { value: ticket[key], class: 'black', action: '' };
+      }
+    }
+    columns.push(column);
+  });
+  return columns;
+}
+// end: completedTicket
+
+actionIcons(ticket, type) {
+  let icons = [];
+  if (type == 3) {
+    icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active", });
+  }
+  return icons;
+}
+
+changeTicketStatusWithConfirm(ticket, type, status) {
+  console.log(ticket, 'status');
+  if (ticket._ticket_id) {
+    let preTitle = "Complete";
+    if (status === -1) {
+      preTitle = "Reject";
+    } else if (status == 2) {
+      preTitle = "Acknowledge";
+    } else if (ticket._status == 2) {
+      preTitle = "Completed";
+    } else if (status == 0) {
+      preTitle = "Re-Active";
+    }
+    this.common.params = {
+      title: preTitle + " Ticket ",
+      description:
+        `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Ticket" + `<b>`,
+      isRemark: status == -1 ? true : false,
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+    activeModal.result.then((data) => {
+      console.log("Confirm response:", data);
+      if (data.response) {
+        this.updateTicketStatus(ticket, type, status, data.remark);
+      }
+    });
+  } else {
+    this.common.showError("Ticket ID Not Available");
+  }
+}
+
+updateTicketStatus(ticket, type, status, remark = null) {
+  if (ticket._ticket_allocation_id) {
+    let params = {
+      ticketId: ticket._ticket_allocation_id,
+      statusId: status,
+      statusOld: ticket._status,
+      remark: remark,
+    }
+    this.common.loading++;
+    this.api.post('Ticket/updateTicketStatus', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.common.showToast(res['msg']);
+        this.getAdminTicket(type);
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+}
 
 callDetails(ticket,type,isDate=false) {
   let params = {

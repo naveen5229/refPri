@@ -5,7 +5,7 @@
   <nb-card-body style="padding: 1rem 1rem;">
     <div class="out-topnav">
     <div>
-      <p class="dirbtn" (click)="backwardMove()"><i class="fas fa-chevron-left"  ></i></p>
+      <p class="dirbtn" (click)="backwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-left"  ></i></p>
     </div>
     <div class="toptab">
       <div class="hiddenby">
@@ -18,34 +18,27 @@
           <b>WorkLog DashBoard</b>
         </p>
       </div>
-      <div *ngIf="selectedDashboard=='Tmg-worklog'">
+      <!-- <div *ngIf="selectedDashboard=='Tmg-worklog'">
         <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
         </auto-suggestion>
-      </div>
+      </div> -->
     </div>
    
     <div>
-      <p class="dirbtn" (click)="forwardMove()"><i class="fas fa-chevron-right" ></i></p>
+      <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
     </div>
    
    </div>
 
-   <!-- <div class="out-topnav">
-    <div>
-      <p class="dirbtn"><i class="fas fa-chevron-left"  ></i></p>
-    </div>
-    <div class="toptab" *ngFor="let dept of departments">
+   <div class="out-topnav-dept" *ngIf="selectedDashboard=='Tmg-worklog'">
+    <div class="toptabdept" *ngFor="let dept of departments">
       <div class="hiddenby">
         <p [class]="selectedDept.id==dept.id?'active':'default'" (click)="selectedDept=dept">
           <b>{{dept.name}}</b>
         </p>
       </div>
     </div>
-   
-    <div>
-      <p class="dirbtn" ><i class="fas fa-chevron-right" ></i></p>
-    </div>
-   </div> -->
+   </div>
 
    <tmg-task *ngIf="['Tmg-Task','Tmg-worklog'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
   </nb-card-body>
