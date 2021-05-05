@@ -68,6 +68,29 @@
     //  box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
    
 }
+
+.out-topnav-dept{
+    margin-top: 0;
+    padding: 0 2px;
+    z-index: 5;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;  
+    overflow: auto;
+}
+
+.toptabdept{
+    padding: 6px 1px;
+    // margin: 0px 10px;
+   display: flex;
+   flex-direction: row;  
+   justify-content: flex-start;
+   align-items: center;
+   width: 100%;
+}
+
 .toptab{
     padding: 6px 1px;
     margin: 0px 10px;

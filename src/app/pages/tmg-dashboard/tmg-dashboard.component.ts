@@ -10,7 +10,7 @@ import { CommonService } from '../../Service/common/common.service';
 export class TmgDashboardComponent  implements OnInit {
   seletionsArray = ['Tmg-Task','Tmg-worklog'];
   selectedDashboard = 'Tmg-Task';
-  selectedDept = {id:null,name:null};
+  selectedDept = {id:null,name:'All'};
   departments = [];
   constructor(public api: ApiService,
     public common: CommonService) {
@@ -57,7 +57,7 @@ export class TmgDashboardComponent  implements OnInit {
       this.common.loading--;
       if (res['code'] >= 0) {
       this.departments = res['data'] || [];
-      // this.selectedDept = this.departments[0];
+      this.departments.splice(0,0,{id:null,name:'All'});
       } else{
         this.common.showError(res['msg']);
       };
