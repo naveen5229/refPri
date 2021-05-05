@@ -5,7 +5,7 @@
   <nb-card-body style="padding: 1rem 1rem;">
     <div class="out-topnav">
     <div>
-      <p class="dirbtn" (click)="backwardMove()"><i class="fas fa-chevron-left"  ></i></p>
+      <p class="dirbtn" (click)="backwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-left"  ></i></p>
     </div>
     <div class="toptab">
       <div class="hiddenby">
@@ -25,7 +25,7 @@
     </div>
    
     <div>
-      <p class="dirbtn" (click)="forwardMove()"><i class="fas fa-chevron-right" ></i></p>
+      <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
     </div>
    
    </div>
