@@ -74,7 +74,8 @@ export class TaskKanbanComponent implements OnInit {
   boardType: number = 0;
   callType = '';
   taskProgressStatus = 0;
-  taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
+  taskHold = { task: null, isHold: null,refType:null, startTime: new Date(), endTime: new Date() };
+  generalTaskList = [];
 
   constructor(private sidebarService: NbSidebarService,
     public common: CommonService,
@@ -269,9 +270,19 @@ export class TaskKanbanComponent implements OnInit {
           //assigning data to current task if end time is not available
           if (element.title == 'Inprogress') {
             if (element.data && element.data.length) {
-              element.data.map(data => {
-                (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
-              })
+              let endTime = [];
+              element.data.map(data => { endTime.push(data.log_end_time) });
+              console.log(endTime);
+              if (endTime.includes(null)) {
+                this.assignTaskToProgress(element.data[endTime.indexOf(null)]);
+              } else {
+                this.getGeneralTaskForProgress();
+              }
+              // element.data.map(data => {
+              //   (!data.log_end_time && data._last_logid) ? this.assignTaskToProgress(data) : null;
+              // })
+            } else {
+              this.getGeneralTaskForProgress();
             }
             // (element.data && element.data.length) ? this.assignTaskToProgress(element.data[0]) : null;
             // && (element.data[0]['log_start_time'])
@@ -297,6 +308,7 @@ export class TaskKanbanComponent implements OnInit {
       this.common.showError();
     });
   }
+
 
   placeCardLength(boardData) {
     if (boardData) {
@@ -402,7 +414,7 @@ export class TaskKanbanComponent implements OnInit {
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0, 0);
+        this.saveActivityLog(ticket, 0, 0, 0);
       }
 
 
@@ -622,7 +634,7 @@ export class TaskKanbanComponent implements OnInit {
           if (res["code"] > 0) {
             // && status != 1 for moving in inprogress
             if (status != 1 && !ticket.log_end_time && ticket._last_logid > 0) {
-              this.saveActivityLog(ticket, 0, 0, ticket['log_start_time'], this.common.getDate());
+              this.saveActivityLog(ticket, 0, 0, this.taskStatusBarData[0].data[0].reftype ? this.taskStatusBarData[0].data[0].reftype : 0, ticket['log_start_time'], this.common.getDate());
               console.log('status with 1 working and end time is null');
             } else {
               this.common.showToast(res["msg"]);
@@ -810,12 +822,12 @@ export class TaskKanbanComponent implements OnInit {
     });
   }
 
-  saveActivityLog(ticket, isHold = 0, progressPer = 0, startTime = this.common.getDate(), endTime = null) {
+  saveActivityLog(ticket, isHold = 0, progressPer = 0, reftype = 0, startTime = this.common.getDate(), endTime = null) {
     this.resetInterval();
     let params = {
       requestId: ticket._last_logid > 0 ? ticket._last_logid : null,
       refid: ticket._tktid,
-      reftype: 0,
+      reftype: reftype,
       outcome: null,
       spendHours: null,
       startTime: (startTime) ? this.common.dateFormatter(startTime) : this.common.dateFormatter(this.common.getDate()),
@@ -824,7 +836,7 @@ export class TaskKanbanComponent implements OnInit {
       progressPer: progressPer
     };
     // this.assignTaskToProgress(ticket);
-    //  return false;
+    //  return console.log(params);
     this.common.loading++;
     this.api.post("Admin/saveActivityLogByRefId", params).subscribe(
       (res) => {
@@ -833,6 +845,7 @@ export class TaskKanbanComponent implements OnInit {
           if (res['data'][0]['y_id'] > 0) {
             this.common.showToast(res['data'][0]['y_msg']);
             document.getElementById('taskStatus').style.display = 'none';
+            this.generalTaskList = [];
             this.resetProgressForm();
             if (!endTime) {
               this.assignTaskToProgress(ticket);
@@ -883,13 +896,14 @@ export class TaskKanbanComponent implements OnInit {
       this.taskHold = {
         task: task,
         isHold: isHold,
+        refType: this.taskStatusBarData[0].data[0].reftype ? this.taskStatusBarData[0].data[0].reftype : 0,
         startTime: startTime,
         endTime: endTime
       }
       this.getCurrentProgress(task);
       document.getElementById('taskStatus').style.display = 'block';
     } else {
-      this.saveActivityLog(task, isHold, 0, startTime, endTime);
+      this.saveActivityLog(task, isHold, 0, this.taskStatusBarData[0].data[0].reftype ? this.taskStatusBarData[0].data[0].reftype : 0, startTime, endTime);
     }
   }
 
@@ -909,7 +923,7 @@ export class TaskKanbanComponent implements OnInit {
 
   onProgressSave() {
     console.log(this.taskHold, this.taskProgressStatus);
-    this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.startTime, this.taskHold.endTime);
+    this.saveActivityLog(this.taskHold.task, this.taskHold.isHold, this.taskProgressStatus, this.taskHold.refType, this.taskHold.startTime, this.taskHold.endTime);
   }
 
   closeotherTaskStatus() {
@@ -920,7 +934,7 @@ export class TaskKanbanComponent implements OnInit {
 
   resetProgressForm() {
     this.taskProgressStatus = 0;
-    this.taskHold = { task: null, isHold: null, startTime: new Date(), endTime: new Date() };
+    this.taskHold = { task: null, isHold: null,refType:null, startTime: new Date(), endTime: new Date() };
   }
 
   openExpectedHourModal(event, task) {
@@ -939,6 +953,89 @@ export class TaskKanbanComponent implements OnInit {
         this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
       }
     });
+  }
+
+  getGeneralTaskForProgress() {
+    // return console.log('trying alternate section for inprogress');
+    this.api.get('Admin/getActivityLogInprogress')
+      .subscribe(
+        (res) => {
+          if (res["code"] > 0) {
+            let ticket = null;
+            if (res['data'] && res['data'].length > 0) {
+              ticket = {
+                _last_logid: res['data'][0].id,
+                datetime: res['data'][0].datetime,
+                title: res['data'][0].description,
+                _task_desc: res['data'][0].description,
+                user_label: res['data'][0].contact_person,
+                total_wh: res['data'][0].spend_hour,
+                outcome: res['data'][0].outcome,
+                aduserid: res['data'][0].aduserid,
+                entrymode: res['data'][0].entrymode,
+                addtime: res['data'][0].addtime,
+                foid: res['data'][0].foid,
+                _tktid: res['data'][0].refid,
+                reftype: res['data'][0].reftype,
+                log_start_time: res['data'][0].start_time,
+                log_end_time: res['data'][0].end_time
+              }
+            }else{
+              return;
+            }
+            console.log(ticket);
+            this.assignTaskToProgress(ticket);
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          this.common.showError();
+        });
+  }
+
+  getGeneralTask(event) {
+    console.log("event", event, this.taskStatusBarData[0].data[0]);
+    if (this.taskStatusBarData[0].data[0]) {
+      return;
+    } else {
+      this.getGeneralTaskList();
+    }
+    // this.getGeneralTaskList();
+  }
+
+  getGeneralTaskList() {
+    this.api.get('AdminTask/getGeneralTask')
+      .subscribe(
+        (res) => {
+          if (res["code"] > 0) {
+            let generalTaskList = res['data'] || [];
+            // this.generalTaskList = generalTaskList.map((x) => {
+            //   return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
+            // });
+            this.generalTaskList = generalTaskList;
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          this.common.showError();
+        });
+  }
+
+  assignGeneralTaskTOLog(task) {
+    let ticket = {
+      addtime: task.addtime,
+      aduserid: task.aduserid,
+      entrymode: task.entrymode,
+      foid: task.foid,
+      _tktid: task.id,
+      is_active: task.is_active,
+      task_desc: task.task_desc,
+      task_subject: task.task_subject
+    }
+    // return console.log(ticket);
+    this.saveActivityLog(ticket, 0, 0, 3);
   }
 
 }

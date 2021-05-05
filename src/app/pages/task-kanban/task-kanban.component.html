@@ -80,6 +80,26 @@
     </div>
 
 
+    <!-- general task popup -->
+    <div class="row generalListing" *ngIf="generalTaskList.length > 0">
+      <div class="col-12">
+        <div class="row headerGeneralTask">
+          <div class="col-9">
+            <h5>General Task</h5>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-danger text-right" (click)="generalTaskList=[]"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 generaltaskListing">
+        <div class="row inprocessCardStyle genTaskHover" *ngFor="let task of generalTaskList"
+          (click)="assignGeneralTaskTOLog(task)">
+          {{task.task_subject}}
+        </div>
+      </div>
+    </div>
+    <!-- general task popup -->
 
     <div class="row" style="padding: 0 0 9px 9px;" *ngIf="dashboardState">
       <!-- <div class="col-2">
@@ -93,14 +113,15 @@
               (click)="getUserPermission(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
             <span *ngIf="!state.data[0]['log_start_time']"
-              (click)="saveActivityLog(state.data[0], 0,0,common.getDate(),null)"><i title="Play"
+              (click)="saveActivityLog(state.data[0], 0,0,this.taskStatusBarData[0].data[0].reftype ? this.taskStatusBarData[0].data[0].reftype : 0,common.getDate(),null)"><i title="Play"
                 class="fas fa-play-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
+
           <div class="col-7 cardContainerProgress" cdkDropList [cdkDropListData]="state.data"
-            (cdkDropListDropped)="drop($event);" [id]="state.id">
-            <div class="row small ml-1 mr-1" *ngIf="!taskStatusBarData[0].data[0]">Drop your card here to start a
-              worklog</div>
+            (dblclick)="getGeneralTask($event)" (cdkDropListDropped)="drop($event);" [id]="state.id">
+            <div class="row small ml-1 mr-1" *ngIf="!taskStatusBarData[0].data[0]">Drop your card here or double click
+              for general task to start a worklog</div>
             <div class="row inprocessCardStyle" *ngFor="let data of state.data" (click)="ticketMessage(data,null)"
               cdkDrag>
               <div class="col-12 text-left title">
@@ -206,7 +227,8 @@
               <label class="cardTitleStyle" title="Spent Hour">{{(data.total_wh) ? data.total_wh : '-:-'}}</label>
             </div>
 
-            <div class="col-8" title="Expected delivery date"><label class="cardTitleStyle" [ngClass]="data.text_color">{{data.due_date}}</label>
+            <div class="col-8" title="Expected delivery date"><label class="cardTitleStyle"
+                [ngClass]="data.text_color">{{data.due_date}}</label>
             </div>
             <div class="col-4 text-right">
               <!-- <label class="cardTitleStyle cursor-pointer" [ngClass]="data.text_color" title="expected hour" (click)="(data.expected_hour) ? null : openExpectedHourModal($event,data)">{{(data.expected_hour) ? data.expected_hour : '-:-'}}</label> -->
