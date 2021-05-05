@@ -16,7 +16,11 @@
     top: -6px;left: 4px;" [ngClass]="(userService._details && userService._details.present) ? 'fas fa-check-circle text-success' : 'far fa-circle'" [ngStyle]="(userService._details && userService._details.present) ? {'font-size':'13px'} : {'font-size':'10px'}"
         [title]="(userService._details && userService._details.present) ? 'Present' : 'Absent'" aria-hidden="true" (click)="getUserPresence()"></i>
 </h6>
-<span *ngIf="userService._fouser && userService._fouser.foid">{{userService._fouser.name}}</span>
+
+<span *ngIf="userService._fouser && userService._fouser.foid" style="display: flex; align-items: center;">
+    <button class="btn btn-primary btn-sm mr-2" style="padding:0 5px !important;height:24px;" (click)="gotoAdmin()">< back</button>
+    <b>FO-User:</b> {{userService._fouser.name+" - "+userService._fouser.mobileno+" - "+userService._fouser.company_name}}
+</span>
 
 <div class="header-container">
     <nb-actions size="small">

@@ -197,11 +197,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
   closeFoadminSearchModal(){
     document.getElementById("foadminSearchModal").style.display = "none";
   }
+
   selectFoUser(fouser){
-    console.log("selectFoUser:",fouser);
     if(fouser && fouser.foid>0){
       localStorage.setItem('FO_USER_DETAILS', JSON.stringify(fouser));
       this.userService._fouser = fouser;
+      this.closeFoadminSearchModal();
+      this.common.refresh();
     }
   }
+
+  gotoAdmin(){
+    this.userService._fouser = null;
+    localStorage.removeItem('FO_USER_DETAILS');
+    this.common.refresh();
+  }
+
 }
