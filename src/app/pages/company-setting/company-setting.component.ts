@@ -102,9 +102,11 @@ export class SettingsComponent implements OnInit {
   }
 
   getUserSettings(type) {
+    this.allSettings = [];
+    this.common.loading++;
     this.api.get("UserRole/getCompanySetting?type=" + type).subscribe(
       (res) => {
-        console.log("data", res["data"]);
+        this.common.loading--;
         if (res["code"] > 0) {
           this.allSettings = res["data"] || [];
           console.log('loadedSettings', this.allSettings)
@@ -113,6 +115,7 @@ export class SettingsComponent implements OnInit {
         }
       },
       (err) => {
+        this.common.loading--;
         this.common.showError();
         console.log("Error: ", err);
       }

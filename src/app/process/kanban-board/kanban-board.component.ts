@@ -850,7 +850,9 @@ export class KanbanBoardComponent implements OnInit {
       refType: ticket._is_action === 1 ? 2 : 1,
       refId: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_state_id,
       requestId: null,
-      title: 'Add Expected Hours'
+      // data: ticket,
+      title: 'Add Expected Hours',
+      timePickFromModal:true
     };
     const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {

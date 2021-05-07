@@ -944,7 +944,8 @@ export class TaskKanbanComponent implements OnInit {
       refId: task._tktid,
       requestId: (task.exp_hour_id) ? task.exp_hour_id : null,
       data: task,
-      title: 'Add Expected Hours'
+      title: 'Add Expected Hours',
+      timePickFromModal:true
     };
     const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {

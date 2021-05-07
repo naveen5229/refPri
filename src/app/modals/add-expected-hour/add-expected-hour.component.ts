@@ -12,6 +12,7 @@ import { CommonService } from '../../Service/common/common.service';
 export class AddExpectedHourComponent implements OnInit {
   title = "Add Expected Hous";
   activeTime = null;
+  timePickerModal = false;
   addForm = {
     refId: null,
     refType: null,
@@ -19,6 +20,14 @@ export class AddExpectedHourComponent implements OnInit {
     remark: null,
     requestId: null,
   }
+  selectedTime = '16';
+  showHours = false;
+  hours = [
+    ['1', '2', '3', '4', '5', '6', '7', '8'],
+    ['9', '10', '11', '12', '13', '14'],
+    ['15', '16', '17', '18', '19', '20'],
+    ['21', '22', '23', '24']
+  ];
   customTargetTime = ['00:30', '01:00', '03:00', '05:00'];
 
   constructor(public common: CommonService,
@@ -29,7 +38,13 @@ export class AddExpectedHourComponent implements OnInit {
     this.addForm.refType = this.common.params.refType;
     this.addForm.refId = this.common.params.refId;
     this.addForm.requestId = (this.common.params.requestId > 0) ? this.common.params.requestId : null;
-    if(this.common.params.data.expected_hour) this.setExptTime(this.common.params.data.expected_hour,this.customTargetTime.indexOf(this.common.params.data.expected_hour));
+    this.timePickerModal = this.common.params.timePickFromModal;
+    if (this.timePickerModal) {
+      this.setExptTimeFromCustomSelection(this.selectedTime);
+    } else {
+      if (this.common.params.data.expected_hour) this.setExptTime(this.common.params.data.expected_hour, this.customTargetTime.indexOf(this.common.params.data.expected_hour));
+    }
+
   }
 
   ngOnInit() { }
@@ -50,7 +65,7 @@ export class AddExpectedHourComponent implements OnInit {
       this.common.showError('Expected Hour is missing');
       return false;
     }
-    
+
     // return console.log('params', params);
     this.common.loading++;
     this.api.post('Admin/saveUserExpectedHour', params)
@@ -72,12 +87,18 @@ export class AddExpectedHourComponent implements OnInit {
       });
   }
 
-  setExptTime(event,index) {
+  setExptTime(event, index) {
     this.activeTime = index;
     let time = event.split(':');
     let date = new Date();
     date.setHours(time[0]);
     date.setMinutes(time[1]);
+    this.addForm.expectedHour = date;
+  }
+  setExptTimeFromCustomSelection(hour) {
+    let date = new Date();
+    date.setHours(hour);
+    date.setMinutes(0);
     this.addForm.expectedHour = date;
   }
 }
