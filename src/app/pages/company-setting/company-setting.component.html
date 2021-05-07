@@ -5,8 +5,11 @@
   <nb-card-body>
     <div class="tabs_style_main">
       <ul class="tabs_style text-left">
-        <li [ngClass]="activeTab==1?'active':''" (click)="activeTab=1;getUserSettings(1);">
+        <li [ngClass]="activeTab==1?'active':''" (click)="activeTab=1;setHeaderFormat();">
           Attendance
+        </li>
+        <li [ngClass]="activeTab==2?'active':''" (click)="activeTab=2;setHeaderFormat();">
+          Kanban Board
         </li>
       </ul>
     </div>
@@ -31,7 +34,7 @@
         <div class="row">
           <div class="col-6">
             <auto-suggestion [data]="settingTypeOptions" display="type" [placeholder]="'Select Type'" seperator="-"
-              autocomplete="off" [preSelected]="{type:'Company'}" name="settingTypeOptions" inputId="settingTypeOptions"
+              autocomplete="off" [preSelected]="selectedEntityType.id == 1 ? {type:selectedEntityType.type} : {type:''}" name="settingTypeOptions" inputId="settingTypeOptions"
               (onSelected)="setSettingType($event)">
             </auto-suggestion>
           </div>

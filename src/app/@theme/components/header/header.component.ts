@@ -64,6 +64,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userLogin = this.userService._details.name || [];
       console.log("----------------", this.userLogin);
       this.getUserPresence();
+      if (this.userService._details) {
+        this.getUserPagesList();
+      }
     }
   }
 
@@ -203,6 +206,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       localStorage.setItem('FO_USER_DETAILS', JSON.stringify(fouser));
       this.userService._fouser = fouser;
       this.closeFoadminSearchModal();
+      if (this.userService._details) {
+        this.getUserPagesList();
+      }
       this.common.refresh();
     }
   }
@@ -210,7 +216,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
   gotoAdmin(){
     this.userService._fouser = null;
     localStorage.removeItem('FO_USER_DETAILS');
+    if (this.userService._details) {
+      this.getUserPagesList();
+    }
     this.common.refresh();
+  }
+
+  getUserPagesList() {
+    this.api.get('UserRole/getUserPages.json?adminId=' + this.userService._details.id)
+      .subscribe(res => {
+        if(res['code']===1) {
+          this.userService._pages = res['data'].filter(page => { return page._userid; });
+          localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.userService._pages));
+          this.userService.filterMenu("pages", "pages");
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      })
   }
 
 }
