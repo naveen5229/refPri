@@ -164,7 +164,7 @@ export class CallLogsComponent implements OnInit {
             // icons: this.actionIcons(inventory)
           };
         } else if (key == 'mobileno') {
-          column[key] = { value: shift[key] ? shift[key] : null, class: 'blue cursor-pointer', action: (shift.callee) ? null : this.addEntity.bind(this, shift), }
+          column[key] = { value: shift[key] ? shift[key] : null, class: (shift.callee) ? null :'blue cursor-pointer', action: (shift.callee) ? null : this.addEntity.bind(this, shift), }
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
