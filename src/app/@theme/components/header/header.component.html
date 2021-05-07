@@ -17,10 +17,18 @@
         [title]="(userService._details && userService._details.present) ? 'Present' : 'Absent'" aria-hidden="true" (click)="getUserPresence()"></i>
 </h6>
 
+<span *ngIf="userService._fouser && userService._fouser.foid" style="display: flex; align-items: center;">
+    <button class="btn btn-primary btn-sm mr-2" style="padding:0 5px !important;height:24px;" (click)="gotoAdmin()">< back</button>
+    <b>FO-User:</b> {{userService._fouser.name+" - "+userService._fouser.mobileno+" - "+userService._fouser.company_name}}
+</span>
+
 <div class="header-container">
     <nb-actions size="small">
         <nb-action class="control-item">
             <nb-search type="rotate-layout" title="Search"></nb-search>
+        </nb-action>
+        <nb-action *ngIf="isShowFoAdmin" class="foadmin_icon">
+            <button class="form-control action-btn refresh" (click)="openFoAdminSearchModal()" title="Search Fo-Admin"><i class="fas fa-user-plus small"></i></button>
         </nb-action>
         <nb-action class="refresh_icon">
             <button class="form-control action-btn refresh" (click)="refresh()" title="Refresh"><i class="icon ion-refresh"></i></button>
@@ -34,3 +42,22 @@
         </nb-action>
     </nb-actions>
 </div>
+
+<!--start: foadminsearch modal -->
+<div class="modal" id="foadminSearchModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search FO Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeFoadminSearchModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <auto-suggestion class="col-12" (onSelected)="selectFoUser($event)" url="Suggestion/searchAllFoAdminUser" [display]="['name','mobileno','company_name']" seperator="-" placeholder="Search By Mobile No. / Name">
+                    </auto-suggestion>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: foadminsearch modal -->

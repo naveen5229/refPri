@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
   isNetConnected = true;
+  isShowFoAdmin = false;
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -63,6 +64,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userLogin = this.userService._details.name || [];
       console.log("----------------", this.userLogin);
       this.getUserPresence();
+      if (this.userService._details) {
+        this.getUserPagesList();
+      }
     }
   }
 
@@ -122,12 +126,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.common.loading--;
           if (res['code']>0) {
-            this.userService._token = '';
-            this.userService._details = null;
-            localStorage.removeItem('ITRM_USER_TOKEN');
-            localStorage.removeItem('ITRM_USER_DETAILS');
-            localStorage.removeItem('ITRM_LOGGED_IN_BY');
-            localStorage.removeItem('ITRM_USER_PAGES');
+            // this.userService._token = '';
+            // this.userService._details = null;
+            // localStorage.removeItem('ITRM_USER_TOKEN');
+            // localStorage.removeItem('ITRM_USER_DETAILS');
+            // localStorage.removeItem('ITRM_LOGGED_IN_BY');
+            // localStorage.removeItem('ITRM_USER_PAGES');
+            this.userService.reset();
+            this.userService.clearStorage();
             this.common.showToast(res['msg']);
             if (loggedInBy == 'customer') {
               this.router.navigate(['/auth/login']);
@@ -185,6 +191,51 @@ export class HeaderComponent implements OnInit, OnDestroy {
         // document.getElementById("noNetwork").style.display = "block";
       }
     }, 10000);
+  }
+
+  openFoAdminSearchModal(){
+    document.getElementById("foadminSearchModal").style.display = "block";
+  }
+
+  closeFoadminSearchModal(){
+    document.getElementById("foadminSearchModal").style.display = "none";
+  }
+
+  selectFoUser(fouser){
+    if(fouser && fouser.foid>0){
+      localStorage.setItem('FO_USER_DETAILS', JSON.stringify(fouser));
+      this.userService._fouser = fouser;
+      this.closeFoadminSearchModal();
+      if (this.userService._details) {
+        this.getUserPagesList();
+      }
+      this.common.refresh();
+    }
+  }
+
+  gotoAdmin(){
+    this.userService._fouser = null;
+    localStorage.removeItem('FO_USER_DETAILS');
+    if (this.userService._details) {
+      this.getUserPagesList();
+    }
+    this.common.refresh();
+  }
+
+  getUserPagesList() {
+    this.api.get('UserRole/getUserPages.json?adminId=' + this.userService._details.id)
+      .subscribe(res => {
+        if(res['code']===1) {
+          this.userService._pages = res['data'].filter(page => { return page._userid; });
+          localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.userService._pages));
+          this.userService.filterMenu("pages", "pages");
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      })
   }
 
 }

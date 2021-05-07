@@ -718,7 +718,7 @@ min-height: 28px;
   }
 
   nb-card-body {
-    min-height: calc(100vh - 100px) !important;
+    min-height: calc(100vh - 90px) !important;
   }
 
 
@@ -824,7 +824,7 @@ min-height: 28px;
   }
 
   .tagsinput {
-    border: 2px solid $light-9;
+    border: 1px solid $light-9;
     border-radius: $radious-xxs;
 
     p {

@@ -6,7 +6,7 @@
             </div>
             <div class="col-9 text-right p-0">
                 <button (click)="openProcessWiseSummary()" class="btn btn-primary btn-sm mr-2">
-                    View Process Wise Summary
+                    view work log summary
                 </button>
                 <button (click)="openViewSummary()" class="btn btn-primary btn-sm mr-2">
                     View Summary
@@ -19,7 +19,8 @@
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <smart-table *ngIf="activityLogsist.length!=0" [data]="table.data" [settings]="table.settings" id="activityLogsist">
+            <smart-table *ngIf="activityLogsist.length!=0" [data]="table.data" [settings]="table.settings"
+                id="activityLogsist">
             </smart-table>
         </div>
     </nb-card-body>
@@ -46,12 +47,15 @@
                         <label>Department :</label>
                     </div>
                     <div class="col-3">
-                        <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(department.id>0)?{name:department.name}:{name:''}">
+                        <auto-suggestion (onSelected)="selectedDepartment($event)" [data]="departments" display="name"
+                            placeholder="Select Department" inputId="selectDepartment" name="selectDepartment"
+                            [preSelected]="(department.id>0)?{name:department.name}:{name:''}">
                         </auto-suggestion>
                     </div>
                     <div class="col-3 text-right">
                         <button (click)="viewSummary()" class="btn btn-primary btn-sm mr-2">Submit</button>
-                        <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV()">
+                        <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;"
+                            title="download excel" (click)="exportCSV()">
                             <i class="fas fa-file-excel"></i>
                         </button>
                     </div>
@@ -75,7 +79,8 @@
                                 <td colspan="4" class="p-0">
                                     <table class="table table-bordered mb-0">
                                         <tbody>
-                                            <tr *ngFor="let dd of d.description_data">
+                                            <tr *ngFor="let dd of d.description_data"
+                                                [ngStyle]="{background:dd.background}">
                                                 <td style="width: 300px;">{{dd.description}}</td>
                                                 <td style="width: 200px;">{{dd.outcome}}</td>
                                                 <td style="width: 120px;">{{dd['contact_person']}}</td>
@@ -106,8 +111,10 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">View Process Wise Activity Log Summary</h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeProcessWiseSummary()">&times;</button>
+                <h5 class="modal-title" *ngIf="selectedWorkLogType == 0">View Project Wise Activity Log Summary</h5>
+                <h5 class="modal-title" *ngIf="selectedWorkLogType == 1">View Process Wise Activity Log Summary</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="closeProcessWiseSummary()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
@@ -115,26 +122,37 @@
                         <label>Start Date :</label>
                     </div>
                     <div class="col-2 pr-0">
-                        <uj-date-time-picker (onChanged)="processFrom.startDate=($event)" [dateTimeValue]="processFrom.startDate" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="processProjectFrom.startDate=($event)"
+                            [dateTimeValue]="processProjectFrom.startDate" [isTime]="false">
                         </uj-date-time-picker>
                     </div>
                     <div class="col-1 pr-0">
                         <label>End Date :</label>
                     </div>
                     <div class="col-2 pr-0">
-                        <uj-date-time-picker (onChanged)="processFrom.endDate=($event)" [dateTimeValue]="processFrom.endDate" [isTime]="false">
+                        <uj-date-time-picker (onChanged)="processProjectFrom.endDate=($event)"
+                            [dateTimeValue]="processProjectFrom.endDate" [isTime]="false">
                         </uj-date-time-picker>
                     </div>
                     <div class="col-1 pr-0">
-                        <label>Process :</label>
+                        <!-- <label>Process :</label> -->
+                        <select [(ngModel)]="selectedWorkLogType" (change)="getProcessProjectList()">
+                            <option *ngFor="let type of workLogViewType" [value]="type.id">{{type.name}}</option>
+                        </select>
                     </div>
                     <div class="col-3 pr-0">
-                        <auto-suggestion (onSelected)="processFrom.process.id = $event._id;processFrom.process.name = $event.name" [data]="processList" display="name" placeholder="Select Process" inputId="selectProcess" name="selectProcess" [preSelected]="(processFrom.process.id>0)?{name:processFrom.process.name}:{name:''}">
+                        <auto-suggestion
+                            (onSelected)="processProjectFrom.processProject.id = $event.id;processProjectFrom.processProject.name = $event.name"
+                            [data]="processProjectList" display="name"
+                            [placeholder]="selectedWorkLogType == 1 ? 'Select Process' : 'Select Project'"
+                            inputId="selectProcessProject" name="selectProcessProject"
+                            [preSelected]="(processProjectFrom.processProject.id>0)?{name:processProjectFrom.processProject.name}:{name:''}">
                         </auto-suggestion>
                     </div>
                     <div class="col-2 text-right">
                         <button (click)="viewProcessWiseSummary()" class="btn btn-primary btn-sm mr-2">Submit</button>
-                        <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel" (click)="exportCSV(2)">
+                        <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;"
+                            title="download excel" (click)="exportCSV(2)">
                             <i class="fas fa-file-excel"></i>
                         </button>
                     </div>

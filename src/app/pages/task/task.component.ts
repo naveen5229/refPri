@@ -2569,7 +2569,20 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            (type!==-8) ? this.getTaskByType(type) : null;
+            if(type===-8){
+              let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
+              if (ticket._cc_user_id && !ticket._cc_status) {
+                activeRowData._cc_status = 1;
+              }
+              if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || ([101,102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status)){
+                
+              }else{
+                this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+              }
+              this.setTableUnreadTaskForMe(type);
+            }else{
+              this.getTaskByType(type)
+            };
           } else {
             this.common.showError(res["data"]);
           }
@@ -2599,7 +2612,20 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            (type!==-8) ? this.getTaskByType(type) : null;
+            if(type===-8){
+              let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
+              if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+                activeRowData._pu_status = 1;
+              }
+              if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || (ticket._cc_user_id && !ticket._cc_status)){
+                
+              }else{
+                this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+              }
+              this.setTableUnreadTaskForMe(type);
+            }else{
+              this.getTaskByType(type)
+            }
           } else {
             this.common.showError(res["data"]);
           }

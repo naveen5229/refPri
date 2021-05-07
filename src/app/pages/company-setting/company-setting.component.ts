@@ -3,6 +3,8 @@ import { CommonService } from "../../Service/common/common.service";
 import { ApiService } from "../../Service/Api/api.service";
 import { UserService } from "../../Service/user/user.service";
 import _ from 'lodash';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ngx-settings',
@@ -13,6 +15,7 @@ export class SettingsComponent implements OnInit {
   loggedInUser = null;
   displaySelectionText = { id: 1, name: 'Select Company' };
   activeTab = 1;
+  selectedEntityType = { id: 1, type: 'Company' };
   settingTypeOptions = [
     { id: 1, type: 'Company' },
     { id: 2, type: 'Department' },
@@ -33,7 +36,8 @@ export class SettingsComponent implements OnInit {
 
   constructor(public common: CommonService,
     public api: ApiService,
-    public userService: UserService) {
+    public userService: UserService,
+    public modalService: NgbModal) {
     this.loggedInUser = userService._details;
     console.log('loggedIn user:', this.loggedInUser);
     this.selectedSettingType = { id: this.loggedInUser.foid, name: this.loggedInUser.companyName };
@@ -41,7 +45,6 @@ export class SettingsComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getSettingProfile();
-    this.getUserSettings(1);
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -49,11 +52,11 @@ export class SettingsComponent implements OnInit {
   }
 
   refresh() {
+    this.activeTab = 1;
     this.getAllAdmin();
     this.getDepartmentList();
     this.getUserGroupList();
     this.getSettingProfile();
-    this.getUserSettings(1);
   }
 
   getSettingProfile() {
@@ -76,6 +79,11 @@ export class SettingsComponent implements OnInit {
   }
 
   setHeaderFormat() {
+    //setting default entityType and entityName
+    // this.selectedEntityType = { id: 1, type: 'Company' };
+    // this.setSettingType({ id: 1, type: 'Company' });
+
+    //getting headings for table here
     this.settingProfileHeader = [];
     this.settingFormat = [];
     if (this.allSettingProfiles && this.allSettingProfiles.length > 0) {
@@ -88,12 +96,17 @@ export class SettingsComponent implements OnInit {
         }
       })
     }
+
+    //gettingsettings here
+    this.getUserSettings(this.activeTab);
   }
 
   getUserSettings(type) {
+    this.allSettings = [];
+    this.common.loading++;
     this.api.get("UserRole/getCompanySetting?type=" + type).subscribe(
       (res) => {
-        console.log("data", res["data"]);
+        this.common.loading--;
         if (res["code"] > 0) {
           this.allSettings = res["data"] || [];
           console.log('loadedSettings', this.allSettings)
@@ -102,6 +115,7 @@ export class SettingsComponent implements OnInit {
         }
       },
       (err) => {
+        this.common.loading--;
         this.common.showError();
         console.log("Error: ", err);
       }
@@ -216,9 +230,9 @@ export class SettingsComponent implements OnInit {
       this.common.showError(`Please ${this.displaySelectionText.name}`);
     }
 
-  //start : directly adding rows to db section
+    //start : directly adding rows to db section
 
-    console.log('to compare:',settingFormat)
+    console.log('to compare:', settingFormat)
     let settingExistance = this.allSettings.find(x => {
       return x._dept_id === settingFormat._dept_id &&
         x._group_id === settingFormat._group_id &&
@@ -226,10 +240,10 @@ export class SettingsComponent implements OnInit {
     });
     console.log('existance:', settingExistance);
 
-    if(settingExistance){
+    if (settingExistance) {
       this.common.showError('Can not add duplicate settings');
-    }else{
-      this.saveSettings(settingFormat,0);
+    } else {
+      this.saveSettings(settingFormat, 0);
     }
 
     //end : directly adding rows to db section
@@ -240,14 +254,14 @@ export class SettingsComponent implements OnInit {
   }
 
 
-  saveSettings(setting,operationType) {
+  saveSettings(setting, operationType) {
     console.log('settings', setting);
     let params = {
-      operationType:operationType,
+      operationType: operationType,
       type: this.activeTab,
       info: setting
     }
-    console.log("params:",params)
+    console.log("params:", params)
     // return;
     this.common.loading++;
     this.api.post('UserRole/saveCompanySetting', params).subscribe(res => {
@@ -270,11 +284,22 @@ export class SettingsComponent implements OnInit {
   }
 
   deleteSetting(setting, index) {
-    console.log("type", setting.data[0].id);
-    if (setting.data[0].id) {
-      // delete through api block
-      this.saveSettings(setting,2);
-    } 
+    this.common.params = {
+      title: "Delete",
+      description:
+        `<b>&nbsp;` + "Are You Sure You Want To Delete This Record" + `<b>`,
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.saveSettings(setting, 2);
+      }
+    });
+    // console.log("type", setting.data[0].id);
+    // if (setting.data[0].id) {
+    //   // delete through api block
+    //   this.saveSettings(setting, 2);
+    // }
     // else {
     //   console.log('index:', index)
     //   this.allSettings.splice(index,1);

@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 import { NbSidebarService } from '@nebular/theme';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { AddTransactionComponent } from '../../modals/process-modals/add-transaction/add-transaction.component';
+import { AddExpectedHourComponent } from '../../modals/add-expected-hour/add-expected-hour.component';
 
 @Component({
   selector: 'ngx-kanban-board',
@@ -842,4 +843,23 @@ export class KanbanBoardComponent implements OnInit {
       }
     });
   }
+
+  openExpectedHourModal(event,ticket){
+    event.stopPropagation();
+    this.common.params = {
+      refType: ticket._is_action === 1 ? 2 : 1,
+      refId: ticket._is_action === 1 ? ticket._transaction_actionid : ticket._transaction_state_id,
+      requestId: null,
+      // data: ticket,
+      title: 'Add Expected Hours',
+      timePickFromModal:true
+    };
+    const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        ticket.expected_hour = data.expectedHour;
+      }
+    });
+  }
+
 }

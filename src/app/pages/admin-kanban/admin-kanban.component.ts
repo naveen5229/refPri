@@ -10,6 +10,7 @@ import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 import { NbSidebarService } from '@nebular/theme';
+import { AddExpectedHourComponent } from '../../modals/add-expected-hour/add-expected-hour.component';
 
 @Component({
   selector: 'ngx-admin-kanban',
@@ -881,6 +882,24 @@ export class AdminKanbanComponent implements OnInit {
       activeModal.result.then((data) => {
         if (data.response) {
           this.goToBoard((this.project._id) ? this.project : this.user, (this.project._id) ? 1 : this.boardType, this.callType);
+        }
+      });
+    }
+
+    openExpectedHourModal(event,task){
+      event.stopPropagation();
+      this.common.params = {
+        refType: 0,
+        refId: task._tktid,
+        requestId: null,
+        // data: task,
+        title: 'Add Expected Hours',
+        timePickFromModal:true
+      };
+      const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
+      activeModal.result.then((data) => {
+        if (data.response) {
+          task.expected_hour = data.expectedHour;
         }
       });
     }

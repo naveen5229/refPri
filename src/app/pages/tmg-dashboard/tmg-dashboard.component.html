@@ -5,19 +5,41 @@
   <nb-card-body style="padding: 1rem 1rem;">
     <div class="out-topnav">
     <div>
-      <p class="dirbtn"><i class="fas fa-chevron-left"  (click)="backwardMove()"></i></p>
+      <p class="dirbtn" (click)="backwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-left"  ></i></p>
     </div>
     <div class="toptab">
       <div class="hiddenby">
-        <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'" (click)="selectedDashboard='Tmg-Task'">
+        <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'" (click)="selectedDashboard='Tmg-Task';selectedDept = {id:null,name:null}">
           <b>Task DashBoard</b>
         </p>
       </div>
+      <div class="hiddenby">
+        <p [class]="selectedDashboard=='Tmg-worklog'?'active':'default'" (click)="selectedDashboard='Tmg-worklog';selectedDept = {id:null,name:null}">
+          <b>WorkLog DashBoard</b>
+        </p>
+      </div>
+      <!-- <div *ngIf="selectedDashboard=='Tmg-worklog'">
+        <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
+        </auto-suggestion>
+      </div> -->
     </div>
+   
     <div>
-      <p class="dirbtn"><i class="fas fa-chevron-right" (click)="forwardMove()"></i></p>
+      <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
+    </div>
+   
+   </div>
+
+   <div class="out-topnav-dept" *ngIf="selectedDashboard=='Tmg-worklog'">
+    <div class="toptabdept" *ngFor="let dept of departments">
+      <div class="hiddenby">
+        <p [class]="selectedDept.id==dept.id?'active':'default'" (click)="selectedDept=dept">
+          <b>{{dept.name}}</b>
+        </p>
+      </div>
     </div>
    </div>
-   <tmg-task *ngIf="selectedDashboard=='Tmg-Task'"></tmg-task>
+
+   <tmg-task *ngIf="['Tmg-Task','Tmg-worklog'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
   </nb-card-body>
 </nb-card>

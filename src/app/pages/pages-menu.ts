@@ -8,8 +8,14 @@ export const MENU_ITEMS = JSON.stringify([
     children: [
       {
         title: 'TMG Dashboard',
-        //icon: 'fa-dashcube',
+        icon: 'home-outline',
         link: '/pages/tmg-dashboard',
+        home: true,
+      },
+      {
+        title: 'Continuity Report',
+        //icon: 'fa-dashcube',
+        link: '/pages/continuity-report',
         home: true,
       },
       {
@@ -158,6 +164,12 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
+        title: 'Call-Logs',
+        icon: 'file-text-outline',
+        link: '/pages/call-logs',
+        home: true,
+      },
+      {
         title: 'OT-Management',
         icon: 'file-text-outline',
         link: '/pages/ot-management',
@@ -203,11 +215,11 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'people-outline',
         link: '/pages/site',
       },
-      // {
-      //   title: 'Settings',
-      //   // icon: 'people-outline',
-      //   link: '/pages/settings',
-      // },
+      {
+        title: 'Settings',
+        icon: 'settings-2-outline',
+        link: '/pages/settings',
+      },
     ]
   },
   {

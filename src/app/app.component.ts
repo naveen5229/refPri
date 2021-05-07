@@ -27,33 +27,33 @@ export class AppComponent implements OnInit {
     public common: CommonService,
     public user: UserService,
     public api: ApiService) {
-    if (this.user._details) {
-      this.getUserPagesList();
-    }
+    // if (this.user._details) {
+    //   this.getUserPagesList();
+    // }
   }
 
   ngOnInit(): void {
     this.analytics.trackPageViews();
   }
 
-  getUserPagesList() {
-    let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;
-    const params = {
-      userId: this.user._details.id,
-      userType: userTypeId
-    };
-    console.log(params);
-    this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
-      .subscribe(res => {
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
-        this.user._pages = res['data'].filter(page => { return page._userid; });
-        localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
-        this.user.filterMenu("pages", "pages");
-      }, err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      })
-  }
+  // getUserPagesList() {
+  //   let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;
+  //   const params = {
+  //     userId: this.user._details.id,
+  //     userType: userTypeId
+  //   };
+  //   console.log(params);
+  //   this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
+  //     .subscribe(res => {
+  //       if(res['code']===0) { this.common.showError(res['msg']); return false;};
+  //       this.user._pages = res['data'].filter(page => { return page._userid; });
+  //       localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
+  //       this.user.filterMenu("pages", "pages");
+  //     }, err => {
+  //       this.common.showError();
+  //       console.log('Error: ', err);
+  //     })
+  // }
 
   // keyHandler(event) {
   //   if (event.keyCode == 123) {

@@ -1,6 +1,6 @@
 .default{
     color: #000;
-    border-radius: 4.17rem;
+    // border-radius: 4.17rem;
     font-size: .75rem;
     text-align: center;
     padding: 5px 10px;
@@ -15,7 +15,7 @@
     margin-right: 10px;
 }
 .default:hover{
-    border-radius: 4.17rem;
+    // border-radius: 4.17rem;
     font-size: .75rem;
     text-align: center;
     padding: 5px 10px;
@@ -57,31 +57,53 @@
 }
 .out-topnav{
     margin-top: -15px;
-    margin-left: -14px;
-    margin-right: -14px;
     padding: 0 2px;
     z-index: 5;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-   
+    width: 100%;
     // -webkit-box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
     //  box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
    
 }
+
+.out-topnav-dept{
+    margin-top: 0;
+    padding: 0 2px;
+    z-index: 5;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;  
+    overflow: auto;
+}
+
+.toptabdept{
+    padding: 6px 1px;
+    // margin: 0px 10px;
+   display: flex;
+   flex-direction: row;  
+   justify-content: flex-start;
+   align-items: center;
+   width: 100%;
+}
+
 .toptab{
     padding: 6px 1px;
     margin: 0px 10px;
    display: flex;
-   flex-direction: row;
-   justify-content: space-between;
+   flex-direction: row;  
+   justify-content: flex-start;
    align-items: center;
-//    background: white;
-//    -webkit-box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
-//     box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
-max-width: calc(100vw - 210px);
-  overflow-y: auto;
+//  background: white;
+//  -webkit-box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
+//  box-shadow: 0 16px 26px -10px rgba(63, 106, 216, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 106, 216, 0.2);
+//  width: calc(100vw - 600px);
+   width: 100%;
+  //overflow-y: auto;
 }
 .toptab::-webkit-scrollbar {
     width: 5px !important;

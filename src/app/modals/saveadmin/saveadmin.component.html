@@ -49,7 +49,7 @@
                         <label class="custom-control-label" for="active">Active</label>
                     </div>
                     <div class="col-6">
-                        <input id="deactive" type="radio" class="custom-control-input" [(ngModel)]="Fouser.isActive" value="false" name="deactive">
+                        <input id="deactive" type="radio" class="custom-control-input" (click)="getRMStatus()" [(ngModel)]="Fouser.isActive" value="false" name="deactive">
                         <label class="custom-control-label" for="deactive">DeActive</label>
                     </div>
                 </div>

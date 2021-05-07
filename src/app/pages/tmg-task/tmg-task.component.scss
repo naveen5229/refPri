@@ -56,9 +56,8 @@
     border: 1px solid #ffffff!important;
 }
 .contentsection{
-    height: calc(100vh - 114px);
+    height: calc(100vh - 104px);
     overflow: auto;
-    margin-top: 10px;
 }
 .link{
     text-decoration: underline;
@@ -82,8 +81,16 @@
       .row{
         height: calc(33.33% - .7rem);
       }
+      .row.firstlast{
+        height: calc(38% - .7rem);
+      }
+      .row.midddle{
+        height: calc(24% - .7rem);
+      }
+      
   }
-
+  h6, .h6 { text-align: center;}
+  
 
   @media (max-width: 1441px){
   .table tr td {font-size: 10px !important; font-weight: 500;}

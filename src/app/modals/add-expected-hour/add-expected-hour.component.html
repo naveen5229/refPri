@@ -1,0 +1,86 @@
+<div class="modal-header">
+    <h6 style="color: white;" class="modal-title p-1" id="modal-basic-title">{{title}}</h6>
+    <div class="col-md-3 text-right">
+        <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false,null)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div class="modal-body">
+    <div class="row mb-2">
+        <div class="col-lg-4">
+            <label>Expected Hours :</label>
+        </div>
+        <div class="col-lg-8" *ngIf="!timePickerModal">
+            <uj-date-time-picker (onChanged)="addForm.expectedHour=($event);activeTime=null" [dateTimeValue]="addForm.expectedHour"
+                [isTime]="true" [isDate]="false">
+            </uj-date-time-picker>       
+        </div>
+        <div class="col-lg-8" *ngIf="timePickerModal">
+            <div class="row">
+                <div class="col-4 pr-0"><input type="text" [value]="selectedTime" style="width: 100%;" readonly></div>
+                <div class="col-1 pl-0" style="border: 1px solid gray;"><div (click)="showHours=true"><i class="fas fa-clock" style="font-size: 18px;"></i></div></div>
+            </div>  
+        </div>
+    </div>
+
+    <div class="row mb-2" *ngIf="!timePickerModal">
+        <div class="col-2"></div>
+        <div class="col-2 text-center ml-2 defaultTimeTabs" [ngClass]="activeTime === i ? 'active' : ''" *ngFor="let time of customTargetTime;let i = index"  (click)="setExptTime($event.target.innerText,i)">{{time}}</div>
+    </div>
+
+
+    <div class="row mb-2">
+        <div class="col-lg-4">
+            <label>Remark :</label>
+        </div>
+        <div class="col-lg-8">
+            <textarea type="text" class="form-control " [(ngModel)]='addForm.remark' placeholder="Enter Remark"
+                required></textarea>
+        </div>
+    </div>
+    <div class="text-right">
+        <button class="btn btn-primary brn-sm" (click)="saveUserExpectedHour()">Save</button>
+    </div>
+</div>
+
+
+<!-- start: show hours popup -->
+<div class="main-view" *ngIf="showHours">
+    <div class="overlay" (click)="dismiss(false)" id="close_modal_btn"></div>
+    <div class="custom-modal">
+        <div class="custom-modal-header" id="modal_title">
+            <span *ngIf="showHours" (click)="showHours = false;" class="back-btn">
+                <ion-icon name="ios-arrow-back"></ion-icon>
+                <span>Back</span>
+            </span>
+            Expected Time
+        </div>
+        <div class="custom-modal-content">
+            <div *ngIf="showHours">
+                <div text-center>
+                    <span *ngFor="let hour of hours[0]"
+                        (click)="selectedTime = hour; showHours = false; setExptTimeFromCustomSelection(hour)" class="btn-hour hour-row-1"
+                        [ngClass]="selectedTime == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+                <div text-center>
+                    <span *ngFor="let hour of hours[1]"
+                        (click)="selectedTime = hour; showHours = false; setExptTimeFromCustomSelection(hour)" class="btn-hour hour-row-2"
+                        [ngClass]="selectedTime == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+                <div text-center>
+                    <span *ngFor="let hour of hours[2]"
+                        (click)="selectedTime = hour; showHours = false; setExptTimeFromCustomSelection(hour)" class="btn-hour hour-row-3"
+                        [ngClass]="selectedTime == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+                <div text-center>
+                    <span *ngFor="let hour of hours[3]"
+                        (click)="selectedTime = hour; showHours = false; setExptTimeFromCustomSelection(hour)" class="btn-hour hour-row-4"
+                        [ngClass]="selectedTime == hour ? 'active-hr' : ''">{{hour}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end: show hours popup -->
