@@ -85,14 +85,14 @@
       <div class="col-12">
         <div class="row headerGeneralTask">
           <div class="col-9">
-            <h5>General Task</h5>
+            <h5 class="text-white m-0">General Task</h5>
           </div>
           <div class="col-3">
-            <button class="btn btn-danger text-right" (click)="generalTaskList=[]"><i class="fas fa-times"></i></button>
+            <button class="close text-right" (click)="generalTaskList=[]"><span> × </span></button>
           </div>
         </div>
       </div>
-      <div class="col-12 generaltaskListing">
+      <div class="col-12 generaltaskListing pl-1 pr-1">
         <div class="row inprocessCardStyle genTaskHover" *ngFor="let task of generalTaskList"
           (click)="assignGeneralTaskTOLog(task)">
           {{task.task_subject}}
