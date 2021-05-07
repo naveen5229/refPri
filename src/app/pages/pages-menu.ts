@@ -8,7 +8,7 @@ export const MENU_ITEMS = JSON.stringify([
     children: [
       {
         title: 'TMG Dashboard',
-        //icon: 'fa-dashcube',
+        icon: 'home-outline',
         link: '/pages/tmg-dashboard',
         home: true,
       },
@@ -217,7 +217,7 @@ export const MENU_ITEMS = JSON.stringify([
       },
       {
         title: 'Settings',
-        // icon: 'people-outline',
+        icon: 'settings-2-outline',
         link: '/pages/settings',
       },
     ]
