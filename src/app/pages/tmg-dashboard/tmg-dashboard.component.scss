@@ -82,13 +82,26 @@
 }
 
 .toptabdept{
-    padding: 6px 1px;
-    // margin: 0px 10px;
+    padding: 0px 1px 2px 1px;
    display: flex;
    flex-direction: row;  
    justify-content: flex-start;
    align-items: center;
    width: 100%;
+   .default{
+    font-weight: 100;
+    border-radius: 50px;
+    border-bottom: 0;
+    padding: 2px 8px;
+   }
+   .active{
+    padding: 2px 8px;
+    font-weight: 100;
+    border-radius: 50px;
+    border-bottom: 0;
+    background: #3f6ad7;
+    color: #fff;
+   }
 }
 
 .toptab{
@@ -105,9 +118,9 @@
    width: 100%;
   //overflow-y: auto;
 }
-.toptab::-webkit-scrollbar {
-    width: 5px !important;
-    height: 5px !important;
+.out-topnav-dept::-webkit-scrollbar {
+    width: 2px !important;
+    height: 4px !important;
     background-color: #c1c1c1 !important;
 }
 .hiddenby{
