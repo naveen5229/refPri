@@ -97,10 +97,15 @@
                     <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
                     </uj-date-time-picker>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="searchTask.tpId = $event._id" [data]="tpList" display="name" placeholder="Search Ticket Process" inputId="ProcessSearch2" name="ProcessSearch"></auto-suggestion>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                    <select [(ngModel)]="currentStatus.id">
+                        <option *ngFor="let status of statusList" [value]="status.id">{{status.status}}</option>
+                    </select>
+                </div>
+                <div class="col-2">
                     <button class="btn btn-primary text-capitalize" (click)="getAdminTicket(3)">Search</button>
                 </div>
             </div>

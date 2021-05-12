@@ -71,6 +71,14 @@ export class TicketAdminComponent implements OnInit {
     minutes: null
   };
   tpList = [];
+  currentStatus = {id:5,status:'Completed'}
+  statusList = [
+    {id:5,status:'Completed'},
+    {id:2,status:'Acknowledge'},
+    {id:0,status:'Assigned'},
+    {id:-1,status:'Rejected'},
+    {id:99,status:'Pending'}
+  ]
 
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAdminTicket(999);
@@ -113,7 +121,7 @@ export class TicketAdminComponent implements OnInit {
   }
 
   getAdminTicket(type) {
-    let startDate, endDate, tpId, minutes = null;
+    let startDate, endDate, tpId, minutes = null,status = null;
     if(type===0 || type===1 || type==2 || type==3) {
       startDate = (this.searchTask.startDate) ? this.common.dateFormatter(this.searchTask.startDate) : null;
       endDate = (this.searchTask.endDate) ? this.common.dateFormatter(this.searchTask.endDate) : null;
@@ -122,7 +130,11 @@ export class TicketAdminComponent implements OnInit {
       tpId = (this.searchTask.tpId) ? this.searchTask.tpId : null;
       minutes = (this.searchTask.minutes) ? this.searchTask.minutes : null;
     }
-    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate+"&tpId="+tpId+"&minutes="+minutes;
+    if(this.activeTab=='completedTicket' && type == 3){
+      status = this.currentStatus.id;
+    }
+    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate+"&tpId="+tpId+"&minutes="+minutes+"&status="+status;
+    // return console.log(params);
     this.common.loading++;
     this.api.get("Ticket/getTicketSummaryByType"+params).subscribe(res => {
       this.common.loading--;
