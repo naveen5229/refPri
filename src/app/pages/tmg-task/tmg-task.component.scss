@@ -82,10 +82,13 @@
         height: calc(33.33% - .7rem);
       }
       .row.firstlast{
-        height: calc(38% - .7rem);
+        height: calc(40% - .5rem);
       }
       .row.midddle{
-        height: calc(24% - .7rem);
+        height: calc(24% - .5rem);
+      }
+      .row.thirdlast{
+        height: calc(36% - .5rem);
       }
       
   }

@@ -183,7 +183,7 @@
 <div *ngIf="pageType=='Tmg-worklog'" class="contentsection">
   <div class="row mb-0 mr-0 " style="min-height: 100%;">
     <div class="col-5" style="height: 100%; overflow: hidden;">
-      <div class="outer" style="height: calc(33.33% - 10px);">
+      <div class="outer" style="height: calc(33.33% - 5px);">
         <h6><b class="charthead text-center mb-0">Chart Title</b></h6>
         <p  class="link"
         (click)="getDetials('AdminTask/getTmgWorkhourMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -191,14 +191,14 @@
         <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-top: -12px;" [options]="chart1.options">
         </chart>
       </div>
-      <div class="outer mt-3" style="height: calc(33.33% - 10px);">
+      <div class="outer mt-1" style="height: calc(33.33% - 5px);">
         <h6><b class="charthead text-center mb-0">% Present Defaults</b></h6>
         <p class="link"
         (click)="getDetials('AdminTask/getTmgAttenDefaultergraph',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
       </p>
         <chart [type]="chart2.type" [data]="chart2.data" style="margin-top: -12px;" [options]="chart2.options"></chart>
       </div>
-      <div class="outer mt-3" style="height: calc(33.33% - 10px);">
+      <div class="outer mt-1" style="height: calc(33.33% - 5px);">
         <h6><b class="charthead text-center mb-0">% Efficiency</b></h6>
         <p class="link"
         (click)="getDetials('AdminTask/getTmgMonthwiseProductivity',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
@@ -258,7 +258,7 @@
         </div>
    
       </div>
-      <div class="row mt-3 mr-0 midddle">
+      <div class="row mt-1 mr-0 midddle">
         <div class="col-6 p-1">
           <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Worst 3 User - Last 30 Days</b></h6>
@@ -301,7 +301,7 @@
           </div>
         </div>
       </div>
-      <div  class="row mt-3 mr-0 firstlast">
+      <div  class="row mt-1 mr-0 thirdlast">
         <div class="col-6 p-1">
           <div class="outer" style="height: 100%">
             <h6 style="text-align:center"><b class="charthead">Efficiency (Worst 3 User - Last 30 Days)</b></h6>
