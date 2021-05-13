@@ -27,7 +27,7 @@
           [preSelected]="activeLogs.id ? {name:activeLogs.name} : {name:''}">
         </auto-suggestion>
       </div>
-
+ 
       <div class="col-3" *ngIf="loggedInUser.is_super_user">
         <auto-suggestion (onSelected)="activeLogs = $event" [data]="adminList" display="name" seperator="-"
           placeholder="Search User" autocomplete="off" name="userId" inputId="userId"
