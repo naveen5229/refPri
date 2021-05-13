@@ -213,7 +213,7 @@
                 [settings]="tableProjectTask.settings" id="tableProjectTaskList">
             </smart-table>
         </div>
-        <div *ngIf="activeTab=='todoList'">
+        <!-- <div *ngIf="activeTab=='todoList'">
             <div class="row mb-1">
                 <div class="col-5">
                     <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
@@ -264,7 +264,7 @@
             <smart-table [data]="tableTaskTodoList.data" [settings]="tableTaskTodoList.settings" id="tableTaskTodoList"
                 class="sl-smart-table">
             </smart-table>
-        </div>
+        </div> -->
         <div *ngIf="activeTab=='futureTaskByMe'">
             <smart-table *ngIf="futureTaskByMeList.length!=0" [data]="tableFutureTaskByMeList.data"
                 [settings]="tableFutureTaskByMeList.settings" id="tableFutureTaskForMeList">

@@ -225,7 +225,7 @@ export class TaskComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getProcessTicketCount();
-    this.getTodoTaskList(0);
+    // this.getTodoTaskList(0);
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -241,7 +241,7 @@ export class TaskComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getProcessTicketCount();
-    this.getTodoTaskList(0);
+    // this.getTodoTaskList(0);
   }
 
   resetSearchTask() {
