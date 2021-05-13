@@ -30,9 +30,12 @@ export class CallLogsComponent implements OnInit {
     }
   };
 
+  headingForCsv = {};
+
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
     this.loggedInUser = this.user._details;
+    console.log("🚀loggedInUser", this.loggedInUser)
     this.activeLogs = { id: this.loggedInUser.id, name: this.loggedInUser.name };
     this.common.refresh = this.refresh.bind(this);
     this.getCallLogs();
@@ -138,6 +141,7 @@ export class CallLogsComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
+    this.headingForCsv = headings;
     return headings;
   }
 
@@ -164,7 +168,7 @@ export class CallLogsComponent implements OnInit {
             // icons: this.actionIcons(inventory)
           };
         } else if (key == 'mobileno') {
-          column[key] = { value: shift[key] ? shift[key] : null, class: (shift.callee) ? null :'blue cursor-pointer', action: (shift.callee) ? null : this.addEntity.bind(this, shift), }
+          column[key] = { value: shift[key] ? shift[key] : null, class: (shift.callee) ? null : 'blue cursor-pointer', action: (shift.callee) ? null : this.addEntity.bind(this, shift), }
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
@@ -199,5 +203,9 @@ export class CallLogsComponent implements OnInit {
     activeModal.result.then(data => {
       // console.log("addEntity ~ data", data)
     });
+  }
+
+  exportCSV() {
+    this.common.getCSVFromDataArray(this.callLogList, this.headingForCsv, `Call Logs ${this.activeLogs.name}`)
   }
 }

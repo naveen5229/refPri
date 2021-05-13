@@ -15,7 +15,7 @@ export class ContinuityReportComponent implements OnInit {
   date = new Date();
   today = new Date();
   continuityReport = [];
-  selectedDepartment = {id:-1,name:'All'}
+  selectedDepartment = { id: -1, name: 'All' }
 
   table = {
     data: {
@@ -26,6 +26,7 @@ export class ContinuityReportComponent implements OnInit {
       hideHeader: true
     }
   };
+  headingForCsv = {};
 
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
@@ -39,7 +40,7 @@ export class ContinuityReportComponent implements OnInit {
   refresh() {
     this.getDepartmentList();
     this.getContinuityReport();
-    this.selectedDepartment = {id:-1,name:'All'}
+    this.selectedDepartment = { id: -1, name: 'All' }
   }
 
   getDepartmentList() {
@@ -48,8 +49,8 @@ export class ContinuityReportComponent implements OnInit {
         console.log("data", res["data"]);
         if (res["code"] > 0) {
           let departmentList = res["data"] || [];
-          this.departmentList = departmentList.map(department => {return {id:department.id,name:department.name}});
-          this.departmentList.splice(0,0,{id:-1,name:'All'});
+          this.departmentList = departmentList.map(department => { return { id: department.id, name: department.name } });
+          this.departmentList.splice(0, 0, { id: -1, name: 'All' });
         } else {
           this.common.showError(res["msg"]);
         }
@@ -61,7 +62,7 @@ export class ContinuityReportComponent implements OnInit {
     );
   }
 
-  getContinuityReport(){
+  getContinuityReport() {
     let date = this.common.dateFormatter(this.date);
     const params = '?date=' + date + '&deptId=' + this.selectedDepartment.id;
     console.log(params);
@@ -83,7 +84,7 @@ export class ContinuityReportComponent implements OnInit {
       });
   }
 
-  
+
   resetTable() {
     this.table.data = {
       headings: {},
@@ -108,6 +109,7 @@ export class ContinuityReportComponent implements OnInit {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
       }
     }
+    this.headingForCsv = headings;
     return headings;
   }
 
@@ -142,5 +144,9 @@ export class ContinuityReportComponent implements OnInit {
     console.log(columns);
     return columns;
 
+  }
+
+  exportCSV() {
+    this.common.getCSVFromDataArray(this.continuityReport, this.headingForCsv, `continuityReport ${this.selectedDepartment.name}`)
   }
 }
