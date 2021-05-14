@@ -20,27 +20,32 @@ export class AddExpectedHourComponent implements OnInit {
     remark: null,
     requestId: null,
   }
-  selectedTime = '16';
+  selectedTime = { hh: '4', mm: '0' };
   showHours = false;
-  hours = [
-    ['1', '2', '3', '4', '5', '6', '7', '8'],
-    ['9', '10', '11', '12', '13', '14'],
-    ['15', '16', '17', '18', '19', '20'],
-    ['21', '22', '23', '24']
-  ];
+  hours = [];
+  minutes = [];
   customTargetTime = ['00:30', '01:00', '03:00', '05:00'];
 
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
     public modalService: NgbModal) {
+    for (let i = 1; i <= 24; i++) {
+      this.hours.push(`${i}`);
+    }
+    for (let i = 0; i < 60; i++) {
+      if (i % 5 == 0) {
+        this.minutes.push(`${i}`);
+      }
+    }
+
     this.title = (this.common.params.title) ? this.common.params.title : this.title;
     this.addForm.refType = this.common.params.refType;
     this.addForm.refId = this.common.params.refId;
     this.addForm.requestId = (this.common.params.requestId > 0) ? this.common.params.requestId : null;
     this.timePickerModal = this.common.params.timePickFromModal;
     if (this.timePickerModal) {
-      this.setExptTimeFromCustomSelection(this.selectedTime);
+      this.setExptTimeFromCustomSelection(this.selectedTime.hh, 'hr');
     } else {
       if (this.common.params.data.expected_hour) this.setExptTime(this.common.params.data.expected_hour, this.customTargetTime.indexOf(this.common.params.data.expected_hour));
     }
@@ -66,7 +71,7 @@ export class AddExpectedHourComponent implements OnInit {
       return false;
     }
 
-    // return console.log('params', params);
+    return console.log('params', params);
     this.common.loading++;
     this.api.post('Admin/saveUserExpectedHour', params)
       .subscribe(res => {
@@ -87,6 +92,15 @@ export class AddExpectedHourComponent implements OnInit {
       });
   }
 
+  openTimePickerModal() {
+    this.showHours = true;
+    document.getElementById('timePickerModalCustom').style.display = 'block';
+  }
+
+  closeTimePickerModal() {
+    document.getElementById('timePickerModalCustom').style.display = 'none';
+  }
+
   setExptTime(event, index) {
     this.activeTime = index;
     let time = event.split(':');
@@ -95,10 +109,15 @@ export class AddExpectedHourComponent implements OnInit {
     date.setMinutes(time[1]);
     this.addForm.expectedHour = date;
   }
-  setExptTimeFromCustomSelection(hour) {
-    let date = new Date();
-    date.setHours(hour);
-    date.setMinutes(0);
-    this.addForm.expectedHour = date;
+
+  setExptTimeFromCustomSelection(value, type) {
+    if (type === 'hr') {
+      this.addForm.expectedHour.setHours(value);
+      this.showHours = false;
+    }
+    if (type === 'min') {
+      this.addForm.expectedHour.setMinutes(value);
+      this.closeTimePickerModal();
+    }
   }
 }

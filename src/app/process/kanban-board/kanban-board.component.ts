@@ -296,6 +296,48 @@ export class KanbanBoardComponent implements OnInit {
   };
 
 
+  getWarningConfirmFromUserForWorkLog(ticket) {
+    this.common.params = {
+      title: 'Warning',
+      description:
+        `<b>&nbsp;` + "There is no expected Hours on this card. Do you still want to Continue." + `<b>`,
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.saveActivityLog(ticket, 0, 0);
+      } else {
+        this.goToBoard({ _id: this.processId, name: this.processName });
+      }
+    });
+  }
+
+  displayInsertError() {
+    this.common.params = {
+      title: 'Restriction Error',
+      description:
+        `<b>&nbsp;` + "There is no expected Hours on this card. Please add Expected time to start a work log." + `<b>`,
+      btn1: 'Ok'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      this.goToBoard({ _id: this.processId, name: this.processName });
+    });
+  }
+
+
   drop(event: CdkDragDrop<string[]>) {
     console.log("🚀 ~ file: kanban-board.component.ts ~ line 297 ~ KanbanBoardComponent ~ drop ~ event", event)
     let containerIdTemp = (event.container.id).toLowerCase();
@@ -328,7 +370,13 @@ export class KanbanBoardComponent implements OnInit {
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0, 0);
+        if (ticket['expected_hour_profile'] === 'warning' && !ticket['expected_hour']) {
+          this.getWarningConfirmFromUserForWorkLog(ticket);
+        } else if (ticket['userid'] == this.loggedInUser && ticket['expected_hour_profile'] === 'restricted' && !ticket['expected_hour']) {
+          this.displayInsertError();
+        } else {
+          this.saveActivityLog(ticket, 0, 0);
+        }
       }
 
 

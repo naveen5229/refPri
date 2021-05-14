@@ -410,7 +410,7 @@ export class TaskKanbanComponent implements OnInit {
     this.common.params = {
       title: 'Restriction Error',
       description:
-        `<b>&nbsp;` + "There is no expected Hours on this card. Please add Expected time to insert card." + `<b>`,
+        `<b>&nbsp;` + "There is no expected Hours on this card. Please add Expected time to start a work log." + `<b>`,
       btn1: 'Ok'
     };
     const activeModal = this.modalService.open(ConfirmComponent, {
