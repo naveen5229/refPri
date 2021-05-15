@@ -12,27 +12,44 @@
   </nb-card-header>
   <nb-card-body>
     <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-2">
+            <label>Start Date</label>
+          </div>
+          <div class="col-4">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="continuityDuration.startDate=($event)" [dateTimeValue]="continuityDuration.startDate" [isTime]="false"
+              [maxd]='today'>
+            </uj-date-time-picker>
+          </div>
+          <div class="col-2">
+            <label>End Date</label>
+          </div>
+          <div class="col-4">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="continuityDuration.endDate=($event)" [dateTimeValue]="continuityDuration.endDate" [isTime]="false"
+              [maxd]='today'>
+            </uj-date-time-picker>
+          </div>
+        </div>
+      </div>
       <div class="col-2">
-        <label>Select Date</label>
-      </div>
-      <div class="col-3">
-        <uj-date-time-picker style="z-index: 999;" (onChanged)="date=($event)" [dateTimeValue]="date" [isTime]="false"
-          [maxd]='today'>
-        </uj-date-time-picker>
-      </div>
-      <div class="col-3">
         <auto-suggestion (onSelected)="selectedDepartment = $event" [data]="departmentList" display="name" seperator="-"
           placeholder="Search Department" autocomplete="off" name="userId" inputId="userId"
           [preSelected]="selectedDepartment.id ? {name:selectedDepartment.name} : {name:''}">
         </auto-suggestion>
       </div>
-      <div class="col-4">
-        <button type="submit" id="submit" (click)="getContinuityReport()" class="btn btn-primary mr-2 btn-sm">Submit</button>
+      <div class="col-2">
+        <button type="submit" id="submit" (click)="getContinuityReport()"
+          class="btn btn-primary mr-2 btn-sm">Submit</button>
+      </div>
+      <div class="col-2 text-right">
+        <button class="btn btn-primary btn-sm mr-2" *ngIf="continuityReport && continuityReport.length>0"
+          (click)="exportCSV()" title="Download Excel"><i class="fas fa-download"></i></button>
       </div>
     </div>
     <div class="mt-1">
       <smart-table *ngIf="continuityReport && continuityReport.length>0" [data]="table.data" [settings]="table.settings"
-        id="entries"></smart-table>
+        id="continuityReport"></smart-table>
     </div>
   </nb-card-body>
 </nb-card>

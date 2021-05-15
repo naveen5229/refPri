@@ -113,8 +113,8 @@
               (click)="getUserPermission(state.data[0], 1,state.data[0]['log_start_time'],common.getDate())"><i
                 title="Pause" class="fas fa-pause-circle text-primary font-size-20 cursor-pointer"></i></span>
             <span *ngIf="!state.data[0]['log_start_time']"
-              (click)="saveActivityLog(state.data[0], 0,0,this.taskStatusBarData[0].data[0].reftype ? this.taskStatusBarData[0].data[0].reftype : 0,common.getDate(),null)"><i title="Play"
-                class="fas fa-play-circle text-primary font-size-20 cursor-pointer"></i></span>
+              (click)="saveActivityLog(state.data[0], 0,0,this.taskStatusBarData[0].data[0].reftype ? this.taskStatusBarData[0].data[0].reftype : 0,common.getDate(),null)"><i
+                title="Play" class="fas fa-play-circle text-primary font-size-20 cursor-pointer"></i></span>
           </div>
 
 
@@ -122,8 +122,8 @@
             (dblclick)="getGeneralTask($event)" (cdkDropListDropped)="drop($event);" [id]="state.id">
             <div class="row small ml-1 mr-1" *ngIf="!taskStatusBarData[0].data[0]">Drop your card here or double click
               for general task to start a worklog</div>
-            <div class="row inprocessCardStyle" *ngFor="let data of state.data" (click)="!data.reftype ? ticketMessage(data,null) : null"
-              cdkDrag>
+            <div class="row inprocessCardStyle" *ngFor="let data of state.data"
+              (click)="!data.reftype ? ticketMessage(data,null) : null" cdkDrag>
               <div class="col-12 text-left title">
                 <h5 [style.color]="data.type_color" title="{{data.title + '\n' + data._task_desc}}"
                   class="mb-0 cardTitleStyle">{{data.title}}</h5>
