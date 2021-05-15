@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../@core/mock/users.service';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { MapService } from '../../Service/map/map.service';
@@ -12,10 +13,9 @@ import { MapService } from '../../Service/map/map.service';
 })
 export class ContinuityReportComponent implements OnInit {
   departmentList = [];
-  date = new Date();
   today = new Date();
   continuityReport = [];
-  selectedDepartment = { id: -1, name: 'All' }
+  selectedDepartment = { id: null, name: null }
 
   table = {
     data: {
@@ -27,6 +27,10 @@ export class ContinuityReportComponent implements OnInit {
     }
   };
   headingForCsv = {};
+  continuityDuration = {
+    startDate: <any>this.common.getDate(-2),
+    endDate: <any>this.common.getDate(),
+  };
 
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
@@ -39,8 +43,6 @@ export class ContinuityReportComponent implements OnInit {
 
   refresh() {
     this.getDepartmentList();
-    this.getContinuityReport();
-    this.selectedDepartment = { id: -1, name: 'All' }
   }
 
   getDepartmentList() {
@@ -50,7 +52,8 @@ export class ContinuityReportComponent implements OnInit {
         if (res["code"] > 0) {
           let departmentList = res["data"] || [];
           this.departmentList = departmentList.map(department => { return { id: department.id, name: department.name } });
-          this.departmentList.splice(0, 0, { id: -1, name: 'All' });
+          this.selectedDepartment = departmentList[0];
+          this.getContinuityReport();
         } else {
           this.common.showError(res["msg"]);
         }
@@ -63,8 +66,9 @@ export class ContinuityReportComponent implements OnInit {
   }
 
   getContinuityReport() {
-    let date = this.common.dateFormatter(this.date);
-    const params = '?date=' + date + '&deptId=' + this.selectedDepartment.id;
+    let startDate = this.common.dateFormatter(this.continuityDuration.startDate);
+    let endDate = this.common.dateFormatter(this.continuityDuration.endDate);
+    const params = '?startDate=' + startDate + '&endDate=' + endDate + '&deptId=' + this.selectedDepartment.id;
     console.log(params);
     this.common.loading++;
     this.api.get('Admin/getContinuityReport' + params)
@@ -133,7 +137,7 @@ export class ContinuityReportComponent implements OnInit {
             value: "",
             isHTML: true,
             action: null,
-            // icons: this.actionIcons(inventory)
+            icons: this.actionIcons(shift)
           };
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
@@ -144,6 +148,33 @@ export class ContinuityReportComponent implements OnInit {
     console.log(columns);
     return columns;
 
+  }
+
+  actionIcons(shift) {
+    let icons = [];
+    icons.push({ class: "fas fa-info-circle", action: this.checkDetail.bind(this, shift), txt: "", title: "Detail", });
+    return icons;
+  }
+
+  checkDetail(shift) {
+    let date = new Date(shift.date);
+    let dataparams = {
+      view: {
+        api: 'Admin/getContinuityReport',
+        param: {
+          startDate: this.common.dateFormatter(date),
+          endDate: this.common.dateFormatter(date),
+          deptId: this.selectedDepartment.id,
+          isDetail: 1,
+          userId: shift._id
+        }
+      },
+      title: `Log Detail `,
+      // type: "transtruck"
+    }
+    // this.common.handleModalSize('class', 'modal-lg', '1100');
+    this.common.params = { data: dataparams };
+    const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   exportCSV() {

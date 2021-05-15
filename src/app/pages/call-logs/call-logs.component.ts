@@ -13,7 +13,6 @@ import { MapService } from '../../Service/map/map.service';
 })
 export class CallLogsComponent implements OnInit {
   callLogList: any;
-  date = new Date();
   today = new Date();
   adminList = [];
   userListForRM = [];
@@ -31,6 +30,10 @@ export class CallLogsComponent implements OnInit {
   };
 
   headingForCsv = {};
+  callLogsDuration = {
+    startDate: <any>this.common.getDate(-2),
+    endDate: <any>this.common.getDate(),
+  };
 
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
@@ -95,8 +98,10 @@ export class CallLogsComponent implements OnInit {
       }
     };
 
-    let date = this.common.dateFormatternew(this.date);
-    const params = '?Date=' + date + '&aduserId=' + this.activeLogs.id;
+    let startDate = this.common.dateFormatter(this.callLogsDuration.startDate);
+    let endDate = this.common.dateFormatter(this.callLogsDuration.endDate);
+    // const params = '?Date=' + startDate + '&aduserId=' + this.activeLogs.id;
+    const params = '?startDate=' + startDate + '&endDate=' + endDate + '&aduserId=' + this.activeLogs.id;
     console.log(params);
     this.common.loading++;
     this.api.get('UserCallLogs/getUserCallLog' + params)
