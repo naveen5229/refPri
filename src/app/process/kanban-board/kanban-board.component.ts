@@ -905,7 +905,8 @@ export class KanbanBoardComponent implements OnInit {
     const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
       if (data.response) {
-        ticket.expected_hour = data.expectedHour;
+        // ticket.expected_hour = data.expectedHour;
+        this.goToBoard({ _id: this.processId, name: this.processName });
       }
     });
   }
