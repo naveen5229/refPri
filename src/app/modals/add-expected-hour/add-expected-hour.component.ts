@@ -71,7 +71,7 @@ export class AddExpectedHourComponent implements OnInit {
       return false;
     }
 
-    return console.log('params', params);
+    // return console.log('params', params);
     this.common.loading++;
     this.api.post('Admin/saveUserExpectedHour', params)
       .subscribe(res => {
