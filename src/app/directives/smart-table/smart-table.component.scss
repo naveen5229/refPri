@@ -2,6 +2,7 @@
 table.fixed {
     table-layout: fixed;
     font-size: 12px;
+    margin-bottom: 2px;
 }
 
 .table>tbody>tr>td,
@@ -197,7 +198,8 @@ tbody tr:nth-child(even) {
     width: 60px;
     border: 1px solid #b5b9b9;
     color: #007bff;
-    height: 20px!important;
+    height: 15px !important;
+    padding: 0 6px!important;
 }
 
 .action-box {

@@ -134,7 +134,8 @@ export class AssignFieldsComponent implements OnInit {
       refType: this.refType,
       info: JSON.stringify(this.assignOrder()),
     }
-    // console.log("Params", params)
+    // console.log("Params", params);
+    // return;
     this.common.loading++;
     this.api.post(apiBase, params)
       .subscribe(res => {

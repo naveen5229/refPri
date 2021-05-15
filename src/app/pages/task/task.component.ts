@@ -225,7 +225,7 @@ export class TaskComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getProcessTicketCount();
-    this.getTodoTaskList(0);
+    // this.getTodoTaskList(0);
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -241,7 +241,7 @@ export class TaskComponent implements OnInit {
     this.getDepartmentList();
     this.getUserGroupList();
     this.getProcessTicketCount();
-    this.getTodoTaskList(0);
+    // this.getTodoTaskList(0);
   }
 
   resetSearchTask() {
@@ -2569,7 +2569,7 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            if(type===-8){
+            if(type===-8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)){
               let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
               if (ticket._cc_user_id && !ticket._cc_status) {
                 activeRowData._cc_status = 1;
@@ -2612,7 +2612,7 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            if(type===-8){
+            if(type===-8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)){
               let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
               if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
                 activeRowData._pu_status = 1;
