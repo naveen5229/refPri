@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
   //     userType: userTypeId
   //   };
   //   console.log(params);
-  //   this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
+  //   this.api.get('UserRole/getUserPages.json?adminId=' + this.user.loggedInUser.id)
   //     .subscribe(res => {
   //       if(res['code']===0) { this.common.showError(res['msg']); return false;};
   //       this.user._pages = res['data'].filter(page => { return page._userid; });

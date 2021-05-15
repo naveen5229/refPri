@@ -62,9 +62,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     else {
 
       this.userLogin = this.userService._details.name || [];
-      console.log("----------------", this.userLogin);
+      console.log("----------------", this.userLogin,this.userService.loggedInUser);
       this.getUserPresence();
-      if (this.userService._details) {
+      if (this.userService.loggedInUser) {
         this.getUserPagesList();
       }
     }
@@ -205,9 +205,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if(fouser && fouser.foid>0){
       localStorage.setItem('FO_USER_DETAILS', JSON.stringify(fouser));
       this.userService._fouser = fouser;
+      this.userService.loggedInUser = {id: fouser.id, name: fouser.name};
       this.closeFoadminSearchModal();
       if (this.userService._details) {
-        this.getUserPagesList();
+        this.getUserPagesList(1);
+        this.getUserPresence();
       }
       this.common.refresh();
     }
@@ -215,20 +217,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   gotoAdmin(){
     this.userService._fouser = null;
+    this.userService.loggedInUser = {id: this.userService._details.id, name: this.userService._details.name};
     localStorage.removeItem('FO_USER_DETAILS');
     if (this.userService._details) {
-      this.getUserPagesList();
+      this.getUserPagesList(1);
+      this.getUserPresence();
     }
     this.common.refresh();
   }
 
-  getUserPagesList() {
-    this.api.get('UserRole/getUserPages.json?adminId=' + this.userService._details.id)
+  getUserPagesList(type=0) {
+    this.api.get('UserRole/getUserPages.json?adminId=' + this.userService.loggedInUser.id)
       .subscribe(res => {
         if(res['code']===1) {
           this.userService._pages = res['data'].filter(page => { return page._userid; });
           localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.userService._pages));
           this.userService.filterMenu("pages", "pages");
+          if(type==1){
+            this.router.navigate(['/pages/task']);
+          }
         }else{
           this.common.showError(res['msg']);
         }

@@ -207,7 +207,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
     let params = {
       date: this.common.dateFormatter(this.broadcast.endDate),
-      to: this.userService._details.id,
+      to: this.userService.loggedInUser.id,
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,
       desc: this.broadcast.desc,

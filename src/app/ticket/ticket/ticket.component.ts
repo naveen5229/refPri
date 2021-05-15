@@ -21,7 +21,7 @@ import { LocationSelectionComponent } from '../../modals/location-selection/loca
 })
 export class TicketComponent implements OnInit {
   ticketDetailTitle = 'Ticket Info';
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   activeTab = 'allocatedTkt';
   activeSabTab = 0;
   adminList = [];

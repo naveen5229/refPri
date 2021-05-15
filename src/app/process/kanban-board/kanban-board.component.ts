@@ -62,7 +62,7 @@ export class KanbanBoardComponent implements OnInit {
     this.getProcessListByUser();
     this.getAllAdmin();
     this.common.refresh = this.refresh.bind(this);
-    this.loggedInUser = this.userService._details.id;
+    this.loggedInUser = this.userService.loggedInUser.id;
   }
 
   ngOnInit() {
@@ -408,7 +408,7 @@ export class KanbanBoardComponent implements OnInit {
       actionName: (lead._action_id > 0) ? lead._action_name : '',
       stateId: (lead._state_id > 0) ? lead._state_id : null,
       stateName: (lead._state_id > 0) ? lead._state_name : '',
-      actionOwnerId: this.userService._details.id, //current user
+      actionOwnerId: this.userService.loggedInUser.id, //current user
       modeId: (lead._mode_id > 0) ? lead._mode_id : null,
       modeName: (lead._mode_id > 0) ? lead._mode_name : '',
       remark: (lead._remark) ? lead._remark : null,
@@ -653,7 +653,7 @@ export class KanbanBoardComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return this.userService._details.id === data.userid
+            return this.userService.loggedInUser.id === data.userid
           })
         }
       });

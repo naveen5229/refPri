@@ -49,7 +49,7 @@ export class TaskMessageComponent implements OnInit {
   messageList = [];
   messageListShow = [];
   showLoading = true;
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   lastMsgId = 0;
   lastSeenId = 0;
   lastSeenIdForView = 0; //only for view not update it
@@ -445,7 +445,7 @@ export class TaskMessageComponent implements OnInit {
       accessUsers.push(this.userListByTask['taskUsers'][0]._po_id);
     }
 
-    if (!this.userListByTask['taskUsers'] || !accessUsers.includes(this.userService._details.id)) {
+    if (!this.userListByTask['taskUsers'] || !accessUsers.includes(this.userService.loggedInUser.id)) {
       this.common.showError("Not a valid user");
       return false;
     }
@@ -490,7 +490,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   removeCCUserWithConfirm(ccUserId, ccUserName) {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id, ccUserId].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id, ccUserId].includes(this.userService.loggedInUser.id)) {
       this.common.params = {
         title: 'Remove CC User',
         description: '<b>Are You Sure To remove CC-user from This Task' + `<b>`,
@@ -648,7 +648,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(status) {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
       let preTitle = "Complete";
       if (status == 3) {
         preTitle = "Hold";
@@ -682,7 +682,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   checkReminderSeen() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
       let params = {
         ticket_id: this.ticketData._tktid
       };
@@ -702,7 +702,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   editTaskAssignDate() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
       this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {

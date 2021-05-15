@@ -88,7 +88,7 @@ export class TaskKanbanComponent implements OnInit {
     this.getUserGroupList();
     this.getDepartmentList();
     this.common.refresh = this.refresh.bind(this);
-    this.loggedInUser = this.userService._details.id;
+    this.loggedInUser = this.userService.loggedInUser.id;
   }
 
   ngOnInit() {
@@ -493,7 +493,7 @@ export class TaskKanbanComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return this.userService._details.id === data.userid
+            return this.userService.loggedInUser.id === data.userid
           })
         }
       });

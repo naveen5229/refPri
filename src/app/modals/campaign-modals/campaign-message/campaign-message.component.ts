@@ -23,7 +23,7 @@ export class CampaignMessageComponent implements OnInit {
   statusId = 0;
   messageList = [];
   showLoading = true;
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   lastMsgId = 0;
   lastSeenId = 0;
   userListByTask = [];

@@ -87,8 +87,8 @@ export class AdminKanbanComponent implements OnInit {
       this.getProjectList();
       this.getAllAdmin();
       this.common.refresh = this.refresh.bind(this);
-      this.loggedInUser = this.userService._details.id;
-      this.user = {_id:this.userService._details.id,name:this.userService._details.name};
+      this.loggedInUser = this.userService.loggedInUser.id;
+      this.user = {_id:this.userService.loggedInUser.id,name:this.userService.loggedInUser.name};
       this.goToBoard(this.user,0,null)
     }
   
@@ -486,7 +486,7 @@ export class AdminKanbanComponent implements OnInit {
         cardsForFilter.forEach(element => {
           if (element.data) {
             element.data = element.data.filter(data => {
-              return this.userService._details.id === data.userid
+              return this.userService.loggedInUser.id === data.userid
             })
           }
         });

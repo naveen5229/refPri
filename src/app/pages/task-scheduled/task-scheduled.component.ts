@@ -798,7 +798,7 @@ export class TaskScheduledComponent implements OnInit {
       ];
     }
     if ((ticket._status == 5 || ticket._status == -1)) {
-      if (type == -2 && ticket._aduserid == this.userService._details.id) {
+      if (type == -2 && ticket._aduserid == this.userService.loggedInUser.id) {
         icons.push({ class: "fa fa-retweet", action: this.reactiveTicket.bind(this, ticket, type), txt: '' });
       }
     } else {

@@ -20,7 +20,7 @@ import { CsvUploadComponent } from '../../modals/csv-upload/csv-upload.component
   styleUrls: ['./my-process.component.scss']
 })
 export class MyProcessComponent implements OnInit {
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   activeSabTab = 0;
   activeSabTab1 = 0;
   activeTab = 'leadsForMe';
@@ -1351,10 +1351,10 @@ export class MyProcessComponent implements OnInit {
       apiBase = "Processes/updateLeadPrimaryOwner";
       params = {
         leadId: lead._transactionid,
-        assigneeUserId: this.userService._details.id,
+        assigneeUserId: this.userService.loggedInUser.id,
         isCCUpdate: 0,
         assigneeUserNameOld: null,
-        assigneeUserNameNew: this.userService._details.name,
+        assigneeUserNameNew: this.userService.loggedInUser.name,
         isClaim: 1
       }
     } else {
@@ -1362,8 +1362,8 @@ export class MyProcessComponent implements OnInit {
       params = {
         transId: lead._transactionid,
         transActionId: lead._trans_action_id,
-        actionOwnerId: this.userService._details.id,
-        actionOwnerName: this.userService._details.name,
+        actionOwnerId: this.userService.loggedInUser.id,
+        actionOwnerName: this.userService.loggedInUser.name,
         actionOwnerNameOld: null,
         isClaim: 1
       }

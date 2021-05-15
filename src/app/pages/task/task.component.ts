@@ -540,7 +540,7 @@ export class TaskComponent implements OnInit {
       // if ((ticket._status == 5 || ticket._status == -1) && ticket._close_form > 0) {
       //   icons.push({ class: "fas fa-plus-square text-primary", action: this.openInfoModal.bind(this, ticket, type, 1), title: "Form Matrix Detail" })
       // }
-      if (ticket._allocated_user == this.userService._details.id && ticket._status == 2 && ticket._check_status > 0) {
+      if (ticket._allocated_user == this.userService.loggedInUser.id && ticket._status == 2 && ticket._check_status > 0) {
         icons.push({ class: "fas fa-clipboard-check", action: this.openCheckStatusModal.bind(this, ticket, type), txt: "", title: "Check Status", });
       }
 
@@ -562,7 +562,7 @@ export class TaskComponent implements OnInit {
       //   icons.push({ class: "fas fa-user-clock", action: this.addTime.bind(this, ticket, type), txt: '', title: "Add Extra Time" });
       // }
 
-      if (ticket._allocated_user == this.userService._details.id) {
+      if (ticket._allocated_user == this.userService.loggedInUser.id) {
         if (!ticket._status) {
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirmUnread.bind(this, ticket, type, -1), txt: "", title: "Mark Rejected", });
           icons.push({ class: "fa fa-check-square text-warning", action: this.changeTicketStatusWithConfirmUnread.bind(this, ticket, type, 2), txt: "", title: "Mark Ack", });
@@ -1220,7 +1220,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: ([101, 102].includes(ticket._tktype) && (!ticket['_reply_demanded'] || ticket['_assignee_user_id'] == this.userService._details.id))
+            action: ([101, 102].includes(ticket._tktype) && (!ticket['_reply_demanded'] || ticket['_assignee_user_id'] == this.userService.loggedInUser.id))
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -1763,8 +1763,8 @@ export class TaskComponent implements OnInit {
         if (ticket._tktype == 103 && ticket._status == 0) {
           column["style"] = { background: "pink" };
         } else if (
-          ticket._assignee_user_id == this.userService._details.id ||
-          ticket._assigned_user_id == this.userService._details.id
+          ticket._assignee_user_id == this.userService.loggedInUser.id ||
+          ticket._assigned_user_id == this.userService.loggedInUser.id
         ) {
           column["style"] = {
             background: this.common.taskStatusBg(ticket._status),
@@ -1848,7 +1848,7 @@ export class TaskComponent implements OnInit {
     } else if (type == 101 || type == 103 || type == -102) {
 
       if (ticket._status == 5 || ticket._status == -1) {
-        if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) && (ticket._status == -1 || ticket._assigned_user_id != this.userService._details.id)) {
+        if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) && (ticket._status == -1 || ticket._assigned_user_id != this.userService.loggedInUser.id)) {
 
         } else {
           icons.push({
@@ -1923,7 +1923,7 @@ export class TaskComponent implements OnInit {
     } else if (type == -8) {
       if (
         ticket._status == 0 &&
-        ticket._assignee_user_id == this.userService._details.id
+        ticket._assignee_user_id == this.userService.loggedInUser.id
       ) {
         icons.push({
           class: "fa fa-check-square text-warning",
@@ -1937,7 +1937,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Rejected",
         });
-      } else if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) {
+      } else if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id
+      ) {
         icons.push({
           class: "fa fa-check-square text-warning",
           action: this.ackTaskByAssignerBehalf.bind(this, ticket, type),
@@ -1964,7 +1965,7 @@ export class TaskComponent implements OnInit {
           title: "Mark Ack as Project Task",
         });
       } else if (ticket._status == 5) {
-        if (ticket._assigned_user_id == this.userService._details.id) {
+        if (ticket._assigned_user_id == this.userService.loggedInUser.id) {
           icons.push({
             class: "fa fa-retweet",
             action: this.reactiveTicket.bind(this, ticket, type),
@@ -2273,7 +2274,7 @@ export class TaskComponent implements OnInit {
           if(ticket._unreadcount>0){
             activeRowData._unreadcount = 0;
           }
-          if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1 || ticket._is_star_mark==1){
+          if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1){
             
           }else{
             this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
@@ -2574,7 +2575,7 @@ export class TaskComponent implements OnInit {
               if (ticket._cc_user_id && !ticket._cc_status) {
                 activeRowData._cc_status = 1;
               }
-              if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || ([101,102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status)){
+              if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || ([101,102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status)){
                 
               }else{
                 this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
@@ -2617,7 +2618,7 @@ export class TaskComponent implements OnInit {
               if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
                 activeRowData._pu_status = 1;
               }
-              if((ticket._status == 0 && ticket._assignee_user_id == this.userService._details.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService._details.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || (ticket._cc_user_id && !ticket._cc_status)){
+              if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || (ticket._cc_user_id && !ticket._cc_status)){
                 
               }else{
                 this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
