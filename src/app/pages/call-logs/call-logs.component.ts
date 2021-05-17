@@ -5,6 +5,7 @@ import { AddentityfieldsComponent } from '../../modals/addentityfields/addentity
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { MapService } from '../../Service/map/map.service';
+import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 
 @Component({
   selector: 'ngx-call-logs',
@@ -34,6 +35,23 @@ export class CallLogsComponent implements OnInit {
     startDate: <any>this.common.getDate(-2),
     endDate: <any>this.common.getDate(),
   };
+
+  compliancereport = {
+    date: new Date(),
+    complianceData: []
+  }
+
+  compliancetable = {
+    data: {
+      headings: {},
+      columns: []
+    },
+    settings: {
+      hideHeader: true
+    }
+  };
+
+  headingForCsvCompliance = {};
 
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
@@ -210,7 +228,104 @@ export class CallLogsComponent implements OnInit {
     });
   }
 
-  exportCSV() {
-    this.common.getCSVFromDataArray(this.callLogList, this.headingForCsv, `Call Logs ${this.activeLogs.name}`)
+  exportCSV(toExport) {
+    if (toExport == 1) {
+      this.common.getCSVFromDataArray(this.callLogList, this.headingForCsv, `Call Logs ${this.activeLogs.name}`)
+    } else if (toExport == 2) {
+      this.common.getCSVFromDataArray(this.compliancereport.complianceData, this.headingForCsvCompliance, `Compliance Report`)
+    }
   }
+
+  resetComplianceTable() {
+    this.compliancetable.data = {
+      headings: {},
+      columns: []
+    };
+  }
+
+  closecomplianceReport() {
+    document.getElementById('complianceReport').style.display = 'none';
+  }
+
+  openComplianceReportModal() {
+    document.getElementById('complianceReport').style.display = 'block';
+    this.getComplianceReport();
+  }
+
+  getComplianceReport() {
+    let params = `?date=${this.common.dateFormatter(this.compliancereport.date)}`;
+    this.common.loading++;
+    this.api.get("Entities/getEntityCompilance" + params).subscribe(
+      (res) => {
+        console.log("data", res["data"]);
+        this.common.loading--;
+        if (res["code"] > 0) {
+          this.compliancereport.complianceData = res["data"] || [];
+          (this.compliancereport.complianceData && this.compliancereport.complianceData.length > 0) ? this.setComplianceTable() : this.resetComplianceTable();
+          console.log(this.compliancereport.complianceData)
+        } else {
+          this.common.showError(res["msg"]);
+        }
+      },
+      (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
+  }
+
+  setComplianceTable() {
+    this.compliancetable.data = {
+      headings: this.generateComplianceTableHeadings(),
+      columns: this.getTableComplianceTableColumns()
+    };
+    return true;
+  }
+
+  generateComplianceTableHeadings() {
+    let headings = {};
+    for (var key in this.compliancereport.complianceData[0]) {
+      console.log(key.charAt(0));
+
+      if (key.charAt(0) != "_") {
+        headings[key] = { title: key, placeholder: this.formatComplianceTableTitle(key) };
+      }
+    }
+    this.headingForCsvCompliance = headings;
+    return headings;
+  }
+
+  formatComplianceTableTitle(strval) {
+    let pos = strval.indexOf('_');
+    if (pos > 0) {
+      return strval.toLowerCase().split('_').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+    } else {
+      return strval.charAt(0).toUpperCase() + strval.substr(1);
+    }
+  }
+
+
+  getTableComplianceTableColumns() {
+    let columns = [];
+    this.compliancereport.complianceData.map(shift => {
+      let column = {};
+      for (let key in this.generateComplianceTableHeadings()) {
+        if (key == 'Action' || key == 'action') {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            // icons: this.actionIcons(inventory)
+          };
+        } else {
+          column[key] = { value: shift[key], class: 'black', action: '' };
+        }
+      }
+      columns.push(column);
+    });
+    console.log(columns);
+    return columns;
+  }
+
 }

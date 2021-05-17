@@ -109,6 +109,17 @@ export class SettingsComponent implements OnInit {
         this.common.loading--;
         if (res["code"] > 0) {
           this.allSettings = res["data"] || [];
+          if (type == 2) {
+            this.allSettings.forEach(setting => {
+              if (setting.data && setting.data.length > 0) {
+                setting.data.map(data => {
+                  if (data.profile_name === 'Completed' && data.profile_value) {
+                    data.profile_value = parseInt(data.profile_value.trim());
+                  }
+                })
+              }
+            })
+          }
           console.log('loadedSettings', this.allSettings)
         } else {
           this.common.showError(res["msg"]);
