@@ -18,6 +18,7 @@ export class AddTransactionContactComponent implements OnInit {
     mobile: null,
     address: '',
     email: null,
+    association: null,
     transId: null
   }
 
@@ -221,6 +222,7 @@ export class AddTransactionContactComponent implements OnInit {
       name: this.contactForm.name,
       mobileno: this.contactForm.mobile,
       email: this.contactForm.email,
+      association: this.contactForm.association,
       ticketId: null
     };
     let apiName = "Processes/addTransactionContact";
@@ -254,7 +256,8 @@ export class AddTransactionContactComponent implements OnInit {
   reserForm() {
     this.contactForm.name = "";
     this.contactForm.mobile = null;
-    this.contactForm.email = null
+    this.contactForm.email = null;
+    this.contactForm.association = null;
   }
 
 }
