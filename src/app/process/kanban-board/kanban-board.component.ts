@@ -677,6 +677,8 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   getFilteredCard(searchedKey) {
+    let keyToSearch = (searchedKey.trim()).toLowerCase();
+    console.log(keyToSearch)
     if (!searchedKey.length) {
       this.cards = this.cardsForFilter;
     } else {
@@ -684,7 +686,7 @@ export class KanbanBoardComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return (data.title.toLowerCase()).match(searchedKey) || (data.type.toLowerCase()).match(searchedKey) || (data.desc.toLowerCase()).match(searchedKey)
+            return (data.title && (data.title.toLowerCase()).match(keyToSearch)) || (data.type && (data.type.toLowerCase() === keyToSearch)) || (data.desc && (data.desc.toLowerCase()).match(keyToSearch))
           })
         }
       });
