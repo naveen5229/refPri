@@ -34,8 +34,10 @@ export class UserService {
     if(localStorage.getItem('FO_USER_DETAILS')){
       this._fouser = JSON.parse(localStorage.getItem('FO_USER_DETAILS'));
     }
-    this.loggedInUser.id = (this._fouser && this._fouser.id>0) ? this._fouser.id : this._details.id;
-    this.loggedInUser.name = (this._fouser && this._fouser.id>0) ? this._fouser.name : this._details.name;
+    if(this._fouser || this._details){
+      this.loggedInUser.id = (this._fouser && this._fouser.id>0) ? this._fouser.id : this._details.id;
+      this.loggedInUser.name = (this._fouser && this._fouser.id>0) ? this._fouser.name : this._details.name;
+    }
 
     if (this._token && !this._loggedInBy) {
       this.reset();
