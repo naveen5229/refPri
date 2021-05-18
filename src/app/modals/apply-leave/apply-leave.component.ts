@@ -46,6 +46,20 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
   ];
 
+  meetingForm = {
+    subject: null,
+    desc: null,
+    cc: [],
+    roomId: null,
+    type: 0,
+    link: null,
+    hostId: null,
+    time: this.common.getDate(2),
+    duration: null,
+    buzz: false
+  }
+  meetingRoomList = [];
+
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
@@ -218,6 +232,67 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.common.loading++;
     this.api.post('AdminTask/addBroadcast', params).subscribe(res => {
       console.log(res);
+      this.common.loading--;
+      if (res['code'] === 1) {
+        if (res['data'][0]['y_id'] > 0) {
+          this.common.showToast(res['data'][0].y_msg);
+          this.closeModal(true);
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+    })
+  }
+
+  addMeeting(){
+    if (!this.meetingForm.subject) {
+      return this.common.showError("Subject is missing");
+    }
+    if (!this.meetingForm.time) {
+      return this.common.showError("Meeting time is missing");
+    } else if (this.meetingForm.time && this.meetingForm.time < this.common.getDate()) {
+      return this.common.showError("Meeting time must be Current/future date");
+    } else if (!this.meetingForm.duration) {
+      return this.common.showError("Meeting duration is missing");
+    } else if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
+      return this.common.showError("User is missing");
+    } else if (!this.meetingForm.hostId) {
+      return this.common.showError("Host user is missing");
+    } else if (this.meetingForm.type==1 && !this.meetingForm.link) {
+      return this.common.showError("Online meeting link is missing");
+    }
+
+    let CC = [];
+    if (this.meetingForm.cc) {
+      this.meetingForm.cc.map(ele => {
+        if (ele.groupId != null) {
+          ele.groupuser.forEach(x2 => {
+            CC.push({ user_id: x2._id });
+          })
+        } else {
+          CC.push({ user_id: ele.id });
+        }
+      })
+    }
+
+    let params = {
+      subject: this.meetingForm.subject,
+      desc: this.meetingForm.desc,
+      roomId: this.meetingForm.roomId,
+      host: this.meetingForm.hostId,
+      cc: JSON.stringify(CC),
+      type: this.meetingForm.type,
+      time: this.common.dateFormatter(this.meetingForm.time),
+      duration: this.common.dateFormatter(this.meetingForm.duration),
+      buzz: this.meetingForm.buzz
+    }
+    this.common.loading++;
+    this.api.post('Admin/saveMeetingDetail', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] === 1) {
         if (res['data'][0]['y_id'] > 0) {

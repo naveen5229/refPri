@@ -118,7 +118,7 @@
             <label>Description:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Task" id="broadCastDesc" name="broadCastDesc" class="form-control" [(ngModel)]="broadcast.desc"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Description" id="broadCastDesc" name="broadCastDesc" class="form-control" [(ngModel)]="broadcast.desc"></textarea>
         </div>
     </div>
 
@@ -156,3 +156,110 @@
         </div>
     </div>
 </div>
+<!-- end:broadcast -->
+<!-- start:meeting -->
+<div class="modal-body" *ngIf="formType==2">
+    <div class="row">
+        <div class="col-4">
+            <label>Subject<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input id="meetingSub" name="meetingSub" placeholder="Enter Subject" class="form-control" maxlength="50" [(ngModel)]="meetingForm.subject">
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Details:</label>
+        </div>
+        <div class="col-6">
+            <textarea id="meetingDesc" name="meetingDesc" row="2" cols="15" placeholder="Enter Details" class="form-control" [(ngModel)]="meetingForm.desc"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Users:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users" (onSelected)="meetingForm.cc = $event" inputId="meetingFormUsers" name="meetingFormUsers" [preSelected]="meetingForm.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Select Room:</label>
+        </div>
+        <div class="col-6">
+            <select [(ngModel)]="meetingForm.roomId">
+                <option value="">Seelct Room</option>
+                <option *ngFor="let room of meetingRoomList" [value]="room.id">{{g.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Meeting Type:</label>
+        </div>
+        <div class="col-6">
+            <select [(ngModel)]="meetingForm.type">
+                <option value="0">Offline</option>
+                <option value="1">Online</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Link:</label>
+        </div>
+        <div class="col-6">
+            <input id="meetingLink" name="meetingLink" placeholder="Enter Link" [(ngModel)]="meetingForm.link" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Host:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User" (onSelected)="meetingForm.hostId = $event" inputId="meetinghost" name="meetinghost" [preSelected]="meetingForm.hostId"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Meeting Time:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="meetingForm.time=$event" [dateTimeValue]="meetingForm.time">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Meeting Duration:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true" (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Buzz:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="meetingForm.buzz" (change)="meetingForm.buzz = !meetingForm.buzz" />
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="addMeetingBtn" (click)="addMeeting()">{{btn}}</button>
+        </div>
+    </div>
+</div>
+<!-- end:meeting -->

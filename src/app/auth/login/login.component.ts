@@ -136,7 +136,7 @@ export class LoginComponent implements OnInit {
       this.otpCount = 0;
       this.formSubmit = false;
       this.qrCode = null;
-    }, 120000);
+    }, 40000);
     this.interval = setInterval(() => {
       this.login();
     }, 5000);
