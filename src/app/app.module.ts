@@ -121,6 +121,7 @@ import { EntityFormComponent } from './modals/entity-form/entity-form.component'
 import { PdfVersioningComponent } from './modals/process-modals/pdf-versioning/pdf-versioning.component';
 import { AddentityfieldsComponent } from './modals/addentityfields/addentityfields.component';
 import { AddExpectedHourComponent } from './modals/add-expected-hour/add-expected-hour.component';
+import { FunctionalReportingMappingComponent } from './modals/functional-reporting-mapping/functional-reporting-mapping.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -209,7 +210,8 @@ const PAGE_COMPONENTS = [
   EntityFormComponent,
   PdfVersioningComponent,
   AddentityfieldsComponent,
-  AddExpectedHourComponent
+  AddExpectedHourComponent,
+  FunctionalReportingMappingComponent
 ];
 
 @NgModule({

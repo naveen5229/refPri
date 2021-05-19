@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h5>{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container">
+    <div class="row">
+      <div class="col-4" style="display: flex;">
+        <label>Name<span class="text-danger">*</span></label>
+        <auto-suggestion class="ml-2" (onSelected)="reportingForm.user=$event" [data]="activeAdminUserList"
+          display="name" seperator="-" placeholder="Select User" autocomplete="off" name="functionalReporting"
+          inputId="functionalReportingId">
+        </auto-suggestion>
+      </div>
+      <div class="col-4">
+        <label>Type</label>
+        <select class="ml-2" [(ngModel)]="reportingForm.type.id">
+          <option *ngFor="let type of reportingTypeList" [value]="type.id">{{type.name}}</option>
+        </select>
+      </div>
+      <div class="col-4 text-right">
+        <button class="btn btn-primary btn-sm" type='submit' (click)="addReporting()">{{button}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div class="row">
+    <div class="tabs_style_main">
+      <ul class="tabs_style text-left">
+        <li [ngClass]="reportingForm.funtionalUsertype==0?'active':''" (click)="reportingForm.funtionalUsertype=0; getAllReporters(1)">
+          Reporting User
+        </li>
+        <li [ngClass]="reportingForm.funtionalUsertype==1?'active':''" (click)="reportingForm.funtionalUsertype=1; getAllReporters(0)">
+          Reporter
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <smart-table [data]="table.data" [settings]="table.settings">
+      </smart-table>
+    </div>
+  </div>
+
+</div>

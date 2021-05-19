@@ -15,7 +15,7 @@ import { GenericModelComponent } from '../../modals/generic-model/generic-model.
 export class CallLogsComponent implements OnInit {
   callLogList: any;
   today = new Date();
-  adminList = [];
+  reporterList = [];
   userListForRM = [];
   loggedInUser = null;
   activeLogs = { id: null, name: null };
@@ -60,7 +60,8 @@ export class CallLogsComponent implements OnInit {
     this.activeLogs = { id: this.loggedInUser.id, name: this.loggedInUser.name };
     this.common.refresh = this.refresh.bind(this);
     this.getCallLogs();
-    this.getAllAdmin();
+    this.getReporters();
+    // this.getAllAdmin();
   }
 
   ngOnInit() {
@@ -68,23 +69,44 @@ export class CallLogsComponent implements OnInit {
 
   refresh() {
     this.getCallLogs();
-    this.getAllAdmin();
+    this.getReporters();
+    // this.getAllAdmin();
   }
 
-  getAllAdmin() {
-    this.api.get("Admin/getAllAdmin.json").subscribe(
+  // getAllAdmin() {
+  //   this.api.get("Admin/getAllAdmin.json").subscribe(
+  //     (res) => {
+  //       console.log("data", res["data"]);
+  //       if (res["code"] > 0) {
+  //         let reporterList = res["data"] || [];
+  //         this.filterUserForRM(reporterList);
+  //         this.reporterList = reporterList.map((x) => {
+  //           return { id: x.id, name: x.name + " - " + x.department_name };
+  //         });
+  //       } else {
+  //         this.common.showError(res["msg"]);
+  //       }
+  //       console.log('reporterList', this.reporterList)
+  //     },
+  //     (err) => {
+  //       this.common.showError();
+  //       console.log("Error: ", err);
+  //     }
+  //   );
+  // }
+
+  getReporters() {
+    let params = `?userId=${this.loggedInUser.id}`;
+    this.api.get("Admin/getAllReporter"+params).subscribe(
       (res) => {
         console.log("data", res["data"]);
         if (res["code"] > 0) {
-          let adminList = res["data"] || [];
-          this.filterUserForRM(adminList);
-          this.adminList = adminList.map((x) => {
-            return { id: x.id, name: x.name + " - " + x.department_name };
-          });
+          let reporterList = res["data"] || [];
+          this.reporterList = reporterList;
         } else {
           this.common.showError(res["msg"]);
         }
-        console.log('adminList', this.adminList)
+        console.log('reporterList', this.reporterList)
       },
       (err) => {
         this.common.showError();
@@ -93,16 +115,16 @@ export class CallLogsComponent implements OnInit {
     );
   }
 
-  filterUserForRM(adminList) {
-    let userListForRM = adminList.filter(users => {
-      return this.loggedInUser.id === users._reporting_user_id;
-    });
-    this.userListForRM = userListForRM.map(user => { return { id: user.id, name: user.name } });
-    if (this.userListForRM && this.userListForRM.length > 0) {
-      this.userListForRM.splice(0, 0, { id: this.loggedInUser.id, name: this.loggedInUser.name });
-    }
-    console.log('userListForRM', this.userListForRM);
-  }
+  // filterUserForRM(adminList) {
+  //   let userListForRM = adminList.filter(users => {
+  //     return this.loggedInUser.id === users._reporting_user_id;
+  //   });
+  //   this.userListForRM = userListForRM.map(user => { return { id: user.id, name: user.name } });
+  //   if (this.userListForRM && this.userListForRM.length > 0) {
+  //     this.userListForRM.splice(0, 0, { id: this.loggedInUser.id, name: this.loggedInUser.name });
+  //   }
+  //   console.log('userListForRM', this.userListForRM);
+  // }
 
   getCallLogs() {
     console.log(this.activeLogs);
