@@ -515,6 +515,7 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   getFilteredCard(searchedKey) {
+    let searchedKeyword = (searchedKey.trim()).toLowerCase();
     if (!searchedKey.length) {
       this.cards = this.cardsForFilter;
     } else {
@@ -522,7 +523,7 @@ export class TaskKanbanComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return (data.title.toLowerCase()).match((searchedKey.trim()).toLowerCase()) || (data.type.toLowerCase()).match((searchedKey.trim()).toLowerCase()) || (data._project_type.toLowerCase()).match((searchedKey.trim()).toLowerCase())
+            return (data.title && (data.title.toLowerCase()).match(searchedKeyword)) || (data.type && (data.type.toLowerCase()).match(searchedKeyword)) || (data._project_type && (data._project_type.toLowerCase()).match(searchedKeyword))
           })
         }
       });
