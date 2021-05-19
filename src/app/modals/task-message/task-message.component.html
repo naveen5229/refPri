@@ -10,7 +10,7 @@
     <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
     <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
         (click)="search();isAttachmentShow=false"></i></span>
-    <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
+    <span *ngIf="![-1,5].includes(statusId)"><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
         [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
     <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
         aria-hidden="true" title="View Attachment"
