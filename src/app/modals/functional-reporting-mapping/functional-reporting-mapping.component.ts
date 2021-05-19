@@ -22,7 +22,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
   button = "Add";
   reportingForm = {
     selectedUserId: null,
-    funtionalUsertype: 0,
+    funtionalUsertype: 1,
     user: { id: null, name: null },
     type: { id: 1, name: 'Reporting User' }
   }
@@ -228,7 +228,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
   }
 
   addReporting(param = null) {
-    console.log('params', param);
+    console.log('reporting Form', this.reportingForm);
     let params = {};
     if (param) {
       params = param;
@@ -240,11 +240,11 @@ export class FunctionalReportingMappingComponent implements OnInit {
       }
 
       params = {
-        reportingId: (this.reportingForm.type.id === 0) ? this.reportingForm.user.id : this.reportingForm.selectedUserId,
-        reporterId: (this.reportingForm.type.id === 0) ? this.reportingForm.selectedUserId : this.reportingForm.user.id
+        reportingId: (this.reportingForm.type.id == 1) ? this.reportingForm.user.id : this.reportingForm.selectedUserId,
+        reporterId: (this.reportingForm.type.id == 1) ? this.reportingForm.selectedUserId : this.reportingForm.user.id
       }
     }
-    // return console.log(params);
+    // return console.log('params',params);
     let apiName = "Admin/saveFunctionalRm";
     this.common.loading++;
     this.api.post(apiName, params)
@@ -253,8 +253,8 @@ export class FunctionalReportingMappingComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            this.reserForm();
-            this.getAllReporters();
+            this.getAllReporters(this.reportingForm.funtionalUsertype);
+            this.resetForm();
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -268,13 +268,9 @@ export class FunctionalReportingMappingComponent implements OnInit {
       });
   }
 
-  reserForm() {
-    this.reportingForm = {
-      selectedUserId: this.reportingForm.selectedUserId,
-      funtionalUsertype: 0,
-      user: { id: null, name: null },
-      type: { id: 1, name: 'Reporting User' }
-    }
+  resetForm() {
+    this.reportingForm.user = { id: null, name: null };
+    this.reportingForm.type = { id: 1, name: 'Reporting User' };
   }
 
 }
