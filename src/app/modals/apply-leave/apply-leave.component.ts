@@ -291,10 +291,10 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       this.meetingForm.cc.map(ele => {
         if (ele.groupId != null) {
           ele.groupuser.forEach(x2 => {
-            CC.push({ user_id: x2._id });
+            CC.push({ id: x2._id });
           })
         } else {
-          CC.push({ user_id: ele.id });
+          CC.push({ id: ele.id });
         }
       })
     }
@@ -303,14 +303,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       subject: this.meetingForm.subject,
       desc: this.meetingForm.desc,
       roomId: this.meetingForm.roomId,
-      host: this.meetingForm.hostId,
+      host: this.meetingForm.hostId.id,
       userId: JSON.stringify(CC),
       type: this.meetingForm.type,
       time: this.common.dateFormatter(this.meetingForm.time),
-      duration: this.common.dateFormatter(this.meetingForm.duration),
+      duration: this.common.timeFormatter(this.meetingForm.duration),
       buzz: this.meetingForm.buzz
     }
-    console.log("add meeting:",params); return false;
+    // console.log("add meeting:",params); return false;
     this.common.loading++;
     this.api.post('Admin/saveMeetingDetail', params).subscribe(res => {
       this.common.loading--;

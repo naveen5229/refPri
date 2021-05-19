@@ -21,8 +21,8 @@ export class FunctionalReportingMappingComponent implements OnInit {
   title = "";
   button = "Add";
   reportingForm = {
-    selectedUserId:null,
-    funtionalUsertype:0,
+    selectedUserId: null,
+    funtionalUsertype: 0,
     user: { id: null, name: null },
     type: { id: 1, name: 'Reporting User' }
   }
@@ -74,7 +74,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
       this.common.loading--;
       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       (res['data']) ? this.activeAdminUserList = res['data'].map(admin => { return { id: admin.id, name: admin.name } }) : this.activeAdminUserList = [];
-      if(this.activeAdminUserList && this.activeAdminUserList.length > 0){
+      if (this.activeAdminUserList && this.activeAdminUserList.length > 0) {
         this.activeAdminUserList = this.activeAdminUserList.filter(user => user.id != this.loggedInUser.id);
       }
     }, err => {
@@ -84,7 +84,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
     });
   }
 
-  getAllReporters(type=1) {
+  getAllReporters(type = 1) {
     this.resetTable();
     let params = `?userId=${this.reportingForm.selectedUserId}&type=${type}`;
     let apiName = "Admin/getFunctionalRm";
@@ -161,7 +161,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
             value: "",
             isHTML: false,
             action: null,
-            // icons: this.actionIcons(reporting)
+            icons: this.actionIcons(reporting)
           };
         }
         // else if (key == 'mobile' && this.fromPage == 1) {
@@ -179,8 +179,8 @@ export class FunctionalReportingMappingComponent implements OnInit {
 
   actionIcons(reporting) {
     let icons = [
-      { class: 'fas fa-trash-alt', action: this.deleteContact.bind(this, reporting) },
-      { class: 'fa fa-phone', action: this.callSync.bind(this, reporting) }
+      { class: 'fas fa-trash-alt', action: this.deleteMappedUser.bind(this, reporting) },
+      // { class: 'fa fa-phone', action: this.callSync.bind(this, reporting) }
     ];
     return icons;
   }
@@ -205,49 +205,45 @@ export class FunctionalReportingMappingComponent implements OnInit {
     });
   }
 
-  deleteContact(row) {
+  deleteMappedUser(row) {
     console.log('delete', row);
     let params = {
       requestId: row._id,
+      reportingId: row._reporting_user_id,
+      reporterId: row._reporter_user_id
     }
     if (row._id) {
       this.common.params = {
         title: 'Delete Record',
         description: '<b>Are Sure To Delete This Record<b>',
       }
-      let apiName = 'Processes/deleteTransactionContact';
-      if (this.fromPage == 1) {
-        apiName = 'Ticket/deleteTicketContact';
-      }
-      // console.log("deleteContact:",apiName,params);return false;
+      // console.log("deleteContact:",params);return false;
       const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
-          this.common.loading++;
-          this.api.post(apiName, params).subscribe(res => {
-            this.common.loading--;
-            if (res['code'] == 1) {
-              this.common.showToast(res['msg']);
-              this.getAllReporters();
-            } else {
-              this.common.showError(res['msg']);
-            }
-          }, err => {
-            this.common.loading--;
-            this.common.showError();
-            console.log('Error: ', err);
-          });
+          this.addReporting(params);
         }
       });
     }
   }
 
-  addReporting() {
-    console.log('params', this.reportingForm);
-    let params = {
-      reportingId:(this.reportingForm.type.id === 0) ? this.reportingForm.user.id : this.reportingForm.selectedUserId, 
-      reporterId:(this.reportingForm.type.id === 0) ?  this.reportingForm.selectedUserId : this.reportingForm.user.id
-    };
+  addReporting(param = null) {
+    console.log('params', param);
+    let params = {};
+    if (param) {
+      params = param;
+    } else {
+
+      if (!this.reportingForm.user.id) {
+        this.common.showError(`Please Select ${(this.reportingForm.type.id === 1) ? 'Reporting' : 'Reporter'} User First`);
+        return;
+      }
+
+      params = {
+        reportingId: (this.reportingForm.type.id === 0) ? this.reportingForm.user.id : this.reportingForm.selectedUserId,
+        reporterId: (this.reportingForm.type.id === 0) ? this.reportingForm.selectedUserId : this.reportingForm.user.id
+      }
+    }
     // return console.log(params);
     let apiName = "Admin/saveFunctionalRm";
     this.common.loading++;
@@ -274,8 +270,8 @@ export class FunctionalReportingMappingComponent implements OnInit {
 
   reserForm() {
     this.reportingForm = {
-      selectedUserId:this.reportingForm.selectedUserId,
-      funtionalUsertype:0,
+      selectedUserId: this.reportingForm.selectedUserId,
+      funtionalUsertype: 0,
       user: { id: null, name: null },
       type: { id: 1, name: 'Reporting User' }
     }
