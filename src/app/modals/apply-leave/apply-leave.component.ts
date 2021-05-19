@@ -79,6 +79,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.btn = (this.common.params.btn) ? this.common.params.btn : "Apply";
     if (!this.formType) {
       this.getLastLeaveRequestData();
+    }else if(this.formType==2){
+      this.getMeetingRoomList();
     }
   }
 
@@ -92,6 +94,23 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   datereset() {
     this.leaveArray.startDate = this.currentDate;
     this.leaveArray.endDate = this.currentDate;
+  }
+  
+  getMeetingRoomList() {
+    this.meetingRoomList = [];
+    this.common.loading++;
+    this.api.get("Admin/getMeetingRoomList").subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        this.meetingRoomList = res['data'] || [];
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getLastLeaveRequestData() {
@@ -285,12 +304,13 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       desc: this.meetingForm.desc,
       roomId: this.meetingForm.roomId,
       host: this.meetingForm.hostId,
-      cc: JSON.stringify(CC),
+      userId: JSON.stringify(CC),
       type: this.meetingForm.type,
       time: this.common.dateFormatter(this.meetingForm.time),
       duration: this.common.dateFormatter(this.meetingForm.duration),
       buzz: this.meetingForm.buzz
     }
+    console.log("add meeting:",params); return false;
     this.common.loading++;
     this.api.post('Admin/saveMeetingDetail', params).subscribe(res => {
       this.common.loading--;

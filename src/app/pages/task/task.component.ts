@@ -371,13 +371,22 @@ export class TaskComponent implements OnInit {
   }
 
   applyLeave(formType) {
+    let title = "Apply Leave";
+    let btn = "Apply";
+    if(formType == 1){
+      title = "Add Broadcast";
+      btn = "Add";
+    }else if(formType == 2){
+      title = "Add Meeting";
+      btn = "Add";
+    }
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
       formType: formType,
-      title: (formType == 1) ? "Add Broadcast" : "Apply Leave",
-      btn: (formType == 1) ? "Add" : "Apply"
+      title: title,
+      btn: btn
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",

@@ -170,7 +170,7 @@
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Details:</label>
+            <label>Details</label>
         </div>
         <div class="col-6">
             <textarea id="meetingDesc" name="meetingDesc" row="2" cols="15" placeholder="Enter Details" class="form-control" [(ngModel)]="meetingForm.desc"></textarea>
@@ -179,7 +179,7 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Users:<span class="text-danger">*</span></label>
+            <label>Users<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users" (onSelected)="meetingForm.cc = $event" inputId="meetingFormUsers" name="meetingFormUsers" [preSelected]="meetingForm.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
@@ -188,21 +188,21 @@
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Select Room:</label>
+            <label>Select Room</label>
         </div>
         <div class="col-6">
-            <select [(ngModel)]="meetingForm.roomId">
+            <select class="form-control" [(ngModel)]="meetingForm.roomId">
                 <option value="">Seelct Room</option>
-                <option *ngFor="let room of meetingRoomList" [value]="room.id">{{g.name}}</option>
+                <option *ngFor="let room of meetingRoomList" [value]="room._id">{{room.room_name+'-'+room.office_name}}</option>
             </select>
         </div>
     </div>
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Meeting Type:</label>
+            <label>Meeting Type</label>
         </div>
         <div class="col-6">
-            <select [(ngModel)]="meetingForm.type">
+            <select class="form-control" [(ngModel)]="meetingForm.type">
                 <option value="0">Offline</option>
                 <option value="1">Online</option>
             </select>
@@ -211,16 +211,16 @@
     
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Link:</label>
+            <label>Link</label>
         </div>
         <div class="col-6">
-            <input id="meetingLink" name="meetingLink" placeholder="Enter Link" [(ngModel)]="meetingForm.link" />
+            <input class="form-control" id="meetingLink" name="meetingLink" placeholder="Enter Link" [(ngModel)]="meetingForm.link" />
         </div>
     </div>
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Host:<span class="text-danger">*</span></label>
+            <label>Host<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User" (onSelected)="meetingForm.hostId = $event" inputId="meetinghost" name="meetinghost" [preSelected]="meetingForm.hostId"></auto-suggestion>
@@ -229,7 +229,7 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Meeting Time:<span class="text-danger">*</span></label>
+            <label>Meeting Time<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="meetingForm.time=$event" [dateTimeValue]="meetingForm.time">
@@ -239,7 +239,7 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Meeting Duration:<span class="text-danger">*</span></label>
+            <label>Meeting Duration<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true" (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration">
@@ -249,7 +249,7 @@
 
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Buzz:</label>
+            <label>Buzz</label>
         </div>
         <div class="col-6">
             <input type="checkbox" [checked]="meetingForm.buzz" (change)="meetingForm.buzz = !meetingForm.buzz" />
