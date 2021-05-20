@@ -112,16 +112,13 @@
                     (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master
                 </li>
+                <li [ngClass]="activeTab=='meeting'?'active':''" (click)="activeTab='meeting'; resetSearchTask(); getMeetingListByType(1)">
+                    Meeting
+                </li>
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''"
                     (click)="activeTab='unreadTaskByMe'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
                     Unread
                 </li>
-                <!-- <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''" (click)="activeTab='unreadTaskByMe'; getTaskByType(-8)">
-                    Unread Task
-                </li>
-                <li [ngClass]="activeTab=='unreadLeads'?'active':''" (click)="activeTab='unreadLeads'; getProcessLeadByType(5)">
-                    Unread Txn
-                </li> -->
             </ul>
         </div>
 
@@ -268,6 +265,34 @@
         <div *ngIf="activeTab=='futureTaskByMe'">
             <smart-table *ngIf="futureTaskByMeList.length!=0" [data]="tableFutureTaskByMeList.data"
                 [settings]="tableFutureTaskByMeList.settings" id="tableFutureTaskForMeList">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='meeting'">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; getMeetingListByType(1)">
+                    Ongoing
+                </li>
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; getMeetingListByType(0)">
+                    Completed
+                </li>
+            </ul>
+            <div *ngIf="!activeSabTab" class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate"
+                        (onChanged)="searchTask.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate"
+                        (onChanged)="searchTask.endDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" (click)="getMeetingListByType(0)">Search</button>
+                </div>
+            </div>
+            <smart-table *ngIf="meetingList.length!=0" [data]="tableMeeting.data" [settings]="tableMeeting.settings"
+                id="tableMeeting" class="sl-smart-table">
             </smart-table>
         </div>
         <!-- <div *ngIf="activeTab=='unreadTaskByMe'">

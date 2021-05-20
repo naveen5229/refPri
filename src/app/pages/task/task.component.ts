@@ -208,6 +208,17 @@ export class TaskComponent implements OnInit {
   todoVisi = false;
   todoAddList = false;
 
+  meetingList = [];
+  tableMeeting = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true,
+    },
+  };
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event) {
     this.keyHandler(event);
@@ -1072,6 +1083,10 @@ export class TaskComponent implements OnInit {
       headings: {},
       columns: [],
     };
+    this.tableMeeting.data = {
+      headings: {},
+      columns: [],
+    };
   }
 
   generateHeadingsNormal() {
@@ -1930,7 +1945,10 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == -8) {
-      if (
+      if (ticket._tktype == 110 && ticket._mp_status == 0) {
+        icons.push({class: "fa fa-check-square text-warning",action: this.ackTaskByCcUser.bind(this, ticket, type),txt: "",title: "Mark ack as meeting user",});
+        icons.push({class: "fa fa-times text-danger",action: this.ackTaskByCcUser.bind(this, ticket, type,-1),txt: "",title: "Mark rejected as meeting user",});
+      } else if (
         ticket._status == 0 &&
         ticket._assignee_user_id == this.userService.loggedInUser.id
       ) {
@@ -2271,7 +2289,11 @@ export class TaskComponent implements OnInit {
       }
       // if (type == -8) {
         if (type !== -8 || (type == -8 && this.unreadTaskForMeList && this.unreadTaskForMeList.length <= 3)) {
-          type ? this.getTaskByType(type) : null;
+          if(this.activeTab=='meeting'){
+            this.getMeetingListByType(type);
+          }else{
+            type ? this.getTaskByType(type) : null;
+          }
         } else {
           let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
           if (ticket._cc_user_id && !ticket._cc_status) {
@@ -2565,12 +2587,13 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  ackTaskByCcUser(ticket, type) {
+  ackTaskByCcUser(ticket, type,status=1) {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
         taskId: ticket._refid,
-        ticketType: ticket._tktype
+        ticketType: ticket._tktype,
+        status: status
       };
       console.log("ackTaskByCcUser:", params);
       this.common.loading++;
@@ -2583,6 +2606,9 @@ export class TaskComponent implements OnInit {
               let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
               if (ticket._cc_user_id && !ticket._cc_status) {
                 activeRowData._cc_status = 1;
+              }
+              if (ticket._tktype==110 && !ticket._mp_status) {
+                activeRowData._mp_status = (status) ? status : 1;
               }
               if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || ([101,102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status)){
                 
@@ -3114,5 +3140,119 @@ export class TaskComponent implements OnInit {
     );
   }
 
+  // start: meeting
+  getMeetingListByType(type, startDate = null, endDate = null) {
+    this.activeSabTab = type;
+    this.common.loading++;
+    if (type == 1 && this.searchTask.startDate && this.searchTask.endDate) {
+      startDate = this.common.dateFormatter(this.searchTask.startDate);
+      endDate = this.common.dateFormatter(this.searchTask.endDate);
+    }
+    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate;
+    this.api.get("Admin/getMeetingListByType"+params).subscribe(
+      (res) => {
+        this.common.loading--;
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+        console.log("data", res["data"]);
+        this.resetSmartTableData();
+        this.meetingList = res["data"] || [];
+        this.setTableMeeting(type);
+        // if (type == 101) {}
+      },
+      (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
+  }
+  // start cc task list
+  setTableMeeting(type) {
+    this.tableMeeting.data = {
+      headings: this.generateHeadingsMeeting(),
+      columns: this.getTableColumnsMeeting(type),
+    };
+    return true;
+  }
+
+  generateHeadingsMeeting() {
+    let headings = {};
+    for (var key in this.meetingList[0]) {
+      if (key.charAt(0) != "_") {
+        headings[key] = {
+          title: key,
+          placeholder: this.common.formatTitle(key),
+        };
+      }
+    }
+    return headings;
+  }
+  getTableColumnsMeeting(type) {
+    let columns = [];
+    this.meetingList.map((ticket) => {
+      ticket["task_subject"] = ticket["subject"];
+      ticket["_task_desc"] = ticket["_desc"];
+      let column = {};
+      for (let key in this.generateHeadingsMeeting()) {
+        if (key.toLowerCase() == "action") {
+          column[key] = {
+            value: "",
+            isHTML: true,
+            action: null,
+            icons: this.actionIconsMeeting(ticket, type),
+          };
+        } else if (key == "subject") {
+          column[key] = {
+            value: ticket[key],
+            class: "black",
+            action: "",
+            isTitle: true,
+            title: ticket["_desc"],
+          };
+        }  else {
+          column[key] = { value: ticket[key], class: "black", action: "" };
+        }
+        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
+      }
+      columns.push(column);
+    });
+    return columns;
+  }
+  // end cc task list
+
+  actionIconsMeeting(ticket, type) {
+    let icons = [
+      {
+        class: "fas fa-comments",
+        action: this.ticketMessage.bind(this, ticket, type),
+        txt: "",
+        title: null,
+      },
+    ];
+
+    if (ticket._unreadcount > 0) {
+      icons = [
+        {
+          class: "fas fa-comments new-comment",
+          action: this.ticketMessage.bind(this, ticket, type),
+          txt: ticket._unreadcount,
+          title: null,
+        },
+      ];
+    } else if (ticket._unreadcount == -1) {
+      icons = [
+        {
+          class: "fas fa-comments no-comment",
+          action: this.ticketMessage.bind(this, ticket, type),
+          txt: "",
+          title: null,
+        },
+      ];
+    }
+    return icons;
+  }
+
+
+  // end: meeting
 
 }
