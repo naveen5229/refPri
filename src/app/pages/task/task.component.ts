@@ -3144,7 +3144,7 @@ export class TaskComponent implements OnInit {
   getMeetingListByType(type, startDate = null, endDate = null) {
     this.activeSabTab = type;
     this.common.loading++;
-    if (type == 1 && this.searchTask.startDate && this.searchTask.endDate) {
+    if (!type && this.searchTask.startDate && this.searchTask.endDate) {
       startDate = this.common.dateFormatter(this.searchTask.startDate);
       endDate = this.common.dateFormatter(this.searchTask.endDate);
     }
