@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
   isNetConnected = true;
-  isShowFoAdmin = false;
+  isShowFoAdmin = true;
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
