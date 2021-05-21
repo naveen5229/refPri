@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   // I_URL: string = 'http://localhost/itrm_webservices/';
-   I_URL: string = 'http://13.232.190.178/itrm_webservices/';
+  //  I_URL: string = 'http://13.232.190.178/itrm_webservices/';
 
-  // I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
+  I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'https://dev.elogist.in/booster_webservices/';
   T_URL: string = 'https://dev.elogist.in/transtrucknew/';
 
@@ -111,10 +111,10 @@ export class ApiService {
       'apptype': 'dashboard',
       'authkey': authKey
     });
-    if(this.user._fouser && this.user._fouser.foid>0){
-      headers = headers.append('viewfoid', JSON.stringify(this.user._fouser.foid));
-      headers = headers.append('viewfoaid', JSON.stringify(this.user._fouser.id));
-    }
+    // if(this.user._fouser && this.user._fouser.foid>0){
+    //   headers = headers.append('viewfoid', JSON.stringify(this.user._fouser.foid));
+    //   headers = headers.append('viewfoaid', JSON.stringify(this.user._fouser.id));
+    // }
     return headers;
   }
 
