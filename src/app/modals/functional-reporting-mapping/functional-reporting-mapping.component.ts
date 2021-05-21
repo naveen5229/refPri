@@ -14,8 +14,8 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 export class FunctionalReportingMappingComponent implements OnInit {
   activeAdminUserList = [];
   reportingTypeList = [
-    { id: 1, name: 'Reporting User' },
-    { id: 0, name: 'Reporter' }
+    { id: 1, name: 'Reporting Manager' },
+    { id: 0, name: 'Subordinate' }
   ]
   loggedInUser = null;
   title = "";
@@ -24,7 +24,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
     selectedUserId: null,
     funtionalUsertype: 1,
     user: { id: null, name: null },
-    type: { id: 1, name: 'Reporting User' }
+    type: { id: 1, name: 'Reporting Manager' }
   }
 
   allReportingDataList = [];
@@ -235,7 +235,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
     } else {
 
       if (!this.reportingForm.user.id) {
-        this.common.showError(`Please Select ${(this.reportingForm.type.id === 1) ? 'Reporting' : 'Reporter'} User First`);
+        this.common.showError(`Please Select ${(this.reportingForm.type.id == 1) ? 'Reporting Manager' : 'Suboridinate'} First`);
         return;
       }
 
@@ -270,7 +270,7 @@ export class FunctionalReportingMappingComponent implements OnInit {
 
   resetForm() {
     this.reportingForm.user = { id: null, name: null };
-    this.reportingForm.type = { id: 1, name: 'Reporting User' };
+    this.reportingForm.type = { id: 1, name: 'Reporting Manager' };
   }
 
 }
