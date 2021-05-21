@@ -2187,18 +2187,26 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
+            let startDate = null;
+            let endDate = null;
             if (
               type == -102 &&
               this.searchTask.startDate &&
               this.searchTask.endDate
             ) {
-              let startDate = this.common.dateFormatter(
+              startDate = this.common.dateFormatter(
                 this.searchTask.startDate
               );
-              let endDate = this.common.dateFormatter(this.searchTask.endDate);
+              endDate = this.common.dateFormatter(this.searchTask.endDate);
+              // this.getTaskByType(type, startDate, endDate);
+            } 
+            // else {
+            //   this.getTaskByType(type);
+            // }
+            if(this.activeTab=='meeting'){
+              this.getMeetingListByType(type);
+            }else{
               this.getTaskByType(type, startDate, endDate);
-            } else {
-              this.getTaskByType(type);
             }
           } else {
             this.common.showError(res["msg"]);
@@ -3249,10 +3257,72 @@ export class TaskComponent implements OnInit {
         },
       ];
     }
+
+    if(type==1 && [ticket._host,ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status!=5){
+      icons.push({class: "fa fa-thumbs-up text-success",action: this.changeTicketStatusWithConfirm.bind(this,ticket,type,5),txt: "",title: "Mark Completed"});
+      icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
+    }
     return icons;
   }
 
+  deleteMeetingWithConfirm(ticket, type) {
+    if (ticket._refid) {
+      let preTitle = "Delete";
+      this.common.params = {
+        title: preTitle + " Meeting ",
+        description:
+          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Meeting" + `<b>`,
+        isRemark: false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, {size: "sm",container: "nb-layout",backdrop: "static",keyboard: false,windowClass: "accountModalClass"});
+      activeModal.result.then((data) => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          this.deleteMeeting(ticket, type, data.remark);
+        }
+      });
+    } else {
+      this.common.showError("Invalid meeting");
+    }
+  }
 
+  deleteMeeting(ticket, type, remark = null) {
+    if (ticket._tktid) {
+      let params = {
+        subject: ticket.subject,
+        desc: ticket._desc,
+        roomId: (ticket._room_id) ? ticket._room_id : 1,
+        host: ticket._host,
+        userId: (ticket._users) ? JSON.stringify(ticket._users) : JSON.stringify([{"id":ticket._host}]),
+        type: 0,
+        time: this.common.dateFormatter(ticket.schedule_time),
+        duration: ticket.duration,
+        buzz: (ticket.buzz) ? ticket.buzz : false,
+        requestId: ticket._refid,
+        isDelete: 1
+      }
+      // console.log("add meeting:",params); return false;
+      this.common.loading++;
+      this.api.post('Admin/saveMeetingDetail', params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] === 1) {
+          if (res['data'][0]['y_id'] > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.getMeetingListByType(type);
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+      })
+    } else {
+      this.common.showError("Invalid request");
+    }
+  }
   // end: meeting
 
 }
