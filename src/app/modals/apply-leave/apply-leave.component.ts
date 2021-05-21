@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'ngx-apply-leave',
@@ -53,7 +54,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     roomId: null,
     type: 0,
     link: null,
-    hostId: null,
+    host: {id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name},
     time: this.common.getDate(2),
     duration: null,
     buzz: false
@@ -268,22 +269,64 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     })
   }
 
+  selectedMeetingUser(event) {
+    console.log("event:",event[event.length-1]);
+    if(event && event.length && !event[event.length-1].groupId){
+      this.getUserPresence(event[event.length-1].id);
+    }
+  }
+
+  getUserPresence(userId) {
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + userId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.adduserConfirm(userPresence,userId)
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+
+  adduserConfirm(userPresence,userId) {
+    // console.log("userPresence:",userPresence);
+    if (!userPresence) {
+      this.common.params = {
+        title: 'User Presence',
+        description: '<b>The user has not started the shift for today.<br> Are you sure to add this user ?<b>'
+      }
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      activeModal.result.then(data => {
+        if (!data.response) {
+          this.meetingForm.cc = this.meetingForm.cc.filter(x=>x.id!==userId);
+        }
+      });
+    }
+  }
+
   addMeeting(){
+    // console.log("addmeeting:",this.meetingForm);
     if (!this.meetingForm.subject) {
       return this.common.showError("Subject is missing");
-    }
-    if (!this.meetingForm.time) {
+    } else if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
+      return this.common.showError("User is missing");
+    } else if (!this.meetingForm.host.id) {
+      return this.common.showError("Host user is missing");
+    } else if (this.meetingForm.type==1 && (!this.meetingForm.link || this.meetingForm.link.trim()=="")) {
+      return this.common.showError("Online meeting link is missing");
+    } else if ((!this.meetingForm.type || this.meetingForm.type==0) && !this.meetingForm.roomId) {
+      return this.common.showError("Room is missing");
+    }else if (!this.meetingForm.time) {
       return this.common.showError("Meeting time is missing");
     } else if (this.meetingForm.time && this.meetingForm.time < this.common.getDate()) {
       return this.common.showError("Meeting time must be Current/future date");
     } else if (!this.meetingForm.duration) {
       return this.common.showError("Meeting duration is missing");
-    } else if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
-      return this.common.showError("User is missing");
-    } else if (!this.meetingForm.hostId) {
-      return this.common.showError("Host user is missing");
-    } else if (this.meetingForm.type==1 && !this.meetingForm.link) {
-      return this.common.showError("Online meeting link is missing");
     }
 
     let CC = [];
@@ -303,7 +346,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       subject: this.meetingForm.subject,
       desc: this.meetingForm.desc,
       roomId: this.meetingForm.roomId,
-      host: this.meetingForm.hostId.id,
+      host: this.meetingForm.host.id,
       userId: JSON.stringify(CC),
       type: this.meetingForm.type,
       time: this.common.dateFormatter(this.meetingForm.time),

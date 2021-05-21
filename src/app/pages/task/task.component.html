@@ -278,12 +278,12 @@
             </ul>
             <div *ngIf="!activeSabTab" class="row" style="z-index: 999;">
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate"
+                    <uj-date-time-picker [maxd]="minDateTodo" [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate"
                         (onChanged)="searchTask.startDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
-                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate"
+                    <uj-date-time-picker [maxd]="minDateTodo" [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate"
                         (onChanged)="searchTask.endDate=$event">
                     </uj-date-time-picker>
                 </div>
