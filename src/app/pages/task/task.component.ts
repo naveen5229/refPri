@@ -2601,7 +2601,8 @@ export class TaskComponent implements OnInit {
         ticketId: ticket._tktid,
         taskId: ticket._refid,
         ticketType: ticket._tktype,
-        status: status
+        status: status,
+        userName: this.userService.loggedInUser.name
       };
       console.log("ackTaskByCcUser:", params);
       this.common.loading++;

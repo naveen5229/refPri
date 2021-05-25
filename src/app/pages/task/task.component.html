@@ -53,8 +53,8 @@
                     <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction"><i
                             class="fas fa-ellipsis-v"></i></button>
                     <div class="text-right" [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
-                        <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting"
-                        (click)="applyLeave(2)"><i class="fas fa-users p-1" aria-hidden="true"></i></button>
+                        <!-- <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting"
+                        (click)="applyLeave(2)"><i class="fas fa-users p-1" aria-hidden="true"></i></button> -->
                         <button class="btn btn-primary btn-sm allicons" id="addBroadcast" title="Add Broadcast"
                             (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
                         <button class="btn btn-primary btn-sm leave allicons" id="applyleave" title="Apply Leave"
@@ -112,9 +112,9 @@
                     (click)="activeTab='scheduleMaster'; getScheduledTask()">
                     Scheduled Task Master
                 </li>
-                <li [ngClass]="activeTab=='meeting'?'active':''" (click)="activeTab='meeting'; resetSearchTask(); getMeetingListByType(1)">
+                <!-- <li [ngClass]="activeTab=='meeting'?'active':''" (click)="activeTab='meeting'; resetSearchTask(); getMeetingListByType(1)">
                     Meeting
-                </li>
+                </li> -->
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''"
                     (click)="activeTab='unreadTaskByMe'; getTaskByType(-8); getProcessLeadByType(5);getTicketByType(102)">
                     Unread
