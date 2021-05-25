@@ -211,7 +211,7 @@
         <div class="col-2">
             <input type="text" placeholder="Search Slot" class="form-control"
                 [value]="(selectedTime.hh && selectedTime.mm) ? selectedTime.hh + ':' + selectedTime.mm : null"
-                (click)="checkAvailability()" readonly />
+                readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
         </div>
     </div>
 
