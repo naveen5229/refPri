@@ -361,9 +361,9 @@ export class PdfVersioningComponent implements OnInit {
             height: pointer.y - origY,
             radius: null,
             type: 'text',
-            aduser_id: this.userService._details.id,
+            aduser_id: this.userService.loggedInUser.id,
             addtime: this.common.dateFormatter(this.common.getDate()),
-            user: this.userService._details.name,
+            user: this.userService.loggedInUser.name,
             selectable: true
           }
 
@@ -395,9 +395,9 @@ export class PdfVersioningComponent implements OnInit {
             height: pointer.y - origY,
             radius: null,
             type: 'rectangle',
-            aduser_id: this.userService._details.id,
+            aduser_id: this.userService.loggedInUser.id,
             addtime: this.common.dateFormatter(this.common.getDate()),
-            user: this.userService._details.name,
+            user: this.userService.loggedInUser.name,
             selectable: true
             // id: id
           }
@@ -427,9 +427,9 @@ export class PdfVersioningComponent implements OnInit {
             height: pointer.y - origY,
             radius: o.radius,
             type: 'circle',
-            aduser_id: this.userService._details.id,
+            aduser_id: this.userService.loggedInUser.id,
             addtime: this.common.dateFormatter(this.common.getDate()),
-            user: this.userService._details.name,
+            user: this.userService.loggedInUser.name,
             selectable: true
           }
           drowType = new fabric.Circle({
@@ -568,7 +568,7 @@ export class PdfVersioningComponent implements OnInit {
     this.freeCanvas.on('text:changed', (opt) => {
       var t1 = opt.target;
       console.log("t1", t1);
-      if (t1.data.aduser_id === this.userService._details.id) {
+      if (t1.data.aduser_id === this.userService.loggedInUser.id) {
         this.contents.forEach(ele => {
           if (ele.x === t1.data.x && ele.y === t1.data.y) {
             console.log('true match');
@@ -851,9 +851,9 @@ export class PdfVersioningComponent implements OnInit {
       width: this.cordinates.width,
       height: this.cordinates.height,
       type: 'text',
-      aduser_id: this.userService._details.id,
+      aduser_id: this.userService.loggedInUser.id,
       addtime: this.common.dateFormatter(this.common.getDate()),
-      user: this.userService._details.name,
+      user: this.userService.loggedInUser.name,
       selectable: true
     };
     console.log('data:', data);

@@ -74,7 +74,7 @@ export class TaskKanbanComponent implements OnInit {
   boardType: number = 0;
   callType = '';
   taskProgressStatus = 0;
-  taskHold = { task: null, isHold: null,refType:null, startTime: new Date(), endTime: new Date() };
+  taskHold = { task: null, isHold: null, refType: null, startTime: new Date(), endTime: new Date() };
   generalTaskList = [];
 
   constructor(private sidebarService: NbSidebarService,
@@ -88,7 +88,7 @@ export class TaskKanbanComponent implements OnInit {
     this.getUserGroupList();
     this.getDepartmentList();
     this.common.refresh = this.refresh.bind(this);
-    this.loggedInUser = this.userService._details.id;
+    this.loggedInUser = this.userService.loggedInUser.id;
   }
 
   ngOnInit() {
@@ -384,6 +384,47 @@ export class TaskKanbanComponent implements OnInit {
     }
   }
 
+  getWarningConfirmFromUserForWorkLog(ticket) {
+    this.common.params = {
+      title: 'Warning',
+      description:
+        `<b>&nbsp;` + "There is no expected Hours on this card. Do you still want to Continue." + `<b>`,
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.saveActivityLog(ticket, 0, 0, 0);
+      } else {
+        this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+      }
+    });
+  }
+
+  displayInsertError() {
+    this.common.params = {
+      title: 'Restriction Error',
+      description:
+        `<b>&nbsp;` + "There is no expected Hours on this card. Please add Expected time to start a work log." + `<b>`,
+      btn1: 'Ok'
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      this.goToBoard((this.callType === 'parent') ? this.project : this.subProject, (this.project._id) ? 1 : this.boardType, this.callType);
+    });
+  }
+
   drop(event: CdkDragDrop<string[]>) {
     console.log("🚀 ~ file: task-kanban.component.ts ~ line 372 ~ TaskKanbanComponent ~ drop ~ event", event)
     let containerIdTemp = (event.container.id).toLowerCase();
@@ -414,7 +455,13 @@ export class TaskKanbanComponent implements OnInit {
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
-        this.saveActivityLog(ticket, 0, 0, 0);
+        if (ticket['expected_hour_profile'] === 'warning' && !ticket['expected_hour']) {
+          this.getWarningConfirmFromUserForWorkLog(ticket);
+        } else if (ticket['_assignee'] == this.loggedInUser && ticket['expected_hour_profile'] === 'restricted' && !ticket['expected_hour']) {
+          this.displayInsertError();
+        } else {
+          this.saveActivityLog(ticket, 0, 0, 0);
+        }
       }
 
 
@@ -468,6 +515,7 @@ export class TaskKanbanComponent implements OnInit {
   }
 
   getFilteredCard(searchedKey) {
+    let searchedKeyword = (searchedKey.trim()).toLowerCase();
     if (!searchedKey.length) {
       this.cards = this.cardsForFilter;
     } else {
@@ -475,7 +523,7 @@ export class TaskKanbanComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return (data.title.toLowerCase()).match((searchedKey.trim()).toLowerCase()) || (data.type.toLowerCase()).match((searchedKey.trim()).toLowerCase()) || (data._project_type.toLowerCase()).match((searchedKey.trim()).toLowerCase())
+            return (data.title && (data.title.toLowerCase()).match(searchedKeyword)) || (data.type && (data.type.toLowerCase()).match(searchedKeyword)) || (data._project_type && (data._project_type.toLowerCase()).match(searchedKeyword))
           })
         }
       });
@@ -493,7 +541,7 @@ export class TaskKanbanComponent implements OnInit {
       cardsForFilter.forEach(element => {
         if (element.data) {
           element.data = element.data.filter(data => {
-            return this.userService._details.id === data.userid
+            return this.userService.loggedInUser.id === data.userid
           })
         }
       });
@@ -934,7 +982,7 @@ export class TaskKanbanComponent implements OnInit {
 
   resetProgressForm() {
     this.taskProgressStatus = 0;
-    this.taskHold = { task: null, isHold: null,refType:null, startTime: new Date(), endTime: new Date() };
+    this.taskHold = { task: null, isHold: null, refType: null, startTime: new Date(), endTime: new Date() };
   }
 
   openExpectedHourModal(event, task) {
@@ -945,7 +993,7 @@ export class TaskKanbanComponent implements OnInit {
       requestId: (task.exp_hour_id) ? task.exp_hour_id : null,
       data: task,
       title: 'Add Expected Hours',
-      timePickFromModal:true
+      timePickFromModal: true
     };
     const activeModal = this.modalService.open(AddExpectedHourComponent, { size: "md", container: "nb-layout", backdrop: "static", });
     activeModal.result.then((data) => {
@@ -981,7 +1029,7 @@ export class TaskKanbanComponent implements OnInit {
                 log_start_time: res['data'][0].start_time,
                 log_end_time: res['data'][0].end_time
               }
-            }else{
+            } else {
               return;
             }
             console.log(ticket);

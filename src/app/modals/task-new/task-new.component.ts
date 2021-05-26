@@ -114,10 +114,10 @@ export class TaskNewComponent implements OnInit {
     }
 
     this.userList.map(user => { 
-      if(user.id === userService._details.id){
+      if(user.id === this.userService.loggedInUser.id){
         this.assigner = {id:user.id,name:user.name}
       }});
-    // {id:userService._details.id,name:userService._details.name}
+    // {id:userService._details.id,name:userService.loggedInUser.name}
     this.getProjectList()
   }
 

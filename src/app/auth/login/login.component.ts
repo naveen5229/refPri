@@ -136,7 +136,7 @@ export class LoginComponent implements OnInit {
       this.otpCount = 0;
       this.formSubmit = false;
       this.qrCode = null;
-    }, 120000);
+    }, 40000);
     this.interval = setInterval(() => {
       this.login();
     }, 5000);
@@ -178,6 +178,7 @@ export class LoginComponent implements OnInit {
 
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
+          this.user.loggedInUser = {id: this.user._details.id, name: this.user._details.name};
           this.getUserPagesList();
         } else {
           if (this.loginType != 2) {

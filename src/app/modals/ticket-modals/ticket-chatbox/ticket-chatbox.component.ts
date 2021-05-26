@@ -43,7 +43,7 @@ export class TicketChatboxComponent implements OnInit {
   messageList = [];
   messageListShow = [];
   showLoading = true;
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   lastMsgId = 0;
   lastSeenId = 0;
   lastSeenIdForView = 0; //only for view not update it
@@ -416,7 +416,7 @@ export class TicketChatboxComponent implements OnInit {
       });
     }
 
-    if (!this.userListByTask['taskUsers'] || !accessUsers.includes(this.userService._details.id)) {
+    if (!this.userListByTask['taskUsers'] || !accessUsers.includes(this.userService.loggedInUser.id)) {
       this.common.showError("Not a valid user");
       return false;
     }
@@ -460,7 +460,7 @@ export class TicketChatboxComponent implements OnInit {
   }
 
   removeCCUserWithConfirm(ccUserId, ccUserName) {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid, ccUserId].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid, ccUserId].includes(this.userService.loggedInUser.id)) {
       this.common.params = {
         title: 'Remove CC User',
         description: '<b>Are You Sure To remove CC-user from This Task' + `<b>`,
@@ -577,7 +577,7 @@ export class TicketChatboxComponent implements OnInit {
 
   changeTicketStatusWithConfirm(status) {
     // console.log("ticketData:", this.ticketData);
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService._details.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid].includes(this.userService.loggedInUser.id)) {
       let preTitle = "Complete";
       if (status == 3) {
         preTitle = "Hold";

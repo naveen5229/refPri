@@ -84,7 +84,10 @@
               <td>{{setting.name}}</td>
               <td>{{setting.entity_type}}</td>
               <td *ngFor="let data of setting.data">
-                <select [(ngModel)]="data.profile_value">
+
+                <input type="number" min="0" [(ngModel)]="data.profile_value" *ngIf="data.profile_name === 'Completed'">
+
+                <select [(ngModel)]="data.profile_value" *ngIf="data.profile_name !== 'Completed'">
                   <option *ngFor="let option of data.info">{{option.option}}</option>
                 </select>
                 <!-- <auto-suggestion [data]="data.info" display="option"

@@ -45,7 +45,7 @@ export class ChatboxComponent implements OnInit {
   messageList = [];
   messageListShow = [];
   showLoading = true;
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   lastMsgId = 0;
   lastSeenId = 0;
   lastSeenIdForView = 0; //only for view
@@ -672,7 +672,7 @@ export class ChatboxComponent implements OnInit {
   }
 
   openTransAction(lead, type, formType = null) {
-    if (![this.priOwnId].includes(this.userService._details.id)) {
+    if (![this.priOwnId].includes(this.userService.loggedInUser.id)) {
       this.common.showError("Permission Denied");
       return false;
     }

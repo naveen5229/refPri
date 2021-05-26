@@ -220,7 +220,7 @@ export class AddcompanyComponent implements OnInit {
       pincode: 1,
       partner_id: this.partnerId,
       language_id: this.newCustomer.language_id,
-      aduserid: this.user._details.id,
+      aduserid: this.user.loggedInUser.id,
       userName: this.newCustomer.username,
       address: this.newCustomer.address,
       authType: this.authType,

@@ -20,6 +20,7 @@ export class UserService {
 
   _loggedInBy = '';
   _pages = [];
+  loggedInUser = {id: null, name: null};
 
   constructor() {
     this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
@@ -32,6 +33,10 @@ export class UserService {
     }
     if(localStorage.getItem('FO_USER_DETAILS')){
       this._fouser = JSON.parse(localStorage.getItem('FO_USER_DETAILS'));
+    }
+    if(this._fouser || this._details){
+      this.loggedInUser.id = (this._fouser && this._fouser.id>0) ? this._fouser.id : this._details.id;
+      this.loggedInUser.name = (this._fouser && this._fouser.id>0) ? this._fouser.name : this._details.name;
     }
 
     if (this._token && !this._loggedInBy) {
@@ -90,6 +95,7 @@ export class UserService {
     this._loggedInBy = '';
     this._pages = [];
     this._fouser = null;
+    this.loggedInUser = {id: null, name: null};
   }
 
   clearStorage() {

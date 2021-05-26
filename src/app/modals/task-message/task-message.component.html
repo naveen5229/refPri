@@ -10,7 +10,7 @@
     <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
     <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
         (click)="search();isAttachmentShow=false"></i></span>
-    <span><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
+    <span *ngIf="![-1,5].includes(statusId)"><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
         [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
     <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
         aria-hidden="true" title="View Attachment"
@@ -285,7 +285,7 @@
           </td>
         </tr>
         <tr valign="top" class="bg-aliceblue" *ngIf="userListByTask['ccUsers'] && userListByTask['ccUsers'].length>0">
-          <td>{{(ticketType==114) ? 'Users' : 'CC'}}:</td>
+          <td>{{[114,110].includes(ticketType) ? 'Users' : 'CC'}}:</td>
           <td class="cc_user">
             <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
               <i class="fa fa-minus-circle cursor-pointer" style="color: cadetblue;font-size: 10px;"
@@ -301,10 +301,10 @@
         </tr>
         <tr valign="top">
           <td colspan="2" class="pt-2 text-center">
-            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users"
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
               (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off"
               isMultiSelect="true" [bGConditions]="bGConditions" [preSelected]="newCCUserId"></auto-suggestion>
-            <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add CC User</button>
+            <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add {{[114,110].includes(ticketType) ? '' : 'CC'}} User</button>
           </td>
         </tr>
       </table>

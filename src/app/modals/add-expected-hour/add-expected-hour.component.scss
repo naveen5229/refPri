@@ -53,7 +53,7 @@
 
 .custom-modal-header {
     text-align: center;
-    background: $danger-5;
+    background: #3366ff;
     padding: 10px;
     color: $light-1;
     letter-spacing: .5px;
@@ -105,7 +105,7 @@
 
 .active-btn,
 .active-hr {
-    background: $danger-5;
+    background: #3366ff;
     color: $light-1;
     font-size: $font-md-sm;
 }
@@ -124,4 +124,14 @@
     width: 30px;
     padding: 0px;
     font-size:$font-sm-lg;
+}
+
+.clockPos{
+    position: absolute;
+    top: 7px;
+    right: 3px;
+}
+
+.clockPos:hover{
+    cursor: pointer;
 }

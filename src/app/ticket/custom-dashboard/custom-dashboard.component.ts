@@ -15,7 +15,7 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
   styleUrls: ['./custom-dashboard.component.scss']
 })
 export class CustomDashboardComponent implements OnInit {
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   tpId = null;
   activeTab = null;
   adminList = [];
