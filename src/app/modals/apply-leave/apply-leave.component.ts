@@ -57,7 +57,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     host: { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name },
     time: this.common.getDate(2),
     duration: null,
-    buzz: true
+    buzz: true,
+    reqId:null
   }
   meetingRoomList = [];
 
@@ -89,6 +90,27 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       this.getLastLeaveRequestData();
     } else if (this.formType == 2) {
       this.getMeetingRoomList();
+      if(this.common.params.meetingData){
+        let durationtime = new Date();
+        let timeduration = (this.common.params.meetingData.duration).split(':');
+        durationtime.setHours(timeduration[0]);
+        durationtime.setMinutes(timeduration[1]);
+
+        this.meetingForm = {
+          subject: this.common.params.meetingData.subject,
+          desc: this.common.params.meetingData._desc,
+          cc: this.common.params.meetingData._user,
+          roomId: this.common.params.meetingData._room_id,
+          type: this.common.params.meetingData._room_id ? 0 : 1,
+          link: this.common.params.meetingData._link,
+          host: { id: this.common.params.meetingData._host, name: this.common.params.meetingData.host },
+          time: new Date(this.common.params.meetingData.schedule_time),
+          duration: durationtime,
+          buzz: this.common.params.meetingData._buzz,
+          reqId:this.common.params.meetingData._refid
+        }
+      }
+      console.log('after',this.meetingForm)
     }
 
     this.setTimeValues();
@@ -374,12 +396,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       subject: this.meetingForm.subject,
       desc: this.meetingForm.desc,
       roomId: this.meetingForm.roomId,
+      link:this.meetingForm.link,
       host: this.meetingForm.host.id,
       userId: JSON.stringify(CC),
       type: this.meetingForm.type,
       time: this.common.dateFormatter(this.meetingForm.time),
       duration: this.common.timeFormatter(this.meetingForm.duration),
-      buzz: this.meetingForm.buzz
+      buzz: this.meetingForm.buzz,
+      requestId: (this.meetingForm.reqId) ? this.meetingForm.reqId : null
     }
     // console.log("add meeting:",params); return false;
     if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId) {
@@ -485,7 +509,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.busySchedules.forEach(schedule => {
           if (schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] == schedule.slotTo['hh']) {
             this.minutes.forEach(minute => {
-              if (schedule.slotTo['mm'] > minute.val && schedule.slotFrom['mm'] < minute.val) {
+              if (schedule.slotTo['mm'] >= minute.val && schedule.slotFrom['mm'] <= minute.val) {
                 minute.isValidate = false;
                 minute.scheduleOf = schedule.scheduleOf;
               }

@@ -339,7 +339,7 @@ export class TaskComponent implements OnInit {
     this.api.get("Ticket/getOpenTicketCount").subscribe(
       (res) => {
         if (res["code"] > 0) {
-          console.log("data", res["data"] );
+          console.log("data", res["data"]);
           this.processTicketNotiSts = res['data'];
         } else {
           this.common.showError(res["msg"]);
@@ -384,15 +384,16 @@ export class TaskComponent implements OnInit {
   applyLeave(formType) {
     let title = "Apply Leave";
     let btn = "Apply";
-    if(formType == 1){
+    if (formType == 1) {
       title = "Add Broadcast";
       btn = "Add";
-    }else if(formType == 2){
+    } else if (formType == 2) {
       title = "Add Meeting";
       btn = "Add";
     }
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = {
+      meetingData: null,
       userList: this.adminList,
       groupList: this.groupList,
       formType: formType,
@@ -406,8 +407,13 @@ export class TaskComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
-        this.getTaskByType(-101);
-        this.activeTab = "TasksByMe";
+        if (formType == 1) {
+          this.getTaskByType(-101);
+          this.activeTab = "TasksByMe";
+        } else if (formType == 2) {
+          this.getMeetingListByType(1);
+          this.activeTab = "meeting";
+        }
       }
       this.tableUnreadTaskForMeList.settings.arrow = true;
     });
@@ -1946,8 +1952,8 @@ export class TaskComponent implements OnInit {
       }
     } else if (type == -8) {
       if (ticket._tktype == 110 && ticket._mp_status == 0) {
-        icons.push({class: "fa fa-check-square text-warning",action: this.ackTaskByCcUser.bind(this, ticket, type),txt: "",title: "Mark ack as meeting user",});
-        icons.push({class: "fa fa-times text-danger",action: this.ackTaskByCcUser.bind(this, ticket, type,-1),txt: "",title: "Mark rejected as meeting user",});
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type), txt: "", title: "Mark ack as meeting user", });
+        icons.push({ class: "fa fa-times text-danger", action: this.ackTaskByCcUser.bind(this, ticket, type, -1), txt: "", title: "Mark rejected as meeting user", });
       } else if (
         ticket._status == 0 &&
         ticket._assignee_user_id == this.userService.loggedInUser.id
@@ -2199,13 +2205,13 @@ export class TaskComponent implements OnInit {
               );
               endDate = this.common.dateFormatter(this.searchTask.endDate);
               // this.getTaskByType(type, startDate, endDate);
-            } 
+            }
             // else {
             //   this.getTaskByType(type);
             // }
-            if(this.activeTab=='meeting'){
+            if (this.activeTab == 'meeting') {
               this.getMeetingListByType(type);
-            }else{
+            } else {
               this.getTaskByType(type, startDate, endDate);
             }
           } else {
@@ -2227,7 +2233,9 @@ export class TaskComponent implements OnInit {
     console.log(status, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
-      if (status === -1) {
+      if(!status){
+        preTitle = "Re-Active";
+      }else if (status === -1) {
         preTitle = "Reject";
       } else if (status == 3) {
         preTitle = "Hold";
@@ -2291,35 +2299,35 @@ export class TaskComponent implements OnInit {
     activeModal.result.then((data) => {
       if (ticket._cc_user_id && !ticket._cc_status) {
         this.ackTaskByCcUser(ticket, type);
-      } 
+      }
       if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
         this.ackTaskByProjectUser(ticket, type);
       }
       // if (type == -8) {
-        if (type !== -8 || (type == -8 && this.unreadTaskForMeList && this.unreadTaskForMeList.length <= 3)) {
-          if(this.activeTab=='meeting'){
-            this.getMeetingListByType(type);
-          }else{
-            type ? this.getTaskByType(type) : null;
-          }
+      if (type !== -8 || (type == -8 && this.unreadTaskForMeList && this.unreadTaskForMeList.length <= 3)) {
+        if (this.activeTab == 'meeting') {
+          this.getMeetingListByType(type);
         } else {
-          let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
-          if (ticket._cc_user_id && !ticket._cc_status) {
-            activeRowData._cc_status = 1;
-          }
-          if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
-            activeRowData._pu_status = 1;
-          }
-          if(ticket._unreadcount>0){
-            activeRowData._unreadcount = 0;
-          }
-          if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1){
-            
-          }else{
-            this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
-          }
-          this.setTableUnreadTaskForMe(type);
+          type ? this.getTaskByType(type) : null;
         }
+      } else {
+        let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
+        if (ticket._cc_user_id && !ticket._cc_status) {
+          activeRowData._cc_status = 1;
+        }
+        if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+          activeRowData._pu_status = 1;
+        }
+        if (ticket._unreadcount > 0) {
+          activeRowData._unreadcount = 0;
+        }
+        if ((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark == 1) {
+
+        } else {
+          this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+        }
+        this.setTableUnreadTaskForMe(type);
+      }
       // }else{
       //   type ? this.getTaskByType(type) : null;
       // }
@@ -2520,7 +2528,7 @@ export class TaskComponent implements OnInit {
     };
   }
 
-  updateTodoTask(task,type=0) {
+  updateTodoTask(task, type = 0) {
     if (task._id) {
       let params = {
         todoTaskId: task._id,
@@ -2533,7 +2541,7 @@ export class TaskComponent implements OnInit {
           if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           this.common.showToast(res["msg"]);
           this.getTodoTaskList(type);
-        },(err) => {
+        }, (err) => {
           this.common.loading--;
           this.common.showError();
           console.log("Error: ", err);
@@ -2544,8 +2552,8 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  saveTaskTodo(type=0) {
-    console.log("saveTaskTodo:",type);
+  saveTaskTodo(type = 0) {
+    console.log("saveTaskTodo:", type);
     if (this.taskTodoForm.desc == "") {
       return this.common.showError("Description is missing");
     } else {
@@ -2564,7 +2572,7 @@ export class TaskComponent implements OnInit {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
             this.todoAddList = false;
-            console.log("saveTaskTodo2:",type);
+            console.log("saveTaskTodo2:", type);
             this.getTodoTaskList(type);
             this.resetTaskTodoForm();
           } else {
@@ -2595,7 +2603,7 @@ export class TaskComponent implements OnInit {
     return icons;
   }
 
-  ackTaskByCcUser(ticket, type,status=1) {
+  ackTaskByCcUser(ticket, type, status = 1) {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -2611,21 +2619,21 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            if(type===-8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)){
+            if (type === -8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)) {
               let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
               if (ticket._cc_user_id && !ticket._cc_status) {
                 activeRowData._cc_status = 1;
               }
-              if (ticket._tktype==110 && !ticket._mp_status) {
+              if (ticket._tktype == 110 && !ticket._mp_status) {
                 activeRowData._mp_status = (status) ? status : 1;
               }
-              if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || ([101,102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status)){
-                
-              }else{
+              if ((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark == 1 || ticket._unreadcount > 0 || ([101, 102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status)) {
+
+              } else {
                 this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
               }
               this.setTableUnreadTaskForMe(type);
-            }else{
+            } else {
               this.getTaskByType(type)
             };
           } else {
@@ -2657,18 +2665,18 @@ export class TaskComponent implements OnInit {
           this.common.loading--;
           if (res["code"] > 0) {
             this.common.showToast(res["msg"]);
-            if(type===-8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)){
+            if (type === -8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)) {
               let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
               if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
                 activeRowData._pu_status = 1;
               }
-              if((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark==1 || ticket._unreadcount>0 || (ticket._cc_user_id && !ticket._cc_status)){
-                
-              }else{
+              if ((ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) || ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) || ticket._isremind == 1 || ticket._is_star_mark == 1 || ticket._unreadcount > 0 || (ticket._cc_user_id && !ticket._cc_status)) {
+
+              } else {
                 this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
               }
               this.setTableUnreadTaskForMe(type);
-            }else{
+            } else {
               this.getTaskByType(type)
             }
           } else {
@@ -3157,8 +3165,8 @@ export class TaskComponent implements OnInit {
       startDate = this.common.dateFormatter(this.searchTask.startDate);
       endDate = this.common.dateFormatter(this.searchTask.endDate);
     }
-    let params = "?type="+type+"&startDate="+startDate+"&endDate="+endDate;
-    this.api.get("Admin/getMeetingListByType"+params).subscribe(
+    let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
+    this.api.get("Admin/getMeetingListByType" + params).subscribe(
       (res) => {
         this.common.loading--;
         if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
@@ -3218,7 +3226,7 @@ export class TaskComponent implements OnInit {
             isTitle: true,
             title: ticket["_desc"],
           };
-        }  else {
+        } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
         column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
@@ -3259,10 +3267,16 @@ export class TaskComponent implements OnInit {
       ];
     }
 
-    if(type==1 && [ticket._host,ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status!=5){
-      icons.push({class: "fa fa-thumbs-up text-success",action: this.changeTicketStatusWithConfirm.bind(this,ticket,type,5),txt: "",title: "Mark Completed"});
+
+    if (type == 1 && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
+      icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket), txt: "", title: "Edit Meeting" });
+      icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
       // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
-      icons.push({class: "fa fa-times text-danger",action: this.ackTaskByCcUser.bind(this, ticket, type,-1),txt: "",title: "Mark rejected"});
+      icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
+    }
+
+    if (type == 0 && [-1, 5].includes(ticket._status)) {
+      icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
     }
     return icons;
   }
@@ -3276,7 +3290,7 @@ export class TaskComponent implements OnInit {
           `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Meeting" + `<b>`,
         isRemark: false,
       };
-      const activeModal = this.modalService.open(ConfirmComponent, {size: "sm",container: "nb-layout",backdrop: "static",keyboard: false,windowClass: "accountModalClass"});
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then((data) => {
         console.log("Confirm response:", data);
         if (data.response) {
@@ -3295,7 +3309,7 @@ export class TaskComponent implements OnInit {
         desc: ticket._desc,
         roomId: (ticket._room_id) ? ticket._room_id : 1,
         host: ticket._host,
-        userId: (ticket._users) ? JSON.stringify(ticket._users) : JSON.stringify([{"id":ticket._host}]),
+        userId: (ticket._users) ? JSON.stringify(ticket._users) : JSON.stringify([{ "id": ticket._host }]),
         type: 0,
         time: this.common.dateFormatter(ticket.schedule_time),
         duration: ticket.duration,
@@ -3326,5 +3340,30 @@ export class TaskComponent implements OnInit {
     }
   }
   // end: meeting
+
+  editMeeting(ticket) {
+    console.log("🚀 ~ file: task.component.ts ~ line 3333 ~ TaskComponent ~ editMeeting ~ ticket", ticket)
+    this.tableUnreadTaskForMeList.settings.arrow = false;
+    this.common.params = {
+      meetingData: ticket,
+      userList: this.adminList,
+      groupList: this.groupList,
+      formType: 2,
+      title: 'Edit Meeting',
+      btn: 'Update'
+    };
+    const activeModal = this.modalService.open(ApplyLeaveComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.getMeetingListByType(1);
+        this.activeTab = "meeting";
+      }
+      this.tableUnreadTaskForMeList.settings.arrow = true;
+    });
+  }
 
 }
