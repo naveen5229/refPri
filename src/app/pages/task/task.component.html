@@ -270,7 +270,10 @@
         <div *ngIf="activeTab=='meeting'">
             <ul class="tabs_style text-left">
                 <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; getMeetingListByType(1)">
-                    Ongoing
+                    Upcoming
+                </li>
+                <li [ngClass]="activeSabTab==2?'active':''" (click)="activeSabTab=1; getMeetingListByType(2)">
+                    To Manage
                 </li>
                 <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; getMeetingListByType(0)">
                     Completed
