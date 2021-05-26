@@ -3275,7 +3275,7 @@ export class TaskComponent implements OnInit {
       icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
     }
 
-    if (type == 0 && [-1, 5].includes(ticket._status)) {
+    if (type == 0 && [-1, 5].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id)) {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
     }
     return icons;
