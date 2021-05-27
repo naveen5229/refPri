@@ -322,8 +322,8 @@
                         <!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
                         <span *ngFor="let hour of hours"
                             (click)="selectedTime.hh = hour.val;this.validateAvailability();showHours =false"
-                            class="btn-hour hour-row-2" [title]="(!hour.isValidate) ? hour.scheduleOf : ''"
-                            [ngClass]="{'active-hr' : selectedTime.hh == hour.val,'disableSelection' : !hour.isValidate}">{{hour.val}}</span>
+                            class="btn-hour hour-row-2" [ngStyle]="{'background': (!hour.isValidate) ? 'red' : ''}"
+                            [ngClass]="{'active-hr' : selectedTime.hh == hour.val,'disableSelection' : hour.roomId}">{{hour.val}}</span>
                     </div>
                 </div>
 
@@ -332,8 +332,9 @@
                     <div text-center>
                         <!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->
                         <span *ngFor="let minute of minutes"
+                            [ngStyle]="{'background': (!minute.isValidate) ? 'red' : ''}"
                             (click)="selectedTime.mm = minute.val; closeTimePickerModal()" class="btn-hour hour-row-2"
-                            [ngClass]="{'active-hr' : selectedTime.mm == minute.val,'disableSelection' : !minute.isValidate}">{{minute.val}}</span>
+                            [ngClass]="{'active-hr' : selectedTime.mm == minute.val,'disableSelection' : minute.roomId}">{{minute.val}}</span>
                     </div>
                 </div>
             </div>

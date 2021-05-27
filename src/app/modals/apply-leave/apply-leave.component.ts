@@ -141,17 +141,17 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.minutes = [];
     for (let i = 1; i <= 24; i++) {
       if (i.toString().length > 1) {
-        this.hours.push({ isValidate: true, val: `${i}` });
+        this.hours.push({ isValidate: true, val: `${i}`,roomId:false });
       } else {
-        this.hours.push({ isValidate: true, val: '0' + i });
+        this.hours.push({ isValidate: true, val: '0' + i,roomId:false });
       }
     }
     for (let i = 0; i < 60; i++) {
       if (i % 5 == 0) {
         if (i.toString().length > 1) {
-          this.minutes.push({ isValidate: true, val: `${i}` });
+          this.minutes.push({ isValidate: true, val: `${i}`,roomId:false });
         } else {
-          this.minutes.push({ isValidate: true, val: '0' + i });
+          this.minutes.push({ isValidate: true, val: '0' + i,roomId:false });
         }
       }
     }
@@ -387,7 +387,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       return this.common.showError("Please check for available time slot");
     }
 
-    
+
     this.meetingForm.time.setHours(parseInt(this.selectedTime.hh));
     this.meetingForm.time.setMinutes(parseInt(this.selectedTime.mm));
 
@@ -499,7 +499,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
-          return { slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] } }
+          return { slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] },roomId:timeranges.room_id }
         }) : [];
 
         console.log('slot recorded:', this.busySchedules);
@@ -524,31 +524,39 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         if (schedule.slotFrom['hh'] == schedule.slotTo['hh'] && schedule.slotTo['mm'] > 55) {
           let index = this.hours.findIndex(ele => ele.val == schedule.slotFrom['hh']);
           this.hours[index].isValidate = false;
-          this.hours[index].scheduleOf = schedule.scheduleOf;
+          this.hours[index].roomId = (schedule.roomId) ? true : false;
         } else if (schedule.slotFrom['hh'] < schedule.slotTo['hh']) {
           for (let i = schedule.slotFrom['hh']; i < schedule.slotTo['hh']; i++) {
             let index = this.hours.findIndex(ele => ele.val == i);
             this.hours[index].isValidate = false;
-            this.hours[index].scheduleOf = schedule.scheduleOf;
+            this.hours[index].roomId = (schedule.roomId) ? true : false;
           }
 
           if (schedule.slotTo['mm'] > 55) {
             let index = this.hours.findIndex(ele => ele.val == schedule.slotTo['hh']);
             this.hours[index].isValidate = false;
-            this.hours[index].scheduleOf = schedule.scheduleOf;
+            this.hours[index].roomId = (schedule.roomId) ? true : false;
           }
         }
       })
       // modified area else part : end
 
       if (this.selectedTime.hh && this.selectedTime.hh.trim() != '') {
+        console.log('first came for', this.selectedTime.hh);
         this.busySchedules.forEach(schedule => {
           if (schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] == schedule.slotTo['hh']) {
+            console.log('second came for', this.selectedTime.hh);
             this.minutes.forEach(minute => {
               if (schedule.slotTo['mm'] >= minute.val && schedule.slotFrom['mm'] <= minute.val) {
                 minute.isValidate = false;
-                minute.scheduleOf = schedule.scheduleOf;
+                minute.roomId = (schedule.roomId) ? true : false;
               }
+            })
+          } else if (schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] < schedule.slotTo['hh']) {
+            console.log('third came for', this.selectedTime.hh);
+            this.minutes.forEach(minute => {
+              minute.isValidate = false;
+              minute.roomId = (schedule.roomId) ? true : false;
             })
           } else if (schedule.slotTo['hh'] == this.selectedTime.hh) {
             console.log('schedule', schedule)
@@ -556,7 +564,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
               console.log(schedule.slotTo['mm'], minute.val)
               if (schedule.slotTo['mm'] > minute.val) {
                 minute.isValidate = false;
-                minute.scheduleOf = schedule.scheduleOf;
+                minute.roomId = (schedule.roomId) ? true : false;
               }
             })
           } else {
