@@ -309,18 +309,19 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <span *ngIf="!showHours" (click)="showHours = true;selectedTime.hh = '';validateAvailability()"><i
+                <span *ngIf="!showHours" (click)="showHours = true;validateAvailability()"><i
                         class="fas fa-arrow-left text-light p-2 pointer"></i></span>
                 <h5 class="modal-title text-center">{{showHours ? 'Hour' : 'Minute'}}</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeTimePickerModal();selectedTime = { hh: '', mm: '' };">&times;</button>
+                    (click)="closeTimePickerModal();(!showHours && !selectedTime.mm && selectedTime.mm == '') ? selectedTime.mm = '00' : null">&times;</button>
             </div>
 
             <div class="modal-body">
                 <div *ngIf="showHours">
                     <div text-center>
+                        <!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
                         <span *ngFor="let hour of hours"
-                            (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')"
+                            (click)="selectedTime.hh = hour.val;this.validateAvailability();showHours =false"
                             class="btn-hour hour-row-2" [title]="(!hour.isValidate) ? hour.scheduleOf : ''"
                             [ngClass]="{'active-hr' : selectedTime.hh == hour.val,'disableSelection' : !hour.isValidate}">{{hour.val}}</span>
                     </div>
@@ -329,9 +330,9 @@
 
                 <div *ngIf="!showHours">
                     <div text-center>
+                        <!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->
                         <span *ngFor="let minute of minutes"
-                            (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')"
-                            class="btn-hour hour-row-2"
+                            (click)="selectedTime.mm = minute.val; closeTimePickerModal()" class="btn-hour hour-row-2"
                             [ngClass]="{'active-hr' : selectedTime.mm == minute.val,'disableSelection' : !minute.isValidate}">{{minute.val}}</span>
                     </div>
                 </div>

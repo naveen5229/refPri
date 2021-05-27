@@ -23,6 +23,7 @@ import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-fo
   styleUrls: ["./task.component.scss"],
 })
 export class TaskComponent implements OnInit {
+  today = new Date();
   activeTab = "unreadTaskByMe";
   // activeTab = "unreadLeads";
   task_type = 1;
@@ -2233,9 +2234,9 @@ export class TaskComponent implements OnInit {
     console.log(status, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
-      if(!status){
+      if (!status) {
         preTitle = "Re-Active";
-      }else if (status === -1) {
+      } else if (status === -1) {
         preTitle = "Reject";
       } else if (status == 3) {
         preTitle = "Hold";
@@ -3268,11 +3269,21 @@ export class TaskComponent implements OnInit {
     }
 
 
-    if (type == 1 && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
-      icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket), txt: "", title: "Edit Meeting" });
-      icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
-      // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
-      icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
+    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
+      if (type == 1) {
+        icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket), txt: "", title: "Edit Meeting" });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
+        icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
+      }
+      if(type == 2){
+        if(!ticket.schedule_time){
+          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket), txt: "", title: "Edit Meeting" });
+          icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
+        }else if(this.today > new Date(ticket.schedule_time)){
+          icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        }
+      }
     }
 
     if (type == 0 && [-1, 5].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id)) {
@@ -3306,7 +3317,7 @@ export class TaskComponent implements OnInit {
     if (ticket._tktid) {
       let params = {
         subject: ticket.subject,
-        desc: ticket._desc,
+        detail: ticket._desc,
         roomId: (ticket._room_id) ? ticket._room_id : 1,
         host: ticket._host,
         userId: (ticket._users) ? JSON.stringify(ticket._users) : JSON.stringify([{ "id": ticket._host }]),
