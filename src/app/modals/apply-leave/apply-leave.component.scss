@@ -3,3 +3,115 @@
     columns: $primary-2;
     color: $primary-2;
 }
+
+.custom-modal {
+    position: absolute;
+    top: calc(50% - (50%/1.5));
+    left: 0;
+    right: 0;
+    // width: 85%;
+    width: 50%;
+    height: auto;
+    padding: $padding-md;
+    z-index: 100;
+    margin: 0 auto;
+    padding: 0px;
+    color: #333;
+    background: transparent;
+    border-radius: 0px;
+      box-shadow: none;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    overflow: hidden;
+}
+
+.custom-modal-header {
+    text-align: center;
+    background: #3366ff;
+    padding: 10px;
+    color: $light-1;
+    letter-spacing: .5px;
+    font-size: 16px;
+    border-radius: 10px 10px 0px 0px;
+    box-shadow: none;
+    z-index: 999;
+    font-weight: 500;
+}
+
+.back-btn {
+    position: absolute;
+    left: 10px;
+    font-size: $font-sm-xxl+1;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+.custom-modal-content {
+    background: $light-1;
+    padding: 5px 10px 45px 10px;
+    border-radius: 0px;
+}
+
+.btn-date,
+.btn-hour {
+    background: $light-10;
+    // padding: 5px 6px;
+    font-weight: bold;
+    margin-right: 3px;
+    margin-left: 3px;
+    margin-top: 8px;
+    display: inline-block;
+    width: 45%;
+    font-size: $font-sm-xxl;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 4px;
+    font-family: monospace;
+    max-width: 100%;
+    display: inline-block;
+    padding: 0 $padding-md;
+}
+
+.btn-hour {
+    width: 30px;
+}
+
+.active-btn,
+.active-hr {
+    background: #3366ff;
+    color: $light-1;
+    font-size: $font-md-sm;
+}
+
+.hour-row-1,
+.hour-row-4 {
+    width: 20px;
+    padding: 0px;
+    font-size:$font-sm-lg;
+    height: 20px;
+    line-height: 20px;
+}
+
+.hour-row-2,
+.hour-row-3 {
+    width: 30px;
+    padding: 0px;
+    font-size:$font-sm-lg;
+}
+
+.clockPos{
+    position: absolute;
+    top: 7px;
+    right: 18px;
+}
+
+.clockPos:hover{
+    cursor: pointer;
+}
+
+.disableSelection{
+    pointer-events:none;
+    background-color: red;
+}

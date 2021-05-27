@@ -1005,4 +1005,18 @@ export class TaskMessageComponent implements OnInit {
     this.searchCount = 0;
     // this.searchTerm = null;
   }
+
+  getCCuserAckStatus(status){
+    let statusClass = "fa-eye-slash";
+    if(this.ticketType==110){
+      if(status==-1){
+        statusClass = "fa-eye text-danger";
+      }else if(status==1){
+        statusClass = "fa-eye text-success";
+      }
+    }else if(status){
+      statusClass = "fa-eye text-success";
+    }
+    return statusClass;
+  }
 }
