@@ -1765,6 +1765,14 @@ export class TaskComponent implements OnInit {
             isTitle: true,
             title: ticket["_task_desc"],
           };
+        } else if (key == "subject" && ticket['_tktype'] == 110) {
+          column[key] = {
+            value: ticket[key],
+            class: "black",
+            action: "",
+            isTitle: true,
+            title: `${ticket["_desc"] ? ticket["_desc"] : ''}\n${ticket['schedule_time'] ? ticket['schedule_time'] : ''}\n${ticket['duration'] ? ticket['duration'] : ''}\n${ticket['_link'] ? ticket['_link'] : ''}`,
+          };
         } else if (key == "time_left") {
           column[key] = {
             value: this.common.findRemainingTime(ticket[key]),
@@ -3225,7 +3233,7 @@ export class TaskComponent implements OnInit {
             class: "black",
             action: "",
             isTitle: true,
-            title: ticket["_desc"],
+            title: `${ticket["_desc"] ? ticket["_desc"] : ''}\n${ticket['schedule_time'] ? ticket['schedule_time'] : ''}\n${ticket['duration'] ? ticket['duration'] : ''}\n${ticket['_link'] ? ticket['_link'] : ''}`,
           };
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
@@ -3271,17 +3279,17 @@ export class TaskComponent implements OnInit {
 
     if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
       if (type == 1) {
-        icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket), txt: "", title: "Edit Meeting" });
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
+        icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
         icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
       }
-      if(type == 2){
-        if(!ticket.schedule_time){
-          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket), txt: "", title: "Edit Meeting" });
+      if (type == 2) {
+        if (!ticket.schedule_time) {
+          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, true), txt: "", title: "Edit Meeting" });
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
-        }else if(this.today > new Date(ticket.schedule_time)){
-          icons.push({ class: "fa fa-thumbs-up text-success", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        } else if (this.today > new Date(ticket.schedule_time)) {
+          icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
       }
     }
@@ -3290,6 +3298,29 @@ export class TaskComponent implements OnInit {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
     }
     return icons;
+  }
+
+  followUpMeeting(ticket, type, status) {
+    this.common.params = {
+      title: "Follow Up Meeting",
+      description:
+        `<b>&nbsp;` + `Create A FollowUp Meeting.`,
+      isRemark: false,
+    };
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      if (data.response) {
+        this.editMeeting(ticket, type, false);
+      } else {
+        this.updateTicketStatus(ticket, type, status);
+      }
+    });
   }
 
   deleteMeetingWithConfirm(ticket, type) {
@@ -3352,16 +3383,17 @@ export class TaskComponent implements OnInit {
   }
   // end: meeting
 
-  editMeeting(ticket) {
+  editMeeting(ticket, type, isEdit) {
     console.log("🚀 ~ file: task.component.ts ~ line 3333 ~ TaskComponent ~ editMeeting ~ ticket", ticket)
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = {
+      isEdit: isEdit,
       meetingData: ticket,
       userList: this.adminList,
       groupList: this.groupList,
       formType: 2,
-      title: 'Edit Meeting',
-      btn: 'Update'
+      title: isEdit ? 'Edit Meeting' : 'Add Meeting',
+      btn: isEdit ? 'Update' : 'Add'
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
@@ -3370,8 +3402,12 @@ export class TaskComponent implements OnInit {
     });
     activeModal.result.then((data) => {
       if (data.response) {
-        this.getMeetingListByType(1);
         this.activeTab = "meeting";
+        if (!isEdit) {
+          this.updateTicketStatus(ticket, type, 5);
+        } else {
+          this.getMeetingListByType(1);
+        }
       }
       this.tableUnreadTaskForMeList.settings.arrow = true;
     });

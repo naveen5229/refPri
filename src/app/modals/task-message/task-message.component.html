@@ -5,12 +5,14 @@
   </button>
 </div>
 <div class="modal-header sub-title" *ngIf="subTitle">
-  <span [innerHtml]="subTitle" style="white-space: pre-wrap;" class="col-9 p-0"></span>
+  <span [innerHtml]="subTitle" style="white-space: pre-wrap;" class="col-9 p-0"
+    [title]="(ticketData && ticketData._tktype == 110) ? ticketData._desc+ '\n' + ticketData.schedule_time+ '\n' + ticketData.duration+ '\n' + ticketData._room_id+ '\n' + ticketData._link : ''"></span>
   <div class="action-icon">
     <!-- <span><i class="fa fa-history text-dark" *ngIf="taskType === 'Scheduled'" (click)="getHistory()"></i></span> -->
     <span><i class="fa fa-search" aria-hidden="true" title="Search Chat"
         (click)="search();isAttachmentShow=false"></i></span>
-    <span *ngIf="![-1,5].includes(statusId)"><i class="fa fa-star" [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
+    <span *ngIf="![-1,5].includes(statusId)"><i class="fa fa-star"
+        [ngClass]="isChecked == 1 ? 'text-warning' : 'text-muted'" aria-hidden="true"
         [title]="isChecked == 1 ? 'Star unmark' : 'Star mark'" (click)="starMarkOnTicket()"></i></span>
     <span><i class="fa fa-files-o" [ngClass]="(attachmentList && attachmentList.length>0) ? 'blue' : ' text-dark'"
         aria-hidden="true" title="View Attachment"
@@ -42,8 +44,8 @@
       <ul *ngIf="attachmentList && attachmentList.length>0">
         <li *ngFor="let a of attachmentList; let i =index">
           <!-- <a target="_blank" [href]="a.url"alt="attachemt file">{{(a.name) ? a.name : a.url}}</a> -->
-          <span class="blue cursor-pointer"
-            (click)="common.checkFile(a.url,a.name)">{{(a.name) ? a.name : a.url}}</span>
+          <span class="blue cursor-pointer" (click)="common.checkFile(a.url,a.name)">{{(a.name) ? a.name :
+            a.url}}</span>
         </li>
       </ul>
       <span *ngIf="!attachmentList || !attachmentList.length">No Data Found</span>
@@ -299,12 +301,13 @@
               <br></span>
           </td>
         </tr>
-        <tr valign="top">
+        <tr valign="top" *ngIf="(ticketData && ticketData._tktype != 110)">
           <td colspan="2" class="pt-2 text-center">
             <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
               (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off"
               isMultiSelect="true" [bGConditions]="bGConditions" [preSelected]="newCCUserId"></auto-suggestion>
-            <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add {{[114,110].includes(ticketType) ? '' : 'CC'}} User</button>
+            <button class="btn btn-primary btn-sm mt-1" (click)="addNewCCUserToTask()">Add
+              {{[114,110].includes(ticketType) ? '' : 'CC'}} User</button>
           </td>
         </tr>
       </table>
