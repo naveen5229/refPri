@@ -291,7 +291,7 @@
           <td class="cc_user">
             <span *ngFor="let ccu of userListByTask.ccUsers;let i = index">
               <i class="fa fa-minus-circle cursor-pointer" style="color: cadetblue;font-size: 10px;"
-                title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user)"></i>
+                title="Remove CC-user" (click)="removeCCUserWithConfirm(ccu._cc_user_id,ccu.cc_user,ticketData._tktype)"></i>
               <i class="fa" style="font-size: 12px;" [ngClass]="getCCuserAckStatus(ccu.status)"
                 [title]="(ccu.status) ? ((ccu.status==-1) ? 'Declined' : 'Ack') : 'Ack Pending'"></i>
               <i class="fa fa-circle mr-1" style="font-size: 8px;"
