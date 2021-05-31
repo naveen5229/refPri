@@ -278,6 +278,7 @@ export class TaskComponent implements OnInit {
       (res) => {
         if (res["code"] > 0) {
           let adminList = res["data"] || [];
+          console.log(adminList)
           this.adminList = adminList.map((x) => {
             return { id: x.id, name: x.name + " - " + x.department_name };
           });
@@ -1763,15 +1764,7 @@ export class TaskComponent implements OnInit {
             class: "black",
             action: "",
             isTitle: true,
-            title: ticket["_task_desc"],
-          };
-        } else if (key == "subject" && ticket['_tktype'] == 110) {
-          column[key] = {
-            value: ticket[key],
-            class: "black",
-            action: "",
-            isTitle: true,
-            title: `${ticket["_desc"] ? ticket["_desc"] : ''}\n${ticket['schedule_time'] ? ticket['schedule_time'] : ''}\n${ticket['duration'] ? ticket['duration'] : ''}\n${ticket['_link'] ? ticket['_link'] : ''}`,
+            title: (ticket['_tktype'] == 110) ? `${ticket["_task_desc"] ? ticket["_task_desc"] : ''}\n${ticket['_meeting_time'] ? ticket['_meeting_time'] : ''}\n${ticket['_duration'] ? ticket['_duration'] : ''}\n${ticket['_link'] ? ticket['_link'] : ''}\n${ticket['_room'] ? ticket['_room'] : ''}` : ticket["_task_desc"],
           };
         } else if (key == "time_left") {
           column[key] = {
