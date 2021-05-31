@@ -301,7 +301,7 @@
               <br></span>
           </td>
         </tr>
-        <tr valign="top" *ngIf="(ticketData && ticketData._tktype != 110)">
+        <tr valign="top">
           <td colspan="2" class="pt-2 text-center">
             <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
               (onSelected)="newCCUserId = $event" inputId="ccUsers" name="ccUser" inputId="ccUser" autocomplete="off"
