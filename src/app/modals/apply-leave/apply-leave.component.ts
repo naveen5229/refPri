@@ -400,15 +400,16 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       this.meetingForm.cc.map(ele => {
         if (ele.groupId != null) {
           ele.groupuser.forEach(x2 => {
-            CC.push({ id: x2._id });
+            CC.push({ id: x2._id, name: x2.name });
           })
         } else {
-          CC.push({ id: ele.id });
+          CC.push({ id: ele.id, name: ele.name });
         }
       })
     }
 
     let params = {
+      checkPresent: 1,
       parentId: this.meetingForm.parentId,
       subject: this.meetingForm.subject,
       detail: this.meetingForm.desc,
@@ -452,6 +453,18 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
+      } else if (res['code'] === -99) {
+        this.common.params = {
+          title: 'User Availability',
+          description: `<b>${res['msg']}`
+        }
+        const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+        activeModal.result.then(data => {
+          if (data.response) {
+            params.checkPresent = 0;
+            this.saveMeeting(params);
+          }
+        });
       } else {
         this.common.showError(res['msg']);
       }
@@ -574,7 +587,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
                 minute.isValidate = false;
                 minute.roomId = (schedule.roomId) ? true : false;
               })
-            }else{
+            } else {
               console.log(`schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] < schedule.slotTo['hh'] && schedule.slotFrom['hh'] > 0`);
               this.minutes.forEach(minute => {
                 if (schedule.slotTo['mm'] < minute.val) {
@@ -583,7 +596,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
                 }
               })
             }
-          }else if (schedule.slotFrom['hh'] < this.selectedTime.hh && schedule.slotTo['hh'] > this.selectedTime.hh) {
+          } else if (schedule.slotFrom['hh'] < this.selectedTime.hh && schedule.slotTo['hh'] > this.selectedTime.hh) {
             console.log(`schedule.slotFrom['hh'] < this.selectedTime.hh && schedule.slotTo['hh'] > this.selectedTime.hh`);
             this.minutes.forEach(minute => {
               minute.isValidate = false;
