@@ -4,6 +4,7 @@ import { scheduled } from 'rxjs';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
+import { AvailableTimeSlotComponent } from '../available-time-slot/available-time-slot.component';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
@@ -655,6 +656,19 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   // }
   closeTimePickerModal() {
     document.getElementById('timePickerModalCustom').style.display = 'none';
+  }
+
+  availableSlot(){
+    this.common.params = {
+      title: 'Time Slot',
+    }
+    const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        console.log('modal Works');
+        // this.saveMeeting(params);
+      }
+    });
   }
 
 }
