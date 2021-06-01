@@ -31,6 +31,7 @@
     },
     "dependencies": {
         "@agm/core": "^1.0.0-beta.5",
+        "@angular-slider/ngx-slider": "^2.0.3",
         "@angular/animations": "^8.0.0",
         "@angular/cdk": "^8.0.0",
         "@angular/common": "^8.0.0",
@@ -67,6 +68,7 @@
         "ckeditor": "4.7.3",
         "classlist.js": "1.1.20150312",
         "core-js": "2.5.1",
+        "detect-passive-events": "^2.0.3",
         "echarts": "^4.0.2",
         "eva-icons": "^1.1.0",
         "fabric": "^4.3.1",
