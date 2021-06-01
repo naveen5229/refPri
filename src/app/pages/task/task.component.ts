@@ -1953,10 +1953,7 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == -8) {
-      if (ticket._tktype == 110 && ticket._mp_status == 0) {
-        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type), txt: "", title: "Mark ack as meeting user", });
-        icons.push({ class: "fa fa-times text-danger", action: this.ackTaskByCcUser.bind(this, ticket, type, -1), txt: "", title: "Mark rejected as meeting user", });
-      } else if (
+      if (
         ticket._status == 0 &&
         ticket._assignee_user_id == this.userService.loggedInUser.id
       ) {
@@ -1980,6 +1977,9 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Ack as Assigner",
         });
+      } else if (ticket._tktype == 110 && ticket._mp_status == 0) {
+        icons.push({ class: "fa fa-check-square text-warning", action: this.ackTaskByCcUser.bind(this, ticket, type), txt: "", title: "Mark ack as meeting user", });
+        icons.push({ class: "fa fa-times text-danger", action: this.ackTaskByCcUser.bind(this, ticket, type, -1), txt: "", title: "Mark rejected as meeting user", });
       } else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
