@@ -22,7 +22,7 @@ export class AvailableTimeSlotComponent implements OnInit {
   };
 
   busySchedules = [
-    {id:1,name:'Naveen',schedule:[{fromTime:8,toTime:8.75},{fromTime:9,toTime:11}]},
+    {id:1,name:'Naveen',schedule:[{fromTime:8,toTime:8.75},{fromTime:9,toTime:11},{fromTime:11.5,toTime:12.5},{fromTime:12.5,toTime:13}]},
     {id:2,name:'Sunil',schedule:[{fromTime:6,toTime:7.75},{fromTime:11,toTime:12.50}]},
     {id:3,name:'Bhavya',schedule:[{fromTime:13,toTime:15.25},{fromTime:16,toTime:17}]}
   ]
