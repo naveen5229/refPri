@@ -360,6 +360,7 @@ export class TaskMessageComponent implements OnInit {
       }
 
       let params = {
+        ticketType: this.ticketType,
         ticketId: this.ticketId,
         status: this.statusId,
         message: formatedMsg,//this.taskMessage,
