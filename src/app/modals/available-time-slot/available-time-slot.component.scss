@@ -1,8 +1,8 @@
 // We need to use ::ng-deep to overcome view encapsulation
 ::ng-deep {
   .custom-slider .ngx-slider .ngx-slider-bar {
-    background: #ffe4d1;
-    height: 2px;
+    //background: #ffe4d1;
+   // height: 2px;
   }
   .custom-slider .ngx-slider .ngx-slider-selection {
     background: orange;
@@ -39,6 +39,43 @@
     background: #ffe4d1;
     top: -1px;
   }
+  .custom-slider .ngx-slider.othersrange .ngx-slider-tick {
+ background: #ff000000!important;
+  }
+  .ngx-slider[disabled].othersrange .ngx-slider-tick.ngx-slider-selected {
+    background: #1747ce!important;
+    z-index: 9999999;
+}
+.ngx-slider[disabled].othersrange .ngx-slider-pointer {
+  cursor: not-allowed;
+  background-color: #d8e0f3;
+  display: none!important;
+}
+  .ngx-slider.othersrange .ngx-slider-bar {
+    left: 0;
+    width: 100%;
+    height: 1px;
+    z-index: 1;
+    background:#1747ce!important;
+    border-radius: 2px;
+}
+  .custom-slider.range2{
+    width: 300.66px;
+}
+.custom-slider.range2:not(:first-child){
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  width: 300.66px;
+}
+.ngx-slider .ngx-slider-bubble {
+  color: #55637d;
+  font-size: 8px!important;
+}
+.ngx-slider[disabled] .ngx-slider-pointer {
+  cursor: not-allowed;
+  background-color: #d8e0f300;
+}
 
   .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
     background: orange;
