@@ -7,7 +7,7 @@
 <div class="modal-body">
   <div class="row mt-2">
     <div class="col-4 my-auto">
-      <label>Select Interval:<span class="text-danger">*</span></label>
+      <label>Select Time Interval:<span class="text-danger">*</span></label>
     </div>
     <div class="col-8">
       <div class="row" class="custom-slider">
@@ -23,19 +23,15 @@
     <div class="col-8">
       <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule">
         <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime"
-          [options]="{floor: 1,ceil: 24,step: 0.05,showTicks: true,disabled: true}" class="othersrange"></ngx-slider>
+          [options]="schedule.option" class="othersrange"></ngx-slider>
       </div>
     </div>
   </div>
 
-</div>
-
-<div class="modal-footer">
-  <div class="row footer">
-    <div class="row mt-1">
-      <div class="col-12 text-right">
-        <button class="btn btn-primary btn-sm" id="addMeetingBtn" (click)="addTime()">Save</button>
-      </div>
+  <div class="row mt-1">
+    <div class="col-12 text-right">
+      <button class="btn btn-primary btn-sm" id="addMeetingBtn" (click)="addTime()">Save</button>
     </div>
   </div>
+
 </div>
