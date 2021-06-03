@@ -59,7 +59,7 @@ export class AvailableTimeSlotComponent implements OnInit {
   ngOnInit() {
   }
 
-  closeModal(res, range) {
+  closeModal(res, range=null) {
     this.activeModal.close({ response: res, range: range });
   }
 
