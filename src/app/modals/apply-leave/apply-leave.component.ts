@@ -662,7 +662,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.common.params = {
       title: 'Time Slot',
     }
-    const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
       if (data.response) {
         console.log('modal Works');

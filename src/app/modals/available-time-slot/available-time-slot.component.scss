@@ -60,13 +60,16 @@
     border-radius: 2px;
 }
   .custom-slider.range2{
-    width: 300.66px;
+    width: 500.66px;
 }
 .custom-slider.range2:not(:first-child){
   position: absolute;
   top: 0px;
   right: 15px;
-  width: 300.66px;
+  width: 500.66px;
+}
+.custom-slider.range2:not(:first-child) .ngx-slider .ngx-slider-bubble.ngx-slider-limit {
+  display: none;
 }
 .ngx-slider .ngx-slider-bubble {
   color: #55637d;
