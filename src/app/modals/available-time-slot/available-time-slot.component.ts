@@ -4,6 +4,8 @@ import { UserService } from '../../@core/mock/users.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { Options } from '@angular-slider/ngx-slider';
+import { parse } from 'querystring';
+import * as moment from 'moment';
 
 @Component({
   selector: 'ngx-available-time-slot',
@@ -11,6 +13,7 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./available-time-slot.component.scss']
 })
 export class AvailableTimeSlotComponent implements OnInit {
+  type = 'time';
   title = 'Available Slot';
   value: number = 1;
   highValue: number = 2;
@@ -21,11 +24,7 @@ export class AvailableTimeSlotComponent implements OnInit {
     showTicks: true
   };
 
-  busySchedules = [
-    {id:1,name:'Naveen',schedule:[{fromTime:8,toTime:8.75},{fromTime:9,toTime:11},{fromTime:11.5,toTime:12.5},{fromTime:12.5,toTime:13}]},
-    {id:2,name:'Sunil',schedule:[{fromTime:6,toTime:7.75},{fromTime:11,toTime:12.50}]},
-    {id:3,name:'Bhavya',schedule:[{fromTime:13,toTime:15.25},{fromTime:16,toTime:17}]}
-  ]
+  busySchedules = [];
 
 
   constructor(public activeModal: NgbActiveModal,
@@ -33,18 +32,71 @@ export class AvailableTimeSlotComponent implements OnInit {
     public common: CommonService,
     public modalService: NgbModal,
     public userService: UserService) {
+    console.log('params', this.common.params);
     this.title = this.common.params.title;
+    if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
+    if (this.common.params.selectedTime) {
+      let slotFrom = null;
+      let slotTo = null;
+      switch (this.common.params.selectedTime.from.mm) {
+        case '15': slotFrom = (this.common.params.selectedTime.from.hh + '.25'); break;
+        case '30': slotFrom = (this.common.params.selectedTime.from.hh + '.50'); break;
+        case '45': slotFrom = (this.common.params.selectedTime.from.hh + '.75'); break;
+        default: slotFrom = this.common.params.selectedTime.from.hh ? this.common.params.selectedTime.from.hh : 9;
+      }
+      switch (this.common.params.selectedTime.to.mm) {
+        case '15': slotTo = (this.common.params.selectedTime.to.hh + '.25'); break;
+        case '30': slotTo = (this.common.params.selectedTime.to.hh + '.50'); break;
+        case '45': slotTo = (this.common.params.selectedTime.to.hh + '.75'); break;
+        default: slotTo = this.common.params.selectedTime.to.hh ? this.common.params.selectedTime.to.hh : 10;
+      }
+      this.value = slotFrom;
+      this.highValue = slotTo;
+      console.log('after time assign', this.value,this.highValue);
+    }
   }
 
   ngOnInit() {
   }
 
-  closeModal(res) {
-    this.activeModal.close(res);
+  closeModal(res, range) {
+    this.activeModal.close({ response: res, range: range });
   }
 
   addTime() {
-    console.log('value:', this.value, 'highvalue:', this.highValue);
+    if (this.type === 'time') {
+      let from = JSON.stringify(this.value).split('.');
+      let to = JSON.stringify(this.highValue).split('.');
+      let interval = { from: { hh: null, mm: '00' }, to: { hh: null, mm: '00' }, duration: { hh: null, mm: '00' } }
+      interval.from.hh = from[0];
+      interval.to.hh = to[0];
+
+      let fromTime = moment();
+      let toTime = moment();
+      fromTime.set({ hour: parseInt(from[0]) });
+      toTime.set({ hour: parseInt(to[0]) });
+      fromTime.set({ minute: 0 });
+      toTime.set({ minute: 0 });
+
+      console.log(from[1], to[1]);
+      switch (from[1]) {
+        case '25': { interval.from.mm = '15', fromTime.set({ minute: 15 }); } break;
+        case '5': { interval.from.mm = '30', fromTime.set({ minute: 30 }); } break;
+        case '75': { interval.from.mm = '45', fromTime.set({ minute: 45 }); } break;
+      }
+
+      switch (to[1]) {
+        case '25': { interval.to.mm = '15', toTime.set({ minute: 15 }); } break;
+        case '5': { interval.to.mm = '30', toTime.set({ minute: 30 }); } break;
+        case '75': { interval.to.mm = '45', toTime.set({ minute: 45 }); } break;
+      }
+
+      let timeDuration = moment.utc(toTime.diff(fromTime)).format('HH:mm:ss');
+      interval.duration.hh = timeDuration.split(':')[0];
+      interval.duration.mm = timeDuration.split(':')[1];
+      console.log('fromTime:', fromTime, 'toTime:', toTime, 'timeDuration', timeDuration);
+      this.closeModal(true, interval)
+    }
   }
 
 }

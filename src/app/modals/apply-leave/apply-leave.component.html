@@ -205,12 +205,12 @@
         </div>
         <div class="col-4">
             <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
-                (onChanged)="meetingForm.time=$event" [dateTimeValue]="meetingForm.time">
+                (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
             </uj-date-time-picker>
         </div>
         <div class="col-2">
             <input type="text" placeholder="Search Slot" class="form-control"
-                [value]="(selectedTime.hh && selectedTime.mm) ? selectedTime.hh + ':' + selectedTime.mm : null"
+                [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
                 readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
         </div>
     </div>
@@ -221,7 +221,7 @@
         </div>
         <div class="col-6">
             <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
-                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration">
+                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration" [isTimeDisabled]="true">
             </uj-date-time-picker>
         </div>
     </div>
@@ -306,7 +306,7 @@
 
 
 <!-- start: show hours popup -->
-<div class="modal" id="timePickerModalCustom">
+<!-- <div class="modal" id="timePickerModalCustom">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -320,7 +320,6 @@
             <div class="modal-body">
                 <div *ngIf="showHours">
                     <div text-center>
-                        <!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
                         <span *ngFor="let hour of hours"
                             (click)="selectedTime.hh = hour.val;this.validateAvailability();showHours =false"
                             class="btn-hour hour-row-2" [ngStyle]="{'background': (!hour.isValidate) ? 'red' : ''}"
@@ -331,7 +330,6 @@
 
                 <div *ngIf="!showHours">
                     <div text-center>
-                        <!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->
                         <span *ngFor="let minute of minutes"
                             [ngStyle]="{'background': (!minute.isValidate) ? 'red' : ''}"
                             (click)="selectedTime.mm = minute.val; closeTimePickerModal()" class="btn-hour hour-row-2"
@@ -343,3 +341,7 @@
         </div>
     </div>
 </div>
+ -->
+
+<!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
+<!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->
