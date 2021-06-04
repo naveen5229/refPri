@@ -8,6 +8,7 @@ import { AvailableTimeSlotComponent } from '../available-time-slot/available-tim
 import { ConfirmComponent } from '../confirm/confirm.component';
 import _ from 'lodash';
 import * as moment from 'moment';
+import { TaskMessageComponent } from '../task-message/task-message.component';
 
 @Component({
   selector: 'ngx-apply-leave',
@@ -68,12 +69,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
   meetingRoomList = [];
 
-
   selectedTime = { from: { hh: '', mm: '' }, to: { hh: '', mm: '' } };
   showHours = false;
   hours = [];
   minutes = [];
   busySchedules = [];
+  isSaveWithChat = null;
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -389,7 +390,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
   }
 
-  addMeeting() {
+  addMeeting(isChat = null) {
+    this.isSaveWithChat = isChat;
     console.log("addmeeting:", this.meetingForm);
     if (!this.meetingForm.subject) {
       return this.common.showError("Subject is missing");
@@ -468,6 +470,19 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         if (res['data'][0]['y_id'] > 0) {
           this.common.showToast(res['data'][0].y_msg);
           this.closeModal(true);
+          if (this.isSaveWithChat == 1) {
+            let ticketEditData = {
+              ticketData: null,
+              ticketId: res['data'][0]['y_tktid'],
+              statusId: 0,
+              lastSeenId: null,
+              taskId: null,
+              taskType: 110,
+              tabType: null,
+            };
+            let subTitle = params.subject + ":<br>" + params.detail;
+            this.ticketMessage(ticketEditData, subTitle);
+          }
         } else {
           this.common.showError(res['data'][0].y_msg);
         }
@@ -734,6 +749,18 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         // this.saveMeeting(params);
       }
     });
+  }
+
+  ticketMessage(ticketEditData, subTitle) {
+    this.common.params = {
+      ticketEditData,
+      title: "Meeting Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.userList,
+      groupList: this.userGroupList,
+    };
+    const activeModal = this.modalService.open(TaskMessageComponent, {size: "xl",container: "nb-layout",backdrop: "static"});
   }
 
 }

@@ -3273,7 +3273,9 @@ export class TaskComponent implements OnInit {
     if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
       if (type == 1) {
         icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
-        icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        if (this.today > new Date(ticket.schedule_time)) {
+          icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        }
         // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
         icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
       }
