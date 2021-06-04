@@ -391,7 +391,7 @@ export class TaskComponent implements OnInit {
       btn = "Add";
     } else if (formType == 2) {
       title = "Add Meeting";
-      btn = "Add";
+      btn = "Save";
     }
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = {
@@ -3388,7 +3388,7 @@ export class TaskComponent implements OnInit {
       groupList: this.groupList,
       formType: 2,
       title: isEdit ? 'Edit Meeting' : 'Add Meeting',
-      btn: isEdit ? 'Save' : 'Add'
+      btn: 'Save'
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
