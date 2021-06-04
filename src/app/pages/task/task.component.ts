@@ -3388,7 +3388,7 @@ export class TaskComponent implements OnInit {
       groupList: this.groupList,
       formType: 2,
       title: isEdit ? 'Edit Meeting' : 'Add Meeting',
-      btn: isEdit ? 'Update' : 'Add'
+      btn: isEdit ? 'Save' : 'Add'
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
       size: "lg",
