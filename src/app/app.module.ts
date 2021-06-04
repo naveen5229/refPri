@@ -122,6 +122,8 @@ import { PdfVersioningComponent } from './modals/process-modals/pdf-versioning/p
 import { AddentityfieldsComponent } from './modals/addentityfields/addentityfields.component';
 import { AddExpectedHourComponent } from './modals/add-expected-hour/add-expected-hour.component';
 import { FunctionalReportingMappingComponent } from './modals/functional-reporting-mapping/functional-reporting-mapping.component';
+import { AvailableTimeSlotComponent } from './modals/available-time-slot/available-time-slot.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -211,7 +213,8 @@ const PAGE_COMPONENTS = [
   PdfVersioningComponent,
   AddentityfieldsComponent,
   AddExpectedHourComponent,
-  FunctionalReportingMappingComponent
+  FunctionalReportingMappingComponent,
+  AvailableTimeSlotComponent,
 ];
 
 @NgModule({
@@ -262,7 +265,8 @@ const PAGE_COMPONENTS = [
       messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
     CoreModule.forRoot(),
-    DragDropModule
+    DragDropModule,
+    NgxSliderModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }

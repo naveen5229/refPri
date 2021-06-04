@@ -201,28 +201,23 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Meeting Time<span class="text-danger">*</span></label>
+            <label>Host<span class="text-danger">*</span></label>
         </div>
-        <div class="col-4">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
-                (onChanged)="meetingForm.time=$event" [dateTimeValue]="meetingForm.time">
-            </uj-date-time-picker>
-        </div>
-        <div class="col-2">
-            <input type="text" placeholder="Search Slot" class="form-control"
-                [value]="(selectedTime.hh && selectedTime.mm) ? selectedTime.hh + ':' + selectedTime.mm : null"
-                readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User"
+                (onSelected)="meetingForm.host = $event" inputId="meetinghost" name="meetinghost"
+                [preSelected]="meetingForm.host"></auto-suggestion>
         </div>
     </div>
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Meeting Duration<span class="text-danger">*</span></label>
+            <label>Users<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
-                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration">
-            </uj-date-time-picker>
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
+                (onSelected)="meetingForm.cc = $event" inputId="meetingFormUsers" name="meetingFormUsers"
+                [preSelected]="meetingForm.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
         </div>
     </div>
 
@@ -264,24 +259,28 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Host<span class="text-danger">*</span></label>
+            <label>Meeting Duration<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User"
-                (onSelected)="meetingForm.host = $event" inputId="meetinghost" name="meetinghost"
-                [preSelected]="meetingForm.host"></auto-suggestion>
+            <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
+                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration" [isTimeDisabled]="true">
+            </uj-date-time-picker>
         </div>
     </div>
 
-
     <div class="row mt-2">
         <div class="col-4">
-            <label>Users<span class="text-danger">*</span></label>
+            <label>Meeting Time<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
-            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
-                (onSelected)="meetingForm.cc = $event" inputId="meetingFormUsers" name="meetingFormUsers"
-                [preSelected]="meetingForm.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
+        <div class="col-4">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-2">
+            <input type="text" placeholder="Search Slot" class="form-control"
+                [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
+                readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
         </div>
     </div>
 
@@ -296,16 +295,18 @@
 
     <div class="row mt-1">
         <div class="col-12 text-right">
-            <button class="btn btn-primary btn-sm" id="addMeetingBtn" (click)="addMeeting()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm mr-2" id="addMeetingBtn" (click)="addMeeting()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat"  (click)="addMeeting(1)">Save With Chat</button>
         </div>
     </div>
+    <!-- <button (click)="availableSlot()">modal</button> -->
 </div>
 <!-- end:meeting -->
 
 
 
 <!-- start: show hours popup -->
-<div class="modal" id="timePickerModalCustom">
+<!-- <div class="modal" id="timePickerModalCustom">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -319,21 +320,20 @@
             <div class="modal-body">
                 <div *ngIf="showHours">
                     <div text-center>
-                        <!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
                         <span *ngFor="let hour of hours"
                             (click)="selectedTime.hh = hour.val;this.validateAvailability();showHours =false"
-                            class="btn-hour hour-row-2" [title]="(!hour.isValidate) ? hour.scheduleOf : ''"
-                            [ngClass]="{'active-hr' : selectedTime.hh == hour.val,'disableSelection' : !hour.isValidate}">{{hour.val}}</span>
+                            class="btn-hour hour-row-2" [ngStyle]="{'background': (!hour.isValidate) ? 'red' : ''}"
+                            [ngClass]="{'active-hr' : selectedTime.hh == hour.val,'disableSelection' : hour.roomId}">{{hour.val}}</span>
                     </div>
                 </div>
 
 
                 <div *ngIf="!showHours">
                     <div text-center>
-                        <!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->
                         <span *ngFor="let minute of minutes"
+                            [ngStyle]="{'background': (!minute.isValidate) ? 'red' : ''}"
                             (click)="selectedTime.mm = minute.val; closeTimePickerModal()" class="btn-hour hour-row-2"
-                            [ngClass]="{'active-hr' : selectedTime.mm == minute.val,'disableSelection' : !minute.isValidate}">{{minute.val}}</span>
+                            [ngClass]="{'active-hr' : selectedTime.mm == minute.val,'disableSelection' : minute.roomId}">{{minute.val}}</span>
                     </div>
                 </div>
             </div>
@@ -341,3 +341,7 @@
         </div>
     </div>
 </div>
+ -->
+
+<!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
+<!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->

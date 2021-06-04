@@ -80,7 +80,7 @@
 
 .active-btn,
 .active-hr {
-    background: #3366ff;
+    background: #3366ff !important;
     color: $light-1;
     font-size: $font-md-sm;
 }
@@ -113,5 +113,5 @@
 
 .disableSelection{
     pointer-events:none;
-    background-color: red;
+    // background: red;
 }

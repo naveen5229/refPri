@@ -234,7 +234,7 @@ export class TaskMessageComponent implements OnInit {
           this.ticketData = ticketData[0];
           this.statusId = this.ticketData._status;
           this.lastSeenId = this.ticketData._lastreadid;
-          this.taskId = [101, 102, 104, 111, 112, 113, 114, 115].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
+          this.taskId = [101, 102, 104, 111, 112, 113, 114, 115,110].includes(this.ticketData._tktype) ? this.ticketData._refid : null;
           this.ticketType = this.ticketData._tktype;
           this.isChatFeature = this.ticketData._chat_feature;
           if (this.ticketType == 114) {
@@ -360,10 +360,11 @@ export class TaskMessageComponent implements OnInit {
       }
 
       let params = {
+        ticketType: this.ticketType,
         ticketId: this.ticketId,
         status: this.statusId,
         message: formatedMsg,//this.taskMessage,
-        attachments: JSON.stringify(this.attachmentFile.map(attachments=> {return{name: attachments.name, file: attachments.file}})),
+        attachments: JSON.stringify(this.attachmentFile.map(attachments => { return { name: attachments.name, file: attachments.file } })),
         parentId: (this.replyType > 0) ? this.parentCommentId : null,
         users: (mentionedUsers && mentionedUsers.length > 0) ? JSON.stringify(mentionedUsers) : null,
         replyStatus: (this.replyType > 0) ? this.replyStatus : null,
@@ -374,7 +375,7 @@ export class TaskMessageComponent implements OnInit {
       this.api.post('AdminTask/saveTicketMessage', params).subscribe(res => {
         this.common.loading--;
         if (res['code'] > 0) {
-          if(res['data']['y_id']>0){
+          if (res['data']['y_id'] > 0) {
             this.taskMessage = "";
             this.attachmentFile = [];
             this.resetQuotedMsg();
@@ -385,7 +386,7 @@ export class TaskMessageComponent implements OnInit {
             this.getMessageList();
             this.getAttachmentByTicket();
             this.msgtextarea.nativeElement.focus();
-          }else{
+          } else {
             this.common.showError(res['data']['y_msg']);
           }
         } else {
@@ -441,7 +442,7 @@ export class TaskMessageComponent implements OnInit {
         accessUsers.push(element._pu_user_id);
       });
     }
-    if (this.userListByTask['taskUsers'][0]._po_id>0) {
+    if (this.userListByTask['taskUsers'][0]._po_id > 0) {
       accessUsers.push(this.userListByTask['taskUsers'][0]._po_id);
     }
 
@@ -489,7 +490,10 @@ export class TaskMessageComponent implements OnInit {
     }
   }
 
-  removeCCUserWithConfirm(ccUserId, ccUserName) {
+  removeCCUserWithConfirm(ccUserId, ccUserName, tktype) {
+    if (tktype == 110 && this.userListByTask['ccUsers'] && this.userListByTask['ccUsers'].length == 1) {
+      return this.common.showError('Atleast 1 user should be in CC');
+    }
     if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id, ccUserId].includes(this.userService.loggedInUser.id)) {
       this.common.params = {
         title: 'Remove CC User',
@@ -579,7 +583,7 @@ export class TaskMessageComponent implements OnInit {
       this.common.showError("Select Assignee user");
     }
   }
-  
+
   updateTaskAssignerUser() {
     if (this.ticketId > 0 && this.newAssignerUser.id > 0) {
       let isCCUpdate = 1;
@@ -682,14 +686,14 @@ export class TaskMessageComponent implements OnInit {
   }
 
   checkReminderSeen() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid, this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
       let params = {
         ticket_id: this.ticketData._tktid
       };
       this.common.loading++;
       this.api.post('AdminTask/checkReminderSeen', params).subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.common.showToast(res['msg']);
         this.ticketData._isremind = 0;
       }, err => {
@@ -702,7 +706,7 @@ export class TaskMessageComponent implements OnInit {
   }
 
   editTaskAssignDate() {
-    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid,this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
+    if (this.userListByTask['taskUsers'] && [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._aduserid, this.userListByTask['taskUsers'][0]._assigner_id].includes(this.userService.loggedInUser.id)) {
       this.common.params = { userList: this.adminList, parentTaskId: this.ticketData._refid, parentTaskDesc: this.ticketData.task_desc, editType: 1, editData: this.ticketData };
       const activeModal = this.modalService.open(TaskNewComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
@@ -730,7 +734,7 @@ export class TaskMessageComponent implements OnInit {
           this.common.showError("Valid Format Are : jpeg, png, jpg, xlsx, xls, docx, doc, pdf, csv");
           return false;
         }
-        this.attachmentFile.push({ name: file.name, file: res, format:format });
+        this.attachmentFile.push({ name: file.name, file: res, format: format });
       }, err => {
         this.common.loading--;
         console.error('Base Err: ', err);
@@ -752,8 +756,8 @@ export class TaskMessageComponent implements OnInit {
     this.fileType = icon;
   }
 
-  removeFile(i){
-    this.attachmentFile.splice(i,1);
+  removeFile(i) {
+    this.attachmentFile.splice(i, 1);
   }
 
   onPaste(event: any) {
@@ -817,11 +821,11 @@ export class TaskMessageComponent implements OnInit {
         }
       });
     }
-    if (this.userListByTask['taskUsers'][0]._po_id>0 && this.userListByTask['taskUsers'][0]._po_id != this.loginUserId) {
+    if (this.userListByTask['taskUsers'][0]._po_id > 0 && this.userListByTask['taskUsers'][0]._po_id != this.loginUserId) {
       accessUsers.push({ id: this.userListByTask['taskUsers'][0]._po_id, name: this.userListByTask['taskUsers'][0].project_owner });
     }
-    if(accessUsers.length>0){
-      accessUsers = this.common.arrayUnique(accessUsers,'id');
+    if (accessUsers.length > 0) {
+      accessUsers = this.common.arrayUnique(accessUsers, 'id');
     }
     if (e && value && value == "@") {
       this.isMentionedUser = true;
@@ -1006,15 +1010,15 @@ export class TaskMessageComponent implements OnInit {
     // this.searchTerm = null;
   }
 
-  getCCuserAckStatus(status){
+  getCCuserAckStatus(status) {
     let statusClass = "fa-eye-slash";
-    if(this.ticketType==110){
-      if(status==-1){
+    if (this.ticketType == 110) {
+      if (status == -1) {
         statusClass = "fa-eye text-danger";
-      }else if(status==1){
+      } else if (status == 1) {
         statusClass = "fa-eye text-success";
       }
-    }else if(status){
+    } else if (status) {
       statusClass = "fa-eye text-success";
     }
     return statusClass;
