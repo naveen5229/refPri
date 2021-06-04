@@ -460,7 +460,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   saveMeeting(params) {
-    return console.log('inside add meeting:', params);
+    // return console.log('inside add meeting:', params);
     this.common.loading++;
     this.api.post('Admin/saveMeetingDetail', params).subscribe(res => {
       this.common.loading--;
