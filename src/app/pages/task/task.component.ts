@@ -118,6 +118,7 @@ export class TaskComponent implements OnInit {
     desc: "",
     date: this.common.getDate(),
     isUrgent: false,
+    duration: null,
     requestId: null
   };
 
@@ -2516,6 +2517,7 @@ export class TaskComponent implements OnInit {
       desc: "",
       date: this.common.getDate(),
       isUrgent: false,
+      duration: null,
       requestId: null
     };
   }
@@ -2526,8 +2528,15 @@ export class TaskComponent implements OnInit {
       desc: task.task_desc,
       date: new Date(task.due_date),
       isUrgent: (task.high_priority) ? true : false,
+      duration: (task.duration) ? new Date() : null,
       requestId: task._id
     };
+    if(task.duration){
+      let time = task.duration.split(':');
+      this.taskTodoForm.duration.setHours((time.length) ? parseInt(time[0]) : 0);
+      this.taskTodoForm.duration.setMinutes((time.length) ? parseInt(time[1]) : 0);
+      this.taskTodoForm.duration.setSeconds(0);
+    }
   }
 
   updateTodoTask(task, type = 0) {
@@ -2555,7 +2564,6 @@ export class TaskComponent implements OnInit {
   }
 
   saveTaskTodo(type = 0) {
-    console.log("saveTaskTodo:", type);
     if (this.taskTodoForm.desc == "") {
       return this.common.showError("Description is missing");
     } else {
@@ -2564,9 +2572,9 @@ export class TaskComponent implements OnInit {
         desc: this.taskTodoForm.desc,
         isUrgent: this.taskTodoForm.isUrgent,
         taskTodoId: this.taskTodoForm.taskTodoId,
+        duration: (this.taskTodoForm.duration) ? this.common.timeFormatter(this.taskTodoForm.duration) : null,
         requestId: (this.taskTodoForm.requestId > 0) ? this.taskTodoForm.requestId : null
       };
-      console.log("todo params:", params);
       this.common.loading++;
       this.api.post("AdminTask/addTodoTask", params).subscribe(res => {
         this.common.loading--;
@@ -2574,7 +2582,6 @@ export class TaskComponent implements OnInit {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
             this.todoAddList = false;
-            console.log("saveTaskTodo2:", type);
             this.getTodoTaskList(type);
             this.resetTaskTodoForm();
           } else {
@@ -3231,7 +3238,9 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
-        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
+        if(ticket._tktid>0){
+          column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
+        }
       }
       columns.push(column);
     });
@@ -3240,37 +3249,38 @@ export class TaskComponent implements OnInit {
   // end cc task list
 
   actionIconsMeeting(ticket, type) {
-    let icons = [
-      {
-        class: "fas fa-comments",
-        action: this.ticketMessage.bind(this, ticket, type),
-        txt: "",
-        title: null,
-      },
-    ];
-
-    if (ticket._unreadcount > 0) {
+    let icons = [];
+    if(ticket._tktid>0){
       icons = [
         {
-          class: "fas fa-comments new-comment",
-          action: this.ticketMessage.bind(this, ticket, type),
-          txt: ticket._unreadcount,
-          title: null,
-        },
-      ];
-    } else if (ticket._unreadcount == -1) {
-      icons = [
-        {
-          class: "fas fa-comments no-comment",
+          class: "fas fa-comments",
           action: this.ticketMessage.bind(this, ticket, type),
           txt: "",
           title: null,
         },
       ];
+      if (ticket._unreadcount > 0) {
+        icons = [
+          {
+            class: "fas fa-comments new-comment",
+            action: this.ticketMessage.bind(this, ticket, type),
+            txt: ticket._unreadcount,
+            title: null,
+          },
+        ];
+      } else if (ticket._unreadcount == -1) {
+        icons = [
+          {
+            class: "fas fa-comments no-comment",
+            action: this.ticketMessage.bind(this, ticket, type),
+            txt: "",
+            title: null,
+          },
+        ];
+      }
     }
 
-
-    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
+    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5 && ticket._tktid>0) {
       if (type == 1) {
         icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
         if (this.today > new Date(ticket.schedule_time)) {
@@ -3289,7 +3299,7 @@ export class TaskComponent implements OnInit {
       }
     }
 
-    if (type == 0 && [-1, 5].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id)) {
+    if (type == 0 && [-1, 5].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._tktid>0) {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
     }
     return icons;
