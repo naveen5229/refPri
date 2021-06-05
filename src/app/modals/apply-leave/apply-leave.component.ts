@@ -106,7 +106,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         let scheduledTimeTO = moment(new Date(this.common.params.meetingData.schedule_time));
         scheduledTimeTO.add(parseInt(timeduration[0]), 'hours').hours();
         scheduledTimeTO.add(parseInt(timeduration[1]), 'minutes').minutes();
-        console.log('toTime:',scheduledTimeTO);
+        console.log('toTime:', scheduledTimeTO);
 
         let scheduledTimeFromHr = new Date(this.common.params.meetingData.schedule_time).getHours();
         let scheduledTimeFromMin = new Date(this.common.params.meetingData.schedule_time).getMinutes();
@@ -555,40 +555,60 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
-          return { slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name }
+          return { userid: timeranges.userid, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name }
         }) : [];
 
 
         let preBookedScheduler: any = [];
-        let groupUser = _.groupBy(this.busySchedules, 'name');
-        Object.keys(groupUser).map(key => {
-          console.log(key);
-          if (groupUser[key] && groupUser[key].length > 0) {
-            console.log(groupUser[key]);
-            preBookedScheduler.push({ name: key, schedule: [], option: { floor: 1, ceil: 24, step: 0.05, showTicks: true, disabled: true } });
-            console.log(preBookedScheduler);
-            groupUser[key].map(schedule => {
-              let slotFrom = null;
-              let slotTo = null;
-              switch (schedule.slotFrom['mm']) {
-                case '15': slotFrom = (schedule.slotFrom['hh'] + '.25'); break;
-                case '30': slotFrom = (schedule.slotFrom['hh'] + '.50'); break;
-                case '45': slotFrom = (schedule.slotFrom['hh'] + '.75'); break;
-                default: slotFrom = schedule.slotFrom['hh'];
-              }
-              switch (schedule.slotTo['mm']) {
-                case '15': slotTo = (schedule.slotTo['hh'] + '.25'); break;
-                case '30': slotTo = (schedule.slotTo['hh'] + '.50'); break;
-                case '45': slotTo = (schedule.slotTo['hh'] + '.75'); break;
-                default: slotTo = schedule.slotTo['hh'];
-              }
-              console.log(slotFrom, slotTo);
-              preBookedScheduler.forEach(data => {
-                if (data.name === key) data.schedule.push({ fromTime: slotFrom, toTime: slotTo })
-              });
+        let uniqueUsers = this.common.arrayUnique(this.meetingForm.cc, 'id');
+        if (this.busySchedules && this.busySchedules.length > 0) {
+          let groupUser = _.groupBy(this.busySchedules, 'name');
+          console.log(groupUser)
+          Object.keys(groupUser).map(key => {
+            console.log(key);
+            if (groupUser[key] && groupUser[key].length > 0) {
+              console.log(groupUser[key]);
+              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 1, ceil: 24, step: 0.05, showTicks: true, disabled: true } });
+              console.log(preBookedScheduler);
+              groupUser[key].map(schedule => {
+                let slotFrom = null;
+                let slotTo = null;
+                switch (schedule.slotFrom['mm']) {
+                  case '15': slotFrom = (schedule.slotFrom['hh'] + '.25'); break;
+                  case '30': slotFrom = (schedule.slotFrom['hh'] + '.50'); break;
+                  case '45': slotFrom = (schedule.slotFrom['hh'] + '.75'); break;
+                  default: slotFrom = schedule.slotFrom['hh'];
+                }
+                switch (schedule.slotTo['mm']) {
+                  case '15': slotTo = (schedule.slotTo['hh'] + '.25'); break;
+                  case '30': slotTo = (schedule.slotTo['hh'] + '.50'); break;
+                  case '45': slotTo = (schedule.slotTo['hh'] + '.75'); break;
+                  default: slotTo = schedule.slotTo['hh'];
+                }
+                console.log(slotFrom, slotTo);
+                preBookedScheduler.forEach(data => {
+                  if (data.name === key) data.schedule.push({ fromTime: slotFrom, toTime: slotTo })
+                });
+              })
+            }
+          });
+
+          if (preBookedScheduler && uniqueUsers && preBookedScheduler.length < uniqueUsers.length) {
+            let presentStatus = [];
+            preBookedScheduler.map(data => presentStatus.push(data.userid));
+            console.log(presentStatus, uniqueUsers);
+            uniqueUsers.map(user => {
+              if (presentStatus.includes(user['id'])) return;
+              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null }], option: { floor: 1, ceil: 24, step: 0.05, showTicks: true, disabled: true } });
             })
           }
-        });
+        } else {
+          uniqueUsers.map(user => {
+            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null }], option: { floor: 1, ceil: 24, step: 0.05, showTicks: true, disabled: true } });
+          });
+        }
+
+        console.log('preBookedScheduler:', preBookedScheduler);
 
         this.availableSlot(preBookedScheduler);
 
@@ -730,10 +750,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   availableSlot(preBookedScheduler) {
+    console.log('today', this.common.getDate().getDate(), 'selected date', this.meetingForm.fromTime.getDate())
     this.common.params = {
       title: 'User Availability',
       preBookedScheduler: preBookedScheduler,
-      selectedTime: this.selectedTime
+      selectedTime: this.selectedTime,
+      timeRestrict: (this.meetingForm.fromTime.getDate() === this.common.getDate().getDate()) ? true : false,
     }
     const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
@@ -760,7 +782,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       userList: this.userList,
       groupList: this.userGroupList,
     };
-    const activeModal = this.modalService.open(TaskMessageComponent, {size: "xl",container: "nb-layout",backdrop: "static"});
+    const activeModal = this.modalService.open(TaskMessageComponent, { size: "xl", container: "nb-layout", backdrop: "static" });
   }
 
 }
