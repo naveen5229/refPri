@@ -1,4 +1,4 @@
-import { Component, OnInit, Directive, HostListener } from "@angular/core";
+import { Component, OnInit, Directive, HostListener, ElementRef } from "@angular/core";
 import { CommonService } from "../../Service/common/common.service";
 import { ApiService } from "../../Service/Api/api.service";
 import { UserService } from "../../Service/user/user.service";
@@ -16,6 +16,7 @@ import { TicketChatboxComponent } from "../../modals/ticket-modals/ticket-chatbo
 import { GenericModelComponent } from "../../modals/generic-model/generic-model.component";
 import { AddExtraTimeComponent } from "../../modals/ticket-modals/add-extra-time/add-extra-time.component";
 import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component";
+import { YearViewService } from "@progress/kendo-angular-dateinputs";
 
 @Component({
   selector: "ngx-task",
@@ -224,11 +225,21 @@ export class TaskComponent implements OnInit {
   handleKeyboardEvent(event) {
     this.keyHandler(event);
   }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    if(this.eRef.nativeElement.contains(event.target)) {
+      console.log("clicked inside",this.eRef.nativeElement.querySelector('todosec')  ,event.target);
+    } else {
+      console.log("clicked outside",this.eRef.nativeElement,event);
+    }
+  }
   constructor(
     public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal,
-    public userService: UserService
+    public userService: UserService,
+    public eRef:ElementRef
   ) {
     this.getTaskByType(-8);
     this.getProcessLeadByType(5);
@@ -3299,8 +3310,10 @@ export class TaskComponent implements OnInit {
     this.common.params = {
       title: "Follow Up Meeting",
       description:
-        `<b>&nbsp;` + `Create A FollowUp Meeting.`,
+        `<b>&nbsp;` + `Press Yes to create a follow up meeting and No will close this meeting without any followup.`,
       isRemark: false,
+      btn1: 'Yes',
+      btn2: 'No'
     };
     const activeModal = this.modalService.open(ConfirmComponent, {
       size: "sm",
@@ -3313,7 +3326,7 @@ export class TaskComponent implements OnInit {
       if (data.response) {
         this.editMeeting(ticket, type, false);
       } else {
-        this.updateTicketStatus(ticket, type, status);
+        (!data.apiHit) ? this.updateTicketStatus(ticket, type, status) : null;
       }
     });
   }
