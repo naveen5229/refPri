@@ -266,7 +266,7 @@ export class TaskComponent implements OnInit {
     // this.getTodoTaskList(0);
   }
 
-  propogateEvent(event) {
+  propogateEvent(event) { 
     event.stopPropagation();
   }
 
