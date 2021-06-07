@@ -229,18 +229,16 @@ export class TaskComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
-    if(this.eRef.nativeElement.contains(event.target)) {
-      console.log("clicked inside",this.eRef.nativeElement.querySelector('todosec')  ,event.target);
-    } else {
-      console.log("clicked outside",this.eRef.nativeElement,event);
-    }
+    console.log('event triggered:', event);
+    (this.todoVisi) ? this.todoVisi = false : null;
+    (this.fabAction) ? this.fabAction = false : null;
   }
   constructor(
     public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal,
     public userService: UserService,
-    public eRef:ElementRef
+    public eRef: ElementRef
   ) {
     this.getTaskByType(-8);
     this.getProcessLeadByType(5);
@@ -266,6 +264,10 @@ export class TaskComponent implements OnInit {
     this.getUserGroupList();
     this.getProcessTicketCount();
     // this.getTodoTaskList(0);
+  }
+
+  propogateEvent(event) { 
+    event.stopPropagation();
   }
 
   resetSearchTask() {
@@ -3313,7 +3315,7 @@ export class TaskComponent implements OnInit {
         if (!ticket.schedule_time) {
           icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, true), txt: "", title: "Edit Meeting" });
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
-        } else if (this.today > new Date(ticket.schedule_time)) {
+        } else if (this.today >= new Date(ticket.schedule_time)) {
           icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
       }

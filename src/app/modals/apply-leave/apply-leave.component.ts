@@ -609,6 +609,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         }
 
         console.log('preBookedScheduler:', preBookedScheduler);
+        preBookedScheduler.map(data => data.option.translate = (value: number): string => {
+          switch (value - parseInt(JSON.stringify(value))) {
+            case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
+            case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
+            case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
+            default: return `${parseInt(JSON.stringify(value))}`;
+          }
+        })
 
         this.availableSlot(preBookedScheduler);
 
