@@ -3251,6 +3251,8 @@ export class TaskComponent implements OnInit {
         }
         if(ticket._tktid>0){
           column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
+        }else{
+          column['rowActions'] = { 'click': this.showTodoList.bind(this, 2 ) };
         }
       }
       columns.push(column);
@@ -3258,6 +3260,13 @@ export class TaskComponent implements OnInit {
     return columns;
   }
   // end cc task list
+
+  showTodoList(type){
+    this.todoVisi = !this.todoVisi;
+    if(this.todoVisi) {
+      this.getTodoTaskList(2);
+    }
+  }
 
   actionIconsMeeting(ticket, type) {
     let icons = [];
