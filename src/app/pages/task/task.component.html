@@ -369,7 +369,9 @@
                 <div class="todoouter">
                     <div class="todolist" *ngFor="let todo of taskTodoList">
                         <div class="todoTitle" title="Due On:{{todo.due_date}}"
-                            [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> {{todo.task_desc}}
+                            [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> 
+                            <i *ngIf="todo.duration" class="fa fa-clock text-warning pull-right"></i>
+                            {{todo.task_desc}}
                         </div>
                         <div class="todoAction">
                             <button *ngIf="!todo._status" title="Mark Complete"><i class="fa fa-thumbs-up text-success"
