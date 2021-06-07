@@ -344,8 +344,13 @@
                             style="height: 40px!important;"></textarea>
                     </div>
                     <div>
-                        <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false"
+                        <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="true"
                             (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
+                        </uj-date-time-picker>
+                    </div>
+                    <div>
+                        <uj-date-time-picker [isDate]="false" [isTime]="true"
+                            (onChanged)="taskTodoForm.duration=$event" [dateTimeValue]="taskTodoForm.duration">
                         </uj-date-time-picker>
                     </div>
 
