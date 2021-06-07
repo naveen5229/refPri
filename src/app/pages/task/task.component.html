@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="fabsection">
-                    <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction"><i
+                    <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction;propogateEvent($event)"><i
                             class="fas fa-ellipsis-v"></i></button>
                     <div class="text-right" [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
                         <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting"
@@ -322,7 +322,7 @@
             </smart-table>
         </div>
 
-        <div class="todosec">
+        <div class="todosec" id="todoSec" (click)="propogateEvent($event)">
             <div class="todolayout" *ngIf="todoVisi">
                 <div class="row todoHeading">
                     <div class="col-10 my-auto pl-4 text-left" (click)="todoVisi = !todoVisi">
@@ -337,7 +337,7 @@
                     </div>
                 </div>
 
-                <div class="addtodo" *ngIf="todoAddList">
+                <div class="addtodo" id="addtodo" *ngIf="todoAddList">
                     <div class="columnGap">
                         <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
                             name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"

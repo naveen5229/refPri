@@ -23,7 +23,15 @@ export class AvailableTimeSlotComponent implements OnInit {
     ceil: 24,
     step: 0.25,
     showTicks: true,
-    minLimit: 1
+    minLimit: 1,
+    translate: (value: number): string => {
+      switch (value - parseInt(JSON.stringify(value))) {
+        case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
+        case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
+        case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
+        default: return `${parseInt(JSON.stringify(value))}`;
+      }
+    }
   };
 
   busySchedules = [];
@@ -38,6 +46,21 @@ export class AvailableTimeSlotComponent implements OnInit {
     this.title = this.common.params.title;
 
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
+    let bookedSchedules = [];
+    this.common.params.preBookedScheduler.map(schedule => {
+      if (schedule['schedule'] && schedule['schedule'].length > 0) {
+        schedule['schedule'].map(data => bookedSchedules.push(data));
+      }
+    });
+    console.log(bookedSchedules);
+
+    this.options.getTickColor = (value: number): string => {
+      for (let i = 0; i < bookedSchedules.length; i++) {
+        if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime) {
+          return 'red';
+        }
+      }
+    }
 
     //if edit previous time selected
     if (this.common.params.selectedTime) {
@@ -48,14 +71,14 @@ export class AvailableTimeSlotComponent implements OnInit {
         case '30': slotFrom = (this.common.params.selectedTime.from.hh + '.50'); break;
         case '45': slotFrom = (this.common.params.selectedTime.from.hh + '.75'); break;
         // default: slotFrom = this.common.params.selectedTime.from.hh ? this.common.params.selectedTime.from.hh : this.setMinTime();
-        default: slotFrom =  this.setMinTime();
+        default: slotFrom = this.setMinTime();
       }
       switch (this.common.params.selectedTime.to.mm) {
         case '15': slotTo = (this.common.params.selectedTime.to.hh + '.25'); break;
         case '30': slotTo = (this.common.params.selectedTime.to.hh + '.50'); break;
         case '45': slotTo = (this.common.params.selectedTime.to.hh + '.75'); break;
         // default: slotTo = this.common.params.selectedTime.to.hh ? this.common.params.selectedTime.to.hh : this.setMinTime() + 1;
-        default: slotTo =  this.setMinTime() + 1;
+        default: slotTo = this.setMinTime() + 1;
       }
       this.value = slotFrom;
       this.highValue = slotTo;
