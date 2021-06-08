@@ -138,6 +138,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         }
       } else if (this.common.params.meetingData && !this.common.params.isEdit) {
         this.meetingForm.parentId = this.common.params.meetingData._refid;
+        this.meetingForm.subject = this.common.params.meetingData.subject;
+        this.meetingForm.desc = this.common.params.meetingData._desc;
+        this.meetingForm. cc = this.common.params.meetingData._user;
+        this.meetingForm.roomId = this.common.params.meetingData._room_id;
+        this.meetingForm.type = this.common.params.meetingData._room_id ? 0  : 1;
+        this.meetingForm.link = this.common.params.meetingData._link;
+        this.meetingForm.host = { id : this.common.params.meetingData._host, name : this.common.params.meetingData.host };
+        this.meetingForm.buzz = this.common.params.meetingData._buzz;
       }
       console.log('after', this.meetingForm)
     }
