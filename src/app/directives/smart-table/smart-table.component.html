@@ -53,7 +53,7 @@
         </thead>
         <tbody>
 
-            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick(column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column),'highlight' : selectedRow == i, 'highlightcolor' : columns.length-1 == i}"
+            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick($event,column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column),'highlight' : selectedRow == i, 'highlightcolor' : columns.length-1 == i}"
                 [ngStyle]="column.style">
 
                 <!-- Records Count -->
