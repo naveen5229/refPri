@@ -266,7 +266,7 @@ export class TaskComponent implements OnInit {
     // this.getTodoTaskList(0);
   }
 
-  propogateEvent(event) { 
+  propogateEvent(event) {
     event.stopPropagation();
   }
 
@@ -2544,7 +2544,7 @@ export class TaskComponent implements OnInit {
       duration: (task.duration) ? new Date() : null,
       requestId: task._id
     };
-    if(task.duration){
+    if (task.duration) {
       let time = task.duration.split(':');
       this.taskTodoForm.duration.setHours((time.length) ? parseInt(time[0]) : 0);
       this.taskTodoForm.duration.setMinutes((time.length) ? parseInt(time[1]) : 0);
@@ -3251,10 +3251,10 @@ export class TaskComponent implements OnInit {
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
-        if(ticket._tktid>0){
+        if (ticket._tktid > 0) {
           column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
-        }else{
-          column['rowActions'] = { 'click': this.showTodoList.bind(this, 2 ) };
+        } else {
+          column['rowActions'] = { 'click': this.showTodoList.bind(this, 2) };
         }
       }
       columns.push(column);
@@ -3263,16 +3263,16 @@ export class TaskComponent implements OnInit {
   }
   // end cc task list
 
-  showTodoList(type){
+  showTodoList(type) {
     this.todoVisi = !this.todoVisi;
-    if(this.todoVisi) {
+    if (this.todoVisi) {
       this.getTodoTaskList(2);
     }
   }
 
   actionIconsMeeting(ticket, type) {
     let icons = [];
-    if(ticket._tktid>0){
+    if (ticket._tktid > 0) {
       icons = [
         {
           class: "fas fa-comments",
@@ -3302,10 +3302,10 @@ export class TaskComponent implements OnInit {
       }
     }
 
-    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5 && ticket._tktid>0) {
+    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._status != 5 && ticket._tktid > 0) {
       if (type == 1) {
         icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
-        if (this.today > new Date(ticket.schedule_time)) {
+        if (this.today >= new Date(ticket.schedule_time)) {
           icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
         // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
@@ -3315,13 +3315,12 @@ export class TaskComponent implements OnInit {
         if (!ticket.schedule_time) {
           icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, true), txt: "", title: "Edit Meeting" });
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
-        } else if (this.today >= new Date(ticket.schedule_time)) {
+        } else if (ticket.schedule_time && this.today >= new Date(ticket.schedule_time)) {
           icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
       }
     }
-
-    if (type == 0 && [-1, 5].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._tktid>0) {
+    if (type == 0 && [-1, 5, 2].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._tktid > 0) {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
     }
     return icons;
