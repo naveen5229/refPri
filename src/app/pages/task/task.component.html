@@ -50,7 +50,8 @@
                     </div>
                 </div>
                 <div class="fabsection">
-                    <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction;propogateEvent($event)"><i
+                    <button class="btn btn-primary fab" title="Action Buttons"
+                        (click)="fabAction = !fabAction;propogateEvent($event)"><i
                             class="fas fa-ellipsis-v"></i></button>
                     <div class="text-right" [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
                         <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting"
@@ -349,8 +350,8 @@
                         </uj-date-time-picker>
                     </div>
                     <div>
-                        <uj-date-time-picker [isDate]="false" [isTime]="true"
-                            (onChanged)="taskTodoForm.duration=$event" [dateTimeValue]="taskTodoForm.duration">
+                        <uj-date-time-picker [isDate]="false" [isTime]="true" (onChanged)="taskTodoForm.duration=$event"
+                            [dateTimeValue]="taskTodoForm.duration">
                         </uj-date-time-picker>
                     </div>
 
@@ -369,7 +370,7 @@
                 <div class="todoouter">
                     <div class="todolist" *ngFor="let todo of taskTodoList">
                         <div class="todoTitle" title="Due On:{{todo.due_date}}"
-                            [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> 
+                            [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}">
                             <i *ngIf="todo.duration" class="fa fa-clock text-warning pull-right"></i>
                             {{todo.task_desc}}
                         </div>
@@ -412,4 +413,55 @@
         </div>
     </div>
     <!-- end: search task modal -->
+
+    <!--meeting attendance status modal -->
+    <div class="modal" id="meetingAttendance" #meetingAttendance>
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">User Presense In Meeting</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="closemeetingAttendanceMoadal(false)">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>S.NO</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Presence</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let user of meetingAttendiesList;let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.status}}</td>
+                                    <td>
+                                        <select [(ngModel)]="user.presense" (change)="saveMeetingAttendiesStatus(user)">
+                                            <option value="1">Present</option>
+                                            <option value="0">Absent</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div class="row float-right pr-2">
+                        <button class="btn btn-primary btn-sm" id="saveMeetingAttendiesStatus"
+                            (click)="closemeetingAttendanceMoadal(true)">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--meeting attendance status modal -->
+
 </nb-card>

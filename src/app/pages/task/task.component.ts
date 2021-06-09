@@ -16,7 +16,6 @@ import { TicketChatboxComponent } from "../../modals/ticket-modals/ticket-chatbo
 import { GenericModelComponent } from "../../modals/generic-model/generic-model.component";
 import { AddExtraTimeComponent } from "../../modals/ticket-modals/add-extra-time/add-extra-time.component";
 import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component";
-import { YearViewService } from "@progress/kendo-angular-dateinputs";
 
 @Component({
   selector: "ngx-task",
@@ -3253,8 +3252,8 @@ export class TaskComponent implements OnInit {
         }
         if (ticket._tktid > 0) {
           column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
-        }else{
-          column['rowActions'] = { 'click': this.showTodoList.bind(this,2) ,"stopPropagation": true};
+        } else {
+          column['rowActions'] = { 'click': this.showTodoList.bind(this, 2), "stopPropagation": true };
         }
       }
       columns.push(column);
@@ -3306,7 +3305,7 @@ export class TaskComponent implements OnInit {
       if (type == 1) {
         icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
         if (this.today >= new Date(ticket.schedule_time)) {
-          icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+          icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket['_host'] == this.userService.loggedInUser.id) ? this.getUserActivityUpdate.bind(this, ticket, type, 5) : this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
         // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
         icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
@@ -3316,7 +3315,7 @@ export class TaskComponent implements OnInit {
           icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, true), txt: "", title: "Edit Meeting" });
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
         } else if (ticket.schedule_time && this.today >= new Date(ticket.schedule_time)) {
-          icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+          icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket['_host'] == this.userService.loggedInUser.id) ? this.getUserActivityUpdate.bind(this, ticket, type, 5) : this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
       }
     }
@@ -3324,6 +3323,61 @@ export class TaskComponent implements OnInit {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
     }
     return icons;
+  }
+
+  meetingAttendiesList = [];
+  holdForFollowUp = {};
+  getUserActivityUpdate(ticket, type, status) {
+    this.holdForFollowUp = { ticket: ticket, type: type, status: status };
+    let params = {
+      ticketId: ticket._tktid,
+      ticketType: 110
+    }
+    this.common.loading++;
+    this.api.post('AdminTask/getAllUserByTask', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        let userListByTask = res['data'] || [];
+        if (userListByTask) this.meetingAttendiesList = userListByTask['ccUsers'].map(user => {
+          return {
+            meetingId: ticket._refid,
+            userId: user._cc_user_id,
+            status: (user.status==1) ? "Ack" : ((user.status==-1) ? "Declined" :  "Pending"),
+            presense: user.is_present ? '1' : '0',
+            name: user.cc_user
+          }
+        });
+        console.log(this.meetingAttendiesList);
+        document.getElementById('meetingAttendance').style.display = 'block';
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.showError();
+    });
+  }
+
+  saveMeetingAttendiesStatus(user) {
+    // console.log("user", user); return;
+    let params = {
+      meetingId: user.meetingId,
+      userId: user.userId,
+      status: parseInt(user.presense)
+    }
+    this.api.post('Admin/updateMeetingParticipantPresence', params).subscribe(res => {
+      if (res['code'] == 1) {
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.showError();
+    });
+  }
+
+  closemeetingAttendanceMoadal(state) {
+    document.getElementById('meetingAttendance').style.display = 'none';
+    if (state) this.followUpMeeting(this.holdForFollowUp['ticket'], this.holdForFollowUp['type'], this.holdForFollowUp['status'])
   }
 
   followUpMeeting(ticket, type, status) {

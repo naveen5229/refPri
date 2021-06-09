@@ -61,7 +61,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     type: 0,
     link: null,
     host: { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name },
-    fromTime: this.common.getDate(),
+    fromTime: null,
     toTime: this.common.getDate(),
     duration: null,
     buzz: true,
@@ -116,12 +116,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             mm: `${scheduledTimeFromMin}`
           },
           to: {
-            hh: `${scheduledTimeTO.format('hh')}`,
+            hh: `${scheduledTimeTO.format('HH')}`,
             mm: `${scheduledTimeTO.format('mm')}`
           }
         };
 
-        this.meetingForm = { 
+        this.meetingForm = {
           parentId: null,
           subject: this.common.params.meetingData.subject,
           desc: this.common.params.meetingData._desc,
@@ -154,6 +154,10 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   ngOnInit() {
+  }
+  
+  eventPropogate(event){
+    event.stopPropagation();
   }
 
   closeModal(response) {
@@ -399,6 +403,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   addMeeting(isChat = null) {
+    
     this.isSaveWithChat = isChat;
     console.log("addmeeting:", this.meetingForm);
     if (!this.meetingForm.subject) {
@@ -407,21 +412,25 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
       return this.common.showError("Host user is missing");
-    } else if (!this.meetingForm.fromTime) {
-      return this.common.showError("Meeting time is missing");
-    } else if (this.meetingForm.fromTime && this.meetingForm.fromTime < this.common.getDate()) {
+    } else if (this.meetingForm.fromTime && this.meetingForm.fromTime < new Date().setHours(0,0,0,0)) {
       return this.common.showError("Meeting time must be Current/future date");
-    } else if (!this.meetingForm.duration) {
-      return this.common.showError("Meeting duration is missing");
-    } else if (!this.selectedTime.from.hh && this.selectedTime.from.hh.trim() == '') {
+    } else if (this.meetingForm.fromTime && !this.selectedTime.from.hh && this.selectedTime.from.hh.trim() == '') {
       return this.common.showError("Please check for available time slot");
     }
+    //  else if (!this.meetingForm.duration) {
+    //   return this.common.showError("Meeting duration is missing");
+    // } 
+    //  else if (!this.meetingForm.fromTime) {
+    //   return this.common.showError("Meeting time is missing");
+    // }
 
     console.log('before setting time:', this.selectedTime)
-    this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
-    this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
-    this.meetingForm.toTime.setHours(parseInt(this.selectedTime.to.hh));
-    this.meetingForm.toTime.setMinutes(parseInt(this.selectedTime.to.mm));
+    if (this.meetingForm.fromTime) {
+      this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
+      this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
+      this.meetingForm.toTime.setHours(parseInt(this.selectedTime.to.hh));
+      this.meetingForm.toTime.setMinutes(parseInt(this.selectedTime.to.mm));
+    }
 
     let CC = [];
     if (this.meetingForm.cc) {
@@ -446,8 +455,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       host: this.meetingForm.host.id,
       userId: JSON.stringify(CC),
       type: this.meetingForm.type,
-      time: this.common.dateFormatter(this.meetingForm.fromTime),
-      duration: this.common.timeFormatter(this.meetingForm.duration),
+      time: this.meetingForm.fromTime ? this.common.dateFormatter(this.meetingForm.fromTime) : null,
+      duration: this.meetingForm.duration ? this.common.timeFormatter(this.meetingForm.duration) : null,
       buzz: this.meetingForm.buzz,
       requestId: (this.meetingForm.reqId) ? this.meetingForm.reqId : null
     }
