@@ -121,7 +121,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           }
         };
 
-        this.meetingForm = {
+        this.meetingForm = { 
           parentId: null,
           subject: this.common.params.meetingData.subject,
           desc: this.common.params.meetingData._desc,
