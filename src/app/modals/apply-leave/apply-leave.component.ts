@@ -125,7 +125,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           parentId: null,
           subject: this.common.params.meetingData.subject,
           desc: this.common.params.meetingData._desc,
-          cc: this.common.params.meetingData._user,
+          cc: JSON.parse(JSON.stringify(this.common.params.meetingData._user)),
           roomId: this.common.params.meetingData._room_id,
           type: this.common.params.meetingData._room_id ? 0 : 1,
           link: this.common.params.meetingData._link,
@@ -140,11 +140,11 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.meetingForm.parentId = this.common.params.meetingData._refid;
         this.meetingForm.subject = this.common.params.meetingData.subject;
         this.meetingForm.desc = this.common.params.meetingData._desc;
-        this.meetingForm. cc = this.common.params.meetingData._user;
+        this.meetingForm.cc = this.common.params.meetingData._user;
         this.meetingForm.roomId = this.common.params.meetingData._room_id;
-        this.meetingForm.type = this.common.params.meetingData._room_id ? 0  : 1;
+        this.meetingForm.type = this.common.params.meetingData._room_id ? 0 : 1;
         this.meetingForm.link = this.common.params.meetingData._link;
-        this.meetingForm.host = { id : this.common.params.meetingData._host, name : this.common.params.meetingData.host };
+        this.meetingForm.host = { id: this.common.params.meetingData._host, name: this.common.params.meetingData.host };
         this.meetingForm.buzz = this.common.params.meetingData._buzz;
       }
       console.log('after', this.meetingForm)
@@ -568,8 +568,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
 
         let preBookedScheduler: any = [];
-        let uniqueUsers = this.common.arrayUnique(this.meetingForm.cc, 'id');
-        uniqueUsers.push(this.meetingForm.host);
+        let userHostUsersList = JSON.parse(JSON.stringify(this.meetingForm.cc));
+        userHostUsersList.push(this.meetingForm.host);
+        let uniqueUsers = this.common.arrayUnique(userHostUsersList, 'id');
         if (this.busySchedules && this.busySchedules.length > 0) {
           let groupUser = _.groupBy(this.busySchedules, 'name');
           console.log(groupUser)
@@ -613,7 +614,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           }
         } else {
           uniqueUsers.map(user => {
-            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null }], option: { floor: 1, ceil: 24, step: 0.05, showTicks: true, disabled: true } });
+            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
           });
         }
 

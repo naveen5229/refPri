@@ -19,8 +19,8 @@ export class AvailableTimeSlotComponent implements OnInit {
   value: number = 1;
   highValue: number = 2;
   options: Options = {
-    floor: 1,
-    ceil: 24,
+    floor: 7,
+    ceil: 22,
     step: 0.25,
     showTicks: true,
     minLimit: 1,
