@@ -142,6 +142,9 @@ export class ContinuityReportComponent implements OnInit {
         } else {
           column[key] = { value: shift[key], class: 'black', action: '' };
         }
+        if(!shift['present_hour']){
+          column["style"] = { background: "pink" };
+        }
       }
       columns.push(column);
     });
