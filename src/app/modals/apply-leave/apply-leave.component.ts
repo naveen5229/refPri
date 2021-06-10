@@ -98,28 +98,40 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     } else if (this.formType == 2) {
       this.getMeetingRoomList();
       if (this.common.params.meetingData && this.common.params.isEdit) {
-        let durationtime = new Date();
-        let timeduration = (this.common.params.meetingData.duration).split(':');
-        durationtime.setHours(timeduration[0]);
-        durationtime.setMinutes(timeduration[1]);
-
-        let scheduledTimeTO = moment(new Date(this.common.params.meetingData.schedule_time));
-        scheduledTimeTO.add(parseInt(timeduration[0]), 'hours').hours();
-        scheduledTimeTO.add(parseInt(timeduration[1]), 'minutes').minutes();
-        console.log('toTime:', scheduledTimeTO);
-
-        let scheduledTimeFromHr = new Date(this.common.params.meetingData.schedule_time).getHours();
-        let scheduledTimeFromMin = new Date(this.common.params.meetingData.schedule_time).getMinutes();
         this.selectedTime = {
           from: {
-            hh: `${scheduledTimeFromHr}`,
-            mm: `${scheduledTimeFromMin}`
+            hh: null,
+            mm: null
           },
           to: {
-            hh: `${scheduledTimeTO.format('HH')}`,
-            mm: `${scheduledTimeTO.format('mm')}`
+            hh: null,
+            mm: null
           }
         };
+        let durationtime = null;
+        if(this.common.params.meetingData.duration || this.common.params.meetingData.schedule_time){
+          let timeduration = (this.common.params.meetingData.duration).split(':');
+          durationtime = new Date();
+          durationtime.setHours(timeduration[0]);
+          durationtime.setMinutes(timeduration[1]);
+          let scheduledTimeTO = moment(new Date(this.common.params.meetingData.schedule_time));
+          scheduledTimeTO.add(parseInt(timeduration[0]), 'hours').hours();
+          scheduledTimeTO.add(parseInt(timeduration[1]), 'minutes').minutes();
+          console.log('toTime:', scheduledTimeTO);
+  
+          let scheduledTimeFromHr = new Date(this.common.params.meetingData.schedule_time).getHours();
+          let scheduledTimeFromMin = new Date(this.common.params.meetingData.schedule_time).getMinutes();
+          this.selectedTime = {
+            from: {
+              hh: `${scheduledTimeFromHr}`,
+              mm: `${scheduledTimeFromMin}`
+            },
+            to: {
+              hh: `${scheduledTimeTO.format('HH')}`,
+              mm: `${scheduledTimeTO.format('mm')}`
+            }
+          };
+        }
 
         this.meetingForm = {
           parentId: null,
@@ -130,8 +142,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           type: this.common.params.meetingData._room_id ? 0 : 1,
           link: this.common.params.meetingData._link,
           host: { id: this.common.params.meetingData._host, name: this.common.params.meetingData.host },
-          fromTime: new Date(this.common.params.meetingData.schedule_time),
-          toTime: new Date(this.common.params.meetingData.schedule_time),
+          fromTime: (this.common.params.meetingData.schedule_time) ? new Date(this.common.params.meetingData.schedule_time) : null,
+          toTime: (this.common.params.meetingData.schedule_time) ? new Date(this.common.params.meetingData.schedule_time) : this.common.getDate(),
           duration: durationtime,
           buzz: this.common.params.meetingData._buzz,
           reqId: this.common.params.meetingData._refid
@@ -414,7 +426,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       return this.common.showError("Host user is missing");
     } else if (this.meetingForm.fromTime && this.meetingForm.fromTime < new Date().setHours(0,0,0,0)) {
       return this.common.showError("Meeting time must be Current/future date");
-    } else if (this.meetingForm.fromTime && !this.selectedTime.from.hh && this.selectedTime.from.hh.trim() == '') {
+    } else if (this.meetingForm.fromTime && !this.selectedTime.from.hh && (!this.selectedTime.from.hh || this.selectedTime.from.hh.trim() == '')) {
       return this.common.showError("Please check for available time slot");
     }
     //  else if (!this.meetingForm.duration) {
@@ -526,19 +538,18 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
   checkAvailability() {
     console.log(this.meetingForm)
-    this.meetingForm.toTime.setDate(this.meetingForm.fromTime.getDate());
-    this.meetingForm.toTime.setMonth(this.meetingForm.fromTime.getMonth());
-    this.meetingForm.toTime.setFullYear(this.meetingForm.fromTime.getFullYear());
-
     if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
       return this.common.showError("Host user is missing");
     } else if (!this.meetingForm.fromTime) {
-      return this.common.showError("Meeting time is missing");
+      return this.common.showError("Meeting Date is missing");
     } else if ((!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId) {
       return this.common.showError("Meeting Room is missing");
     }
+    this.meetingForm.toTime.setDate(this.meetingForm.fromTime.getDate());
+    this.meetingForm.toTime.setMonth(this.meetingForm.fromTime.getMonth());
+    this.meetingForm.toTime.setFullYear(this.meetingForm.fromTime.getFullYear());
 
     let CC = [];
     if (this.meetingForm.cc) {
