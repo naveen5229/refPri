@@ -3312,7 +3312,7 @@ export class TaskComponent implements OnInit {
       }
       if (type == 2) {
         if (!ticket.schedule_time) {
-          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, true), txt: "", title: "Edit Meeting" });
+          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
         } else if (ticket.schedule_time && this.today >= new Date(ticket.schedule_time)) {
           icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket['_host'] == this.userService.loggedInUser.id) ? this.getUserActivityUpdate.bind(this, ticket, type, 5) : this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
