@@ -69,7 +69,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
   meetingRoomList = [];
 
-  selectedTime = { from: { hh: '', mm: '' }, to: { hh: '', mm: '' } };
+  selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } };
   showHours = false;
   hours = [];
   minutes = [];
@@ -98,18 +98,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     } else if (this.formType == 2) {
       this.getMeetingRoomList();
       if (this.common.params.meetingData && this.common.params.isEdit) {
-        this.selectedTime = {
-          from: {
-            hh: null,
-            mm: null
-          },
-          to: {
-            hh: null,
-            mm: null
-          }
-        };
         let durationtime = null;
-        if(this.common.params.meetingData.duration || this.common.params.meetingData.schedule_time){
+        if(this.common.params.meetingData.duration && this.common.params.meetingData.schedule_time){
           let timeduration = (this.common.params.meetingData.duration).split(':');
           durationtime = new Date();
           durationtime.setHours(timeduration[0]);
@@ -415,19 +405,24 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   addMeeting(isChat = null) {
-    
     this.isSaveWithChat = isChat;
     console.log("addmeeting:", this.meetingForm);
+    if (this.meetingForm.fromTime && this.selectedTime.from.hh) {
+      this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
+      this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
+      this.meetingForm.toTime.setHours(parseInt(this.selectedTime.to.hh));
+      this.meetingForm.toTime.setMinutes(parseInt(this.selectedTime.to.mm));
+    }
     if (!this.meetingForm.subject) {
       return this.common.showError("Subject is missing");
     } else if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
       return this.common.showError("Host user is missing");
-    } else if (this.meetingForm.fromTime && this.meetingForm.fromTime < new Date().setHours(0,0,0,0)) {
-      return this.common.showError("Meeting time must be Current/future date");
     } else if (this.meetingForm.fromTime && !this.selectedTime.from.hh && (!this.selectedTime.from.hh || this.selectedTime.from.hh.trim() == '')) {
       return this.common.showError("Please check for available time slot");
+    } else if (this.meetingForm.fromTime && this.meetingForm.fromTime < new Date()) {
+      return this.common.showError("Meeting time must be Current/future time");
     }
     //  else if (!this.meetingForm.duration) {
     //   return this.common.showError("Meeting duration is missing");
@@ -437,12 +432,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     // }
 
     console.log('before setting time:', this.selectedTime)
-    if (this.meetingForm.fromTime) {
-      this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
-      this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
-      this.meetingForm.toTime.setHours(parseInt(this.selectedTime.to.hh));
-      this.meetingForm.toTime.setMinutes(parseInt(this.selectedTime.to.mm));
-    }
+    // if (this.meetingForm.fromTime) {
+    //   this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
+    //   this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
+    //   this.meetingForm.toTime.setHours(parseInt(this.selectedTime.to.hh));
+    //   this.meetingForm.toTime.setMinutes(parseInt(this.selectedTime.to.mm));
+    // }
 
     let CC = [];
     if (this.meetingForm.cc) {
@@ -537,7 +532,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   checkAvailability() {
-    console.log(this.meetingForm)
+    console.log("checkAvailability:",this.meetingForm)
     if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
