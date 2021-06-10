@@ -23,7 +23,8 @@
     <div class="col-8">
       <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule">
         <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime"
-          [options]="schedule.option" class="othersrange"></ngx-slider>
+          [options]="schedule.option" [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
+          <!-- class="othersrange" -->
       </div>
     </div>
   </div>

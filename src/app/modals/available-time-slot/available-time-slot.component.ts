@@ -56,7 +56,9 @@ export class AvailableTimeSlotComponent implements OnInit {
 
     this.options.getTickColor = (value: number): string => {
       for (let i = 0; i < bookedSchedules.length; i++) {
-        if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime) {
+        if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && !bookedSchedules[i].is_todo) {
+          return 'blue';
+        }else if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && bookedSchedules[i].is_todo){
           return 'red';
         }
       }

@@ -583,7 +583,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
-          return { userid: timeranges.userid, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name }
+          return { userid: timeranges.userid, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name,is_todo:timeranges.is_todo }
         }) : [];
 
 
@@ -617,7 +617,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
                 }
                 console.log(slotFrom, slotTo);
                 preBookedScheduler.forEach(data => {
-                  if (data.name === key) data.schedule.push({ fromTime: slotFrom, toTime: slotTo })
+                  if (data.name === key) data.schedule.push({ fromTime: slotFrom, toTime: slotTo,is_todo:schedule.is_todo })
                 });
               })
             }
