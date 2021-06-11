@@ -2,8 +2,8 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS = JSON.stringify([
   {
-    title: "Admin",
-    icon: 'people-outline',
+    title: "TMG Dashboard",
+    icon: 'home-outline',
     home: true,
     children: [
       {
@@ -11,11 +11,81 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'home-outline',
         link: '/pages/tmg-dashboard',
         home: true,
+      }
+    ]
+  },
+  {
+    title: "Admin",
+    icon: 'people-outline',
+    home: true,
+    children: [
+      // {
+      //   title: 'TMG Dashboard',
+      //   icon: 'home-outline',
+      //   link: '/pages/tmg-dashboard',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Continuity Report',
+      //   //icon: 'fa-dashcube',
+      //   link: '/pages/continuity-report',
+      //   home: true,
+      // },
+      {
+        title: 'Admin-Kanban',
+        icon: 'file-text-outline',
+        link: '/pages/admin-kanban',
+        home: true,
+      },
+      // {
+      //   title: 'Add Pages',
+      //   icon: 'people-outline',
+      //   link: '/pages/add-pages',
+      //   home: true,
+      // },
+      {
+        title: 'Admin-Tool',
+        icon: 'people-outline',
+        link: '/pages/admin-tool',
+        home: true,
       },
       {
-        title: 'Continuity Report',
-        //icon: 'fa-dashcube',
-        link: '/pages/continuity-report',
+        title: 'Entity Details',
+        icon: 'people-outline',
+        link: '/pages/entity-details',
+        home: true
+      },
+      // {
+      //   title: 'User Expenses',
+      //   icon: 'people-outline',
+      //   link: '/pages/user-expenses',
+      //   home: true,
+      // }, {
+      //   title: 'User Wise Expenses',
+      //   icon: 'people-outline',
+      //   link: '/pages/user-wise-expenses',
+      //   home: true,
+      // }, {
+      //   title: 'On-Site-Images',
+      //   icon: 'people-outline',
+      //   link: '/pages/on-site-images',
+      //   home: true,
+      // }, {
+      //   title: 'On Site Images Summary',
+      //   icon: 'people-outline',
+      //   link: '/pages/on-site-images-summary',
+      //   home: true,
+      // },
+      {
+        title: 'User Groups',
+        icon: 'people-outline',
+        link: '/pages/user-groups',
+        home: true,
+      },
+      {
+        title: 'User-Mapping',
+        icon: 'file-text-outline',
+        link: '/pages/user-mapping',
         home: true,
       },
       {
@@ -24,55 +94,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/user-role',
         home: true,
       },
-      {
-        title: 'Add Pages',
-        icon: 'people-outline',
-        link: '/pages/add-pages',
-        home: true,
-      },
-      {
-        title: 'Admin-Tool',
-        icon: 'people-outline',
-        link: '/pages/admin-tool',
-        home: true,
-      },{
-        title: 'User Expenses',
-        icon: 'people-outline',
-        link: '/pages/user-expenses',
-        home: true,
-      }, {
-        title: 'User Wise Expenses',
-        icon: 'people-outline',
-        link: '/pages/user-wise-expenses',
-        home: true,
-      }, {
-        title: 'On-Site-Images',
-        icon: 'people-outline',
-        link: '/pages/on-site-images',
-        home: true,
-      }, {
-        title: 'On Site Images Summary',
-        icon: 'people-outline',
-        link: '/pages/on-site-images-summary',
-        home: true,
-      }, {
-        title: 'Entity Details',
-        icon: 'people-outline',
-        link: '/pages/entity-details',
-        home: true
-      },
-      {
-        title: 'User Groups',
-        icon: 'grid-outline',
-        link: '/pages/user-groups',
-        home: true,
-      },
-      {
-        title: 'Ticket-Call-Mapping',
-        icon: 'file-text-outline',
-        link: '/pages/ticket-call-mapping',
-        home: true,
-      },
+      // {
+      //   title: 'Ticket-Call-Mapping',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/ticket-call-mapping',
+      //   home: true,
+      // },
       {
         title: 'Daily-Report',
         icon: 'list-outline',
@@ -85,48 +112,36 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/daily-partner-report',
         home: true,
       },
-      {
-        title: 'WW-Tools',
-        icon: 'file-text-outline',
-        link: '/pages/ww-tools',
-        home: true,
-      },
-      {
-        title: 'Task',
-        icon: 'file-text-outline',
-        link: '/pages/task',
-        home: true,
-      },
-      {
-        title: 'Task Kanban',
-        icon: 'grid-outline',
-        link: '/pages/task-kanban',
-        home: true,
-      },
-      {
-        title: 'Task-Admin',
-        icon: 'file-text-outline',
-        link: '/pages/task-scheduled',
-        home: true,
-      },
-      {
-        title: 'Admin-Kanban',
-        icon: 'file-text-outline',
-        link: '/pages/admin-kanban',
-        home: true,
-      },
-      {
-        title: 'User-Mapping',
-        icon: 'file-text-outline',
-        link: '/pages/user-mapping',
-        home: true,
-      },
-      {
-        title: 'Customer-On-Boarding',
-        icon: 'file-text-outline',
-        link: '/pages/customeronboarding',
-        home: true,
-      },
+      // {
+      //   title: 'WW-Tools',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/ww-tools',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Task',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/task',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Task Kanban',
+      //   icon: 'grid-outline',
+      //   link: '/pages/task-kanban',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Task-Admin',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/task-scheduled',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Customer-On-Boarding',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/customeronboarding',
+      //   home: true,
+      // },
       {
         title: 'Company KYC',
         icon: 'file-text-outline',
@@ -139,16 +154,166 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/future-ref',
         home: true,
       },
+      // {
+      //   title: 'Call-KPI',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/call-kpi',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Attendance',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/attendance',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Shift-Logs',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/shift-logs',
+      //   home: true,
+      // },
+      // {
+      //   title: 'WIFI-Logs',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/wifi-logs',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Call-Logs',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/call-logs',
+      //   home: true,
+      // },
+      // {
+      //   title: 'OT-Management',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/ot-management',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Activity-Logs',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/activity-logs',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Activity-Logs-Summary',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/activity-logs-summary',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Holiday-Calendar',
+      //   icon: 'calendar',
+      //   link: '/pages/holiday-calendar',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Travel Distance',
+      //   icon: 'map-outline',
+      //   link: '/pages/travel-distance',
+      //   home: true,
+      // },
+      // {
+      //   title: 'salary',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/salary',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Employee Monitoring',
+      //   icon: 'people-outline',
+      //   link: '/pages/employee-monitoring',
+      // },
+      // {
+      //   title: 'Sites',
+      //   icon: 'people-outline',
+      //   link: '/pages/site',
+      // },
       {
-        title: 'Call-KPI',
-        icon: 'file-text-outline',
-        link: '/pages/call-kpi',
+        title: 'Settings',
+        icon: 'settings-2-outline',
+        link: '/pages/settings',
+      },
+    ]
+  },
+  {
+    title: "User page",
+    icon: 'person-outline',
+    home: true,
+    children: [
+      {
+        title: 'Call-Logs',
+        icon: 'phone-call-outline',
+        link: '/pages/call-logs',
         home: true,
       },
       {
-        title: 'Attendance',
+        title: 'Activity-Logs',
+        icon: 'activity-outline',
+        link: '/pages/activity-logs',
+        home: true,
+      },
+      {
+        title: 'Shift-Logs',
         icon: 'file-text-outline',
+        link: '/pages/shift-logs',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "Task",
+    icon: 'briefcase-outline',
+    home: true,
+    children: [
+      {
+        title: 'Task',
+        icon: 'book-outline',
+        link: '/pages/task',
+        home: true,
+      },
+      {
+        title: 'Task-Admin',
+        icon: 'book-outline',
+        link: '/pages/task-scheduled',
+        home: true,
+      },
+      {
+        title: 'Task Kanban',
+        icon: 'book-open-outline',
+        link: '/pages/task-kanban',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "HR",
+    icon: 'person-done-outline',
+    home: true,
+    children: [
+      {
+        title: 'Attendance',
+        icon: 'person-done-outline',
         link: '/pages/attendance',
+        home: true,
+      },
+      {
+        title: 'Holiday-Calendar',
+        icon: 'calendar',
+        link: '/pages/holiday-calendar',
+        home: true,
+      },
+      {
+        title: 'OT-Management',
+        icon: 'file-text-outline',
+        link: '/pages/ot-management',
+        home: true,
+      },
+      {
+        title: 'salary',
+        icon: 'file-text-outline',
+        link: '/pages/salary',
         home: true,
       },
       {
@@ -159,39 +324,38 @@ export const MENU_ITEMS = JSON.stringify([
       },
       {
         title: 'WIFI-Logs',
-        icon: 'file-text-outline',
+        icon: 'wifi-outline',
         link: '/pages/wifi-logs',
         home: true,
       },
+    ]
+  },
+  {
+    title: "Field Team",
+    icon: 'navigation-2-outline',
+    home: true,
+    children: [
       {
-        title: 'Call-Logs',
-        icon: 'file-text-outline',
-        link: '/pages/call-logs',
+        title: 'Employee Monitoring',
+        icon: 'pin-outline',
+        link: '/pages/employee-monitoring',
+      },
+      {
+        title: 'On-Site-Images',
+        icon: 'image-outline',
+        link: '/pages/on-site-images',
         home: true,
       },
       {
-        title: 'OT-Management',
-        icon: 'file-text-outline',
-        link: '/pages/ot-management',
+        title: 'On Site Images Summary',
+        icon: 'image-outline',
+        link: '/pages/on-site-images-summary',
         home: true,
       },
       {
-        title: 'Activity-Logs',
-        icon: 'file-text-outline',
-        link: '/pages/activity-logs',
-        home: true,
-      },
-      {
-        title: 'Activity-Logs-Summary',
-        icon: 'file-text-outline',
-        link: '/pages/activity-logs-summary',
-        home: true,
-      },
-      {
-        title: 'Holiday-Calendar',
-        icon: 'calendar',
-        link: '/pages/holiday-calendar',
-        home: true,
+        title: 'Sites',
+        icon: 'globe-2-outline',
+        link: '/pages/site',
       },
       {
         title: 'Travel Distance',
@@ -200,26 +364,86 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'salary',
-        icon: 'file-text-outline',
-        link: '/pages/salary',
+        title: 'User Expenses',
+        icon: 'people-outline',
+        link: '/pages/user-expenses',
         home: true,
       },
       {
-        title: 'Employee Monitoring',
+        title: 'User Wise Expenses',
         icon: 'people-outline',
-        link: '/pages/employee-monitoring',
+        link: '/pages/user-wise-expenses',
+        home: true,
+      },
+    ]
+  },
+  {
+    title: "Monitoring",
+    icon: 'monitor-outline',
+    home: true,
+    children: [
+      {
+        title: 'Activity-Logs-Summary',
+        icon: 'activity-outline',
+        link: '/pages/activity-logs-summary',
+        home: true,
       },
       {
-        title: 'Sites',
-        icon: 'people-outline',
-        link: '/pages/site',
+        title: 'Call-KPI',
+        icon: 'phone-outline',
+        link: '/pages/call-kpi',
+        home: true,
       },
       {
-        title: 'Settings',
-        icon: 'settings-2-outline',
-        link: '/pages/settings',
+        title: 'Call-Logs',
+        icon: 'phone-call-outline',
+        link: '/pages/call-logs',
+        home: true,
       },
+      {
+        title: 'Continuity Report',
+        icon: 'fa-dashcube',
+        link: '/pages/continuity-report',
+        home: true,
+      },
+    ]
+  },
+  {
+    title: "Analytics",
+    icon: 'pie-chart-outline',
+    home: true,
+    children: [
+      {
+        title: 'Graphical Reports',
+        icon: 'grid-outline',
+        link: '/pages/graphical-reports',
+        home: true,
+      },
+    ]
+  },
+  {
+    title: "IT - Admin",
+    icon: 'file-text-outline',
+    home: true,
+    children: [
+      {
+        title: 'Add Pages',
+        icon: 'plus-square-outline',
+        link: '/pages/add-pages',
+        home: true,
+      },
+      {
+        title: 'WW-Tools',
+        icon: 'file-text-outline',
+        link: '/pages/ww-tools',
+        home: true,
+      },
+      {
+        title: 'Customer-On-Boarding',
+        icon: 'file-text-outline',
+        link: '/pages/customeronboarding',
+        home: true,
+      }
     ]
   },
   {
@@ -428,6 +652,12 @@ export const MENU_ITEMS = JSON.stringify([
     icon: 'layers-outline',
     home: true,
     children: [
+      {
+        title: 'Ticket-Call-Mapping',
+        icon: 'file-text-outline',
+        link: '/pages/ticket-call-mapping',
+        home: true,
+      },
       {
         title: 'Ticket Process',
         icon: 'grid-outline',
