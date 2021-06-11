@@ -263,7 +263,8 @@
         </div>
         <div class="col-6">
             <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
-                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration" [isTimeDisabled]="true">
+                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration"
+                [isTimeDisabled]="true">
             </uj-date-time-picker>
         </div>
     </div>
@@ -275,12 +276,14 @@
             </label>
         </div>
         <div class="col-3 pr-0">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
-                (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="meetingForm.fromTime=$event"
+                [dateTimeValue]="meetingForm.fromTime">
             </uj-date-time-picker>
         </div>
         <div class="col-1 pr-0 pl-0">
-            <i class="fas fa-undo cursor-pointer" title="Reset Time" (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } };"></i>
+            <i class="fas fa-undo cursor-pointer" [ngClass]="{'disableSelection' : !meetingForm.fromTime}"
+                title="Reset Time"
+                (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } }"></i>
         </div>
         <div class="col-2 pl-0">
             <input type="text" placeholder="Search Slot" class="form-control"
@@ -301,7 +304,7 @@
     <div class="row mt-1">
         <div class="col-12 text-right">
             <button class="btn btn-primary btn-sm mr-2" id="addMeetingBtn" (click)="addMeeting()">{{btn}}</button>
-            <button class="btn btn-primary btn-sm" id="saveWithChat"  (click)="addMeeting(1)">Save With Chat</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" (click)="addMeeting(1)">Save With Chat</button>
         </div>
     </div>
     <!-- <button (click)="availableSlot()">modal</button> -->
