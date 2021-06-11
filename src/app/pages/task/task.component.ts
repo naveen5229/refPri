@@ -16,6 +16,7 @@ import { TicketChatboxComponent } from "../../modals/ticket-modals/ticket-chatbo
 import { GenericModelComponent } from "../../modals/generic-model/generic-model.component";
 import { AddExtraTimeComponent } from "../../modals/ticket-modals/add-extra-time/add-extra-time.component";
 import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "ngx-task",
@@ -237,7 +238,8 @@ export class TaskComponent implements OnInit {
     public api: ApiService,
     public modalService: NgbModal,
     public userService: UserService,
-    public eRef: ElementRef
+    public eRef: ElementRef,
+    public router: Router
   ) {
     this.getTaskByType(-8);
     this.getProcessLeadByType(5);
@@ -3247,6 +3249,13 @@ export class TaskComponent implements OnInit {
             isTitle: true,
             title: `${ticket["_desc"] ? ticket["_desc"] : ''}\n${ticket['schedule_time'] ? ticket['schedule_time'] : ''}\n${ticket['duration'] ? ticket['duration'] : ''}\n${ticket['_link'] ? ticket['_link'] : ''}`,
           };
+        } else if (key == "info") {
+          column[key] = {
+            value: ticket[key],
+            class: !ticket['_room_id'] ? "blue" : "black",
+            isHTML: true,
+            action: !ticket['_room_id'] ? this.jumpToLink.bind(this, ticket['info']) : null,
+          };
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
@@ -3261,6 +3270,10 @@ export class TaskComponent implements OnInit {
     return columns;
   }
   // end cc task list
+
+  jumpToLink(link) {
+    window.open(link, '_blank');
+  }
 
   showTodoList(type) {
     this.todoVisi = !this.todoVisi;
@@ -3342,7 +3355,7 @@ export class TaskComponent implements OnInit {
           return {
             meetingId: ticket._refid,
             userId: user._cc_user_id,
-            status: (user.status==1) ? "Ack" : ((user.status==-1) ? "Declined" :  "Pending"),
+            status: (user.status == 1) ? "Ack" : ((user.status == -1) ? "Declined" : "Pending"),
             presense: user.is_present ? '1' : '0',
             name: user.cc_user
           }
