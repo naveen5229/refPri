@@ -1,7 +1,10 @@
 <div *ngIf="!isNetConnected" id="noNetwork" class="text-center text-danger bg-dark col-12" style="z-index: 1111;position: absolute;margin-left: -20px;"><strong>No internet connection</strong></div>
 <div class="header-container">
     <div class="logo-container">
-        <a class="logo" href="#" (click)="navigateHome()">E-<span>logist</span></a>
+        <a class="logo" href="#" (click)="navigateHome()">
+            <img src="assets/images/prime_logo.jpg">
+            <!-- <span>Prime</span> -->
+        </a>
         <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
             <nb-icon icon="menu-2-outline"></nb-icon>
         </a>

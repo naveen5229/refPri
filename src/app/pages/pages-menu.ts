@@ -100,18 +100,18 @@ export const MENU_ITEMS = JSON.stringify([
       //   link: '/pages/ticket-call-mapping',
       //   home: true,
       // },
-      {
-        title: 'Daily-Report',
-        icon: 'list-outline',
-        link: '/pages/daily-report',
-        home: true,
-      },
-      {
-        title: 'Miscellaneous-Report',
-        icon: 'list-outline',
-        link: '/pages/daily-partner-report',
-        home: true,
-      },
+      // {
+      //   title: 'Daily-Report',
+      //   icon: 'list-outline',
+      //   link: '/pages/daily-report',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Miscellaneous-Report',
+      //   icon: 'list-outline',
+      //   link: '/pages/daily-partner-report',
+      //   home: true,
+      // },
       // {
       //   title: 'WW-Tools',
       //   icon: 'file-text-outline',
@@ -142,18 +142,18 @@ export const MENU_ITEMS = JSON.stringify([
       //   link: '/pages/customeronboarding',
       //   home: true,
       // },
-      {
-        title: 'Company KYC',
-        icon: 'file-text-outline',
-        link: '/pages/companykyc',
-        home: true,
-      },
-      {
-        title: 'Customer-Feedback',
-        icon: 'file-text-outline',
-        link: '/pages/future-ref',
-        home: true,
-      },
+      // {
+      //   title: 'Company KYC',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/companykyc',
+      //   home: true,
+      // },
+      // {
+      //   title: 'Customer-Feedback',
+      //   icon: 'file-text-outline',
+      //   link: '/pages/future-ref',
+      //   home: true,
+      // },
       // {
       //   title: 'Call-KPI',
       //   icon: 'file-text-outline',
@@ -259,6 +259,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/shift-logs',
         home: true,
+      },
+      {
+        title: 'Call-Logs',
+        icon: 'phone-call-outline',
+        link: '/pages/call-logs',
+        home: true,
       }
     ]
   },
@@ -314,12 +320,6 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'salary',
         icon: 'file-text-outline',
         link: '/pages/salary',
-        home: true,
-      },
-      {
-        title: 'Shift-Logs',
-        icon: 'file-text-outline',
-        link: '/pages/shift-logs',
         home: true,
       },
       {
@@ -395,14 +395,8 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Call-Logs',
-        icon: 'phone-call-outline',
-        link: '/pages/call-logs',
-        home: true,
-      },
-      {
         title: 'Continuity Report',
-        icon: 'fa-dashcube',
+        icon: 'file-text-outline',
         link: '/pages/continuity-report',
         home: true,
       },
@@ -430,12 +424,6 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Add Pages',
         icon: 'plus-square-outline',
         link: '/pages/add-pages',
-        home: true,
-      },
-      {
-        title: 'WW-Tools',
-        icon: 'file-text-outline',
-        link: '/pages/ww-tools',
         home: true,
       },
       {
@@ -680,6 +668,43 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Custom-Dashboard',
         icon: 'grid-outline',
         link: '/pages/custom-dashboard',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "To Remove",
+    icon: 'scissors-outline',
+    home: true,
+    children: [
+      {
+        title: 'WW-Tools',
+        icon: 'file-text-outline',
+        link: '/pages/ww-tools',
+        home: true,
+      },
+      {
+        title: 'Company KYC',
+        icon: 'file-text-outline',
+        link: '/pages/companykyc',
+        home: true,
+      },
+      {
+        title: 'Customer-Feedback',
+        icon: 'file-text-outline',
+        link: '/pages/future-ref',
+        home: true,
+      },
+      {
+        title: 'Daily-Report',
+        icon: 'list-outline',
+        link: '/pages/daily-report',
+        home: true,
+      },
+      {
+        title: 'Miscellaneous-Report',
+        icon: 'list-outline',
+        link: '/pages/daily-partner-report',
         home: true,
       }
     ]
