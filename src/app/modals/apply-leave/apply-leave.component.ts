@@ -123,6 +123,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           };
         }
 
+        console.log('Duration:',durationtime,'selectedTime:',this.selectedTime)
+
         this.meetingForm = {
           parentId: null,
           subject: this.common.params.meetingData.subject,
@@ -138,6 +140,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           buzz: this.common.params.meetingData._buzz,
           reqId: this.common.params.meetingData._refid
         }
+        console.log(this.meetingForm)
       } else if (this.common.params.meetingData && !this.common.params.isEdit) {
         this.meetingForm.parentId = this.common.params.meetingData._refid;
         this.meetingForm.subject = this.common.params.meetingData.subject;
@@ -793,7 +796,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       title: 'User Availability',
       preBookedScheduler: preBookedScheduler,
       selectedTime: this.selectedTime,
-      timeRestrict: (this.meetingForm.fromTime.getDate() === this.common.getDate().getDate()) ? true : false,
+      timeRestrict: (this.meetingForm.fromTime.getDate() <= this.common.getDate().getDate()) ? true : false,
     }
     const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
