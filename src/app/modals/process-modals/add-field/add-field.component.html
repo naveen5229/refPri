@@ -48,13 +48,21 @@
                         <div class="col-3">
                             <label> Is Fixed Value ?</label>
                         </div>
-                        <div class="col-6 custdrop" *ngIf="isFixedValue">
+                        <div class="col-8 custdrop" *ngIf="isFixedValue">
+                            <div class="row">
+                                <div class="col-6"><small>Option</small></div>
+                                <div class="col-2"><small>NonBind</small></div>
+                                <div class="col-4"><small>Action</small></div>
+                            </div>
                             <div class="row" *ngFor="let fixValue of fixValues; let i = index">
-                                <div class="col-8">
+                                <div class="col-6">
                                     <input *ngIf="typeId =='text'" type="text" [(ngModel)]="fixValue.option"
                                         class="form-control" #fixvalue>
                                     <input *ngIf="typeId =='number'" type="number" [(ngModel)]="fixValue.option"
                                         class="form-control" #fixvalue>
+                                </div>
+                                <div class="col-2">
+                                    <input type="checkbox" [(ngModel)]="fixValue.isNonBind">
                                 </div>
                                 <div class="col-4">
                                     <i class="fa fa-plus" *ngIf="i == fixValues.length-1"
