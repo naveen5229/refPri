@@ -220,7 +220,7 @@ export class AddFieldComponent implements OnInit {
       return false;
     }
     if (error_multi_notbind) {
-      this.common.showError('mark only single input-box for fixed value option');
+      this.common.showError('Mark only single input-box for fixed value option');
       return false;
     }
     let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
