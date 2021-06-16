@@ -3334,6 +3334,7 @@ export class TaskComponent implements OnInit {
     }
     if (type == 0 && [-1, 5, 2].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._tktid > 0) {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
+      icons.push({ class: "fa fa-caret-square-o-down", action: this.editMeeting.bind(this,ticket, type, false), txt: "", title: "Follow Up" });
     }
     return icons;
   }

@@ -18,12 +18,12 @@ export class TicketClosingFormComponent implements OnInit {
   refId = null;
   refType = null;
   ticketId = null;
-  requestId =null;
+  requestId = null;
   info = null;
   isDisabled = false;
   attachmentFile = [{ name: null, file: null }];
 
-  constructor(public activeModal: NgbActiveModal,public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) { 
+  constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.title = this.common.params.title ? this.common.params.title : 'Ticket Closing Form';
     console.log("TicketClosingFormComponent -> constructor -> common", common)
     if (this.common.params && this.common.params.actionData) {
@@ -44,7 +44,7 @@ export class TicketClosingFormComponent implements OnInit {
     this.common.loading++;
     this.api.get('Ticket/getTicketFormFieldById?' + params).subscribe(res => {
       this.common.loading--;
-      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (res['data']) {
         this.ticketFormFields = res['data'];
         this.formatArray();
@@ -56,11 +56,11 @@ export class TicketClosingFormComponent implements OnInit {
     });
   }
 
-  onSelectNotBind(event,row){
+  onSelectNotBind(event, row) {
     let selectEl = event.target;
     let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
     row.isNotBindFixedvalue = false;
-    if(JSON.parse(testval)){
+    if (JSON.parse(testval)) {
       row.isNotBindFixedvalue = true;
     }
   }
@@ -78,18 +78,18 @@ export class TicketClosingFormComponent implements OnInit {
       if (dd.r_coltype == 'checkbox') {
         dd.r_value = (dd.r_value == "true") ? true : false;
       }
-      if (dd.r_coltype == 'entity'){
-        if(dd.r_value>0 && dd.r_fixedvalues && dd.r_fixedvalues.length) {
-          let entity_value = dd.r_fixedvalues.find(x=>{return x._id==dd.r_value});
+      if (dd.r_coltype == 'entity') {
+        if (dd.r_value > 0 && dd.r_fixedvalues && dd.r_fixedvalues.length) {
+          let entity_value = dd.r_fixedvalues.find(x => { return x._id == dd.r_value });
           dd['entity_value'] = (entity_value) ? entity_value.option : null;
-        }else{
+        } else {
           dd['entity_value'] = null;
         }
       }
-      if(dd.r_value && dd.r_fixedvalues && dd.r_fixedvalues.length) { // for not bind dropdown
-        let notBindFixedvalue = dd.r_fixedvalues.find(x=>{return x.option==dd.r_value});
-        if(!notBindFixedvalue){
-          let notBindOption = dd.r_fixedvalues.find(x=>x.isNonBind);
+      if (dd.r_value && dd.r_fixedvalues && dd.r_fixedvalues.length) { // for not bind dropdown
+        let notBindFixedvalue = dd.r_fixedvalues.find(x => { return x.option == dd.r_value });
+        if (!notBindFixedvalue) {
+          let notBindOption = dd.r_fixedvalues.find(x => x.isNonBind);
           dd["isNotBindFixedvalue"] = true;
           dd["notBindFixedvalue"] = dd.r_value;
           dd["r_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
@@ -108,21 +108,22 @@ export class TicketClosingFormComponent implements OnInit {
     console.log("oddArray", this.oddArray);
   }
 
-  dismiss(res,isContinue) {
-    this.activeModal.close({ response: res,isContinue:isContinue });
+  dismiss(res, isContinue) {
+    this.activeModal.close({ response: res, isContinue: isContinue });
   }
 
   saveFromDetail(isContinue) {
-     let detailsTemp = this.evenArray.concat(this.oddArray);
+    let detailsTemp = this.evenArray.concat(this.oddArray);
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
         copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
-      }else if(detail['isNotBindFixedvalue']) {
+      } else if (detail['isNotBindFixedvalue']) {
         copyDetails['r_value'] = detail['notBindFixedvalue'];
       }
       return copyDetails;
     });
+    
     const params = {
       info: JSON.stringify(details),
       refId: this.refId,
@@ -130,7 +131,7 @@ export class TicketClosingFormComponent implements OnInit {
       ticketId: this.ticketId,
       requestId: null
     }
-    // console.log("para......", params);return false;
+    // console.log("para......", params,detailsTemp);return false;
     this.common.loading++;
     this.api.post('Ticket/saveTicketFormByRefId', params)
       .subscribe(res => {
@@ -138,7 +139,7 @@ export class TicketClosingFormComponent implements OnInit {
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             // this.common.showToast(res['data'][0].y_msg);
-            this.dismiss(true,isContinue);
+            this.dismiss(true, isContinue);
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -176,12 +177,12 @@ export class TicketClosingFormComponent implements OnInit {
     });
   }
 
-  handleFileSelection(event, i,arrayType) {
-    this.common.handleFileSelection(event,null).then(res=>{
-      console.log("handleFileSelection:",res);
-      this.attachmentFile[i]= { name: res['name'], file: res['file'] };
-      this.uploadattachFile(arrayType,i)
-    },err=>{
+  handleFileSelection(event, i, arrayType) {
+    this.common.handleFileSelection(event, null).then(res => {
+      console.log("handleFileSelection:", res);
+      this.attachmentFile[i] = { name: res['name'], file: res['file'] };
+      this.uploadattachFile(arrayType, i)
+    }, err => {
       this.common.showError();
     });
   }
@@ -230,5 +231,14 @@ export class TicketClosingFormComponent implements OnInit {
       this.common.showError();
       console.error('Api Error:', err);
     });
+  }
+
+  tableEvents(event, i, tableType) {
+    console.log("tableEvents - event", event, tableType);
+    if (tableType === 'even') {
+      this.evenArray[i]._param_child = JSON.parse(JSON.stringify(event));
+    } else {
+      this.oddArray[i]._param_child = JSON.parse(JSON.stringify(event));
+    }
   }
 }
