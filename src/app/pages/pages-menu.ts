@@ -4,15 +4,16 @@ export const MENU_ITEMS = JSON.stringify([
   {
     title: "TMG Dashboard",
     icon: 'home-outline',
+    link: '/pages/tmg-dashboard',
     home: true,
-    children: [
-      {
-        title: 'TMG Dashboard',
-        icon: 'home-outline',
-        link: '/pages/tmg-dashboard',
-        home: true,
-      }
-    ]
+    // children: [
+    //   {
+    //     title: 'TMG Dashboard',
+    //     icon: 'home-outline',
+    //     link: '/pages/tmg-dashboard',
+    //     home: true,
+    //   }
+    // ]
   },
   {
     title: "Admin",
@@ -77,15 +78,15 @@ export const MENU_ITEMS = JSON.stringify([
       //   home: true,
       // },
       {
-        title: 'User Groups',
-        icon: 'people-outline',
-        link: '/pages/user-groups',
+        title: 'Task-Admin',
+        icon: 'book-outline',
+        link: '/pages/task-scheduled',
         home: true,
       },
       {
-        title: 'User-Mapping',
-        icon: 'file-text-outline',
-        link: '/pages/user-mapping',
+        title: 'User Groups',
+        icon: 'people-outline',
+        link: '/pages/user-groups',
         home: true,
       },
       {
@@ -259,12 +260,6 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/shift-logs',
         home: true,
-      },
-      {
-        title: 'Call-Logs',
-        icon: 'phone-call-outline',
-        link: '/pages/call-logs',
-        home: true,
       }
     ]
   },
@@ -280,15 +275,89 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Task-Admin',
-        icon: 'book-outline',
-        link: '/pages/task-scheduled',
-        home: true,
-      },
-      {
         title: 'Task Kanban',
         icon: 'book-open-outline',
         link: '/pages/task-kanban',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "Ticket",
+    icon: 'layers-outline',
+    home: true,
+    children: [
+      {
+        title: 'Ticket-Call-Mapping',
+        icon: 'file-text-outline',
+        link: '/pages/ticket-call-mapping',
+        home: true,
+      },
+      {
+        title: 'Ticket Process',
+        icon: 'grid-outline',
+        link: '/pages/ticket-process',
+        home: true,
+      },
+      {
+        title: 'Ticket',
+        icon: 'grid-outline',
+        link: '/pages/ticket',
+        home: true,
+      },
+      {
+        title: 'Ticket-Admin',
+        icon: 'person-done-outline',
+        link: '/pages/ticket-admin',
+        home: true,
+      },
+      {
+        title: 'Custom-Dashboard',
+        icon: 'grid-outline',
+        link: '/pages/custom-dashboard',
+        home: true,
+      }
+    ]
+  },
+  {
+    title: "Process",
+    icon: 'layers-outline',
+    home: true,
+    children: [
+      {
+        title: 'Process List',
+        icon: 'plus-square-outline',
+        link: '/pages/process-list',
+        home: true,
+      },
+      {
+        title: 'My Process',
+        icon: 'grid-outline',
+        link: '/pages/my-process',
+        home: true,
+      },
+      {
+        title: 'Process Admin',
+        icon: 'grid-outline',
+        link: '/pages/process-admin',
+        home: true,
+      },
+      {
+        title: 'Custom Dashboard',
+        icon: 'grid-outline',
+        link: '/pages/personalised-dashboard',
+        home: true,
+      },
+      {
+        title: 'Graphical Reports',
+        icon: 'grid-outline',
+        link: '/pages/graphical-reports',
+        home: true,
+      },
+      {
+        title: 'Kanban Board',
+        icon: 'grid-outline',
+        link: '/pages/kanban-board',
         home: true,
       }
     ]
@@ -430,6 +499,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Customer-On-Boarding',
         icon: 'file-text-outline',
         link: '/pages/customeronboarding',
+        home: true,
+      },
+      {
+        title: 'User-Mapping',
+        icon: 'file-text-outline',
+        link: '/pages/user-mapping',
         home: true,
       }
     ]
@@ -590,86 +665,6 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/installer',
         home: true,
       },
-    ]
-  },
-  {
-    title: "Process",
-    icon: 'layers-outline',
-    home: true,
-    children: [
-      {
-        title: 'Process List',
-        icon: 'plus-square-outline',
-        link: '/pages/process-list',
-        home: true,
-      },
-      {
-        title: 'My Process',
-        icon: 'grid-outline',
-        link: '/pages/my-process',
-        home: true,
-      },
-      {
-        title: 'Process Admin',
-        icon: 'grid-outline',
-        link: '/pages/process-admin',
-        home: true,
-      },
-      {
-        title: 'Custom Dashboard',
-        icon: 'grid-outline',
-        link: '/pages/personalised-dashboard',
-        home: true,
-      },
-      {
-        title: 'Graphical Reports',
-        icon: 'grid-outline',
-        link: '/pages/graphical-reports',
-        home: true,
-      },
-      {
-        title: 'Kanban Board',
-        icon: 'grid-outline',
-        link: '/pages/kanban-board',
-        home: true,
-      }
-    ]
-  },
-  {
-    title: "Tickets",
-    icon: 'layers-outline',
-    home: true,
-    children: [
-      {
-        title: 'Ticket-Call-Mapping',
-        icon: 'file-text-outline',
-        link: '/pages/ticket-call-mapping',
-        home: true,
-      },
-      {
-        title: 'Ticket Process',
-        icon: 'grid-outline',
-        link: '/pages/ticket-process',
-        home: true,
-      },
-      {
-        title: 'Ticket',
-        icon: 'grid-outline',
-        link: '/pages/ticket',
-        home: true,
-      },
-      {
-        title: 'Ticket-Admin',
-        icon: 'person-done-outline',
-        link: '/pages/ticket-admin',
-        home: true,
-      },
-      {
-        title: 'Custom-Dashboard',
-        icon: 'grid-outline',
-        link: '/pages/custom-dashboard',
-        home: true,
-      }
     ]
   },
   {

@@ -281,10 +281,21 @@ export class TicketComponent implements OnInit {
     });
   }
 
+  onSelectNotBind(event,row){
+    let selectEl = event.target;
+    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
+    row.isNotBindFixedvalue = false;
+    if(JSON.parse(testval)){
+      row.isNotBindFixedvalue = true;
+    }
+  }
+
   formatArray() {
     this.evenArray = [];
     this.oddArray = [];
     this.ticketFormFields.map(dd => {
+      dd["isNotBindFixedvalue"] = false;
+      dd["notBindFixedvalue"] = null;
       if (dd.r_coltype == 'date') {
         dd.r_value = dd.r_value ? new Date(dd.r_value) : new Date();
         console.log("date==", dd.r_value);
@@ -298,6 +309,15 @@ export class TicketComponent implements OnInit {
           dd['entity_value'] = (entity_value) ? entity_value.option : null;
         }else{
           dd['entity_value'] = null;
+        }
+      }
+      if(dd.r_value && dd.r_fixedvalues && dd.r_fixedvalues.length) { // for not bind dropdown
+        let notBindFixedvalue = dd.r_fixedvalues.find(x=>{return x.option==dd.r_value});
+        if(!notBindFixedvalue){
+          let notBindOption = dd.r_fixedvalues.find(x=>x.isNonBind);
+          dd["isNotBindFixedvalue"] = true;
+          dd["notBindFixedvalue"] = dd.r_value;
+          dd["r_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
         }
       }
       if (dd.r_fixedvalues) {
@@ -1118,6 +1138,8 @@ export class TicketComponent implements OnInit {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
         copyDetails['r_value'] = this.common.dateFormatter(detail['r_value']);
+      }else if(detail['isNotBindFixedvalue']) {
+        copyDetails['r_value'] = detail['notBindFixedvalue'];
       }
       return copyDetails;
     });

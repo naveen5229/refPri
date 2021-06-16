@@ -86,7 +86,7 @@ export class TicketClosingFormComponent implements OnInit {
           dd['entity_value'] = null;
         }
       }
-      if(dd.r_value && dd.r_fixedvalues && dd.r_fixedvalues.length) {
+      if(dd.r_value && dd.r_fixedvalues && dd.r_fixedvalues.length) { // for not bind dropdown
         let notBindFixedvalue = dd.r_fixedvalues.find(x=>{return x.option==dd.r_value});
         if(!notBindFixedvalue){
           let notBindOption = dd.r_fixedvalues.find(x=>x.isNonBind);
