@@ -34,8 +34,8 @@ export class CommonService {
   chartData: any;
   chartOptions: any;
 
-  constructor(private toastrService: NbToastrService,public modalService: NgbModal,
-    private datePipe: DatePipe,public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
+  constructor(private toastrService: NbToastrService, public modalService: NgbModal,
+    private datePipe: DatePipe, public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -767,43 +767,43 @@ export class CommonService {
       let splitedMsg = element2.split("\n");
       splitedMsg.forEach((element, index) => {
         let linkFound = false;
-        if(match == "www." && (element.match(match) || element.match('http://') || element.match('https://'))){
+        if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://'))) {
           linkFound = true;
-        }else{
+        } else {
           let totalSize = element.length;
           let inIndex = element.indexOf('.in');
           let comIndex = element.indexOf('.com');
-          let inFound = (inIndex>0 && ((totalSize - inIndex) ==3)) ? true : false;
-          let comFound = (comIndex>0 && ((totalSize - comIndex) ==4)) ? true : false;
-          if(inFound || comFound){
+          let inFound = (inIndex > 0 && ((totalSize - inIndex) == 3)) ? true : false;
+          let comFound = (comIndex > 0 && ((totalSize - comIndex) == 4)) ? true : false;
+          if (inFound || comFound) {
             linkFound = true;
           }
         }
         // if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
-        if(match == "www." && linkFound){
+        if (match == "www." && linkFound) {
           let indexHTTP = element.indexOf("http://");
           let indexHTTPS = element.indexOf("https://");
           let indexWWW = element.indexOf("www.");
           let str1 = "";
           let str2 = element;
-          if(indexHTTP !== -1){
-            if(indexHTTP>0){
-              str1 = element.substr(0,indexHTTP);
+          if (indexHTTP !== -1) {
+            if (indexHTTP > 0) {
+              str1 = element.substr(0, indexHTTP);
               str2 = element.substr(indexHTTP);
             }
-          }else if(indexHTTPS !== -1){
-            if(indexHTTPS>0){
-              str1 = element.substr(0,indexHTTPS);
+          } else if (indexHTTPS !== -1) {
+            if (indexHTTPS > 0) {
+              str1 = element.substr(0, indexHTTPS);
               str2 = element.substr(indexHTTPS);
             }
-          }else if(indexWWW !== -1){
-            if(indexWWW>0){
-              str1 = element.substr(0,indexWWW);
+          } else if (indexWWW !== -1) {
+            if (indexWWW > 0) {
+              str1 = element.substr(0, indexWWW);
               str2 = element.substr(indexWWW);
             }
           }
           let fullURL = (str2.match('http')) ? str2 : "http://" + str2;
-          let href_temp = str1+'<a target="_blank" href=' + fullURL + '>' + str2 + '</a>';
+          let href_temp = str1 + '<a target="_blank" href=' + fullURL + '>' + str2 + '</a>';
           splitedMsg[index] = href_temp;
         }
       });
@@ -816,7 +816,7 @@ export class CommonService {
   checkMentionedUser(userList, str) {
     let mentionUserList = [];
     userList.forEach((element, index) => {
-      let matchstr = "@"+element.name;
+      let matchstr = "@" + element.name;
       if (str.match(matchstr)) {
         // console.log("element:", element);
         mentionUserList.push(element);
@@ -825,27 +825,27 @@ export class CommonService {
     return (mentionUserList.length > 0) ? mentionUserList : null;
   }
 
-  checkFile(url,name){
+  checkFile(url, name) {
     var ext = url.split('.').pop();
     let formats = ["jpeg", "jpg", "png", 'pdf'];
-    console.log("ext:",ext);
-    let files = [{name:name,url:url}];
+    console.log("ext:", ext);
+    let files = [{ name: name, url: url }];
     if (formats.includes(ext.toLowerCase())) {
       this.openImageView(files);
-    }else{
+    } else {
       this.getFile(files);
     }
   }
 
-  convertFileToBase64(files){
+  convertFileToBase64(files) {
     return new Promise((resolve, reject) => {
       let params = {
         files: files
       };
-      this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
-        if(res['code']==1){
+      this.api.post('Processes/convertFileToBase64', params, "I").subscribe(res => {
+        if (res['code'] == 1) {
           resolve(res['data']);
-        }else{
+        } else {
           this.showError(res['data']);
           reject(res['data']);
         }
@@ -854,12 +854,12 @@ export class CommonService {
         console.log('Error: ', err);
         reject(err);
       });
-      
+
     })
   }
 
-  getFile(files){
-    this.convertFileToBase64(files).then(res=>{
+  getFile(files) {
+    this.convertFileToBase64(files).then(res => {
       let b64encodedString = res[0]['base64'];
       let fileName = res[0]['name'];
       var blob = this.base64ToBlob(b64encodedString, 'text/plain');
@@ -870,7 +870,7 @@ export class CommonService {
     //     url: url,
     //     name: name
     //   };
-      
+
     //   this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
     //     if(res['code']==1){
     //       let b64encodedString = res['data']['base64'];
@@ -889,25 +889,25 @@ export class CommonService {
     //     console.log('Error: ', err);
     //     reject(err);
     //   });
-      
+
     // })
   }
 
-  public base64ToBlob(b64Data, contentType='', sliceSize=512) {
+  public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
     b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
     let byteCharacters = atob(b64Data);
     let byteArrays = [];
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        let slice = byteCharacters.slice(offset, offset + sliceSize);
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
 
-        let byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-        let byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
     }
-    return new Blob(byteArrays, {type: contentType});
+    return new Blob(byteArrays, { type: contentType });
   }
 
   fileLinkHandler(selector) {
@@ -920,7 +920,7 @@ export class CommonService {
         console.log('Name:', name);
         if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
           eve.preventDefault();
-          this.checkFile(url,name);
+          this.checkFile(url, name);
           console.log('--------------------ITS FILE--------------------');
         }
         // console.log('url:', url)
@@ -929,10 +929,10 @@ export class CommonService {
     }
   }
 
-  async searchString(value,messageList) {
+  async searchString(value, messageList) {
     let searchTerm = value.trim();
     let searchedIndex = [];
-    if (searchTerm && searchTerm!="" && searchTerm!=".") {
+    if (searchTerm && searchTerm != "" && searchTerm != ".") {
       if (searchTerm.indexOf(' ') == 0) {
         return;
       }
@@ -996,12 +996,12 @@ export class CommonService {
       let file = event.target.files[0];
       console.log("Type:", file, res);
       var ext = file.name.split('.').pop();
-      let formats = (format && format.length) ? format :  ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      let formats = (format && format.length) ? format : ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
       if (formats.includes(ext)) {
         result.name = file.name;
-        result.file =  res;
+        result.file = res;
       } else {
-        this.showError("Valid Format Are : "+format.join(","));
+        this.showError("Valid Format Are : " + format.join(","));
         return false;
       }
       // console.log("attachmentFile:", file);
@@ -1015,11 +1015,11 @@ export class CommonService {
 
   openImageView(files) {
     console.log("openImageView", files);
-    this.convertFileToBase64(files).then(res=>{
-      let getFiles:any = res;
-      let img = getFiles.map(x=>{return{image:x.base64,name:x.name} });
+    this.convertFileToBase64(files).then(res => {
+      let getFiles: any = res;
+      let img = getFiles.map(x => { return { image: x.base64, name: x.name } });
       const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-      activeModal.componentInstance.imageList = { images:img, title: 'Image' };
+      activeModal.componentInstance.imageList = { images: img, title: 'Image' };
       activeModal.componentInstance.isDownload = true;
       activeModal.result.then((data) => {
         if (data.response) {
@@ -1031,25 +1031,25 @@ export class CommonService {
     });
   }
 
-  async setTimerrr(dateTime){// not in use
+  async setTimerrr(dateTime) {// not in use
     let countDownDate = new Date(dateTime).getTime();
     let now = new Date().getTime();
     let distance = countDownDate - now; // Find the distance between now and the count down date
     // Time calculations for days, hours, minutes and seconds
     let result = null;
-    if(distance>0){
-    let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    // Output the result in an element with id="demo"
-    result = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    if (distance > 0) {
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // Output the result in an element with id="demo"
+      result = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
     }
     return (distance < 0) ? null : result;
   }
 
-  arrayUnique(list,key){
-    return [...new Map(list.map(item =>[item[key], item])).values()];
+  arrayUnique(list, key) {
+    return [...new Map(list.map(item => [item[key], item])).values()];
   }
   chartScaleLabelAndGrid(arr) {
     let chartObj = {
@@ -1104,7 +1104,7 @@ export class CommonService {
     chartObj.gridSize = Math.round(((max1 - min1) / 5) / 10) * 10;
     return chartObj;
   }
-  
+
   pieChart(labels, data, colors) {
     let chartData = {
       labels: labels,
@@ -1141,6 +1141,18 @@ export class CommonService {
     // }, 10);
 
     return { chartData, chartOptions };
+  }
+
+  varifyLink(text, completeString = true, displayText = "Link") {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    if (completeString) {
+      return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" id="urlEvent">${displayText}</a>`;
+      })
+    } else {
+      let url = text.match(urlRegex)
+      return `<a href="${url}" target="_blank" id="urlEvent">${displayText}</a>`;
+    }
   }
 }
 
