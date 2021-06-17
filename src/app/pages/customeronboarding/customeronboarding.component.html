@@ -22,6 +22,9 @@
              <li [ngClass]="activeTab=='wifi'?'active':''" (click)="activeTab='wifi';resetTable3();getOfficeDataForWifi(null);resetvar();" style="font-weight:600;font-size:14px;">
                  Wifi Necessity
              </li>
+             <li [ngClass]="activeTab=='room'?'active':''" (click)="activeTab='room';resetTable3();getOfficeDataForWifi(null);resetvar();" style="font-weight:600;font-size:14px;">
+                Meeting Rooms
+             </li>
              <li [ngClass]="activeTab=='userRole'?'active':''" (click)="activeTab='userRole';resetvar();" style="font-weight:600;font-size:14px;">
               User Role
           </li>
@@ -145,6 +148,33 @@
       </div>
       </div>
 
+    </div>
+
+    <div class="row mrgn" *ngIf="activeTab == 'room'">
+      <div class="col-3">
+        <div class="col-12" style="display:inline-block;">
+          <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+          placeholder="FO User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        </div>
+      </div>
+      <div class="col-3">
+        <!-- <div class="col-12" style="display:inline-block;"> -->
+          <auto-suggestion (onSelected)="selectOffice($event)" [display]="['name']" [data]="officeDataForWifi"
+          placeholder="Office" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+          </auto-suggestion>
+        <!-- </div> -->
+      </div>
+      <div class="col-3">
+        <input type="text" class="form-control"  id="meetingRoomName" placeholder="Enter Meeting Room Name" [(ngModel)]="meetingRoomName">
+      </div>
+      <div class="col-3 text-right">
+        <button (click)='addMeetingRoom()' class="btn btn-primary">Submit</button>
+      </div>
+
+      <div class="col-12 mt-2">
+        <smart-table [data]="tableRoom.data" [settings]="tableRoom.settings"></smart-table>
+      </div>
     </div>
 
     <div class="row mrgn" *ngIf="activeTab == 'userRole'">
