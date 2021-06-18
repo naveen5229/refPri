@@ -169,7 +169,7 @@ export class SmartTableComponent implements OnInit {
     this.sortType = this.sortType == 'desc' ? 'asc' : 'desc';
   }
 
-  handleRowClick(column, index) {
+  handleRowClick(event,column, index) {
     if (column.rowActions.click == 'selectRow') this.activeRow = column._smartId;
     else if (column.rowActions.click == 'selectMultiRow') {
       if (this.activeRows.indexOf(column._smartId) === -1) {
@@ -177,7 +177,12 @@ export class SmartTableComponent implements OnInit {
       } else {
         this.activeRows.splice(this.activeRows.indexOf(column._smartId), 1);
       }
-    } else column.rowActions.click();
+    } else {
+      if(column.rowActions && column.rowActions.stopPropagation){
+        event.stopPropagation();
+      }
+      column.rowActions.click();
+    }
   }
 
   isItActive(column) {

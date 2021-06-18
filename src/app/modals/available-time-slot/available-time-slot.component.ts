@@ -15,13 +15,23 @@ import * as moment from 'moment';
 export class AvailableTimeSlotComponent implements OnInit {
   type = 'time';
   title = 'Available Slot';
+  today = new Date();
   value: number = 1;
   highValue: number = 2;
   options: Options = {
-    floor: 1,
-    ceil: 24,
+    floor: 7,
+    ceil: 22,
     step: 0.25,
-    showTicks: true
+    showTicks: true,
+    minLimit: 1,
+    translate: (value: number): string => {
+      switch (value - parseInt(JSON.stringify(value))) {
+        case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
+        case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
+        case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
+        default: return `${parseInt(JSON.stringify(value))}`;
+      }
+    }
   };
 
   busySchedules = [];
@@ -32,9 +42,29 @@ export class AvailableTimeSlotComponent implements OnInit {
     public common: CommonService,
     public modalService: NgbModal,
     public userService: UserService) {
-    console.log('params', this.common.params);
+    console.log('params', this.common.params, moment(this.today).format("HH"));
     this.title = this.common.params.title;
+
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
+    let bookedSchedules = [];
+    this.common.params.preBookedScheduler.map(schedule => {
+      if (schedule['schedule'] && schedule['schedule'].length > 0) {
+        schedule['schedule'].map(data => bookedSchedules.push(data));
+      }
+    });
+    console.log(bookedSchedules);
+
+    this.options.getTickColor = (value: number): string => {
+      for (let i = 0; i < bookedSchedules.length; i++) {
+        if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && !bookedSchedules[i].is_todo) {
+          return 'blue';
+        }else if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && bookedSchedules[i].is_todo){
+          return 'red';
+        }
+      }
+    }
+
+    //if edit previous time selected
     if (this.common.params.selectedTime) {
       let slotFrom = null;
       let slotTo = null;
@@ -42,25 +72,48 @@ export class AvailableTimeSlotComponent implements OnInit {
         case '15': slotFrom = (this.common.params.selectedTime.from.hh + '.25'); break;
         case '30': slotFrom = (this.common.params.selectedTime.from.hh + '.50'); break;
         case '45': slotFrom = (this.common.params.selectedTime.from.hh + '.75'); break;
-        default: slotFrom = this.common.params.selectedTime.from.hh ? this.common.params.selectedTime.from.hh : 9;
+        // default: slotFrom = this.common.params.selectedTime.from.hh ? this.common.params.selectedTime.from.hh : this.setMinTime();
+        default: slotFrom = this.setMinTime();
       }
       switch (this.common.params.selectedTime.to.mm) {
         case '15': slotTo = (this.common.params.selectedTime.to.hh + '.25'); break;
         case '30': slotTo = (this.common.params.selectedTime.to.hh + '.50'); break;
         case '45': slotTo = (this.common.params.selectedTime.to.hh + '.75'); break;
-        default: slotTo = this.common.params.selectedTime.to.hh ? this.common.params.selectedTime.to.hh : 10;
+        // default: slotTo = this.common.params.selectedTime.to.hh ? this.common.params.selectedTime.to.hh : this.setMinTime() + 1;
+        default: slotTo = this.setMinTime() + 1;
       }
       this.value = slotFrom;
       this.highValue = slotTo;
-      console.log('after time assign', this.value,this.highValue);
+      console.log('after time assign', this.value, this.highValue);
+    }
+
+    //if time restricted
+    if (this.common.params.timeRestrict) {
+      this.value = this.setMinTime();
+      this.highValue = this.setMinTime() + 1;
+      this.options.minLimit = this.setMinTime();
     }
   }
 
   ngOnInit() {
   }
 
-  closeModal(res, range=null) {
+  closeModal(res, range = null) {
     this.activeModal.close({ response: res, range: range });
+  }
+
+  setMinTime() {
+    let min = parseInt(moment(this.today).format("mm"));
+    console.log(min);
+    if (min > 1 && min <= 15) {
+      return parseFloat(moment(this.today).format("HH") + '.25');
+    } else if (min > 15 && min <= 30) {
+      return parseFloat(moment(this.today).format("HH") + '.50');
+    } else if (min > 30 && min <= 45) {
+      return parseFloat(moment(this.today).format("HH") + '.75');
+    } else {
+      return parseInt(moment(this.today).format("HH")) + 1;
+    }
   }
 
   addTime() {

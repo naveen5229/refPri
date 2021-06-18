@@ -258,7 +258,7 @@ smart-table {
     transition: opacity 0.9s;
     button {
       display: none;
-      
+
       transition: display 0.9s;
     }
   }
@@ -336,117 +336,120 @@ smart-table {
   }
 }
 
-
-
-.todosec{
+.todosec {
   text-align: end;
   position: absolute;
   right: 15px;
   bottom: 0px;
-  .todobtns{
-        button{
-    border: 0;
-    background: #3366ff;
-    color: #fff;
-    border-radius: 3px;
-
-    }
-    button:focus{
-      outline: 0;
-      }
-  }
-
-.todolayout {
-  position: absolute;
-  right: 0;
-  bottom: 26px;
-  height: 430px;
-  width: 380px;
-  z-index: 999;
-  background: white;
-  box-shadow: 0px 1px 9px #c5c5c5;
-  border-radius: 20px;
-  overflow: hidden;
-
-  .addtodo {
-    margin: 5px;
-    padding: 10px;
-    text-align: center;
-    background: #fff;
-    border-radius: 5px;    
-    border: 1px solid #d6d6d6;
-    box-shadow: 0px 0px 10px #bbbbbb;
-
-
-    div{
-      padding-top: 2px;
-      text-align: end;
-    }
-  }
-.todoouter{
-  overflow: auto;
-  height: 90%;
-  .todolist {
-    text-align: center;
-    background: #fff;
-    color: #000;
-    padding: 2px;
-    border-bottom: 1px solid #d0d0d0;
-    display: flex;
-  }
- 
-}
-  .todoTitle {
-    width: 78%;
-    text-align: left;
-    padding: 0 10px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 10px;
-  }
-
-  .todoAction {
-    width: 22%;
-    text-align:center;
-    border-left: 1px solid #3366ff;  
-    padding: 5px 0px;
-    button{
-      border-radius: 40px;
+  .todobtns {
+    button {
       border: 0;
-      background: none;
-      margin-right: 1px;
-      width: 30px;
-      height: 30px; transition: .1s; 
-    i{
-      font-size: 12px;
-    }}  
-    button:hover{ 
-      background-color: #e4f0fe;
-      border-radius: 40px;
-      width: 30px;
-      height: 30px; transition: .1s; }  
-      button:focus{ 
-      outline: 0;}  
-  }
-
-  .todoHeading {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    background: #3366ff;
-    color: white;
-    height: 38px;
-    border-radius: 15px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    padding: 0 20px;
-    align-items: center;
-    p{
-      margin: 0;
+      background: #3366ff;
       color: #fff;
-      font-size: 16px;
-      font-weight: 600
+      border-radius: 3px;
+    }
+    button:focus {
+      outline: 0;
     }
   }
-}
+
+  .todolayout {
+    position: absolute;
+    right: 0;
+    bottom: 26px;
+    height: 430px;
+    width: 380px;
+    z-index: 999;
+    background: white;
+    box-shadow: 0px 1px 9px #c5c5c5;
+    border-radius: 20px;
+    overflow: hidden;
+
+    .addtodo {
+      margin: 5px;
+      padding: 10px;
+      text-align: center;
+      background: #fff;
+      border-radius: 5px;
+      border: 1px solid #d6d6d6;
+      box-shadow: 0px 0px 10px #bbbbbb;
+
+      div {
+        padding-top: 2px;
+        text-align: end;
+      }
+    }
+    .todoouter {
+      overflow: auto;
+      height: 90%;
+      .todolist {
+        text-align: center;
+        background: #fff;
+        color: #000;
+        padding: 2px;
+        border-bottom: 1px solid #d0d0d0;
+        display: flex;
+      }
+    }
+    .todoTitle {
+      width: 78%;
+      text-align: left;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+    }
+
+    .todoAction {
+      width: 22%;
+      text-align: center;
+      border-left: 1px solid #3366ff;
+      padding: 5px 0px;
+      button {
+        border-radius: 40px;
+        border: 0;
+        background: none;
+        margin-right: 1px;
+        width: 30px;
+        height: 30px;
+        transition: 0.1s;
+        i {
+          font-size: 12px;
+        }
+      }
+      button:hover {
+        background-color: #e4f0fe;
+        border-radius: 40px;
+        width: 30px;
+        height: 30px;
+        transition: 0.1s;
+      }
+      button:focus {
+        outline: 0;
+      }
+    }
+
+    .todoHeading {
+      // display: flex;
+      // justify-content: space-between;
+      font-weight: bold;
+      background: #3366ff;
+      color: white;
+      height: 38px;
+      border-radius: 15px;
+      // border-bottom-left-radius: 0;
+      // border-bottom-right-radius: 0;
+      // padding: 0 20px;
+      // align-items: center;
+      p {
+        margin: 0;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+    .todoHeading:hover {
+      cursor: pointer;
+    }
+  }
 }

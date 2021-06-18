@@ -45,12 +45,14 @@
                     <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
 
                     <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                    <!-- <ngx-table-view [additionalFields]="oddArray[i]._param_child" [tableHeader]="oddArray[i]._param_child[0]" (tableUpdate)="tableEvents($event,i,'odd')" *ngIf="oddArray[i].r_coltype == 'table'"></ngx-table-view> -->
 
                     <!-- dynamic dropdown -->
-                    <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'">
-                      <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                    <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'" (change)="onSelectNotBind($event,oddArray[i])">
+                      <option [value]="fixValue.option" [attr.isNotBind]="fixValue.isNonBind" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                         {{fixValue.option}}</option>
                     </select>
+                    <input type="text" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="oddArray[i].notBindFixedvalue">
                     <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
                         name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
                     </auto-suggestion>
@@ -104,12 +106,14 @@
 
             <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
               aria-hidden="true"></i></span>
+              <!-- <ngx-table-view [additionalFields]="evenArray[i]._param_child" [tableHeader]="evenArray[i]._param_child[0]" (tableUpdate)="tableEvents($event,i,'even')" *ngIf="evenArray[i].r_coltype == 'table'"></ngx-table-view> -->
 
             <!-- dynamic data array -->
-            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'">
-              <option [value]="fixValue.option" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'" (change)="onSelectNotBind($event,evenArray[i])">
+              <option [value]="fixValue.option" [attr.isNotBind]="fixValue.isNonBind" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                 {{fixValue.option}}</option>
             </select>
+            <input type="text" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="evenArray[i].notBindFixedvalue">
             <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
                 name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
             </auto-suggestion>

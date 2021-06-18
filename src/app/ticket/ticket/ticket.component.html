@@ -187,11 +187,11 @@
                                         class="fa fa-table" aria-hidden="true"></i></span>
 
                                 <!-- dynamic dropdown -->
-                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'">
-                                    <option [value]="fixValue.option"
-                                        *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'" (change)="onSelectNotBind($event,oddArray[i])">
+                                    <option [value]="fixValue.option" [attr.isNotBind]="fixValue.isNonBind" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+                                <input type="text" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="oddArray[i].notBindFixedvalue">
                                 <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
                                     name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
                                 </auto-suggestion>
@@ -261,11 +261,11 @@
                                         aria-hidden="true"></i></span>
 
                                 <!-- dynamic data array -->
-                                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'">
-                                    <option [value]="fixValue.option"
-                                        *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+                                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'" (change)="onSelectNotBind($event,evenArray[i])">
+                                    <option [value]="fixValue.option" [attr.isNotBind]="fixValue.isNonBind" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+                                <input type="text" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="evenArray[i].notBindFixedvalue">
                                 <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
                                     name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
                                 </auto-suggestion>
@@ -437,6 +437,7 @@
                                         <i class="fas fa-globe-africa"></i>
                                     </label>
                                 </div>
+                                <input type="text" *ngIf="opening.r_fixedvalues && opening.isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="opening.notBindFixedvalue" readonly>
                             </div>
                         </div>
                     </div>
@@ -461,6 +462,7 @@
                                 <span *ngIf="primary.r_coltype=='attachment' && primary.r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(primary.r_url,primary.r_doc_name)">{{primary.r_doc_name}}</span>
                                 </span>
+                                <input type="text" *ngIf="primary.r_fixedvalues && primary.isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="primary.notBindFixedvalue" readonly>
                             </div>
                         </div>
                     </div>
@@ -485,6 +487,7 @@
                                 <span *ngIf="closing.r_coltype=='attachment' && closing.r_url">
                                     <span class="blue cursor-pointer" (click)="common.checkFile(closing.r_url,opening.r_doc_name)">{{closing.r_doc_name}}</span>
                                 </span>
+                                <input type="text" *ngIf="closing.r_fixedvalues && closing.isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="closing.notBindFixedvalue" readonly>
                             </div>
                         </div>
                     </div>

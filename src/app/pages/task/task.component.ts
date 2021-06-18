@@ -1,4 +1,4 @@
-import { Component, OnInit, Directive, HostListener } from "@angular/core";
+import { Component, OnInit, Directive, HostListener, ElementRef } from "@angular/core";
 import { CommonService } from "../../Service/common/common.service";
 import { ApiService } from "../../Service/Api/api.service";
 import { UserService } from "../../Service/user/user.service";
@@ -16,6 +16,7 @@ import { TicketChatboxComponent } from "../../modals/ticket-modals/ticket-chatbo
 import { GenericModelComponent } from "../../modals/generic-model/generic-model.component";
 import { AddExtraTimeComponent } from "../../modals/ticket-modals/add-extra-time/add-extra-time.component";
 import { TicketClosingFormComponent } from "../../modals/ticket-modals/ticket-form-field/ticket-closing-form.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "ngx-task",
@@ -118,6 +119,7 @@ export class TaskComponent implements OnInit {
     desc: "",
     date: this.common.getDate(),
     isUrgent: false,
+    duration: null,
     requestId: null
   };
 
@@ -224,11 +226,20 @@ export class TaskComponent implements OnInit {
   handleKeyboardEvent(event) {
     this.keyHandler(event);
   }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    console.log('event triggered:', event);
+    (this.todoVisi) ? this.todoVisi = false : null;
+    (this.fabAction) ? this.fabAction = false : null;
+  }
   constructor(
     public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal,
-    public userService: UserService
+    public userService: UserService,
+    public eRef: ElementRef,
+    public router: Router
   ) {
     this.getTaskByType(-8);
     this.getProcessLeadByType(5);
@@ -254,6 +265,10 @@ export class TaskComponent implements OnInit {
     this.getUserGroupList();
     this.getProcessTicketCount();
     // this.getTodoTaskList(0);
+  }
+
+  propogateEvent(event) {
+    event.stopPropagation();
   }
 
   resetSearchTask() {
@@ -2516,6 +2531,7 @@ export class TaskComponent implements OnInit {
       desc: "",
       date: this.common.getDate(),
       isUrgent: false,
+      duration: null,
       requestId: null
     };
   }
@@ -2526,8 +2542,15 @@ export class TaskComponent implements OnInit {
       desc: task.task_desc,
       date: new Date(task.due_date),
       isUrgent: (task.high_priority) ? true : false,
+      duration: (task.duration) ? new Date() : null,
       requestId: task._id
     };
+    if (task.duration) {
+      let time = task.duration.split(':');
+      this.taskTodoForm.duration.setHours((time.length) ? parseInt(time[0]) : 0);
+      this.taskTodoForm.duration.setMinutes((time.length) ? parseInt(time[1]) : 0);
+      this.taskTodoForm.duration.setSeconds(0);
+    }
   }
 
   updateTodoTask(task, type = 0) {
@@ -2555,7 +2578,6 @@ export class TaskComponent implements OnInit {
   }
 
   saveTaskTodo(type = 0) {
-    console.log("saveTaskTodo:", type);
     if (this.taskTodoForm.desc == "") {
       return this.common.showError("Description is missing");
     } else {
@@ -2564,9 +2586,9 @@ export class TaskComponent implements OnInit {
         desc: this.taskTodoForm.desc,
         isUrgent: this.taskTodoForm.isUrgent,
         taskTodoId: this.taskTodoForm.taskTodoId,
+        duration: (this.taskTodoForm.duration) ? this.common.timeFormatter(this.taskTodoForm.duration) : null,
         requestId: (this.taskTodoForm.requestId > 0) ? this.taskTodoForm.requestId : null
       };
-      console.log("todo params:", params);
       this.common.loading++;
       this.api.post("AdminTask/addTodoTask", params).subscribe(res => {
         this.common.loading--;
@@ -2574,7 +2596,6 @@ export class TaskComponent implements OnInit {
           if (res["data"][0]["y_id"] > 0) {
             this.common.showToast(res["msg"]);
             this.todoAddList = false;
-            console.log("saveTaskTodo2:", type);
             this.getTodoTaskList(type);
             this.resetTaskTodoForm();
           } else {
@@ -3228,10 +3249,21 @@ export class TaskComponent implements OnInit {
             isTitle: true,
             title: `${ticket["_desc"] ? ticket["_desc"] : ''}\n${ticket['schedule_time'] ? ticket['schedule_time'] : ''}\n${ticket['duration'] ? ticket['duration'] : ''}\n${ticket['_link'] ? ticket['_link'] : ''}`,
           };
+        } else if (key == "info") {
+          column[key] = {
+            value: !ticket['_room_id'] ? this.common.varifyLink(ticket[key],false) : ticket[key],
+            // class: !ticket['_room_id'] ? "blue" : "black",
+            isHTML: true,
+            // action: !ticket['_room_id'] ? this.jumpToLink.bind(this, ticket['info']) : null,
+          };
         } else {
           column[key] = { value: ticket[key], class: "black", action: "" };
         }
-        column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
+        if (ticket._tktid > 0) {
+          column['rowActions'] = { 'click': this.ticketMessage.bind(this, ticket, type) };
+        } else {
+          column['rowActions'] = { 'click': this.showTodoList.bind(this, 2), "stopPropagation": true };
+        }
       }
       columns.push(column);
     });
@@ -3239,68 +3271,137 @@ export class TaskComponent implements OnInit {
   }
   // end cc task list
 
-  actionIconsMeeting(ticket, type) {
-    let icons = [
-      {
-        class: "fas fa-comments",
-        action: this.ticketMessage.bind(this, ticket, type),
-        txt: "",
-        title: null,
-      },
-    ];
+  jumpToLink(link) {
+    window.open(link, '_blank');
+  }
 
-    if (ticket._unreadcount > 0) {
+  showTodoList(type) {
+    this.todoVisi = !this.todoVisi;
+    if (this.todoVisi) {
+      this.getTodoTaskList(2);
+    }
+  }
+
+  actionIconsMeeting(ticket, type) {
+    let icons = [];
+    if (ticket._tktid > 0) {
       icons = [
         {
-          class: "fas fa-comments new-comment",
-          action: this.ticketMessage.bind(this, ticket, type),
-          txt: ticket._unreadcount,
-          title: null,
-        },
-      ];
-    } else if (ticket._unreadcount == -1) {
-      icons = [
-        {
-          class: "fas fa-comments no-comment",
+          class: "fas fa-comments",
           action: this.ticketMessage.bind(this, ticket, type),
           txt: "",
           title: null,
         },
       ];
+      if (ticket._unreadcount > 0) {
+        icons = [
+          {
+            class: "fas fa-comments new-comment",
+            action: this.ticketMessage.bind(this, ticket, type),
+            txt: ticket._unreadcount,
+            title: null,
+          },
+        ];
+      } else if (ticket._unreadcount == -1) {
+        icons = [
+          {
+            class: "fas fa-comments no-comment",
+            action: this.ticketMessage.bind(this, ticket, type),
+            txt: "",
+            title: null,
+          },
+        ];
+      }
     }
 
-
-    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket.status != 5) {
+    if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._status != 5 && ticket._tktid > 0) {
       if (type == 1) {
         icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
-        if (this.today > new Date(ticket.schedule_time)) {
-          icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        if (new Date() >= new Date(ticket.schedule_time)) {
+          icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket['_host'] == this.userService.loggedInUser.id) ? this.getUserActivityUpdate.bind(this, ticket, type, 5) : this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
         // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});
         icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
       }
       if (type == 2) {
         if (!ticket.schedule_time) {
-          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, true), txt: "", title: "Edit Meeting" });
+          icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
           icons.push({ class: "fa fa-times text-danger", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1), txt: "", title: "Mark rejected" });
-        } else if (this.today > new Date(ticket.schedule_time)) {
-          icons.push({ class: "fa fa-thumbs-up text-success", action: this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
+        } else if (ticket.schedule_time && new Date() >= new Date(ticket.schedule_time)) {
+          icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket['_host'] == this.userService.loggedInUser.id) ? this.getUserActivityUpdate.bind(this, ticket, type, 5) : this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
       }
     }
-
-    if (type == 0 && [-1, 5].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id)) {
+    if (type == 0 && [-1, 5, 2].includes(ticket._status) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._tktid > 0) {
       icons.push({ class: "fa fa-retweet", action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, 0), txt: "", title: "Re-Active" });
+      icons.push({ class: "fa fa-caret-square-o-down", action: this.editMeeting.bind(this, ticket, type, false), txt: "", title: "Follow Up" });
     }
     return icons;
+  }
+
+  meetingAttendiesList = [];
+  holdForFollowUp = {};
+  getUserActivityUpdate(ticket, type, status) {
+    this.holdForFollowUp = { ticket: ticket, type: type, status: status };
+    let params = {
+      ticketId: ticket._tktid,
+      ticketType: 110
+    }
+    this.common.loading++;
+    this.api.post('AdminTask/getAllUserByTask', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        let userListByTask = res['data'] || [];
+        if (userListByTask) this.meetingAttendiesList = userListByTask['ccUsers'].map(user => {
+          return {
+            meetingId: ticket._refid,
+            userId: user._cc_user_id,
+            status: (user.status == 1) ? "Ack" : ((user.status == -1) ? "Declined" : "Pending"),
+            presense: user.is_present ? '1' : '0',
+            name: user.cc_user
+          }
+        });
+        console.log(this.meetingAttendiesList);
+        document.getElementById('meetingAttendance').style.display = 'block';
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.showError();
+    });
+  }
+
+  saveMeetingAttendiesStatus(user) {
+    // console.log("user", user); return;
+    let params = {
+      meetingId: user.meetingId,
+      userId: user.userId,
+      status: parseInt(user.presense)
+    }
+    this.api.post('Admin/updateMeetingParticipantPresence', params).subscribe(res => {
+      if (res['code'] == 1) {
+        this.common.showToast(res['msg']);
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.showError();
+    });
+  }
+
+  closemeetingAttendanceMoadal(state) {
+    document.getElementById('meetingAttendance').style.display = 'none';
+    if (state) this.followUpMeeting(this.holdForFollowUp['ticket'], this.holdForFollowUp['type'], this.holdForFollowUp['status'])
   }
 
   followUpMeeting(ticket, type, status) {
     this.common.params = {
       title: "Follow Up Meeting",
       description:
-        `<b>&nbsp;` + `Create A FollowUp Meeting.`,
+        `<b>&nbsp;` + `Press Yes to create a follow up meeting and No will close this meeting without any followup.`,
       isRemark: false,
+      btn1: 'Yes',
+      btn2: 'No'
     };
     const activeModal = this.modalService.open(ConfirmComponent, {
       size: "sm",
@@ -3313,7 +3414,7 @@ export class TaskComponent implements OnInit {
       if (data.response) {
         this.editMeeting(ticket, type, false);
       } else {
-        this.updateTicketStatus(ticket, type, status);
+        (!data.apiHit) ? this.updateTicketStatus(ticket, type, status) : null;
       }
     });
   }
@@ -3398,7 +3499,7 @@ export class TaskComponent implements OnInit {
     activeModal.result.then((data) => {
       if (data.response) {
         this.activeTab = "meeting";
-        if (!isEdit) {
+        if (!isEdit && type != 0) {
           this.updateTicketStatus(ticket, type, 5);
         } else {
           this.getMeetingListByType(1);

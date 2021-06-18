@@ -8,6 +8,7 @@ import { MonthPickerComponent } from './month-picker/month-picker.component';
 import { SmartTableComponent } from './smart-table/smart-table.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { DndDirective } from './dndDirective/dnd.directive';
+import { TableViewComponent } from './table-view/table-view.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, DateInputsModule],
@@ -20,8 +21,9 @@ import { DndDirective } from './dndDirective/dnd.directive';
         SmartTableComponent,
         ImageViewerComponent,
         DndDirective,
+        TableViewComponent
     ],
-    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective,],
+    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective, TableViewComponent,],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [],
 })

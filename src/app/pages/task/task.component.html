@@ -50,11 +50,12 @@
                     </div>
                 </div>
                 <div class="fabsection">
-                    <button class="btn btn-primary fab" title="Action Buttons" (click)="fabAction = !fabAction"><i
+                    <button class="btn btn-primary fab" title="Action Buttons"
+                        (click)="fabAction = !fabAction;propogateEvent($event)"><i
                             class="fas fa-ellipsis-v"></i></button>
                     <div class="text-right" [ngClass]="{'fshow': fabAction, 'fhide': !fabAction}">
                         <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting"
-                        (click)="applyLeave(2)"><i class="fas fa-users p-1" aria-hidden="true"></i></button>
+                            (click)="applyLeave(2)"><i class="fas fa-users p-1" aria-hidden="true"></i></button>
                         <button class="btn btn-primary btn-sm allicons" id="addBroadcast" title="Add Broadcast"
                             (click)="applyLeave(1)"><i class="fa fa-bullhorn p-1" aria-hidden="true"></i></button>
                         <button class="btn btn-primary btn-sm leave allicons" id="applyleave" title="Apply Leave"
@@ -109,10 +110,11 @@
                     ToDo List
                 </li> -->
                 <li [ngClass]="activeTab=='scheduleMaster'?'active':''"
-                    (click)="activeTab='scheduleMaster'; getScheduledTask()">
+                    (click)="activeTab='scheduleMaster'; getScheduledTask();todoVisi = false;">
                     Scheduled Task Master
                 </li>
-                <li [ngClass]="activeTab=='meeting'?'active':''" (click)="activeTab='meeting'; resetSearchTask(); getMeetingListByType(1)">
+                <li [ngClass]="activeTab=='meeting'?'active':''"
+                    (click)="activeTab='meeting'; resetSearchTask(); getMeetingListByType(1);todoVisi = false;">
                     Meeting
                 </li>
                 <li [ngClass]="activeTab=='unreadTaskByMe'?'active':''"
@@ -281,13 +283,13 @@
             </ul>
             <div *ngIf="!activeSabTab" class="row" style="z-index: 999;">
                 <div class="col-4">
-                    <uj-date-time-picker [maxd]="minDateTodo" [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.startDate"
-                        (onChanged)="searchTask.startDate=$event">
+                    <uj-date-time-picker [maxd]="minDateTodo" [isStart]="true" [isTime]="false"
+                        [dateTimeValue]="searchTask.startDate" (onChanged)="searchTask.startDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
-                    <uj-date-time-picker [maxd]="minDateTodo" [isStart]="true" [isTime]="false" [dateTimeValue]="searchTask.endDate"
-                        (onChanged)="searchTask.endDate=$event">
+                    <uj-date-time-picker [maxd]="minDateTodo" [isStart]="true" [isTime]="false"
+                        [dateTimeValue]="searchTask.endDate" (onChanged)="searchTask.endDate=$event">
                     </uj-date-time-picker>
                 </div>
                 <div class="col-4">
@@ -321,29 +323,38 @@
             </smart-table>
         </div>
 
-        <div class="todosec">
+        <div class="todosec" id="todoSec" (click)="propogateEvent($event)">
             <div class="todolayout" *ngIf="todoVisi">
-                <div class="todoHeading">
-                    <p>To Do List </p>
-                    <div class="right">
-                        <i class="fas fa-plus" *ngIf="!todoAddList" (click)="todoAddList = true"></i>
-                        <i class="fas fa-times" *ngIf="todoAddList" (click)="todoAddList = false"
-                            (click)="resetTaskTodoForm()"></i>
+                <div class="row todoHeading">
+                    <div class="col-10 my-auto pl-4 text-left" (click)="todoVisi = !todoVisi">
+                        <p>To Do List </p>
+                    </div>
+                    <div class="col-2 my-auto pr-4">
+                        <div class="right">
+                            <i class="fas fa-plus" *ngIf="!todoAddList" (click)="todoAddList = true"></i>
+                            <i class="fas fa-times" *ngIf="todoAddList" (click)="todoAddList = false"
+                                (click)="resetTaskTodoForm()"></i>
+                        </div>
                     </div>
                 </div>
 
-                <div class="addtodo" *ngIf="todoAddList">
+                <div class="addtodo" id="addtodo" *ngIf="todoAddList">
                     <div class="columnGap">
                         <textarea row="3" cols="15" maxlength="2044" placeholder="Enter Description" id="todoDesc"
                             name="todoDesc" class="form-control" [(ngModel)]="taskTodoForm.desc" resize="true"
                             style="height: 40px!important;"></textarea>
                     </div>
                     <div>
-                        <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="false"
+                        <uj-date-time-picker [mind]="minDateTodo" [isStart]="true" [isTime]="true"
                             (onChanged)="taskTodoForm.date=$event" [dateTimeValue]="taskTodoForm.date">
                         </uj-date-time-picker>
                     </div>
-                  
+                    <div>
+                        <uj-date-time-picker [isDate]="false" [isTime]="true" (onChanged)="taskTodoForm.duration=$event"
+                            [dateTimeValue]="taskTodoForm.duration">
+                        </uj-date-time-picker>
+                    </div>
+
                     <div>
                         <label class="pr-5">
                             <input type="checkbox" [checked]="taskTodoForm.isUrgent"
@@ -358,19 +369,25 @@
                 </div>
                 <div class="todoouter">
                     <div class="todolist" *ngFor="let todo of taskTodoList">
-                        <div class="todoTitle" title="Due On:{{todo.due_date}}" [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}"> {{todo.task_desc}} </div>
+                        <div class="todoTitle" title="Due On:{{todo.due_date}}"
+                            [ngStyle]="{'text-decoration': todo._status ? 'line-through' : ''}">
+                            <i *ngIf="todo.duration" class="fa fa-clock text-warning pull-right"></i>
+                            {{todo.task_desc}}
+                        </div>
                         <div class="todoAction">
-                            <button *ngIf="!todo._status" title="Mark Complete"><i class="fa fa-thumbs-up text-success"  (click)="updateTodoTask(todo,2)"></i></button>
-                            <button *ngIf="!todo._status" title="Edit" > <i class="fa fa-edit" (click)="todoAddList=true;editTodoTask(todo)"></i></button>
+                            <button *ngIf="!todo._status" title="Mark Complete"><i class="fa fa-thumbs-up text-success"
+                                    (click)="updateTodoTask(todo,2)"></i></button>
+                            <button *ngIf="!todo._status" title="Edit"> <i class="fa fa-edit"
+                                    (click)="todoAddList=true;editTodoTask(todo)"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="todobtns">
-            <button title="Todo List" (click)="todoVisi = !todoVisi; (todoVisi) ? getTodoTaskList(2) : null">
-                <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
-                <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
-            </button>
+                <button title="Todo List" (click)="todoVisi = !todoVisi; (todoVisi) ? getTodoTaskList(2) : null">
+                    <i class="fas fa-chevron-up" *ngIf="!todoVisi"></i>
+                    <i class="fas fa-chevron-down" *ngIf="todoVisi"></i>
+                </button>
             </div>
         </div>
 
@@ -396,4 +413,55 @@
         </div>
     </div>
     <!-- end: search task modal -->
+
+    <!--meeting attendance status modal -->
+    <div class="modal" id="meetingAttendance" #meetingAttendance>
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">User Presence In Meeting</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="closemeetingAttendanceMoadal(false)">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>S.NO</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Presence</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let user of meetingAttendiesList;let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.status}}</td>
+                                    <td>
+                                        <select [(ngModel)]="user.presense" (change)="saveMeetingAttendiesStatus(user)">
+                                            <option value="1">Present</option>
+                                            <option value="0">Absent</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div class="row float-right pr-2">
+                        <button class="btn btn-primary btn-sm" id="saveMeetingAttendiesStatus"
+                            (click)="closemeetingAttendanceMoadal(true)">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--meeting attendance status modal -->
+
 </nb-card>

@@ -38,7 +38,8 @@ export class AddFieldComponent implements OnInit {
   // }]
   childArray = [];
   fixValues = [{
-    option: ''
+    option: '',
+    isNonBind: false
   }];
   fixValuesChild = [{
     option: ''
@@ -196,12 +197,18 @@ export class AddFieldComponent implements OnInit {
     }
 
     let error_count = false;
+    let error_multi_notbind = false;
     if (tmpJson.type === 'table') {
       tmpJson.param_child.forEach(ele => {
         if (ele.param.length == 0 || !ele.type.length) {
           error_count = true;
         }
       })
+    }else if (tmpJson.drpOption) {
+      let notbindList = tmpJson.drpOption.filter(x=>x.isNonBind);
+      if(notbindList && notbindList.length>1){
+        error_multi_notbind = true;
+      }
     }
 
     if (!this.name || !this.typeId) {
@@ -210,6 +217,10 @@ export class AddFieldComponent implements OnInit {
     }
     if (error_count) {
       this.common.showError('Table Field Name or Type is missing');
+      return false;
+    }
+    if (error_multi_notbind) {
+      this.common.showError('Mark only single input-box for fixed value option');
       return false;
     }
     let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
@@ -379,7 +390,7 @@ export class AddFieldComponent implements OnInit {
 
   addFixValue() {
     if (this.fixValues[this.fixValues.length - 1].option) {
-      this.fixValues.push({ option: '' })
+      this.fixValues.push({ option: '',isNonBind: false })
     } else {
       this.common.showError('Enter Value First')
     }
@@ -414,7 +425,8 @@ export class AddFieldComponent implements OnInit {
     this.isRequired = false
     this.fieldId = null;
     this.fixValues = [{
-      option: ''
+      option: '',
+      isNonBind: false
     }];
     this.btn1 = "Add";
     this.childArray = []
