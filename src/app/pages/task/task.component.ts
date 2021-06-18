@@ -3251,7 +3251,7 @@ export class TaskComponent implements OnInit {
           };
         } else if (key == "info") {
           column[key] = {
-            value: !ticket['_room_id'] ? this.common.varifyLink(ticket[key],false) : ticket[key],
+            value: !ticket['_room_id'] ? ((ticket['_link']) ? this.common.varifyLink(ticket[key],false) : null) : ticket[key],
             // class: !ticket['_room_id'] ? "blue" : "black",
             isHTML: true,
             // action: !ticket['_room_id'] ? this.jumpToLink.bind(this, ticket['info']) : null,
