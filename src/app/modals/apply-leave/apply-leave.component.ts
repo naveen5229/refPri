@@ -603,7 +603,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             console.log(key);
             if (groupUser[key] && groupUser[key].length > 0) {
               console.log(groupUser[key]);
-              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
+              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
               console.log(preBookedScheduler);
               groupUser[key].map(schedule => {
                 let slotFrom = null;
@@ -634,12 +634,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             console.log(presentStatus, uniqueUsers);
             uniqueUsers.map(user => {
               if (presentStatus.includes(user['id'])) return;
-              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
+              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
             })
           }
         } else {
           uniqueUsers.map(user => {
-            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
+            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
           });
         }
 

@@ -6,6 +6,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { Options } from '@angular-slider/ngx-slider';
 import { parse } from 'querystring';
 import * as moment from 'moment';
+import { scheduled } from 'rxjs';
 
 @Component({
   selector: 'ngx-available-time-slot',
@@ -13,6 +14,7 @@ import * as moment from 'moment';
   styleUrls: ['./available-time-slot.component.scss']
 })
 export class AvailableTimeSlotComponent implements OnInit {
+  detailedSlot = null;
   type = 'time';
   title = 'Available Slot';
   today = new Date();
@@ -58,7 +60,7 @@ export class AvailableTimeSlotComponent implements OnInit {
         schedule['schedule'].map(data => bookedSchedules.push(data));
       }
     });
-    console.log(bookedSchedules);
+    console.log(this.busySchedules, bookedSchedules);
 
     this.options.getTickColor = (value: number): string => {
       for (let i = 0; i < bookedSchedules.length; i++) {
@@ -158,17 +160,27 @@ export class AvailableTimeSlotComponent implements OnInit {
     }
   }
 
-  getSeperateInfo(event, schedule) {
-    console.log(" schedule", event, schedule);
-    // this.seperateInfo = schedule;
-    // if (this.seperateInfo.schedule && this.seperateInfo.schedule.length > 1) {
-    //   let tooltipEle = document.getElementById('ngx-tooltip');
-    //   tooltipEle.style.display = 'block';
-    //   tooltipEle.style.top = event.y + 'px';
-    // }
-  }
-  closeTooltip() {
-    document.getElementById('ngx-tooltip').style.display = 'none';
-  }
+  // getSeperateInfo(event, schedule) {
+  //   console.log(" schedule", event, schedule);
+  //   this.seperateInfo = schedule;
+  //   if (this.seperateInfo.schedule && this.seperateInfo.schedule.length > 1) {
+  //     // let tooltipEle = document.getElementById('ngx-tooltip');
+  //     // tooltipEle.style.display = 'block';
+  //     // tooltipEle.style.top = event.y + 'px';
+  //     this.detailedSlot = true;
+  //   }
+  // }
+  // closeTooltip() {
+  //   document.getElementById('ngx-tooltip').style.display = 'none';
+  // }
 
+  manageIcons(schedule, iconState) {
+    this.busySchedules.forEach(ele => {
+      ele.detaildIcon = true
+      if (ele.userid == schedule.userid) {
+        ele.detaildIcon = iconState
+      }
+    });
+    console.log('edited:',this.busySchedules)
+  }
 }

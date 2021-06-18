@@ -16,16 +16,33 @@
     </div>
   </div>
 
-  <div class="row mt-2" *ngFor="let schedule of busySchedules">
+  <div class="row mt-2" *ngFor="let schedule of busySchedules;let i = index">
     <div class="col-4 my-auto">
-      <label>{{schedule.name}}:</label>
+      <label>{{schedule.name}} :
+        <i class="fas fa-sort-down" *ngIf="schedule.schedule && schedule.schedule.length > 1 && schedule.detaildIcon"
+          (click)="seperateInfo = schedule;detailedSlot = i;manageIcons(schedule, false)"></i>
+        <i class="fas fa-sort-up" *ngIf="schedule.schedule && schedule.schedule.length > 1 && !schedule.detaildIcon"
+          (click)="detailedSlot = null;manageIcons(schedule, true)"></i>
+      </label>
     </div>
+
     <div class="col-8">
-      <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule"
-        (click)="getSeperateInfo($event,schedule)">
-        <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"
-          [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
-        <!-- class="othersrange" -->
+
+      <div>
+        <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule">
+          <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"
+            [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
+          <!-- class="othersrange" -->
+        </div>
+      </div>
+
+      <div class="ngx-detailedTooltip" *ngIf="detailedSlot==i">
+        <div class="row" class="custom-slider range2">
+          <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"
+            *ngFor="let booked of schedule.schedule"
+            [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
+          <!-- class="othersrange" -->
+        </div>
       </div>
     </div>
   </div>
