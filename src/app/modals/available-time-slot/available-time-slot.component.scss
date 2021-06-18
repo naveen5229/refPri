@@ -122,7 +122,16 @@
 }
 
 .ngx-detailedTooltip {
-  background-color: gray;
-  height: 100px;
+  background-color: #f3f5fd;
+  height: 120px;
   overflow: auto;
+  position: absolute;
+  top: 50px;
+  z-index: 32;
+  width: 500.66px;
+  box-shadow: inset 2px 1px 3px #b5b2b2;
+  .custom-slider.range2{
+    width: 98%;
+    margin-left: 1%;
+  }
 }
