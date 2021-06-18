@@ -17,7 +17,7 @@
   </div>
 
   <div class="row mt-2" *ngFor="let schedule of busySchedules;let i = index">
-    <div class="col-4 my-auto">
+    <div class="col-4 mt-2">
       <label>{{schedule.name}} :
         <i class="fas fa-sort-down" *ngIf="schedule.schedule && schedule.schedule.length > 1 && schedule.detaildIcon"
           (click)="seperateInfo = schedule;detailedSlot = i;manageIcons(schedule, false)"></i>
