@@ -3317,7 +3317,7 @@ export class TaskComponent implements OnInit {
     if ((type == 1 || type == 2) && [ticket._host, ticket._aduserid].includes(this.userService.loggedInUser.id) && ticket._status != 5 && ticket._tktid > 0) {
       if (type == 1) {
         icons.push({ class: "fas fa-edit", action: this.editMeeting.bind(this, ticket, type, true), txt: "", title: "Edit Meeting" });
-        if (new Date() >= new Date(ticket.schedule_time)) {
+        if (ticket.schedule_time && new Date() >= new Date(ticket.schedule_time)) {
           icons.push({ class: "fa fa-thumbs-up text-success", action: (ticket['_host'] == this.userService.loggedInUser.id) ? this.getUserActivityUpdate.bind(this, ticket, type, 5) : this.followUpMeeting.bind(this, ticket, type, 5), txt: "", title: "Mark Completed" });
         }
         // icons.push({class: "fas fa-trash-alt",action: this.deleteMeetingWithConfirm.bind(this, ticket, type),txt: "",title: "Delete Task"});

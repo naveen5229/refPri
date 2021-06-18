@@ -107,3 +107,16 @@
     background: orange;
   }
 }
+
+.ngx-tooltip{
+  position: absolute;
+  z-index: 1;
+  background: #000;
+  // height: 30px;
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  color: #ffffff;
+  // visibility: hidden;
+  display: none;
+}

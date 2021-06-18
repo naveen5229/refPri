@@ -35,6 +35,12 @@ export class AvailableTimeSlotComponent implements OnInit {
   };
 
   busySchedules = [];
+  seperateInfo = {
+    name: '',
+    option: {},
+    schedule: [],
+    userid: null
+  };
 
 
   constructor(public activeModal: NgbActiveModal,
@@ -58,7 +64,7 @@ export class AvailableTimeSlotComponent implements OnInit {
       for (let i = 0; i < bookedSchedules.length; i++) {
         if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && !bookedSchedules[i].is_todo) {
           return 'blue';
-        }else if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && bookedSchedules[i].is_todo){
+        } else if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && bookedSchedules[i].is_todo) {
           return 'red';
         }
       }
@@ -150,6 +156,19 @@ export class AvailableTimeSlotComponent implements OnInit {
       console.log('fromTime:', fromTime, 'toTime:', toTime, 'timeDuration', timeDuration);
       this.closeModal(true, interval)
     }
+  }
+
+  getSeperateInfo(event, schedule) {
+    console.log(" schedule", event, schedule);
+    // this.seperateInfo = schedule;
+    // if (this.seperateInfo.schedule && this.seperateInfo.schedule.length > 1) {
+    //   let tooltipEle = document.getElementById('ngx-tooltip');
+    //   tooltipEle.style.display = 'block';
+    //   tooltipEle.style.top = event.y + 'px';
+    // }
+  }
+  closeTooltip() {
+    document.getElementById('ngx-tooltip').style.display = 'none';
   }
 
 }

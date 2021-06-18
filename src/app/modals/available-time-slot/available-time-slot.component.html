@@ -11,7 +11,7 @@
     </div>
     <div class="col-8">
       <div class="row" class="custom-slider">
-        <ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options" ></ngx-slider>
+        <ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options"></ngx-slider>
       </div>
     </div>
   </div>
@@ -21,13 +21,21 @@
       <label>{{schedule.name}}:</label>
     </div>
     <div class="col-8">
-      <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule">
-        <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime"
-          [options]="schedule.option" [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
-          <!-- class="othersrange" -->
+      <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule"
+        (click)="getSeperateInfo($event,schedule)">
+        <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"
+          [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
+        <!-- class="othersrange" -->
       </div>
     </div>
   </div>
+
+  <!-- <span class="custom-slider ngx-tooltip" id="ngx-tooltip">
+    <i class="fas fa-times float-right" (click)="closeTooltip()"></i>
+    <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" *ngFor="let booked of seperateInfo.schedule"
+      [options]="seperateInfo.option"
+      [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
+  </span> -->
 
   <div class="row mt-1">
     <div class="col-12 text-right">
