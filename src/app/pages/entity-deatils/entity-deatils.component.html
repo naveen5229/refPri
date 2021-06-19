@@ -1,0 +1,181 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-6">
+        <h5 class="heading-design">Entity Details</h5>
+      </div>
+      <div class="col-6 text-right">
+        <button class="btn btn-primary btn-sm allicons mr-2" style="background: blueviolet;" (click)="addEntity('entityType')">
+          Add Entity Type
+        </button>
+        <button class="btn btn-primary btn-sm allicons" (click)="addEntity('entityList')">Add Entity</button>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="tabs_style_main">
+      <ul class="tabs_style text-left">
+        <li [ngClass]="activeTab=='entityType'?'active':''" (click)="activeTab='entityType';getEntityType()">
+          Entity Type
+        </li>
+        <li [ngClass]="activeTab=='entitiesList'?'active':''" (click)="activeTab='entitiesList';getEntitiesList()">
+          Entities
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="activeTab=='entityType'">
+      <smart-table *ngIf="entityTypeData.length!=0" [data]="entityType.data" [settings]="entityType.settings"
+        id="entityTypeList">
+      </smart-table>
+    </div>
+    <div *ngIf="activeTab=='entitiesList'">
+      <smart-table *ngIf="entitiesData.length!=0" [data]="entitiesList.data" [settings]="entitiesList.settings"
+        id="entitiesListList">
+      </smart-table>
+    </div>
+  </nb-card-body>
+
+  <!-- start: search task  modal -->
+  <div class="modal" id="contactDetails">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Contact Details</h5>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeContactDetails()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-1">
+            <div class="col-12 text-right">
+              <button class="btn btn-primary btn-sm allicons mr-2" id="contact" title="Add Conatct"
+                (click)="addEntity('contact')">
+                <i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+            <smart-table [data]="contactData.data" [settings]="contactData.settings" id="tableSearchTaskList"></smart-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end: search task modal -->
+  <!--start: update modal -->
+  <div class="modal" id="entityContactFields">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{entityContactFieldsTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeEntityContactFields()">&times;</button>
+        </div>
+        <div class="modal-body" *ngIf="modalType == 1">
+          <div class="row mb-1">
+            <div class="col-3">
+              <label>Name:</label>
+            </div>
+            <div class="col-9">
+              <input type="text" class="form-control" maxlength="40" placeholder="Entity Type" [(ngModel)]="entityTypeForm.name">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body" *ngIf="modalType == 2">
+          <div class="row mb-2">
+            <div class="col-3">
+              <label>Name:</label>
+            </div>
+            <div class="col-9">
+              <input type="text" class="form-control" maxlength="60" placeholder="Entity Name" [(ngModel)]="entityListForm.name">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-3">
+              <label>Entity Type:</label>
+            </div>
+            <div class="col-9">
+              <auto-suggestion [data]="entityTypes" display="name" seperator="-" placeholder="Select Entity Type"
+                (onSelected)="entityListForm.entityType = $event" inputId="entityType" name="entityType"
+                autocomplete="off"
+                [preSelected]="(entityListForm.entityType.id>0) ? {name: entityListForm.entityType.name} : {name: ''}">
+              </auto-suggestion>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body" *ngIf="modalType == 3">
+          <div class="row mb-2">
+            <div class="col-3">
+              <label>Name:</label>
+            </div>
+            <div class="col-9">
+              <input type="text" class="form-control" maxlength="60" placeholder="Enter Name" [(ngModel)]="contactForm.name">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-3">
+              <label>Contact:</label>
+            </div>
+            <div class="col-9">
+              <input type="number" class="form-control" placeholder="Enter Contact" [(ngModel)]="contactForm.contactNo">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-3">
+              <label>Email:</label>
+            </div>
+            <div class="col-9">
+              <input type="email" class="form-control" placeholder="Enter Email" [(ngModel)]="contactForm.email">
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-3">
+              <label>Association:</label>
+            </div>
+            <div class="col-9">
+              <input type="text" class="form-control" placeholder="Enter Association" [(ngModel)]="contactForm.association">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-2 mr-2">
+          <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="button"
+              (click)="save(entityContactFieldsTitle,modalType)">Save</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- end:update modal -->
+
+  <!-- start: search format modal -->
+  <div class="modal" id="searchFormatModal">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Search Format</h5>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeSearchFormatModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-9">
+              <label>Select Field<span class="text-danger">*</span></label>
+              <auto-suggestion [data]="entityFormFields" display="param_name" seperator="-" placeholder="Select Users" [preSelected]="searchFormatForm.value" (onSelected)="searchFormatForm.value = $event" inputId="searchFormat" name="searchFormat" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            </div>
+            <div class="col-3">
+              <label>Separator<span class="text-danger">*</span></label>
+              <input class="form-control" name="seperator" [(ngModel)]="searchFormatForm.separator"/>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12 text-right">
+              <button class="btn btn-primary btn-sm allicons mr-2" id="searchFormatbtn" title="Save Search Format" (click)="saveSearchFormat()">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end: search format modal -->
+</nb-card>

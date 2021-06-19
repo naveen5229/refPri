@@ -1,0 +1,6 @@
+@import '../../style';
+:host::ng-deep{
+        .highlight-text{
+            color: $primary-2;
+        }
+}

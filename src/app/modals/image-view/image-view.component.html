@@ -1,0 +1,23 @@
+<!--  Author by Hemant Singh Sisodia -->
+
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+  <!-- http://elogist.in/transtruck/partnerdashboard/api/fastag_temp/front_1578295605.jpg -->
+  <!-- {{activeImage}} -->
+   <!-- <a class="close" target="_blank" [href]="activeImage.indexOf('.pdf')>-1?activeImage:'http://elogist.in/Image-filter/?image='+activeImage"> <i class="fa fa-download"></i></a> -->
+  <span *ngIf="isDownload" (click)="closeModal(true)" title="download" class="close">
+    <i class="material-icons">file_download</i>
+  </span>
+  <button type="button" class="close" aria- label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container" *ngIf="images && images.length>0">
+    <ngx-image-viewer
+      [images]="images"
+      [idContainer]="'idOnHTML'" [loadOnInit]="true"
+      [download]="false" [fullscreen]="fullscreen" (onNext)="nextMove()" (onPrevious)="backMove()">
+    </ngx-image-viewer>
+  </div>
+</div>

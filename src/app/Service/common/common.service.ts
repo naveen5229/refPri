@@ -6,6 +6,11 @@ import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
+import { Router } from '@angular/router';
+import { ApiService } from '../../Service/Api/api.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ImageViewComponent } from '../../modals/image-view/image-view.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 // import { Http, Headers } from '@angular/http';
 
@@ -23,11 +28,14 @@ export class CommonService {
     ack: "yellow",
     complete: "#32cd32b3",
     reject: "red",
-    hold: "antiquewhite"
+    hold: "antiquewhite",
   }
-  constructor(private toastrService: NbToastrService,
-    // private http: Http,
-    private datePipe: DatePipe) { }
+
+  chartData: any;
+  chartOptions: any;
+
+  constructor(private toastrService: NbToastrService, public modalService: NgbModal,
+    private datePipe: DatePipe, public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }
 
   showError(msg?, err?) {
     let message = msg || 'Something went wrong! try again.';
@@ -204,6 +212,18 @@ export class CommonService {
     }
   }
 
+  timeToSecond(date) {
+    let d = new Date(date);
+    let hours = d.getHours() < 9 ? "0" + d.getHours() : d.getHours();
+    let minutes = d.getMinutes() < 9 ? "0" + d.getMinutes() : d.getMinutes();
+    let seconds = d.getSeconds() < 9 ? "0" + d.getSeconds() : d.getSeconds();
+
+    var hms = hours + ":" + minutes + ":" + seconds;
+    var a = hms.split(':');
+    return (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+
+  }
+
   timeFormatter(date) {
     let d = new Date(date);
     let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
@@ -238,9 +258,17 @@ export class CommonService {
 
     return hours + ":" + minutes + ":";
   }
-  changeDateformate(date) {
+  // changeDateformate(date) {
+  //   let d = new Date(date);
+  //   return this.datePipe.transform(date, "dd-MMM-yyyy");
+  // }
+  changeDateformate(date, type = 'dd-MMM-yyyy hh:mm a') {
     let d = new Date(date);
-    return this.datePipe.transform(date, "dd-MMM-yyyy");
+    if (type === 'dd-MMM-yyyy hh:mm a') {
+      return this.datePipe.transform(date, type);
+    } else {
+      return this.datePipe.transform(date, type);
+    }
   }
   changeDateformat(date) {
     let d = new Date(date);
@@ -261,8 +289,8 @@ export class CommonService {
     return this.datePipe.transform(date, "dd");
   }
 
-
   getBase64(files) {
+    console.log("🚀 ~ file: common.service.ts ~ line 289 ~ CommonService ~ getBase64 ~ files", files)
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(files);
@@ -300,7 +328,7 @@ export class CommonService {
   }
 
 
-  getPDFFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?) {
+  getPDFFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?, options?, Title?) {
     // console.log("Action Data:", doNotIncludes); return;
     //remove table cols with del class
     let tblelt = document.getElementById(tblEltId);
@@ -487,7 +515,7 @@ export class CommonService {
     });
 
 
-    doc.save("report.pdf");
+    doc.save(`${Title}.pdf`);
   }
   getCSVFromTableId(tblEltId, left_heading?, center_heading?, doNotIncludes?, time?, lower_left_heading?) {
     let tblelt = document.getElementById(tblEltId);
@@ -709,6 +737,423 @@ export class CommonService {
   }
   // end: csv export from data
 
+  // start: download by url
+  downloadFile(file, text) {
+    //creating an invisible element 
+    var element = document.createElement('a');
+    element.setAttribute('href',
+      'data:text/plain;charset=utf-8, '
+      + encodeURIComponent(text));
+    element.setAttribute('download', file);
+
+    // Above code is equivalent to 
+    // <a href="path of file" download="file name"> 
+    document.body.appendChild(element);
+    //onClick property 
+    element.click();
+    document.body.removeChild(element);
+  }
+  // end: download by url
+
+  gotoPage(route) {
+    if (route) {
+      this.router.navigate([route]);
+    }
+  }
+
+  getFormatedString(str, match) { //match="wwww."
+    let splitedMsg2 = str.split(" ");
+    splitedMsg2.forEach((element2, index2) => {
+      let splitedMsg = element2.split("\n");
+      splitedMsg.forEach((element, index) => {
+        let linkFound = false;
+        if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://'))) {
+          linkFound = true;
+        } else {
+          let totalSize = element.length;
+          let inIndex = element.indexOf('.in');
+          let comIndex = element.indexOf('.com');
+          let inFound = (inIndex > 0 && ((totalSize - inIndex) == 3)) ? true : false;
+          let comFound = (comIndex > 0 && ((totalSize - comIndex) == 4)) ? true : false;
+          if (inFound || comFound) {
+            linkFound = true;
+          }
+        }
+        // if (match == "www." && (element.match(match) || element.match('http://') || element.match('https://') || element.substr(element.indexOf('.')).match('.com') || element.substr(element.indexOf('.')).match('.in'))) {
+        if (match == "www." && linkFound) {
+          let indexHTTP = element.indexOf("http://");
+          let indexHTTPS = element.indexOf("https://");
+          let indexWWW = element.indexOf("www.");
+          let str1 = "";
+          let str2 = element;
+          if (indexHTTP !== -1) {
+            if (indexHTTP > 0) {
+              str1 = element.substr(0, indexHTTP);
+              str2 = element.substr(indexHTTP);
+            }
+          } else if (indexHTTPS !== -1) {
+            if (indexHTTPS > 0) {
+              str1 = element.substr(0, indexHTTPS);
+              str2 = element.substr(indexHTTPS);
+            }
+          } else if (indexWWW !== -1) {
+            if (indexWWW > 0) {
+              str1 = element.substr(0, indexWWW);
+              str2 = element.substr(indexWWW);
+            }
+          }
+          let fullURL = (str2.match('http')) ? str2 : "http://" + str2;
+          let href_temp = str1 + '<a target="_blank" href=' + fullURL + '>' + str2 + '</a>';
+          splitedMsg[index] = href_temp;
+        }
+      });
+      splitedMsg2[index2] = splitedMsg.join("\n");
+    });
+    let formatedMsg = splitedMsg2.join(" ");
+    return formatedMsg;
+  }
+
+  checkMentionedUser(userList, str) {
+    let mentionUserList = [];
+    userList.forEach((element, index) => {
+      let matchstr = "@" + element.name;
+      if (str.match(matchstr)) {
+        // console.log("element:", element);
+        mentionUserList.push(element);
+      }
+    });
+    return (mentionUserList.length > 0) ? mentionUserList : null;
+  }
+
+  checkFile(url, name) {
+    var ext = url.split('.').pop();
+    let formats = ["jpeg", "jpg", "png", 'pdf'];
+    console.log("ext:", ext);
+    let files = [{ name: name, url: url }];
+    if (formats.includes(ext.toLowerCase())) {
+      this.openImageView(files);
+    } else {
+      this.getFile(files);
+    }
+  }
+
+  convertFileToBase64(files) {
+    return new Promise((resolve, reject) => {
+      let params = {
+        files: files
+      };
+      this.api.post('Processes/convertFileToBase64', params, "I").subscribe(res => {
+        if (res['code'] == 1) {
+          resolve(res['data']);
+        } else {
+          this.showError(res['data']);
+          reject(res['data']);
+        }
+      }, err => {
+        this.showError();
+        console.log('Error: ', err);
+        reject(err);
+      });
+
+    })
+  }
+
+  getFile(files) {
+    this.convertFileToBase64(files).then(res => {
+      let b64encodedString = res[0]['base64'];
+      let fileName = res[0]['name'];
+      var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+      saveAs(blob, fileName);
+    });
+    // return new Promise((resolve, reject) => {
+    //   let params = {
+    //     url: url,
+    //     name: name
+    //   };
+
+    //   this.api.post('Processes/convertFileToBase64',params,"I").subscribe(res => {
+    //     if(res['code']==1){
+    //       let b64encodedString = res['data']['base64'];
+    //       let fileName = res['data']['name'];
+    //       if(isDownload){
+    //         var blob = this.base64ToBlob(b64encodedString, 'text/plain');
+    //         saveAs(blob, fileName);
+    //       }
+    //       resolve(res['data']);
+    //     }else{
+    //       this.showError(res['data']);
+    //       reject(res['data']);
+    //     }
+    //   }, err => {
+    //     this.showError();
+    //     console.log('Error: ', err);
+    //     reject(err);
+    //   });
+
+    // })
+  }
+
+  public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
+    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, { type: contentType });
+  }
+
+  fileLinkHandler(selector) {
+    let ele = document.getElementById(selector);
+    let links = ele.querySelectorAll('a');
+    for (let i = 0; i < links.length; i++) {
+      links[i].onclick = (eve: any) => {
+        let url = eve.target.href;
+        let name = eve.target.innerText;
+        console.log('Name:', name);
+        if (url.includes('elogist-prime.s3.ap-south-1.amazonaws.com/') || url.includes('edocs.elogist.in/')) {
+          eve.preventDefault();
+          this.checkFile(url, name);
+          console.log('--------------------ITS FILE--------------------');
+        }
+        // console.log('url:', url)
+        // console.log('eve', eve);
+      }
+    }
+  }
+
+  async searchString(value, messageList) {
+    let searchTerm = value.trim();
+    let searchedIndex = [];
+    if (searchTerm && searchTerm != "" && searchTerm != ".") {
+      if (searchTerm.indexOf(' ') == 0) {
+        return;
+      }
+      // console.log("🚀 ~ file: task-message.component.ts ~ line 907 ~ TaskMessageComponent ~ searchChat ~ this.searchTerm", searchTerm, messageList)
+      let final = "";
+      let caseSensitive = false;
+      let splitFlag = null;
+      let matchFlag = null
+      if (!caseSensitive) {
+        splitFlag = "i";
+        matchFlag = "gi";
+      } else {
+        splitFlag = "";
+        matchFlag = "g";
+      }
+      let searchPattern = new RegExp(searchTerm, splitFlag);
+      let matchpattern = new RegExp(searchTerm, matchFlag);
+
+      for (let i = messageList.length - 1; i >= 0; i--) {
+        let msg = messageList[i].comment;
+        // console.log("🚀 ~ file: task-message.component.ts ~ line 936 ~ TaskMessageComponent ~ searchChat ~ msg", msg, searchTerm)
+        if ((msg.toLowerCase()).match(searchTerm.toLowerCase()) && !msg.match(/<a.*?<\/a>/g)) {
+          searchedIndex.push(i);
+          let separatedText = msg.split(searchPattern);
+          let separatedSearchedText = msg.match(matchpattern);
+          if (
+            separatedSearchedText != null &&
+            separatedSearchedText.length > 0
+          ) {
+            for (let j = 0; j < separatedText.length; j++) {
+              if (j <= separatedSearchedText.length - 1) {
+                final +=
+                  separatedText[j] +
+                  `<span class="text-highlight" id="focusOn-${i}">` +
+                  separatedSearchedText[j] +
+                  `</span>`;
+              } else {
+                final += separatedText[j];
+              }
+            }
+          }
+          messageList[i].comment = this.sanitizer.bypassSecurityTrustHtml(final);
+          messageList = messageList;
+          final = '';
+        }
+      }
+    }
+    let result = {
+      value: searchTerm,
+      messageList: messageList,
+      searchedIndex: searchedIndex
+    }
+    return result;
+  }
+
+  async handleFileSelection(event, format) {
+    let result = { name: null, file: null };
+    this.loading++;
+    await this.getBase64(event.target.files[0]).then((res: any) => {
+      this.loading--;
+      let file = event.target.files[0];
+      console.log("Type:", file, res);
+      var ext = file.name.split('.').pop();
+      let formats = (format && format.length) ? format : ["jpeg", "jpg", "png", 'xlsx', 'xls', 'docx', 'doc', 'pdf', 'csv'];
+      if (formats.includes(ext)) {
+        result.name = file.name;
+        result.file = res;
+      } else {
+        this.showError("Valid Format Are : " + format.join(","));
+        return false;
+      }
+      // console.log("attachmentFile:", file);
+    }, err => {
+      this.loading--;
+      this.showError(err);
+      console.error('Base Err: ', err);
+    })
+    return result;
+  }
+
+  openImageView(files) {
+    console.log("openImageView", files);
+    this.convertFileToBase64(files).then(res => {
+      let getFiles: any = res;
+      let img = getFiles.map(x => { return { image: x.base64, name: x.name } });
+      const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.componentInstance.imageList = { images: img, title: 'Image' };
+      activeModal.componentInstance.isDownload = true;
+      activeModal.result.then((data) => {
+        if (data.response) {
+          let selectedImg = res[data.index];
+          var blob = this.base64ToBlob(selectedImg['base64'], 'text/plain');
+          saveAs(blob, selectedImg['name']);
+        }
+      });
+    });
+  }
+
+  async setTimerrr(dateTime) {// not in use
+    let countDownDate = new Date(dateTime).getTime();
+    let now = new Date().getTime();
+    let distance = countDownDate - now; // Find the distance between now and the count down date
+    // Time calculations for days, hours, minutes and seconds
+    let result = null;
+    if (distance > 0) {
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // Output the result in an element with id="demo"
+      result = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    }
+    return (distance < 0) ? null : result;
+  }
+
+  arrayUnique(list, key) {
+    return [...new Map(list.map(item => [item[key], item])).values()];
+  }
+  chartScaleLabelAndGrid(arr) {
+    let chartObj = {
+      yaxisLabel: '',
+      scaleData: null,
+      gridSize: null,
+      minValue: 0
+    }
+    var max = 0;
+    if (arr.length) {
+      max = arr.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
+    }
+    //--y axis scale data
+    if (max > 1000 && max < 90000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 100;
+      });
+      chartObj.yaxisLabel = "(in '00)"
+    }
+    else if (max > 90000 && max < 900000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 1000;
+      });
+      chartObj.yaxisLabel = "(in '000)";
+    }
+    else if (max > 900000 && max < 9000000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 100000;
+      });
+      chartObj.yaxisLabel = "(in Lacs)";
+    }
+    else if (max > 9000000) {
+      chartObj.scaleData = arr.map(a => {
+        return a /= 10000000;
+      });
+      chartObj.yaxisLabel = "(in Cr.)";
+    }
+    else {
+      chartObj.scaleData = arr;
+    }
+
+    //-----grid size
+    var max1 = chartObj.scaleData.reduce(function (a, b) {
+      return Math.max(a, b);
+    });
+    var min1 = chartObj.scaleData.reduce(function (a, b) {
+      return Math.min(a, b);
+    });
+    console.log("max1", max1, min1);
+    chartObj.gridSize = Math.round(((max1 - min1) / 5) / 10) * 10;
+    return chartObj;
+  }
+
+  pieChart(labels, data, colors) {
+    let chartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: data,
+          backgroundColor: colors
+        }
+      ]
+    };
+
+    let chartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            display: false
+          }
+        ],
+        yAxes: [
+          {
+            display: false
+          }
+        ]
+      },
+      legend: false
+    };
+
+    // setTimeout(() => {
+    //   console.log(document.getElementsByTagName("canvas")[0]);
+    //   document.getElementsByTagName("canvas")[0].style.width = "80px";
+    //   document.getElementsByTagName("canvas")[0].style.height = "180px";
+    // }, 10);
+
+    return { chartData, chartOptions };
+  }
+
+  varifyLink(text, completeString = true, displayText = "Link") {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    if (completeString) {
+      return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" id="urlEvent">${displayText}</a>`;
+      })
+    } else {
+      let url = text.match(urlRegex)
+      return `<a href="${url}" target="_blank" id="urlEvent">${displayText}</a>`;
+    }
+  }
 }
 
 

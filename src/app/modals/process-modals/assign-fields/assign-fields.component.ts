@@ -3,6 +3,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddGlobalFieldComponent } from '../add-global-field/add-global-field.component';
 
 @Component({
   selector: 'ngx-assign-fields',
@@ -10,14 +11,17 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./assign-fields.component.scss']
 })
 export class AssignFieldsComponent implements OnInit {
+  title = "Assign Columns";
   fields = [];
   unassign = [];
+  processId = null;
   refId = null;
   refType = null;
   assign = {
     left: [],
     right: []
   }
+  formType = null;
 
 
   constructor(
@@ -28,6 +32,9 @@ export class AssignFieldsComponent implements OnInit {
     if (this.common.params && this.common.params.ref) {
       this.refId = this.common.params.ref.id;
       this.refType = this.common.params.ref.type;
+      this.formType = this.common.params.formType;
+      this.title = (this.common.params.title) ? this.common.params.title : "Assign Columns";
+      this.processId = (this.common.params.processId) ? this.common.params.processId : null;
       this.getFields();
     }
   }
@@ -40,22 +47,20 @@ export class AssignFieldsComponent implements OnInit {
 
   getFields() {
     this.common.loading++;
-    let params = "refId=" + this.refId +
-      "&refType=" + this.refType
-    this.api.get('Processes/getProcessFormField?' + params)
+    let api = this.formType == 11 ? 'Ticket/getTicketMatrixCalAssigned?' : 'Processes/getProcessFormField?';
+    let params = "processId=" + this.processId +"&refId=" + this.refId +"&refType=" + this.refType
+    this.api.get(api + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("getFields", res['data']);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.fields = res['data'] || [];
         this.colinitialization();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
-
-
-
 
   drop(event: CdkDragDrop<string[]>) {
     console.log("drop", event);
@@ -123,18 +128,18 @@ export class AssignFieldsComponent implements OnInit {
 
 
   saveColumns() {
+    let apiBase = this.formType == 11 ? 'Ticket/saveTicketMatrixCalAssign' : 'Processes/saveProcessMatrixCalAssign';
     let params = {
       refId: this.refId,
       refType: this.refType,
       info: JSON.stringify(this.assignOrder()),
     }
-    console.log("Params", params)
+    // console.log("Params", params);
+    // return;
     this.common.loading++;
-
-    this.api.post('Processes/saveProcessMatrixCalAssign', params)
+    this.api.post(apiBase, params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("saveColumns", res['data'][0].y_id);
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
@@ -147,6 +152,7 @@ export class AssignFieldsComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -179,5 +185,19 @@ export class AssignFieldsComponent implements OnInit {
 
     return [...selected, ...this.unassign];
   }
+
+  markImportant(item) {
+    console.log("AssignFieldsComponent -> markImportant -> item", item)
+    item.r_isdashboard_info = !item.r_isdashboard_info;
+  }
+
+  addGlobalfield(){
+    this.common.params = {process:{id:this.processId,name:null}};
+    const activeModal = this.modalService.open(AddGlobalFieldComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      this.getFields();
+    });
+  }
+
 }
 

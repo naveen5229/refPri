@@ -1,0 +1,148 @@
+<div class="modal-header">
+    <h5>{{title || 'New Task'}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf="!editType">
+    <div class="row" *ngIf="normalTask.parentTaskId>0">
+        <div class="col-12 text-center">
+            {{parentTaskDesc}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label class="form-check-inline">
+            <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isProject" (click)="normalTask.projectId = null">
+            StandAlone
+          </label>
+        </div>
+        <div class="col-6">
+            <label class="form-check-inline">
+            <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isProject">
+            Project
+          </label>
+        </div>
+    </div>
+    <div class="row mt-2 " *ngIf="isProject=='1'">
+        <div class="col-4">
+            <label>Project:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
+            </auto-suggestion>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Assign To:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="(userId>0) ? {name: normalTask.userName} : {name: ''}">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Subject<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Task Description:</label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>CC users:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="normalTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Last Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>High-Priority:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="normalTask.isUrgent" (change)="normalTask.isUrgent = !normalTask.isUrgent" />
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Is Future Task:</label>
+        </div>
+        <div class="col-1">
+            <input type="checkbox" [checked]="normalTask.isFuture" (change)="normalTask.isFuture = !normalTask.isFuture" />
+        </div>
+    </div>
+    <div class="row mt-2" *ngIf="normalTask.isFuture">
+        <div class="col-4">
+            <label>Future Assign Date:</label>
+        </div>
+        <div class="col-5">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="true" [isTime]="false" (onChanged)="normalTask.futureDate=$event" [dateTimeValue]="normalTask.futureDate">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTask()">{{btn}}</button>
+        </div>
+    </div>
+    <!-- start: task mapping -->
+    <div class="row" *ngIf="normalTask.parentTaskId>0 && taskMapping.length > 0">
+        <div class="col-12">Task Mapping</div>
+        <smart-table *ngIf="taskMapping.length!=0" [data]="tableTaskMapping.data" [settings]="tableTaskMapping.settings" id="taskMapping">
+        </smart-table>
+    </div>
+    <!-- end: task mapping -->
+</div>
+
+<!-- start: update date form -->
+<div class="modal-body" *ngIf="editType==1">
+    <div class="row mt-2">
+        <div class="col-3">
+            <label>Last Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
+            </uj-date-time-picker>
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-3">
+            <label>Reason:</label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" (click)="updateAssignDate()">Update</button>
+        </div>
+    </div>
+</div>
+<!-- end: update date form -->

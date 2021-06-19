@@ -1,13 +1,19 @@
+@import '../../style.scss';
+
 :host ::ng-deep {
     .fa-edit {
-        color: green;
-        font-size: 18px;
+        color: $success-3;
+        font-size: $font-md-lg;
         cursor: pointer;
     }
     .fa-trash-alt {
-        margin-right: 10px;
-        color: red;
-        font-size: 18px;
+        margin-right: $margin-md;
+        color: $danger-2;
+        font-size: $font-md-lg;
         cursor: pointer;
     }
 }
+smart-table{
+    height: calc(100vh - 203px);
+}
+

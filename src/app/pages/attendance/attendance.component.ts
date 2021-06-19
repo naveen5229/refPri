@@ -25,8 +25,12 @@ export class AttendanceComponent implements OnInit {
       hideHeader: true
     }
   };
+  groupList = [];
+  selectedGroup = -1;
+
   constructor(public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.getAttendanceList();
+    this.getUserGroupList();
     this.common.refresh = this.refresh.bind(this);
   }
   ngOnInit() {
@@ -34,24 +38,40 @@ export class AttendanceComponent implements OnInit {
 
   refresh() {
     this.getAttendanceList();
+    this.getUserGroupList();
   }
 
   getAttendanceList() {
     this.attandanceList = [];
     this.resetTable();
-    // let params = "?date=" + this.common.dateFormatter(this.common.getDate());
-    let params = "?date=" + this.common.dateFormatter(this.date);
+    let params = "?date=" + this.common.dateFormatter(this.date) + "&groupId=" + this.selectedGroup;
     this.common.loading++;
     this.api.get('Admin/getAttendanceList.json' + params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.attandanceList = res['data'] || [];
-        console.log(this.attandanceList);
         this.attandanceList.length ? this.setTable() : this.resetTable();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  getUserGroupList() {
+    this.common.loading++;
+    this.api.get('UserRole/getUserGroups')
+      .subscribe(res => {
+        this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        let groupList = res['data'] || [];
+        if (groupList.length) {
+          this.groupList = groupList.filter(x => (!x._group_type));
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -130,7 +150,12 @@ export class AttendanceComponent implements OnInit {
   }
 
   getAttendanceMonthySummary() {
+    this.common.params = { groupList: this.groupList };
     const activeModal = this.modalService.open(AttendanceMonthlySummaryComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
 
+  }
+
+  exportCSV() {
+    this.common.getCSVFromTableId('attandanceList')
   }
 }

@@ -54,13 +54,14 @@ export class LocationTargetComponent implements OnInit {
     this.api.get('campaigns/getAllTargetWrtCamp?campaignId=' + this.campaignId)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.filterData = res['data'];
         this.createrouteMarker();
 
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

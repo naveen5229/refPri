@@ -44,14 +44,13 @@ export class AddPagesComponent implements OnInit {
     this.getGroupList();
   }
   getPageData() {
-    console.log(this.user);
     this.common.loading++;
     const params = 'adminId=' + this.user['_details']['id'];
     this.api.get("UserRole/getAdminPages.json?" + params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.data = res['data'];
       this.setTable();
-      console.log("data", res['data'])
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -63,10 +62,11 @@ export class AddPagesComponent implements OnInit {
     this.common.loading++;
     this.api.get('UserRole/getPageGroup').subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.groupdata = res['data'];
-      console.log("api Data:", this.groupdata);
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log('Error: ', err);
     })
   }
@@ -124,7 +124,7 @@ export class AddPagesComponent implements OnInit {
 
   actionIcons(request) {
     if (request.status != 'Active') {
-      let icons = [{ class: "icon fa fa-pencil-square-o red", action: this.editData.bind(this, request), }];
+      let icons = [{ class: "fa fa-edit", action: this.editData.bind(this, request), }];
       return icons;
     }
   }
@@ -157,7 +157,6 @@ export class AddPagesComponent implements OnInit {
     this.api.post('UserRole/savePage.json', params)
       .subscribe(res => {
         this.common.loading--;
-        console.log('Res: ', res);
         if (res['success']) {
           this.resetUserRole();
           this.common.showToast(res['msg']);
@@ -167,6 +166,7 @@ export class AddPagesComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       })
   }

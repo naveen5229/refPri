@@ -64,12 +64,12 @@ export class TaskAssignComponent implements OnInit {
     this.common.loading++;
     this.api.post('Task/addTask', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.getTask()
       this.common.showToast(res['msg'])
     },
       err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });
@@ -77,11 +77,9 @@ export class TaskAssignComponent implements OnInit {
 
   getTask() {
     this.common.loading++;
-
     this.api.get("Task/getTaskWrtStatus").subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
-
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.taskList = res['data']["AssignForMe"] || [];
       this.assigned = res['data']["AssignByMe"] || [];
       this.complateTask = res['data']["CompleteTask"] || [];
@@ -91,17 +89,11 @@ export class TaskAssignComponent implements OnInit {
       this.pendingReview.map(date=>{
          return date.review_time=date.review_time ? new Date(this.common.dateFormatter(date.review_time)):new Date();
         });
-      
-      //  this.endDate=new Date(this.common.dateFormatter(this.pendingReview[0]['review_time']));
-      //  console.log("************",this.endDate)
-
-    },
-      err => {
-        this.common.loading--;
-
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   editTask(task) {
@@ -130,25 +122,19 @@ export class TaskAssignComponent implements OnInit {
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log('res', data);
       if (data.response) {
-        console.log("task", task)
         const params = {
           taskId: task.id
         }
-        console.log("id", params)
-
         this.common.loading++;
         this.api.post('Task/deleteTask', params).subscribe(res => {
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.getTask()
           this.common.showToast(res['msg'])
-
         },
-
           err => {
             this.common.loading--;
-
             this.common.showError();
             console.log('Error: ', err);
           });
@@ -175,27 +161,21 @@ export class TaskAssignComponent implements OnInit {
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log('res', data);
       if (data.response) {
-
-
-        console.log("tasssssssssssssss",this.endDate);
         const params = {
           status: 2,
           taskId: task.id,
           reviewTime:this.common.dateFormatter(new Date())
         }
-       console.log("-------------",params)
         this.common.loading++;
         this.api.post('Task/updateTaskStatus', params).subscribe(res => {
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.getTask()
           this.common.showToast(res['msg'])
         },
-
           err => {
             this.common.loading--;
-
             this.common.showError();
             console.log('Error: ', err);
           });
@@ -212,26 +192,21 @@ export class TaskAssignComponent implements OnInit {
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log('res', data);
       if (data.response) {
         console.log(check);
         const params = {
           status: 1,
           taskId: check.id,
           reviewTime:check.review_time
-
-
         }
         this.common.loading++;
         this.api.post('Task/updateTaskStatus', params).subscribe(res => {
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           this.getTask()
           this.common.showToast(res['msg'])
-        },
-
-          err => {
+        },err => {
             this.common.loading--;
-
             this.common.showError();
             console.log('Error: ', err);
           });
@@ -274,18 +249,15 @@ export class TaskAssignComponent implements OnInit {
       taskId: task.id,
       remark: task.remark,
       reviewTime:this.common.dateFormatter(task.review_time)
-
     }
-    console.log("paramssssssssss", params)
     this.common.loading++;
     this.api.post('Task/updateTaskStatus', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.getTask()
       this.common.showToast(res['msg'])
-    },
-      err => {
+    },err => {
         this.common.loading--;
-
         this.common.showError();
         console.log('Error: ', err);
       });

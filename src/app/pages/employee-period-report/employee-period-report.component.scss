@@ -1,0 +1,29 @@
+@import '../../style.scss';
+
+table {
+  margin-bottom: 0rem;
+  @include fixed-table;
+  thead {
+    th {
+      vertical-align: top;
+      @include th-bordered;
+    }
+  }
+
+  tbody {
+    max-height: calc(100vh - 210px);
+
+    tr {
+      td {
+        padding: 0.5rem;
+        vertical-align: top;
+        border-top: 1px solid $light-7;
+      }
+
+      td:first-child {
+        width: 60px;
+      }
+    }
+
+  }
+}

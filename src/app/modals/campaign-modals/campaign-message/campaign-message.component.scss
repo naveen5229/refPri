@@ -1,8 +1,10 @@
 // @import 'https://github.com/daneden/animate.css/blob/master/animate.css';
+@import '../../../style.scss';
+
 .table {
     font-size: 14px;
     thead {
-        background-color: lightgrey;
+        background-color: $secondary-23;
     }
     th,
     td {
@@ -15,34 +17,34 @@
 }
 
 .chat_block {
-    max-height: 70vh;
+    max-height: 59vh;
     overflow: auto;
-    background: ghostwhite;
+    background: $light-2;
     margin-top: 0!important;
 }
 
 .active_chat {
     float: right;
     text-align: right;
-    background: #1def1d2e;
-    border: 1px solid #1def1d2e;
+    background: $success-1;
+    border: 1px solid $success-1;
 }
 
 .other_chat {
     float: left;
-    background-color: #fff;
-    border: 1px solid lightgray;
+    background-color: $light-1;
+    border: 1px solid $secondary-19;
 }
 
 .other_chat,
 .active_chat {
     max-width: 90%;
     margin-bottom: 1px;
-    border-radius: 10px;
-    padding: 0 10px;
+    border-radius: $radious-xs;
+    padding: 0 $padding-md;
     span {
         display: flow-root;
-        font-size: 10px;
+        font-size: $margin-md;
     }
 }
 
@@ -175,7 +177,7 @@
 .modal-header.sub-title {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    color: #fff;
+    color: $light-1;
 }
 
 .action-icon {

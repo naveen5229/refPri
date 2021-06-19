@@ -27,13 +27,15 @@ export class InstallerComponent implements OnInit {
     }
   };
 
-  constructor(public modalService: NgbModal,
-    public common: CommonService,
-    public api: ApiService) {
+  constructor(public modalService: NgbModal,public common: CommonService,public api: ApiService) {
+    this.common.refresh = this.refresh.bind(this);
     this.getInstallerList();
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+  
+  refresh() {
+    this.getInstallerList();
   }
 
   showInstallerModal(mode = null) {
@@ -53,13 +55,12 @@ export class InstallerComponent implements OnInit {
     this.api.get("Installer/getInstallerList.json?").subscribe(
       res => {
         this.common.loading--;
-        console.log("datA", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.installerlist = res['data'] || [];
         this.installerlist.length ? this.setTableInstallerList() : this.resetSmartTable();
-
-      },
-      err => {
+      },err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       }
     );
@@ -141,10 +142,12 @@ export class InstallerComponent implements OnInit {
           this.api.post('Installer/deleteInstaller', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getInstallerList();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

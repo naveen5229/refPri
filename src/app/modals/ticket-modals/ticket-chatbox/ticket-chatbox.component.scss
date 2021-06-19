@@ -1,0 +1,236 @@
+@import '../../../style';
+
+.table {
+    font-size: $font-md-sm;
+    thead {
+        background-color:$secondary-23;
+    }
+    th,
+    td {
+        padding: 2px;
+    }
+}
+
+.modal-body {
+    padding-top: 0;
+}
+
+.chat_block {
+    // min-height: 56vh;
+    max-height: 56vh;
+    overflow: auto;
+    background:$light-2;
+    margin-top: 0!important;
+    padding-top: 2vh;
+}
+
+.active_chat {
+    float: right;
+    // text-align: right;
+    background: #e0ff302e;
+    //border: 1px solid #1def1d2e;
+    box-shadow: 0 1px 3px $secondary-20;
+    .quoted_msg {
+        background: $light-8;
+        border-left: 2px solid $success-7;
+    }
+}
+
+.other_chat {
+    float: left;
+    background-color: $light-1;
+    // border: 1px solid lightgray;
+    box-shadow: 0 1px 3px $secondary-20;
+}
+
+.other_chat,
+.active_chat {
+    $light-1-space: pre-wrap;
+    max-width: 82%;
+    margin-bottom: $margin-xs;
+    border-radius: $radious-xs;
+    padding: 0 $padding-md;
+    span {
+        //display: flow-root;
+        // display: block;
+        font-size: $font-sm-lg;
+        color:$secondary-5;
+        i {
+            color: $primary-11;
+            font-size: $font-sm-sm;
+            vertical-align: -webkit-baseline-middle;
+            &.fa-star {
+                display: contents;
+                font-size: $font-sm-lg;
+            }
+        }
+        i.fa-sort-desc {
+            font-size: $font-md-sm;
+        }
+    }
+    label {
+        margin: 0;
+        max-width:100%;
+        overflow-x: auto;
+    }
+}
+
+.bottom-block {
+    background: $light-2;
+    .button-box {
+        display: inline-grid;
+    }
+}
+
+.modal-header.sub-title {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    color: $light-1;
+}
+
+.action-icon {
+    //width: 150px;
+    text-align: right;
+    .fa {
+        cursor: pointer;
+        margin-right: $margin-xs;
+    }
+}
+
+:host::ng-deep {
+    .highlight-blue {
+        color:$primary-2
+    }
+}
+
+.replyPopContent {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    li {
+        font-size:$font-sm-xxl;
+    }
+}
+
+.reply_demand {
+    color: $danger-2;
+}
+
+.mentioned_user {
+    max-width: 50%;
+    max-height: 50vh;
+    overflow: auto;
+    position: absolute;
+    bottom: 60px;
+    background: $light-1;
+    font-size:$font-sm-xxl;
+    left: 15px;
+    z-index: 1;
+    border-radius: 4px;
+    border: 1px solid $secondary-29;
+    box-shadow: 0 2px 4px $success-2;
+    span,
+    a { 
+        display: block;
+        cursor: pointer;
+        padding: $padding-xxs $padding-md;
+        letter-spacing: .5px;
+        color: $dark-1;
+    }
+    span:focus,
+    a:focus {
+        background: $warning-3 !important;
+        border: none;
+    }
+}
+
+.send {
+    color: $primary-11;
+    width: fit-content;
+    transition: .5s;
+    z-index: 10;
+}
+
+.send::before {
+    content: '';
+    display: block;
+    opacity: 0;
+    position: absolute;
+    transition-duration: .15s;
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    z-index: -1;
+    bottom: -10px;
+    left: -10px;
+    right: -5px;
+    top: -10px;
+    background: none;
+    border-radius: 50%;
+    box-sizing: border-box;
+    transform: scale(0);
+    transition-property: transform, opacity;
+}
+
+.send:hover::before,
+.send:focus::before {
+    background-color: rgba(201, 200, 200, 0.2);
+    border: none;
+    box-shadow: none;
+    opacity: 1;
+    transform: scale(0.7);
+}
+
+.add {
+    color: $primary-7;
+    padding: 0 $padding-sm;
+    i {
+        font-size:$font-sm-xxl;
+    }
+} 
+
+.add:focus {
+    box-shadow: none !important;
+}
+
+.send:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+.chatmsg {
+    height: auto !important;
+    resize: none;
+    border: 1px solid $light-1;
+    background: $secondary-4;
+    color: $dark-1;
+    padding-top: $padding-md!important;
+}
+
+.chatmsg:focus {
+    box-shadow: none;
+}
+
+.chatmsg::placeholder {
+    color: $secondary-4;
+}
+
+.cc_user {
+    max-height: 300px;
+    overflow: auto;
+    display: block;
+}
+
+.limit {
+    position: absolute;
+    bottom: -18px;
+    right: 0;
+}
+
+
+::ng-deep .text-highlight {
+    background: yellow;
+  }
+::ng-deep .text-focus-highlight{
+    background: yellow;
+    font-size: 12px;
+    border: 1px solid black;
+}

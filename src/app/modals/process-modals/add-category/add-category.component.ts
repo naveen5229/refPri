@@ -71,14 +71,14 @@ export class AddCategoryComponent implements OnInit {
     this.common.loading++;
     this.api.get(apiName).subscribe(res => {
       this.common.loading--;
-      console.log("api data", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.catList = res['data'];
-      console.log("catList:", this.catList);
       this.catList.length ? this.setTableCatList() : this.resetTableCatList();
 
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -173,6 +173,7 @@ export class AddCategoryComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -184,7 +185,6 @@ export class AddCategoryComponent implements OnInit {
     };
     const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      console.log('res', data);
       if (data.response) {
         let apiName = null;
         if (this.catType == 1) {
@@ -212,6 +212,7 @@ export class AddCategoryComponent implements OnInit {
           }
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
       }

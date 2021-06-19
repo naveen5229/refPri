@@ -1,0 +1,79 @@
+<div class="modal-header">
+  <h5>{{Title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="close(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row form-group">
+    <div class="col-4">
+      <label>User</label>
+    </div>
+    <div class="col-8">
+      <auto-suggestion [data]="adminList" display="name" placeholder="User" name="defaultOwn" id="defaultOwn"
+        (onSelected)="esclationMatrix.userId=$event;"
+        [preSelected]="esclationMatrix.userId['id'] ? {name: esclationMatrix.userId['name']}:{name:''}"
+        autocomplete="off">
+      </auto-suggestion>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-4">
+      <label>User Level</label>
+    </div>
+    <div class="col-8">
+      <select [(ngModel)]="esclationMatrix.userLevel">
+        <option selected disabled>--Select--</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-4">
+      <label>Senior User</label>
+    </div>
+    <div class="col-8">
+      <auto-suggestion [data]="adminList" display="name" placeholder="Senior User" name="defaultOwn" id="defaultOwn"
+        (onSelected)="esclationMatrix.seniorUserId=$event;"
+        [preSelected]="esclationMatrix.seniorUserId['id'] ? {name: esclationMatrix.seniorUserId['name']}:{name:''}"
+        autocomplete="off">
+      </auto-suggestion>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-4">
+      <label>From Time<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-8">
+      <uj-date-time-picker (onChanged)="esclationMatrix.fromTime = $event" [dateTimeValue]="esclationMatrix.fromTime"
+        [isDate]="false">
+      </uj-date-time-picker>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-4">
+      <label>To Time</label>
+    </div>
+    <div class="col-8">
+      <uj-date-time-picker (onChanged)="esclationMatrix.toTime = $event" [isStart]="false"
+        [dateTimeValue]="esclationMatrix.toTime" [isDate]="false">
+      </uj-date-time-picker>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col text-right">
+      <button class="btn btn-primary btn-sm" type='submit' id="save"
+        (click)="saveEsclation()">{{button}}</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div class="row footer">
+    <smart-table *ngIf="esclationMatrixList && esclationMatrixList.length" [data]="esclationTable.data" [settings]="esclationTable.settings" class="ksr-smrt"></smart-table>
+  </div>
+</div>

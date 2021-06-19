@@ -1,0 +1,162 @@
+@import '../../style';
+
+#route-maper-map {
+    width: 100%;
+    height: 400px;
+}
+.slide-bar {
+    display: -moz-inline-stack;
+    vertical-align: middle;
+    display: inline-block;
+    width: 100%;
+    height: 10%;
+    background-color: #ccc;
+    position: relative;
+    width: 100%;
+}
+
+.time-line-event {
+    position: absolute;
+    width: 100%;
+}
+
+.time-line-event .time-line-scale {
+    position: relative;
+    width: 98%;
+    border-bottom: 1px solid $dark-1;
+    top: 4px;
+}
+
+.time-line-event .time-line-circle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    top: 50%;
+    background-color: aqua;
+}
+
+.slide-bar .player_inner {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translate(0px, -50%);
+    height: auto;
+    margin: 0px;
+    padding: 0px 15px;
+}
+
+.player_inner button {
+    display: inline-block;
+    background-color: $dark-1;
+    border: 0px;
+    color: $light-1;
+    font-size: 14px;
+    padding: 10px 0px;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.player_inner input {
+    display: inline-block;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    line-height: 30px;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    // visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    margin: 0 !important;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.close-btn {
+    position: absolute;
+    right: -30px;
+    top: 0px;
+    font-size: 22px;
+    z-index: 999;
+    text-align: center;
+    color: $light-1;
+    display: block;
+    background-color: $dark-1;
+    padding: 0 7px 6px 7px;
+    opacity: 1;
+}
+
+.slider {
+    -webkit-appearance: none;
+    padding: 0px !important;
+    height: 5px !important;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #4caf50;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4caf50;
+    border-radius: 100%;
+    cursor: pointer;
+}
+.speed-control {
+    background-color: #ccc;
+    padding: 10px;
+    height: 56px;
+}
+
+.modal-body {
+    padding-top: 0px;
+}
+.btn2{
+    vertical-align: middle;
+    margin-top: 25px;
+    width: 100px;
+}

@@ -2,7 +2,7 @@
     <nb-card-header>
         <div class="row ">
             <div class="col-3">
-                <h5>Add Stack</h5>
+                <h5 class="heading-design">Add Stack</h5>
             </div>
         </div>
     </nb-card-header>
@@ -29,7 +29,7 @@
             <table class="table table-bordered mt-2">
                 <thead class="thead" style="background-color:lightgrey">
                     <tr>
-                        <th>#</th>
+                        <th style="width:40px;">#</th>
                         <th>Stack Parent Name</th>
                         <th>Stack Child Name</th>
                         <th>Action</th>
@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let stack of stackChilds; let i=index;">
-                        <td>{{i +1 }}</td>
+                        <td style="width:40px;">{{i +1 }}</td>
                         <td>{{stack.stackname}}</td>
                         <td>{{stack.name }}</td>
                         <td><i class="fas fa-trash-alt" style="color: red;" (click)="deletestackChild(stack.id,i)"></i>

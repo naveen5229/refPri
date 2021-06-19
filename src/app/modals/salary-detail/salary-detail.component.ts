@@ -69,7 +69,6 @@ export class SalaryDetailComponent implements OnInit {
     let params = "?date=" + this.selectedDates.start;
     this.api.get("Admin/getSalaryDetails" + params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
       this.reserSmartTableData();
       if (res["code"] == 1) {
         this.salaryDetailList = res['data'] || [];
@@ -77,7 +76,6 @@ export class SalaryDetailComponent implements OnInit {
       } else {
         this.common.showError(res['msg']);
       }
-
     }, err => {
       this.common.loading--;
       this.common.showError();
@@ -177,7 +175,6 @@ export class SalaryDetailComponent implements OnInit {
     this.common.loading++;
     this.api.post("Admin/saveSalaryDetail", params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data']);
       if (res['code'] == 1) {
         this.common.showToast(res['msg']);
         this.closeDetailFormModal();
@@ -194,7 +191,6 @@ export class SalaryDetailComponent implements OnInit {
 
 
   deleteSalaryDetail(sDetail) {
-    console.log(sDetail);
     if (sDetail._id) {
       let params = {
         tableId: sDetail._id
@@ -219,6 +215,7 @@ export class SalaryDetailComponent implements OnInit {
               }
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

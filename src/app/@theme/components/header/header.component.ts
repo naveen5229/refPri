@@ -44,6 +44,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentTheme = 'default';
   userLogin = '';
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
+  isNetConnected = true;
+  isShowFoAdmin = false;
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -60,7 +62,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     else {
 
       this.userLogin = this.userService._details.name || [];
-      console.log("----------------", this.userLogin);
+      console.log("----------------", this.userLogin,this.userService.loggedInUser);
+      this.getUserPresence();
+      if (this.userService.loggedInUser) {
+        this.getUserPagesList();
+      }
     }
   }
 
@@ -81,6 +87,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
+
+    this.checkNetConnection();
   }
 
   ngOnDestroy() {
@@ -117,27 +125,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.api.post(apiCall, params)
         .subscribe(res => {
           this.common.loading--;
-          if (res['success']) {
-            this.userService._token = '';
-            this.userService._details = null;
-
-            localStorage.removeItem('ITRM_USER_TOKEN');
-            localStorage.removeItem('ITRM_USER_DETAILS');
-            localStorage.removeItem('ITRM_LOGGED_IN_BY');
-            localStorage.removeItem('ITRM_USER_PAGES');
-
+          if (res['code']>0) {
+            // this.userService._token = '';
+            // this.userService._details = null;
+            // localStorage.removeItem('ITRM_USER_TOKEN');
+            // localStorage.removeItem('ITRM_USER_DETAILS');
+            // localStorage.removeItem('ITRM_LOGGED_IN_BY');
+            // localStorage.removeItem('ITRM_USER_PAGES');
+            this.userService.reset();
+            this.userService.clearStorage();
             this.common.showToast(res['msg']);
             if (loggedInBy == 'customer') {
               this.router.navigate(['/auth/login']);
             } else {
               this.router.navigate(['/auth/login/admin']);
             }
+          }else{
+            this.common.showError(res['msg']);
           }
-        },
-          err => {
-            this.common.loading--;
-            this.common.showError();
-          });
+        },err => {
+          this.common.loading--;
+          this.common.showError();
+        });
     }
   }
   refresh() {
@@ -148,4 +157,92 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.common.refresh();
   }
+
+  getUserPresence() {
+    let empId = this.userService._details.id;
+    this.common.loading++;
+    this.api.get("Admin/getUserPresence.json?empId=" + empId).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] > 0) {
+        let userPresence = (res['data'] && res['data'].length) ? res['data'] : null;
+        this.userService._details['present'] = (userPresence) ? 1 : 0;
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
+  }
+  
+  checkNetConnection(){
+    let thisVar = this;
+    setInterval(function () {
+      // console.log("navigator online:", navigator.onLine);
+      if (navigator.onLine) {
+        if (!thisVar.isNetConnected) {
+          thisVar.refresh();
+        }
+        thisVar.isNetConnected = true;
+        // document.getElementById("noNetwork").style.display = "none";
+      } else {
+        thisVar.isNetConnected = false;
+        // document.getElementById("noNetwork").style.display = "block";
+      }
+    }, 10000);
+  }
+
+  openFoAdminSearchModal(){
+    document.getElementById("foadminSearchModal").style.display = "block";
+  }
+
+  closeFoadminSearchModal(){
+    document.getElementById("foadminSearchModal").style.display = "none";
+  }
+
+  selectFoUser(fouser){
+    if(fouser && fouser.foid>0){
+      localStorage.setItem('FO_USER_DETAILS', JSON.stringify(fouser));
+      this.userService._fouser = fouser;
+      this.userService.loggedInUser = {id: fouser.id, name: fouser.name};
+      this.closeFoadminSearchModal();
+      if (this.userService._details) {
+        this.getUserPagesList(1);
+        this.getUserPresence();
+      }
+      this.common.refresh();
+    }
+  }
+
+  gotoAdmin(){
+    this.userService._fouser = null;
+    this.userService.loggedInUser = {id: this.userService._details.id, name: this.userService._details.name};
+    localStorage.removeItem('FO_USER_DETAILS');
+    if (this.userService._details) {
+      this.getUserPagesList(1);
+      this.getUserPresence();
+    }
+    this.common.refresh();
+  }
+
+  getUserPagesList(type=0) {
+    this.api.get('UserRole/getUserPages.json?adminId=' + this.userService.loggedInUser.id)
+      .subscribe(res => {
+        if(res['code']===1) {
+          this.userService._pages = res['data'].filter(page => { return page._userid; });
+          localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.userService._pages));
+          this.userService.filterMenu("pages", "pages");
+          if(type==1){
+            this.router.navigate(['/pages/task']);
+          }
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.showError();
+        console.log('Error: ', err);
+      })
+  }
+
 }

@@ -55,3 +55,19 @@ import 'core-js/es7/object';
 if (typeof SVGElement.prototype.contains === 'undefined') {
   SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
 }
+
+if (Promise && !Promise['allSettled']) {
+  Promise['allSettled'] = function (promises) {
+    return Promise.all(promises.map(function (promise) {
+      if (promise) {
+        return promise.then(function (value) {
+          return { state: 'fulfilled', value: value };
+        }).catch(function (reason) {
+          return { state: 'rejected', reason: reason };
+        });
+      } else {
+        return promise;
+      }
+    }));
+  };
+}

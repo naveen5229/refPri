@@ -1,10 +1,12 @@
+@import '../../../app/style';
+
 .main {
     width: 350px;
     margin: auto;
-    background: rgba(0, 0, 0, 0.25);
-    padding: 20px;
+    background: rgba($dark-1, 0.25);
+    padding: $padding-md*2;
     height: auto;
-    border-radius: 5px;
+    border-radius: $radious-sm;
 }
 
 .logo {
@@ -23,36 +25,40 @@ img {
 }
 
 .title {
-    color: #ff5722;
+    color: $danger-4;
 }
 
 .sub-title {
-    color: #fff;
+    color:$light-1;
     font-weight: normal;
-    font-size: 12px;
+    font-size: $font-sm-xxl;
     letter-spacing: 0.2px;
-    font-family: cursive;
-    line-height: 20px;
+    font-family: $font-family-secondary;
+    line-height: $lh-lg;
 }
 
 input {
     background: transparent !important;
-    color: #fff !important;
+    color:$light-1 !important;
     padding: 4px 14px !important;
-    font-size: 14px;
+    font-size: $font-sm-xxl;
     font-weight: 400;
-    border: 1px solid #ff5722 !important;
+    border: 1px solid $danger-4 !important;
     border-radius: 4px;
-    font-family: sans-serif;
+    font-family:$font-family-secondary;
     width: 85%;
     margin: auto;
     margin-top: -4%;
     letter-spacing: 0.8px;
 }
 
+input::placeholder{
+    color: #ffffff;
+}
+
 .btn {
-    border-radius: 3px;
-    background: #ff5722 !important;
+    border-radius: $radious-xs;
+    background: $danger-4 !important;
     padding: 7px;
     width: 60%;
     margin: auto;
@@ -61,23 +67,23 @@ input {
 
 .back-icon {
     position: absolute;
-    color: #fff;
-    font-size: 20px;
+    color:$light-1;
+    font-size:$font-md-xl;
     cursor: pointer;
 }
 
 .error {
-    font-size: 14px;
-    color: #fff;
-    // color: #FF5722;
+    font-size:$font-sm-xxl;
+    color:$light-1;
+    // color: $primary-11;
     margin-top: 3px;
     margin-left: 25px;
 }
 
 .resendOtp {
-    color: #fff;
+    color:$light-1;
     margin-left: 25px;
-    font-size: 14px;
+    font-size:$font-sm-xxl;
 }
 
 .blink {
@@ -88,30 +94,30 @@ input {
 span {
     font-size: 25px;
     font-family: cursive;
-    color: white;
+    color: $light-1;
     animation: blink 5s linear infinite;
 }
 
 @keyframes blink {
     0% {
         opacity: 0;
-        color: white;
+        color: $light-1;
     }
     0% {
         opacity: 0.25;
-        color: white;
+        color: $light-1;
     }
     50% {
         opacity: 0.5;
-        color: white;
+        color: $light-1;
     }
     0% {
         opacity: 0.75;
-        color: #ff5722;
+        color: $primary-11;
     }
     100% {
         opacity: 1;
-        color: #ff5722;
+        color: $primary-11;
     }
 }
 

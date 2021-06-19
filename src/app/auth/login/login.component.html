@@ -10,7 +10,7 @@
     <div *ngIf="!listenOTP">
         <form #mobileForm="ngForm" (submit)="mobileForm.valid && sendOTP()">
             <div class="form-group">
-                <input type="tel" autocomplete="off" minlength="10" maxlength="10" [(ngModel)]="userDetails.mobile" #mobile="ngModel" name="mobile" id="input-mobile" placeholder="Mobile Number" class="form-control" pattern="[0-9]+" required>
+                <input type="tel" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode <= 13) " autocomplete="off" minlength="10" maxlength="10" [(ngModel)]="userDetails.mobile" #mobile="ngModel" name="mobile" id="input-mobile" placeholder="Mobile Number" class="form-control" pattern="[0-9]+" required>
                 <div *ngIf="mobile.errors && formSubmit">
                     <div class="error" [hidden]="!mobile.errors.required">Mobile number is required</div>
                     <div class="error" [hidden]="!mobile.errors.minlength">Mobile number must be 10 digit long</div>

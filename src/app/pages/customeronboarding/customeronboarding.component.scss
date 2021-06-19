@@ -1,0 +1,78 @@
+@import '../../style.scss';
+
+fieldset {
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-image: initial;
+    margin-top:20px;
+  }
+  
+  legend {
+    display: block;
+    padding-inline-start: 2px;
+    padding-inline-end: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    padding: 10px;
+    border-image: initial;
+    color:black;
+    font-weight: bold;
+  }
+
+  .mrgn{
+    margin-top:10px;
+  }
+
+  // start: userrole
+  .container {
+    color: $dark-1;
+    overflow: auto;
+    height: calc(100vh - 208px);
+    margin-top: $margin-md;
+  }
+  
+  .module-container {
+    background: $secondary-26;
+    padding: 5px 16px;
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: $font-md-xxl;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .module-name {
+    margin-left: $margin-xs;
+    color: $dark-4;
+  }
+  .group-container {
+    background:$light-10;
+    font-weight: 500;
+    padding: $padding-xs $padding-xl;
+    font-size: $font-md-lg;
+    color: initial;
+  }
+
+  .group-head {
+    color: $dark-2;
+    background:$secondary-27;
+    padding: 4px;
+  }
+  .page-container {
+    font-size: $font-md-sm !important;
+    color: $primary-4;
+    margin-left: 25px;
+    padding: 0px;
+    display: inline-table;
+  }
+  // end: userrole

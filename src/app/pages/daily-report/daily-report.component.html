@@ -1,11 +1,10 @@
 <nb-card>
     <nb-card-header>
-        <div class="row">
-            <div class="col-6">
-                <h5>Daily Report</h5>
-            </div>
+        <div class="row m-0">
+                <h5 class="heading-design">Daily Report</h5>
         </div>
-
+    </nb-card-header>
+    <nb-card-body>
         <div class="row">
             <div class="col-3">
                 <label>Start Date</label>
@@ -28,8 +27,8 @@
                 <button type="submit" id="submit" (click)="getDailyReport()" class="btn btn-primary mr-2">Submit</button>
             </div>
         </div>
-        <br>
-        <div class="row">
+        
+        <div class="row mt-2 mb-2">
 
             <div class="col-12 text-right mt-8">
                 <button type="submit" id="submit" (click)="showCallData1()" class="btn btn-primary mr-2">W8 Campaign Admin Wise</button>
@@ -38,9 +37,6 @@
                 <!-- <button type="submit" (click)="getWrongCaptcha()" class="btn btn-primary">Wronge Captcha Latest</button> -->
             </div>
         </div>
-
-    </nb-card-header>
-    <nb-card-body style="min-height: 485px;">
         <smart-table *ngIf="dailyReportList.length>0" [data]="table.data" [settings]="table.settings" id="dailyReportList">
         </smart-table>
         <!-- <div class="row no-record" *ngIf="ticketList.length==0">No Data Available</div> -->
@@ -52,7 +48,7 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title" style="color:#fff;">Wrong Captcha Latest</h4>
+                    <h5 class="modal-title">Wrong Captcha Latest</h5>
                     <button type="button" class="close" data-dismiss="modal" (click)="closeMapModal()">&times;</button>
                 </div>
                 <!-- Modal body -->

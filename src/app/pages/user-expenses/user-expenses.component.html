@@ -1,0 +1,55 @@
+<nb-card>
+  <nb-card-header>
+    <h5>User Expenses</h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="row mr-0 ml-0">
+      <div class="col-1">
+        <label>Date:<span class="require">*</span></label>
+      </div>
+      <div class="col-2">
+        <uj-date-time-picker (onChanged)="Date=($event)" [dateTimeValue]="Date" [isTime]="false">
+        </uj-date-time-picker>
+      </div>
+      <div class="col-sm-1">
+        <button class="btn btn-primary btn-sm" (click)="showinstallerwageslist()">Submit</button>
+      </div>
+      <div class="col-7"></div>
+      <div class="col-1">
+        <button class="btn btn-primary btn-sm" (click)="downloadExcel()" title="Download Excel"><i
+            class="fas fa-download"></i></button>
+      </div>
+    </div>
+    <div class="row mr-0 ml-0 mt-2">
+      <smart-table *ngIf="userwageslist && userwageslist.length>0" [data]="table.data"
+        [settings]="table.settings" id="transactions">
+      </smart-table>
+      <!-- <div class="row no-record" *ngIf="installerlist.length==0">No Data Available</div> -->
+    </div>
+  </nb-card-body>
+</nb-card>
+
+
+<!-- image Listing Table - Start -->
+
+<div class="modal" id="imageListing">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Images</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeImageListing()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <smart-table *ngIf="imageList && imageList.length>0" [data]="tableImages.data"
+            [settings]="tableImages.settings" id="images">
+          </smart-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- image Listing Table - End -->

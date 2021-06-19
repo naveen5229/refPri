@@ -1,0 +1,39 @@
+.settingTypeFields {
+  padding: 8px;
+  background: #263238;
+  border-radius: 10px;
+}
+
+.typeAddFields {
+  padding: 10px;
+//   background: #263238;
+  margin-top: 5px;
+  border-radius: 10px;
+}
+
+
+.table-responsive{
+  max-height: calc(100vh - 209px);
+  overflow: auto;
+  table{
+    thead{
+    th{
+      color: #fff;
+      position: sticky;
+      top: 0;
+    }
+  }
+  }
+}
+
+/*input type number spinner hide chrome */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

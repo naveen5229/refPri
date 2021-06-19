@@ -1,25 +1,34 @@
+@import '../../style.scss';
+
 ::ng-deep .blue{
     width: 200px;
-    color: blue;
+    color: $primary-2;
 }
 ::ng-deep .red{
-    color: red,
+    color:$danger-2,
     ;
 }
 ::ng-deep .brown{
-    color: brown;
+    color:$danger-4;
 }
 ::ng-deep .magenta{
-    color: magenta;
+    color: $danger-10;
 }
 ::ng-deep .green{
-    color: green;
+    color: $success-3;
 }
 ::ng-deep .purple{
-    color: purple;
+    color: $danger-12;
 }
 :host ::ng-deep{
     th:nth-child(2){
         width: 200px;
     }
+}
+smart-table{
+    height: calc(100vh - 186px);
+}
+.chartbox{
+    height: calc(100vh - 186px);
+    overflow: auto;
 }

@@ -31,7 +31,7 @@
 
             <div class="row mt-1 bottom-block">
                 <div class="col-9">
-                    <textarea name="taskMessage" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
+                    <textarea name="taskMessage" maxlength="500" class="form-control" placeholder="New Comment" [(ngModel)]="taskMessage"></textarea>
                 </div>
                 <div class="col-3 text-right button-box">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="saveLeadMessage()">Send

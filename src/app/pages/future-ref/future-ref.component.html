@@ -2,14 +2,14 @@
     <nb-card-header>
         <div class="row">
             <div class="col-9">
-                <h5>Customer Feedback</h5>
+                <h5 class="heading-design">Customer Feedback</h5>
             </div>
         </div>
     </nb-card-header>
     <nb-card-body>
 
 
-        <div class="row form-group">
+        <div class="row form-group mb-1">
             <div class="col-4">
               <label>Select Type <span class="require">*</span></label>
             </div>
@@ -35,20 +35,23 @@
 
           </div>
 
-          <div  *ngIf='select_type == 2 || select_type == 3' class="row form-group">
-            <div class="col-6">
+          <div  *ngIf='select_type == 2 || select_type == 3' class="row form-group mb-1">
+            <div class="col-2">
                 <label>Start Date</label>
-                <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
-                </uj-date-time-picker>           
+                    
             </div>
-            <div class="col-6">
-              
+            <div class="col-4">
+              <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+              </uj-date-time-picker>           
+          </div>
+            <div class="col-2">
                     <label>End Date</label>
-                    <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
-                    </uj-date-time-picker>
-                
-              
+                   
             </div>
+            <div class="col-4">
+              <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
+              </uj-date-time-picker>
+      </div>
           </div>
 
           

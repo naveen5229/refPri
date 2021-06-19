@@ -25,7 +25,12 @@ export class CsvUploadComponent implements OnInit {
   selectedPartner = {
     id: null,
     name: ""
+  };
+  processForm = {
+    processId: null,
+    isValidationCheck: 1
   }
+  processList = [];
   constructor(public common: CommonService,
     public api: ApiService,
     public activeModal: NgbActiveModal,
@@ -34,7 +39,11 @@ export class CsvUploadComponent implements OnInit {
     this.button = this.common.params.button;
     this.typeFrom = (this.common.params.typeFrom) ? this.common.params.typeFrom : null;
     this.common.handleModalSize('class', 'modal-lg', '450', 'px');
-    this.getcampaignList();
+    if (this.typeFrom == "process") {
+      this.processList = (this.common.params.processList) ? this.common.params.processList : [];
+    } else {
+      this.getcampaignList();
+    }
 
   }
 
@@ -48,15 +57,14 @@ export class CsvUploadComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
-
 
   handleFileSelection(event) {
     this.common.loading++;
@@ -82,20 +90,48 @@ export class CsvUploadComponent implements OnInit {
 
   sampleCsv() {
     if (this.typeFrom == 'installer') {
-      window.open(this.api.URL + "sample/addInstallerSample.csv");
+      window.open(this.api.I_URL + "sample/addInstallerSample.csv");
+    } else if (this.typeFrom == 'process') {
+      if (!this.processForm.processId) {
+        this.common.showError("Process is missing");
+        return false;
+      }
+      let formField = null;
+      const params = "refId=" + this.processForm.processId + "&refType=2&transId=null";
+      this.common.loading++;
+      this.api.get('Processes/getFormWrtRefId?' + params).subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          formField = res['data'] || [];
+          if (formField && formField.length > 0) {
+            let headings = {};
+            headings['identity'] = { title: 'identity', placeholder: 'identity' };
+            for (var key of formField) {
+              headings[key['r_coltitle']] = { title: key['r_coltitle'], placeholder: key['r_coltitle'] };
+            }
+            console.log("headings:", headings);
+            this.common.getCSVFromDataArray([{ identity: "" }], headings, null);
+          } else {
+            this.common.showError("Data not found");
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.error('Api Error:', err);
+      });
+
+
     } else {
-      window.open(this.api.URL + "sample/sampleCampaignCsv.csv");
+      window.open(this.api.I_URL + "sample/sampleCampaignCsv.csv");
     }
   }
 
   uploadCsv() {
     let params = null;
     let apiPath = null;
-    // const params = {
-    //   CmpTarCsv: this.upload.csv,
-    //   campaignId: this.upload.campaignId,
-    //   campaignType: this.upload.campaignType
-    // };
     if (this.typeFrom == 'installer') {
       params = {
         partnerId: this.selectedPartner.id,
@@ -104,6 +140,16 @@ export class CsvUploadComponent implements OnInit {
       apiPath = 'Installer/importAddInstallerCsv';
       if (!params.addInstallerCsv || !params.partnerId) {
         return this.common.showError("Partner or CSV is missing");
+      }
+    } else if (this.typeFrom == 'process') {
+      params = {
+        processId: this.processForm.processId,
+        csv: this.upload.csv,
+        isValidationCheck: this.processForm.isValidationCheck
+      };
+      apiPath = 'Processes/importTransactionCsv';
+      if (!params.csv || !params.processId) {
+        return this.common.showError("Process or CSV is missing");
       }
     } else {
       params = {
@@ -116,10 +162,6 @@ export class CsvUploadComponent implements OnInit {
         return this.common.showError("Select Option First");
       }
     }
-    console.log(params);
-    // if (!params.CmpTarCsv && !params.campaignId) {
-    //   return this.common.showError("Select Option First");
-    // }
     if (!apiPath) {
       return this.common.showError("Something went wrong, please try again");
     }
@@ -127,21 +169,28 @@ export class CsvUploadComponent implements OnInit {
     this.api.post(apiPath, params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res["msg"]);
-
         let successData = res['data']['success'];
         let errorData = res['data']['fail'];
-        console.log("error: ", errorData);
         alert(res["msg"]);
-        this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+        let title = 'Csv Uploaded Data';
+        if (this.typeFrom == "process" && this.processForm.isValidationCheck == 1) {
+          title = 'Preview';
+        }
+        this.common.params = { successData, errorData, title: title };
         const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
         activeModal.result.then(data => {
           if (data.response) {
-            this.activeModal.close({ response: true });
+            if (this.typeFrom == "process" && this.processForm.isValidationCheck == 1) {
+            } else {
+              this.activeModal.close({ response: true });
+            }
           }
         });
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

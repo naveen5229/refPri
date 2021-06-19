@@ -1,0 +1,55 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-8">
+        <h5 class="heading-design">Admin Report</h5>
+      </div>
+    </div>
+
+
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-4">
+        <div class="row">
+          <div class="col-4">
+            <label>Start Date</label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="startDate=($event)" [dateTimeValue]="startDate"
+              [isTime]="false" [maxd]="today">
+            </uj-date-time-picker>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="row">
+          <div class="col-4">
+            <label>End Date</label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker style="z-index: 999;" (onChanged)="endDate=($event)" [dateTimeValue]="endDate"
+              [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="row">
+          <div class="col-7">
+            <button type="submit" id="submit" (click)="getAdminReports()"
+              class="btn btn-primary mr-2 btn-sm">Submit</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="mt-1">
+      <smart-table *ngIf="adminReportList && adminReportList.length>0" [data]="table.data" [settings]="table.settings"
+        id="adminReports"></smart-table>
+    </div>
+  </nb-card-body>
+
+</nb-card>

@@ -1,37 +1,37 @@
 
 <nb-card>
   <nb-card-header>
-      User Mapping
+      <h5 class="heading-design">User Mapping</h5>
   </nb-card-header>
   <nb-card-body>
       <div class="container">
          <div class="row">
-           
-          <div class="tabs_style_main">
+          <div class="tabs_style_main w-100">
             <ul class="tabs_style text-left">
-                <li [ngClass]="activeTab=='partnerMapping'?'active':''" (click)="activeTab='partnerMapping'; getPartnerMappingData()">
+                <li [ngClass]="activeTab=='partnerMapping'?'active':''" (click)="activeTab='partnerMapping';resetTable(); getPartnerMappingData()">
                     Partner Mapping
                 </li>
-                <li [ngClass]="activeTab=='partnerUserMapping'?'active':''" (click)="activeTab='partnerUserMapping';">
+                <li [ngClass]="activeTab=='partnerUserMapping'?'active':''" (click)="activeTab='partnerUserMapping';resetTable1()">
                     Partner User Mapping
                 </li>
-                <li [ngClass]="activeTab=='companyMapping'?'active':''" (click)="activeTab='companyMapping';">
+                <li [ngClass]="activeTab=='companyMapping'?'active':''" (click)="activeTab='companyMapping';resetTable2()">
                     Company Mapping
                 </li>
-                <li [ngClass]="activeTab=='companyUserMapping'?'active':''" (click)="activeTab='companyUserMapping';">
+                <li [ngClass]="activeTab=='companyUserMapping'?'active':''" (click)="activeTab='companyUserMapping';resetTable3()">
                     Company User Mapping
                 </li>
-                <li [ngClass]="activeTab=='vehicleMapping'?'active':''" (click)="activeTab='vehicleMapping';">
+                <li [ngClass]="activeTab=='vehicleMapping'?'active':''" (click)="activeTab='vehicleMapping';resetTable4()">
                   Vehicle Mapping
               </li>
             </ul>
         </div>
 
-
-
          </div> 
           <div class="row" *ngIf="activeTab == 'partnerMapping'">
-            <div class="mt-2">
+            <div class="col-sm-12">
+              <button  type="submit" style="float:right;" class="btn btn-primary col-sm-2" (click)="addPartner()">Add Partner</button>
+            </div>
+            <div class="mt-1">
                 <smart-table *ngIf="partnerMapping.length" [data]="table.data" [settings]="table.settings"></smart-table>
             </div>
         </div>
@@ -40,12 +40,12 @@
           <div class="col-6">
           <label class="col-4" style="display:inline-block;" >Elogist Partner</label>
           <div class="col-8" style="display:inline-block">
-            <auto-suggestion (onSelected)="getElogistPartner($event)" [display]="['name','mobileno']" [data]="partnerMapping"
+            <auto-suggestion (onSelected)="getElogistPartner($event)" [display]="['name','mobileno','ax_provider_name']" [data]="partnerMapping"
             placeholder="Elogist Partner" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
             </auto-suggestion>
           </div>
         </div>
-        <div class="col-6"></div>
+        <div class="col-6"><button  type="submit" style="float:right;" class="btn btn-primary col-sm-4" (click)="addPartnerUser()">Add Partner User</button></div>
         <div class="col-12">
           <div class="mt-2">
             <smart-table *ngIf="partnerUserMappings.length" [data]="table1.data" [settings]="table1.settings"></smart-table>
@@ -63,7 +63,9 @@
           </auto-suggestion>
         </div>
       </div>
-      <div class="col-6"></div>
+      <div class="col-6">
+        <button  (click)='addFODetail()' style="float:right;" class="btn btn-primary">Add Company</button>
+      </div>
       <div class="col-12">
         <div class="mt-2">
           <smart-table *ngIf="companyMappings.length" [data]="table2.data" [settings]="table2.settings"></smart-table>
@@ -82,12 +84,15 @@
       </div>
     </div> -->
     <div class="col-6">
-      <label class="col-4" style="display:inline-block;" >Company User</label>
+      <label class="col-4" style="display:inline-block;" >Company</label>
       <div class="col-8" style="display:inline-block">
-        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno']" [data]="companyData"
-        placeholder="Company User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+        <auto-suggestion (onSelected)="getElogistCompanyUser($event)" [display]="['name','mobileno','provider_name']" [data]="companyData"
+        placeholder="Select Company" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
         </auto-suggestion>
       </div>
+    </div>
+    <div class="col-6">
+      <button  (click)='addFoAdminUser()' style="float:right;" class="btn btn-primary">Add Company User</button>
     </div>
     <div class="col-12">
       <div class="mt-2">

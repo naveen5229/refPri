@@ -79,13 +79,13 @@ export class CampaignTargetComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getCampaignList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.campaignDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   addCampaignTarget() {
     this.common.params = { title: "Add Lead ", button: "Add" }
@@ -128,7 +128,7 @@ export class CampaignTargetComponent implements OnInit {
   }
   getCampaignTargetData() {
     if (this.campaignid > 0) {
-      console.log("filterParam:", this.filterParam);
+      // console.log("filterParam:", this.filterParam);
       let startdate = (this.filterParam.startDate) ? this.common.dateFormatter(this.filterParam.startDate) : null;
       let enddate = (this.filterParam.endDate) ? this.common.dateFormatter(this.filterParam.endDate) : null;
       // let nextActionstartDate = this.common.dateFormatter(this.filterParam.nextActionstartDate);
@@ -143,20 +143,19 @@ export class CampaignTargetComponent implements OnInit {
         "&endDate=" + enddate;
       // "&nextActionstartDate=" + nextActionstartDate +
       // "&nextActionendDate=" + nextActionendDate;
-      console.log('filterParam:', params);
+      // console.log('filterParam:', params);
       this.resetTable();
       this.common.loading++;
       this.api.get('Campaigns/getCampTarget?' + params)
         .subscribe(res => {
           this.common.loading--;
-          console.log("api data", res);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           if (!res['data']) return;
           this.campaignTargetData = res['data'];
-          console.log(this.campaignTargetData);
           this.campaignTargetData.length ? this.setTable() : this.resetTable();
-
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     } else {
@@ -173,14 +172,15 @@ export class CampaignTargetComponent implements OnInit {
     // console.log(userid);
     this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid + '&startDate=' + startdate + '&endDate=' + enddate)
       .subscribe(res => {
-        console.log(res);
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         let fodata = res['data'];
         let left_heading = fodata['name'];
         let center_heading = "Campaign Target Summary";
         this.common.getPDFFromTableId(tblEltId, left_heading, center_heading, null, '');
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -193,12 +193,14 @@ export class CampaignTargetComponent implements OnInit {
       this.api.get('Campaigns/getCampTarget?campId=' + this.campaignid + '&startDate=' + startdate + '&endDate=' + enddate)
         .subscribe(res => {
           this.common.loading--;
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           let fodata = res['data'];
           let left_heading = fodata['name'];
           let center_heading = "Toll Usage";
           this.common.getCSVFromTableId(tblEltId, left_heading, center_heading, ['Action']);
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     } else {
@@ -388,7 +390,7 @@ export class CampaignTargetComponent implements OnInit {
     };
     console.log(campaign);
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: this.stateDataList, actionDataList: this.actionDataList, nextactionDataList: this.nextactionDataList };
-    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignTargetData();
     });
@@ -415,10 +417,12 @@ export class CampaignTargetComponent implements OnInit {
           this.api.post('Campaigns/removeCampTarget', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getCampaignTargetData();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -447,6 +451,7 @@ export class CampaignTargetComponent implements OnInit {
     // this.common.loading++;
     this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.campaignid).subscribe(res => {
       // this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.stateDataList = res['data'];
       this.stateDataListTemp = this.stateDataList;
       let stateDataListTemp = [];
@@ -465,36 +470,35 @@ export class CampaignTargetComponent implements OnInit {
       }
       console.log("stateDataListTemp:", stateDataListTemp)
       this.stateDataListTemp = stateDataListTemp;
-    },
-      err => {
-        // this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      // this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   getActionList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.campaignid).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.actionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   getnextActionList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.nextactionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
 

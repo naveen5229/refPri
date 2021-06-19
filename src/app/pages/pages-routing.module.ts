@@ -51,6 +51,28 @@ import { MyProcessComponent } from '../process/my-process/my-process.component';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
+import { ProcessAdminComponent } from '../process/process-admin/process-admin.component';
+import { PersonalisedDashboardComponent } from '../process/personalised-dashboard/personalised-dashboard.component';
+import { GraphicalReportsComponent } from '../process/graphical-reports/graphical-reports.component';
+import { TicketComponent } from '../ticket/ticket/ticket.component';
+import { TicketProcessComponent } from '../ticket/ticket-process/ticket-process.component';
+import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
+import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
+import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
+import { CustomeronboardingComponent } from './customeronboarding/customeronboarding.component';
+import { TicketAdminComponent } from '../ticket/ticket-admin/ticket-admin.component';
+import { CustomDashboardComponent } from '../ticket/custom-dashboard/custom-dashboard.component';
+import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
+import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
+import { UserExpensesComponent } from './user-expenses/user-expenses.component';
+import { KanbanBoardComponent } from '../process/kanban-board/kanban-board.component';
+import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
+import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
+import { SitesComponent } from './sites/sites.component';
+import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
+import { SettingsComponent } from './company-setting/company-setting.component';
+import { CallLogsComponent } from './call-logs/call-logs.component';
+import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 
 const routes: Routes = [{
   path: '',
@@ -128,7 +150,7 @@ const routes: Routes = [{
     {
       path: 'module-report',
       component: ModuleReportComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'employee-daywise-report',
@@ -194,19 +216,25 @@ const routes: Routes = [{
     {
       path: 'task',
       component: TaskComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'user-mapping',
       component: UserMappingComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
+
+    },
+    {
+      path: 'customeronboarding',
+      component: CustomeronboardingComponent,
+      canActivate: [AuthGuard, RouteGuard]
 
     },
     {
       path: 'companykyc',
       component: CompanykycComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
       path: 'task-scheduled',
@@ -307,8 +335,112 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
+      path: 'process-admin',
+      component: ProcessAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'personalised-dashboard',
+      component: PersonalisedDashboardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    }, {
+      path: 'graphical-reports',
+      component: GraphicalReportsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
       path: 'user-groups',
       component: UserGroupsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket',
+      component: TicketComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket-process',
+      component: TicketProcessComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'ticket-admin',
+      component: TicketAdminComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'custom-dashboard',
+      component: CustomDashboardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'employee-monitoring',
+      component: EmployeeMonitoringComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'on-site-images',
+      component: OnSiteImagesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'on-site-images-summary',
+      component: OnSiteImagesSummaryComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'entity-details',
+      component: EntityDeatilsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-wise-expenses',
+      component: UserWiseExpensesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'user-expenses',
+      component: UserExpensesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'kanban-board',
+      component: KanbanBoardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'task-kanban',
+      component: TaskKanbanComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'admin-kanban',
+      component: AdminKanbanComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'site',
+      component: SitesComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'tmg-dashboard',
+      component: TmgDashboardComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'settings',
+      component: SettingsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'call-logs',
+      component: CallLogsComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'continuity-report',
+      component: ContinuityReportComponent,
       canActivate: [AuthGuard, RouteGuard]
     }
 

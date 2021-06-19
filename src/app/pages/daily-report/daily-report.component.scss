@@ -1,11 +1,17 @@
+
+@import '../../style.scss';
 :host ::ng-deep.blue{
-    color:blue;
+    color:$primary-2;
     text-decoration: underline;
 }
-.ng-star-inserted   { color: red;
+.ng-star-inserted   { 
+    color: $danger-2;
 }
 :host ::ng-deep{
     th:nth-child(2){
         width: 200px;
     }
+}
+smart-table{
+    height: calc(100vh - 225px);
 }

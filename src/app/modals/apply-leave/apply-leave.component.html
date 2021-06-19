@@ -1,0 +1,355 @@
+<div class="modal-header">
+    <h5>{{title || 'Apply Leave'}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="!formType">
+    <div class="row">
+    </div>
+    <div class="row mb-2 font-weight-bold">
+        <div class="col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='0' id="single"
+                    [(ngModel)]="leaveArray.type" (change)="datereset()">
+                Single Day
+            </label>
+        </div>
+        <div class="col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='1' id="multiple"
+                    [(ngModel)]="leaveArray.type" (change)="datereset()">
+                Multiple Day
+            </label>
+        </div>
+        <div class="col-2">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='2' id="firstHalf"
+                    [(ngModel)]="leaveArray.type" (change)="datereset()">
+                1st Half
+            </label>
+        </div>
+        <div class="col-2">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='3' id="secondHalf"
+                    [(ngModel)]="leaveArray.type" (change)="datereset()">
+                2nd Half
+            </label>
+        </div>
+        <div class="col-2">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" [value]='5' id="optionalLeave"
+                    [(ngModel)]="leaveArray.type" (change)="datereset()">
+                Optional
+            </label>
+        </div>
+    </div>
+
+    <div class="row mt-2" *ngIf="leaveArray.type!=1">
+        <div class="col-4">
+            <label>Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                (onChanged)="leaveArray.startDate=$event" [dateTimeValue]="leaveArray.startDate">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2" *ngIf="leaveArray.type==1">
+        <div class="col-2">
+            <label>From:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-3">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                (onChanged)="leaveArray.startDate=$event" [dateTimeValue]="leaveArray.startDate">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-2">
+            <label>To:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-3">
+            <uj-date-time-picker [mind]="leaveArray.startDate?leaveArray.startDate:nextDate" [isStart]="false"
+                [isTime]="false" (onChanged)="leaveArray.endDate=$event"
+                [dateTimeValue]="leaveArray.startDate?leaveArray.startDate:nextDate">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>To:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display='name' (onSelected)="leaveArray.To = $event" seperator="-"
+                placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+                [preSelected]="(leaveArray.To && leaveArray.To.id>0) ? {name: leaveArray.To.name} : {name:''}">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>CC:</label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users"
+                (onSelected)="leaveArray.cc = $event" inputId="ccUsers" name="ccUsers" [preSelected]="leaveArray.cc"
+                isMultiSelect="true"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Reason:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" maxlength="500" placeholder="Enter Task" id="normaltask" name="nomaltask"
+                class="form-control" [(ngModel)]="leaveArray.reason"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="requestLeave()">{{btn}}</button>
+        </div>
+    </div>
+</div>
+<!-- end:leave -->
+<!-- start:broadcast -->
+<div class="modal-body" *ngIf="formType==1">
+    <div class="row">
+        <div class="col-4">
+            <label>Subject<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input placeholder="Enter Subject" name="broadcastSub" id="broadcastSub" class="form-control" maxlength="50"
+                [(ngModel)]="broadcast.subject">
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Description:</label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Description" id="broadCastDesc" name="broadCastDesc"
+                class="form-control" [(ngModel)]="broadcast.desc"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Users:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
+                (onSelected)="broadcast.cc = $event" inputId="broadcastUsers" name="broadcastUsers"
+                [preSelected]="broadcast.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Exp Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                (onChanged)="broadcast.endDate=$event" [dateTimeValue]="broadcast.endDate">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Chat Feature:</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="broadcast.chatFeature"
+                (change)="broadcast.chatFeature = !broadcast.chatFeature" />
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="addBroadcastBtn" (click)="addBroadcast()">{{btn}}</button>
+        </div>
+    </div>
+</div>
+<!-- end:broadcast -->
+<!-- start:meeting -->
+<div class="modal-body" *ngIf="formType==2" (keydown)="eventPropogate($event)">
+    <div class="row">
+        <div class="col-4">
+            <label>Subject<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input id="meetingSub" name="meetingSub" placeholder="Enter Subject" class="form-control" maxlength="50"
+                [(ngModel)]="meetingForm.subject">
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Details</label>
+        </div>
+        <div class="col-6">
+            <textarea id="meetingDesc" name="meetingDesc" row="2" cols="15" placeholder="Enter Details"
+                class="form-control" [(ngModel)]="meetingForm.desc"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Host<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User"
+                (onSelected)="meetingForm.host = $event" inputId="meetinghost" name="meetinghost"
+                [preSelected]="meetingForm.host"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Users<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
+                (onSelected)="meetingForm.cc = $event" inputId="meetingFormUsers" name="meetingFormUsers"
+                [preSelected]="meetingForm.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Meeting Type</label>
+        </div>
+        <div class="col-6">
+            <select class="form-control" [(ngModel)]="meetingForm.type"
+                (change)="meetingForm.type == 0 ? meetingForm.link = null : meetingForm.roomId = null">
+                <option value=0>Offline</option>
+                <option value=1>Online</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mt-2 " *ngIf="meetingForm.type == 0">
+        <div class="col-4">
+            <label>Select Room</label>
+        </div>
+        <div class="col-6">
+            <select class="form-control" [(ngModel)]="meetingForm.roomId">
+                <option value="">Seelct Room</option>
+                <option *ngFor="let room of meetingRoomList" [value]="room._id">{{room.room_name+'-'+room.office_name}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mt-2 " *ngIf="meetingForm.type == 1">
+        <div class="col-4">
+            <label>Link</label>
+        </div>
+        <div class="col-6">
+            <input class="form-control" id="meetingLink" name="meetingLink" placeholder="Enter Link"
+                [(ngModel)]="meetingForm.link" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Meeting Duration<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
+                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration"
+                [isTimeDisabled]="true">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Meeting Time
+                <!-- <span class="text-danger">*</span> -->
+            </label>
+        </div>
+        <div class="col-3 pr-0">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="meetingForm.fromTime=$event"
+                [dateTimeValue]="meetingForm.fromTime">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-1 pr-0 pl-0">
+            <i class="fas fa-undo cursor-pointer" [ngClass]="{'disableSelection' : !meetingForm.fromTime}"
+                title="Reset Time"
+                (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } }"></i>
+        </div>
+        <div class="col-2 pl-0">
+            <input type="text" placeholder="Search Slot" class="form-control"
+                [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
+                readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Buzz</label>
+        </div>
+        <div class="col-6">
+            <input type="checkbox" [checked]="meetingForm.buzz" (change)="meetingForm.buzz = !meetingForm.buzz" />
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm mr-2" id="addMeetingBtn" (click)="addMeeting()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" (click)="addMeeting(1)">Save With Chat</button>
+        </div>
+    </div>
+    <!-- <button (click)="availableSlot()">modal</button> -->
+</div>
+<!-- end:meeting -->
+
+
+
+<!-- start: show hours popup -->
+<!-- <div class="modal" id="timePickerModalCustom">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span *ngIf="!showHours" (click)="showHours = true;validateAvailability()"><i
+                        class="fas fa-arrow-left text-light p-2 pointer"></i></span>
+                <h5 class="modal-title text-center">{{showHours ? 'Hour' : 'Minute'}}</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="closeTimePickerModal();(!showHours && !selectedTime.mm && selectedTime.mm == '') ? selectedTime.mm = '00' : null">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div *ngIf="showHours">
+                    <div text-center>
+                        <span *ngFor="let hour of hours"
+                            (click)="selectedTime.hh = hour.val;this.validateAvailability();showHours =false"
+                            class="btn-hour hour-row-2" [ngStyle]="{'background': (!hour.isValidate) ? 'red' : ''}"
+                            [ngClass]="{'active-hr' : selectedTime.hh == hour.val,'disableSelection' : hour.roomId}">{{hour.val}}</span>
+                    </div>
+                </div>
+
+
+                <div *ngIf="!showHours">
+                    <div text-center>
+                        <span *ngFor="let minute of minutes"
+                            [ngStyle]="{'background': (!minute.isValidate) ? 'red' : ''}"
+                            (click)="selectedTime.mm = minute.val; closeTimePickerModal()" class="btn-hour hour-row-2"
+                            [ngClass]="{'active-hr' : selectedTime.mm == minute.val,'disableSelection' : minute.roomId}">{{minute.val}}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+ -->
+
+<!-- (click)="selectedTime.hh = hour.val; setExptTimeFromCustomSelection(hour.val,'hr')" -->
+<!-- (click)="selectedTime.mm = minute.val; setExptTimeFromCustomSelection(minute.val,'min')" -->

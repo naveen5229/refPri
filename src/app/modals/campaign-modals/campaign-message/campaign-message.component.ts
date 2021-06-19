@@ -23,7 +23,7 @@ export class CampaignMessageComponent implements OnInit {
   statusId = 0;
   messageList = [];
   showLoading = true;
-  loginUserId = this.userService._details.id;
+  loginUserId = this.userService.loggedInUser.id;
   lastMsgId = 0;
   lastSeenId = 0;
   userListByTask = [];
@@ -114,26 +114,25 @@ export class CampaignMessageComponent implements OnInit {
     }
     this.api.post('Campaigns/getLeadMessage', params).subscribe(res => {
       this.showLoading = false;
-      console.log("messageList:", res['data']);
-      if (res['success']) {
+      if (res['code']>0) {
         this.messageList = res['data'] || [];
         if (this.messageList.length > 0) {
           let msgListOfOther = this.messageList.filter(x => { return x._userid != this.loginUserId });
           this.msgListOfMine = this.messageList.filter(x => { return x._userid == this.loginUserId });
-          console.log("msgListOfOther:", msgListOfOther);
-          console.log("msgListOfMine:", this.msgListOfMine.length);
+          // console.log("msgListOfOther:", msgListOfOther);
+          // console.log("msgListOfMine:", this.msgListOfMine.length);
           if (msgListOfOther.length > 0) {
             let lastMsgIdTemp = msgListOfOther[msgListOfOther.length - 1]._id;
             if (this.lastMsgId != lastMsgIdTemp) {
               this.lastMsgId = lastMsgIdTemp;
               this.lastMessageReadoflead();
             }
-            console.log("lastMsgIdTemp:", lastMsgIdTemp);
+            // console.log("lastMsgIdTemp:", lastMsgIdTemp);
           }
-          console.log("lastMsgId:", this.lastMsgId);
+          // console.log("lastMsgId:", this.lastMsgId);
         }
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['msg'])
       }
     }, err => {
       this.showLoading = false;
@@ -161,7 +160,6 @@ export class CampaignMessageComponent implements OnInit {
           //   this.updateTicketStatus(2);
           // }
           this.getLeadMessage();
-
         } else {
           this.common.showError(res['msg'])
         }
@@ -178,11 +176,10 @@ export class CampaignMessageComponent implements OnInit {
       leadId: this.taskId
     }
     this.api.post('Campaigns/getAllUserByLead', params).subscribe(res => {
-      console.log("getAllUserByLead:", res['data']);
-      if (res['success']) {
+      if (res['code']>0) {
         this.userListByTask = res['data'] || [];
       } else {
-        this.common.showError(res['data'])
+        this.common.showError(res['msg'])
       }
     }, err => {
       this.showLoading = false;
@@ -200,11 +197,11 @@ export class CampaignMessageComponent implements OnInit {
       this.common.loading++;
       this.api.post('Campaigns/addNewCCUserToLead', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code']>0) {
           this.newCCUserId = null;
           this.getAllUserByLead();
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -238,12 +235,12 @@ export class CampaignMessageComponent implements OnInit {
       this.common.loading++;
       this.api.post('Campaigns/updateLeadPrimaryOwner', params).subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code']>0) {
           this.getAllUserByLead();
           this.getLeadMessage();
           this.showAssignUserAuto = null;
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -265,7 +262,6 @@ export class CampaignMessageComponent implements OnInit {
       this.api.post('Campaigns/readLastMessage', params).subscribe(res => {
         console.log("messageList:", res['data']);
         if (res['code'] > 0) {
-
           setTimeout(() => {
             this.lastSeenId = this.lastMsgId;
           }, 5000);
@@ -322,13 +318,13 @@ export class CampaignMessageComponent implements OnInit {
     this.api.get('Campaigns/getCampTarAction?' + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.campaignTargetActionData = res['data'];
         this.campaignTargetActionData.length ? this.setTable() : this.resetTable();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -406,10 +402,12 @@ export class CampaignMessageComponent implements OnInit {
           this.api.post('Campaigns/removeCampTarAction', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getTargetActionData();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

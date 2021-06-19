@@ -1,45 +1,60 @@
-:host ::ng-deep .green{color:green!important;}
+@import '../../style.scss';
 
-:host ::ng-deep .txtstyle{
-    margin-top: 4px !important;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    color:black;
-    font-style: normal;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-right: 7px;
-    font-weight: 700;
-    font-size: 12px;
-    box-shadow: inset 0px 0px 3px 1px;
-}
 
-:host ::ng-deep .txtstyle1{
-    margin-top: 4px !important;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    color:black;
-    font-style: normal;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-right: 7px;
-    font-weight: 700;
-    font-size: 12px;
-    box-shadow: inset 0px 0px 3px 1px;
-}
+:host ::ng-deep {
+  smart-table {
+    height: calc(100vh - 160px);
 
-:host ::ng-deep .show{
-    color:blue;
-    cursor: pointer;
-    font-style: normal;
-    font-weight:600;
-}
+    .green {
+      color: $success-3 !important;
 
-:host ::ng-deep .show:hover{
-    text-decoration:underline;
-    cursor: pointer;
-}
+    }
+
+    .txtstyle {
+      margin-top: $padding-sm / 2 !important;
+      padding-left: $padding-sm;
+      padding-right: $padding-sm;
+      padding-top: $padding-xxs;
+      padding-bottom: $padding-xxs;
+      color: $dark-1;
+      font-style: normal;
+      border-radius: $radious-xxs;
+      cursor: pointer;
+      margin-right: 7px;
+      font-weight: 700;
+      font-size: $font-sm-xxl;
+      box-shadow: inset 0px 0px 3px 1px;
+    }
+
+    .txtstyle1 {
+      margin-top: $margin-sm / 2 !important;
+      padding-left: $padding-sm;
+      padding-right: $padding-sm;
+      padding-top: $padding-xxs;
+      padding-bottom: $padding-xxs;
+      color: $dark-1;
+      font-style: normal;
+      border-radius: $radious-xxs;
+      cursor: pointer;
+      margin-right: 7px;
+      font-weight: $bolder;
+      font-size: $font-sm-xxl;
+      box-shadow: inset 0px 0px 3px 1px;
+    }
+
+    .show {
+      color: $primary-2;
+      cursor: pointer;
+      font-style: normal;
+      font-weight: $bold;
+    }
+
+    .show:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+  }
+
+
+  }

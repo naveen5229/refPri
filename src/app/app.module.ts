@@ -91,9 +91,39 @@ import { UserMappingComponent } from './modals/process-modals/user-mapping/user-
 import { AddTransactionComponent } from './modals/process-modals/add-transaction/add-transaction.component';
 import { AddTransactionActionComponent } from './modals/process-modals/add-transaction-action/add-transaction-action.component';
 import { ChatboxComponent } from './modals/process-modals/chatbox/chatbox.component';
+import { AddpartnerComponent } from './modals/addpartner/addpartner.component';
+import { AddpartneruserComponent } from './modals/addpartneruser/addpartneruser.component';
+import { AddcompanyComponent } from './modals/addcompany/addcompany.component';
+import { AddfouserComponent } from './modals/addfouser/addfouser.component';
 import { AddTransactionStateComponent } from './modals/process-modals/add-transaction-state/add-transaction-state.component';
 import { AddCategoryComponent } from './modals/process-modals/add-category/add-category.component';
 import { AddTransactionContactComponent } from './modals/process-modals/add-transaction-contact/add-transaction-contact.component';
+import { AddDashboardFieldComponent } from './modals/process-modals/add-dashboard-field/add-dashboard-field.component';
+import { ViewDashboardComponent } from './modals/process-modals/view-dashboard/view-dashboard.component';
+import { FormDataTableComponent } from './modals/process-modals/form-data-table/form-data-table.component';
+import { AddFieldTableComponent } from './modals/process-modals/add-field-table/add-field-table.component';
+import { ApplyLeaveComponent } from './modals/apply-leave/apply-leave.component';
+import { SettingsComponent } from './modals/process-modals/settings/settings.component';
+import { DocumentListingComponent } from './modals/document-listing/document-listing.component';
+import { TicketChatboxComponent } from './modals/ticket-modals/ticket-chatbox/ticket-chatbox.component';
+import { AddExtraTimeComponent } from './modals/ticket-modals/add-extra-time/add-extra-time.component';
+import { RouteMapperComponent } from './modals/route-mapper/route-mapper.component';
+import { TicketClosingFormComponent } from './modals/ticket-modals/ticket-form-field/ticket-closing-form.component';
+import { ImageViewComponent } from './modals/image-view/image-view.component';
+import { stateActionMapping } from './modals/state-action-mapping/state-action-mapping';
+import { UserEsclationComponent } from './modals/process-modals/user-esclation/user-esclation.component';
+import { AddProcessPropertyComponent } from './modals/process-modals/add-process-property/add-process-property.component';
+import { CalulateTravelDistanceComponent } from './modals/calulate-travel-distance/calulate-travel-distance.component';
+import { MobileNoComponent } from './modals/mobile-no/mobile-no.component';
+import { LocationOnSiteImageComponent } from './modals/location-on-site-image/location-on-site-image.component';
+import { AddGlobalFieldComponent } from './modals/process-modals/add-global-field/add-global-field.component';
+import { EntityFormComponent } from './modals/entity-form/entity-form.component';
+import { PdfVersioningComponent } from './modals/process-modals/pdf-versioning/pdf-versioning.component';
+import { AddentityfieldsComponent } from './modals/addentityfields/addentityfields.component';
+import { AddExpectedHourComponent } from './modals/add-expected-hour/add-expected-hour.component';
+import { FunctionalReportingMappingComponent } from './modals/functional-reporting-mapping/functional-reporting-mapping.component';
+import { AvailableTimeSlotComponent } from './modals/available-time-slot/available-time-slot.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -152,10 +182,39 @@ const PAGE_COMPONENTS = [
   AddActionComponent,
   AddTransactionComponent,
   AddTransactionActionComponent,
+  ChatboxComponent,
+  AddpartnerComponent,
+  AddpartneruserComponent,
+  AddcompanyComponent,
+  AddfouserComponent,
   AddTransactionStateComponent,
   AddCategoryComponent,
-  ChatboxComponent,
-  AddTransactionContactComponent
+  AddTransactionContactComponent,
+  AddDashboardFieldComponent,
+  ViewDashboardComponent,
+  FormDataTableComponent,
+  AddFieldTableComponent,
+  SettingsComponent,
+  ApplyLeaveComponent,
+  DocumentListingComponent,
+  TicketChatboxComponent,
+  AddExtraTimeComponent,
+  RouteMapperComponent,
+  TicketClosingFormComponent,
+  ImageViewComponent,
+  stateActionMapping,
+  UserEsclationComponent,
+  AddProcessPropertyComponent,
+  CalulateTravelDistanceComponent,
+  MobileNoComponent,
+  LocationOnSiteImageComponent,
+  AddGlobalFieldComponent,
+  EntityFormComponent,
+  PdfVersioningComponent,
+  AddentityfieldsComponent,
+  AddExpectedHourComponent,
+  FunctionalReportingMappingComponent,
+  AvailableTimeSlotComponent,
 ];
 
 @NgModule({
@@ -166,6 +225,16 @@ const PAGE_COMPONENTS = [
     AxestrackMappingComponent,
     AddvehicleComponent,
     ImportbulkvehicleComponent,
+    AddpartnerComponent,
+    AddpartneruserComponent,
+    AddcompanyComponent,
+    AddfouserComponent,
+    ChatboxComponent,
+    stateActionMapping,
+    UserEsclationComponent,
+    AddProcessPropertyComponent,
+    MobileNoComponent,
+
 
     // SendmessageComponent,
     // GenericModelComponent,
@@ -196,7 +265,8 @@ const PAGE_COMPONENTS = [
       messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
     CoreModule.forRoot(),
-    DragDropModule
+    DragDropModule,
+    NgxSliderModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }

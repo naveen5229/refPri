@@ -1,0 +1,46 @@
+<div class="modal-header">
+    <h5>Add Table</h5>
+    <button type="button" class="close" aria-label="Close" (click)="close(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="table-responsive">
+        <table class="table-bordered" width="100%">
+            <thead>
+                <tr>
+                    <th *ngFor="let head of tableHeader;">{{head.param_name}}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tr of additionalFields;let i=index">
+                    <td *ngFor="let td of tr;let vi=index">
+                        <input type="text" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'text'  && !td.param_info">
+                        <input type="number" class="form-control" [(ngModel)]="td.param_value" *ngIf="td.param_type == 'number'  && !td.param_info">
+                        <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value" *ngIf="td.param_type =='date'" [isTime]="false">
+                        </uj-date-time-picker>
+                        <select [(ngModel)]="td.param_value" class="form-conrol col-12" *ngIf="td.param_info">
+                            <option [value]="fixValue.option" *ngFor="let fixValue of td.param_info">
+                                {{fixValue.option}}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button *ngIf="i == additionalFields.length-1 && !isDisabled" type="button" class="btn btn-bg-transparent" title="Add Row" (click)="AddTableRow()">
+                            <i class="fa fa-plus text-primary cursor-pointer"></i>
+                        </button>
+                        <button *ngIf="i !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row" (click)="additionalFields.splice(i,1)">
+                            <i  class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <button type="button" *ngIf="!isDisabled" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
+        </div>
+    </div>
+</div>

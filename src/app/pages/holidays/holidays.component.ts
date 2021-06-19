@@ -25,9 +25,14 @@ export class HolidaysComponent implements OnInit {
   allHolidayList = [];
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
+    this.common.refresh = this.refresh.bind(this);
     this.getHolidayCalendar();
   }
   ngOnInit() { }
+
+  refresh() {
+    this.getHolidayCalendar();
+  }
 
   getHolidayCalendar() {
     this.resetTable();
@@ -35,7 +40,7 @@ export class HolidaysComponent implements OnInit {
     this.api.get('Admin/getHolidayCalendar')
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data']) {
           this.allHolidayList = res['data'] || [];
           this.holidayList = res['data'] || [];
@@ -43,6 +48,7 @@ export class HolidaysComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -67,6 +73,9 @@ export class HolidaysComponent implements OnInit {
     for (var key in this.holidayList[0]) {
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if (key == 'date') {
+          headings[key]["type"] = "date";
+        }
       }
     }
     return headings;
@@ -130,10 +139,8 @@ export class HolidaysComponent implements OnInit {
         this.common.loading--;
         if (res["code"] > 0) {
           this.common.showToast(res["msg"]);
-
           let successData = res['data']['success'];
           let errorData = res['data']['fail'];
-          console.log("error: ", errorData);
           alert(res["msg"]);
           this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
           const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
@@ -149,6 +156,7 @@ export class HolidaysComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -176,7 +184,7 @@ export class HolidaysComponent implements OnInit {
   }
 
   sampleCsv() {
-    window.open(this.api.URL + "sample/holidaySample.csv");
+    window.open(this.api.I_URL + "sample/holidaySample.csv");
   }
 
 }

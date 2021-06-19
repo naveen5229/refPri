@@ -1,0 +1,554 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-9">
+                <h5 class="heading-design">My Ticket</h5>
+            </div>
+            <div class="col-3 text-right">
+                <button class="btn btn-primary btn-sm" id="gototask" title="Go To Task" (click)="common.gotoPage('/pages/task')"><i class="fas fa-tasks"></i></button>
+                <button class="btn btn-primary btn-sm ml-2" id="addTicket" (click)="openAddTicketModal()"><i
+                        class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabs_style_main">
+            <ul class="tabs_style text-left">
+                <li [ngClass]="activeTab=='allocatedTkt'?'active':''"
+                    (click)="activeTab='allocatedTkt'; getTicketByType(101)">
+                    Open
+                </li>
+                <li [ngClass]="activeTab=='unallocatedTkt'?'active':''"
+                    (click)="activeTab='unallocatedTkt'; getTicketByType(100)">
+                    Claim & Unassigned
+                </li>
+                <!-- <li [ngClass]="activeTab=='unassignedTkt'?'active':''"
+                    (click)="activeTab='unassignedTkt'; getTicketByType(103)">
+                    Unassigned
+                </li> -->
+                <li [ngClass]="activeTab=='completedTkt'?'active':''"
+                    (click)="activeTab='completedTkt';getTicketByType(105) ">
+                    Completed
+                </li>
+                <li [ngClass]="activeTab=='ccTkt'?'active':''" (click)="activeTab='ccTkt'; getTicketByType(104)">
+                    CC
+                </li>
+                <li [ngClass]="activeTab=='addedByMeTkt'?'active':''"
+                    (click)="activeTab='addedByMeTkt'; getTicketByType(106)">
+                    Added By Me
+                </li>
+                <li [ngClass]="activeTab=='unreadTkt'?'active':''"
+                    (click)="activeTab='unreadTkt'; getTicketByType(102)">
+                    Unread
+                </li>
+                <li [ngClass]="activeTab=='openTikcets'?'active':''"
+                    (click)="activeTab='openTikcets'; getTicketByType(107)">
+                    All Open Tickets
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="activeTab=='allocatedTkt'">
+            <smart-table [data]="tableAllocatedTkt.data" [settings]="tableAllocatedTkt.settings" id="tableAllocatedTkt"
+                class="smart1"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unallocatedTkt'">
+            <smart-table [data]="tableUnallocatedTkt.data" [settings]="tableUnallocatedTkt.settings"
+                id="tableUnallocatedTkt" class="smart1"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unassignedTkt'">
+            <smart-table [data]="tableUnassignedTkt.data" [settings]="tableUnassignedTkt.settings"
+                id="tableUnassignedTkt" class="smart1"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='unreadTkt'">
+            <smart-table [data]="tableUnreadTkt.data" [settings]="tableUnreadTkt.settings" id="tableUnreadTkt" class="smart1">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='completedTkt'">
+            <div class="row mb-2" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event"
+                        [dateTimeValue]="searchData.startDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event"
+                        [dateTimeValue]="searchData.endDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary text-capitalize" id="button"
+                        (click)="getTicketByType(105)">Search</button>
+                </div>
+            </div>
+            <ul class="tabs_style text-left">
+                <li [ngClass]="!activeSabTab?'active':''" (click)="activeSabTab=0; filterTicketBySubTab(105,0)">
+                    All
+                </li>
+                <li [ngClass]="activeSabTab==1?'active':''" (click)="activeSabTab=1; filterTicketBySubTab(105,1)">
+                    By Me
+                </li>
+                <li [ngClass]="activeSabTab==2?'active':''" (click)="activeSabTab=2; filterTicketBySubTab(105,2)">
+                    For Me
+                </li>
+            </ul>
+            <smart-table [data]="tableCompletedTkt.data" [settings]="tableCompletedTkt.settings" id="tablecompletedTkt" class="smart2">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='ccTkt'">
+            <smart-table [data]="tableCcTkt.data" [settings]="tableCcTkt.settings" id="tableCcTkt"  class="smart2"></smart-table>
+        </div>
+        <div *ngIf="activeTab=='addedByMeTkt'">
+            <smart-table [data]="tableAddedByMeTkt.data" [settings]="tableAddedByMeTkt.settings" id="tableAddedByMeTkt"  class="smart2">
+            </smart-table>
+        </div>
+        <div *ngIf="activeTab=='openTikcets'">
+            <smart-table [data]="tableAllOpenTkt.data" [settings]="tableAllOpenTkt.settings" id="tableAllOpenTkt" class="smart2"></smart-table>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+
+<!--start: addTicketModal -->
+<div class="modal modal-overflow" id="addTicketModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="closeAddTicketModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Ticket Process</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="tpList" display="name" placeholder="Ticket Process" name="tpName"
+                            id="tpName" (onSelected)="onSelectedTp($event)"
+                            [preSelected]="ticketForm.tp.id ? {name: ticketForm.tp.name}:{name:''}" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+                <!-- start:dyn field -->
+                <div *ngIf="oddArray.length" class="hr_full">
+                    <hr>
+                </div>
+                <div *ngFor="let dd of oddArray ; let i = index; " class="row">
+
+                    <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'"
+                        style="margin-bottom: 1rem;">
+                        <div *ngIf="oddArray[i].r_colalias" class="row">
+                            <div class="col-4">
+                                <label>{{oddArray[i].r_colalias}}<span style="color: red"
+                                        *ngIf="oddArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <!-- <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
+                                    *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
+                                    <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control" [(ngModel)]=oddArray[i].r_value rows="1"></textarea>
+                                <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value
+                                    *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues" [ngStyle]="((oddArray[i].r_coltitle).toLowerCase()=='latitude') ? {'width':'75%','display':'initial'} : ''">
+                                <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event"
+                                    [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'"
+                                    [isTime]="true">
+                                </uj-date-time-picker>
+
+                                <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'"
+                                    [data]="priCatList" display="name"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Primary Category'"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="oddArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'"
+                                    [data]="secCatList" display="name"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Secondary Category'"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="oddArray[i].r_value=($event.name);categoryIds.secCat=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'"
+                                    [data]="typeList" display="name" name="processType"
+                                    [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Type'"
+                                    id="processType"
+                                    (onSelected)="oddArray[i].r_value=($event.name);categoryIds.type=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+
+                                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value"
+                                    *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+
+                                <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i
+                                        class="fa fa-table" aria-hidden="true"></i></span>
+
+                                <!-- dynamic dropdown -->
+                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'" (change)="onSelectNotBind($event,oddArray[i])">
+                                    <option [value]="fixValue.option" [attr.isNotBind]="fixValue.isNonBind" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                                        {{fixValue.option}}</option>
+                                </select>
+                                <input type="text" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="oddArray[i].notBindFixedvalue">
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
+                                    name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
+                                </auto-suggestion>
+
+                                <label class="custom-file-upload p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i,'oddArray')">
+                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
+                                </label>
+
+                                <div *ngIf="oddArray[i].r_coltype =='number' && (oddArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(oddArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
+                        <span *ngIf="evenArray[i].r_colalias" class="row">
+                            <div class="col-4">
+                                <label>{{evenArray[i].r_colalias}} <span style="color: red"
+                                        *ngIf="evenArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
+                                    *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
+                                    <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control" [(ngModel)]=evenArray[i].r_value rows="1"></textarea>
+                                <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
+                                    *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues" [ngStyle]="((evenArray[i].r_coltitle).toLowerCase()=='latitude') ? {'width':'75%','display':'initial'} : ''">
+                                <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event"
+                                    [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'"
+                                    [isTime]="true">
+                                </uj-date-time-picker>
+
+                                <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
+                                    [data]="priCatList" display="name" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Primary Category'"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="evenArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'"
+                                    [data]="secCatList" display="name" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Secondary Category'"
+                                    name="secCat" id="secCat"
+                                    (onSelected)="evenArray[i].r_value=($event.name);categoryIds.secCat=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion
+                                    *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'"
+                                    [data]="typeList" display="name" name="processType" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Type'"
+                                    id="processType"
+                                    (onSelected)="evenArray[i].r_value=($event.name);categoryIds.type=($event.id);"
+                                    [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+
+                                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"
+                                    *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+
+                                <span *ngIf="evenArray[i].r_coltype == 'table'"
+                                    (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
+                                        aria-hidden="true"></i></span>
+
+                                <!-- dynamic data array -->
+                                <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'" (change)="onSelectNotBind($event,evenArray[i])">
+                                    <option [value]="fixValue.option" [attr.isNotBind]="fixValue.isNonBind" *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+                                        {{fixValue.option}}</option>
+                                </select>
+                                <input type="text" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="evenArray[i].notBindFixedvalue">
+                                <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
+                                    name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
+                                </auto-suggestion>
+
+                                <!-- attachment -->
+                                <label class="custom-file-upload p-0" *ngIf="evenArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i,'evenArray')">
+                                    <!-- <button type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button> -->
+                                </label>
+
+                                <div *ngIf="evenArray[i].r_coltype =='number' && (evenArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(evenArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <!-- end: dyn field -->   
+                <div class="row footer mt-2">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm"
+                            (click)="saveTicket()">Save</button>
+                    </div>
+                </div>           
+            </div>
+        </div>
+    </div>
+</div>
+<!--end: addTicketModal -->
+<!--end: assignUserModal -->
+<div class="modal" id="assignUserModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign User</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="closeassignUserModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="User" name="tpName" id="tpName"
+                            (onSelected)="assignUserObject.userId = $event" autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm"
+                            (click)="appointUser()">Assign</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: assignUserModal -->
+
+<!--start: forward ticket -->
+<div class="modal" id="forwardTicket">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Forward</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeForwardTicket()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket User" name="tpName"
+                            id="tpName" (onSelected)="forwardTicketObject.userId = $event;getUserPresence(forwardTicketObject.userId.id)"
+                            [preSelected]="forwardTicketObject.userId.id ? {name: forwardTicketObject.userId.name}:{name:''}"
+                            autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Remark<span style="color: red;">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control"
+                            [(ngModel)]="forwardTicketObject.remark"></textarea>
+                    </div>
+                </div>
+
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="assignUserForm"
+                            (click)="forwardTicket(forwardTicketObject.tabType)">Forward</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: forward ticket -->
+
+<!--start: Ticket History -->
+<!-- <div class="modal" id="ticketHistory">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket History</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeTicketHistory()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <smart-table [data]="tableTicketHistory.data" [settings]="tableTicketHistory.settings"
+                    id="tableTicketHIstory" class="sl-smart-table"></smart-table>
+            </div>
+
+        </div>
+    </div>
+</div> -->
+<!--end: Ticket History -->
+
+<!--start: Detailed Info -->
+<div class="modal modal-overflow" id="infoWindow">
+    <div
+        [class]="(primaryFormInfo.length > 0 && closingFormInfo.length > 0 && openingFormInfo.length > 0) ? 'modal-dialog modal-xl' : 'modal-dialog modal-lg'">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ticketDetailTitle}}</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeInfo()">&times;</button>
+            </div>
+
+            <!-- <div class="modal-body" *ngIf="activeTab=='completedTkt'"> -->
+            <div class="modal-body">
+
+                <div class="row">
+                    <div [class]="(primaryFormInfo.length > 0 && closingFormInfo.length > 0) ? 'col-4' : 'col-6'">
+                        <div class="row form_view_header"><label>Opening Form</label></div>
+                        <div *ngFor="let opening of openingFormInfo" class="row" style="margin-bottom: 1rem;">
+                            <div class="col-4">
+                                <label>{{opening.r_colalias}}<span *ngIf="opening.r_required"
+                                        style="color: red;">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <uj-date-time-picker *ngIf="opening.r_coltype =='date'" [dateTimeValue]="opening.r_value" [isTime]="true" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="opening.r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="opening.r_value" readonly>
+                                <span *ngIf="opening.r_coltype == 'table'" (click)="AdditionalFormNew(opening._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(opening.r_coltype)" type="text" class="form-control" [(ngModel)]="opening.r_value" readonly>
+                                <div *ngIf="opening.r_coltype == 'text'" class="form-control div-input" [textContent]=opening.r_value  style="height: auto;" readonly></div>
+                                <div *ngIf="opening.r_coltype == 'entity'" class="form-control div-input" [textContent]=opening.entity_value  style="height: auto;" readonly></div>
+                                <span *ngIf="opening.r_coltype=='attachment' && opening.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(opening.r_url,opening.r_doc_name)">{{opening.r_doc_name}}</span>
+                                </span>
+                                <div *ngIf="opening.r_coltype =='number' && (opening.r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(opening);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
+                                <input type="text" *ngIf="opening.r_fixedvalues && opening.isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="opening.notBindFixedvalue" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="primaryFormInfo.length>0"
+                        [class]="(openingFormInfo.length > 0 && closingFormInfo.length > 0) ? 'col-4' : 'col-6'"
+                        style="border-left: 1px solid black;">
+                        <div class="row form_view_header"><label>Primary Form</label></div>
+                        <div *ngFor="let primary of primaryFormInfo" class="row" style="margin-bottom: 1rem;">
+                            <div class="col-4">
+                                <label>{{primary.r_coltitle}}<span *ngIf="primary.r_required"
+                                        style="color: red;">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <uj-date-time-picker *ngIf="primary.r_coltype =='date'" [dateTimeValue]="primary.r_value" [isTime]="true" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="primary.r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="primary.r_value" readonly>
+                                <span *ngIf="primary.r_coltype == 'table'" (click)="AdditionalFormNew(primary._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(primary.r_coltype)" type="text" class="form-control" [(ngModel)]="primary.r_value" readonly>
+                                <div *ngIf="primary.r_coltype == 'text'" class="form-control div-input" [textContent]=primary.r_value  style="height: auto;" readonly></div>
+                                <div *ngIf="primary.r_coltype == 'entity'" class="form-control div-input" [textContent]=primary.entity_value  style="height: auto;" readonly></div>
+                                <span *ngIf="primary.r_coltype=='attachment' && primary.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(primary.r_url,primary.r_doc_name)">{{primary.r_doc_name}}</span>
+                                </span>
+                                <input type="text" *ngIf="primary.r_fixedvalues && primary.isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="primary.notBindFixedvalue" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="closingFormInfo.length>0"
+                        [class]="(openingFormInfo.length > 0 && primaryFormInfo.length > 0) ? 'col-4' : 'col-6'"
+                        style="border-left: 1px solid black;">
+                        <div class="row form_view_header"><label>Closing Form</label></div>
+                        <div *ngFor="let closing of closingFormInfo" class="row" style="margin-bottom: 1rem;">
+                            <div class="col-4">
+                                <label>{{closing.r_coltitle}}<span *ngIf="closing.r_required"
+                                        style="color: red;">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <uj-date-time-picker *ngIf="closing.r_coltype =='date'" [dateTimeValue]="closing.r_value" [isTime]="true" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="closing.r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="closing.r_value" readonly>
+                                <span *ngIf="closing.r_coltype == 'table'" (click)="AdditionalFormNew(closing._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(closing.r_coltype)" type="text" class="form-control" [(ngModel)]="closing.r_value" readonly>
+                                <div *ngIf="closing.r_coltype == 'text'" class="form-control div-input" [textContent]=closing.r_value  style="height: auto;" readonly></div>
+                                <div *ngIf="closing.r_coltype == 'entity'" class="form-control div-input" [textContent]=closing.entity_value  style="height: auto;" readonly></div>
+                                <span *ngIf="closing.r_coltype=='attachment' && closing.r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(closing.r_url,opening.r_doc_name)">{{closing.r_doc_name}}</span>
+                                </span>
+                                <input type="text" *ngIf="closing.r_fixedvalues && closing.isNotBindFixedvalue" class="form-control" placeholder="Enter value" [(ngModel)]="closing.notBindFixedvalue" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal-body" *ngIf="activeTab!='completedTkt'">
+                <div *ngFor="let dd of oddArray ; let i = index; " class="row">
+                    <div [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
+                        <div *ngIf="oddArray[i].r_colalias" class="row">
+                            <div class="col-4">
+                                <label style="font-weight: bold;">{{oddArray[i].r_colalias}}<span style="color: red"
+                                        *ngIf="oddArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <uj-date-time-picker *ngIf="oddArray[i].r_coltype =='date'" [dateTimeValue]="oddArray[i].r_value" [isTime]="true" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="oddArray[i].r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalFormNew(oddArray[i]._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(oddArray[i].r_coltype)" type="text" class="form-control" [(ngModel)]="oddArray[i].r_value" readonly>
+                                <div *ngIf="oddArray[i].r_coltype == 'text'" class="form-control div-input" [textContent]=oddArray[i].r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="oddArray[i].r_coltype=='attachment' && oddArray[i].r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                </span>
+                                <div *ngIf="oddArray[i].r_coltype =='number' && (oddArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(oddArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
+                        <div *ngIf="evenArray[i].r_colalias" class="row">
+                            <div class="col-4">
+                                <label style="font-weight: bold;">{{evenArray[i].r_colalias}}<span style="color: red"
+                                        *ngIf="evenArray[i].r_required">*</span></label>
+                            </div>
+
+                            <div class="col-8">
+                                <uj-date-time-picker *ngIf="evenArray[i].r_coltype =='date'" [dateTimeValue]="evenArray[i].r_value" [isTime]="true" [isDateDisabled]="'true'"></uj-date-time-picker>
+                                <input *ngIf="evenArray[i].r_coltype == 'checkbox'" type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalFormNew(evenArray[i]._param_child)"><i class="fa fa-table" aria-hidden="true"></i></span>
+                                <input *ngIf="['number','auto'].includes(evenArray[i].r_coltype)" type="text" class="form-control" [(ngModel)]="evenArray[i].r_value" readonly>
+                                <div *ngIf="evenArray[i].r_coltype == 'text'" class="form-control div-input" [textContent]=evenArray[i].r_value  style="height: auto;" readonly></div>
+                                <span *ngIf="evenArray[i].r_coltype=='attachment' && evenArray[i].r_url">
+                                    <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
+                                </span>
+                                <div *ngIf="evenArray[i].r_coltype =='number' && (evenArray[i].r_coltitle).toLowerCase()=='latitude'" class="col-2" style="display: inline-block;padding: 0!important;">
+                                    <label class="btn-primary" style="padding:7px" (click)="takeAction(evenArray[i]);">
+                                        <i class="fas fa-globe-africa"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+</div>
+<!--end: Detailed Info -->

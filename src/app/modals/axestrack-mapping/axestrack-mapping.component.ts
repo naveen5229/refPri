@@ -17,6 +17,8 @@ export class AxestrackMappingComponent implements OnInit {
   vehicleData=[];
   elparid='';
   axesparid='';
+  axespartnerName='';
+  axcompanyName='';
   title='';
   userName='';
   userMobile='';
@@ -81,11 +83,12 @@ export class AxestrackMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getAxestrackPartner.json')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.axestrackPartnerData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -93,8 +96,9 @@ export class AxestrackMappingComponent implements OnInit {
 
 
   getAxestrackPartner(event){
-    console.log("Event:",event);
+    // console.log("Event:",event);
     this.axesparid=event.provider_id;
+    this.axespartnerName=event.provider_name;
   }
 
 
@@ -103,13 +107,12 @@ export class AxestrackMappingComponent implements OnInit {
     this.common.loading++;
     let param={
       elPartnerId:this.elparid,
-      axPartnerId:this.axesparid
+      axPartnerId:this.axesparid,
+      axPartnerName:this.axespartnerName
     }
-    console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/savePartnerMapping.json',param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (res['success']){
           this.common.showToast(res['msg']);
           this.activeModal.close({response:true});
@@ -118,6 +121,7 @@ export class AxestrackMappingComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -128,11 +132,12 @@ export class AxestrackMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getAxestrackPartAdminuser.json?axProviderId='+this.common.params.partnerUser._ax_provider_id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.axestrackPartnerUserData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -140,7 +145,7 @@ export class AxestrackMappingComponent implements OnInit {
 
 
   getAxestrackUserPartner(event){
-    console.log("Event:",event);
+    // console.log("Event:",event);
     this.axesparid=event.autoid;
   }
 
@@ -150,11 +155,9 @@ export class AxestrackMappingComponent implements OnInit {
       elPartAdminId:this.elparid,
       axPartAdminId:this.axesparid
     }
-    console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/savePartadminuserMapping.json',param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (res['success']){
           this.common.showToast(res['msg']);
           this.activeModal.close({response:true});
@@ -163,6 +166,7 @@ export class AxestrackMappingComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -173,11 +177,12 @@ export class AxestrackMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getAxestrackCompany.json?axProviderId='+this.common.params.company._ax_provider_id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.axestrackCompanyData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -185,21 +190,21 @@ export class AxestrackMappingComponent implements OnInit {
 
 
   getAxestrackCompany(event){
-    console.log("Event:",event);
+    // console.log("Event:",event);
     this.axesparid=event.company_id;
+    this.axcompanyName=event.company_name;
   }
 
   saveCompanyMapping(){
     this.common.loading++;
     let param={
       elCompanyId:this.elparid,
-      axCompanyId:this.axesparid
+      axCompanyId:this.axesparid,
+      axCompanyName:this.axcompanyName
     }
-    console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/saveCompanyMapping.json',param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (res['success']){
           this.common.showToast(res['msg']);
           this.activeModal.close({response:true});
@@ -208,6 +213,7 @@ export class AxestrackMappingComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -218,11 +224,12 @@ export class AxestrackMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getAxestrackCompanyuser.json?axCompanyId='+this.common.params.companyUser._ax_company_id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.axestrackCompanyUserData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -230,7 +237,7 @@ export class AxestrackMappingComponent implements OnInit {
 
 
   getAxestrackCompanyUser(event){
-    console.log("Event:",event);
+    // console.log("Event:",event);
     this.axesparid=event.autoid;
   }
 
@@ -240,11 +247,9 @@ export class AxestrackMappingComponent implements OnInit {
       elCompanyUserId:this.elparid,
       axCompanyUserId:this.axesparid
     }
-    console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/saveCompanyUserMapping.json',param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (res['success']){
           this.common.showToast(res['msg']);
           this.activeModal.close({response:true});
@@ -253,6 +258,7 @@ export class AxestrackMappingComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -262,18 +268,19 @@ export class AxestrackMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getAxestrackCompanyVehicle.json?axCompanyId='+this.common.params.vehicle._ax_company_id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code'] ===0){this.common.showError(res['msg']);return false;}
         if (!res['data']) return;
         this.vehicleData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
     // getAxestrackCompanyVehicle
   }
 
   getAxestrackCompanyVehicle(event){
-    console.log("Event:",event);
+    // console.log("Event:",event);
     this.axesparid=event.autoid;
   }
 
@@ -283,11 +290,9 @@ export class AxestrackMappingComponent implements OnInit {
       elVehicleId:this.elparid,
       axVehicleId:this.axesparid
     }
-    console.log("PaRAM:",param);
     this.api.postTranstruck('AxesUserMapping/saveVehicleMapping.json',param)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
         if (res['success']){
           this.common.showToast(res['msg']);
           this.activeModal.close({response:true});
@@ -296,6 +301,7 @@ export class AxestrackMappingComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

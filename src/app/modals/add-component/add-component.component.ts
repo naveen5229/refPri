@@ -35,7 +35,7 @@ export class AddComponentComponent implements OnInit {
     this.api.get('Suggestion/getModules')
       .subscribe(res => {
         this.common.loading--;
-        console.log("list", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.modules = res['data'];
       }, err => {
         this.common.loading--;
@@ -49,7 +49,7 @@ export class AddComponentComponent implements OnInit {
     this.api.get('Projects/getAllStackChilds')
       .subscribe(res => {
         this.common.loading--;
-        console.log("list", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.stacks = res['data'];
       }, err => {
         this.common.loading--;
@@ -69,9 +69,11 @@ export class AddComponentComponent implements OnInit {
     this.api.post('Components/addComponent', params)
       .subscribe(res => {
         this.common.loading--;
-        if (res['success']) {
+        if (res['code']) {
           this.common.showToast(res['msg']);
           this.activeModel.close({ response: res['data'] });
+        }else{
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;

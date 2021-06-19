@@ -1,3 +1,8 @@
+@import '../../style.scss';
 :host ::ng-deep .blue {
-    color: blue;
+    color:$primary-2;
   }
+  smart-table{
+       height: calc(100vh - 107px);
+     
+}

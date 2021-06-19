@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-10">
 
-                <h5>Tasks</h5>
+                <h5 class="heading-design">Tasks</h5>
 
             </div>
             <div class="col text-right">
@@ -14,7 +14,7 @@
 
 
     </nb-card-header>
-    <nb-card>
+
         <nb-card-body>
             <div class="tabs_style_main">
                 <ul class="tabs_style text-left">
@@ -45,12 +45,12 @@
                 <div class="col-2 text-right">
                     <button class="btn btn-primary text-capitalize" id="button" (click)="assignTask()">Assign Task</button> </div>
             </div> -->
-            <div *ngIf="activeTab=='Assign Task'">
+            <div *ngIf="activeTab=='Assign Task'" class="table-responsive">
 
-                <table class="table table-border mt-1">
+                <table class="table table-border">
                     <thead class="thead">
                         <tr>
-                            <th>#</th>
+                            <th style="width:40px;">#</th>
                             <th>Title</th>
                             <th>Description</th>
                             <th>Project</th>
@@ -64,7 +64,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let task of taskList; let i=index;">
-                            <td>0{{i+1}}</td>
+                            <td style="width:40px;">0{{i+1}}</td>
                             <td>{{task.Title }}</td>
                             <td>{{task.Description }}</td>
                             <td>{{task.ProjectName }}</td>
@@ -81,7 +81,7 @@
                 </table>
             </div>
 
-            <div *ngIf="activeTab=='Completed Task'">
+            <div *ngIf="activeTab=='Completed Task'" class="table-responsive">
                 <table class="table table-border mt-1">
                     <thead class="thead">
                         <tr>
@@ -109,7 +109,7 @@
                     </tbody>
                 </table>
             </div>
-            <div *ngIf="activeTab=='Assigned By Me'">
+            <div *ngIf="activeTab=='Assigned By Me'" class="table-responsive">
                 <table class="table table-border mt-1">
                     <thead class="thead">
                         <tr>
@@ -146,7 +146,7 @@
                     </tbody>
                 </table>
             </div>
-            <div *ngIf="activeTab=='Waiting For Review'">
+            <div *ngIf="activeTab=='Waiting For Review'" class="table-responsive">
                 <table class="table table-bordered mt-1">
                     <thead class="thead" style="background-color:lightgrey">
                         <tr>
@@ -180,7 +180,7 @@
                     </tbody>
                 </table>
             </div>
-            <div *ngIf="activeTab=='Review But Change'">
+            <div *ngIf="activeTab=='Review But Change'" class="table-responsive">
                 <table class="table table-border mt-1">
                     <thead class="thead">
                         <tr>
@@ -221,7 +221,7 @@
                     </tbody>
                 </table>
             </div>
-            <div *ngIf="activeTab=='Pending Review'">
+            <div *ngIf="activeTab=='Pending Review'" class="table-responsive">
 
                 <table id="pandingReview" style="overflow-x:scroll;display:block;width:165%!important;"
                     class="table table-border mt-1">
@@ -278,4 +278,4 @@
             </div>
         </nb-card-body>
 
-    </nb-card>
+   </nb-card>

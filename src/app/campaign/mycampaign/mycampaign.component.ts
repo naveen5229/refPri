@@ -131,8 +131,8 @@ export class MycampaignComponent implements OnInit {
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
     this.api.get("Campaigns/getMyCampaignByType" + params).subscribe(res => {
       this.common.loading--;
-      console.log("data", res['data'])
       this.reserSmartTableData();
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (type == 1) {//normal task pending (task for me)
         this.leadsForMe = res['data'] || [];
         this.setTableLeadsForMe(type);
@@ -516,10 +516,12 @@ export class MycampaignComponent implements OnInit {
           this.api.post('Campaigns/removeCampTarget', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getCampaignByType(type);
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -564,7 +566,7 @@ export class MycampaignComponent implements OnInit {
     };
     console.log(campaign);
     this.common.params = { targetActionData, title: "Campaign Target Action", button: "Add", stateDataList: null, actionDataList: null, nextactionDataList: null };
-    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(CampaignTargetActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getCampaignByType(type);
     });
@@ -602,7 +604,7 @@ export class MycampaignComponent implements OnInit {
           this.common.showToast(res['msg']);
           this.getCampaignByType(type);
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -621,7 +623,7 @@ export class MycampaignComponent implements OnInit {
         title: preText + ' Lead',
         description: `<b>` + 'Are You Sure You ' + preText + ` this Lead <b>`,
       }
-      const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+      const activeModal = this.modalService.open(ConfirmComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
       activeModal.result.then(data => {
         if (data.response) {
           this.updateCampaignStatus(campaign, type, status);
@@ -684,10 +686,12 @@ export class MycampaignComponent implements OnInit {
     this.api.post('Campaigns/checkLeadReminderSeen', params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res['msg']);
         this.getCampaignByType(type);
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log('Error: ', err);
       });
   }
@@ -706,7 +710,7 @@ export class MycampaignComponent implements OnInit {
           this.common.showToast(res['msg']);
           this.getCampaignByType(type);
         } else {
-          this.common.showError(res['data']);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
@@ -717,32 +721,6 @@ export class MycampaignComponent implements OnInit {
       this.common.showError("Lead ID Not Available");
     }
   }
-
-  // ackTaskByAssigner(campaign, type) {
-  //   if (campaign._tktid && campaign._refid) {
-  //     let params = {
-  //       campaignId: campaign._tktid,
-  //       taskId: campaign._refid
-  //     }
-  //     console.log("ackTaskByAssigner:", params);
-  //     this.common.loading++;
-  //     this.api.post('AdminTask/ackTaskByAssigner', params).subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] > 0) {
-  //         this.common.showToast(res['msg']);
-  //         this.getCampaignByType(type);
-  //       } else {
-  //         this.common.showError(res['data']);
-  //       }
-  //     }, err => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log('Error: ', err);
-  //     });
-  //   } else {
-  //     this.common.showError("Task ID Not Available");
-  //   }
-  // }
 
   uploadDataByCsv() {
     this.common.params = { title: "CSV", button: "Upload" };

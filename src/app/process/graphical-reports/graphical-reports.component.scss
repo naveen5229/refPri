@@ -1,0 +1,176 @@
+@import '../../style';
+
+.drag-container {
+    max-width: 100%;
+    min-height: 30px;
+    display: inline-block;
+    vertical-align: top;
+    z-index: 0;
+    border: 1px solid $light-5;
+    padding: $padding-xs;
+    border-radius: $radious-xxs;
+    border-radius: $radious-xxs;
+}
+
+.filter-Container {
+    width: 100%;
+    height: 100px;
+    display: inline-block;
+    vertical-align: top;
+    z-index: 0;
+    border: 1px solid $light-5;
+    padding: $padding-xs;
+    border-radius: $radious-xxs;
+    border-radius: $radious-xxs;
+    overflow: auto;
+}
+
+.child-ul {
+    list-style-type: none;
+    padding: 0 $padding-xs;
+}
+
+.fieldStyle {
+    background-color: #d1dada;
+    color: $dark-1;
+    display: inline-block;
+    border-radius: $radious-xl;
+    padding: 2px 12px 5px 10px;
+    position: relative;
+    margin: 0 0 0 4px;
+    height: 26px;
+    vertical-align: middle;
+    font-size: 14px;
+    margin-top: 1px;
+}
+.cancelButtonCss {
+    color: $danger-2;
+    cursor: pointer;
+}
+.margin_right {
+    margin-right: 0.5rem;
+}
+.padding-left{
+    padding-left: 0.5rem;
+}
+
+.chartbox {
+    // height: calc(100vh - 220px);
+    overflow: auto;
+}
+
+.selectInsideSelected {
+    padding: 0 !important;
+}
+.sidenavleft {
+    background-color: #efefef;
+    max-height: calc(100vh - 125px);
+    overflow: auto;
+    h6 {
+        color: $light-1;
+        font-size: 0.8rem;
+        background: $primary-11;
+        padding: 0 10px;
+    }
+    .drophead {
+        font-size: 0.7rem;
+        border: 1px solid $light-5;
+        padding: 0px 5px;
+        margin-bottom: 0.2rem;
+        background: $light-1;
+        position: relative;
+        .dropcaret {
+            position: absolute;
+            right: 5px;
+            top: -1px;
+            color: $secondary-7;
+        }
+    }
+
+    .child-ul .top:first-child {
+        display: none;
+    }
+
+    .innerdrop {
+        background: $light-1;
+        padding: $padding-xs $padding-xs 0 $padding-xs;
+        padding: $padding-xs $padding-xs 0 $padding-xs;
+        margin-bottom: $margin-md;
+        margin-top: -4px;
+        border: 1px solid $secondary-30;
+        max-height: 130px;
+        overflow: auto;
+        
+        li {
+            font-family: "Poppins", sans-serif !important;
+            font-size: 0.68rem;
+            border-bottom: 1px solid $secondary-30;
+            padding-left: 5px;
+            position: relative;
+        }
+
+        li:before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 1px;
+            background: #d0cccc;
+            left: -1px;
+            top: 10px;
+        }
+        li:after {
+            content: "";
+            position: absolute;
+            width: 1px;
+            height: 21px;
+            background: #d0cccc;
+            left: -2px;
+            top: 0px;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+    }
+}
+.active {
+    border-bottom: 2px solid $dark-1;
+}
+.hoverChart:hover {
+    cursor: pointer;
+}
+.grptab{
+    padding: 4px 0px;
+    width: 70px;
+    box-shadow: 0 4px 13px #ccc8c8;
+    border-radius: 9px!important;
+    background: $light-1;
+    border: 1px solid #e2e2e2;
+    border-top: 3px solid $primary-11;
+    margin-bottom: 10%;
+}
+.centarize {
+    text-align: center;
+    //border-bottom: 1px solid #d1d9e8 !important;
+    display: flex;
+    justify-content: flex-start;
+    background: #efefef;
+}
+
+.disablePieClick{
+    pointer-events: none;
+    -webkit-filter: grayscale(100%); 
+	-moz-filter: grayscale(100%); 
+	-o-filter: grayscale(100%);
+	-ms-filter: grayscale(100%); 
+    filter: grayscale(100%);
+    img{
+        opacity: 0.25;
+    }
+}
+
+.tableref{
+    background: $dark-1;
+    padding: 4px;
+    border-radius: 20px;
+    color: white;
+}

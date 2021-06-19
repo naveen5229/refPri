@@ -1,63 +1,66 @@
+@import '../../style.scss';
+
 /***************** New CSS ************/
+
 .row.col-2 {
     margin: 2px;
   }
   .search {
     width: 180px;
-    margin-left: 20px;
+    margin-left: $padding-xxl/3;
   }
   .container {
-    color: black;
+    color: $dark-1;
+    overflow: auto;
+    height: calc(100vh - 208px);
+    margin-top: $margin-md;
   }
   
   .module-container {
-    background: #ffd7d7;
+    background: $secondary-26;
     padding: 5px 16px;
     font-weight: bold;
     text-transform: capitalize;
-    font-size: 22px;
-    margin-top: 10px;
+    font-size: $font-md-xxl;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
   .module-name {
-      margin-left: 5px;
-    color: #01203c;
+    margin-left: $margin-xs;
+    color: $dark-4;
   }
   .group-container {
-    background: #f2f2f2;
+    background:$light-10;
     font-weight: 500;
-    padding: 5px 30px;
-    font-size: 18px;
+    padding: $padding-xs $padding-xl;
+    font-size: $font-md-lg;
     color: initial;
   }
+
   .group-head {
-    color: #161617;
-    background: #d0e4f5;
+    color: $dark-2;
+    background:$secondary-27;
     padding: 4px;
   }
   .page-container {
-    font-size: 14px !important;
-    color: darkblue;
+    font-size: $font-md-sm !important;
+    color: $primary-4;
     margin-left: 25px;
     padding: 0px;
     display: inline-table;
   }
   
-  input.page-box {
-    width: 16px;
-    height: 16px !important;
-    cursor: pointer;
+  input{
+    &.page-box,
+    &.group-box,
+    &.module-box{
+      width: 16px;
+      height: 16px !important;
+      cursor: pointer;
+    }
   }
-  input.group-box {
-    width: 16px;
-    height: 16px !important;
-    cursor: pointer;
-  }
-  
-  input.module-box {
-    width: 16px;
-    height: 16px !important;
-    cursor: pointer;
-  }
+
   .permission-type {
     margin: 2px;
     border: 1px solid;
@@ -69,12 +72,12 @@
   }
   .permission-type,
   label {
-    margin-right: 10px;
+    margin-right: $margin-md;
   }
   input.page-box-type {
     width: 12px;
     height: 12px !important;
-    margin-left: 8px;
+    margin-left: $margin-sm;
     cursor: pointer;
   }
   

@@ -43,10 +43,11 @@ export class ModulesComponent implements OnInit {
     this.api.get('Suggestion/getProjectList')
       .subscribe(res => {
         this.common.loading--;
-        console.log("items", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.projectName = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -78,6 +79,7 @@ export class ModulesComponent implements OnInit {
       this.common.loading++;
       this.api.post('Modules/addModules', params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'][0].z_id > 0) {
           this.common.showToast(res['data'][0].z_msg);
           this.getModule();
@@ -112,6 +114,7 @@ export class ModulesComponent implements OnInit {
     this.common.loading++;
     this.api.post('Modules/addModules', params).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (res['data'][0].z_id > 0) {
         this.common.showToast(res['data'][0].z_msg);
         this.getModule();
@@ -136,14 +139,13 @@ export class ModulesComponent implements OnInit {
 
   getModule() {
     this.api.get("Modules/getAllModules").subscribe(res => {
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.modulesData1 = res['data'] || [];
       this.filterItem();
-
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   editModule(modulesData) {
@@ -173,7 +175,7 @@ export class ModulesComponent implements OnInit {
         this.api.post('Modules/deleteModule', params)
           .subscribe(res => {
             this.common.loading--;
-            console.log("res", res);
+            if(res['code']===0) { this.common.showError(res['msg']); return false;};
             if (res['data'][0].z_id > 0) {
               this.common.showToast(res['data'][0].z_msg);
               this.getModule();

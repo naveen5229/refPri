@@ -12,6 +12,7 @@ const COLLECTION = {
 export class UserService {
   _token = '';
   _details = null;
+  _fouser = null;
 
   _menu = {
     pages: []
@@ -19,6 +20,7 @@ export class UserService {
 
   _loggedInBy = '';
   _pages = [];
+  loggedInUser = {id: null, name: null};
 
   constructor() {
     this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
@@ -28,6 +30,13 @@ export class UserService {
     if (localStorage.getItem("ITRM_USER_PAGES")) {
       this._pages = JSON.parse(localStorage.getItem("ITRM_USER_PAGES"));
       this.filterMenu("pages", "pages");
+    }
+    if(localStorage.getItem('FO_USER_DETAILS')){
+      this._fouser = JSON.parse(localStorage.getItem('FO_USER_DETAILS'));
+    }
+    if(this._fouser || this._details){
+      this.loggedInUser.id = (this._fouser && this._fouser.id>0) ? this._fouser.id : this._details.id;
+      this.loggedInUser.name = (this._fouser && this._fouser.id>0) ? this._fouser.name : this._details.name;
     }
 
     if (this._token && !this._loggedInBy) {
@@ -69,6 +78,12 @@ export class UserService {
         return true;
       });
 
+    if (this._loggedInBy === 'admin') {
+      this._menu[type].push({
+        title: "Walle8",
+        icon: 'layers-outline',
+      });
+    }
   }
 
   reset() {
@@ -79,6 +94,8 @@ export class UserService {
     };
     this._loggedInBy = '';
     this._pages = [];
+    this._fouser = null;
+    this.loggedInUser = {id: null, name: null};
   }
 
   clearStorage() {
@@ -86,6 +103,7 @@ export class UserService {
     localStorage.removeItem('ITRM_USER_DETAILS');
     localStorage.removeItem('ITRM_LOGGED_IN_BY');
     localStorage.removeItem('ITRM_USER_PAGES');
+    localStorage.removeItem('FO_USER_DETAILS');
   }
 
 

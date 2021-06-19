@@ -43,12 +43,12 @@ export class DailyPartnerReportComponent implements OnInit {
     this.api.get('Users/getMiscReport.json?' + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.reportList = res['data'] || [];
         this.reportList.length ? this.setTable() : '';
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

@@ -4,6 +4,8 @@ import { ApiService } from '../../../Service/Api/api.service';
 import { CommonService } from '../../../Service/common/common.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddFieldComponent } from '../add-field/add-field.component';
+import { AddActionComponent } from '../add-action/add-action.component';
+import { AssignFieldsComponent } from '../assign-fields/assign-fields.component';
 
 @Component({
   selector: 'ngx-add-state',
@@ -13,12 +15,17 @@ import { AddFieldComponent } from '../add-field/add-field.component';
 export class AddStateComponent implements OnInit {
   states = [];
   nextStates = [];
+  userTag = { id: null, name: null }
+  stateUser = [];
   // nextState = null;
   typeId = null;
   stateName = null;
   processId = null;
+  processName = null;
   requestId = null;
   threshold = null;
+  adminList = null;
+  // isDefault = false;
 
   data = [];
   table = {
@@ -41,6 +48,11 @@ export class AddStateComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal) {
     this.processId = this.common.params.process.id;
+    this.processName = this.common.params.process.name;
+    const adminList = [...this.common.params.adminList];
+    this.adminList = adminList.map(admin => {
+      return { id: admin.id, name: admin.name }
+    })
     this.getStates();
   }
 
@@ -51,32 +63,36 @@ export class AddStateComponent implements OnInit {
   }
 
   Add() {
-    console.log("type:", this.typeId);
-    // let ns = [];
+    let stateUser = (this.stateUser && this.stateUser.length>0) ? this.stateUser.map(ele => {return {user_id:ele.id}}) : [];
     let params = {
       processId: this.processId,
       name: this.stateName,
       type: this.typeId,
       nextStates: (this.nextStates && this.nextStates.length) ? JSON.stringify(this.nextStates) : null,
       requestId: this.requestId,
-      threshold: this.threshold
+      threshold: this.threshold,
+      stateOwnerId: this.userTag.id,
+      stateUsers: JSON.stringify(stateUser)
     }
-    // console.log("params", params);
+    // console.log("addProcessState:",params,this.stateUser)
+    // return;
     this.common.loading++;
-    this.api.post('Processes/addProcessState', params)
-      .subscribe(res => {
+    this.api.post('Processes/addProcessState', params).subscribe(res => {
         this.common.loading--;
-        // console.log(res);
-        if (res['data'][0].y_id > 0) {
-          this.common.showToast("Successfully added");
-          this.resetData();
-          this.getStates();
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.resetData();
+            this.getStates();
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
         } else {
-          this.common.showError(res['data'][0].y_msg);
+          this.common.showError(res['msg']);
         }
       }, err => {
         this.common.loading--;
-        this.common.showError(err);
+        this.common.showError();
         console.log('Err:', err);
       });
   }
@@ -99,24 +115,15 @@ export class AddStateComponent implements OnInit {
         };
         this.headings = [];
         this.valobj = {};
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
 
         if (!res['data']) return;
         this.data = res['data'];
         this.states = (this.data && this.data.length) ? this.data.map(x => { return { id: x._state_id, name: x.name } }) : [];
         this.data.length ? this.setTable() : this.resetTable();
-        // let first_rec = this.data[0];
-        // for (var key in first_rec) {
-        //   if (key.charAt(0) != "_") {
-        //     this.headings.push(key);
-        //     let headerObj = { title: this.formatTitle(key), placeholder: this.formatTitle(key) };
-        //     this.table.data.headings[key] = headerObj;
-        //   }
-        // }
-        // let action = { title: this.formatTitle('action'), placeholder: this.formatTitle('action'), hideHeader: true };
-        // this.table.data.headings['action'] = action;
-        // this.table.data.columns = this.getTableColumns();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -190,6 +197,7 @@ export class AddStateComponent implements OnInit {
       { class: "fas fa-edit edit", title: "Edit State", action: this.setData.bind(this, row) },
       { class: "fas fa-trash-alt", title: "Delete State", action: this.deleteRow.bind(this, row) },
       { class: "fas fa-plus-square", title: "Add Form Field", action: this.openFieldModal.bind(this, row) },
+      // { class: "fas fa-handshake", title: "Add Action", action: this.addProcessAction.bind(this, row) },
     )
     return icons;
   };
@@ -210,16 +218,15 @@ export class AddStateComponent implements OnInit {
           this.api.post('Processes/deleteProcessState', params)
             .subscribe(res => {
               this.common.loading--;
-              console.log("Result:", res['data'][0].y_msg);
               if (res['data'][0].y_id > 0) {
                 this.common.showToast("Delete SuccessFully");
                 this.getStates();
               } else {
                 this.common.showError(res['data'][0].y_msg);
               }
-
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -234,9 +241,12 @@ export class AddStateComponent implements OnInit {
     this.processId = this.processId;
     this.requestId = data._state_id;
     this.threshold = (data._threshold) ? data._threshold : null;
+    this.userTag = { id: data._state_owner_id, name: data.state_owner }
+    this.stateUser = data._state_users;
+    // this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
-  }
+  } 
 
   resetData() {
     this.typeId = null;
@@ -245,6 +255,9 @@ export class AddStateComponent implements OnInit {
     // this.nextState = null;
     this.requestId = null;
     this.threshold = null;
+    this.userTag = { id: null, name: null };
+    this.stateUser = [];
+    // this.isDefault = false;
     this.btn1 = "Add";
   }
 
@@ -261,16 +274,45 @@ export class AddStateComponent implements OnInit {
   }
 
   openFieldModal(data) {
-    let refData = {
+    // let refData = {
+    //   id: data._state_id,
+    //   type: 0
+    // }
+    // this.common.params = { ref: refData };
+    // const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    // activeModal.result.then(data => {
+    //   if (data.response) {
+    //     console.log(data.response);
+    //   }
+    // });
+
+    let ref = {
       id: data._state_id,
       type: 0
     }
-    this.common.params = { ref: refData };
-    const activeModal = this.modalService.open(AddFieldComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.response);
-      }
-    });
+    let title = "State Form Assignment";
+    this.common.params = { ref: ref, processId: this.processId, title: title };
+    const activeModal = this.modalService.open(AssignFieldsComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
   }
+
+  addProcessAction(row) {
+    if (row._state_id > 0) {
+      let param = {
+        process_id: this.processId,
+        process_name: this.processName,
+        state_id: row._state_id,
+        state_name: row.name
+      }
+      this.common.params = { actionData: param };
+      const activeModal = this.modalService.open(AddActionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+      activeModal.result.then(data => {
+        if (data.response) {
+          console.log("addProcessAction:", data.response);
+        }
+      });
+    } else {
+      this.common.showError("State is missing");
+    }
+  }
+
 }

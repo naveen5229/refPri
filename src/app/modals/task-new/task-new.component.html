@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5>{{title || 'New Task'}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <button type="button" class="close" aria-label="Close" id="close" (click)="closeModal(false)">
       <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -10,14 +10,14 @@
             {{parentTaskDesc}}
         </div>
     </div>
-    <div class="row mt-2">
-        <div class="col-6">
+    <div class="row mb-2">
+        <div class="offset-3 col-3">
             <label class="form-check-inline">
             <input class="form-check-input" type="radio" name="mode" value="" [(ngModel)]="isProject" (click)="normalTask.projectId = null">
             StandAlone
           </label>
         </div>
-        <div class="col-6">
+        <div class="col-3">
             <label class="form-check-inline">
             <input class="form-check-input" type="radio" name="mode" value="1" [(ngModel)]="isProject">
             Project
@@ -29,13 +29,24 @@
             <label>Project:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId">
+            <auto-suggestion (onSelected)="selectedProject($event)" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="projectId" inputId="projectId" [preSelected]="(projectName) ? {project_desc: projectName} : {name: ''}">
             </auto-suggestion>
         </div>
     </div>
+
     <div class="row mt-2">
         <div class="col-4">
-            <label>Assign To:<span class="text-danger">*</span></label>
+            <label>Assign By:<span *ngIf="isProject!='1'" class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="assigner = $event" [data]="userList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="{name: assigner.name}">
+            </auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Assign To:<span *ngIf="isProject!='1'" class="text-danger">*</span></label>
         </div>
         <div class="col-6">
             <auto-suggestion (onSelected)="selectedNormalUser($event)" [data]="userList" display='name' seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser" [preSelected]="(userId>0) ? {name: normalTask.userName} : {name: ''}">
@@ -48,7 +59,7 @@
             <label>Subject<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <input placeholder="Enter Subject" name="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
+            <input placeholder="Enter Subject" name="subject" id="subject" class="form-control" maxlength="50" [(ngModel)]="normalTask.subject">
         </div>
     </div>
 
@@ -57,7 +68,7 @@
             <label>Task Description:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Task" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Task" id="description" name="nomaltask" class="form-control" [(ngModel)]="normalTask.task"></textarea>
         </div>
     </div>
 
@@ -66,7 +77,7 @@
             <label>CC users:</label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="changeCCUsers($event)" inputId="ccUsers" name="ccUsers" isMultiSelect="true" autocomplete="off"></auto-suggestion>
+            <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select CC Users" (onSelected)="normalTask.ccUsers = $event" inputId="ccUsers" name="ccUsers" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
         </div>
     </div>
 
@@ -75,7 +86,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="normalTask.date=$event" [dateTimeValue]="normalTask.date">
             </uj-date-time-picker>
         </div>
     </div>
@@ -105,10 +116,19 @@
             </uj-date-time-picker>
         </div>
     </div>
+    <div class="row mt-2 " *ngIf="normalTask.parentTaskId">
+        <div class="col-4">
+            <label>Is Queue:</label>
+        </div>
+        <div class="col-1">
+            <input type="checkbox" [checked]="normalTask.isQueue" (change)="normalTask.isQueue = !normalTask.isQueue" />
+        </div>
+    </div>
 
     <div class="row mt-1">
         <div class="col-12 text-right">
-            <button class="btn btn-primary text-capitalize" id="button" (click)="saveTask()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm mr-2" id="button" (click)="saveTask()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" *ngIf="(!normalTask.isQueue && !normalTask.isFuture)" (click)="saveTask(1)">Save With Chat</button>
         </div>
     </div>
     <!-- start: task mapping -->
@@ -127,7 +147,7 @@
             <label>Last Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="updateLastDateForm.date=$event" [dateTimeValue]="updateLastDateForm.date">
             </uj-date-time-picker>
         </div>
     </div>
@@ -136,13 +156,35 @@
             <label>Reason:</label>
         </div>
         <div class="col-6">
-            <textarea row="2" cols="15" placeholder="Enter Reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
+            <textarea row="2" cols="15" placeholder="Enter Reason" id="reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
         </div>
     </div>
     <div class="row mt-2 ">
         <div class="col-12 text-right">
-            <button class="btn btn-primary btn-sm" (click)="updateAssignDate()">Update</button>
+            <button class="btn btn-primary btn-sm" id="updateExpDatebtn" (click)="updateAssignDate()">Update</button>
         </div>
     </div>
 </div>
 <!-- end: update date form -->
+
+<!-- start: update project form -->
+<div class="modal-body" *ngIf="editType==3">
+    <div class="row">
+        <div class="col-4">
+            <label>Project:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <auto-suggestion (onSelected)="updateTaskForm.project.id = $event.id;updateTaskForm.project.name = $event.project_desc" [data]="projectList" display="project_desc" seperator="-" placeholder="Search project" autocomplete="off" name="updateProjectId" inputId="updateProjectId" [preSelected]="(updateTaskForm.project.id) ? {project_desc: updateTaskForm.project.name} : {project_desc: ''}">
+            </auto-suggestion>
+        </div>
+        <div class="col-2">
+            <i class="fa fa-undo cursor-pointer" aria-hidden="true" title="Remove Project" (click)="updateTaskForm.project = {id: null, name: null}"></i>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="updateProjectbtn" (click)="updateTaskProject()">Update</button>
+        </div>
+    </div>
+</div>
+<!-- end: update project form -->
