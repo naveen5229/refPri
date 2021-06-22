@@ -5,10 +5,9 @@
 
 
   <nb-card-body>
-
     <form class="expense-form" (keyup.enter)="SubmitExpenses()">
       <div class="row align-items-center">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="form-group">
             <label for=""> expense type </label>
             <input type="text" class="form-control">
@@ -31,9 +30,46 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+
+        <div class="col-md-3">
+          <auto-suggestion (onSelected)="selectedCategory($event)" [data]="categories" display='name'
+            placeholder="Search category" autocomplete="off" name="primaryUser" inputId="primaryUser"
+            [preSelected]="{name:''}">
+          </auto-suggestion>
+        </div>
+
+        <div class="col-md-3">
           <button type="submit" class="btn btn-primary" (click)="SubmitExpenses()"> Save </button>
         </div>
       </div>
     </form>
   </nb-card-body>
+
+</nb-card>
+
+
+
+<nb-card>
+  <nb-card-header>
+
+    <h5> Visit Management </h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="row">
+      <form action="">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="from-group d-flex">
+              <input type="text">
+            </div>
+
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+
+  </nb-card-body>
+</nb-card>
