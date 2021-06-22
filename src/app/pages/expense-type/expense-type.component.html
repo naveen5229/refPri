@@ -1,0 +1,39 @@
+<nb-card>
+  <nb-card-header>
+    <h5>User Wise Expenses</h5>
+  </nb-card-header>
+
+
+  <nb-card-body>
+
+    <form class="expense-form" (keyup.enter)="SubmitExpenses()">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for=""> expense type </label>
+            <input type="text" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for=""> Status</label>
+            <div class="d-block">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" [(ngModel)]="expenseType" name="inlineRadioOptions"
+                  id="inlineRadio1" value="option1">
+                <label class="form-check-label" for="inlineRadio1">Active</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" [(ngModel)]="status"
+                  id="inlineRadio2" value="option2">
+                <label class="form-check-label" for="inlineRadio2"> Inactive </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-primary" (click)="SubmitExpenses()"> Save </button>
+        </div>
+      </div>
+    </form>
+  </nb-card-body>

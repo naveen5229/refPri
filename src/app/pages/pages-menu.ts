@@ -444,6 +444,13 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/user-wise-expenses',
         home: true,
       },
+    {
+        title: 'Expenses Types',
+        icon: 'people-outline',
+        link: '/pages/Expense-type',
+        home: true,
+      },
+
     ]
   },
   {

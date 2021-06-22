@@ -1,5 +1,6 @@
+import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
@@ -442,8 +443,12 @@ const routes: Routes = [{
       path: 'continuity-report',
       component: ContinuityReportComponent,
       canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+    path:'Expense-type',
+    component:ExpenseTypeComponent,
+    canActivate: [AuthGuard, RouteGuard]
     }
-
   ],
 }];
 

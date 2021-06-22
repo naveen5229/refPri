@@ -266,7 +266,8 @@ const PAGE_COMPONENTS = [
     }),
     CoreModule.forRoot(),
     DragDropModule,
-    NgxSliderModule
+    NgxSliderModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }
