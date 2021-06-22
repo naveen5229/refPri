@@ -45,6 +45,10 @@ export class TmgTaskComponent implements OnInit {
     options: {},
   };
 
+  dataList9 = [];
+  dataList10 = [];
+  dataList11 = [];
+
   @Input() pageType: string = "Tmg-Task";
   @Input() deptId: string = null;
   // deptId = 9;
@@ -73,22 +77,29 @@ export class TmgTaskComponent implements OnInit {
     this.xAxisData = [];
     this.getChallansMonthGraph(0, 1);
     this.getuserwisereadtat(1);
-    this.getreadingtatgraphdata(1);
+    if(this.pageType == 'Tmg-Task'){
+      this.getreadingtatgraphdata(1);
+    }
     this.getTaskSnapchat(2);
     this.getuncomplete(3);
     this.getHoldTask(4);
     this.getoverduetask(5);
     this.getlongestunreadhours(6);
-    if (this.pageType == "Tmg-worklog") {
+    if (["Tmg-worklog","tmgProcess"].includes(this.pageType)) {
       this.getChallansMonthGraph(7, 2);
       this.getChallansMonthGraph(8, 3);
+    }
+    if(this.pageType == 'tmgProcess'){
+      // this.getdataList9(9);
+      this.getdataList10(10);
+      this.getdataList11(11);
     }
   }
 
   getChallansMonthGraph(index, chrtIndex = 1) {
     this.challansMonthGraph = [];
     this.showLoader(index);
-    let days = 120;
+    let days = (['tmgProcess'].includes(this.pageType)) ? 30 : 120;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -104,7 +115,14 @@ export class TmgTaskComponent implements OnInit {
       } else if (chrtIndex == 3) {
         apiname = 'AdminTask/getTmgMonthwiseProductivity?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
       }
-
+    }else if (this.pageType == "tmgProcess") {
+      if (chrtIndex == 1) {
+        apiname = 'AdminTask/getTmgProcessMonthgraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      } else if (chrtIndex == 2) {
+        apiname = 'AdminTask/getTmgProcessCompletiontatGraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      } else if (chrtIndex == 3) {
+        apiname = 'AdminTask/getTmgProcessCompletiontatGraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      }
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -123,7 +141,7 @@ export class TmgTaskComponent implements OnInit {
     this.TaskSnapchatTop3 = [];
     this.showLoader(index);
     // let params = { totalrecord: 3 };
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 120;
+    let days = (['Tmg-worklog','tmgProcess'].includes(this.pageType)) ? 30 : 120;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -133,6 +151,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskSnapshot';
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgUserwiseWorkAvail?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    }else if(this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessOpenTrxLivesnapshot?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -145,7 +165,9 @@ export class TmgTaskComponent implements OnInit {
               return false;
             }
           });
-          this.TaskSnapchatTop3 = _.uniqBy(this.TaskSnapchatTop3, 'name');
+          if(this.pageType !== "tmgProcess"){
+            this.TaskSnapchatTop3 = _.uniqBy(this.TaskSnapchatTop3, 'name');
+          }
         }
         this.hideLoader(index);
       }, err => {
@@ -156,7 +178,7 @@ export class TmgTaskComponent implements OnInit {
 
   getuncomplete(numindex) {
     this.uncomplete = [];
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 90;
+    let days = (['Tmg-worklog','tmgProcess'].includes(this.pageType)) ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -167,6 +189,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwiseUncomplete?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgWorklogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    }else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessIncompleteActUserwise?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -181,7 +205,9 @@ export class TmgTaskComponent implements OnInit {
             }
             console.log('index1', index1);
           });
-          this.uncomplete = _.uniqBy(this.uncomplete, 'name');
+          if(this.pageType !== "tmgProcess"){
+            this.uncomplete = _.uniqBy(this.uncomplete, 'name');
+          }
         }
 
         // this.hideLoader(index);
@@ -193,7 +219,7 @@ export class TmgTaskComponent implements OnInit {
 
   getHoldTask(index) {
     this.holdtask = [];
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 90;
+    let days = (['Tmg-worklog','tmgProcess'].includes(this.pageType)) ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -204,6 +230,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwisehold?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgWosrtThreeDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    }else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessLongestPenState?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -211,11 +239,14 @@ export class TmgTaskComponent implements OnInit {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
               this.holdtask.push(val);
+              console.log('holdtask:'+index1 +"-", this.holdtask);
             }
           });
-          this.holdtask = _.uniqBy(this.holdtask, 'name');
+          console.log('holdtask:', this.holdtask);
+          if(this.pageType !== "tmgProcess"){
+            this.holdtask = _.uniqBy(this.holdtask, 'name');
+          }
         }
-        console.log('holdtask:', this.holdtask);
         this.hideLoader(index);
       }, err => {
         this.hideLoader(index);
@@ -226,7 +257,7 @@ export class TmgTaskComponent implements OnInit {
   getoverduetask(index) {
     this.overduetaskdata = [];
     this.showLoader(index);
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 90;
+    let days = (['Tmg-worklog','tmgProcess'].includes(this.pageType)) ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -236,6 +267,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwiseOverduelive';
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgWosrtThreeUserwisePh?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    }else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessUserwiseCompletionTat?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -245,9 +278,11 @@ export class TmgTaskComponent implements OnInit {
               this.overduetaskdata.push(val);
             }
           });
-          this.overduetaskdata = _.uniqBy(this.overduetaskdata, 'name');
+          console.log('overduetaskdata:', this.overduetaskdata);
+          if(this.pageType !== "tmgProcess"){
+            this.overduetaskdata = _.uniqBy(this.overduetaskdata, 'name');
+          }
         }
-        console.log('holdtask:', this.overduetaskdata);
         this.hideLoader(index);
       }, err => {
         this.hideLoader(index);
@@ -268,7 +303,9 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwiseUnreadtat?startDate=' + params.fromdate + '&endDate=' + params.todate;
     // let apiname = 'AdminTask/getDashboardTaskMonthwiseUnreadTat?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
-      apiname = 'AdminTask/getTmgActivitylogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+      apiname = 'AdminTask/getTmgActivitylogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    }else if(this.pageType == 'tmgProcess') {
+      apiname = 'AdminTask/getTmgProcessLongestPenTransaction?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -280,12 +317,14 @@ export class TmgTaskComponent implements OnInit {
             }
           });
         }
-        this.userwisereadavgtat = _.uniqBy(this.userwisereadavgtat, 'name');
+        console.log('userwisereadavgtat:', this.userwisereadavgtat);
+        if(this.pageType !== "tmgProcess"){
+          this.userwisereadavgtat = _.uniqBy(this.userwisereadavgtat, 'name');
+        }
         this.hideLoader(index);
         if (this.pageType == "Tmg-Task") {
           this.getsecondlabelValue();
         }
-        console.log('holdtask:', this.userwisereadavgtat);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -312,12 +351,12 @@ export class TmgTaskComponent implements OnInit {
             }
           });
         }
+        console.log('readingTatGraphData:', this.readingTatGraphData);
         this.readingTatGraphData = _.uniqBy(this.readingTatGraphData, 'Month');
         this.hideLoader(index);
         if (this.pageType == "Tmg-Task") {
           this.handleChart();
         }
-        console.log('holdtask:', this.readingTatGraphData);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -349,6 +388,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskLongestUnreadhour';
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgUserwiseProductivity?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    }else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessCompletionTat?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -358,10 +399,12 @@ export class TmgTaskComponent implements OnInit {
               this.longestunreadhoursdata.push(val);
             }
           });
-          this.longestunreadhoursdata = _.uniqBy(this.longestunreadhoursdata, 'name');
+          console.log('longestunreadhoursdata:', this.longestunreadhoursdata);
+          if(this.pageType !== "tmgProcess"){
+            this.longestunreadhoursdata = _.uniqBy(this.longestunreadhoursdata, 'name');
+          }
         }
         this.hideLoader(index);
-        console.log('holdtask:', this.longestunreadhoursdata);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -397,11 +440,30 @@ export class TmgTaskComponent implements OnInit {
         lable2 = "";
         lable3 = "";
       }
+    }else if (this.pageType == "tmgProcess") {
+      if (type == 1) {
+        lable1 = "Completed";
+        lable2 = "Added";
+        lable3 = "";
+      } else {
+        lable1 = "";
+        lable2 = "";
+        lable3 = "";
+      }
     }
     // challansMonthGraph
     dataList.map(tlt => {
       xaxis.push(tlt['Month']);
-      if (this.pageType == "Tmg-worklog") {
+      if (this.pageType == "tmgProcess") {
+        if (type == 1) {
+          yaxis.push(tlt['Completed']);
+          zaxis.push(tlt['Added']);
+        } else if (type == 2) {
+          yaxis.push(tlt['hour']);
+        } else if (type == 3) {
+          yaxis.push(tlt['hour']);
+        }
+      } else if (this.pageType == "Tmg-worklog") {
         if (type == 1) {
           yaxis.push(tlt['Present']);
           zaxis.push((tlt['Activitylog']) ? tlt['Activitylog'] : 0);
@@ -782,5 +844,98 @@ export class TmgTaskComponent implements OnInit {
     } catch (e) {
       console.log('Exception', e);
     }
+  }
+
+  getdataList9(numindex) {
+    this.dataList9 = [];
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(numindex);
+    let apiname = 'AdminTask/getTmgProcessCompletionTat?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.hideLoader(numindex);
+        if (res['data']) {
+          res['data'].map((val, index1) => {
+            if (index1 < 3) {
+              this.dataList9.push(val);
+            } else {
+              return false;
+            }
+          });
+          // this.dataList9 = _.uniqBy(this.dataList9, 'process');
+          console.log('dataList9', this.dataList9);
+        }
+      }, err => {
+        this.hideLoader(numindex);
+        console.log('Err:', err);
+      });
+  }
+  
+  getdataList10(numindex) {
+    this.dataList10 = [];
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(numindex);
+    let apiname = 'AdminTask/getTmgProcessLongestAckPenTransaction?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.hideLoader(numindex);
+        if (res['data']) {
+          res['data'].map((val, index1) => {
+            if (index1 < 3) {
+              this.dataList10.push(val);
+            } else {
+              return false;
+            }
+          });
+          console.log('dataList10', this.dataList10);
+          // this.dataList10 = _.uniqBy(this.dataList10, 'trx');
+        }
+      }, err => {
+        this.hideLoader(numindex);
+        console.log('Err:', err);
+      });
+  }
+  
+  getdataList11(numindex) {
+    this.dataList11 = [];
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(numindex);
+    let apiname = 'AdminTask/getTmgProcessLongestPenAction?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.hideLoader(numindex);
+        if (res['data']) {
+          res['data'].map((val, index1) => {
+            if (index1 < 3) {
+              this.dataList11.push(val);
+            } else {
+              return false;
+            }
+          });
+          console.log('dataList11', this.dataList11);
+          // this.dataList11 = _.uniqBy(this.dataList11, 'action');
+        }
+      }, err => {
+        this.hideLoader(numindex);
+        console.log('Err:', err);
+      });
   }
 }
