@@ -123,7 +123,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           };
         }
 
-        console.log('Duration:',durationtime,'selectedTime:',this.selectedTime)
+        console.log('Duration:', durationtime, 'selectedTime:', this.selectedTime)
 
         this.meetingForm = {
           parentId: null,
@@ -554,13 +554,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       this.meetingForm.cc.map(ele => {
         if (ele.groupId != null) {
           ele.groupuser.forEach(x2 => {
-            CC.push({ id: x2._id });
+            CC.push({ id: x2._id, name: x2.name });
           })
         } else {
-          CC.push({ id: ele.id });
+          CC.push({ id: ele.id, name: ele.name });
         }
       })
     }
+    console.log('CC inserted............', CC);
 
     let params = {
       requestId: this.meetingForm.reqId,
@@ -586,12 +587,13 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
 
         let preBookedScheduler: any = [];
-        let userHostUsersList = JSON.parse(JSON.stringify(this.meetingForm.cc));
+        let userHostUsersList = JSON.parse(JSON.stringify(CC));
         if (this.meetingForm.roomId) {
           this.meetingRoomList.map(data => {
             if (data._id == this.meetingForm.roomId) userHostUsersList.push({ id: data._id, name: data.room_name })
           });
         }
+        console.log('userHostUsersList.........', userHostUsersList);
         userHostUsersList.push(this.meetingForm.host);
         let uniqueUsers = this.common.arrayUnique(userHostUsersList, 'id');
         if (this.busySchedules && this.busySchedules.length > 0) {
@@ -601,7 +603,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             console.log(key);
             if (groupUser[key] && groupUser[key].length > 0) {
               console.log(groupUser[key]);
-              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
+              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
               console.log(preBookedScheduler);
               groupUser[key].map(schedule => {
                 let slotFrom = null;
@@ -632,12 +634,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             console.log(presentStatus, uniqueUsers);
             uniqueUsers.map(user => {
               if (presentStatus.includes(user['id'])) return;
-              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
+              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
             })
           }
         } else {
           uniqueUsers.map(user => {
-            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true } });
+            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
           });
         }
 
