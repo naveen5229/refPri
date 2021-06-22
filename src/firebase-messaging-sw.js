@@ -1,12 +1,7 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- */
-export const environment = {
-  production: true,
-  version: '0.0.0',
-  firebase: {
+importScripts('https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.6.0/firebase-analytics.js');
+importScripts('https://www.gstatic.com/firebasejs/7.6.0/firebase-messaging.js');
+firebase.initializeApp({
     apiKey: "AIzaSyCmTIkkPgO98K-FYWdRaUpYGsOwcnv5ayc",
     authDomain: "prime-ac52f.firebaseapp.com",
     databaseURL: "https://prime-ac52f.firebaseio.com",
@@ -15,5 +10,5 @@ export const environment = {
     messagingSenderId: "315479184528",
     appId: "1:315479184528:web:5acaf5ce1438d7d5383415",
     measurementId: "G-NQKKQQVV11"
-  }
-};
+});
+const messaging = firebase.messaging();
