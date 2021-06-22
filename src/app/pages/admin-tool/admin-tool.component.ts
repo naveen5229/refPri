@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { SendmessageComponent } from '../../modals/sendmessage/sendmessage.component';
+import { FunctionalReportingMappingComponent } from '../../modals/functional-reporting-mapping/functional-reporting-mapping.component';
 @Component({
   selector: 'ngx-admin-tool',
   templateUrl: './admin-tool.component.html',
@@ -28,9 +29,13 @@ export class AdminToolComponent implements OnInit {
     public modalService: NgbModal,
   ) {
     this.getActiveAdminList();
+    this.common.refresh = this.refresh.bind(this);
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  refresh() {
+    this.getActiveAdminList();
   }
 
   adminTools() {
@@ -39,20 +44,16 @@ export class AdminToolComponent implements OnInit {
 
   getActiveAdminList() {
     this.common.loading++;
-    this.api.get('Admin/getAllAdmin')
-      .subscribe(res => {
-        this.common.loading--;
-        // console.log('res:', res);
-        this.activeAdminUserList = res['data'] || [];
-        console.log(this.activeAdminUserList);
-
-        this.activeAdminUserList.length ? this.setTable() : this.resetTable();
-
-
-      }, err => {
-        this.common.loading--;
-        console.log(err);
-      });
+    this.api.get('Admin/getAllAdmin').subscribe(res => {
+      this.common.loading--;
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+      this.activeAdminUserList = res['data'] || [];
+      this.activeAdminUserList.length ? this.setTable() : this.resetTable();
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
   }
 
   resetTable() {
@@ -62,14 +63,15 @@ export class AdminToolComponent implements OnInit {
     };
   }
   generateHeadings() {
-    // console.log(this.dailyReportList);
     let headings = {};
     for (var key in this.activeAdminUserList[0]) {
-      // console.log(key.charAt(0));
-
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        if (key == 'doj') {
+          headings[key]["type"] = "date";
+        }
       }
+
     }
     return headings;
   }
@@ -117,6 +119,7 @@ export class AdminToolComponent implements OnInit {
   actionIcons(activeAdmin) {
     let icons = [
       { class: "fa fa-edit", action: this.editActiveAdmin.bind(this, activeAdmin) },
+      { class: 'fas fa-address-book s-4', action: this.addFunctionalReportingManager.bind(this, activeAdmin), txt: '', title: "Functional Reporting Mapping" }
       // { class: "fa fa-info-circle", action: this.editAdminInfo.bind(this, activeAdmin) },
       // { class: "fa fa-trash", action: this.deleteInstaller.bind(this, installer) },
     ];
@@ -126,6 +129,18 @@ export class AdminToolComponent implements OnInit {
   editActiveAdmin(activeAdmin) {
     this.common.params = { activeAdminDetail: activeAdmin, title: "Edit Admin", button: "Update" };
     const activeModal = this.modalService.open(SaveadminComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      console.log(data);
+      if (data) {
+        this.getActiveAdminList();
+      }
+    })
+  }
+
+  addFunctionalReportingManager(activeAdmin) {
+    console.log("activeAdmin", activeAdmin);
+    this.common.params = { activeAdminDetail: activeAdmin};
+    const activeModal = this.modalService.open(FunctionalReportingMappingComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log(data);
       if (data) {
@@ -145,10 +160,14 @@ export class AdminToolComponent implements OnInit {
   }
 
   editAdminInfo(activeAdmin) {
-    console.log("editAdminInfo:", activeAdmin);
     document.getElementById("adminDetailModal").style.display = "block";
     this.adminDetail.id = activeAdmin.id;
     this.adminDetail.name = activeAdmin.name;
+  }
+
+  exportCSV() {
+    // this.common.getCSVFromTableId('dailyPartnerReport');
+    this.common.getCSVFromDataArray(this.activeAdminUserList, this.table.data.headings, 'Admin')
   }
 
 }

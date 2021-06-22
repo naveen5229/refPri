@@ -13,31 +13,60 @@
         <div class="col-2">
             <month-picker (select)="selectedDates = $event; onSelectMonth();"></month-picker>
         </div>
-        <div class="col-6 text-left">
-            <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)" class="btn btn-primary btn-sm mr-2">Get Monthly Report</button>
-            <button type="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get Final Report</button>
+        <div class="col-2">
+            <select [(ngModel)]="selectedGroup">
+                <option value="-1">All</option>
+                <option *ngFor="let g of groupList" [value]="g._id">{{g.name}}</option>
+            </select>
         </div>
-        <div class="col-3 text-right" style="margin-top: -15px;">
-            <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i class="fas fa-file-excel"></i></span>
+        <div class="col-7 text-right">
+            <button type="submit" id="submit" (click)="getAttendanceMonthySummary(null)"
+                class="btn btn-primary btn-sm mr-2">Get Monthly Report</button>
+            <button type="submit" (click)="getAttendanceMonthySummary('final')" class="btn btn-primary btn-sm mr-2">Get
+                Final Report</button>
+            <button (click)="getAttendanceMonthySummary('leave')" class="btn btn-primary btn-sm mr-2">Get Leave
+                Request</button>
+            <button (click)="getAttendanceMonthySummary('weekly')" class="btn btn-primary btn-sm mr-2">Get Work Hour
+                Report</button>
+            <button class="btn default btn-sm mr-2 p-0 exel-icon" style="line-height: 0;" title="download excel"
+                (click)="exportCSV()">
+                <i class="fas fa-file-excel"></i>
+            </button>
         </div>
+        <!-- <div class="col-1 text-right" style="margin-top: -15px;">
+            <span class="exel-icon" title="CSV Export" (click)="exportCSV()" style="cursor: pointer;"><i
+                    class="fas fa-file-excel"></i></span>
+        </div> -->
     </div>
-    <br>
 
-    <div class="row form-group" style="overflow: auto;" *ngIf="!reportType">
-        <div class="col-12">
-            <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover" id='attendanceSummary'>
+
+    <!-- <div class="row mt-1" style="overflow: auto;" *ngIf="!reportType"> -->
+    <div class="row mt-4" style="overflow: auto;" *ngIf="reportType === 'summary'">
+        <div class="col-12 text-right">
+            <button type="submit" id="SaturdaysMark" class="btn btn-primary btn-sm mr-2" (click)="markAltSat()">Mark Saturdays(IT)</button>
+        </div>
+        <!-- <div class="col-12">
+    <div class="row mt-1" style="overflow: auto;" *ngIf="!reportType"> -->
+        <div class="w-100 table-responsive">
+            <table *ngIf='filteredAttendanceSummaryList.length' class="table table-bordered table-hover"
+                id='attendanceSummary'>
                 <thead class="thead" style="background-color: #c0b2b2">
                     <tr style="text-align:center">
                         <th title="Name">Name</th>
-                        <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];" [title]="checkHolidayTypeTitle(department.htype)" [style.background]="checkHolidayTypeColor(department.htype)">{{department.date}}</th>
+                        <th *ngFor="let department of filteredAttendanceSummaryList[0]['data'];"
+                            [title]="checkHolidayTypeTitle(department.htype)"
+                            [style.background]="checkHolidayTypeColor(department.htype)">{{department.date}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let activity of filteredAttendanceSummaryList; let i = index;">
                         <td>{{activity.name}}</td>
-                        <td *ngFor="let dt of activity.data; let i = index;" [style.background]="checkHolidayTypeColor(dt.htype)" (click)="showShiftLogPopup(dt)">
+                        <td *ngFor="let dt of activity.data; let i = index;"
+                            [style.background]="checkHolidayTypeColor(dt.htype)" (click)="showShiftLogPopup(dt)">
                             <!-- <i *ngIf='dt.present' title="p" class="fa fa-check text-success"></i> -->
-                            <span *ngIf='dt.present' [title]="dt.present" [style.color]="checkPresentTypeColor(dt)" (click)="(dt.present=='L')?markUnpaidLeave(dt):null" (dblclick)="deleteShiftLog(dt)">{{dt.present}}</span>
+                            <span *ngIf='dt.present' [title]="dt.present" [style.color]="checkPresentTypeColor(dt)"
+                                (click)="(dt.present=='L')?markUnpaidLeave(dt):null"
+                                (dblclick)="deleteShiftLog(dt)">{{dt.present}}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -45,9 +74,43 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="reportType=='final'">
-        <div class="col-12">Final Report</div>
-        <smart-table [data]="tableFinalAttendanceList.data" [settings]="tableFinalAttendanceList.settings" id="tableFinalAttendanceList">
+    <div class="row mt-2" *ngIf="reportType=='final'">
+        <div class="col-12"><span class="subhead">Final Report</span></div>
+        <smart-table [data]="tableFinalAttendanceList.data" [settings]="tableFinalAttendanceList.settings"
+            id="tableFinalAttendanceList">
+        </smart-table>
+    </div>
+    <div class="row mt-2" *ngIf="reportType=='leave'">
+        <div class="col-12"><span class="subhead">Leave Request Summary</span></div>
+        <smart-table [data]="tableLeaveRequestList.data" [settings]="tableLeaveRequestList.settings"
+            id="tableLeaveRequestList">
+        </smart-table>
+    </div>
+    <div class="row mt-2" *ngIf="reportType=='weekly'">
+        <div class="col-12"><span class="subhead">Work Hour Summary</span>
+            <div class="row" style="z-index: 999;">
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="weekdate.startDate"
+                        (onChanged)="weekdate.startDate=$event">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-4">
+                    <uj-date-time-picker [isStart]="true" [isTime]="false" [dateTimeValue]="weekdate.endDate"
+                        (onChanged)="weekdate.endDate=$event" [maxd]="currentDate">
+                    </uj-date-time-picker>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary text-capitalize"
+                        (click)="getAttendanceMonthySummary('weekly')">Search</button>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-sm ml-2" style="float: right;"
+                        (click)="downloadAttendanceExcel()" title="Download Detailed Report"><i
+                            class="fas fa-download"></i></button>
+                </div>
+            </div>
+        </div>
+        <smart-table [data]="tableWeeklyList.data" [settings]="tableWeeklyList.settings" id="tableWeeklyList">
         </smart-table>
     </div>
 

@@ -48,6 +48,9 @@ export class TicketCallMappingComponent implements OnInit {
 
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.formatTitle(key) };
+        if(key == 'Tk. Raise Time' || key == 'Tk. Claim Time' || key == 'Tk. Close Time'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     return headings;
@@ -189,14 +192,13 @@ export class TicketCallMappingComponent implements OnInit {
     this.api.get('Users/getUserTicketCallMapping.json?' + params)
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.ticketList = res['data'] || [];
         this.filterDataList = res['data'] || [];
-        console.log(this.ticketList);
         this.ticketList.length ? this.setTable() : this.resetTable();
-
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

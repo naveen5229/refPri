@@ -29,10 +29,11 @@ segment=''
     this.api.get('Suggestion/getModules')
     .subscribe(res => {
       this.common.loading--;
-      console.log("list",res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.moduleName = res['data'];
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
   }
@@ -58,15 +59,14 @@ segment=''
       this.common.loading++;
       this.api.post('Segment/addSegment', params).subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.common.showToast(res['msg'])
         this.closeModal(true);
-       
-      },
-        err => {
-          this.common.loading--;
-          this.common.showError(err['msg']);
-          console.log('Error: ', err);
-        });
+      },err => {
+        this.common.loading--;
+        this.common.showError(err['msg']);
+        console.log('Error: ', err);
+      });
      } 
   }
 

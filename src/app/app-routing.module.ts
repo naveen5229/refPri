@@ -62,6 +62,10 @@ const routes: Routes = [
     path: 'process',
     loadChildren: () => import('../app/process/process.module')
       .then(m => m.ProcessModule),
+  },{
+    path: 'tickets',
+    loadChildren: () => import('../app/ticket/ticket.module')
+      .then(m => m.TicketModule),
   },
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },

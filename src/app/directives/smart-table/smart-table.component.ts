@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, Output, HostListener, EventEmitter } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 
 @Component({
@@ -9,6 +9,7 @@ import { CommonService } from '../../Service/common/common.service';
 export class SmartTableComponent implements OnInit {
   @Input() data: any;
   @Input() settings: any;
+  @Output() action = new EventEmitter();
   objectKeys = Object.keys;
   headings = null;
   columns = [];
@@ -32,7 +33,12 @@ export class SmartTableComponent implements OnInit {
     column: null,
     heading: ''
   };
+  selectedRow = 0;
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event) {
+    this.keyHandler(event);
+  }
   constructor(private cdr: ChangeDetectorRef,
     public common: CommonService) { }
 
@@ -51,8 +57,26 @@ export class SmartTableComponent implements OnInit {
 
   ngAfterViewInit() {
     this.setData();
+    this.selectedRow = (this.settings && this.settings.arrow) ? 0 : -20;
+    console.log('settings', this.settings);
   }
 
+  keyHandler(event) {
+    const key = event.key.toLowerCase();
+    let activeId = document.activeElement.id;
+
+    if (this.columns.length && (this.settings && this.settings.arrow)) {
+      // console.log('selected row data',this.selectedRow,'row count ',this.columns[this.selectedRow]);
+      if((key.includes('arrowup') || key.includes('arrowdown'))){
+        if (key == 'arrowup' && this.selectedRow != 0) this.selectedRow--;
+        else if (this.selectedRow != this.columns.length - 1) this.selectedRow++;
+      }
+      if(key.includes('enter')){
+        let selectRow = this.columns[this.selectedRow];
+        this.action.emit({ 'data': this.columns[this.selectedRow], 'rowcount': this.selectedRow,'smartId':selectRow._smartId });
+      }
+    }
+  }
   setData() {
     this.headings = this.data.headings;
     this.handlePagination(this.pages.active);
@@ -72,6 +96,8 @@ export class SmartTableComponent implements OnInit {
   }
 
   filterData(key) {
+    this.selectedRow = (this.settings && this.settings.arrow) ? 0 : -20;
+    console.log("filterData:",this.selectedRow);
     let search = this.headings[key].value.toLowerCase();
     this.search = { key, txt: search };
     this.columns = this.data.columns.filter(column => {
@@ -90,6 +116,7 @@ export class SmartTableComponent implements OnInit {
       if (search.includes('>')) this.sortColumn(key, 'asc')
       else this.sortColumn(key, 'desc')
     }
+    if(!search.length) this.setData();
   }
 
   sortColumn(key, sortType?) {
@@ -116,12 +143,11 @@ export class SmartTableComponent implements OnInit {
     });
 
 
-    console.info('Sort Counts:', counts);
     this.columns.sort((a, b) => {
       if (this.headings[key].type === 'date') {
         let firstDate: any = a[key].value ? this.common.dateFormatter(a[key].value) : 0;
         let secondDate: any = b[key].value ? this.common.dateFormatter(b[key].value) : 0;
-        return firstDate - secondDate;
+        return firstDate > secondDate ? 1 : -1;
       } else if (counts.time > counts.number) {
         let firstValue = a[key].value ? parseFloat(a[key].value.replace(':', '.')) : 0;
         let secondValue = b[key].value ? parseFloat(b[key].value.replace(':', '.')) : 0;
@@ -143,7 +169,7 @@ export class SmartTableComponent implements OnInit {
     this.sortType = this.sortType == 'desc' ? 'asc' : 'desc';
   }
 
-  handleRowClick(column, index) {
+  handleRowClick(event,column, index) {
     if (column.rowActions.click == 'selectRow') this.activeRow = column._smartId;
     else if (column.rowActions.click == 'selectMultiRow') {
       if (this.activeRows.indexOf(column._smartId) === -1) {
@@ -151,7 +177,12 @@ export class SmartTableComponent implements OnInit {
       } else {
         this.activeRows.splice(this.activeRows.indexOf(column._smartId), 1);
       }
-    } else column.rowActions.click();
+    } else {
+      if(column.rowActions && column.rowActions.stopPropagation){
+        event.stopPropagation();
+      }
+      column.rowActions.click();
+    }
   }
 
   isItActive(column) {
@@ -213,13 +244,21 @@ export class SmartTableComponent implements OnInit {
    * @param heading Table Heading Name
    * @param rowIndex Clicked row index
    */
-  handleColumnClick(column: any, heading: string, rowIndex: number) {
-    if (column[heading].isCheckbox || column[heading].isAutoSuggestion) return;
-    if (column[heading].action) column[heading].action();
-    else if (this.settings.editable) {
+  handleColumnClick(event, column: any, heading: string, rowIndex: number) {
+    if (column[heading].isCheckbox || column[heading].isAutoSuggestion) {
+      event.stopPropagation();
+      return;
+    };
+    if (column[heading].action) {
+      event.stopPropagation();
+      column[heading].action();
+    } else if (this.settings.editable) {
+      event.stopPropagation();
       this.edit.row = rowIndex;
       this.edit.column = JSON.parse(JSON.stringify(column));
       this.edit.heading = heading;
+    } else if (heading.toLowerCase() === 'action') {
+      event.stopPropagation();
     }
   }
 

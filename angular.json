@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "d4748664-3ff1-4e2f-b977-7c5cc8e1126c"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -22,6 +25,8 @@
               "src/assets",
               "src/favicon.ico",
               "src/favicon.png",
+              "src/firebase-messaging-sw.js",
+              "src/manifest.json" ,
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
@@ -34,6 +39,7 @@
               },
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/typeface-exo/index.css",
+              "node_modules/material-design-icons/iconfont/material-icons.css",
               "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
               "node_modules/ionicons/scss/ionicons.scss",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
@@ -43,10 +49,12 @@
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
               "node_modules/leaflet/dist/leaflet.css",
               "src/app/@theme/styles/styles.scss",
-              "src/app/style.css"
+              "src/image-viewer.scss",
+              "src/app/style.scss"
             ],
             "scripts": [
-              "node_modules/pace-js/pace.min.js",
+        
+               "node_modules/pace-js/pace.min.js",
               "node_modules/tinymce/tinymce.min.js",
               "node_modules/tinymce/themes/modern/theme.min.js",
               "node_modules/tinymce/plugins/link/plugin.min.js",
@@ -55,6 +63,7 @@
               "node_modules/echarts/dist/echarts.min.js",
               "node_modules/echarts/dist/extension/bmap.min.js",
               "node_modules/chart.js/dist/Chart.min.js"
+              
             ]
           },
           "configurations": {
@@ -101,7 +110,7 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [
+              "scripts": [
               "node_modules/pace-js/pace.min.js",
               "node_modules/tinymce/tinymce.min.js",
               "node_modules/tinymce/themes/modern/theme.min.js",
@@ -124,8 +133,9 @@
               "node_modules/socicon/css/socicon.css",
               "node_modules/nebular-icons/scss/nebular-icons.scss",
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
-              "src/app/@theme/styles/styles.scss"
-            ],
+               "src/app/@theme/styles/styles.css",
+               "src/app/style.scss"
+            ],     
             "assets": [
               "src/assets",
               "src/favicon.ico",

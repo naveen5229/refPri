@@ -72,9 +72,15 @@ export class CallKpiComponent implements OnInit {
     // this.endTime.setDate(this.endTime.getDate()-1)
     // console.log(this.shiftStart.getTime());
     this.getDepartments();
+    this.common.refresh = this.refresh.bind(this);
   }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.getCallKpi();
+    this.getDepartments();
   }
 
   getDepartments() {
@@ -84,6 +90,7 @@ export class CallKpiComponent implements OnInit {
         this.common.loading--;
         this.departments = [];
         this.departments.push({ "id": null, "name": "All Departments" });
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         if (res['data'] && res['data'].length > 0) {
           for (let i = 0; i < res['data'].length; i++) {
             this.departments.push({ "id": res['data'][i]["id"], "name": res['data'][i]["name"] });
@@ -98,7 +105,6 @@ export class CallKpiComponent implements OnInit {
   }
 
   getCallKpi() {
-    console.log(this.startTime, this.endTime);
     this.callKpiList = [];
     this.table = {
       data: {
@@ -120,24 +126,18 @@ export class CallKpiComponent implements OnInit {
       "&shiftStart=" + shiftStart +
       "&shiftEnd=" + shiftEnd +
       "&departmentId=" + this.selectedDept.id;
-    console.log(params);
-    console.log(shiftStart);
-    console.log(typeof (shiftStart));
     this.common.loading++;
     this.api.get('Users/getAdminCallKpis.json?' + params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.callKpiList = res['data'] || [];
-        // console.log(this.callKpiList);
         this.showChart(this.callKpiList[0]);
-
         this.callKpiList.length ? this.setTable() : this.resetTable();
         return this.callKpiList[0];
-        console.log(this.callKpiList);
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -219,6 +219,7 @@ export class CallKpiComponent implements OnInit {
   }
 
   showChartForAdmin(doc) {
+    console.log("doc", doc)
     this.temCharts.forEach(ele => ele.destroy());
     console.log(doc);
 
@@ -244,6 +245,7 @@ export class CallKpiComponent implements OnInit {
       bgColor: [doc['Tk. Dur.']['class'], doc['FO Dur.']['class'], doc['Pt. Dur.']['class'], doc['Ad. Dur.']['class'], doc['Ot. Dur.']['class']],
       showLegend: false
     }
+    console.log(chartData1, chartData2, chartData3);
     this.temCharts = this.chart.generatePieChartforCall([chartData1, chartData2, chartData3]);
 
     this.showLabel = true;
@@ -310,4 +312,44 @@ export class CallKpiComponent implements OnInit {
     const activeModal = this.modalService.open(GenericModelComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
+
+  exportCSV() {
+    let exportCsvData = {
+      headings: {},
+      Columns: []
+    }
+    for (var key in this.callKpiList[0]) {
+      if (key.charAt(0) != "_") {
+        if (key.replace(/[.\s]/g, '') === 'TotalDur(HH:MM)') {
+          exportCsvData.headings['TotalDur'] = { title: 'TotalDur', placeholder: this.common.formatTitle(key) };
+        } else {
+          exportCsvData.headings[key.replace(/[.\s]/g, '')] = { title: key.replace(/[.\s]/g, ''), placeholder: this.common.formatTitle(key) };
+        }
+      }
+    }
+
+
+    exportCsvData.Columns = this.callKpiList.map(ele => {
+      return {
+        AdCnt: `${ele['Ad. Cnt.']['value']}%`,
+        AdDur: `${ele['Ad. Dur.']['value']}%`,
+        FOCnt: `${ele['FO Cnt.']['value']}%`,
+        FODur: `${ele['FO Dur.']['value']}%`,
+        OtCnt: `${ele['Ot. Cnt.']['value']}%`,
+        OtDur: `${ele['Ot. Dur.']['value']}%`,
+        PtCnt: `${ele['Pt. Cnt.']['value']}%`,
+        PtDur: `${ele['Pt. Dur.']['value']}%`,
+        TkCnt: `${ele['Tk. Cnt.']['value']}%`,
+        TkDur: `${ele['Tk. Dur.']['value']}%`,
+        AdminName: `${ele['Admin Name']}`,
+        ProCnt: `${ele['Pro. Cnt.']['value']}%`,
+        TotalCall: `${ele['Total Call']}`,
+        TotalDur: `${ele['Total Dur. (HH:MM)']}`,
+        dept: `${ele['dept']}`
+      }
+    });
+
+    this.common.getCSVFromDataArray(exportCsvData.Columns, exportCsvData.headings, 'Call Kpi Report');
+    console.log(exportCsvData)
+  }
 }

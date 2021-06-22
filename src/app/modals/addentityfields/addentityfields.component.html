@@ -1,0 +1,129 @@
+<div class="modal-header">
+  <h5>{{entityContactFieldsTitle}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body" *ngIf="modalType == 1">
+  <div class="row mb-1">
+    <div class="col-3">
+      <label>Name:</label>
+    </div>
+    <div class="col-9">
+      <input type="text" class="form-control" maxlength="40" placeholder="Entity Type" [(ngModel)]="entityTypeForm.name">
+    </div>
+  </div>
+</div>
+
+<div class="modal-body" *ngIf="modalType == 2">
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Entity Type:</label>
+    </div>
+    <div class="col-9">
+      <auto-suggestion [data]="entityTypes" display="name" seperator="-" placeholder="Select Entity Type"
+        (onSelected)="entityListForm.entityType = $event" inputId="entityType" name="entityType"
+        autocomplete="off"
+        [preSelected]="(entityListForm.entityType.id>0) ? {name: entityListForm.entityType.name} : {name: ''}">
+      </auto-suggestion>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Name:</label>
+    </div>
+    <div class="col-9">
+      <input type="text" class="form-control" maxlength="60" placeholder="Entity Name" [(ngModel)]="entityListForm.name">
+    </div>
+  </div>
+</div>
+
+<div class="modal-body" *ngIf="modalType == 3">
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Name:</label>
+    </div>
+    <div class="col-9">
+      <input type="text" class="form-control" maxlength="60" placeholder="Enter Name" [(ngModel)]="contactForm.name">
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Contact:</label>
+    </div>
+    <div class="col-9">
+      <input type="number" class="form-control" placeholder="Enter Contact" [(ngModel)]="contactForm.contactNo">
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Email:</label>
+    </div>
+    <div class="col-9">
+      <input type="email" class="form-control" placeholder="Enter Email" [(ngModel)]="contactForm.email">
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-3">
+      <label>Association:</label>
+    </div>
+    <div class="col-9">
+      <input type="text" class="form-control" placeholder="Enter Association" [(ngModel)]="contactForm.association">
+    </div>
+  </div>
+</div>
+<div class="modal-body" *ngIf="modalType == 4">
+  <div class="row mb-2 text-center">
+    <div class="col-6">
+      <label class="form-check-inline">
+        <input class="form-check-input" type="radio" name="contactAddType" [value]='0' [(ngModel)]="ticketContactForm.type" (click) = "ticketContactForm.entityId = null">
+        On New Entity
+      </label>
+    </div>
+    <div class="col-6">
+      <label class="form-check-inline">
+        <input class="form-check-input" type="radio" name="contactAddType" [value]='1' [(ngModel)]="ticketContactForm.type">
+        On Existing Entity
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="ticketContactForm.type==1" class="mb-2">
+    <div class="row mb-2">
+      <div class="col-3">
+        <label>Select Entity Type:<span class="text-danger">*</span></label>
+      </div>
+      <div class="col-9">
+        <auto-suggestion [data]="entityTypes" display="name" seperator="-" placeholder="Select Entity Type"
+          (onSelected)="ticketContactForm.entityType = $event.id; onSelectContactEntityType()" inputId="entityTypeId" name="entityTypeId" autocomplete="off">
+        </auto-suggestion>
+      </div>
+    </div>
+    <div *ngIf="ticketContactForm.entityType>0" class="row">
+      <div class="col-3">
+        <label>Select Entity:<span class="text-danger">*</span></label>
+      </div>
+      <div class="col-9">
+        <auto-suggestion [data]="filterdEntityList" display="name" seperator="-" placeholder="Select Entity"
+          (onSelected)="ticketContactForm.entityId = $event._id" inputId="entityId" name="entityId" autocomplete="off">
+        </auto-suggestion>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 text-right">
+      <button class="btn btn-primary btn-sm" (click)="onNext()" [disabled]="ticketContactForm.type==1 && !ticketContactForm.entityId">Next</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="modalType != 4" class="row mb-2 mr-2">
+  <div class="col-12 text-right">
+    <button class="btn btn-primary btn-sm" id="button"
+      (click)="save()">Save</button>
+  </div>
+</div>
+

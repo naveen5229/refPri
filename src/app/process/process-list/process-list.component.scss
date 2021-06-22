@@ -1,15 +1,23 @@
+
+@import '../../style';
 :host ::ng-deep .pri_cat {
-    color: deeppink;
+    color: $danger-9;
 }
 
 :host ::ng-deep .process_type {
-    color: lawngreen;
+    color: $success-6;
 }
 
 :host ::ng-deep .fa-grip-horizontal {
-    color: #07f8d4;
+    color:$success-4;
 }
 
 :host ::ng-deep .fa-handshake {
-    color: #00f;
+    color: $primary-3;
 }
+smart-table{
+    height: calc(100vh - 124px);
+}
+
+
+

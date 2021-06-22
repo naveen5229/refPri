@@ -1,3 +1,5 @@
+@import '../../style.scss';
+
 @media  print {
   #tollUsage{
     width: 100%;
@@ -7,18 +9,18 @@
  
 }
 :host ::ng-deep .fa-edit {
-  color: green;
-  font-size: 18px;
+  color: $success-3;
+  font-size:$font-md-lg;
   span {
     position: absolute;
     display: none;
     padding: 10px 24px;
-    font-weight: normal;
-    font-size: 11px;
+    font-weight:$normal;
+    font-size:$font-sm-xl;
     left: -12px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($dark-1,0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1,0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -28,10 +30,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: green;
-    border-radius: 3px;
-    padding: 5px 10px;
-    color: #fff;
+    background-color: $success-3;
+    border-radius: $radious-xxs;;
+    padding: $padding-xs $padding-md;
+    color:$light-1;
     width: 100%;
   }
   span::after {
@@ -40,7 +42,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid green;
+    border-top: 5px solid $success-3;
     position: absolute;
     bottom: -5px;
     right: 24px;
@@ -51,18 +53,18 @@
 }
 
 :host ::ng-deep .fa-trash-alt {
-  color: red;
-  font-size: 18px;
+  color: $danger-2;
+  font-size:$font-md-lg;
   span {
     position: absolute;
     display: none;
     padding: 10px 27px;
-    font-weight: normal;
-    font-size: 11px;
+    font-weight:$normal;
+    font-size:$font-sm-xl;
     left: -10px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($dark-1,0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1,0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -72,10 +74,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: red;
-    border-radius: 3px;
-    padding: 5px 10px;
-    color: #fff;
+    background-color: $danger-2;
+    border-radius: $radious-xxs;;
+    padding: $padding-xs $padding-md;
+    color:$light-1;
     width: 100%;
   }
   span::after {
@@ -84,7 +86,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid red;
+    border-top: 5px solid $danger-2;
     position: absolute;
     bottom: -5px;
     right: 24px;
@@ -95,18 +97,18 @@
 }
 
 :host ::ng-deep .fa-address-book {
-  color: blue;
-  font-size: 18px;
+  color:$primary-2;
+  font-size:$font-md-lg;
   span {
     position: absolute;
     display: none;
     padding: 10px 24px;
-    font-weight: normal;
-    font-size: 11px;
+    font-weight:$normal;
+    font-size:$font-sm-xl;
     left: -12px;
     top: -28px;
-    -webkit-box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 2px 8px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 5px 2px 8px rgba($dark-1,0.5);
+    box-shadow: 5px 2px 8px rgba($dark-1,0.5);
     font-family: Roboto;
     z-index: 9999;
   }
@@ -116,10 +118,10 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: green;
-    border-radius: 3px;
-    padding: 5px 10px;
-    color: #fff;
+    background-color: $success-3;
+    border-radius: $radious-xxs;;
+    padding: $padding-xs $padding-md;
+    color:$light-1;
     width: 100%;
   }
   span::after {
@@ -128,32 +130,36 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid green;
+    border-top: 5px solid $success-3;
     position: absolute;
     bottom: -5px;
     right: 24px;
   }
 }
+
 :host ::ng-deep .fa-address-book:hover span {
   display: block;
 }
 .print-icon {
   font-size: 35px;
-  color: rgb(136, 160, 196);
+  color: $secondary-13;
 }
 
 .pdf-icon {
-  font-size: 40px;
-  color: #9F0001;
+  font-size:$font-lg-lg;
+  color: $danger-1;
 }
 
 .exel-icon {
-  font-size: 40px;
-  color: #217346;
+  font-size:$font-lg-lg;
+  color: $success-2;
 }
 
-
 :host ::ng-deep .blue {
-  color: #0606e3;
-  font-size: 16px;
+  color: $primary-5;
+  font-size:$font-md-md;
+}
+
+smart-table{
+  height: calc(100vh - 250px);
 }

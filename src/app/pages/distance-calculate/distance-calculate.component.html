@@ -1,14 +1,14 @@
-<nb-card style="padding:none">
+<nb-card>
     <nb-card-header>
         <div class="row">
             <div class="col-3">
-                <h5>Distance Calculate</h5>
+                <h5 class="heading-design">Distance Calculate</h5>
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 650px;">
+    <nb-card-body>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <div class="form-group">
                     <label class="fill-elt">Name:</label>
                     <auto-suggestion (onSelected)="driverId=($event.id)" url="Suggestion/getElogistDriverList?" display="empname" placeholder="Enter Name" style="width:100%;">
@@ -29,7 +29,7 @@
                     </uj-date-time-picker>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col-2">
                 <div class="form-group">
                     <button type="button" style="margin-top: 31px;" class="btn btn-primary" (click)="getDriverLatLongs()">Submit</button>
                 </div>

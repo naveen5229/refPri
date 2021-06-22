@@ -1,0 +1,14 @@
+@import '../../style.scss';
+
+smart-table {
+    height: calc(100vh - 170px);
+}
+:host ::ng-deep {
+    .tagsinput{
+        max-height: 85px;
+        overflow: auto;
+    }
+    .tagsinput p{
+        font-size: $font-sm-xxl!important;
+    }
+}

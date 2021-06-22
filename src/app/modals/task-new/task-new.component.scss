@@ -1,4 +1,12 @@
+
+@import '../../style';
+
 smart-table .tableFixHead,
 #taskMapping .tableFixHead {
     height: auto;
+}
+:host::ng-deep{
+    .highlight-blue{
+        color:$primary-2;
+    }
 }

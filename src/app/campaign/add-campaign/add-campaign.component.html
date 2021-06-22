@@ -2,16 +2,16 @@
     <nb-card-header>
         <div class="row ">
             <div class="col-9">
-                <h5> Add Campaign</h5>
+                <h5 class="heading-design"> Add Campaign</h5>
             </div>
             <div class="col-3 text-right">
                 <button class="btn btn-primary text-capitalize" id="button" (click)="addCampaign()">Add</button>
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 485px;">
+    <nb-card-body>
         <div class="row">
-            <div class="mt-2">
+            <div>
                 <smart-table *ngIf="campaignData.length" [data]="table.data" [settings]="table.settings"></smart-table>
             </div>
         </div>

@@ -41,7 +41,7 @@
             <div class="col-md-6">
                 <div class="col-10" style="display: inline-block;padding:0;">
                     <auto-suggestion (onChange)="onChangeAuto($event)" (onSelected)="selectLocation($event)" (noDataFound)="takeAction($event)" [isNoDataFoundEmit]="true" url="Location/getPlaceFromRedis" display="location" inputId="location" name="location" placeholder="Location"
-                        [value]="installerData.location" [preSelected]="(installerData.location!='')?{location:installerData.location}:{location:''}" [apiMethod]="'getBooster'">
+                        [value]="installerData.location" [preSelected]="(installerData.location!='')?{location:installerData.location}:{location:''}" [apiMethod]="'getBooster'" [apiBase]="'B'">
                     </auto-suggestion>
                 </div>
                 <div class="col-2" style="display: inline-block;padding: 0!important;">

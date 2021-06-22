@@ -80,17 +80,15 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
       partnerId: this.approveForm.partner.id
     }
     this.api.post("Installer/getInstallerListByPartner.json", params).subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
         this.installerList = res['data'];
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   assignInstallerToFieldSupportRequest() {
@@ -112,7 +110,6 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
       }
       this.common.loading++;
       this.api.post('Grid/assignInstallerToFieldSupportRequest', params).subscribe(res => {
-        console.log(res);
         this.common.loading--;
         if (res['code'] > 0) {
           this.common.showToast(res['msg'])
@@ -142,13 +139,12 @@ export class AssignInstallerToFieldrequestComponent implements OnInit {
     this.api.post('Installer/getNearestInstallerList.json?', params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.nearestInstallerlist = res['data'] || [];
-        console.log('after get data call api', this.nearestInstallerlist);
         this.createNearestInstallerMarkers();
-        // this.setTable() 
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

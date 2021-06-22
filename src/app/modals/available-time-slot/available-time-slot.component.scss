@@ -1,0 +1,136 @@
+// We need to use ::ng-deep to overcome view encapsulation
+::ng-deep {
+  .custom-slider .ngx-slider .ngx-slider-bar {
+    //background: #ffe4d1;
+    // height: 2px;
+  }
+  .custom-slider .ngx-slider .ngx-slider-selection {
+    background: orange;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: #333;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-bubble {
+    bottom: 14px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-limit {
+    font-weight: bold;
+    color: orange;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+  }
+  .custom-slider .ngx-slider.othersrange .ngx-slider-tick {
+    background: #ff000000 !important;
+  }
+  .ngx-slider[disabled].othersrange .ngx-slider-tick.ngx-slider-selected {
+    background: blue !important;
+    z-index: 9999999;
+  }
+  .ngx-slider[disabled].othersrange .ngx-slider-pointer {
+    cursor: not-allowed;
+    background-color: #d8e0f3;
+    display: none !important;
+  }
+  .ngx-slider.othersrange .ngx-slider-bar {
+    left: 0;
+    width: 100%;
+    height: 1px;
+    z-index: 1;
+    background: #1747ce !important;
+    border-radius: 2px;
+  }
+
+  .custom-slider .ngx-slider.othersrangered .ngx-slider-tick {
+    background: #ff000000 !important;
+  }
+  .ngx-slider[disabled].othersrangered .ngx-slider-tick.ngx-slider-selected {
+    background: red !important;
+    z-index: 9999999;
+  }
+  .ngx-slider[disabled].othersrangered .ngx-slider-pointer {
+    cursor: not-allowed;
+    background-color: #d8e0f3;
+    display: none !important;
+  }
+  .ngx-slider.othersrangered .ngx-slider-bar {
+    left: 0;
+    width: 100%;
+    height: 1px;
+    z-index: 1;
+    background: #1747ce !important;
+    border-radius: 2px;
+  }
+  //   .custom-slider.range2{
+  //     width: 300.66px;
+  // }
+  .custom-slider.range2:not(:first-child) {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    width: 500.66px;
+  }
+  .custom-slider.range2:not(:first-child)
+    .ngx-slider
+    .ngx-slider-bubble.ngx-slider-limit {
+    display: none;
+  }
+  .ngx-slider .ngx-slider-bubble {
+    color: #55637d;
+    font-size: 8px !important;
+  }
+  .ngx-slider[disabled] .ngx-slider-pointer {
+    cursor: not-allowed;
+    background-color: #d8e0f300;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    background: orange;
+  }
+}
+
+.ngx-tooltip {
+  position: absolute;
+  z-index: 1;
+  background: #000;
+  // height: 30px;
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  color: #ffffff;
+  // visibility: hidden;
+  // display: none;
+}
+
+.ngx-detailedTooltip {
+  background-color: #f3f5fd;
+  height: 120px;
+  overflow: auto;
+  top: 50px;
+  z-index: 32;
+  width: 500.66px;
+  box-shadow: inset 2px 1px 3px #b5b2b2;
+  .custom-slider.range2{
+    width: 98%;
+    margin-left: 1%;
+  }
+}

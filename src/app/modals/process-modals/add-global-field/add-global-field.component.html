@@ -1,0 +1,168 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="(!isShowField) ? closeModal(false) : closeAddGlobalFieldModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div *ngIf="!isShowField">
+    <div class="row">
+      <div class="col-10">
+        <div class="row mb-2">
+          <div *ngFor="let t of types;let i=index;" class="col-2 text-center mb-2" [ngClass]="(i+1)%6==0 ? '' : 'pr-0'">
+            <div class="card text-center cursor-pointer" (click)="openAddFieldModal(t)" [title]="t.title">
+              <span *ngIf="t.id=='text'" class="mt-1"><strong><i>T</i></strong></span>
+              <span *ngIf="t.id=='entity'" class="mt-1"><strong><i>E</i></strong></span>
+              <span *ngIf="!['text','entity'].includes(t.id)" class="mt-1"><i [ngClass]="t.icon"></i></span>
+              <div class="card-body pr-1 pl-1"><strong>{{t.name}}</strong></div>
+            </div>
+          </div>
+        </div>
+        <smart-table [data]="table.data" [settings]="table.settings" id="addGlobalField"></smart-table>
+      </div>
+      <div class="col-2" style="border-left:1px solid black;">
+        <label><b>Master Fields</b></label>
+        <table class="table border">
+            <tr *ngFor="let m of masterFiledList;let i=index">
+                <td>{{m.col_name}}</td>
+            </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+<!-- start: addformfiled -->
+  <div *ngIf="isShowField">
+    <!-- <div class="row">
+      <div class="col small">
+        <span class="text-danger">*</span>Use global field "contact name" and "mobile number" to add in contact into the contact list and to show on the dashboard of the ticket.
+      </div>
+    </div> -->
+    <div class="row mb-2">
+      <div class="col-2 mr-0">
+          <label>Type</label>
+          <input type="text" name="type" id="type" [(ngModel)]="form.typeId" class="form-control" readonly>
+      </div>
+      <div class="col-3 mr-0">
+          <label>Field Name</label>
+          <input *ngIf="form.typeId !='entity'" type="text" name="name" id="name" [(ngModel)]="form.name" class="form-control" maxlength="25">
+          <select *ngIf="form.typeId =='entity'" class="form-control" [(ngModel)]="form.name">
+            <option *ngFor="let t of entityTypeList" [value]="t._id">{{t.type}}</option>
+          </select>
+      </div>
+      <div *ngIf="fromPage==3" class="col-2 mr-0">
+        <label>Order</label>
+        <input type="number" name="order" id="order" min="0" maxlength="25" [(ngModel)]="form.order" class="form-control">
+      </div>
+      <div *ngIf="form.typeId =='table'" class="col-2 pt-4">
+          <span class="cursor-pointer" title="Add Table Column" (click)="openAddFieldTable()">
+            <i class="fa fa-table" aria-hidden="true"></i>
+          </span>
+      </div>
+      <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="col-2 pt-4">
+        <label><input type="checkbox" [(ngModel)]="form.isFixedValue"> Is Dropdown ?</label>
+      </div>
+      <div class="pt-4 text-right" [ngClass]="(['text','number','table'].includes(form.typeId)) ? 'col-3' : 'col-6'">
+        <button class="btn btn-danger btn-sm mr-1" name="cancelBtn"(click)="closeAddGlobalFieldModal(true)">{{cancelBtn}}</button>
+        <button class="btn btn-primary btn-sm" name="submit" (click)="addFieldConfirm()">{{addBtn}}</button>
+      </div>
+    </div>
+    <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="row mb-2">
+      <div class="col-9">
+          <div class="row">
+              <div class="col-6 custdrop" *ngIf="form.isFixedValue">
+                  <div class="row" *ngFor="let fixValue of form.fixValues; let i = index">
+                      <div class="col-8">
+                          <input *ngIf="form.typeId =='text'" type="text" [(ngModel)]="fixValue.option"
+                              class="form-control" #fixvalue>
+                          <input *ngIf="form.typeId =='number'" type="number" [(ngModel)]="fixValue.option"
+                              class="form-control" #fixvalue>
+                      </div>
+                      <div class="col-4">
+                          <i class="fa fa-plus" *ngIf="i == form.fixValues.length-1"
+                              (click)="addFixValue()"></i>&nbsp;
+                          <i class="fa fa-trash" (click)="form.fixValues.splice(i,1)" *ngIf="i !== 0"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- end: addformfiled -->
+</div>
+
+
+<!--start: add-field-modal -->
+<div class="modal mt-2" id="fieldInfoModal">
+  <div class="modal-dialog modal-md">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Field Restriction</h5>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeFieldInfoModal(false)">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div *ngFor="let r of restrictionForm.info" class="row">
+              <div class="col-6">
+                <label><input type="checkbox" [(ngModel)]="r.isShow"> {{r.name}}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col text-right">
+                <button class="btn btn-danger btn-sm mr-1" name="infoCancelBtn" (click)="closeFieldInfoModal(false)">Cancel</button>
+                <button class="btn btn-primary btn-sm" name="infoSubmitBtn" (click)="saveFieldRestriction()">Save</button>
+              </div>
+            </div>
+              <!-- <div class="row form-group">
+                <div class="col-12">
+                  <div class="row mb-2">
+                    <div class="col-3 mr-0">
+                        <label>Type</label>
+                        <input type="text" name="type" id="type" [(ngModel)]="form.typeId" class="form-control" readonly>
+                    </div>
+                    <div class="col-3 mr-0">
+                        <label>Field Name</label>
+                        <input type="text" name="name" id="name" [(ngModel)]="form.name" class="form-control" maxlength="25">
+                    </div>
+                    <div *ngIf="form.typeId =='table'" class="col-3 pt-4">
+                        <span class="cursor-pointer" title="Add Table Column" (click)="openAddFieldTable()">
+                          <i class="fa fa-table" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="col-3 pt-4">
+                      <label><input type="checkbox" [(ngModel)]="form.isFixedValue"> Is Dropdown ?</label>
+                    </div>
+                    <div class="col-3 text-right">
+                      <button class="btn btn-danger btn-sm mr-1" name="cancelBtn"(click)="closeAddGlobalFieldModal(false)">{{cancelBtn}}</button>
+                      <button class="btn btn-primary btn-sm" name="submit" (click)="AddField()">{{addBtn}}</button>
+                    </div>
+                  </div>
+  
+                  <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="row mb-2">
+                      <div class="col-9">
+                          <div class="row">
+                              <div class="col-6 custdrop" *ngIf="form.isFixedValue">
+                                  <div class="row" *ngFor="let fixValue of form.fixValues; let i = index">
+                                      <div class="col-8">
+                                          <input *ngIf="form.typeId =='text'" type="text" [(ngModel)]="fixValue.option"
+                                              class="form-control" #fixvalue>
+                                          <input *ngIf="form.typeId =='number'" type="number" [(ngModel)]="fixValue.option"
+                                              class="form-control" #fixvalue>
+                                      </div>
+                                      <div class="col-4">
+                                          <i class="fa fa-plus" *ngIf="i == form.fixValues.length-1"
+                                              (click)="addFixValue()"></i>&nbsp;
+                                          <i class="fa fa-trash" (click)="form.fixValues.splice(i,1)" *ngIf="i !== 0"></i>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                
+                </div>
+              </div>-->
+          </div>
+      </div>
+  </div>
+</div>
+<!--end: add-field-modal -->

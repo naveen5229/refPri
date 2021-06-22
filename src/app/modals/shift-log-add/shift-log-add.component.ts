@@ -11,6 +11,7 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 })
 export class ShiftLogAddComponent implements OnInit {
   today = new Date();
+  dateExtendForAttendance = new Date();
   shiftForm = {
     startTime: null,
     endTime: null,
@@ -47,11 +48,14 @@ export class ShiftLogAddComponent implements OnInit {
     { id: -1, name: 'Optional-Leave' }
   ];
   isAttendanceType = false;
+  endDateDis: Boolean = true;
 
   constructor(public activeModal: NgbActiveModal, public api: ApiService, public common: CommonService, public modalService: NgbModal) {
     this.getAllAdmin();
+    // this.dateExtendForAttendance.setDate(this.dateExtendForAttendance.getDate() + 1);
+    console.log("param:", this.common.params);
     if (this.common.params && this.common.params.isAttendanceType) {
-      console.log("param:", this.common.params);
+      this.endDateDis = false;
       this.isAttendanceType = this.common.params.isAttendanceType;
       this.shiftForm.user.id = this.common.params.userId;
       this.shiftForm.user.name = this.common.params.userName;
@@ -60,6 +64,12 @@ export class ShiftLogAddComponent implements OnInit {
       this.shiftForm.endTime.setHours(18);
       this.shiftForm.endTime.setMinutes(30);
       // this.shiftForm.addtime = this.common.params.date;
+
+      this.dateExtendForAttendance = new Date(this.shiftForm.endTime);
+      this.dateExtendForAttendance.setDate(this.dateExtendForAttendance.getDate() + 1);
+    } else {
+      this.shiftForm.startTime = this.today;
+      this.shiftForm.endTime = null;
     }
   }
 
@@ -72,17 +82,18 @@ export class ShiftLogAddComponent implements OnInit {
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(res => {
-      console.log("data", res['data'])
       if (res['code'] > 0) {
-        this.adminList = res['data'] || [];
+        let adminList = res["data"] || [];
+        this.adminList = adminList.map((x) => {
+          return { id: x.id, name: x.name + " - " + x.department_name };
+        });
       } else {
         this.common.showError(res['msg']);
       }
-    },
-      err => {
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    }, err => {
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   // start: shift log list
@@ -168,7 +179,6 @@ export class ShiftLogAddComponent implements OnInit {
     };
     let param = "?date=" + this.common.dateFormatter(this.common.getDate()) + "&userId=" + this.shiftForm.user.id;
     this.api.get("Admin/getUserShiftDetailByDate" + param).subscribe(res => {
-      console.log("data", res['data']);
       if (res['code'] > 0) {
         this.shiftLogList = res['data'] || [];
         this.setTableShiftLog();
@@ -183,7 +193,6 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   saveUserShift() {
-    console.log("saveUserShift", this.shiftForm);
     if (!this.shiftForm.user.id) {
       return this.common.showError("User is missing");
     } else if (!this.shiftForm.startTime) {
@@ -207,9 +216,7 @@ export class ShiftLogAddComponent implements OnInit {
         attendanceType: this.shiftForm.attendanceType,
         remark: this.shiftForm.remark
       };
-      // this.api.post("Admin/saveUserShift", params).subscribe(res => {
       this.api.post("Admin/saveUserShiftV2", params).subscribe(res => {
-        console.log("data", res['data'])
         this.common.loading--;
         if (res['code'] > 0) {
           if (res['data'][0]['y_id'] > 0) {
@@ -235,7 +242,7 @@ export class ShiftLogAddComponent implements OnInit {
   }
 
   resetDate() {
-    this.shiftForm.startTime = null;
+    this.shiftForm.startTime = this.today;
     this.shiftForm.endTime = null;
     this.shiftForm.type = 1;
     this.shiftForm.addtime = null;
@@ -257,10 +264,12 @@ export class ShiftLogAddComponent implements OnInit {
           this.api.get('Admin/deleteUserShiftById' + params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getUserShiftDetailByDate();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

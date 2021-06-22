@@ -1,8 +1,8 @@
 <div class="modal-header">
     <h5>Add Transaction</h5>
     <button type="button" class="close" aria-label="Close" (click)="close(false)">
-      <span aria-hidden="true">&times;</span>
-  </button>
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div *ngIf="!transForm.showDynField" class="modal-body">
     <div class="row mb-2">
@@ -10,7 +10,8 @@
             <label>Process Name<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
-            <auto-suggestion [data]="processList" display="name" placeholder="Process Name" name="processName" id="processName" (onSelected)="transForm.process=($event);" [preSelected]="{name:transForm.process.name}" autocomplete="off">
+            <auto-suggestion [data]="processList" display="name" placeholder="Process Name" name="processName" id="processName" (onSelected)="transForm.process=($event);transForm.isAutoIdentity = $event._default_identity" [preSelected]="{name:transForm.process.name}"
+                autocomplete="off">
             </auto-suggestion>
         </div>
         <div class="col-2 text-right">
@@ -19,171 +20,173 @@
     </div>
 </div>
 <div *ngIf="transForm.showDynField" class="modal-body">
-    <div class="row mb-2">
-        <div class="col-6">
-            <label>Process Name: {{transForm.process.name}}</label>
-        </div>
-        <div class="col-3">
-            <label>Identity<span class="text-danger">*</span></label>
-        </div>
-        <div class="col-3">
-            <input type="text" class="form-control" placeholder="Enter Identity" [(ngModel)]="transForm.identity">
-        </div>
-    </div>
-    <!-- <div class="row mb-2">
-        <div class="col-4">
-            <label>Transaction Name<span class="text-danger">*</span></label>
-        </div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Transaction Name" [(ngModel)]="transForm.name">
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Primary Owner</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="transForm.priOwn.id=($event.id);" [preSelected]="{name:transForm.priOwn.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Mobile No</label>
-        </div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Mobile Mo" [(ngModel)]="transForm.mobileno">
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Primary Category</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="priCatList" display="name" placeholder="Select Primary Category" name="priCat" id="priCat" (onSelected)="transForm.priCat.id=($event.id);" [preSelected]="{name:transForm.priCat.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Secondary Category</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);" [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Type</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);" [preSelected]="{name:transForm.type.name}" autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Location</label>
-        </div>
-        <div class="col-8">
-            <auto-suggestion url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)" [preSelected]="{location:transForm.location.name}"
-                autocomplete="off">
-            </auto-suggestion>
-        </div>
-    </div>
+    <div>
+        <div class="row">
+            <div class="col-6">
+                <label>Process Name: {{transForm.process.name}}</label>
+            </div>
 
-    <div class="row mb-2">
-        <div class="col-4">
-            <label>Address</label>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-4">
+                        <label>Identity<span *ngIf="!transForm.isAutoIdentity" class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" placeholder="Enter Identity" [(ngModel)]="transForm.identity" [disabled]="transForm.isAutoIdentity==1">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-8">
-            <textarea name="address" cols="5" rows="5" class="form-control" [(ngModel)]="transForm.address"></textarea>
-        </div>
-    </div> -->
+
+    </div>
     <!-- start:dym field -->
-    <div class="row mb-2">
-        <div class="col-12" style="padding-left:18px">
-            <div class=" table-conan filter-coff">
-                <table style="width:100%">
-                    <tr *ngFor="let dd of oddArray ; let i = index; ">
+    <div>
+        <div style="width: 100%;">
+            <div>
+                <div *ngFor="let dd of oddArray ; let i = index; " class="row">
 
-                        <td *ngIf="oddArray[i]" style="padding-right: 5%;">
-                            <span *ngIf="oddArray[i].r_coltitle">
-                                <label>{{oddArray[i].r_coltitle}}<span style="color: red"
+                    <div *ngIf="oddArray[i]" [class]="evenArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                        <div *ngIf="oddArray[i].r_coltitle" class="row">
+                            <div class="col-4 pr-0">
+                                <label (click)="getParamAllValues(oddArray[i])">{{oddArray[i].r_colalias}}<span style="color: red"
                                         *ngIf="oddArray[i].r_required">*</span>
-                            </label>
-                            <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
-                            <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
-                            <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="false">
-                            </uj-date-time-picker>
+                                </label>
+                            </div>
 
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="transForm.priOwn.id=($event.id);"
-                                [preSelected]="{name:transForm.priOwn.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);"
-                                [preSelected]="{name:transForm.type.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                [preSelected]="{location:transForm.location.name}" autocomplete="off">
-                            </auto-suggestion>
+                            <div class="col-8">
+                                <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues ">
+                                <input type="number" class="form-control" [(ngModel)]=oddArray[i].r_value *ngIf="oddArray[i].r_coltype == 'number' && !oddArray[i].r_fixedvalues ">
+                                <uj-date-time-picker (onChanged)="oddArray[i].r_value = $event" [dateTimeValue]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype =='date'" [isTime]="true">
+                                </uj-date-time-picker>
 
-                            <!-- dynamic data array -->
-                            <select [(ngModel)]="oddArray[i].r_value" class="form-conrol" *ngIf="oddArray[i].r_fixedvalues">
-                                    <option [value]="fixValue.option" *ngFor="let fixValue of oddArray[i].r_fixedvalues">
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="oddArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Primary Category'"
+                                    name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.priCat.id=($event.id);" [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Secondary Category'"
+                                    name="secCat" id="secCat" (onSelected)="oddArray[i].r_value=($event.name);transForm.secCat.id=($event.id);" [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="oddArray[i].r_value=($event.name);transForm.type.id=($event.id);"
+                                    [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="oddArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
+                                    [preSelected]="{location:oddArray[i].r_value}" autocomplete="off">
+                                </auto-suggestion>
+
+                                <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="oddArray[i].r_value" *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
+
+                                <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+
+
+                                <!-- dynamic data array -->
+                                <select [(ngModel)]="oddArray[i].r_value" class="form-conrol col-12" *ngIf="oddArray[i].r_fixedvalues && oddArray[i].r_coltype !='entity'">
+                                    <option [value]="fixValue.option"
+                                        *ngFor="let fixValue of oddArray[i].r_fixedvalues">
                                         {{fixValue.option}}</option>
                                 </select>
+                                <auto-suggestion *ngIf="oddArray[i].r_coltype =='entity'" [data]="oddArray[i].r_fixedvalues" display="option" [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Entity'"
+                                    name="entityField" id="entityField" (onSelected)="oddArray[i].r_value=($event._id);" [preSelected]="{option: oddArray[i].entity_value}" autocomplete="off">
+                                </auto-suggestion>
+
+                                <!-- attachment -->
+                                <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='attachment'">
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelection($event,i,'oddArray')">
+                                    <!-- <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
+                                </div>
+
+
+                                <!-- pdf-versoning -->
+                                <div class="input-group p-0" *ngIf="oddArray[i].r_coltype =='pdf-versioning'">
+                                    <span *ngIf="oddArray[i].r_url" class="small col-12 p-0">
+                                        <span class="blue cursor-pointer" (click)="common.checkFile(oddArray[i].r_url,oddArray[i].r_doc_name)">{{oddArray[i].r_doc_name}}</span>
+                                    </span>
+                                    <input type="file" class="file-control col-8" [id]="'chat-attachment-oddArray-'+i" (change)="handleFileSelectionForPdf($event,i,'oddArray')">
+                                    <!-- <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('oddArray',i)">Upload</button> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'" style="margin-top: 1rem;">
+                        <span *ngIf="evenArray[i].r_coltitle" class="row">
+                            <div class="col-4 pr-0">
+                                <label (click)="getParamAllValues(evenArray[i])">{{evenArray[i].r_colalias}} <span style="color: red"
+                                        *ngIf="evenArray[i].r_required">*</span></label>
+                    </div>
+
+                    <div class="col-8">
+                        <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
+                        <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
+                        <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="true">
+                        </uj-date-time-picker>
+
+                        <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="evenArray[i].r_value=($event.name);transForm.priOwn.id=($event.id);"
+                            [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                        </auto-suggestion>
+                        <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="priCatList" display="name" placeholder="Select Primary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.priCat.id=($event.id);"
+                            [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                        </auto-suggestion>
+                        <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="evenArray[i].r_value=($event.name);transForm.secCat.id=($event.id);"
+                            [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                        </auto-suggestion>
+                        <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="evenArray[i].r_value=($event.name);transForm.type.id=($event.id);"
+                            [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                        </auto-suggestion>
+                        <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="evenArray[i].r_value=($event.location);transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
+                            [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
+                        </auto-suggestion>
+
+                        <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
+
+                        <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span>
+
+                        <!-- dynamic data array -->
+                        <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12" *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'">
+                                    <option [value]="fixValue.option"
+                                        *ngFor="let fixValue of evenArray[i].r_fixedvalues">
+                                        {{fixValue.option}}</option>
+                                </select>
+                                
+                        <auto-suggestion *ngIf="evenArray[i].r_coltype =='entity'" [data]="evenArray[i].r_fixedvalues" display="option" [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Entity'"
+                            name="entityFieldEven" id="entityFieldEven" (onSelected)="evenArray[i].r_value=($event._id);" [preSelected]="{option: evenArray[i].entity_value}" autocomplete="off">
+                        </auto-suggestion>
+
+                        <!-- attachment -->
+                        <div class="input-group" *ngIf="evenArray[i].r_coltype =='attachment'">
+                            <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
                             </span>
-                        </td>
-                        <td *ngIf="evenArray[i]"><span *ngIf="evenArray[i].r_coltitle">
-                              <label>{{evenArray[i].r_coltitle}} <span style="color: red"
-                                      *ngIf="evenArray[i].r_required">*</span></label>
-                            <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues">
-                            <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues">
-                            <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value" *ngIf="evenArray[i].r_coltype =='date'" [isTime]="false">
-                            </uj-date-time-picker>
+                            <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelection($event,i,'evenArray')">
+                            <!-- <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button> -->
+                        </div>
 
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary owner'" [data]="adminList" display="name" placeholder="select Primary Owner" name="priOwn" id="priOwn" (onSelected)="transForm.priOwn.id=($event.id);"
-                                [preSelected]="{name:transForm.priOwn.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'" [data]="secCatList" display="name" placeholder="Select Secondary Category" name="secCat" id="secCat" (onSelected)="transForm.secCat.id=($event.id);"
-                                [preSelected]="{name:transForm.secCat.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='transaction type'" [data]="typeList" display="name" placeholder="Select Type" name="processType" id="processType" (onSelected)="transForm.type.id=($event.id);"
-                                [preSelected]="{name:transForm.type.name}" autocomplete="off">
-                            </auto-suggestion>
-                            <auto-suggestion *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='location'" url="CampaignSuggestion/getLocation" display="location" placeholder="Location" name="location" id="location" (onSelected)="transForm.location.id=($event.id);transForm.location.lat=($event.lat);transForm.location.long=($event.long)"
-                                [preSelected]="{location:transForm.location.name}" autocomplete="off">
-                            </auto-suggestion>
-
-                            <!-- dynamic data array -->
-                            <select [(ngModel)]="evenArray[i].r_value" class="form-conrol" *ngIf="evenArray[i].r_fixedvalues">
-                                  <option [value]="fixValue.option"
-                                      *ngFor="let fixValue of evenArray[i].r_fixedvalues">
-                                      {{fixValue.option}}</option>
-                              </select>
+                         <!-- pdf-versoning -->
+                         <div class="input-group p-0" *ngIf="evenArray[i].r_coltype =='pdf-versioning'">
+                            <span *ngIf="evenArray[i].r_url" class="small col-12 p-0">
+                                <span class="blue cursor-pointer" (click)="common.checkFile(evenArray[i].r_url,evenArray[i].r_doc_name)">{{evenArray[i].r_doc_name}}</span>
                             </span>
-                        </td>
-                    </tr>
-                </table>
-
+                            <input type="file" class="file-control col-8" [id]="'chat-attachment-evenArray-'+i" (change)="handleFileSelectionForPdf($event,i,'evenArray')">
+                            <!-- <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm col-4" (click)="uploadattachFile('evenArray',i)">Upload</button> -->
+                        </div>
+                    </div>
+                    </span>
+                </div>
             </div>
 
         </div>
+
     </div>
-    <!-- end: dym field -->
-    <div class="row">
-        <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
-        </div>
+</div>
+<!-- end: dym field -->
+<div class="row mt-2">
+    <div class="col-12 text-right">
+        <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm mr-2" (click)="addTransaction()">Submit</button>
+        <button *ngIf="!isDisabled" type="button" class="btn btn-primary btn-sm" (click)="addTransaction(1)">Submit with chat</button>
     </div>
+</div>
 </div>

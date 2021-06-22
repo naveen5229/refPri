@@ -2,25 +2,30 @@
   position: relative;
 }
 .suggestions {
-  position: relative;
   text-align: left;
   max-height: 216px;
   overflow: auto;
   z-index: 9999;
   background: #fff;
-  width: 95%;
-  margin: 1px 0px 0px 5px;
-  // padding: 0px 8px 1px 8px;
+  width: calc(100% - 4px);
+  margin-left: 1.5px;
   font-size: 14px;
   letter-spacing: 0.5px;
-  -webkit-box-shadow: 1px 1px 3px grey;
   box-shadow: 1px 1px 3px grey;
   position: absolute;
+
 }
+
+.suggestions .suggestion:last-child{
+  padding-bottom: 0;
+  margin-bottom: 2px;
+  border-bottom: 0;
+}
+
 .suggestion {
   padding: 5px 0px 1px 10px;
   margin: 1px 0px 3px 1px;
-  font-size: 14px;
+  font-size: 12px;
   list-style: none;
   border-bottom: 1px solid #e2e2e2;
   cursor: pointer;
@@ -33,7 +38,7 @@
 }
 .tagsinput {
   display: inline-block;
-  border: 2px solid #e2e2e2;
+  border: 1px solid #e2e2e2;
   width: 100%;
   border-radius: 3px;
   p {
@@ -47,7 +52,7 @@
     margin: 0;
     height: 26px;
     vertical-align: middle;
-    font-size: 16px;
+    font-size: 14px;
     margin-left: 4px;
 
     input {
@@ -95,3 +100,5 @@
 .fa-times-circle {
   color: red;
 }
+
+

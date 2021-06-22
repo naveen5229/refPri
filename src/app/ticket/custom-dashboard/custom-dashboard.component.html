@@ -1,0 +1,84 @@
+<nb-card>
+  <nb-card-header>
+      <div class="row">
+          <div class="col-3">
+              <h5 class="heading-design">Custom Dashboard</h5>
+          </div>
+          <div class="col-3">
+              <span style="display: flex;">
+              <auto-suggestion class="form-controls col-9 p-0 searchselect" (onSelected)="tpId = $event._id" [data]="tpList" display="name" placeholder="Search Process" inputId="ProcessSearch" name="ProcessSearch"></auto-suggestion>
+          </span>
+          </div>
+          <div class="col-2">
+              <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.startDate=$event" [dateTimeValue]="searchData.startDate">
+              </uj-date-time-picker>
+          </div>
+          <div class="col-2">
+              <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="searchData.endDate=$event" [dateTimeValue]="searchData.endDate">
+              </uj-date-time-picker>
+          </div>
+          <div class="col-2">
+              <button class="btn btn-primary text-capitalize" id="button" (click)="activeTab='allOpen';getTicketByType(107)">Search</button>
+          </div>
+      </div>
+  </nb-card-header>
+  <nb-card-body>
+      <div class="tabs_style_main">
+          <ul class="tabs_style text-left">
+              <li [ngClass]="activeTab=='allOpen'?'active':''" (click)="activeTab='allOpen';getTicketByType(107)">
+                All Open
+              </li>
+          </ul>
+      </div>
+
+      <div *ngIf="activeTab=='allOpen'">
+          <smart-table [data]="table.data" [settings]="table.settings" id="tableAllOpen">
+          </smart-table>
+      </div>
+  </nb-card-body>
+</nb-card>
+
+
+<!--start: forward ticket -->
+<div class="modal" id="forwardTicket">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Forward</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeForwardTicket()">&times;</button>
+            </div>
+  
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>User</label>
+                    </div>
+                    <div class="col-8">
+                        <auto-suggestion [data]="adminList" display="name" placeholder="Ticket User" name="tpName"
+                            id="tpName" (onSelected)="forwardTicketObject.userId = $event;getUserPresence(forwardTicketObject.userId.id)"
+                            [preSelected]="forwardTicketObject.userId.id ? {name: forwardTicketObject.userId.name}:{name:''}"
+                            autocomplete="off">
+                        </auto-suggestion>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Remark<span style="color: red;">*</span></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea row="2" cols="15" placeholder="Fill Remark" name="nomaltask" class="form-control"
+                            [(ngModel)]="forwardTicketObject.remark"></textarea>
+                    </div>
+                </div>
+                <div class="row footer">
+                    <div class="col text-right">
+                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="forwardTicketId"
+                            (click)="forwardTicket(forwardTicketObject.tabType)">Forward</button>
+                    </div>
+                </div>
+            </div>
+  
+        </div>
+    </div>
+  </div>
+  <!--end: forward ticket -->

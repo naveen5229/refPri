@@ -1,4 +1,4 @@
-<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '73vh'}">
+<div [ngClass]="[settings.notFixedHeader  ? '' : 'tableFixHead', pages.count > 1 ? 'paginaion_conditon':'']" [ngStyle]="{height: settings.tableHeight || '94%'}">
     <table *ngIf="headings && !isTableHide" class="table table-bordered fixed">
         <thead *ngIf="!settings.hideHeader">
             <th style="width: 40px">#</th>
@@ -16,7 +16,7 @@
                 <!-- # END -->
                 <!-- Headings -->
                 <th style="padding:5px;" *ngFor="let heading of objectKeys(headings);" [ngClass]="headings[heading].class">
-                    <div *ngIf="!headings[heading].isHTML">
+                    <div *ngIf="!headings[heading].isHTML && !headings[heading].isCheckbox">
                         <!-- Searchable -->
                         <div *ngIf="!headings[heading].hideSearch" class="filter-container">
                             <!-- Search INPUT -->
@@ -40,6 +40,12 @@
                     <!-- heading as HTML -->
                     <div *ngIf="headings[heading].isHTML" [innerHTML]="headings[heading].html"></div>
                     <!-- heading as HTML END -->
+
+                    <!-- heading as Checkbox -->
+                    <div *ngIf="headings[heading].isCheckbox">
+                        <input type="checkbox" (change)="headings[heading].action(headings[heading].value)"
+                            [(ngModel)]="headings[heading].value">
+                    </div>
                 </th>
                 <!-- Headings END -->
                 <th class="action-box" *ngIf="edit.row !== -1">Action</th>
@@ -47,7 +53,7 @@
         </thead>
         <tbody>
 
-            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick(column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column)}"
+            <tr *ngFor="let column of columns; let i = index;" (click)="column.rowActions && column.rowActions.click && handleRowClick($event,column, i)" (dblclick)="column.rowActions?.dblclick && column.rowActions.dblclick()" [ngClass]="{'active-row': isItActive(column),'highlight' : selectedRow == i, 'highlightcolor' : columns.length-1 == i}"
                 [ngStyle]="column.style">
 
                 <!-- Records Count -->
@@ -57,7 +63,7 @@
                 <!-- Records Count End -->
 
                 <!-- Smart Table Value -->
-                <td *ngFor="let heading of objectKeys(headings);" [ngClass]="column[heading] ? column[heading].class : ''" (click)="handleColumnClick(column, heading, i)" (dblclick)="handleColDoubleClick(column, heading)" (mouseover)="handleMouseHover(column, heading)"
+                <td *ngFor="let heading of objectKeys(headings);" [ngClass]="column[heading] ? column[heading].class : ''" (click)="handleColumnClick($event,column, heading, i)" (dblclick)="handleColDoubleClick(column, heading)" (mouseover)="handleMouseHover(column, heading)"
                     (mouseout)="handleMouseOut(column, heading)" [ngStyle]="{cursor: (column[heading] && column[heading].action) ? 'pointer' : ''}">
 
                     <!-- Auto Suggestion -->
@@ -80,7 +86,7 @@
 
                     <!-- Checkbox -->
                     <div [ngClass]="column[heading].action ? 'zoom' : ''" *ngIf="column[heading] && column[heading].isCheckbox">
-                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)" [checked]="column[heading].value">
+                        <input type="checkbox" (change)="handleCheckboxChange($event, column[heading].action)" [(ngModel)]="column[heading].value">
                     </div>
                     <!-- CheckBox END -->
 
@@ -93,8 +99,8 @@
                     <!-- Show Text END -->
 
                     <!-- Show Action Icons -->
-                    <div *ngIf="column[heading] && column[heading].icons" [class]="column[heading].class || ''">
-                        <div *ngFor="let icon of column[heading].icons" [class]="icon.parentClass" style="display:inline; position: relative;">
+                    <div *ngIf="column[heading]  && column[heading].icons"  [class]="column[heading].class || ''">
+                        <div *ngFor="let icon of column[heading].icons"  [class]="icon.parentClass" style= "display:inline; position: relative;">
                             <i [class]="icon.class" (click)="icon.action && icon.action()" [title]="icon.title || ''"><span>{{icon.txt}}</span></i>
                         </div>
                     </div>
@@ -125,6 +131,7 @@
         <button (click)="handlePagination(pages.active + 1)" [disabled]="pages.active == pages.count">Next</button>
     </div>
     <!-- Page Count END -->
+
     <!-- Records Per Page -->
     <div class="numer_list ml-3">
         <input type="text" class="customPage form-control" name="customPageNo" (keyup.enter)="customPage()" [(ngModel)]="pages.limit">

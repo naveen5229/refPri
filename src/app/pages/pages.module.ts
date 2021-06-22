@@ -49,6 +49,24 @@ import { ProcessModule } from '../process/process.module';
 import { UserMappingComponent } from './user-mapping/user-mapping.component';
 import { CompanykycComponent } from './companykyc/companykyc.component';
 import { UserGroupsComponent } from './user-groups/user-groups.component';
+import {TicketModule} from '../ticket/ticket.module';
+import { EmployeeMonitoringComponent } from './employee-monitoring/employee-monitoring.component';
+import { OnSiteImagesComponent } from './on-site-images/on-site-images.component';
+import { OnSiteImagesSummaryComponent } from './on-site-images-summary/on-site-images-summary.component';
+import { CustomeronboardingComponent } from './customeronboarding/customeronboarding.component';
+import { EntityDeatilsComponent } from './entity-deatils/entity-deatils.component';
+import { UserWiseExpensesComponent } from './user-wise-expenses/user-wise-expenses.component';
+import { UserExpensesComponent } from './user-expenses/user-expenses.component';
+import { TaskKanbanComponent } from './task-kanban/task-kanban.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AdminKanbanComponent } from './admin-kanban/admin-kanban.component';
+import { SitesComponent } from './sites/sites.component';
+import { ChartModule } from 'angular2-chartjs';
+import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
+import { TmgTaskComponent } from './tmg-task/tmg-task.component';
+import { SettingsComponent } from './company-setting/company-setting.component';
+import { CallLogsComponent } from './call-logs/call-logs.component';
+import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -59,7 +77,10 @@ import { UserGroupsComponent } from './user-groups/user-groups.component';
     DirectiveModule,
     DashboardModule,
     CampaignModule,
-    ProcessModule
+    ProcessModule,
+    TicketModule,
+    DragDropModule,
+    ChartModule
   ],
   declarations: [
     PagesComponent,
@@ -102,7 +123,22 @@ import { UserGroupsComponent } from './user-groups/user-groups.component';
     WifiLogsComponent,
     UserMappingComponent,
     CompanykycComponent,
-    UserGroupsComponent
+    UserGroupsComponent,
+    EmployeeMonitoringComponent,
+    OnSiteImagesComponent,
+    OnSiteImagesSummaryComponent,
+    CustomeronboardingComponent,
+    EntityDeatilsComponent,
+    UserWiseExpensesComponent,
+    UserExpensesComponent,
+    TaskKanbanComponent,
+    AdminKanbanComponent,
+    SitesComponent,
+    TmgDashboardComponent,
+    TmgTaskComponent,
+    SettingsComponent,
+    CallLogsComponent,
+    ContinuityReportComponent
   ],
 })
 export class PagesModule {

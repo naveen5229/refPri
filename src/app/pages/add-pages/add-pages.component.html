@@ -2,14 +2,14 @@
     <nb-card-header>
         <div class="row">
             <div class="col-9">
-                <h5>Add Pages</h5>
+                <h5 class="heading-design">Add Pages</h5>
             </div>
         </div>
     </nb-card-header>
 
-    <nb-card-body style="min-height: 580px;">
+    <nb-card-body>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <label>Page Name</label>
                 <input class="form-control" type="text" placeholder="Page Name" style="width: 100%;" [(ngModel)]='pageName'>
             </div>
@@ -33,18 +33,14 @@
                 <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Add</button>
             </div>
 
-            <div class="col-2 mt-4" *ngIf='rowId != null'>
+            <div class="col-3 mt-4" *ngIf='rowId != null'>
                 <button class="btn btn-primary btn-sm" (click)="saveUserRole()">Update</button>
                 <button class="btn btn-primary btn-sm ml-2" (click)="resetUserRole()">Cancel</button>
             </div>
 
 
         </div>
-
-        <br>
-        <br>
-
-        <div class="row">
+        <div class="row mt-2">
             <smart-table *ngIf="data && data.length>0" [data]="table.data" [settings]="table.settings" id="data">
             </smart-table>
             <!-- <div class="row no-record" *ngIf="data.length==0">No Data Available</div> -->

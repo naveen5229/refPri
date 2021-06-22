@@ -1,19 +1,63 @@
+@import '../../style.scss';
+
 .fa-trash-alt {
-    font-size: 12px;
-    margin-right: 10px;
-    color: red;
-    border-color: red;
-    padding: 8px;
-    border-radius: 3px;
+  font-size: $font-sm-xxl;
+  margin-right: $margin-md;
+  color: $danger-2;
+  border-color: $danger-2;
+  padding:$padding-sm;
+  border-radius: $radious-xxs;
 }
 
 :host ::ng-deep .fa-edit {
-    // font-size: 12px;
-    margin-right: 10px;
-    //background-color: #3c6ac7;
-    color: #3c6ac7;
-    // border-color: #73a1ff;
-    padding: 2px;
-    border-radius: 3px;
-    cursor: pointer;
+  // font-size: 12px;
+  margin-right: $margin-md;
+  //background-color: #3c6ac7;
+  color: $primary-4;
+  // border-color: #73a1ff;
+  padding: 2px;
+  border-radius: $radious-xxs;
+  cursor: pointer;
+}
+
+table {
+  margin-bottom: 0rem;
+@include fixed-table;
+  thead {
+    th {
+      padding: 0.2rem !important;
+      background: $light-1 !important;
+      border: 6px solid $dark-1 !important;
+      font-size: .80rem;
+    }
+
+
+    th:nth-child(5),
+    th:nth-child(2),
+    th:nth-child(3) {
+      width: 120px;
+    }
+  }
+
+  tbody {
+    max-height: calc(100vh - 228px);
+
+    tr {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+
+      td:first-child {
+        width: 60px;
+      }
+
+      td:nth-child(5),
+      td:nth-child(2),
+      td:nth-child(3) {
+        width: 120px;
+      }
+
+    }
+
+  }
 }

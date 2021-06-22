@@ -76,13 +76,14 @@ export class AddContactComponent implements OnInit {
     this.api.get('Campaigns/getTargetContactDetails?'+params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.campaignTargetActionData = res['data'];
         this.campaignTargetActionData.length ? this.setTable() : this.resetTable();
 
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -166,10 +167,12 @@ export class AddContactComponent implements OnInit {
           this.api.post('Campaigns/deleteTargetContactDetails', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getTargetActionData();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }
@@ -192,8 +195,7 @@ export class AddContactComponent implements OnInit {
     this.api.post("Campaigns/addCampTargetContact ", params)
       .subscribe(res => {
         this.common.loading--;
-        console.log(res);
-        if (res['success'] == true) {
+        if (res['code'] >0) {
           this.common.showToast(res['msg']);
           this.getTargetActionData();
         } else {
@@ -201,6 +203,7 @@ export class AddContactComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

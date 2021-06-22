@@ -4,6 +4,11 @@ import { ApiService } from '../../Service/Api/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AxestrackMappingComponent } from '../../modals/axestrack-mapping/axestrack-mapping.component';
 import { AddvehicleComponent } from '../../modals/addvehicle/addvehicle.component';
+import { AddpartnerComponent } from '../../modals/addpartner/addpartner.component';
+import { AddpartneruserComponent } from '../../modals/addpartneruser/addpartneruser.component';
+import { AddcompanyComponent } from '../../modals/addcompany/addcompany.component';
+import { AddfouserComponent } from '../../modals/addfouser/addfouser.component';
+import { MobileNoComponent } from '../../modals/mobile-no/mobile-no.component';
 
 @Component({
   selector: 'ngx-user-mapping',
@@ -75,33 +80,56 @@ export class UserMappingComponent implements OnInit {
     public modalService: NgbModal) { 
       this.getPartnerMappingData();
       this.getCompanyMappingData(null);
+      this.common.refresh = this.refresh.bind(this);
     }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  refresh() {
+    this.resetTable();
+    this.activeTab='partnerMapping';
+    this.getPartnerMappingData();
+    this.getCompanyMappingData(null);
+  }
+
+  addFODetail(){
+    const activeModal = this.modalService.open(AddcompanyComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+  }
+
+  addFoAdminUser() {
+     const activeModal = this.modalService.open(AddfouserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   
 
   // Partner Mapping Start
   getPartnerMappingData(){
+   
+    this.partnerMapping=[];
     this.common.loading++;
     this.api.getTranstruck('AxesUserMapping/getElogistPartner.json')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.partnerMapping = res['data'];
         this.partnerMapping.length ? this.setTable() : this.resetTable();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
 
   resetTable() {
-    this.table.data = {
-      headings: {},
-      columns: []
+    this.table = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
 
@@ -144,7 +172,9 @@ export class UserMappingComponent implements OnInit {
             action: null,
             icons: this.actionIcons(campaign)
           };
-        } else {
+        }else if(key =='mobileno'){
+            column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -157,7 +187,7 @@ export class UserMappingComponent implements OnInit {
     let icons=[];
     if(partner['ax_provider_id']=='' || partner['ax_provider_id'] == null){
      icons = [
-       { class: "fa fa-plus", action: this.partnerMap.bind(this, partner) },
+       { class: "fa fa-plus green", action: this.partnerMap.bind(this, partner) },
     ];
     return icons;
   }
@@ -188,20 +218,26 @@ export class UserMappingComponent implements OnInit {
     this.api.getTranstruck('AxesUserMapping/getElogistPartadminuser.json?elPartnerId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.partnerUserMappings = res['data'];
         this.partnerUserMappings.length ? this.setTable1() : this.resetTable1();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
 
   resetTable1(){
-    this.table1.data = {
-      headings: {},
-      columns: []
+    this.table1 = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
 
@@ -245,7 +281,9 @@ export class UserMappingComponent implements OnInit {
             action: null,
             icons: this.actionIcons1(campaign)
           };
-        } else {
+        }else if(key =='mobileno'){
+          column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -258,10 +296,15 @@ export class UserMappingComponent implements OnInit {
     let icons=[];
     if(partner['ax_user_id']=='' || partner['ax_user_id'] == null){
      icons = [
-       { class: "fa fa-plus", action: this.partnerUserMap.bind(this, partner) },
+       { class: "fa fa-plus green", action: this.partnerUserMap.bind(this, partner) },
     ];
-    return icons;
+    
+  } else if(partner['ax_user_id']!='' || partner['ax_user_id']!=null){
+    icons = [
+      { class: "fa fa-minus-circle red", action: this.partnerUserUnMap.bind(this, partner) },
+   ];
   }
+  return icons;
 }
 
 partnerUserMap(partnerUser){
@@ -282,6 +325,27 @@ partnerUserMap(partnerUser){
   
 }
 
+partnerUserUnMap(partnerUser){
+  console.log(partnerUser);
+  this.common.loading++;
+    let param={
+      elPartAdminId:partnerUser.id
+    }
+    this.api.postTranstruck('AxesUserMapping/unmapPartadminuserMapping.json',param)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['success']){
+          this.common.showToast(res['msg']);
+        }else{
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+}
+
 // Partner User Mapping End----------------------------------------------------------------------------
 
 
@@ -297,20 +361,26 @@ getElogistCompany(event){
   this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId='+id)
     .subscribe(res => {
       this.common.loading--;
-      console.log("api data", res);
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       if (!res['data']) return;
       this.companyMappings = res['data'];
       this.companyMappings.length ? this.setTable2() : this.resetTable2();
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log(err);
     });
 }
 
 resetTable2(){
-  this.table2.data = {
-    headings: {},
-    columns: []
+  this.table2 = {
+    data: {
+      headings: {},
+      columns: [],
+    },
+    settings: {
+      hideHeader: true
+    }
   };
 }
 
@@ -354,7 +424,9 @@ getTableColumns2() {
           action: null,
           icons: this.actionIcons2(campaign)
         };
-      } else {
+      }else if(key =='mobileno'){
+        column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+      }else {
         column[key] = { value: campaign[key], class: 'black', action: '' };
       }
     }
@@ -367,10 +439,14 @@ actionIcons2(company) {
   let icons=[];
   if(company['ax_company_id']=='' || company['ax_company_id'] == null){
    icons = [
-     { class: "fa fa-plus", action: this.companyMap.bind(this, company) },
+     { class: "fa fa-plus green", action: this.companyMap.bind(this, company) },
   ];
-  return icons;
+  } else if(company['ax_company_id']!='' || company['ax_company_id'] != null){
+  icons = [
+    { class: "fa fa-minus-circle red", action: this.companyUnMap.bind(this, company) },
+ ];
 }
+return icons;
 }
 
 companyMap(company){
@@ -386,6 +462,27 @@ companyMap(company){
   }else{
     this.common.showError('First Map Partner!');
   }
+  }
+
+  companyUnMap(company){
+    console.log(company);
+    this.common.loading++;
+      let param={
+        elCompanyId:company.id
+      }
+      this.api.postTranstruck('AxesUserMapping/unmapCompanyMapping.json',param)
+        .subscribe(res => {
+          this.common.loading--;
+          if (res['success']){
+            this.common.showToast(res['msg']);
+          }else{
+            this.common.showError(res['msg']);
+          }
+        }, err => {
+          this.common.loading--;
+          this.common.showError();
+          console.log(err);
+        });
   }
 
   //Company Mapping End-----------------------------------------------------------------------
@@ -406,14 +503,17 @@ companyMap(company){
     this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.companyData = res['data'];
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
+
+  
 
   getElogistCompanyUser(event){
     console.log("Elogist Company:",event);
@@ -448,20 +548,26 @@ companyMap(company){
     this.api.getTranstruck('AxesUserMapping/getCompanyuser.json?elCompanyId='+id)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.companyUserMappings = res['data'];
         this.companyUserMappings.length ? this.setTable3() : this.resetTable3();
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
   
   resetTable3(){
-    this.table3.data = {
-      headings: {},
-      columns: []
+    this.table3 = {
+      data: {
+        headings: {},
+        columns: [],
+      },
+      settings: {
+        hideHeader: true
+      }
     };
   }
   
@@ -505,7 +611,9 @@ companyMap(company){
             action: null,
             icons: this.actionIcons3(campaign)
           };
-        } else {
+        } else if(key =='mobileno'){
+          column[key]={value:campaign['mobileno']?'show':'',class:'blue',action:this.showMobileNo.bind(this,campaign['mobileno']) }
+        }else {
           column[key] = { value: campaign[key], class: 'black', action: '' };
         }
       }
@@ -518,10 +626,15 @@ companyMap(company){
     let icons=[];
     if(companyUser['ax_user_id']=='' || companyUser['ax_user_id'] == null){
      icons = [
-       { class: "fa fa-plus", action: this.companyUserMap.bind(this, companyUser) },
+       { class: "fa fa-plus green", action: this.companyUserMap.bind(this, companyUser) },
     ];
-    return icons;
+    
+  } else if(companyUser['ax_user_id']!='' || companyUser['ax_user_id'] != null){
+    icons = [
+      { class: "fa fa-minus-circle red", action: this.companyUserUnMap.bind(this, companyUser) },
+   ];
   }
+  return icons;
   }
   
   companyUserMap(companyUser){
@@ -537,6 +650,26 @@ companyMap(company){
     }else{
       this.common.showError('First Map Company!');
     }
+    }
+    companyUserUnMap(companyUser){
+      console.log(companyUser);
+      this.common.loading++;
+        let param={
+          elCompanyUserId:companyUser.id
+        }
+        this.api.postTranstruck('AxesUserMapping/unmapCompanyUserMapping.json',param)
+          .subscribe(res => {
+            this.common.loading--;
+            if (res['success']){
+              this.common.showToast(res['msg']);
+            }else{
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            this.common.showError();
+            console.log(err);
+          });
     }
 
     // searchCompanyUserList(){
@@ -565,20 +698,26 @@ companyMap(company){
       this.api.getTranstruck('AxesUserMapping/getCompanyVehicles.json?elCompanyId='+id)
         .subscribe(res => {
           this.common.loading--;
-          console.log("api data", res);
+          if(res['code']===0) { this.common.showError(res['msg']); return false;};
           if (!res['data']) return;
           this.vehicleMapping = res['data'];
           this.vehicleMapping.length ? this.setTable4() : this.resetTable4();
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     }
 
     resetTable4(){
-      this.table4.data = {
-        headings: {},
-        columns: []
+      this.table4 = {
+        data: {
+          headings: {},
+          columns: [],
+        },
+        settings: {
+          hideHeader: true
+        }
       };
     }
     
@@ -635,10 +774,14 @@ companyMap(company){
       let icons=[];
       if(vehicle['ax_veh_id']=='' || vehicle['ax_veh_id'] == null){
        icons = [
-         { class: "fa fa-plus", action: this.vehiclemappings.bind(this, vehicle) },
+         { class: "fa fa-plus green", action: this.vehiclemappings.bind(this, vehicle) },
       ];
-      return icons;
+    } else if(vehicle['ax_veh_id']!='' || vehicle['ax_veh_id'] != null){
+      icons = [
+        { class: "fa fa-minus-circle red", action: this.vehicleUnMap.bind(this, vehicle) },
+     ];
     }
+    return icons;
     }
 
     vehiclemappings(vehicle){
@@ -656,9 +799,47 @@ companyMap(company){
     }
     }
 
+    vehicleUnMap(vehicle){
+      console.log(vehicle);
+      this.common.loading++;
+        let param={
+          elVehicleId:vehicle.id
+        }
+        this.api.postTranstruck('AxesUserMapping/unmapVehicleMapping.json',param)
+          .subscribe(res => {
+            this.common.loading--;
+            if (res['success']){
+              this.common.showToast(res['msg']);
+            }else{
+              this.common.showError(res['msg']);
+            }
+          }, err => {
+            this.common.loading--;
+            this.common.showError()
+            console.log(err);
+          });
+    }
+
     addVehicle(){
     this.modalService.open(AddvehicleComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     }
+
+    addPartner(){
+      this.modalService.open(AddpartnerComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+
+    addPartnerUser(){
+      this.modalService.open(AddpartneruserComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    }
+
+    showMobileNo(mobileno){
+      this.common.params=mobileno;
+      console.log("mobile no",this.common.params);
+      const activeModal = this.modalService.open(MobileNoComponent, {
+        size: "sm",
+        container: "nb-layout"
+      });
+   }
   
 
 }

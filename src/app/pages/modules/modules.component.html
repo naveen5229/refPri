@@ -2,11 +2,11 @@
     <nb-card-header>
         <div class="row ">
             <div class="col-3">
-                <h5> Module</h5>
+                <h5 class="heading-design"> Module</h5>
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 485px;">
+    <nb-card-body>
         <div class="row">
             <div class="col-3">
                 <auto-suggestion [data]="projectName" placeholder="Enter Project Name" display="name"
@@ -25,7 +25,7 @@
         <table class="table table-bordered mt-2">
             <thead class="thead" style="background-color:lightgrey">
                 <tr>
-                    <th>#</th>
+                    <th style="width:40px;">#</th>
                     <th>Project Name</th>
                     <th>Module Name</th>
                     <th>Add By</th>
@@ -34,7 +34,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let module of filteredItems; let i=index;">
-                    <td>0{{i +1 }}</td>
+                    <td style="width:40px;">0{{i +1 }}</td>
                     <td>{{module.project_name}}</td>
                     <td>{{module.name }}</td>
                     <td>{{module.addedby}}</td>

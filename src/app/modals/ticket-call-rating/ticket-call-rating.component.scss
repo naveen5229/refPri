@@ -1,12 +1,11 @@
+@import '../../style';
+
 input[type=checkbox] {
-    transform: scale(2);
-    -ms-transform: scale(2);
-    -webkit-transform: scale(2);
-    padding: 8px;
+    margin: 0px $margin-md;
 }
 .class1{
-    color: red;
+    color: $danger-2
 }
 .class2 {
-    color: green;
+    color: $success-3;
 }

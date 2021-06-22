@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <h5 class="modal-title">Add FoAdmin Users</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    <div class="row" style="margin-bottom:10px">
+        <div class="col-4">
+            <label>Company</label>
+            <auto-suggestion (onSelected)="selectFoUserList($event)" url="Suggestion/getFoUsersList" apiBase="B" [display]="['name','mobileno','provider_name']" placeholder="Name-mob-provider" seperator="-"></auto-suggestion>
+        </div>
+
+        <div class="col-4">
+            <label>Mobile Number</label>
+            <input type="text" class="form-control" id="mobile-number" autocomplete="off" [(ngModel)]="Fouser.mobileNo" placeholder="Mobile NO.">
+        </div>
+
+        <div class="col-4">
+            <label>Name</label>
+            <input type="text" class="form-control" [(ngModel)]="Fouser.name" autocomplete="off" id="name">
+        </div>
+
+        <div class="col-4">
+            <label>User Name</label>
+            <input type="text" class="form-control" id="user-name" autocomplete="off" [(ngModel)]="Fouser.userName" placeholder="User Name">
+        </div>
+
+        <div class="col-4">
+            <label>Password</label>
+            <input type="password" class="form-control" id="password" autocomplete="off" [(ngModel)]="Fouser.password" placeholder="Password">
+        </div>
+
+        <div class="col-4">
+            <label>Auth Type</label>
+            <select [(ngModel)]="authType" class="form-control" (change)="displayLoginType()">
+          <option value='1'>Mobile</option>
+          <option value='2'>User</option>
+        </select>
+        </div>
+
+        <div class="col-4" *ngIf="authType=='1'">
+            <label>Login Type</label>
+            <select [(ngModel)]='loginType' class="form-control">
+          <option *ngFor='let loginData of data' [value]="loginData.id">
+            {{loginData.name}}
+          </option>
+        </select>
+        </div>
+
+        <div class="col-4">
+            <label style="width:100%">Is Active</label>
+            <input class="mt-2" name="time" [(ngModel)]="isActive" type="radio" [value]="true"><span class="mt-2" style="font-weight:bold;">True</span>
+            <input name="time" class="ml-2 mt-2" type="radio" [(ngModel)]="isActive" [value]="false"><span class="mt-2" style="font-weight:bold;">False</span>
+        </div>
+        <div class="col-4 text-center" style="margin-top:24px;">
+            <button class="btn btn-primary" style="padding-left:13px;padding-right:13px;padding-top:6px;padding-bottom:6px;" id="submit" (click)="addFoAdmin()">Submit</button>
+        </div>
+    </div>
+</div>

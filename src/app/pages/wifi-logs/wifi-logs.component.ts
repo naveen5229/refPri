@@ -26,9 +26,14 @@ export class WifiLogsComponent implements OnInit {
   };
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
+    this.common.refresh = this.refresh.bind(this);
     this.getUserWifiLogs();
   }
   ngOnInit() { }
+
+  refresh() {
+    this.getUserWifiLogs();
+  }
 
   getUserWifiLogs() {
     this.table = {
@@ -40,21 +45,18 @@ export class WifiLogsComponent implements OnInit {
         hideHeader: true
       }
     };
-    // let date = this.common.dateFormatter(this.date);
-    // const params = '?date=' + date;
-    // console.log(params);
     this.common.loading++;
     this.api.get('Admin/getUserWifiLogs')
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data']) {
           this.wifiLogList = res['data'] || [];
           this.wifiLogList.length ? this.setTable() : this.resetTable();
-          console.log("wifiLogList:", this.wifiLogList);
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -80,6 +82,9 @@ export class WifiLogsComponent implements OnInit {
       // console.log(key.charAt(0));
       if (key.charAt(0) != "_") {
         headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        if(key == 'lasttime'){
+          headings[key]["type"] = "date";
+        }
       }
     }
     return headings;

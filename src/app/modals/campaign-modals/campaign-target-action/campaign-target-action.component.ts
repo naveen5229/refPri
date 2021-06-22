@@ -93,38 +93,38 @@ export class CampaignTargetActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getStateList?campaignId=" + this.targetAction.campaign.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.stateDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   getActionList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList?campaignId=" + this.targetAction.campaign.id).subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.actionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
   getnextActionList() {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getActionList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.nextactionDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
 
@@ -132,13 +132,13 @@ export class CampaignTargetActionComponent implements OnInit {
     this.common.loading++;
     this.api.get("CampaignSuggestion/getRemarkList").subscribe(res => {
       this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
       this.remarkDataList = res['data'];
-    },
-      err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Error: ', err);
-      });
+    },err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 
   unselected(variable) {
@@ -181,22 +181,20 @@ export class CampaignTargetActionComponent implements OnInit {
         remarkIdList: this.standards.map(remark => { return { remarkId: remark.id } }),
         userCallLogId: null
       };
-      console.log("saveCampaignTargetAction:", params);
       this.common.loading++;
       this.api.post("Campaigns/addCampTargetAction ", params)
         .subscribe(res => {
           this.common.loading--;
-          console.log(res);
-          if (res['success'] == true) {
+          if (res['code']>0) {
             this.common.showToast(res['msg']);
             this.getTargetActionData();
             this.resetData();
           } else {
             this.common.showError(res['msg']);
-
           }
         }, err => {
           this.common.loading--;
+          this.common.showError();
           console.log(err);
         });
     }
@@ -212,11 +210,10 @@ export class CampaignTargetActionComponent implements OnInit {
     this.api.get('Campaigns/getCampTarAction?' + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.campaignTargetActionData = res['data'];
         this.campaignTargetActionData.length ? this.setTable() : this.resetTable();
-
       }, err => {
         this.common.loading--;
         console.log(err);
@@ -303,10 +300,12 @@ export class CampaignTargetActionComponent implements OnInit {
           this.api.post('Campaigns/removeCampTarAction', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getTargetActionData();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

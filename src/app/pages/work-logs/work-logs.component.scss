@@ -1,59 +1,97 @@
+@import '../../style.scss';
+
 .tabs_style {
   width: 100%;
   margin: 0px;
-  border-bottom: 2px solid #26a69a;
-  margin-bottom: 10px;
-  padding-left: 5px !important;
+  // border-bottom: 2px solid $success-5;
+  margin-bottom: $margin-md;
+  padding-left: $padding-xs !important;
+
   li {
     padding: 5px 6px;
     list-style: none;
-    margin-right: 5px;
-    background-color: #26a69a;
-    border: 2px solid #26a69a;
-    color: #fff;
+    margin-right: $margin-xs;
+    // background-color: $success-5;
+    // border: 2px solid $success-5;
+    color: $light-1;
     border-bottom: 0px;
     display: inline-block;
-    border-radius: 5px 5px 0px 0px;
-    font-size: 14px;
+    border-radius: $radious-xs $radious-xs 0px 0px;
+    font-size: $font-md-sm;
     font-weight: normal;
     cursor: pointer;
+
     &.active {
-      background-color: #fff;
-      color: #26a69a;
+      background-color: $light-1;
+      // color: $success-5;
+      color: $primary-11;
       position: relative;
+
       &::after {
         content: "";
         display: block;
-        background-color: #fff;
+        background-color: $light-1;
         height: 10px;
         width: 100%;
         position: absolute;
         left: 0px;
       }
+
     }
   }
 }
 
-.table th,
-.table td {
-  padding: 0.5rem;
-  vertical-align: top;
-  border-top: 1px solid #dee2e6;
-}
+
 :host ::ng-deep .fa-edit {
-  color: #3c6ac7;
+  color: $primary-10;
   cursor: pointer;
   display: contents;
 }
 
 :host ::ng-deep .edit-btn:hover {
-  background-color: #0054ff;
+  background-color: $primary-6;
 }
 
 :host ::ng-deep .fa-trash-alt {
-  margin-right: 10px;
-  color: red;
+  margin-right: $margin-md;
+  color: $danger-2;
   padding: 2px;
   border-radius: 3px;
   cursor: pointer;
+}
+
+table {
+  margin-bottom: 0rem;
+
+  thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    th {
+      padding: 0.2rem !important;
+      background: $light-1 !important;
+      border: 6px solid $dark-1 !important;
+      font-size: .80rem;
+      vertical-align: top;
+    }
+
+  }
+
+  tbody {
+    max-height: calc(100vh - 210px);
+
+    tr {
+      td {
+        padding: 0.5rem;
+        vertical-align: top;
+        border-top: 1px solid $light-7;
+      }
+
+      td:first-child {
+        width: 60px;
+      }
+    }
+
+  }
 }

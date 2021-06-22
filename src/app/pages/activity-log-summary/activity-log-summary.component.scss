@@ -1,16 +1,42 @@
-:host::ng-deep{
-    .tableFixHead{
-        height: auto !important;
+@import '../../style.scss';
+// :host::ng-deep{
+//     .tableFixHead{
+//         height: auto !important;
+//     }
+// }
+// smart-table{
+//     display: block;
+//     max-height: calc(100vh - 370px);
+//     overflow: auto;
+
+// }
+
+#devices {
+  :host::ng-deep {
+    .suggestion {
+      text-transform: uppercase !important;
     }
-}
-#devices{
-    :host::ng-deep{
-        .suggestion{
-            text-transform: uppercase !important;
-        }
-    }
-}
-.exel-icon {
-    font-size: 40px;
-    color: #217346;
   }
+}
+
+.exel-icon {
+  font-size: $font-lg-xl;
+  color: $success-2;
+}
+
+table {
+  margin-bottom: 0rem;
+  thead {
+    // display: table;
+    // table-layout: fixed;
+    th {
+      min-width: 135px;
+      word-break: keep-all;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    max-height: calc(100vh - 238px);
+  }
+}

@@ -1,6 +1,11 @@
+@import '../../../style';
+
 :host ::ng-deep .tableFixHead{
     height: auto !important;
 }
+smart-table{
+    height: calc(100vh - 241px);
+}
 :host ::ng-deep .edit{
-    margin-left: 15px;
+    margin-left: $margin-lg;
 }

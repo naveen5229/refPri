@@ -44,6 +44,7 @@ export class DailyReportComponent implements OnInit {
     this.api.get("Admin/getDepartmentList", "I")
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.departments = res['data'] || [];
       }, err => {
         this.common.loading--;
@@ -233,16 +234,12 @@ export class DailyReportComponent implements OnInit {
     this.api.get('Users/getDailyReport.json?' + params)
       .subscribe(res => {
         this.common.loading--;
-        // console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.dailyReportList = res['data'] || [];
-        console.log(this.dailyReportList);
-
         this.dailyReportList.length ? this.setTable() : this.resetTable();
-
-        console.log(this.dailyReportList);
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -314,12 +311,12 @@ export class DailyReportComponent implements OnInit {
     this.api.get('Users/getWrongCaptcha.json?')
       .subscribe(res => {
         this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.captchList = res['data'] || [];
-        console.log("captchList:", this.captchList);
         this.captchList.length ? this.setWrongCaptchaTable() : this.resetWrongCaptchaTable();
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

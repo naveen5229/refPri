@@ -2,11 +2,11 @@
     <nb-card-header>
         <div class="row ">
             <div class="col-3">
-                <h5> Segment</h5>
+                <h5 class="heading-design"> Segment</h5>
             </div>
         </div>
     </nb-card-header>
-    <nb-card-body style="min-height: 445px; max-height: 410px;">
+    <nb-card-body>
         <div class="row">
             <div class="col-3">
                 <auto-suggestion [data]="moduleName" [display]="['modulename','projectname']" seperator="-"
@@ -26,7 +26,7 @@
         <table class="table table-bordered mt-2">
             <thead class="thead" style="background-color:lightgrey">
                 <tr>
-                    <th>#</th>
+                    <th style="width:40px;">#</th>
                     <th>Module Name</th>
                     <th>Segment Name</th>
                     <th>Add By</th>
@@ -35,7 +35,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let segment of filteredItems; let i=index;">
-                    <td>0{{i +1 }}</td>
+                    <td style="width:40px;">0{{i +1 }}</td>
                     <td>{{segment.module_name}}({{segment.project_name}})</td>
                     <td>{{segment.name}}</td>
                     <td>{{segment.addedby}}</td>

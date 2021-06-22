@@ -28,9 +28,14 @@ export class ShiftLogsComponent implements OnInit {
   };
 
   constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public mapService: MapService) {
+    this.common.refresh = this.refresh.bind(this);
     this.getShiftLogs();
   }
   ngOnInit() { }
+  
+  refresh() {
+    this.getShiftLogs();
+  }
 
   getShiftLogs() {
     this.table = {
@@ -50,22 +55,17 @@ export class ShiftLogsComponent implements OnInit {
     this.api.get('Admin/getUserShiftByDate' + params, 'I')
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data']) {
           this.shiftLogList = res['data'] || [];
           this.shiftLogList.length ? this.setTable() : this.resetTable();
-          console.log(this.shiftLogList);
         }
-
-
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
-
-
   }
-
 
   resetTable() {
     this.table.data = {
@@ -137,7 +137,7 @@ export class ShiftLogsComponent implements OnInit {
 
   showShiftLogPopup() {
     this.common.params = null;
-    const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(ShiftLogAddComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
         this.getShiftLogs();
@@ -153,7 +153,7 @@ export class ShiftLogsComponent implements OnInit {
     this.api.get('Admin/getUserShiftLogLocationByDate' + params)
       .subscribe(res => {
         this.common.loading--;
-        console.log('res:', res, res['data'][0]['lat']);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (res['data'] && res['data'][0]['lat'] && res['data'][0]['long']) {
           this.showMap(res['data'][0]['lat'], res['data'][0]['long']);
         } else {
@@ -161,6 +161,7 @@ export class ShiftLogsComponent implements OnInit {
         }
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }

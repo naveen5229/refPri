@@ -8,9 +8,9 @@
   <div class="container">
     <div class="row" *ngFor="let list of listOfData; let i=index;">
       <div class="col-6 page-container">
-        <label>
           <input type="checkbox" class="page-box" [name]="'list-' + i" [(ngModel)]="list.ismapped" value="{{list.id}}"
-            (change)="typeId=='stateId' ? onCheckboxChange(list,$event) : selected(list,$event)">{{list.name}}</label>
+            (change)="typeId=='stateId' ? onCheckboxChange(list,$event) : selected(list,$event)">
+            <label class="ml-2">{{list.name}}</label>
       </div>
     </div>
   </div>

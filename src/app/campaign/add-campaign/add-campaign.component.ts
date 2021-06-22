@@ -52,13 +52,14 @@ export class AddCampaignComponent implements OnInit {
     this.api.get('Campaigns/getCampaigns')
       .subscribe(res => {
         this.common.loading--;
-        console.log("api data", res);
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
         if (!res['data']) return;
         this.campaignData = res['data'];
         this.campaignData.length ? this.setTable() : this.resetTable();
 
       }, err => {
         this.common.loading--;
+        this.common.showError();
         console.log(err);
       });
   }
@@ -196,10 +197,12 @@ export class AddCampaignComponent implements OnInit {
           this.api.post('Campaigns/deleteCampaign', params)
             .subscribe(res => {
               this.common.loading--;
+              if(res['code']===0) { this.common.showError(res['msg']); return false;};
               this.common.showToast(res['msg']);
               this.getCampaignData();
             }, err => {
               this.common.loading--;
+              this.common.showError();
               console.log('Error: ', err);
             });
         }

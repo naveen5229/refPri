@@ -1,4 +1,9 @@
+@import '../../../style.scss';
+
 .require {
-  font-size: 20px;
-  color: red;
+  font-size: $font-md-xl;
+  color: $danger-2;
+}
+.form-group {
+  margin-bottom: .3rem;
 }

@@ -1,18 +1,26 @@
-.fa-trash-alt {
-  font-size: 12px;
-  margin-right: 10px;
-  color: red;
-  border-color: red;
-  padding: 8px;
-  border-radius: 3px;
+@import '../../style.scss';
+
+
+.fa-edit {
+  margin-right: $margin-md;
+  color: $primary-10;
+  padding: 2px;
+  border-radius: $radious-xxs;
   cursor: pointer;
 }
 
-.fa-edit {
-  font-size: 12px;
-  margin-right: 10px;
-  color: #3c6ac7;
-  padding: 2px;
-  border-radius: 3px;
-  cursor: pointer;
+table {
+  margin-bottom: 0rem;
+  @include fixed-table;
+  thead{
+    th{
+        @include th-bordered;
+        } 
+   }
+  tbody {
+    max-height: calc(100vh - 218px);
+
+  
+
+  }
 }

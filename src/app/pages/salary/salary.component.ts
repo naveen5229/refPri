@@ -38,11 +38,10 @@ export class SalaryComponent implements OnInit {
 
   getEmployeeSalary() {
     this.salaryList = [];
-    let params = "?date=" + this.selectedDates.start;//this.common.dateFormatter(this.date);
+    let params = "?date=" + this.selectedDates.start;
     this.common.loading++;
     this.api.get('Admin/getEmpolyeeSalery.json' + params).subscribe(res => {
       this.common.loading--;
-      console.log('res:', res);
       if (res['code'] == 1) {
         let r = res['data'];
         this.totalDays = r['totalDays'];
@@ -52,16 +51,15 @@ export class SalaryComponent implements OnInit {
         this.employerEsicPercent = r['employerEsicPercent'];
         this.employeeEsicPercent = r['employeeEsicPercent'];
         this.salaryList = r['salaryList'] || [];
-        console.log("salaryList:", this.salaryList);
         if (!this.salaryList.length) {
           this.common.showError("No Record Found");
         }
-
       } else {
         this.common.showError(res["msg"]);
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log("error:", err);
     });
   }
@@ -96,6 +94,7 @@ export class SalaryComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log("error:", err);
     });
   }
@@ -113,9 +112,7 @@ export class SalaryComponent implements OnInit {
     };
     this.common.loading++;
     this.api.post('Admin/saveEmployeeSalary.json', params).subscribe(res => {
-      // this.api.get('Campaigns/getCampaignPrimaryInfoMatrix?campaignId=49&infotype=1').subscribe(res => {
       this.common.loading--;
-      console.log('res:', res);
       if (res['code'] == 1) {
         this.common.showToast(res['msg']);
         this.getEmployeeSalary();
@@ -124,6 +121,7 @@ export class SalaryComponent implements OnInit {
       }
     }, err => {
       this.common.loading--;
+      this.common.showError();
       console.log("error:", err);
     });
   }
