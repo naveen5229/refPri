@@ -3,6 +3,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../Service/common/common.service';
+import { MessagingService } from '../../Service/messaging.service';
 
 @Component({
   selector: 'ngx-login',
@@ -27,7 +28,8 @@ export class LoginComponent implements OnInit {
     public router: Router,
     private route: ActivatedRoute,
     public common: CommonService,
-    public user: UserService) {
+    public user: UserService,
+    public messageService: MessagingService) {
   }
 
   ngOnInit() {
@@ -180,6 +182,7 @@ export class LoginComponent implements OnInit {
           this.user._token = res['data'][0]['authkey'];
           this.user.loggedInUser = {id: this.user._details.id, name: this.user._details.name};
           this.getUserPagesList();
+          this.messageService.updateWebToken();
         } else {
           if (this.loginType != 2) {
             this.common.showError(res['msg']);
