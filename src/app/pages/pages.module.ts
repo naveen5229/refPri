@@ -1,3 +1,4 @@
+import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
 
@@ -81,7 +82,8 @@ import { ExpenseTypeComponent } from './expense-type/expense-type.component';
     ProcessModule,
     TicketModule,
     DragDropModule,
-    ChartModule
+    ChartModule,
+    DataTablesModule
   ],
   declarations: [
     PagesComponent,

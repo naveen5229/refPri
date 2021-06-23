@@ -1,3 +1,5 @@
+import { expenses } from './pages/expense-type/data';
+import { from } from 'rxjs';
 /**
  * @license
  * Copyright Akveo. All Rights Reserved.
@@ -23,6 +25,9 @@ export class AppComponent implements OnInit {
   // handleKeyboardEvent(event) {
   //   this.keyHandler(event);
   // }
+
+  datatabledata:any[] = [];
+
   constructor(private analytics: AnalyticsService,
     public common: CommonService,
     public user: UserService,
@@ -35,6 +40,15 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.analytics.trackPageViews();
   }
+
+
+getdatatabledata(){
+let data = from(expenses);
+data.subscribe((item:any)=>{
+this.datatabledata = item;
+})
+
+}
 
   // getUserPagesList() {
   //   let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;

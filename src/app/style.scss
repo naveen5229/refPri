@@ -10,7 +10,7 @@ $light: '.nb-theme-light';
 
 
 // body{
-//   @include padding(null 1rem);  
+//   @include padding(null 1rem);
 // }
 
 
@@ -62,7 +62,7 @@ $light: '.nb-theme-light';
 }
 
 
-//  tab style 
+//  tab style
 @mixin tab-style {
   width: 100%;
   margin: 0px;
@@ -268,3 +268,22 @@ $light: '.nb-theme-light';
 .div-input{
   min-height: 27px;
 }
+
+
+//  custom style Item Redesign and development
+
+
+.nb-theme-default{
+.action-block {
+  button {
+    padding: 5px 15px !important;
+    text-transform: capitalize;
+    margin-right: 7px;
+    height: 15px;
+    line-height: 5px;
+    font-family: Poppins,sans-serif !important;
+
+  }
+}
+}
+

@@ -1,6 +1,19 @@
-.expense-form{
- label{
-  text-transform: capitalize;
-  font-weight: 500;
+.expense-form {
+  label {
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+}
+
+
+:host ::ng-deep {
+  nb-card-body {
+    min-height: auto !important
+  }
+
+ nb-card-body{
+ overflow: visible !important;
+
  }
+
 }

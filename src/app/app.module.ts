@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { DataTablesModule } from 'angular-datatables';
 
 import {
   NbChatModule,
@@ -251,6 +252,7 @@ const PAGE_COMPONENTS = [
     AppRoutingModule,
     FormsModule,
     NbSpinnerModule,
+    DataTablesModule,
     ReactiveFormsModule,
     DirectiveModule,
     ThemeModule.forRoot(),

@@ -1,4 +1,4 @@
-<nb-card>
+<nb-card class="min-h-auto">
   <nb-card-header>
     <h5>User Wise Expenses</h5>
   </nb-card-header>
@@ -13,7 +13,7 @@
             <input type="text" placeholder="add expense type" class="form-control">
           </div>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <div class="form-group">
             <label for=""> Status</label>
             <div class="d-block">
@@ -29,7 +29,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-md-3">
           <auto-suggestion (onSelected)="selectedCategory($event)" [data]="categories" display='name'
@@ -48,10 +48,72 @@
 </nb-card>
 
 
+<nb-card>
+  <nb-card-header>
+    <h5> Expense List </h5>
+
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <h4> {{startTime}} </h4>
+
+    <table datatable class="table table-primary" [dtOptions]="dtOptions" [dtTrigger]="">
+      <thead>
+        <tr>
+          <th>
+            Sr No.
+          </th>
+          <th>
+            expense type
+          </th>
+          <th>
+            expense category
+          </th>
+          <th> staus </th>
+          <th>Action </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of expenseData;index as i">
+          <td> {{i+1}} </td>
+          <td>
+            {{item.type}}
+          </td>
+          <td>
+            {{item.category}}
+          </td>
+          <td>
+
+            {{item.Status}}
+          </td>
+
+          <td>
+            <div class="action-block">
+              <button class="btn btn-danger"> delete </button>
+              <button class="btn btn-success"> edit </button>
+              <button class="btn btn-info"> View </button>
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <smart-table [data]="expenseData" [settings]="table.settings"></smart-table>
+    <h4> {{endTime}} </h4>
+
+  </nb-card-body>
+
+</nb-card>
+
 
 <nb-card>
   <nb-card-header>
-
     <h5> Visit Management </h5>
   </nb-card-header>
 
@@ -61,13 +123,10 @@
         <div class="row">
           <div class="col-md-4">
             <div class="from-group d-flex">
-              <input type="text">
+              <input type="text" class="form-control" placeholder="">
             </div>
-
           </div>
         </div>
-
-
       </form>
     </div>
 
