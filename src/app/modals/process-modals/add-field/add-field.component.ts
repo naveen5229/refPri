@@ -115,7 +115,7 @@ export class AddFieldComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   closeModal(res) {
     this.activeModal.close({ response: res });
@@ -126,7 +126,7 @@ export class AddFieldComponent implements OnInit {
     this.api.get('Entities/getEntityTypes')
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         if (!res['data']) return;
         this.entityTypeList = res['data'] || [];
       }, err => {
@@ -159,8 +159,8 @@ export class AddFieldComponent implements OnInit {
       this.common.params = {
         title: 'Field Duplicacy',
         description: `<b>&nbsp;` + 'Please use Global Fields to add contact name or contact number.' +
-         `<br>` + `Otherwise, it may occur problem in analytics.` +
-         `<br>`+ `Continue Anyway`+ `<b>` + `.`,
+          `<br>` + `Otherwise, it may occur problem in analytics.` +
+          `<br>` + `Continue Anyway` + `<b>` + `.`,
         btn1: `Continue`,
         btn2: `Remove`
       }
@@ -204,9 +204,9 @@ export class AddFieldComponent implements OnInit {
           error_count = true;
         }
       })
-    }else if (tmpJson.drpOption) {
-      let notbindList = tmpJson.drpOption.filter(x=>x.isNonBind);
-      if(notbindList && notbindList.length>1){
+    } else if (tmpJson.drpOption) {
+      let notbindList = tmpJson.drpOption.filter(x => x.isNonBind);
+      if (notbindList && notbindList.length > 1) {
         error_multi_notbind = true;
       }
     }
@@ -224,26 +224,26 @@ export class AddFieldComponent implements OnInit {
       return false;
     }
     let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
-    // console.log("apiName:", apiName,params); return false;
+    // console.log("apiName:", apiName,params,tmpJson); return false;
     this.common.loading++;
     this.api.post(apiName, params).subscribe(res => {
-        this.common.loading--;
-        if(res['code']>0) {
-          if (res['data'][0].y_id > 0) {
-            this.common.showToast("Successfully added");
-            this.resetData();
-            this.getFieldName();
-          }else {
-            this.common.showError(res['data'][0].y_msg);
-          }
-        }else {
-          this.common.showError(res['msg']);
-        };
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log('Err:', err);
-      });
+      this.common.loading--;
+      if (res['code'] > 0) {
+        if (res['data'][0].y_id > 0) {
+          this.common.showToast("Successfully added");
+          this.resetData();
+          this.getFieldName();
+        } else {
+          this.common.showError(res['data'][0].y_msg);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      };
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Err:', err);
+    });
   }
 
   getFieldName() {
@@ -258,13 +258,13 @@ export class AddFieldComponent implements OnInit {
         this.resetTable();
         this.headings = [];
         this.valobj = {};
-        if(res['code']>0) {
+        if (res['code'] > 0) {
           if (!res['data']) return;
           this.data = res['data'];
           this.data.length ? this.setTable() : this.resetTable();
-          }else{
-            this.common.showError(res['msg']); return false;
-          };
+        } else {
+          this.common.showError(res['msg']); return false;
+        };
       }, err => {
         this.common.loading--;
         this.common.showError();
@@ -390,7 +390,7 @@ export class AddFieldComponent implements OnInit {
 
   addFixValue() {
     if (this.fixValues[this.fixValues.length - 1].option) {
-      this.fixValues.push({ option: '',isNonBind: false })
+      this.fixValues.push({ option: '', isNonBind: false })
     } else {
       this.common.showError('Enter Value First')
     }
@@ -447,9 +447,10 @@ export class AddFieldComponent implements OnInit {
   }
 
   openAddFieldTable() {
-    this.common.params = { data: (this.childArray && this.childArray.length > 0) ? this.childArray : null };
+    this.common.params = { data: (this.childArray && this.childArray.length > 0) ? this.childArray : null, formType: this.formType };
     const activeModal = this.modalService.open(AddFieldTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
+      console.log('added table:', data);
       if (data.response) {
         this.childArray = (data.data && data.data.length > 0) ? data.data : [];
       }

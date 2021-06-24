@@ -21,15 +21,46 @@ export class TableViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("additionalFields:", this.tableHeader, this.additionalFields);
     if (this.additionalFields && this.additionalFields.length > 0) {
       this.additionalFields.forEach(element => {
         element.forEach(e => {
+          e["isNotBindFixedvalue"] = (e["isNotBindFixedvalue"]) ? e["isNotBindFixedvalue"] : false;
+          e["notBindFixedvalue"] = (e["notBindFixedvalue"]) ? e["notBindFixedvalue"] : null;
           if (e.param_type == 'date') {
             e.param_value = (e.param_value) ? new Date(e.param_value) : new Date();
+          }else if (e.param_type == 'entity') {
+            if (e.param_value > 0 && e.param_info && e.param_info.length) {
+              let entity_value = e.param_info.find(x => { return x._id == e.param_value });
+              e['entity_value'] = (entity_value) ? entity_value.option : null;
+            } else {
+              e['entity_value'] = null;
+            }
+          }else if (e.param_value && e.param_info && e.param_info.length) { // for not bind dropdown
+            let notBindFixedvalue = e.param_info.find(x => { return x.option == e.param_value });
+            if (!notBindFixedvalue) {
+              let notBindOption = e.param_info.find(x => x.isNonBind);
+              e["isNotBindFixedvalue"] = true;
+              e["notBindFixedvalue"] = e.param_value;
+              e["param_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
+            }
           }
         });
       });
+    }
+
+    let attr = document.getElementById('option');
+    console.log('attr:',attr)
+    console.log("additionalFields:", this.tableHeader, this.additionalFields);
+  }
+
+  onSelectNotBind(event, row) {
+    console.log(event)
+    let selectEl = event.target;
+    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
+    console.log(testval)
+    row.isNotBindFixedvalue = false;
+    if (JSON.parse(testval)) {
+      row.isNotBindFixedvalue = true;
     }
   }
 
@@ -43,6 +74,14 @@ export class TableViewComponent implements OnInit {
 
   addTransaction() {
     console.log("additionalFields:", this.additionalFields);
+    this.additionalFields.forEach(element => {
+      element.forEach(element2 => {
+        if (element2['isNotBindFixedvalue']) {
+          element2['param_value'] = element2['notBindFixedvalue'];
+        }
+      });
+    });
     this.tableUpdate.next(this.additionalFields);
+    // this.tableUpdate.next(details);
   }
 }
