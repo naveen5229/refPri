@@ -261,7 +261,11 @@ export class LoginComponent implements OnInit {
         this.user._pages = res['data'].filter(page => { return page._userid; });
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");
-        this.router.navigate(['/pages/task']);
+        if(this.user._loggedInBy == 'customer'){
+          this.router.navigate(['/pages/shift-logs']);
+        }else{
+          this.router.navigate(['/pages/task']);
+        }
       }, err => {
         this.common.loading--;
         this.common.showError();

@@ -152,7 +152,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   refresh() {
     if (!this.common.refresh) {
       // this.router.navigateByUrl('/pages/dashboard');
-      this.router.navigateByUrl('/pages/task');
+      if(this.user._loggedInBy == 'customer'){
+        this.router.navigate(['/pages/shift-logs']);
+      }else{
+        this.router.navigate(['/pages/task']);
+      }
       return;
     }
     this.common.refresh();
@@ -234,7 +238,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
           localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.userService._pages));
           this.userService.filterMenu("pages", "pages");
           if(type==1){
-            this.router.navigate(['/pages/task']);
+            if(this.user._loggedInBy == 'customer'){
+              this.router.navigate(['/pages/shift-logs']);
+            }else{
+              this.router.navigate(['/pages/task']);
+            }
           }
         }else{
           this.common.showError(res['msg']);
