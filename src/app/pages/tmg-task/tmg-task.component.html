@@ -598,3 +598,214 @@
   </div>
 </div>
 <!-- end:tmgProcess -->
+
+
+<!-- start: tmg-call -Dasboard -->
+<div *ngIf="pageType=='tmgCallDashboard'" class="contentsection">
+  <div class="row mb-0 mr-0 " style="min-height: 100%;">
+    <div class="col-4" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(33.33% - 5px);">
+        <h6><b class="charthead text-center mb-0">Call Count & Duration Trend </b></h6>
+        <p  class="link"
+        (click)="getDetials('AdminTask/getCallLogMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+      <chart *ngIf="doubleChart.type" [type]="doubleChart.type" [data]="doubleChart.dataSet" style="margin-right:5px;min-height: 200px;height: 90%; padding-left: 10px;" [options]="doubleChart.options">
+    </chart>
+      </div>
+      <div class="outer mt-1" style="height: calc(33.33% - 5px);">
+        <h6><b class="charthead text-center mb-0">Call Sync Defaults - 7 Days</b></h6>
+        <p class="link"
+        (click)="getDetials('AdminTask/getCallSyncDefaults',{totalrecord: 3,stepno: -1},7,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+      <table class="table" *ngIf="TaskSnapchat">
+        <thead class="thead">
+          <th>Name</th>
+          <th>Present Days</th>
+          <th>Not Sync Days</th>
+          <th>% Default</th>
+        </thead>
+        <tbody class="tbody">
+            <tr *ngFor="let s of TaskSnapchatTop3">
+              <td>{{s['name']}}</td>
+              <td>{{s['present']}}</td>
+              <td>{{s['sync']}}</td>
+              <td>{{s['default']}}</td>
+            </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="outer mt-1" style="height: calc(33.33% - 5px);">
+        <h6><b class="charthead text-center mb-0">Call Sync Defaults - 30 Days</b></h6>
+        <p class="link"
+        (click)="getDetials('AdminTask/getCallSyncDefaults',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+      </p>
+      <table class="table">
+        <thead class="thead">
+          <th>Name</th>
+          <th>Present Days</th>
+          <th>Not Sync Days</th>
+          <th>% Default</th>
+        </thead>
+        <tbody class="tbody">
+          <tr *ngFor="let ov of overduetaskdata">
+            <td>{{ov['name']}}</td>
+              <td>{{ov['present']}}</td>
+              <td>{{ov['sync']}}</td>
+              <td>{{ov['default']}}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="col-8 pl-0 pr-0 right">
+      <div class="row mr-0 firstlast">
+        <div class="col-6 pl-1 pr-1" style="height: 100%;">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Deviation-Benchmark</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgUserwiseWorkAvail',{totalrecord: 3,stepno: -1},300,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+          <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+          </chart>
+          </div>
+        </div>
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%;">
+            <h6 style="text-align:center"><b class="charthead">Missed Call Not Reverted</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getMissedCallMonthGraph',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+          <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart.options"></chart>
+           
+          </div>
+         
+        </div>
+
+       
+   
+      </div>
+      <div class="row mt-1 mr-0 midddle">
+        <div class="col-6 pl-1 pr-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Deviation Count Worst 3 (30 Days) </b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgWorklogDefaulters',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="uncomplete">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Call/Day</th>
+                <th>Benchmark</th>
+                <th>Deviation (%)</th>
+              </thead>
+              <tbody class="tbody">
+                <!-- <tr *ngFor="let ho of uncomplete">
+                  <td>{{ho['name']}}</td>
+                  <td>{{ho['present_hour']}}</td>
+                  <td>{{ho['work_log']}}</td>
+                  <td>{{ho['%default']}}</td>
+                </tr> -->
+                <tr *ngFor="let s of TaskSnapchatTop3">
+                  <td>{{s['name']}}</td>
+                  <td>{{s['present']}}</td>
+                  <td>{{s['sync']}}</td>
+                  <td>{{s['default']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Missed Call Not Reverted Worst-3 (7 Days)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getMissedCallDefaults',{totalrecord: 3,stepno: -1},7,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="longestunreadhoursdata">
+              <thead class="thead">
+                <th>Name</th>
+                <th>Total Missed Call</th>
+                <th>Missed Call Not Reverted</th>
+                <th>% Non Reverted Call</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let lo of longestunreadhoursdata">
+                  <td>{{lo['name']}}</td>
+                  <td>{{lo['total_missed_call']}}</td>
+                  <td>{{lo['not_reverted']}}</td>
+                  <td>{{lo['% Not Reverted']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div  class="row mt-1 mr-0 thirdlast">
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Deviation Time Worst 3 (30 Days)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getTmgWosrtThreeDefaulters',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table" *ngIf="holdtask">
+              <thead class="thead">
+                <th>Name</th>
+                <!-- <th>Dept</th> -->
+                <th>Call/Day</th>
+                <th>Duration/Day</th>
+                <!-- <th>Benchmark</th> -->
+                <th>Deviation (%)</th>
+              </thead>
+              <tbody class="tbody">
+                <!-- <tr *ngFor="let ho of holdtask">
+                  <td>{{ho['name']}}</td>
+                  <td>{{ho['Present%']}}</td>
+                  <td>{{ho['name']}}</td>
+                  <td>{{ho['Present%']}}</td>
+                  <td>{{ho['name']}}</td>
+                  <td>{{ho['Present%']}}</td>
+                </tr> -->
+                <tr *ngFor="let s of TaskSnapchatTop3">
+                  <td>{{s['name']}}</td>
+                  <td>{{s['present']}}</td>
+                  <td>{{s['sync']}}</td>
+                  <td>{{s['default']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+         
+        </div>
+        <div class="col-6 p-1">
+          <div class="outer" style="height: 100%">
+            <h6 style="text-align:center"><b class="charthead">Missed Call Not Reverted Worst-3 (30 Days)</b></h6>
+            <p class="link"
+            (click)="getDetials('AdminTask/getMissedCallDefaults',{totalrecord: 3,stepno: -1},30,'days')"><i title="More Details" class="fa fa-list"></i>
+          </p>
+            <table class="table">
+              <thead class="thead">
+                <!-- <th>Month</th> -->
+                <th>Name</th>
+                <th>Total Missed Call</th>
+                <th>Missed Call Not Reverted</th>
+                <th>% Non Reverted Call</th>
+              </thead>
+              <tbody class="tbody">
+                <tr *ngFor="let uw of userwisereadavgtat">
+                  <!-- <td>{{uw['Month']}}</td> -->
+                  <td>{{uw['name']}}</td>
+                  <td>{{uw['total_missed_call']}}</td>
+                  <td>{{uw['not_reverted']}}</td>
+                  <td>{{uw['% Not Reverted']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end: tmg-call-dashboard -->
