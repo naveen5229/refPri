@@ -8,6 +8,7 @@ import { AnalyticsService } from './@core/utils/analytics.service';
 import { CommonService } from './Service/common/common.service';
 import { UserService } from './Service/user/user.service';
 import { ApiService } from './Service/Api/api.service';
+import { MessagingService } from './Service/messaging.service';
 
 @Component({
   selector: 'ngx-app',
@@ -23,10 +24,14 @@ export class AppComponent implements OnInit {
   // handleKeyboardEvent(event) {
   //   this.keyHandler(event);
   // }
+  title = 'push-notification';
+  message;
   constructor(private analytics: AnalyticsService,
     public common: CommonService,
     public user: UserService,
-    public api: ApiService) {
+    public api: ApiService,
+    private messagingService: MessagingService
+    ) {
     // if (this.user._details) {
     //   this.getUserPagesList();
     // }
@@ -34,6 +39,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.analytics.trackPageViews();
+    this.messagingService.requestPermission()
+  this.messagingService.receiveMessage()
+  this.message = this.messagingService.currentMessage
   }
 
   // getUserPagesList() {

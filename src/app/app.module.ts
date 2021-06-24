@@ -125,6 +125,14 @@ import { FunctionalReportingMappingComponent } from './modals/functional-reporti
 import { AvailableTimeSlotComponent } from './modals/available-time-slot/available-time-slot.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AsyncPipe } from '../../node_modules/@angular/common';
+import { MessagingService } from './Service/messaging.service';
+
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -266,9 +274,13 @@ const PAGE_COMPONENTS = [
     }),
     CoreModule.forRoot(),
     DragDropModule,
-    NgxSliderModule
+    NgxSliderModule,
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.firebase),
   ],
-  providers: [
+  providers: [MessagingService,AsyncPipe,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
   bootstrap: [AppComponent],

@@ -25,6 +25,8 @@
               "src/assets",
               "src/favicon.ico",
               "src/favicon.png",
+              "src/firebase-messaging-sw.js",
+              "src/manifest.json" ,
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
