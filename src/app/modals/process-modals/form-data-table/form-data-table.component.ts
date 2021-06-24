@@ -18,13 +18,54 @@ export class FormDataTableComponent implements OnInit {
     this.additionalFields = this.common.params.additionalform;
     this.isDisabled = common.params.isDisabled;
     console.log("additionalFields:", this.additionalFields);
+    // if (this.additionalFields && this.additionalFields.length > 0) {
+    //   this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
+    //   this.additionalFields.forEach(element => {
+    //     element.forEach(e => {
+    //       if (e.param_type == 'date') {
+    //         e.param_value = (e.param_value) ? new Date(e.param_value) : new Date();
+    //       }
+    //     });
+    //   });
+    // }
+
     if (this.additionalFields && this.additionalFields.length > 0) {
       this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
       this.additionalFields.forEach(element => {
         element.forEach(e => {
+          e["isNotBindFixedvalue"] = (e["isNotBindFixedvalue"]) ? e["isNotBindFixedvalue"] : false;
+          e["notBindFixedvalue"] = (e["notBindFixedvalue"]) ? e["notBindFixedvalue"] : null;
           if (e.param_type == 'date') {
             e.param_value = (e.param_value) ? new Date(e.param_value) : new Date();
+          } else if (e.param_type == 'entity') {
+            if (e.param_value > 0 && e.param_info && e.param_info.length) {
+              let entity_value = e.param_info.find(x => { return x._id == e.param_value });
+              e['entity_value'] = (entity_value) ? entity_value.option : null;
+            } else {
+              e['entity_value'] = null;
+            }
+          } else if (e.param_value && e.param_info && e.param_info.length) { // for not bind dropdown
+            let notBindFixedvalue = e.param_info.find(x => { return x.option == e.param_value });
+            if (!notBindFixedvalue) {
+              let notBindOption = e.param_info.find(x => x.isNonBind);
+              e["isNotBindFixedvalue"] = true;
+              e["notBindFixedvalue"] = e.param_value;
+              e["param_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
+            }
           }
+
+          //earlier code
+          // if (e.r_value && e.param_info && e.param_info.length) { // for not bind dropdown
+          //   let notBindFixedvalue = e.param_info.find(x => { return x.option == e.r_value });
+          //   if (!notBindFixedvalue) {
+          //     let notBindOption = e.param_info.find(x => x.isNonBind);
+          //     e["isNotBindFixedvalue"] = true;
+          //     e["notBindFixedvalue"] = e.r_value;
+          //     e["r_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
+          //   }
+          // }
+          //earlier code
+
         });
       });
     }
@@ -47,5 +88,16 @@ export class FormDataTableComponent implements OnInit {
   addTransaction() {
     // console.log("additionalFields:", this.additionalFields);
     this.close(true);
+  }
+
+  onSelectNotBind(event, row) {
+    console.log(event, row)
+    let selectEl = event.target;
+    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
+    console.log(testval)
+    row.isNotBindFixedvalue = false;
+    if (JSON.parse(testval)) {
+      row.isNotBindFixedvalue = true;
+    }
   }
 }

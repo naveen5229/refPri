@@ -11,6 +11,7 @@ import { FormDataTableComponent } from '../../process-modals/form-data-table/for
   styleUrls: ['./ticket-closing-form.component.scss']
 })
 export class TicketClosingFormComponent implements OnInit {
+  expandTable = null;
   title = 'Ticket Closing Form';
   evenArray = [];
   oddArray = [];
@@ -46,7 +47,8 @@ export class TicketClosingFormComponent implements OnInit {
       this.common.loading--;
       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (res['data']) {
-        this.ticketFormFields = res['data'];
+        let ticketFormFields = res['data'];
+        this.ticketFormFields = ticketFormFields.map(data => { data.isExpand = false; return data })
         this.formatArray();
       }
     }, err => {
@@ -123,7 +125,7 @@ export class TicketClosingFormComponent implements OnInit {
       }
       return copyDetails;
     });
-    
+
     const params = {
       info: JSON.stringify(details),
       refId: this.refId,
@@ -237,8 +239,29 @@ export class TicketClosingFormComponent implements OnInit {
     console.log("tableEvents - event", event, tableType);
     if (tableType === 'even') {
       this.evenArray[i]._param_child = JSON.parse(JSON.stringify(event));
+      this.evenArray[i].isExpand = false;
     } else {
       this.oddArray[i]._param_child = JSON.parse(JSON.stringify(event));
+      this.oddArray[i].isExpand = false;
+    }
+  }
+
+  checkAllExpandedTables(checkedOf, arrayType, status) {
+    console.log(checkedOf, arrayType, status);
+    this.oddArray.forEach(obj => { obj.isExpand = false; });
+    this.evenArray.forEach(obj => { obj.isExpand = false; });
+    if (arrayType === 'odd') {
+      let index = this.oddArray.findIndex(ele => {
+        return ele.r_colid === checkedOf.r_colid
+      });
+      this.oddArray[index].isExpand = status
+      console.log(index, status)
+    } else {
+      let index = this.evenArray.findIndex(ele => {
+        return ele.r_colid === checkedOf.r_colid
+      });
+      this.evenArray[index].isExpand = status;
+      console.log(index, status)
     }
   }
 }

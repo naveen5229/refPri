@@ -10,12 +10,15 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./add-field-table.component.scss']
 })
 export class AddFieldTableComponent implements OnInit {
+  formType = null;
   title = "Add Table Columns";
   types = [
     { id: 'text', name: 'Text' },
     { id: 'number', name: 'Number' },
     { id: 'date', name: 'Date' },
-    { id: 'checkbox', name: 'Checkbox' }
+    { id: 'checkbox', name: 'Checkbox' },
+    { id: 'attachment', name: 'Attachment' },
+    { id: 'entity', name: 'Entity' }
   ];
   childArray = {
     index: null,
@@ -27,10 +30,13 @@ export class AddFieldTableComponent implements OnInit {
     _param_id: null,
     _used_in: null
   };
+  entityTypeList = [];
   finalArray = [];
   isFixedValue = false;
   fixValues = [{
-    option: ''
+    // option: ''
+    option: '',
+    isNonBind: false
   }];
 
   // data = [];
@@ -52,6 +58,8 @@ export class AddFieldTableComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal) {
     console.log("params:", this.common.params);
+    this.formType = this.common.params.formType;
+    this.getEntityType();
     if (this.common.params && this.common.params.data) {
       this.finalArray = this.common.params.data;
       this.getFieldName();
@@ -59,6 +67,21 @@ export class AddFieldTableComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  getEntityType() {
+    this.common.loading++;
+    this.api.get('Entities/getEntityTypes')
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+        if (!res['data']) return;
+        this.entityTypeList = res['data'] || [];
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
   AddTable(child_name) {
@@ -81,6 +104,17 @@ export class AddFieldTableComponent implements OnInit {
       return false;
     }
     let temp = JSON.parse(JSON.stringify(this.childArray));
+    let error_multi_notbind = false;
+    if (temp._param_info) {
+      let notbindList = temp._param_info.filter(x => x.isNonBind);
+      if (notbindList && notbindList.length > 1) {
+        error_multi_notbind = true;
+      }
+    }
+    if (error_multi_notbind) {
+      this.common.showError('Mark only single input-box for fixed value option');
+      return false;
+    }
     if (temp.index != null) {
       let index = temp.index;
       this.finalArray[index].param = temp.param;
@@ -171,11 +205,18 @@ export class AddFieldTableComponent implements OnInit {
   }
 
   addFixValue(fixvalue) {
-    if (fixvalue.length == 0) {
+    // if (fixvalue.length == 0) {
+    // } else {
+    //   this.fixValues.push({
+    //     // option: ''
+    //     option: '',
+    //     isNonBind: false
+    //   });
+    // }
+    if (this.fixValues[this.fixValues.length - 1].option) {
+      this.fixValues.push({ option: '', isNonBind: false })
     } else {
-      this.fixValues.push({
-        option: ''
-      });
+      this.common.showError('Enter Value First')
     }
   }
 
@@ -200,7 +241,9 @@ export class AddFieldTableComponent implements OnInit {
   resetData() {
     this.isFixedValue = false;
     this.fixValues = [{
-      option: ''
+      // option: ''
+      option: '',
+      isNonBind: false
     }];
     this.btn1 = "Add";
     this.childArray = {
