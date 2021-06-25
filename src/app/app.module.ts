@@ -132,6 +132,8 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MessagingService } from './Service/messaging.service';
+import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
+
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -223,6 +225,8 @@ const PAGE_COMPONENTS = [
   AddExpectedHourComponent,
   FunctionalReportingMappingComponent,
   AvailableTimeSlotComponent,
+
+ 
 ];
 
 @NgModule({

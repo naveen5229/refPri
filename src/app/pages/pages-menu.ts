@@ -15,6 +15,7 @@ export const MENU_ITEMS = JSON.stringify([
     //   }
     // ]
   },
+ 
   {
     title: "Admin",
     icon: 'people-outline',
@@ -244,6 +245,12 @@ export const MENU_ITEMS = JSON.stringify([
     home: true,
     children: [
       {
+        title: "Leave Management",
+        icon: 'home-outline',
+        link: '/pages/leave-management',
+        home: true,
+      },
+      {
         title: 'Call-Logs',
         icon: 'phone-call-outline',
         link: '/pages/call-logs',
@@ -373,6 +380,7 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/attendance',
         home: true,
       },
+
       {
         title: 'Holiday-Calendar',
         icon: 'calendar',

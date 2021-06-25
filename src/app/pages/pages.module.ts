@@ -67,6 +67,8 @@ import { TmgTaskComponent } from './tmg-task/tmg-task.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
+import { LeaveManagementComponent } from './leave-management/leave-management.component';
+import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -138,7 +140,9 @@ import { ContinuityReportComponent } from './continuity-report/continuity-report
     TmgTaskComponent,
     SettingsComponent,
     CallLogsComponent,
-    ContinuityReportComponent
+    ContinuityReportComponent,
+    LeaveManagementComponent,
+    MyLeavesComponent
   ],
 })
 export class PagesModule {
