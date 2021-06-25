@@ -230,6 +230,7 @@ export class TaskComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   clickout(event) {
     console.log('event triggered:', event);
+    if ((event.target.innerText >= 1 && event.target.innerText <= 100) || event.target.innerText == 'Cancel' || event.target.innerText == 'Set') return;
     (this.todoVisi) ? this.todoVisi = false : null;
     (this.fabAction) ? this.fabAction = false : null;
   }

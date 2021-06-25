@@ -105,8 +105,8 @@ export class AddFieldTableComponent implements OnInit {
     }
     let temp = JSON.parse(JSON.stringify(this.childArray));
     let error_multi_notbind = false;
-    if (temp._param_info) {
-      let notbindList = temp._param_info.filter(x => x.isNonBind);
+    if (this.isFixedValue && this.fixValues && this.fixValues.length>0) {
+      let notbindList = this.fixValues.filter(x => x.isNonBind);
       if (notbindList && notbindList.length > 1) {
         error_multi_notbind = true;
       }
