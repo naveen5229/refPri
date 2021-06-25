@@ -1,9 +1,8 @@
 import { MapService } from './../../Service/map/map.service';
-import { allUsers, } from './../employee-monitoring/data';
+// import { allUsers, } from './../employee-monitoring/data';
 import { CommonService } from './../../Service/common/common.service';
-import { expenses, allvisits, expenseDetail } from './data';
-import { group } from 'console';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiService } from '../../Service/Api/api.service';
+import { expenses, expenseDetail } from './data';
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { from, Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
@@ -17,7 +16,12 @@ export class VisitManagementComponent implements OnInit {
  startDate = new Date();
  endDate = new Date();
  category:any;
- allUsers:any[] = [];
+ allUsers:any[] = [{
+  "id": null,
+  "name": "All",
+  "mobileno": null,
+  "department_name": null
+}];
  allVisits:any[] = [];
  listView:boolean = true;
  detailView:boolean = false;
@@ -29,6 +33,9 @@ export class VisitManagementComponent implements OnInit {
  detailImageZoom:boolean = false;
  expenseImage:string = '';
  map: any;
+
+
+alluserselect:boolean = false;
 
 expenseIndex:number = -1;
 detailDataIndex:number = -1;
@@ -82,13 +89,22 @@ detailDataIndex:number = -1;
 
   startTime:any;
   endTime:any;
+  
+  updatedExpenses = [];
+  expenseSearch = {
+    admin : { id: null, name: 'All' }
+  }
+
+  constructor(public common:CommonService, public mapService:MapService, public api: ApiService) {
+    this.common.refresh = this.refreshPage.bind(this);
+    this.getAllAdmin();
+  }
 
 ngAfterViewInit() {
     this.dtTrigger.next();
     this.getexpenses();
     this.dtTrigger1.next();
-    this.getAllvisits();
-
+    // this.getAllvisits();
   }
 
  ngOnDestroy(): void {
@@ -96,6 +112,151 @@ ngAfterViewInit() {
      this.dtTrigger1.unsubscribe();
   }
 
+  refreshPage(){
+    this.getAllAdmin();
+    this.listView = true;
+    this.allVisits = [];
+    this.allUsers = [{
+      "id": null,
+      "name": "All",
+      "mobileno": null,
+      "department_name": null
+    }];
+  }
+
+  getAllAdmin() {
+    this.allUsers = [{
+      "id": null,
+      "name": "All",
+      "mobileno": null,
+      "department_name": null
+    }];
+    this.common.loading++;
+    this.api.get('Admin/getAllAdmin.json')
+      .subscribe(res => {
+        this.common.loading--;
+        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        let allUsers = res['data'] || [];
+
+        allUsers.map(x=>{
+          this.allUsers.push({
+            "id": x.id,
+            "name": x.name,
+            "mobileno": x.mobileno,
+            "department_name": x.department_name
+          });
+        })
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  selectedUser(event:any){
+    if(!event.id){
+      this.endDate = this.startDate; 
+    }
+    this.expenseSearch.admin = { id: event.id, name: event.name };
+  }
+
+  showAdminWiseWagesList() {
+    let adminId = this.expenseSearch.admin.id;
+    // if (!adminId) {
+    //   this.common.showError('Please select User');
+    //   return;
+    // }
+    if (this.startDate > this.endDate) {
+      this.common.showError('End Date should be grater than Start Date')
+      return;
+    }
+    let param = `userId=${adminId}&startDate=${this.common.dateFormatter1(this.startDate)}&endDate=${this.common.dateFormatter1(this.endDate)}`;
+    this.common.loading++;
+    this.allVisits = [];
+    this.api.get('Admin/getOnSiteExpensesByUserNew?' + param)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.allVisits = res['data'] || [];
+          this.updateExpenseArray();
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  updateExpenseArray() {
+    this.updatedExpenses = [];
+    this.updatedExpenses = this.allVisits.map(data => {
+      data['checked'] = false;
+      return {
+        user_id: this.expenseSearch.admin.id,
+        date: data.sqdate,
+        user_amount: data.travel_amount,
+        system_amount: data.system_expense,
+        other_amount: data.other_amount,
+        total_amount: data.total_expense,
+      }
+    });
+    console.log('arrayManaged', this.updatedExpenses)
+  }
+
+  onsiteImages = [];
+  getOnSiteImagesByUser() {
+    let adminId = this.selectedExpense._user_id;
+    // if (!adminId) {
+    //   this.common.showError('Please select User');
+    //   return;
+    // }
+    if (this.startDate > this.endDate) {
+      this.common.showError('End Date should be grater than Start Date')
+      return;
+    }
+    let param = `userId=${adminId}&startDate=${this.common.dateFormatter1(this.startDate)}&endDate=${this.common.dateFormatter1(this.endDate)}`;
+    this.common.loading++;
+    this.allVisits = [];
+    this.api.get('Admin/getOnSiteImagesByUser?' + param)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.onsiteImages = res['data'] || [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  expenseList = [];
+  getExpenseWrtImage(imageId) {
+    if (!imageId) {
+      this.common.showError('Invalid request');
+      return;
+    }
+    let param = `imageId=${imageId}`;
+    this.common.loading++;
+    this.allVisits = [];
+    this.api.get('Admin/getExpenseWrtImage?' + param)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.expenseList = res['data'] || [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
 
  renderTable1() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -113,9 +274,7 @@ ngAfterViewInit() {
       // });
 
     });
-
   }
-
 
    renderTable() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -133,25 +292,12 @@ ngAfterViewInit() {
       // });
 
     });
-
   }
-
-
-
-
-  constructor(public common:CommonService, public mapService:MapService) {
-
-  }
-
-
 
 filterColumn(){
 this.dtTrigger.next();
 this.renderTable();
 }
-
-
-
 
 getCategoris(){
 let catrgories = from ([[
@@ -166,88 +312,105 @@ let catrgories = from ([[
 catrgories.subscribe((item:any)=>{
 this.categories = item;
 console.log('this.categories: ', this.categories);
-
 })
-
-
 }
 
-
-
-getAllvisits(){
-  let allvisitData = from(allvisits);
-  allvisitData.subscribe((item:any)=>{
- this.allVisits = item;
-//  this.renderTable1();
-
- })
-
-}
+// getAllvisits(){
+//   let allvisitData = from(allvisits);
+//   allvisitData.subscribe((item:any)=>{
+//   this.allVisits = item ||+ [];
+//   this.allVisits.map((item:any)=>{
+//   item.checked = false;
+//   })
+// //  this.renderTable1();
+//  })
+// }
 
 getexpenses(){
-let expense = from(expenses);
-console.log('expense : ', expense);
-expense.subscribe((item:any)=>{
-this.expenseData = item;
-// this.renderTable();
-},
-);
-
-
-
-
+  let expense = from(expenses);
+  console.log('expense : ', expense);
+  expense.subscribe((item:any)=>{
+  this.expenseData = item;
+  // this.renderTable();
+  });
 }
 
 selectedCategory(event:any){
-this.category = event.name;
-
+  this.category = event.name;
 }
-
-
 
 SubmitExpenses(){
-console.log('expenseTypeVal',this.expenseTypeVal);
-let params = {
-expeenseType:this.expenseTypeVal,
-status:this.status,
-category:this.category,
-}
-console.log('params: ', params);
-
-
+  console.log('expenseTypeVal',this.expenseTypeVal);
+  let params = {
+  expeenseType:this.expenseTypeVal,
+  status:this.status,
+  category:this.category,
+  }
+  console.log('params: ', params);
 }
 
-selectedUser(event:any){
+// getVisitManagement(){
+//   this.allUsers = allUsers;
+// }
 
-}
-
-
-getVisitManagement(){
-this.allUsers = allUsers;
-}
-
-
-Userdetail(index:number){
-let expensedata = from(expenseDetail);
-expensedata.subscribe((item:any)=>{
-this.expensdetail = item[index];
-})
-
-console.log('this.expensdetail',this.expensdetail);
-
-this.detailView = true;
-this.listView = false;
+selectedExpense;
+viewExpenseDetail(item){
+  let expensedata = from(expenseDetail);
+  // expensedata.subscribe((item:any)=>{
+  this.expensdetail = item;
+  // })
+  this.selectedExpense = item;
+  console.log('this.expensdetail',this.expensdetail);
+  this.detailView = true;
+  this.listView = false;
 
 }
 
 
-approveExpense(){
-
+selectAllUser(event:any){
+  this.alluserselect  = !this.alluserselect;
+  event.stopPropagation();
+  console.log('all check',this.alluserselect);
+  this.allVisits.map((item:any)=>{
+    item.checked = this.alluserselect;
+  })
 }
 
+selectUser(index:number){
+  this.allVisits[index].checked = true;
+  if(this.allVisits && this.allVisits.find(x=>!x.checked)){
+    this.alluserselect = false;
+  }else{
+    this.alluserselect = (!this.allVisits) ? false : true;
+  }
+  console.log('this.allVisits',this.allVisits);
+}
 
-rejectexpense(){
-
+updateOnsiteImageStatusByUser(status,userId){
+  if (!userId) {
+    this.common.showError('Please select User');
+    return false;
+  }
+  if (this.startDate > this.endDate) {
+    this.common.showError('End Date should be grater than Start Date');
+    return false;
+  }
+  let param = `userId=${userId}&status=${status}&startDate=${this.common.dateFormatter1(this.startDate)}&endDate=${this.common.dateFormatter1(this.endDate)}`;
+  this.common.loading++;
+  this.api.get('Admin/updateOnsiteImageStatusByUser?' + param)
+    .subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        this.allVisits = res['data'] || [];
+        this.updateExpenseArray();
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, (err) => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
 }
 
 renderAllTables(): void {
@@ -326,7 +489,7 @@ this.detailImageZoom = false;
   ngOnInit() {
   this.getCategoris();
   this.getexpenses();
-  this.getAllvisits();
+  // this.getAllvisits();
 
   }
 }
