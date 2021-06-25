@@ -10,7 +10,7 @@ $light: '.nb-theme-light';
 
 
 // body{
-//   @include padding(null 1rem);  
+//   @include padding(null 1rem);
 // }
 
 
@@ -62,7 +62,7 @@ $light: '.nb-theme-light';
 }
 
 
-//  tab style 
+//  tab style
 @mixin tab-style {
   width: 100%;
   margin: 0px;
@@ -231,6 +231,17 @@ $light: '.nb-theme-light';
 
 }
 
+@mixin headings {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @content;
+  }
+}
+
 .iv-fullscreen{
   z-index: 9999 !important;
 }
@@ -268,3 +279,35 @@ $light: '.nb-theme-light';
 .div-input{
   min-height: 27px;
 }
+
+
+//  custom style Item Redesign and development
+
+
+.nb-theme-default{
+.action-block {
+  button {
+    padding: 5px 15px !important;
+    text-transform: capitalize;
+    margin-right: 7px;
+    height: 25px !important;
+    line-height: 5px;
+    font-family: Poppins,sans-serif !important;
+
+  }
+}
+
+table.dataTable{
+td,th{
+ vertical-align: middle;
+}
+}
+
+table{
+.action-block {
+  margin: 3px 0px;
+}
+}
+
+}
+
