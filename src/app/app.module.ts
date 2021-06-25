@@ -128,7 +128,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 // import { SmartDataTableComponent } from './directives/smart-data-table/smart-data-table.component';
 
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
-import { AngularFireDatabaseModule } from '@angular/fire/datatables';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
