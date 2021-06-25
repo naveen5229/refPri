@@ -231,6 +231,17 @@ $light: '.nb-theme-light';
 
 }
 
+@mixin headings {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @content;
+  }
+}
+
 .iv-fullscreen{
   z-index: 9999 !important;
 }
@@ -279,11 +290,24 @@ $light: '.nb-theme-light';
     padding: 5px 15px !important;
     text-transform: capitalize;
     margin-right: 7px;
-    height: 15px;
+    height: 25px !important;
     line-height: 5px;
     font-family: Poppins,sans-serif !important;
 
   }
 }
+
+table.dataTable{
+td,th{
+ vertical-align: middle;
+}
+}
+
+table{
+.action-block {
+  margin: 3px 0px;
+}
+}
+
 }
 

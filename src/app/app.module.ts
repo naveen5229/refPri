@@ -125,6 +125,7 @@ import { AddExpectedHourComponent } from './modals/add-expected-hour/add-expecte
 import { FunctionalReportingMappingComponent } from './modals/functional-reporting-mapping/functional-reporting-mapping.component';
 import { AvailableTimeSlotComponent } from './modals/available-time-slot/available-time-slot.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+// import { SmartDataTableComponent } from './directives/smart-data-table/smart-data-table.component';
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -235,6 +236,8 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
+
+    // SmartDataTableComponent,
 
 
     // SendmessageComponent,

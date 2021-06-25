@@ -1,3 +1,4 @@
+import { ExpenseDetailComponent } from '../../app/pages/expense-detail/expense-detail.component';
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
@@ -142,7 +143,8 @@ import { ExpenseTypeComponent } from './expense-type/expense-type.component';
     SettingsComponent,
     CallLogsComponent,
     ContinuityReportComponent,
-    ExpenseTypeComponent
+    ExpenseTypeComponent,
+    ExpenseDetailComponent
   ],
 })
 export class PagesModule {

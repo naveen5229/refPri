@@ -35,6 +35,9 @@ export class AppComponent implements OnInit {
     // if (this.user._details) {
     //   this.getUserPagesList();
     // }
+
+  let date = Date.now();
+  console.log('start time', date);
   }
 
   ngOnInit(): void {

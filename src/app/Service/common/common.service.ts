@@ -739,17 +739,17 @@ export class CommonService {
 
   // start: download by url
   downloadFile(file, text) {
-    //creating an invisible element 
+    //creating an invisible element
     var element = document.createElement('a');
     element.setAttribute('href',
       'data:text/plain;charset=utf-8, '
       + encodeURIComponent(text));
     element.setAttribute('download', file);
 
-    // Above code is equivalent to 
-    // <a href="path of file" download="file name"> 
+    // Above code is equivalent to
+    // <a href="path of file" download="file name">
     document.body.appendChild(element);
-    //onClick property 
+    //onClick property
     element.click();
     document.body.removeChild(element);
   }
@@ -1154,6 +1154,23 @@ export class CommonService {
       return `<a href="${url}" target="_blank" id="urlEvent">${displayText}</a>`;
     }
   }
+
+
+dataColumn(data:any){
+console.log('data: ', data);
+let dataobj:any[];
+data.map((item:any) =>{
+dataobj.push({
+title:item,
+data:item
+});
+})
+console.log('dataobj: ', dataobj);
+return dataobj;
+
+
+}
+
 }
 
 
