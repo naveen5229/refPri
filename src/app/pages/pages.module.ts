@@ -1,4 +1,3 @@
-import { ExpenseDetailComponent } from '../../app/pages/expense-detail/expense-detail.component';
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
@@ -70,6 +69,7 @@ import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
+import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -144,7 +144,7 @@ import { ExpenseTypeComponent } from './expense-type/expense-type.component';
     CallLogsComponent,
     ContinuityReportComponent,
     ExpenseTypeComponent,
-    ExpenseDetailComponent
+    VisitManagementComponent
   ],
 })
 export class PagesModule {

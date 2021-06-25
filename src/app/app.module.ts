@@ -236,7 +236,6 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
-
     // SmartDataTableComponent,
 
 

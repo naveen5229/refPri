@@ -450,6 +450,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/Expense-type',
         home: true,
       },
+       {
+        title: 'Visit Management',
+        icon: 'people-outline',
+        link: '/pages/visit-management',
+        home: true,
+      },
 
     ]
   },

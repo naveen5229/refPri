@@ -1,3 +1,4 @@
+import { VisitManagementComponent } from './visit-management/visit-management.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule, Component } from '@angular/core';
@@ -447,6 +448,11 @@ const routes: Routes = [{
     {
     path:'Expense-type',
     component:ExpenseTypeComponent,
+    canActivate: [AuthGuard, RouteGuard]
+    },
+      {
+    path:'visit-management',
+    component:VisitManagementComponent,
     canActivate: [AuthGuard, RouteGuard]
     }
   ],

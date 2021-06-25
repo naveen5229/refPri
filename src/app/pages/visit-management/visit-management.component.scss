@@ -1,0 +1,233 @@
+@import '../../style';
+$color-primary:#72b3c7;
+
+.expense-form {
+  label {
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+}
+
+
+.visit-management {
+  margin-bottom: 10px;
+
+  label {
+    text-transform: capitalize;
+  }
+}
+
+:host ::ng-deep {
+  nb-card-body {
+    min-height: auto !important
+  }
+
+  nb-card-body {
+    overflow: visible !important;
+
+  }
+
+}
+
+.back-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  position: absolute;
+  left: 20px;
+  top: 7px;
+  padding: 0 !important;
+}
+
+.expense-image-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+
+}
+
+
+.expense-image {
+  padding: 5px;
+  position: relative;
+
+  .image-view {
+    display: none;
+  }
+
+  &.active {
+    background-color: $color-primary;
+
+    .image-view {
+      display: block;
+    }
+
+    img {
+      //  transform: scale(1.5);
+      box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  img {
+    width: 100px;
+    height: auto;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+}
+
+
+.expense-detail {
+  @include headings {
+    text-transform: capitalize;
+  }
+
+  .row {
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.4);
+
+    div[class^="col-"] {
+      .col-container {
+        // box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.4);
+        // height: 100%;
+      }
+
+    }
+  }
+
+  .expense-list {
+    padding-left: 0;
+    list-style: none;
+    border: 1px solid #d0d0d0;
+    padding: 5px;
+    background: #f6f9fb;
+    //  height: 100%;
+
+    li {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+      cursor: pointer;
+
+      &:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &.active {
+        color: $color-primary;
+        font-weight: 600;
+      }
+
+      span.expense {
+        font-weight: 500;
+      }
+
+      span.expense {
+        font-weight: 600;
+      }
+
+
+    }
+  }
+}
+
+
+.expense-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: flex-end;
+
+  button {
+    text-transform: capitalize;
+  }
+}
+
+.image-view {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 8px 0px rgba(142, 142, 142, 0.2);
+}
+
+
+//  location list
+
+.location-list {
+  padding-left: 0;
+  list-style: none;
+
+  li {
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    &.active {
+      color: #72b3c7;
+
+      span:last-child {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+
+
+//  location map
+.map {
+  width: 100%;
+  height: 100%;
+
+}
+
+
+// box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 40%);
+// padding: 5px;
+
+
+
+//  detail images
+
+.detail-images-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .detail-images {
+    flex: 0 0 calc(50% - 5px);
+    padding: 5px;
+
+    &.active {
+      background-color: $color-primary;
+    }
+
+    &.zoom {
+      transform: scale(1.3);
+      transition: all linear 0.2s;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+
+// expense table
+
+.expense-table {
+  tbody {
+    tr.active {
+      background-color: $color-primary;
+
+      td {
+        font-weight: bold;
+        color: #f6f9fb;
+      }
+    }
+  }
+}
