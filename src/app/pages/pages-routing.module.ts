@@ -1,5 +1,7 @@
+import { VisitManagementComponent } from './visit-management/visit-management.component';
+import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
@@ -448,8 +450,17 @@ const routes: Routes = [{
       path: 'leave-management',
       component: LeaveManagementComponent,
       canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+    path:'Expense-type',
+    component:ExpenseTypeComponent,
+    canActivate: [AuthGuard, RouteGuard]
+    },
+      {
+    path:'visit-management',
+    component:VisitManagementComponent,
+    canActivate: [AuthGuard, RouteGuard]
     }
-
   ],
 }];
 

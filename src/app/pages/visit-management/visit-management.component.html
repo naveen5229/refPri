@@ -1,0 +1,259 @@
+<ng-container *ngIf="listView">
+  <nb-card>
+    <nb-card-header>
+      <h5> Visit Management </h5>
+    </nb-card-header>
+
+    <nb-card-body>
+      <div class="row">
+        <div class="col-md-12">
+          <form action="" class="visit-management">
+            <div class="row align-items-end">
+              <div class="col-md-3">
+                <div class="from-group">
+                  <label for="">select User </label>
+                  <auto-suggestion (onSelected)="selectedUser($event)" [data]="allUsers" display='name'
+                    placeholder="Search category" autocomplete="off" name="primaryUser" inputId="primaryUser"
+                    [preSelected]="{name:null}">
+                  </auto-suggestion>
+
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group">
+                  <label>Start Date</label>
+                  <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="true">
+                  </uj-date-time-picker>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group">
+                  <label>End Date</label>
+                  <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="true"
+                    [isStart]="false">
+                  </uj-date-time-picker>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group action-block">
+                  <div class="btn-block">
+                    <button type="button" class="btn btn-danger"> Reset </button>
+                    <button type="button" class="btn btn-success"> Approved </button>
+                    <button type="button" class="btn btn-"></button>
+
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+          </form>
+
+          <table class="table table-primary" datatable [dtOptions]="dtOptions1" [dtTrigger]="dtTrigger1">
+            <thead>
+              <tr>
+                <th>Sr. No.</th>
+                <th>UserName</th>
+                <th>Total Expesne</th>
+                <th>Status</th>
+                <th>Travel Distance</th>
+                <th>Total Image Uploaded</th>
+                <th>Approvable Expense</th>
+                <th> Action </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of allVisits;index as i">
+                <td>
+                  <div class="d-flex position-relative">
+                      <!-- <p> {{i+1}} </p> -->
+                    <div class="form-check user-check-label">
+                      <label for=""> {{i+1}} </label>
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                    </div>
+
+                  </div>
+
+                </td>
+                <td>{{item.userName}} </td>
+                <td>{{item.totalExpense}} </td>
+                <td>{{item.status}}</td>
+                <td>{{item.trasvelDistance}} </td>
+                <td>{{item.totalImageUploaded}}</td>
+                <td>{{item.approveExpense}}</td>
+                <td>
+                  <div class="action-block">
+                    <div class="btn-block">
+                      <button class="btn btn-danger" type="button" (click)="rejectexpense()"> Reject </button>
+                      <button class="btn btn-success" type="button" (click)="approveExpense()"> Approve </button>
+                      <button type="button" class="btn btn-primary" (click)="Userdetail(i)"> View </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+
+    </nb-card-body>
+  </nb-card>
+
+</ng-container>
+
+
+<ng-container *ngIf="detailView">
+
+  <nb-card>
+    <nb-card-header class="position-relative mb-2">
+      <button class="btn btn-primary back-btn" (click)="backnavigate()"> <i class="fa fa-arrow-left"></i> </button>
+      <h5 class="text-center">Expense Detail</h5>
+
+      <div class="header-block">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>User Name </h5>
+          </div>
+
+
+          <div class="col-md-5 justify-content-end">
+            <div class="date-block">
+              <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="ExpenseDate" [isTime]="true">
+              </uj-date-time-picker>
+            </div>
+          </div>
+
+
+          <div class="col-md-3">
+            <div class="expense-actions">
+              <button type="button" class="btn btn-primary" (click)="backnavigate()"> Back </button>
+              <button type="button" class="btn btn-success">Approve</button>
+              <button type="button" class="btn btn-danger"> Reject </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </nb-card-header>
+
+    <nb-card-body>
+
+      <div class="expense-detail">
+        <div class="row mx-0 py-2 px-0">
+          <div class="col-md-6">
+            <h5>Expenses</h5>
+
+            <table class="table table-primary expense-table">
+              <thead class="bg-primary text-white">
+                <tr>
+                  <th>
+                    Expense Type
+                  </th>
+                  <th> Expense </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr (click)="expenselistHandler(i)" *ngFor="let item of expensdetail?.expense;index as i"
+                  [class.active]="expenseIndex == i">
+                  <td> {{item.expensetype}} </td>
+                  <td> {{item.Expense}} </td>
+                </tr>
+
+              </tbody>
+            </table>
+
+
+          </div>
+
+          <div class="col-md-6">
+            <h5>Expense Images</h5>
+            <div class="expense-image-block">
+              <div class="expense-image" *ngFor="let item of expensdetail?.expense;index as i"
+                [class.active]="expenseIndex == i" (click)="expenseImageHandler(i)">
+                <button class="btn image-view" data-toggle="modal" data-target="#image-model"
+                  (click)="expenseImageView(i)"> <i class="fa fa-eye"></i> </button>
+                <img [src]="item.image" [alt]="item.image">
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row mx-0 py-2 px-0">
+          <div class="col-md-4">
+            <h5> Location with time </h5>
+            <ul class="location-list">
+              <li *ngFor="let item of expensdetail?.detail;index as i" [class.active]="detailDataIndex == i"
+                (click)="detaillisthandler(i)"> <span>
+                  {{item.location.Time}} </span> <span>
+                  {{item.location.place}} </span>
+              </li>
+            </ul>
+
+
+          </div>
+
+          <div class="col-md-4">
+
+            <div class="location-map">
+              <div class="map-container">
+                <div class="map" id="map"></div>
+              </div>
+            </div>
+
+
+          </div>
+
+
+          <div class="col-md-4">
+            <h5> visit images - {{expensdetail.detail.length +' Image'}} </h5>
+            <div class="detail-images-container">
+              <div class="detail-images" [class.active]="detailDataIndex == i"
+                [class.zoom]="detailDataIndex == i && detailImageZoom"
+                *ngFor="let item of expensdetail.detail;index as i" (mouseover)="detailImagehandler(i)"
+                (mouseout)="detailImageZoomHandler()">
+                <img class="img-fluid" [src]="item.image" [alt]="item.image">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </nb-card-body>
+
+  </nb-card>
+</ng-container>
+
+
+
+<div id="image-model" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Title</h5>
+        <button class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <img [src]="expenseImage" [alt]="expenseImage"> -->
+        <ngx-image-viewer [images]="expenseImage" [idContainer]="'idOnHTML'" [loadOnInit]="true" [download]="false"
+          [fullscreen]="true">
+        </ngx-image-viewer>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

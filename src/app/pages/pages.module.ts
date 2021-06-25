@@ -1,3 +1,4 @@
+import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
 
@@ -69,6 +70,8 @@ import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { LeaveManagementComponent } from './leave-management/leave-management.component';
 import { MyLeavesComponent } from './my-leaves/my-leaves.component';
+import { ExpenseTypeComponent } from './expense-type/expense-type.component';
+import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -82,7 +85,8 @@ import { MyLeavesComponent } from './my-leaves/my-leaves.component';
     ProcessModule,
     TicketModule,
     DragDropModule,
-    ChartModule
+    ChartModule,
+    DataTablesModule
   ],
   declarations: [
     PagesComponent,
@@ -142,7 +146,9 @@ import { MyLeavesComponent } from './my-leaves/my-leaves.component';
     CallLogsComponent,
     ContinuityReportComponent,
     LeaveManagementComponent,
-    MyLeavesComponent
+    MyLeavesComponent,
+    ExpenseTypeComponent,
+    VisitManagementComponent
   ],
 })
 export class PagesModule {
