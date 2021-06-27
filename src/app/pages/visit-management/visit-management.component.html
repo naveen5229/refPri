@@ -1,4 +1,4 @@
-<ng-container *ngIf="listView">
+<ng-container *ngIf="!isDetailView">
   <nb-card>
     <nb-card-header>
       <h5> Visit Management </h5>
@@ -57,6 +57,7 @@
                   </div>
                 </th>
                 <th>Name</th>
+                <th>Date</th>
                 <th>Total Expesne</th>
                 <th>Status</th>
                 <th>Travel Distance</th>
@@ -74,6 +75,7 @@
                   </div>
                 </td>
                 <td>{{item.name}}</td>
+                <td>{{item.sqdate}}</td>
                 <td>{{item.total_expense}}</td>
                 <td>{{'status'}}</td>
                 <td>{{item.total_distance+' | '+ item.total_distance_live}}</td>
@@ -100,7 +102,7 @@
   </nb-card>
 </ng-container>
 
-<ng-container *ngIf="detailView">
+<ng-container *ngIf="isDetailView">
   <nb-card>
     <nb-card-header class="position-relative mb-2">
       <button class="btn btn-primary back-btn" (click)="backnavigate()"> <i class="fa fa-arrow-left"></i> </button>
@@ -135,14 +137,14 @@
               <thead class="bg-primary text-white">
                 <tr>
                   <th>Expense Type</th>
-                  <th> Expense </th>
+                  <th>Expense</th>
                 </tr>
               </thead>
               <tbody>
-                <tr (click)="expenselistHandler(i)" *ngFor="let item of expensdetail?.expense;index as i"
+                <tr (click)="expenseIndex=i" *ngFor="let item of expenseList;index as i"
                   [class.active]="expenseIndex == i">
-                  <td> {{item.expensetype}} </td>
-                  <td> {{item.Expense}} </td>
+                  <td> {{item.description}} </td>
+                  <td> {{item.amount}} </td>
                 </tr>
               </tbody>
             </table>
@@ -150,11 +152,11 @@
           <div class="col-md-6">
             <h5>Expense Images</h5>
             <div class="expense-image-block">
-              <div class="expense-image" *ngFor="let item of expensdetail?.expense;index as i"
-                [class.active]="expenseIndex == i" (click)="expenseImageHandler(i)">
+              <div class="expense-image" *ngFor="let item of expenseList;index as i"
+                [class.active]="expenseIndex == i" (click)="expenseIndex = i">
                 <button class="btn image-view" data-toggle="modal" data-target="#image-model"
-                  (click)="expenseImageView(i)"> <i class="fa fa-eye"></i> </button>
-                <img [src]="item.image" [alt]="item.image">
+                  (click)="expenseImage = item._url"> <i class="fa fa-eye"></i> </button>
+                <img [src]="item._url" [alt]="item.image">
               </div>
             </div>
           </div>
@@ -162,12 +164,11 @@
 
         <div class="row mx-0 py-2 px-0">
           <div class="col-md-4">
-            <h5> Location with time </h5>
+            <h5>Location with time</h5>
             <ul class="location-list">
-              <li *ngFor="let item of expensdetail?.detail;index as i" [class.active]="detailDataIndex == i"
-                (click)="detaillisthandler(i)"> <span>
-                  {{item.location.Time}} </span> <span>
-                  {{item.location.place}} </span>
+              <li *ngFor="let item of onsiteImages;index as i" [class.active]="detailDataIndex == i"
+                (click)="detailDataIndex = i">
+                <span>{{item.addtime}}</span> <span> {{item.site_name}}</span>
               </li>
             </ul>
           </div>
@@ -175,19 +176,18 @@
           <div class="col-md-4">
             <div class="location-map">
               <div class="map-container">
-                <div class="map" id="map"></div>
+                <div class="map" id="map" style="position: absolute;" #map></div>
               </div>
             </div>
           </div>
 
           <div class="col-md-4">
-            <h5> visit images - {{expensdetail.detail.length +' Image'}} </h5>
+            <h5> visit images - {{(onsiteImages) ? onsiteImages.length +' Image' : N/A}} </h5>
             <div class="detail-images-container">
-              <div class="detail-images" [class.active]="detailDataIndex == i"
-                [class.zoom]="detailDataIndex == i && detailImageZoom"
-                *ngFor="let item of expensdetail.detail;index as i" (mouseover)="detailImagehandler(i)"
-                (mouseout)="detailImageZoomHandler()">
-                <img class="img-fluid" [src]="item.image" [alt]="item.image">
+              <div *ngFor="let item of onsiteImages;index as i" class="detail-images" [class.active]="detailDataIndex == i"
+                [class.zoom]="detailDataIndex == i && detailImageZoom" (mouseover)="detailDataIndex = i;detailImageZoom = true"
+                (mouseout)="detailImageZoom = false" (click)="getExpenseWrtImage(item._id)">
+                <img class="img-fluid" [src]="item._url" [alt]="item.image">
               </div>
             </div>
           </div>
