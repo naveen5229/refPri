@@ -1,12 +1,24 @@
+import { Router } from '@angular/router';
+import { DataService } from './../../Service/Component/data.service';
+import { ApiService } from './../../Service/Api/api.service';
 import { MapService } from './../../Service/map/map.service';
 import { allUsers, } from './../employee-monitoring/data';
 import { CommonService } from './../../Service/common/common.service';
 import { expenses, allvisits, expenseDetail } from './data';
 import { group } from 'console';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit,ViewChild } from '@angular/core';
-import { from, Subject } from 'rxjs';
+import { Component, Injector, NgModuleFactoryLoader, OnInit,SimpleChanges,ViewChild, ViewContainerRef } from '@angular/core';
+import { from, Subject, Subscription } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
+import * as _ from 'lodash';
+
+interface report {
+ User:string,
+ place:string,
+ time: string,
+ lat:string,
+ lng:string,
+};
 
 @Component({
   selector: 'ngx-visit-management',
@@ -29,15 +41,18 @@ export class VisitManagementComponent implements OnInit {
  detailImageZoom:boolean = false;
  expenseImage:string = '';
  map: any;
+ mapdata:any[] = [];
+ userdetailIndex:number = -1;
+  installerMarker:any;
+  wayPoints = null;
+  adminList:any[] = [];
+  poly:any;
 
+alluserselect:boolean = false;
 expenseIndex:number = -1;
 detailDataIndex:number = -1;
-// map variables
-  markerInfoWindow: any;
-  markers = [];
-
-
- @ViewChild(DataTableDirective, { static: false })
+clickEventsubscription:Subscription;
+@ViewChild(DataTableDirective, { static: false })
 
 
   dtElement: any;
@@ -49,18 +64,7 @@ detailDataIndex:number = -1;
     pageLength: 5,
     lengthMenu: [5, 10, 25],
     processing: true,
-    //  ajax: this.getexpenses(),
-    //  columns: [{
-    //    title: 'Type',
-    //     data: 'type'
-    //   }, {
-    //     title: 'Category',
-    //     data: 'category'
-    //   }, {
-    //     title: 'Status',
-    //     data: 'Status'
-    //   }],
-  }
+ }
 
 
 
@@ -85,10 +89,7 @@ detailDataIndex:number = -1;
 
 ngAfterViewInit() {
     this.dtTrigger.next();
-    this.getexpenses();
-    this.dtTrigger1.next();
     this.getAllvisits();
-
   }
 
  ngOnDestroy(): void {
@@ -97,49 +98,27 @@ ngAfterViewInit() {
   }
 
 
- renderTable1() {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-          dtInstance.destroy();
-          this.dtTrigger1.next();
-      // dtInstance.columns().every(function () {
-      //   const that = this;
-      //   $('input', this.footer()).on('keyup change', function () {
-      //     if (that.search() !== this['value']) {
-      //       that
-      //         .search(this['value'])
-      //         .draw();
-      //     }
-      //   });
-      // });
-
-    });
-
-  }
-
 
    renderTable() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
           dtInstance.destroy();
           this.dtTrigger.next();
-      // dtInstance.columns().every(function () {
-      //   const that = this;
-      //   $('input', this.footer()).on('keyup change', function () {
-      //     if (that.search() !== this['value']) {
-      //       that
-      //         .search(this['value'])
-      //         .draw();
-      //     }
-      //   });
-      // });
-
     });
 
   }
 
 
-
-
-  constructor(public common:CommonService, public mapService:MapService) {
+  constructor(public common:CommonService,
+    public mapService:MapService,
+    public api:ApiService,
+    public data:DataService
+  ) {
+  this.data.visitlistView = true;
+  this.clickEventsubscription =   this.data.getClickEvent().subscribe(()=>{
+  // this.getAllvisits();
+  // this.renderAllTables();
+  // this.renderTable();
+})
 
   }
 
@@ -150,6 +129,21 @@ this.dtTrigger.next();
 this.renderTable();
 }
 
+
+getmapdata(){
+this.expensdetail.detail.map((item:any)=>{
+ this.mapdata.push({
+ User:this.allVisits[this.userdetailIndex].userName,
+ place:item.location.place,
+ time: item.location.Time,
+ lat:item.locationMark.lat,
+ lng:item.locationMark.lng,
+});
+
+});
+
+
+}
 
 
 
@@ -173,12 +167,28 @@ console.log('this.categories: ', this.categories);
 }
 
 
+renderAllTables(): void {
+this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+dtInstance.destroy();
+this.dtTrigger.next();
+  });
+}
+
+
+
 
 getAllvisits(){
   let allvisitData = from(allvisits);
   allvisitData.subscribe((item:any)=>{
- this.allVisits = item;
-//  this.renderTable1();
+  this.allVisits = item ||+ [];
+  // this.renderTable();
+  this.allVisits.map((item:any)=>{
+  item.checked = false;
+  })
+
+ console.log('visit data',this.allVisits);
+
+
 
  })
 
@@ -191,16 +201,12 @@ expense.subscribe((item:any)=>{
 this.expenseData = item;
 // this.renderTable();
 },
-);
-
-
-
-
+)
 }
+
 
 selectedCategory(event:any){
 this.category = event.name;
-
 }
 
 
@@ -231,15 +237,44 @@ Userdetail(index:number){
 let expensedata = from(expenseDetail);
 expensedata.subscribe((item:any)=>{
 this.expensdetail = item[index];
+this.userdetailIndex = index;
+this.data.visitlistView = false;
+this.data.visitDetailView = true;
 })
-
-console.log('this.expensdetail',this.expensdetail);
-
-this.detailView = true;
-this.listView = false;
 
 }
 
+
+// loadDetailView(){
+//  this.loader.load('/pages/visit-management')
+//       .then(factory => {
+//         const module = factory.create(this.injector);
+//         var entryComponentType = module.injector.get('LAZY_ENTRY_COMPONENT')
+//         var componentFactory = module.componentFactoryResolver.resolveComponentFactory(entryComponentType);
+//         this.vcr.createComponent(componentFactory);
+//       })
+// }
+
+selectAllUser(event:any){
+this.alluserselect  = !this.alluserselect;
+event.stopPropagation();
+this.allVisits.map((item:any)=>{
+item.checked = this.alluserselect;
+})
+}
+
+
+
+selectUser(index:number){
+this.allVisits[index].checked = true;
+setTimeout(() => {
+this.alluserselect =  this.allVisits.every((item:any)=>{
+return item.checked;
+});
+}, 10);
+console.log('this.allVisits',this.allVisits);
+
+}
 
 approveExpense(){
 
@@ -250,83 +285,19 @@ rejectexpense(){
 
 }
 
-renderAllTables(): void {
-this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-// Destroy the table first
-dtInstance.destroy();
-// Call the dtTrigger to rerender again
-this.dtTrigger.next();
-  });}
 
 
-backnavigate(){
-this.listView = true;
-this.detailView = false;
-setTimeout(() => {
-  // window.scrollBy(0, 500);
-  // this.renderAllTables();
-}, 200);
-
+ngOnChanges(changes: SimpleChanges): void {
+console.log('SimpleChanges: ', changes);
 }
 
-expenseImageHandler(index:number){
-this.expenseIndex = index;
-}
-
-expenselistHandler(index:number){
-this.expenseIndex = index;
-}
-
-expenseImageView(index:number){
-this.expenseImage = this.expensdetail.expense[index].image;
-}
-
-
-detailImagehandler(index:number){
-this.detailDataIndex = index;
-this.detailImageZoom = true;
-}
-
-detaillisthandler(index:any){
-this.detailDataIndex = index;
-
-}
-
-detailImageZoomHandler(){
-this.detailImageZoom = false;
-}
-
-
-  setMarkers() {
-    if (!this.markerInfoWindow)
-      this.markerInfoWindow = new google.maps.InfoWindow({ content: '' });
-
-    this.markers.map(marker => marker.setMap(null));
-    let reports = this.expensdetail.filter(report => report.lat);
-    this.markers = this.mapService.createMarkers(reports, false, false)
-      .map((marker, index) => {
-        let report = reports[index];
-        console.log('report: ', report);
-        marker.setTitle(report.name);
-        this.setMarkerEvents(marker, report);
-        return { id: report.userId, marker: marker };
-      });
-
-
-  }
-
-
-  setMarkerEvents(marker, report) {
-    marker.addListener('click', () => {
-       this.markerInfoWindow.open(this.map, marker);
-    });
-  }
 
 
   ngOnInit() {
   this.getCategoris();
   this.getexpenses();
   this.getAllvisits();
+
 
   }
 }

@@ -1,0 +1,222 @@
+  <nb-card>
+    <nb-card-header class="position-relative mb-2">
+      <button class="btn btn-primary back-btn" (click)="backnavigate()"> <i class="fa fa-arrow-left"></i> </button>
+      <h5 class="text-center">Expense Detail</h5>
+
+      <div class="header-block">
+        <div class="row">
+          <div class="col-md-3">
+            <h5>User Name </h5>
+          </div>
+
+
+          <div class="col-md-6">
+            <div class="date-container">
+              <div class="form-group">
+                <label for=""> to Date</label>
+                <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="ExpenseDate" [isTime]="false">
+                </uj-date-time-picker>
+              </div>
+
+
+              <div class="form-group d-flex">
+                <label for=""> from Date </label>
+                <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="ExpenseDate" [isTime]="false">
+                </uj-date-time-picker>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+
+          <div class="col-md-3">
+            <div class="expense-actions">
+              <button type="button" class="btn btn-primary" (click)="backnavigate()"> Back </button>
+              <button type="button" class="btn btn-success">Approve</button>
+              <button type="button" class="btn btn-danger"> Reject </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </nb-card-header>
+
+    <nb-card-body>
+      <div class="expense-detail">
+        <div class="row  no-gutters expense-info">
+          <div class="col-md-6">
+            <div class="col-block">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">
+                    Expenses
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <table class="table table-primary expense-table">
+                    <thead class="bg-primary text-white">
+                      <tr>
+                        <th>
+                          Expense Type
+                        </th>
+                        <th> Expense </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr (click)="expenselistHandler(i)" *ngFor="let item of expensdetail?.expense;index as i"
+                        [class.active]="expenseIndex == i">
+                        <td> {{item.expensetype}} </td>
+                        <td> {{item.Expense}} </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+            <div class="col-block">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">
+                    Expense Images
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <div class="expense-image-block">
+                    <div class="expense-image" *ngFor="let item of expensdetail?.expense;index as i"
+                      [class.active]="expenseIndex == i" (click)="expenseImageHandler(i)">
+                      <img [src]="item.image" [alt]="item.image">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row no-gutters expense-timeline">
+          <div class="col-md-3">
+            <div class="col-block">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title"> Location with time </h5>
+                </div>
+
+                <div class="card-body">
+                  <ul class="location-list">
+                    <li *ngFor="let item of expensdetail?.detail;index as i" [class.active]="detailDataIndex == i"
+                      (click)="detaillisthandler(i)"> <span>
+                        {{item.location.Time}} </span> <span>
+                        {{item.location.place}} </span>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+          <div class="col-md-6">
+            <div class="col-block">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">
+                    location map
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <!-- <div class="location-map">
+                    <div #map id="map"> </div>
+                  </div> -->
+
+
+                  <agm-map [latitude]="lat" [longitude]="lng" [fullscreenControl]='true' [mapTypeControl]='true'
+                    [fitBounds]="true">
+                    <agm-marker *ngFor="let coordinate of latlng; let i=index" [latitude]="coordinate[0]"
+                      [longitude]="coordinate[1]" [agmFitBounds]="true"></agm-marker>
+                    <agm-polyline [visible]="true" [strokeWeight]="3" [strokeColor]="'#07b57a'">
+                      <agm-polyline-point *ngFor="let coordinate of latlng; let i=index" [latitude]="coordinate[0]"
+                        [longitude]="coordinate[1]">
+
+                      </agm-polyline-point>
+                    </agm-polyline>
+                  </agm-map>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-3">
+            <div class="col-block">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">
+                    visit images - {{expensdetail?.detail.length +' Image'}}
+                  </h5>
+
+                </div>
+
+                <div class="card-body">
+                  <div class="detail-images-container">
+                    <div class="detail-images" [class.active]="detailDataIndex == i"
+                      [class.zoom]="detailDataIndex == i && detailImageZoom"
+                      *ngFor="let item of expensdetail?.detail;index as i" (click)="imageDialogue(itemImage,item.image)"
+                      (mouseover)="detailImagehandler(i)" (mouseout)="detailImageZoomHandler()">
+                      <img class="img-fluid" [src]="item.image" [alt]="item.image">
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </nb-card-body>
+
+  </nb-card>
+
+  <ng-template #itemImage let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"> Detail Image </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <img [src]="detailimageSrc" class="detail-image">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close('Save click')">Close</button>
+    </div>
+  </ng-template>

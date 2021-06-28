@@ -1,3 +1,4 @@
+
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
@@ -70,6 +71,8 @@ import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
+import { VisitManagementDetailComponent } from './visit-management-detail/visit-management-detail.component';
+import { AgmCoreModule } from '@agm/core';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -84,7 +87,12 @@ import { VisitManagementComponent } from '../pages/visit-management/visit-manage
     TicketModule,
     DragDropModule,
     ChartModule,
-    DataTablesModule
+    DataTablesModule,
+    AgmCoreModule,
+ AgmCoreModule.forRoot({
+ apiKey: 'AIzaSyAvcDy5ZYc2ujCS6TTtI3RYX5QmuoV8Ffw',
+ libraries: ['places', 'drawing', 'geometry'],
+    })
   ],
   declarations: [
     PagesComponent,
@@ -144,7 +152,8 @@ import { VisitManagementComponent } from '../pages/visit-management/visit-manage
     CallLogsComponent,
     ContinuityReportComponent,
     ExpenseTypeComponent,
-    VisitManagementComponent
+    VisitManagementComponent,
+    VisitManagementDetailComponent
   ],
 })
 export class PagesModule {
