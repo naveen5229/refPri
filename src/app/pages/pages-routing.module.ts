@@ -76,6 +76,7 @@ import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
+import { LeaveManagementComponent } from './leave-management/leave-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -444,6 +445,11 @@ const routes: Routes = [{
     {
       path: 'continuity-report',
       component: ContinuityReportComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'leave-management',
+      component: LeaveManagementComponent,
       canActivate: [AuthGuard, RouteGuard]
     },
     {

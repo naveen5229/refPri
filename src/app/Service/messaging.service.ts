@@ -40,24 +40,24 @@ export class MessagingService {
   );
   }
   receiveMessage() {
-    console.log("receive Message");
-  this.angularFireMessaging.messages.subscribe(
-  (payload) => {
-   console.log("new message received here. ", payload);
-  this.currentMessage.next(payload);
-  })
+  //   console.log("receive Message");
   // this.angularFireMessaging.messages.subscribe(
-  //   (payload:any) => {
-  //       console.log("new message received. ", payload);
-  //       const NotificationOptions = {
-  //               body: payload.notification.body,
-  //               data: payload.data,
-  //               icon: payload.notification.icon
-  //             }
-  //             navigator.serviceWorker.getRegistration('/firebase-cloud-messaging-push-scope').then(registration => {
-  //               registration.showNotification(payload.notification.title, NotificationOptions);
-  //             });
-  //       this.currentMessage.next(payload);})
+  // (payload) => {
+  //  console.log("new message received here. ", payload);
+  // this.currentMessage.next(payload);
+  // })
+  this.angularFireMessaging.messages.subscribe(
+    (payload:any) => {
+        console.log("new message received. ", payload);
+        const NotificationOptions = {
+                body: payload.notification.body,
+                data: payload.data,
+                icon: payload.notification.icon
+              }
+              navigator.serviceWorker.getRegistration('/firebase-cloud-messaging-push-scope').then(registration => {
+                registration.showNotification(payload.notification.title, NotificationOptions);
+              });
+        this.currentMessage.next(payload);})
   }
 
   updateWebToken(){

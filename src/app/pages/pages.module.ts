@@ -69,6 +69,8 @@ import { TmgTaskComponent } from './tmg-task/tmg-task.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
+import { LeaveManagementComponent } from './leave-management/leave-management.component';
+import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
 import { VisitManagementDetailComponent } from './visit-management-detail/visit-management-detail.component';
@@ -151,6 +153,8 @@ import { AgmCoreModule } from '@agm/core';
     SettingsComponent,
     CallLogsComponent,
     ContinuityReportComponent,
+    LeaveManagementComponent,
+    MyLeavesComponent,
     ExpenseTypeComponent,
     VisitManagementComponent,
     VisitManagementDetailComponent
