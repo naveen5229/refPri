@@ -73,7 +73,6 @@ import { LeaveManagementComponent } from './leave-management/leave-management.co
 import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
-import { VisitManagementDetailComponent } from './visit-management-detail/visit-management-detail.component';
 import { AgmCoreModule } from '@agm/core';
 @NgModule({
   imports: [
@@ -157,7 +156,6 @@ import { AgmCoreModule } from '@agm/core';
     MyLeavesComponent,
     ExpenseTypeComponent,
     VisitManagementComponent,
-    VisitManagementDetailComponent
   ],
 })
 export class PagesModule {

@@ -1,4 +1,3 @@
-import { VisitManagementDetailComponent } from '../pages/visit-management-detail/visit-management-detail.component';
 import { VisitManagementComponent } from './visit-management/visit-management.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { RouterModule, Routes } from '@angular/router';
