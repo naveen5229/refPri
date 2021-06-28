@@ -208,6 +208,7 @@ export class VisitManagementComponent implements OnInit {
         this.common.loading--;
         if (res['code'] == 1) {
           this.allVisits = res['data'] || [];
+          // this.renderTable1();
           this.updateExpenseArray();
         } else {
           this.common.showError(res['msg']);
@@ -245,7 +246,7 @@ export class VisitManagementComponent implements OnInit {
   }
   
   selectUser(index:number){
-    this.allVisits[index].checked = true;
+    this.allVisits[index].checked = !this.allVisits[index].checked;
     if(this.allVisits && this.allVisits.find(x=>!x.checked)){
       this.alluserselect = false;
     }else{
@@ -278,6 +279,27 @@ export class VisitManagementComponent implements OnInit {
         this.common.showError();
         console.log(err);
       });
+  }
+
+  saveVerifiedExpense() {
+    console.log('adminWiseList', this.updatedExpenses);
+    this.common.loading++;
+    let params = {
+      expenses: JSON.stringify(this.updatedExpenses),
+    }
+    this.api.post(`Admin/saveOnSiteExpenseByAdminNew`, params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0]['y_id'] > 0) {
+          this.common.showToast(res['data'][0]['y_msg']);
+          this.showAdminWiseWagesList();
+        }
+      }else{
+        this.common.showError(res['msg']);
+      }
+    },err=>{
+      this.common.showError();
+    })
   }
 
   viewExpenseDetail(item){
@@ -347,6 +369,9 @@ export class VisitManagementComponent implements OnInit {
   }
 
   updateOnsiteExpenseStatus(status,expenseId){
+    if(!expenseId && this.expenseIndex>=0){
+      expenseId = this.expenseList[this.expenseIndex]['_id'];
+    }
     if (!expenseId) {
       this.common.showError('Please select an expense');
       return false;

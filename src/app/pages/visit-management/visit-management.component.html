@@ -98,6 +98,11 @@
           </table>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <button class="btn btn-primary btn-sm mr-2" id="verifiedExpenseBtn" (click)="saveVerifiedExpense()">Save</button>
+        </div>
+      </div>
     </nb-card-body>
   </nb-card>
 </ng-container>
@@ -121,8 +126,8 @@
           <div class="col-md-3">
             <div class="expense-actions">
               <button type="button" class="btn btn-primary" (click)="backnavigate()"> Back </button>
-              <button type="button" class="btn btn-success">Approve</button>
-              <button type="button" class="btn btn-danger"> Reject </button>
+              <button type="button" class="btn btn-success" (click)="updateOnsiteExpenseStatus(1,null)">Approve</button>
+              <button type="button" class="btn btn-danger" (click)="updateOnsiteExpenseStatus(-1,null)"> Reject </button>
             </div>
           </div>
         </div>
@@ -164,7 +169,12 @@
 
         <div class="row mx-0 py-2 px-0">
           <div class="col-md-4">
-            <h5>Location with time</h5>
+            <div class="row">
+              <div class="col-8"><h5>Location with time</h5></div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
+              </div>
+            </div>
             <ul class="location-list">
               <li *ngFor="let item of onsiteImages;index as i" [class.active]="detailDataIndex == i"
                 (click)="detailDataIndex = i">
