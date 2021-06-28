@@ -1,3 +1,5 @@
+import { DataTablesModule } from 'angular-datatables';
+import { SmartDataTableComponent } from './smart-data-table/smart-data-table.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,7 +13,7 @@ import { DndDirective } from './dndDirective/dnd.directive';
 import { TableViewComponent } from './table-view/table-view.component';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, DateInputsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DateInputsModule, DataTablesModule],
     exports: [
         CommonModule,
         FormsModule,
@@ -21,9 +23,11 @@ import { TableViewComponent } from './table-view/table-view.component';
         SmartTableComponent,
         ImageViewerComponent,
         DndDirective,
-        TableViewComponent
+        TableViewComponent,
+        SmartDataTableComponent,
+
     ],
-    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective, TableViewComponent,],
+    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective, TableViewComponent,SmartDataTableComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [],
 })

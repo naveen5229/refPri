@@ -23,6 +23,11 @@
           <b>Process DashBoard</b>
         </p>
       </div>
+      <div class="hiddenby">
+        <p [class]="selectedDashboard=='tmgCallDashboard'?'active':'default'" (click)="selectedDashboard='tmgCallDashboard';selectedDept = {id:null,name:null}">
+          <b>Call DashBoard</b>
+        </p>
+      </div>
       <!-- <div *ngIf="selectedDashboard=='Tmg-worklog'">
         <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
         </auto-suggestion>
@@ -35,7 +40,7 @@
    
    </div>
 
-   <div class="out-topnav-dept" *ngIf="['Tmg-worklog','tmgProcess'].includes(selectedDashboard)">
+   <div class="out-topnav-dept" *ngIf="['Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)">
     <div class="toptabdept" *ngFor="let dept of departments">
       <div class="hiddenby">
         <p [class]="selectedDept.id==dept.id?'active':'default'" (click)="selectedDept=dept">
@@ -45,6 +50,6 @@
     </div>
    </div>
 
-   <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
+   <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
   </nb-card-body>
 </nb-card>

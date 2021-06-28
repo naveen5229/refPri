@@ -201,7 +201,7 @@ export class CallKpiComponent implements OnInit {
             // icons: this.actionIcons(pending)
           };
         } else {
-          column[key] = { value: typeof (ticket[key]) == 'object' ? ticket[key]['value'] + ticket[key]['suffix'] : ticket[key], class: ticket[key]['class'], action: '' };
+          column[key] = { value: (ticket[key] && typeof (ticket[key]) == 'object') ? ticket[key]['value'] + ticket[key]['suffix'] : ticket[key], class: (ticket[key]) ? ticket[key]['class'] : '', action: '' };
         }
       }
       columns.push(column);

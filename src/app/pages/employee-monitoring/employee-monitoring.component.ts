@@ -191,6 +191,7 @@ export class EmployeeMonitoringComponent implements OnInit {
     this.markers = this.mapService.createMarkers(reports, false, false)
       .map((marker, index) => {
         let report = reports[index];
+        console.log('report: ', report);
         marker.setTitle(report.name);
         this.setMarkerEvents(marker, report);
         return { id: report.userId, marker: marker };
