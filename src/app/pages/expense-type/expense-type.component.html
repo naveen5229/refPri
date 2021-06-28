@@ -1,0 +1,111 @@
+  <nb-card class="min-h-auto">
+    <nb-card-header>
+      <h5>User Wise Expenses</h5>
+    </nb-card-header>
+
+
+    <nb-card-body>
+      <form class="expense-form">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for=""> expense type </label>
+              <input type="text" placeholder="add expense type" [(ngModel)]="expenseTypeVal"
+                [ngModelOptions]="{standalone: true}" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for=""> Status</label>
+              <div class="d-block">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" [(ngModel)]="status" name="inlineRadioOptions"
+                    id="inlineRadio1" value="Active">
+                  <label class="form-check-label" for="inlineRadio1">Active</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" [(ngModel)]="status"
+                    id="inlineRadio2" value="Inactive">
+                  <label class="form-check-label" for="inlineRadio2"> Inactive </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <auto-suggestion (onSelected)="selectedCategory($event)" [data]="categories" display='name'
+              placeholder="Search category" autocomplete="off" name="primaryUser" inputId="primaryUser"
+              [preSelected]="{name:''}">
+            </auto-suggestion>
+          </div>
+
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary" (click)="SubmitExpenses()"> Save </button>
+          </div>
+        </div>
+      </form>
+    </nb-card-body>
+
+  </nb-card>
+
+
+  <nb-card>
+    <nb-card-header>
+      <h5> Expense List </h5>
+
+    </nb-card-header>
+
+    <nb-card-body>
+
+
+
+      <table datatable class="table table-primary" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead>
+          <tr>
+            <th>
+              Sr No.
+            </th>
+            <th>
+              expense type
+            </th>
+            <th>
+              expense category
+            </th>
+            <th> staus </th>
+            <th>Action </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of expenseData;index as i">
+            <td> {{i+1}} </td>
+            <td>
+              {{item.type}}
+            </td>
+            <td>
+              {{item.category}}
+            </td>
+            <td>
+
+              {{item.Status}}
+            </td>
+
+            <td>
+              <div class="action-block">
+                <button class="btn btn-danger"> delete </button>
+                <button class="btn btn-success"> edit </button>
+                <button class="btn btn-info"> View </button>
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </nb-card-body>
+
+  </nb-card>
+

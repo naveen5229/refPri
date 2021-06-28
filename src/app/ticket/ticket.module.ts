@@ -1,3 +1,4 @@
+import { DataTablesModule } from 'angular-datatables';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeModule } from '../@theme/theme.module';
@@ -19,6 +20,7 @@ import { CustomDashboardComponent } from './custom-dashboard/custom-dashboard.co
     NbCardModule,
     FormsModule,
     DirectiveModule,
+    DataTablesModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

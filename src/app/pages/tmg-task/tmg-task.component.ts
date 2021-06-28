@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericModelComponent } from '../../modals/generic-model/generic-model.component';
 import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 import _ from 'lodash';
+import { Console } from 'console';
 
 @Component({
   selector: 'tmg-task',
@@ -45,6 +46,22 @@ export class TmgTaskComponent implements OnInit {
     options: {},
   };
 
+  doubleChart = {
+    data: {
+      dataGraph1: [],
+      dataGraph2: []
+    },
+    type: '',
+    dataSet: {
+      labels: [],
+      datasets: []
+    },
+    options: null
+  };
+  dataList9 = [];
+  dataList10 = [];
+  dataList11 = [];
+
   @Input() pageType: string = "Tmg-Task";
   @Input() deptId: string = null;
   // deptId = 9;
@@ -54,6 +71,7 @@ export class TmgTaskComponent implements OnInit {
     public common: CommonService,
     private modalService: NgbModal) {
     this.common.refresh = this.refresh.bind(this);
+    console.log("page type", this.pageType);
   }
 
   ngOnDestroy() { }
@@ -65,30 +83,48 @@ export class TmgTaskComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    console.log("ngOnChanges deptId:", this.deptId,changes);
+    console.log("ngOnChanges deptId:", this.deptId, changes);
     this.refresh();
   }
 
   refresh() {
     this.xAxisData = [];
     this.getChallansMonthGraph(0, 1);
-    this.getuserwisereadtat(1);
-    this.getreadingtatgraphdata(1);
-    this.getTaskSnapchat(2);
-    this.getuncomplete(3);
-    this.getHoldTask(4);
-    this.getoverduetask(5);
-    this.getlongestunreadhours(6);
-    if (this.pageType == "Tmg-worklog") {
-      this.getChallansMonthGraph(7, 2);
-      this.getChallansMonthGraph(8, 3);
+
+    if (this.pageType == 'tmgCallDashboard') {
+      this.getTaskSnapchat(1);
+      this.getoverduetask(2);
+      this.getuserwisereadtat(8);
+      this.getMissedCallNotRevertedData(5);
+      
     }
+    else {
+      this.getuserwisereadtat(1);
+      if (this.pageType == 'Tmg-Task') {
+        this.getreadingtatgraphdata(1);
+      }
+      this.getTaskSnapchat(2);
+      this.getuncomplete(3);
+      this.getHoldTask(4);
+      this.getoverduetask(5);
+
+      if (["Tmg-worklog", "tmgProcess"].includes(this.pageType)) {
+        this.getChallansMonthGraph(7, 2);
+        this.getChallansMonthGraph(8, 3);
+      }
+      if (this.pageType == 'tmgProcess') {
+        // this.getdataList9(9);
+        this.getdataList10(10);
+        this.getdataList11(11);
+      }
+    }
+    this.getlongestunreadhours(6);
   }
 
   getChallansMonthGraph(index, chrtIndex = 1) {
     this.challansMonthGraph = [];
     this.showLoader(index);
-    let days = 120;
+    let days = (['tmgProcess'].includes(this.pageType)) ? 30 : 120;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -104,14 +140,29 @@ export class TmgTaskComponent implements OnInit {
       } else if (chrtIndex == 3) {
         apiname = 'AdminTask/getTmgMonthwiseProductivity?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
       }
-
+    } else if (this.pageType == "tmgProcess") {
+      if (chrtIndex == 1) {
+        apiname = 'AdminTask/getTmgProcessMonthgraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      } else if (chrtIndex == 2) {
+        apiname = 'AdminTask/getTmgProcessCompletiontatGraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      } else if (chrtIndex == 3) {
+        apiname = 'AdminTask/getTmgProcessCompletiontatGraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      }
+    } else if (this.pageType == "tmgCallDashboard") {
+      if (chrtIndex == 1) {
+        apiname = 'AdminTask/getCallLogMonthgraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      } else if (chrtIndex == 2) {
+        apiname = 'AdminTask/getCallLogMonthgraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      } else if (chrtIndex == 3) {
+        apiname = 'AdminTask/getMissedCallMonthGraph?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+      }
     }
     this.api.get(apiname)
       .subscribe(res => {
         console.log('challansMonthGraph:', res);
         this.challansMonthGraph = res['data'];
         this.hideLoader(index);
-        this.getlabelValue(this.challansMonthGraph, chrtIndex);
+        this.getlabelValue(this.challansMonthGraph, chrtIndex, this.pageType);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -123,7 +174,10 @@ export class TmgTaskComponent implements OnInit {
     this.TaskSnapchatTop3 = [];
     this.showLoader(index);
     // let params = { totalrecord: 3 };
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 120;
+    let days = (['Tmg-worklog', 'tmgProcess'].includes(this.pageType)) ? 30 : 120;
+    if (this.pageType == "tmgCallDashboard") {
+      days = 7;
+    }
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -133,6 +187,10 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskSnapshot';
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgUserwiseWorkAvail?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    } else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessOpenTrxLivesnapshot?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    } else if (this.pageType == "tmgCallDashboard") {
+      apiname = 'AdminTask/getCallSyncDefaults?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -145,7 +203,9 @@ export class TmgTaskComponent implements OnInit {
               return false;
             }
           });
-          this.TaskSnapchatTop3 = _.uniqBy(this.TaskSnapchatTop3, 'name');
+          if (this.pageType !== "tmgProcess") {
+            this.TaskSnapchatTop3 = _.uniqBy(this.TaskSnapchatTop3, 'name');
+          }
         }
         this.hideLoader(index);
       }, err => {
@@ -156,7 +216,7 @@ export class TmgTaskComponent implements OnInit {
 
   getuncomplete(numindex) {
     this.uncomplete = [];
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 90;
+    let days = (['Tmg-worklog', 'tmgProcess'].includes(this.pageType)) ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -167,6 +227,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwiseUncomplete?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgWorklogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    } else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessIncompleteActUserwise?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -181,7 +243,9 @@ export class TmgTaskComponent implements OnInit {
             }
             console.log('index1', index1);
           });
-          this.uncomplete = _.uniqBy(this.uncomplete, 'name');
+          if (this.pageType !== "tmgProcess") {
+            this.uncomplete = _.uniqBy(this.uncomplete, 'name');
+          }
         }
 
         // this.hideLoader(index);
@@ -193,7 +257,7 @@ export class TmgTaskComponent implements OnInit {
 
   getHoldTask(index) {
     this.holdtask = [];
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 90;
+    let days = (['Tmg-worklog', 'tmgProcess'].includes(this.pageType)) ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -204,6 +268,8 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwisehold?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgWosrtThreeDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    } else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessLongestPenState?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -211,11 +277,14 @@ export class TmgTaskComponent implements OnInit {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
               this.holdtask.push(val);
+              console.log('holdtask:' + index1 + "-", this.holdtask);
             }
           });
-          this.holdtask = _.uniqBy(this.holdtask, 'name');
+          console.log('holdtask:', this.holdtask);
+          if (this.pageType !== "tmgProcess") {
+            this.holdtask = _.uniqBy(this.holdtask, 'name');
+          }
         }
-        console.log('holdtask:', this.holdtask);
         this.hideLoader(index);
       }, err => {
         this.hideLoader(index);
@@ -226,7 +295,7 @@ export class TmgTaskComponent implements OnInit {
   getoverduetask(index) {
     this.overduetaskdata = [];
     this.showLoader(index);
-    let days = (this.pageType == "Tmg-worklog") ? 30 : 90;
+    let days = (['Tmg-worklog', 'tmgProcess', 'tmgCallDashboard'].includes(this.pageType)) ? 30 : 90;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -236,6 +305,10 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwiseOverduelive';
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgWosrtThreeUserwisePh?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    } else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessUserwiseCompletionTat?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    } else if (this.pageType == "tmgCallDashboard") {
+      apiname = 'AdminTask/getCallSyncDefaults?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -245,9 +318,11 @@ export class TmgTaskComponent implements OnInit {
               this.overduetaskdata.push(val);
             }
           });
-          this.overduetaskdata = _.uniqBy(this.overduetaskdata, 'name');
+          console.log('overduetaskdata:', this.overduetaskdata);
+          if (this.pageType !== "tmgProcess") {
+            this.overduetaskdata = _.uniqBy(this.overduetaskdata, 'name');
+          }
         }
-        console.log('holdtask:', this.overduetaskdata);
         this.hideLoader(index);
       }, err => {
         this.hideLoader(index);
@@ -268,7 +343,11 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskUserwiseUnreadtat?startDate=' + params.fromdate + '&endDate=' + params.todate;
     // let apiname = 'AdminTask/getDashboardTaskMonthwiseUnreadTat?startDate=' + params.fromdate + '&endDate=' + params.todate;
     if (this.pageType == "Tmg-worklog") {
-      apiname = 'AdminTask/getTmgActivitylogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+      apiname = 'AdminTask/getTmgActivitylogDefaulters?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    } else if (this.pageType == 'tmgProcess') {
+      apiname = 'AdminTask/getTmgProcessLongestPenTransaction?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    }else if (this.pageType == 'tmgCallDashboard') {
+      apiname = 'AdminTask/getMissedCallDefaults?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -280,12 +359,14 @@ export class TmgTaskComponent implements OnInit {
             }
           });
         }
-        this.userwisereadavgtat = _.uniqBy(this.userwisereadavgtat, 'name');
+        console.log('userwisereadavgtat:', this.userwisereadavgtat);
+        if (this.pageType !== "tmgProcess") {
+          this.userwisereadavgtat = _.uniqBy(this.userwisereadavgtat, 'name');
+        }
         this.hideLoader(index);
         if (this.pageType == "Tmg-Task") {
           this.getsecondlabelValue();
         }
-        console.log('holdtask:', this.userwisereadavgtat);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -312,12 +393,34 @@ export class TmgTaskComponent implements OnInit {
             }
           });
         }
+        console.log('readingTatGraphData:', this.readingTatGraphData);
         this.readingTatGraphData = _.uniqBy(this.readingTatGraphData, 'Month');
         this.hideLoader(index);
         if (this.pageType == "Tmg-Task") {
           this.handleChart();
         }
-        console.log('holdtask:', this.readingTatGraphData);
+      }, err => {
+        this.hideLoader(index);
+        console.log('Err:', err);
+      });
+  }
+
+  getMissedCallNotRevertedData(index) {
+    let days = 120;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(index);
+    let apiname = 'AdminTask/getMissedCallMonthGraph?startDate=' + params.fromdate + '&endDate=' + params.todate+ '&deptId=' + this.deptId;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.readingTatGraphData = res['data'];
+       
+        this.hideLoader(index);
+        this.handleChart();
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
@@ -326,12 +429,6 @@ export class TmgTaskComponent implements OnInit {
 
   getsecondlabelValue() {
     if (this.userwisereadavgtat) {
-      // this.userwisereadavgtat.forEach((cmg) => {
-      //   this.chart.data.line.push(cmg['name']);
-      //   this.chart.data.bar.push(cmg['hour']);
-      //   this.xAxisData.push(cmg['hour']);
-      // });
-
       this.handleChart();
     }
   }
@@ -340,6 +437,9 @@ export class TmgTaskComponent implements OnInit {
     this.longestunreadhoursdata = [];
     this.showLoader(index);
     let days = 30;
+    if (this.pageType == 'tmgCallDashboard') {
+      days = 7;
+    }
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
@@ -349,6 +449,11 @@ export class TmgTaskComponent implements OnInit {
     let apiname = 'AdminTask/getDashboardTaskLongestUnreadhour';
     if (this.pageType == "Tmg-worklog") {
       apiname = 'AdminTask/getTmgUserwiseProductivity?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    } else if (this.pageType == "tmgProcess") {
+      apiname = 'AdminTask/getTmgProcessCompletionTat?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
+    }
+    else if (this.pageType == "tmgCallDashboard") {
+      apiname = 'AdminTask/getMissedCallDefaults?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;
     }
     this.api.get(apiname)
       .subscribe(res => {
@@ -358,27 +463,34 @@ export class TmgTaskComponent implements OnInit {
               this.longestunreadhoursdata.push(val);
             }
           });
-          this.longestunreadhoursdata = _.uniqBy(this.longestunreadhoursdata, 'name');
+          console.log('longestunreadhoursdata:', this.longestunreadhoursdata);
+          if (this.pageType !== "tmgProcess") {
+            this.longestunreadhoursdata = _.uniqBy(this.longestunreadhoursdata, 'name');
+          }
         }
         this.hideLoader(index);
-        console.log('holdtask:', this.longestunreadhoursdata);
       }, err => {
         this.hideLoader(index);
         console.log('Err:', err);
       });
   }
 
-  getlabelValue(dataList = null, type = 1) {
+  getlabelValue(dataList = null, type = 1, pageType) {
     if (dataList && dataList.length) {
-      // this.challansMonthGraph.forEach((cmg) => {
-      //   this.chart.data.line.push(cmg['Month']);
-      //   this.chart.data.bar.push(cmg['Completed']);
-      //   this.xAxisData.push(cmg['Added']);
-      // });
-
-      this.handleChart1(dataList, type);
+      if (pageType == 'tmgCallDashboard') {
+        this.challansMonthGraph.forEach((cmg) => {
+          this.doubleChart.data.dataGraph1.push(cmg['count']);
+          this.doubleChart.data.dataGraph2.push(cmg['call_duration']);
+          this.xAxisData.push(cmg['Month']);
+        });
+        this.handleDoubleChart("bar", "Hours", "line", "Count");
+      }
+      else {
+        this.handleChart1(dataList, type);
+      }
     }
   }
+
   handleChart1(dataList, type) {
     let yaxis = [];
     let xaxis = [];
@@ -397,11 +509,32 @@ export class TmgTaskComponent implements OnInit {
         lable2 = "";
         lable3 = "";
       }
+    } else if (this.pageType == "tmgProcess") {
+      if (type == 1) {
+        lable1 = "Completed";
+        lable2 = "Added";
+        lable3 = "";
+      } else {
+        lable1 = "";
+        lable2 = "";
+        lable3 = "";
+      }
     }
+  
+
     // challansMonthGraph
     dataList.map(tlt => {
       xaxis.push(tlt['Month']);
-      if (this.pageType == "Tmg-worklog") {
+      if (this.pageType == "tmgProcess") {
+        if (type == 1) {
+          yaxis.push(tlt['Completed']);
+          zaxis.push(tlt['Added']);
+        } else if (type == 2) {
+          yaxis.push(tlt['hour']);
+        } else if (type == 3) {
+          yaxis.push(tlt['hour']);
+        }
+      } else if (this.pageType == "Tmg-worklog") {
         if (type == 1) {
           yaxis.push(tlt['Present']);
           zaxis.push((tlt['Activitylog']) ? tlt['Activitylog'] : 0);
@@ -411,7 +544,17 @@ export class TmgTaskComponent implements OnInit {
         } else if (type == 3) {
           yaxis.push((tlt['productivity']) ? tlt['productivity'] : 0);
         }
-      } else {
+      }
+      else if (this.pageType == "Tmg-worklog") {
+        if (type == 1) {
+          yaxis.push(tlt['count']);
+          zaxis.push((tlt['call_duration']));
+        } else if (type == 2) {
+          yaxis.push(tlt['count']);
+          zaxis.push((tlt['call_duration']));
+        }
+      }
+      else {
         yaxis.push(tlt['Completed']);
         zaxis.push(tlt['Added']);
       }
@@ -423,8 +566,6 @@ export class TmgTaskComponent implements OnInit {
     let zaxisObj = (zaxis && zaxis.length) ? this.common.chartScaleLabelAndGrid(zaxis) : null;
     let zaxis2Obj = (zaxis2 && zaxis2.length) ? this.common.chartScaleLabelAndGrid(zaxis2) : null;
     console.log("handleChart1", xaxis, yaxis);
-    // this.chart1.type = chartType
-    // this.chart1.data = chartData;
     let chartType = 'line'
     let chartData = {
       labels: xaxis,
@@ -439,16 +580,7 @@ export class TmgTaskComponent implements OnInit {
           pointHoverBackgroundColor: '#FFEB3B',
           borderWidth: 3,
         },
-        // {
-        //   label: lable2,
-        //   data: zaxisObj.scaleData,
-        //   backgroundColor: '#FFA500',
-        //   borderColor: '#FFA500',
-        //   fill: false,
-        //   pointHoverRadius: 8,
-        //   pointHoverBackgroundColor: '#FFA500',
-        //   borderWidth: 3,
-        // }
+
       ]
     };
     if (zaxisObj && zaxisObj.scaleData.length) {
@@ -495,55 +627,19 @@ export class TmgTaskComponent implements OnInit {
           tension: 0
         }
       },
-      // scales: {
-      //   yAxes: [{
-      //     scaleLabel: {
-      //       display: true,
-      //       labelString: 'Time (in Hrs.)' + yaxisObj.yaxisLabel
-      //     },
-      //     ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
-      //     suggestedMin: yaxisObj.minValue,
-      //   }
-      //   ],
-      //   xAxes: [{
-      //     scaleLabel: {
-      //       display: true,
-      //       labelString: 'Completed (yello line)  ' + 'Added (Blue line)' 
 
-      //     },
-      //     ticks: { stepSize: yaxisObj.gridSize },//beginAtZero: true,min:0,
-      //     suggestedMin: yaxisObj.minValue,
-      //   }
-      //   ]
-      // },
       tooltips: {
         enabled: true,
         mode: 'single',
         callbacks: {
           label: function (tooltipItems, data) {
             console.log("tooltipItems", tooltipItems, "data", data);
-            // let tti = ('' + tooltipItems.yLabel).split(".");
-            // let min = tti[1] ? String(parseInt(tti[1]) * 6).substring(0, 2) : '00';
-            // return tooltipItems.xLabel + " ( " + tti[0] + ":" + min + " Hrs. )";
             let x = tooltipItems.yLabel;
-            // let z = (parseFloat(x.toFixed()) + parseFloat((x % 1).toFixed(10)) * 0.6).toString();
-            // z = z.slice(0, z.indexOf('.') + 3).split('.').join(':');
-            //   return tooltipItems.xLabel + " ( " + z + " Hrs. )";
-            //let z = (parseFloat((x % 1).toFixed(10)) * 0.6).toString();
-            // z = z.slice(0, z.indexOf('.') + 3).split('.').join(':') ;
-            // let final = x.toString().split('.')[0] +':'+ z.split(':')[1];
-
             return tooltipItems.xLabel + " ( " + Math.floor(x * 100) + " )";
           }
         }
       },
-      // scales: {
-      //   yAxes: [{
-      //     ticks: { stepSize: 50000},
-      //     suggestedMin : 0,
-      //     max : 100
-      //   }]
-      //  },
+
 
     };
 
@@ -562,33 +658,36 @@ export class TmgTaskComponent implements OnInit {
     }
 
   }
+
   handleChart() {
+    console.log("this.pageType ",this.pageType);
     let yaxis = [];
     let xaxis = [];
     let label = "Hour";
     if (this.pageType == "Tmg-worklog") {
       label = "Defaulter %";
+    } 
+    else if(this.pageType == "tmgCallDashboard") {
+      label = "call %";
     }
-    console.log(this.userwisereadavgtat,this.readingTatGraphData)
-    // this.userwisereadavgtat.map(tlt => {
-    //   if (this.pageType == "Tmg-worklog") {
-    //     xaxis.push(tlt['Month']);
-    //     yaxis.push(tlt['Defaulter %']);
-    //   } else {
-    //     xaxis.push(tlt['name']);
-    //     yaxis.push(tlt['hour']);
-    //   }
-    // });
+    console.log(this.userwisereadavgtat, this.readingTatGraphData)
+
 
     if (this.pageType == "Tmg-worklog") {
       this.userwisereadavgtat.map(tlt => {
-      xaxis.push(tlt['Month']);
-      yaxis.push(tlt['Defaulter %']);
+        xaxis.push(tlt['Month']);
+        yaxis.push(tlt['Defaulter %']);
       });
-    } else {
+    } if (this.pageType == "tmgCallDashboard") {
       this.readingTatGraphData.map(tlt => {
-      xaxis.push(tlt['Month']);
-      yaxis.push(tlt['hour']);
+        xaxis.push(tlt['Month']);
+        yaxis.push(tlt['% Not reverted']);
+      });
+    }
+    else {
+      this.readingTatGraphData.map(tlt => {
+        xaxis.push(tlt['Month']);
+        yaxis.push(tlt['hour']);
       });
     }
 
@@ -620,7 +719,7 @@ export class TmgTaskComponent implements OnInit {
         },
         scaleLabel: {
           display: true,
-          labelString: 'Hour' + yaxisObj.yaxisLabel,
+          labelString: this.pageType == "tmgCallDashboard" ? 'Call %' :'Hour' + yaxisObj.yaxisLabel,
           fontSize: 17,
         },
 
@@ -638,7 +737,7 @@ export class TmgTaskComponent implements OnInit {
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Hour' + yaxisObj.yaxisLabel
+              labelString: this.pageType == "tmgCallDashboard" ? 'Call %' :'Hour' + yaxisObj.yaxisLabel,
             },
             ticks: {
               beginAtZero: true,
@@ -661,7 +760,54 @@ export class TmgTaskComponent implements OnInit {
 
   }
 
-  setChartOptions() {
+
+  handleDoubleChart(chartType1, label1, chartType2, label2) {
+    this.yaxisObj1 = this.common.chartScaleLabelAndGrid(this.doubleChart.data.dataGraph1);
+    this.yaxisObj2 = this.common.chartScaleLabelAndGrid(this.doubleChart.data.dataGraph2);
+    console.log("this.yaxisObj1", this.yaxisObj1, "this.yaxisObj2", this.yaxisObj2);
+    let data = {
+      labels: this.xAxisData,
+      datasets: []
+    };
+
+    data.datasets.push({
+      type: chartType1,
+      label: label1,
+      borderColor: '#ed7d31',
+      backgroundColor: '#ed7d31',
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: '#FFEB3B',
+      fill: false,
+      data: this.yaxisObj2.scaleData,
+      yAxisID: 'y-axis-2'
+    });
+
+    data.datasets.push({
+      type: chartType2,
+      label: label2,
+      borderColor: '#386ac4',
+      backgroundColor: '#386ac4',
+      fill: false,
+      data: this.yaxisObj1.scaleData.map(value => { return value.toFixed(2) }),
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: '#FFEB3B',
+      yAxisID: 'y-axis-1',
+    });
+
+    this.doubleChart = {
+      data: {
+        dataGraph1: [],
+        dataGraph2: []
+      },
+      type: 'bar',
+      dataSet: data,
+      options: this.setChartOptions("Calls Count", "Hours", "Month")
+    };
+
+  }
+
+
+  setChartOptions(leftSideLabel, rightSideLabel, xaxisString) {
     let options = {
       responsive: true,
       hoverMode: 'index',
@@ -670,10 +816,7 @@ export class TmgTaskComponent implements OnInit {
         position: 'bottom',
         display: true
       },
-      // tooltips: {
-      //   mode: 'index',
-      //   intersect: 'true'
-      // },
+
 
       maintainAspectRatio: false,
       title: {
@@ -690,24 +833,21 @@ export class TmgTaskComponent implements OnInit {
         xAxes: [{
           scaleLabel: {
             display: true,
-            labelString: 'Months',
+            labelString: xaxisString,
             fontSize: 17
           },
         }],
       }
     }
 
-    console.log('this.yaxisObj1.minValue', this.yaxisObj1.minValue);
-    console.log('this.yaxisObj2.minValue', this.yaxisObj2.minValue);
-
     options.scales.yAxes.push({
-      // scaleLabel: {
-      //   display: true,
-      //   labelString: 'Count of Challans'+this.yaxisObj1.yaxisLabel,
-      //   fontSize: 16
-      // },
-      ticks: { stepSize: (this.yaxisObj1.gridSize), min: this.yaxisObj1.minValue - this.yaxisObj1.gridSize > 0 ? this.yaxisObj1.minValue - this.yaxisObj1.gridSize : 0 }, //beginAtZero: true,min:0,
-      // suggestedMin : this.yaxisObj1.minValue,
+      scaleLabel: {
+        display: true,
+        labelString: leftSideLabel + this.yaxisObj1.yaxisLabel,
+        fontSize: 16
+      },
+      ticks: { stepSize: this.yaxisObj1.gridSize }, //beginAtZero: true,min:0,
+      suggestedMin: this.yaxisObj1.minValue,
       type: 'linear',
       display: true,
       position: 'left',
@@ -715,12 +855,12 @@ export class TmgTaskComponent implements OnInit {
 
     });
     options.scales.yAxes.push({
-      // scaleLabel: {
-      //   display: true,
-      //   labelString: 'Challan Amount '+this.yaxisObj2.yaxisLabel,
-      //   fontSize: 16,
-      // },
-      ticks: { stepSize: (this.yaxisObj2.gridSize), beginAtZero: true }, //beginAtZero: true,min:0,
+      scaleLabel: {
+        display: true,
+        labelString: rightSideLabel + this.yaxisObj2.yaxisLabel,
+        fontSize: 16,
+      },
+      ticks: { stepSize: this.yaxisObj2.gridSize }, //beginAtZero: true,min:0,
       suggestedMin: this.yaxisObj2.minValue,
       // max : 100
       type: 'linear',
@@ -733,7 +873,6 @@ export class TmgTaskComponent implements OnInit {
     });
     return options;
   }
-
   getDetials(url, params, value = 0, type = 'days') {
     let dataparams = {
       view: {
@@ -782,5 +921,98 @@ export class TmgTaskComponent implements OnInit {
     } catch (e) {
       console.log('Exception', e);
     }
+  }
+
+  getdataList9(numindex) {
+    this.dataList9 = [];
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(numindex);
+    let apiname = 'AdminTask/getTmgProcessCompletionTat?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.hideLoader(numindex);
+        if (res['data']) {
+          res['data'].map((val, index1) => {
+            if (index1 < 3) {
+              this.dataList9.push(val);
+            } else {
+              return false;
+            }
+          });
+          // this.dataList9 = _.uniqBy(this.dataList9, 'process');
+          console.log('dataList9', this.dataList9);
+        }
+      }, err => {
+        this.hideLoader(numindex);
+        console.log('Err:', err);
+      });
+  }
+
+  getdataList10(numindex) {
+    this.dataList10 = [];
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(numindex);
+    let apiname = 'AdminTask/getTmgProcessLongestAckPenTransaction?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.hideLoader(numindex);
+        if (res['data']) {
+          res['data'].map((val, index1) => {
+            if (index1 < 3) {
+              this.dataList10.push(val);
+            } else {
+              return false;
+            }
+          });
+          console.log('dataList10', this.dataList10);
+          // this.dataList10 = _.uniqBy(this.dataList10, 'trx');
+        }
+      }, err => {
+        this.hideLoader(numindex);
+        console.log('Err:', err);
+      });
+  }
+
+  getdataList11(numindex) {
+    this.dataList11 = [];
+    let days = 30;
+    let startDate = new Date(new Date().setDate(new Date().getDate() - days));
+    let endDate = new Date();
+    let params = {
+      fromdate: this.common.dateFormatter1(startDate),
+      todate: this.common.dateFormatter1(endDate)
+    };
+    this.showLoader(numindex);
+    let apiname = 'AdminTask/getTmgProcessLongestPenAction?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.api.get(apiname)
+      .subscribe(res => {
+        this.hideLoader(numindex);
+        if (res['data']) {
+          res['data'].map((val, index1) => {
+            if (index1 < 3) {
+              this.dataList11.push(val);
+            } else {
+              return false;
+            }
+          });
+          console.log('dataList11', this.dataList11);
+          // this.dataList11 = _.uniqBy(this.dataList11, 'action');
+        }
+      }, err => {
+        this.hideLoader(numindex);
+        console.log('Err:', err);
+      });
   }
 }

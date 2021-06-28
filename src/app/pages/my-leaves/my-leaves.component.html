@@ -1,0 +1,69 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-4" style="float: left;">
+        <div class="out-topnav">
+          <div class="toptab">
+            <div class="hiddenby">
+              <p [class]="selectedTab=='recent'?'active':'default'" (click)="selectedTab='recent';leaveTypes =4;getMyLeaves()">
+                <b>Recent</b>
+              </p>
+            </div>
+            <div class="hiddenby">
+              <p [class]="selectedTab=='to'?'active':'default'" (click)="selectedTab='to';leaveTypes =2;getMyLeaves()">
+                <b>To Me</b>
+              </p>
+            </div>
+            <div class="hiddenby">
+              <p [class]="selectedTab=='cc'?'active':'default'" (click)="selectedTab='cc';leaveTypes =3;getMyLeaves()">
+                <b>CC</b>
+              </p>
+            </div>
+            <div class="hiddenby">
+              <p [class]="selectedTab=='by'?'active':'default'" (click)="selectedTab='by';leaveTypes =1;getMyLeaves()">
+                <b>By Me</b>
+              </p>
+            </div>
+          </div>
+         
+         </div>
+        </div>
+      <div class="col-8" style="float: left; text-align: right;" >
+          <div class="circle orange">
+            <span class="numberText">56</span><br>
+            <span class="stringText">Provided</span>
+          </div>
+        
+          <div class="circle orange">
+            <span class="numberText">56</span><br>
+            <span class="stringText">Provided</span>
+          </div>
+
+          <div class="circle blue">
+            <span class="numberText">56</span><br>
+            <span class="stringText">Provided</span>
+          </div>
+
+          <div class="circle blue">
+            <span class="numberText">56</span><br>
+            <span class="stringText">Provided</span>
+          </div>
+
+          <div class="circle red">
+            <span class="numberText">56</span><br>
+            <span class="stringText">Provided test </span>
+          </div>
+
+        <div class="circle red">
+            <span class="numberText">56</span><br>
+            <span class="stringText">Provided test </span>
+          </div>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div>
+      <smart-table [data]="table.data" [settings]="table.settings" id="tableLeaves"></smart-table>
+    </div>
+  </nb-card-body>
+</nb-card>

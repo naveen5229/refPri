@@ -1,3 +1,5 @@
+import { expenses } from './pages/expense-type/data';
+import { from } from 'rxjs';
 /**
  * @license
  * Copyright Akveo. All Rights Reserved.
@@ -8,6 +10,7 @@ import { AnalyticsService } from './@core/utils/analytics.service';
 import { CommonService } from './Service/common/common.service';
 import { UserService } from './Service/user/user.service';
 import { ApiService } from './Service/Api/api.service';
+import { MessagingService } from './Service/messaging.service';
 
 @Component({
   selector: 'ngx-app',
@@ -23,18 +26,39 @@ export class AppComponent implements OnInit {
   // handleKeyboardEvent(event) {
   //   this.keyHandler(event);
   // }
+  title = 'push-notification';
+  message;
+  datatabledata:any[] = [];
+
   constructor(private analytics: AnalyticsService,
     public common: CommonService,
     public user: UserService,
-    public api: ApiService) {
+    public api: ApiService,
+    private messagingService: MessagingService
+    ) {
     // if (this.user._details) {
     //   this.getUserPagesList();
     // }
+
+  let date = Date.now();
+  console.log('start time', date);
   }
 
   ngOnInit(): void {
     this.analytics.trackPageViews();
+    this.messagingService.requestPermission()
+  this.messagingService.receiveMessage()
+  this.message = this.messagingService.currentMessage
   }
+
+
+getdatatabledata(){
+let data = from(expenses);
+data.subscribe((item:any)=>{
+this.datatabledata = item;
+})
+
+}
 
   // getUserPagesList() {
   //   let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;

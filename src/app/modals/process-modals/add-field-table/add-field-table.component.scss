@@ -3,3 +3,12 @@
 :host ::ng-deep .tableFixHead {
     height: auto !important;
 }
+.custdrop{
+    max-height: 100px;
+    overflow: auto;
+    padding-bottom:$padding-md;
+    .row{
+        margin-top: 1px;
+    }
+
+}

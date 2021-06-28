@@ -48,11 +48,11 @@ export class AssignFieldsComponent implements OnInit {
   getFields() {
     this.common.loading++;
     let api = this.formType == 11 ? 'Ticket/getTicketMatrixCalAssigned?' : 'Processes/getProcessFormField?';
-    let params = "processId=" + this.processId +"&refId=" + this.refId +"&refType=" + this.refType
+    let params = "processId=" + this.processId + "&refId=" + this.refId + "&refType=" + this.refType
     this.api.get(api + params)
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.fields = res['data'] || [];
         this.colinitialization();
       }, err => {
@@ -67,16 +67,75 @@ export class AssignFieldsComponent implements OnInit {
     if (event.previousContainer === event.container) {
       if (event.container.id == "unassign")
         return;
+
+      if (event.previousContainer.id == event.container.id) {
+        if (event.previousContainer.id === 'assign-left') {
+          console.log('working from assign-left', this.assign.right[event.currentIndex], this.assign.left[event.previousIndex], this.assign.left[event.currentIndex])
+          if (this.formType==11 && (this.assign.right[event.currentIndex] || this.assign.right[event.previousIndex]) && ((this.assign.left[event.previousIndex] && this.assign.left[event.previousIndex].param_type === "table") || (this.assign.left[event.currentIndex] && this.assign.left[event.currentIndex].param_type === "table"))) {
+            console.log('table');
+            this.common.showError('can not drop type table corresponding to other');
+            return;
+            // this.assign.right[event.currentIndex + 1] = this.unassign[event.previousIndex];
+          } else {
+            console.log('not tabel', this.assign.left[event.currentIndex]);
+            if (this.assign.left[event.currentIndex]) {
+              let completeLeft = JSON.parse(JSON.stringify(this.assign.left));
+              completeLeft[event.previousIndex] = this.assign.left[event.currentIndex];
+              completeLeft[event.currentIndex] = this.assign.left[event.previousIndex];
+              this.assign.left = JSON.parse(JSON.stringify(completeLeft));
+            } else {
+              let completeLeft = JSON.parse(JSON.stringify(this.assign.left));
+              completeLeft[event.previousIndex] = null;
+              completeLeft[event.currentIndex] = this.assign.left[event.previousIndex];
+              this.assign.left = JSON.parse(JSON.stringify(completeLeft));
+            }
+          }
+        } else if (event.previousContainer.id === 'assign-right') {
+          console.log('working from assign-right')
+          if (this.formType==11 && this.assign.left[event.currentIndex] && this.assign.left[event.currentIndex].param_type === "table") {
+            this.common.showError('can not drop corresponding to type table');
+            return;
+            // this.assign.right[event.currentIndex + 1] = this.unassign[event.previousIndex];
+          } else {
+            console.log('not table in right', this.assign.right[event.currentIndex]);
+            if (this.assign.right[event.currentIndex]) {
+              let completeRight = JSON.parse(JSON.stringify(this.assign.right));
+              completeRight[event.previousIndex] = this.assign.right[event.currentIndex];
+              completeRight[event.currentIndex] = this.assign.right[event.previousIndex];
+              this.assign.right = JSON.parse(JSON.stringify(completeRight));
+            } else {
+              let completeRight = JSON.parse(JSON.stringify(this.assign.right));
+              completeRight[event.previousIndex] = null;
+              completeRight[event.currentIndex] = this.assign.right[event.previousIndex];
+              this.assign.right = JSON.parse(JSON.stringify(completeRight));
+            }
+          }
+        }
+
+      }
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else if (event.previousContainer.id == "unassign") {
       if (event.container.id == "assign-left") {
         if (this.assign.left[event.currentIndex] == null) {
-          this.assign.left[event.currentIndex] = this.unassign[event.previousIndex];
+          if (this.formType==11 && this.assign.right[event.currentIndex] && this.unassign[event.previousIndex].param_type === "table") {
+            this.common.showError('can not drop type table corresponding to other');
+            return;
+            // this.assign.right[event.currentIndex + 1] = this.unassign[event.previousIndex];
+          } else {
+            this.assign.left[event.currentIndex] = this.unassign[event.previousIndex];
+          }
           this.unassign.splice(event.previousIndex, 1);
         }
       } else if (event.container.id == "assign-right") {
         if (this.assign.right[event.currentIndex] == null) {
-          this.assign.right[event.currentIndex] = this.unassign[event.previousIndex];
+          if (this.unassign[event.previousIndex].param_type === "table") return this.common.showError('table type can only be assigned in Left');
+          if (this.formType==11 && this.assign.left[event.currentIndex] && this.assign.left[event.currentIndex].param_type === "table") {
+            this.common.showError('can not drop corresponding to type table');
+            return;
+            // this.assign.right[event.currentIndex + 1] = this.unassign[event.previousIndex];
+          } else {
+            this.assign.right[event.currentIndex] = this.unassign[event.previousIndex];
+          }
           this.unassign.splice(event.previousIndex, 1);
         }
       }
@@ -92,16 +151,33 @@ export class AssignFieldsComponent implements OnInit {
           this.assign.right[event.previousIndex] = null;
         }
       }
-    } else if (event.previousContainer.id == "assign-left" && event.container.id == "assign-right") {
-      let val = this.assign.right[event.currentIndex];
-      this.assign.right[event.currentIndex] = this.assign.left[event.previousIndex];
-      this.assign.left[event.previousIndex] = val;
-    } else if (event.previousContainer.id == "assign-right" && event.container.id == "assign-left") {
-      let val = this.assign.left[event.currentIndex];
-      this.assign.left[event.currentIndex] = this.assign.right[event.previousIndex];
-      this.assign.right[event.previousIndex] = val;
     }
+    // else if (event.previousContainer.id == "assign-left" && event.container.id == "assign-right") {
+    //   if (this.assign.right[event.currentIndex] != null) {
+    //     return this.common.showError('can not replace columns')
+    //   } else {
+    //     if (this.assign.left[event.previousIndex].param_type === "table") return this.common.showError('table type can only be assigned in Left')
+    //     this.assign.right[event.currentIndex] = this.assign.left[event.previousIndex];
+    //     this.assign.left.splice(event.previousIndex, 1);
+    //   }
+    //   // if(this.assign.left[event.previousIndex].param_type === "table") return this.common.showError('table type can only be assigned in Left')
+    //   // let val = this.assign.right[event.currentIndex];
+    //   // this.assign.right[event.currentIndex] = this.assign.left[event.previousIndex];
+    //   // this.assign.left[event.previousIndex] = val;
+    // } else if (event.previousContainer.id == "assign-right" && event.container.id == "assign-left") {
+    //   if (this.assign.left[event.currentIndex] != null) {
+    //     return this.common.showError('can not replace columns')
+    //   } else {
+    //     this.assign.left[event.currentIndex] = this.assign.right[event.previousIndex];
+    //     this.assign.right.splice(event.previousIndex, 1);
+    //   }
+    //   // if (this.assign.left[event.previousIndex].param_type === "table") return this.common.showError('table type can only be assigned in Left')
+    //   // let val = this.assign.left[event.currentIndex];
+    //   // this.assign.left[event.currentIndex] = this.assign.right[event.previousIndex];
+    //   // this.assign.right[event.previousIndex] = val;
+    // }
 
+    console.log('Left:', this.assign.left, 'Right:', this.assign.right)
   }
 
   colinitialization() {
@@ -191,8 +267,8 @@ export class AssignFieldsComponent implements OnInit {
     item.r_isdashboard_info = !item.r_isdashboard_info;
   }
 
-  addGlobalfield(){
-    this.common.params = {process:{id:this.processId,name:null}};
+  addGlobalfield() {
+    this.common.params = { process: { id: this.processId, name: null } };
     const activeModal = this.modalService.open(AddGlobalFieldComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       this.getFields();

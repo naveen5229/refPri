@@ -8,7 +8,7 @@ import { CommonService } from '../../Service/common/common.service';
   styleUrls: ['./tmg-dashboard.component.scss']
 })
 export class TmgDashboardComponent  implements OnInit {
-  seletionsArray = ['Tmg-Task','Tmg-worklog'];
+  seletionsArray = ['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'];
   selectedDashboard = 'Tmg-Task';
   selectedDept = {id:null,name:'All'};
   departments = [];
