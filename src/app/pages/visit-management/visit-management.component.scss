@@ -231,3 +231,26 @@ $color-primary:#72b3c7;
     }
   }
 }
+
+
+table {
+  .user-check-label {
+    label {
+      margin-bottom: 0;
+      font-size: 12px;
+      font-weight: 500;
+      margin-left: 5px;
+      position: relative;
+      line-height: 20px
+    }
+
+    .form-check-input {
+      width: 15px;
+      height: 15px;
+      position: absolute;
+      z-index: 20;
+      top: -3px;
+      border-radius: 0;
+    }
+  }
+}

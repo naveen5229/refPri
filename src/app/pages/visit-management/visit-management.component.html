@@ -1,22 +1,20 @@
-<ng-container *ngIf="listView">
+<ng-container *ngIf="!isDetailView">
   <nb-card>
     <nb-card-header>
       <h5> Visit Management </h5>
     </nb-card-header>
-
     <nb-card-body>
       <div class="row">
         <div class="col-md-12">
           <form action="" class="visit-management">
             <div class="row align-items-end">
               <div class="col-md-3">
-                <div class="from-group">
+                <div class="form-group">
                   <label for="">select User </label>
                   <auto-suggestion (onSelected)="selectedUser($event)" [data]="allUsers" display='name'
-                    placeholder="Search category" autocomplete="off" name="primaryUser" inputId="primaryUser"
-                    [preSelected]="{name:null}">
+                    placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+                    [preSelected]="{name:expenseSearch.admin.name}">
                   </auto-suggestion>
-
                 </div>
               </div>
               <div class="col-3">
@@ -30,22 +28,18 @@
                 <div class="form-group">
                   <label>End Date</label>
                   <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="true"
-                    [isStart]="false">
+                    [isStart]="false" [isDateDisabled] = "!expenseSearch.admin.id" [isTimeDisabled] = "!expenseSearch.admin.id">
                   </uj-date-time-picker>
                 </div>
               </div>
-
               <div class="col-md-3">
                 <div class="form-group action-block">
                   <div class="btn-block">
                     <button type="button" class="btn btn-danger"> Reset </button>
-                    <button type="button" class="btn btn-success"> Approved </button>
-                    <button type="button" class="btn btn-"></button>
-
+                    <button type="button" class="btn btn-primary" (click)="showAdminWiseWagesList()"> Search </button>
+                    <button type="button" class="btn btn-success"> Cancel </button>
                   </div>
                 </div>
-
-
               </div>
 
             </div>
@@ -54,174 +48,156 @@
           <table class="table table-primary" datatable [dtOptions]="dtOptions1" [dtTrigger]="dtTrigger1">
             <thead>
               <tr>
-                <th>Sr. No.</th>
-                <th>UserName</th>
+                <th>
+                  <div class="form-check user-check-label d-flex">
+                    <label for=""> Sr. No. </label>
+                    <input class="form-check-input" [(ngModel)]="alluserselect"
+                      (click)="selectAllUser($event)"
+                      type="checkbox" value="" id="flexCheckChecked">
+                  </div>
+                </th>
+                <th>Name</th>
+                <th>Date</th>
                 <th>Total Expesne</th>
                 <th>Status</th>
                 <th>Travel Distance</th>
-                <th>Total Image Uploaded</th>
+                <th>Total Image</th>
                 <th>Approvable Expense</th>
-                <th> Action </th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of allVisits;index as i">
+              <tr *ngFor="let item of allVisits;let i = index">
                 <td>
-                  <div class="d-flex position-relative">
-                      <!-- <p> {{i+1}} </p> -->
-                    <div class="form-check user-check-label">
-                      <label for=""> {{i+1}} </label>
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                    </div>
-
+                  <div class="form-check user-check-label d-flex">
+                    <label for=""> {{i+1}} </label>
+                    <input class="form-check-input" [(ngModel)]="item.checked"  type="checkbox" value="" id="flexCheckChecked" (click)="selectUser(i)">
                   </div>
-
                 </td>
-                <td>{{item.userName}} </td>
-                <td>{{item.totalExpense}} </td>
-                <td>{{item.status}}</td>
-                <td>{{item.trasvelDistance}} </td>
-                <td>{{item.totalImageUploaded}}</td>
-                <td>{{item.approveExpense}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.sqdate}}</td>
+                <td>{{item.total_expense}}</td>
+                <td>{{'status'}}</td>
+                <td>{{item.total_distance+' | '+ item.total_distance_live}}</td>
+                <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
+                <td>
+                  <input type="number" class="form-group" style="width: 40%;"
+                  [(ngModel)]="updatedExpenses[i]['total_amount']">
+                </td>
                 <td>
                   <div class="action-block">
                     <div class="btn-block">
-                      <button class="btn btn-danger" type="button" (click)="rejectexpense()"> Reject </button>
-                      <button class="btn btn-success" type="button" (click)="approveExpense()"> Approve </button>
-                      <button type="button" class="btn btn-primary" (click)="Userdetail(i)"> View </button>
+                      <button type="button" class="btn btn-danger btn-sm" [attr.disabled]="!(item._onside_img && item._onside_img.length)" (click)="(item._onside_img && item._onside_img.length) ? updateOnsiteImageStatusByUser(-1) : null">Reject</button>
+                      <button type="button" class="btn btn-success btn-sm" [attr.disabled]="!(item._onside_img && item._onside_img.length)" (click)="(item._onside_img && item._onside_img.length) ? updateOnsiteImageStatusByUser(1) : null">Approve</button>
+                      <button type="button" class="btn btn-primary btn-sm" (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : viewExpenseDetail(item)">View</button>
                     </div>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
-
         </div>
-
       </div>
-
+      <div class="row">
+        <div class="col-12">
+          <button class="btn btn-primary btn-sm mr-2" id="verifiedExpenseBtn" (click)="saveVerifiedExpense()">Save</button>
+        </div>
+      </div>
     </nb-card-body>
   </nb-card>
-
 </ng-container>
 
-
-<ng-container *ngIf="detailView">
-
+<ng-container *ngIf="isDetailView">
   <nb-card>
     <nb-card-header class="position-relative mb-2">
       <button class="btn btn-primary back-btn" (click)="backnavigate()"> <i class="fa fa-arrow-left"></i> </button>
       <h5 class="text-center">Expense Detail</h5>
-
       <div class="header-block">
         <div class="row">
           <div class="col-md-4">
-            <h5>User Name </h5>
+            <h5>User Name : {{(selectedExpense) ? selectedExpense.name : 'N/A'}}</h5>
           </div>
-
-
           <div class="col-md-5 justify-content-end">
             <div class="date-block">
               <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="ExpenseDate" [isTime]="true">
               </uj-date-time-picker>
             </div>
           </div>
-
-
           <div class="col-md-3">
             <div class="expense-actions">
               <button type="button" class="btn btn-primary" (click)="backnavigate()"> Back </button>
-              <button type="button" class="btn btn-success">Approve</button>
-              <button type="button" class="btn btn-danger"> Reject </button>
+              <button type="button" class="btn btn-success" (click)="updateOnsiteExpenseStatus(1,null)">Approve</button>
+              <button type="button" class="btn btn-danger" (click)="updateOnsiteExpenseStatus(-1,null)"> Reject </button>
             </div>
           </div>
-
         </div>
       </div>
-
     </nb-card-header>
-
     <nb-card-body>
-
       <div class="expense-detail">
         <div class="row mx-0 py-2 px-0">
           <div class="col-md-6">
             <h5>Expenses</h5>
-
             <table class="table table-primary expense-table">
               <thead class="bg-primary text-white">
                 <tr>
-                  <th>
-                    Expense Type
-                  </th>
-                  <th> Expense </th>
+                  <th>Expense Type</th>
+                  <th>Expense</th>
                 </tr>
               </thead>
-
               <tbody>
-                <tr (click)="expenselistHandler(i)" *ngFor="let item of expensdetail?.expense;index as i"
+                <tr (click)="expenseIndex=i" *ngFor="let item of expenseList;index as i"
                   [class.active]="expenseIndex == i">
-                  <td> {{item.expensetype}} </td>
-                  <td> {{item.Expense}} </td>
+                  <td> {{item.description}} </td>
+                  <td> {{item.amount}} </td>
                 </tr>
-
               </tbody>
             </table>
-
-
           </div>
-
           <div class="col-md-6">
             <h5>Expense Images</h5>
             <div class="expense-image-block">
-              <div class="expense-image" *ngFor="let item of expensdetail?.expense;index as i"
-                [class.active]="expenseIndex == i" (click)="expenseImageHandler(i)">
+              <div class="expense-image" *ngFor="let item of expenseList;index as i"
+                [class.active]="expenseIndex == i" (click)="expenseIndex = i">
                 <button class="btn image-view" data-toggle="modal" data-target="#image-model"
-                  (click)="expenseImageView(i)"> <i class="fa fa-eye"></i> </button>
-                <img [src]="item.image" [alt]="item.image">
+                  (click)="expenseImage = item._url"> <i class="fa fa-eye"></i> </button>
+                <img [src]="item._url" [alt]="item.image">
               </div>
             </div>
           </div>
-
-
-
         </div>
-
 
         <div class="row mx-0 py-2 px-0">
           <div class="col-md-4">
-            <h5> Location with time </h5>
-            <ul class="location-list">
-              <li *ngFor="let item of expensdetail?.detail;index as i" [class.active]="detailDataIndex == i"
-                (click)="detaillisthandler(i)"> <span>
-                  {{item.location.Time}} </span> <span>
-                  {{item.location.place}} </span>
-              </li>
-            </ul>
-
-
-          </div>
-
-          <div class="col-md-4">
-
-            <div class="location-map">
-              <div class="map-container">
-                <div class="map" id="map"></div>
+            <div class="row">
+              <div class="col-8"><h5>Location with time</h5></div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
               </div>
             </div>
-
-
+            <ul class="location-list">
+              <li *ngFor="let item of onsiteImages;index as i" [class.active]="detailDataIndex == i"
+                (click)="detailDataIndex = i">
+                <span>{{item.addtime}}</span> <span> {{item.site_name}}</span>
+              </li>
+            </ul>
           </div>
 
+          <div class="col-md-4">
+            <div class="location-map">
+              <div class="map-container">
+                <div class="map" id="map" style="position: absolute;" #map></div>
+              </div>
+            </div>
+          </div>
 
           <div class="col-md-4">
-            <h5> visit images - {{expensdetail.detail.length +' Image'}} </h5>
+            <h5> visit images - {{(onsiteImages) ? onsiteImages.length +' Image' : N/A}} </h5>
             <div class="detail-images-container">
-              <div class="detail-images" [class.active]="detailDataIndex == i"
-                [class.zoom]="detailDataIndex == i && detailImageZoom"
-                *ngFor="let item of expensdetail.detail;index as i" (mouseover)="detailImagehandler(i)"
-                (mouseout)="detailImageZoomHandler()">
-                <img class="img-fluid" [src]="item.image" [alt]="item.image">
+              <div *ngFor="let item of onsiteImages;index as i" class="detail-images" [class.active]="detailDataIndex == i"
+                [class.zoom]="detailDataIndex == i && detailImageZoom" (mouseover)="detailDataIndex = i;detailImageZoom = true"
+                (mouseout)="detailImageZoom = false" (click)="getExpenseWrtImage(item._id)">
+                <img class="img-fluid" [src]="item._url" [alt]="item.image">
               </div>
             </div>
           </div>
@@ -229,11 +205,8 @@
       </div>
 
     </nb-card-body>
-
   </nb-card>
 </ng-container>
-
-
 
 <div id="image-model" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title"
   aria-hidden="true">
