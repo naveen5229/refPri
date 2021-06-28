@@ -28,8 +28,8 @@
 
     <div class="col-8">
 
-      <div>
-        <div class="row" class="custom-slider range2" *ngFor="let booked of schedule.schedule">
+      <div class="position-relative">
+        <div class="custom-slider range2" *ngFor="let booked of schedule.schedule">
           <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"
             [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
           <!-- class="othersrange" -->
@@ -37,7 +37,7 @@
       </div>
 
       <div class="ngx-detailedTooltip" *ngIf="detailedSlot==i">
-        <div class="row" class="custom-slider range2">
+        <div class="custom-slider range2">
           <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"
             *ngFor="let booked of schedule.schedule"
             [ngClass]="{'othersrange':booked.is_todo===0,'othersrangered':booked.is_todo===1}"></ngx-slider>
