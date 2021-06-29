@@ -103,9 +103,11 @@ export class EmployeeMonitoringComponent implements OnInit {
     this.common.loading++;
     this.api.get('Admin/getEmployeeTrackingReports')
       .subscribe((res: any) => {
+      console.log('report  result:', res);
         this.common.loading--;
         if(res['code']===0) { this.common.showError(res['msg']); return false;};
         this.reports = res.data.map(record => {
+
           return {
             name: record.name,
             department: record.department,
@@ -121,6 +123,7 @@ export class EmployeeMonitoringComponent implements OnInit {
             addTime: record.addtime
           }
         });
+
         this.setMarkers();
         this.setSmartTable();
       }, err => {
@@ -187,7 +190,9 @@ export class EmployeeMonitoringComponent implements OnInit {
       this.markerInfoWindow = new google.maps.InfoWindow({ content: '' });
 
     this.markers.map(marker => marker.setMap(null));
+    console.log('this.markers: ', this.markers);
     let reports = this.reports.filter(report => report.lat);
+    console.log('let reports: ', reports);
     this.markers = this.mapService.createMarkers(reports, false, false)
       .map((marker, index) => {
         let report = reports[index];

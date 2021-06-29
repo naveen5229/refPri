@@ -232,6 +232,7 @@ $light: '.nb-theme-light';
 }
 
 @mixin headings {
+
   h1,
   h2,
   h3,
@@ -242,7 +243,7 @@ $light: '.nb-theme-light';
   }
 }
 
-.iv-fullscreen{
+.iv-fullscreen {
   z-index: 9999 !important;
 }
 
@@ -276,7 +277,7 @@ $light: '.nb-theme-light';
   }
 }
 
-.div-input{
+.div-input {
   min-height: 27px;
 }
 
@@ -284,30 +285,58 @@ $light: '.nb-theme-light';
 //  custom style Item Redesign and development
 
 
-.nb-theme-default{
-.action-block {
-  button {
-    padding: 5px 15px !important;
-    text-transform: capitalize;
-    margin-right: 7px;
-    height: 25px !important;
-    line-height: 5px;
-    font-family: Poppins,sans-serif !important;
+.nb-theme-default {
+  .action-block {
+    button {
+      padding: 5px 15px !important;
+      text-transform: capitalize;
+      margin-right: 7px;
+      height: 25px !important;
+      line-height: 5px;
+      font-family: Poppins, sans-serif !important;
 
+    }
   }
+
+  table.dataTable {
+
+    td,
+    th {
+      vertical-align: middle;
+    }
+  }
+
+  table {
+    .action-block {
+      margin: 3px 0px;
+    }
+  }
+
 }
 
-table.dataTable{
-td,th{
- vertical-align: middle;
-}
-}
 
-table{
-.action-block {
-  margin: 3px 0px;
-}
-}
+
+// datatable
+.ng-dataTable {
+  border: 1px solid rgba(61, 105, 214, 0.5) !important;
+  border-top: 0 !important;
+
+  th {
+    background-color: #3f69d6;
+    // background-color:#72b3c7;
+    padding: 10px;
+    color: #fff;
+    border: 0 !important;
+  }
+
+  tbody {
+    td:last-child {
+      border-right: 0 !important;
+    }
+
+    td:first-child {
+      border-left: 0 !important;
+    }
+  }
 
 }
-
