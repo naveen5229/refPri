@@ -137,6 +137,7 @@ import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 
 
+
 const PAGE_COMPONENTS = [
   WorkLogComponent,
   TaskAssignUserComponent,
@@ -287,7 +288,7 @@ const PAGE_COMPONENTS = [
     AngularFireAuthModule,
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [MessagingService,AsyncPipe,
     { provide: APP_BASE_HREF, useValue: '/' }

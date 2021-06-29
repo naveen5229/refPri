@@ -16,6 +16,7 @@ import { TaskMessageComponent } from '../task-message/task-message.component';
   styleUrls: ['./apply-leave.component.scss']
 })
 export class ApplyLeaveComponent implements OnInit { //user for two forms 1. leave,2. broadcast
+  isEdit = false;
   title = "Apply Leave";
   userList = [];
   btn = 'Apply';
@@ -52,6 +53,15 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
   ];
 
+  todoForm = {
+    subject: null,
+    desc: null,
+    host: { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name },
+    roomId: null,
+    time: this.common.getDate(),
+    buzz: true
+  }
+
   meetingForm = {
     parentId: null,
     subject: null,
@@ -75,6 +85,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   minutes = [];
   busySchedules = [];
   isSaveWithChat = null;
+  isBuzzandButton = true;
 
   constructor(public activeModal: NgbActiveModal,
     public api: ApiService,
@@ -98,6 +109,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     } else if (this.formType == 2) {
       this.getMeetingRoomList();
       if (this.common.params.meetingData && this.common.params.isEdit) {
+        if(this.common.params.meetingData._meeting_type == 2) this.formType = 8;
+        this.isEdit = this.common.params.isEdit;
+        
         let durationtime = null;
         if (this.common.params.meetingData.duration && this.common.params.meetingData.schedule_time) {
           let timeduration = (this.common.params.meetingData.duration).split(':');
@@ -131,7 +145,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           desc: this.common.params.meetingData._desc,
           cc: JSON.parse(JSON.stringify(this.common.params.meetingData._user)),
           roomId: this.common.params.meetingData._room_id,
-          type: this.common.params.meetingData._room_id ? 0 : 1,
+          type: this.common.params.meetingData._meeting_type,
           link: this.common.params.meetingData._link,
           host: { id: this.common.params.meetingData._host, name: this.common.params.meetingData.host },
           fromTime: (this.common.params.meetingData.schedule_time) ? new Date(this.common.params.meetingData.schedule_time) : null,
@@ -418,7 +432,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
     if (!this.meetingForm.subject) {
       return this.common.showError("Subject is missing");
-    } else if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
+    } else if (this.formType == 2 && (!this.meetingForm.cc || !this.meetingForm.cc.length)) {
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
       return this.common.showError("Host user is missing");
@@ -470,8 +484,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       buzz: this.meetingForm.buzz,
       requestId: (this.meetingForm.reqId) ? this.meetingForm.reqId : null
     }
-    // console.log("add meeting:",params); return false;
-    if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId) {
+    // console.log("add meeting:", params); return false;
+    if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId && this.formType==2) {
       this.common.params = {
         title: 'Alert',
         description: `<b>${(this.meetingForm.type == 1) ? 'Meeting Link' : 'Meeting Room'} not available.<br>Create Anyway..`
@@ -535,8 +549,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   checkAvailability() {
-    console.log("checkAvailability:", this.meetingForm)
-    if (!this.meetingForm.cc || !this.meetingForm.cc.length) {
+    console.log("checkAvailability:", this.meetingForm, this.formType)
+    if (this.formType == 2 && (!this.meetingForm.cc || !this.meetingForm.cc.length)) {
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
       return this.common.showError("Host user is missing");
@@ -603,7 +617,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             console.log(key);
             if (groupUser[key] && groupUser[key].length > 0) {
               console.log(groupUser[key]);
-              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
+              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true });
               console.log(preBookedScheduler);
               groupUser[key].map(schedule => {
                 let slotFrom = null;
@@ -634,12 +648,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             console.log(presentStatus, uniqueUsers);
             uniqueUsers.map(user => {
               if (presentStatus.includes(user['id'])) return;
-              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
+              preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true });
             })
           }
         } else {
           uniqueUsers.map(user => {
-            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon:true });
+            preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true });
           });
         }
 
@@ -798,7 +812,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       title: 'User Availability',
       preBookedScheduler: preBookedScheduler,
       selectedTime: this.selectedTime,
-      timeRestrict: (this.meetingForm.fromTime.getDate() <= this.common.getDate().getDate()) ? true : false,
+      timeRestrict: (this.meetingForm.fromTime.getDate() <= this.common.getDate().getDate()) ? ((this.meetingForm.fromTime.getMonth() == this.common.getDate().getMonth()) ? true : false) : false,
     }
     const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
@@ -826,6 +840,19 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       groupList: this.userGroupList,
     };
     const activeModal = this.modalService.open(TaskMessageComponent, { size: "xl", container: "nb-layout", backdrop: "static" });
+  }
+
+  todoUserChangeEvent(event) {
+    console.log(event)
+    this.meetingForm.host = event;
+    if (event.id == this.userService._details.id) {
+      this.isBuzzandButton = true;
+      this.meetingForm.buzz = true;
+    } else {
+      this.isBuzzandButton = false;
+      this.meetingForm.buzz = false;
+    }
+    // meetingForm.host = $event
   }
 
 }

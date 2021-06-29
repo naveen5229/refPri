@@ -72,6 +72,7 @@ import { LeaveManagementComponent } from './leave-management/leave-management.co
 import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
+import { MeetingComponent } from './meeting/meeting.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -148,7 +149,8 @@ import { VisitManagementComponent } from '../pages/visit-management/visit-manage
     LeaveManagementComponent,
     MyLeavesComponent,
     ExpenseTypeComponent,
-    VisitManagementComponent
+    VisitManagementComponent,
+    MeetingComponent
   ],
 })
 export class PagesModule {

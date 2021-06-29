@@ -267,6 +267,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/shift-logs',
         home: true,
+      },
+      {
+        title: 'Meeting',
+        icon: 'file-text-outline',
+        link: '/pages/meeting',
+        home: true,
       }
     ]
   },
