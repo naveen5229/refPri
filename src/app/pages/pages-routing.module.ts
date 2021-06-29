@@ -76,6 +76,7 @@ import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { LeaveManagementComponent } from './leave-management/leave-management.component';
+import { MeetingComponent } from './meeting/meeting.component';
 
 const routes: Routes = [{
   path: '',
@@ -461,6 +462,11 @@ const routes: Routes = [{
     component:VisitManagementComponent,
     canActivate: [AuthGuard, RouteGuard]
     },
+    {
+  path:'meeting',
+  component:MeetingComponent,
+  canActivate: [AuthGuard, RouteGuard]
+  }
   ],
 }];
 
