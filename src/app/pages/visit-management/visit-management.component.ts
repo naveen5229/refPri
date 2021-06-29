@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit,ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { from, Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
@@ -16,7 +16,7 @@ import * as _ from 'lodash';
   templateUrl: './visit-management.component.html',
   styleUrls: ['./visit-management.component.scss']
 })
-export class VisitManagementComponent implements OnInit {
+export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewInit {
  startDate = new Date();
  endDate = new Date();
  category:any;
@@ -38,33 +38,17 @@ export class VisitManagementComponent implements OnInit {
   alluserselect:boolean = false;
   expenseIndex:number = -1;
   detailDataIndex:number = -1;
-  dtElement: any;
-  dtTrigger: any = new Subject();
-  @ViewChild(DataTableDirective, { static: false })
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
+  // dtOptions: DataTables.Settings = {};
   dtOptions: any = {
     pagingType: 'full_numbers',
     pageLength: 5,
     lengthMenu: [5, 10, 25],
-    processing: true
-  }
-
-  dtElement1: any;
-  dtTrigger1: any = new Subject();
-  dtOptions1: any = {
-    pagingType: 'full_numbers',
-    pageLength: 5,
-    lengthMenu: [5, 10, 25],
     processing: true,
-    // ajax: this.allVisits,
    }
-
- modifylist:boolean = false;
- SearchFilter = [
- 'Type','category','Status'
- ];
-
-  startTime:any;
-  endTime:any;
+  dtTrigger: Subject<any> = new Subject<any>();
+  
   updatedExpenses = [];
   expenseSearch = {
     admin : { id: null, name: 'All' }
@@ -111,13 +95,11 @@ expenseListitem:any;
   }
 
   ngAfterViewInit() {
-    this.dtTrigger.next();
-    this.dtTrigger1.next();
+    // this.dtTrigger.next();
   }
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
-    this.dtTrigger1.unsubscribe();
   }
 
   initializeMap(){
@@ -151,7 +133,7 @@ expenseListitem:any;
 
   refreshPage(){
     this.getAllAdmin();
-    this.isDetailView = true;
+    this.isDetailView = false;
     this.allVisits = [];
     this.allUsers = [{
       "id": null,
@@ -219,8 +201,9 @@ expenseListitem:any;
         this.common.loading--;
         if (res['code'] == 1) {
           this.allVisits = res['data'] || [];
-          this.renderTable();
+          // this.renderTable();
           this.updateExpenseArray();
+          this.dtTrigger.next();
         } else {
           this.common.showError(res['msg']);
         }
@@ -266,20 +249,20 @@ expenseListitem:any;
     console.log('this.allVisits',this.allVisits);
   }
 
-  updateOnsiteImageStatusByUser(status,userId){
-    if (!userId) {
+  updateOnsiteImageStatusByUser(status,item){
+    if (!item._user_id) {
       this.common.showError('Please select User');
       return false;
     }
-    if (this.startDate > this.endDate) {
-      this.common.showError('End Date should be grater than Start Date');
+    if (!item.sqdate) {
+      this.common.showError('Date is missing');
       return false;
     }
     let param = {
-      "userId":userId,
+      "userId":item._user_id,
       "status":status,
-      "startDate":this.common.dateFormatter(this.startDate),
-      "endDate":this.common.dateFormatter(this.endDate)
+      "startDate":this.common.dateFormatter(item.sqdate),
+      "endDate":this.common.dateFormatter(item.sqdate)
     };
     this.common.loading++;
     this.api.post('Admin/updateOnsiteImageStatusByUser', param)
@@ -336,11 +319,11 @@ expenseListitem:any;
     //   this.common.showError('Please select User');
     //   return;
     // }
-    if (this.startDate > this.endDate) {
-      this.common.showError('End Date should be grater than Start Date')
+    if (!this.selectedExpense.sqdate) {
+      this.common.showError('Date is missing');
       return;
     }
-    let param = `userId=${adminId}&startDate=${this.common.dateFormatter1(this.startDate)}&endDate=${this.common.dateFormatter1(this.endDate)}`;
+    let param = `userId=${adminId}&startDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}&endDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}`;
     this.common.loading++;
     this.api.get('Admin/getOnSiteImagesByUser?' + param)
       .subscribe(res => {
@@ -368,52 +351,52 @@ expenseListitem:any;
       });
   }
 
-  // getExpenseWrtUserDate() {
-  //   this.expenseList = [];
-  //   let param = `userId=${this.selectedExpense._user_id}&startDate=${this.common.dateFormatter1(this.startDate)}&endDate=${this.common.dateFormatter1(this.endDate)}`;
-  //   this.common.loading++;
-  //   this.api.get('Admin/getExpenseWrtUserDate?' + param)
-  //     .subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] == 1) {
-  //         this.expenseList = res['data'] || [];
-  //       } else {
-  //         this.common.showError(res['msg']);
-  //       }
-  //     }, (err) => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log(err);
-  //     });
-  // }
-
-
-    getExpenseWrtUserDate() {
- this.expenseList = [
-{
-description:'demo description 1',
-amount:21515151,
-},
-{
-description:'demo description 2',
-amount:21515151,
-},{
-description:'demo description 3',
-amount:21515151,
-},{
-description:'demo description 4',
-amount:21515151,
-},{
-description:'demo description 5',
-amount:21515151,
-},{
-description:'demo description 6',
-amount:21515151,
-},
-
-]
-
+  getExpenseWrtUserDate() {
+    this.expenseList = [];
+    let param = `userId=${this.selectedExpense._user_id}&startDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}&endDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}`;
+    this.common.loading++;
+    this.api.get('Admin/getExpenseWrtUserDate?' + param)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.expenseList = res['data'] || [];
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
+
+
+//     getExpenseWrtUserDate() {
+//  this.expenseList = [
+// {
+// description:'demo description 1',
+// amount:21515151,
+// },
+// {
+// description:'demo description 2',
+// amount:21515151,
+// },{
+// description:'demo description 3',
+// amount:21515151,
+// },{
+// description:'demo description 4',
+// amount:21515151,
+// },{
+// description:'demo description 5',
+// amount:21515151,
+// },{
+// description:'demo description 6',
+// amount:21515151,
+// },
+
+// ]
+
+//   }
 
 
   updateOnsiteExpenseStatus(){
@@ -421,7 +404,7 @@ amount:21515151,
       "expenseInfo": this.expenseList
     };
     this.common.loading++;
-    this.api.post('Admin/updateOnsiteExpenseStatus', param)
+    this.api.post('Admin/updateOnsiteExpenseAmountMulti', param)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
@@ -436,50 +419,50 @@ amount:21515151,
       });
   }
 
-  renderTable1() {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.destroy();
-      this.dtTrigger1.next();
-      // dtInstance.columns().every(function () {
-      //   const that = this;
-      //   $('input', this.footer()).on('keyup change', function () {
-      //     if (that.search() !== this['value']) {
-      //       that
-      //         .search(this['value'])
-      //         .draw();
-      //     }
-      //   });
-      // });
-
-    });
+  updateOnsiteImageStatus(status,item){
+    if (!item._id) {
+      this.common.showError('image is missing');
+      return false;
+    }
+    let param = {
+      "id":item._id,
+      "status":status
+    };
+    this.common.loading++;
+    this.api.post('Admin/updateOnsiteImageStatus', param)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res['code'] == 1) {
+          this.common.showToast(res['msg']);
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, (err) => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
   }
 
-   renderTable() {
+  renderTable() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
       dtInstance.destroy();
+      // Call the dtTrigger to rerender again
       this.dtTrigger.next();
-      // dtInstance.columns().every(function () {
-      //   const that = this;
-      //   $('input', this.footer()).on('keyup change', function () {
-      //     if (that.search() !== this['value']) {
-      //       that
-      //         .search(this['value'])
-      //         .draw();
-      //     }
-      //   });
-      // });
-
     });
   }
 
-dateextractor(index:number){
-let today = new Date()
-let otherdate = new Date(today)
-otherdate.setDate(otherdate.getDate() + index);
-this.detaildate = this.datePipe.transform(otherdate,'dd-MM-yyyy');
-console.log('this.detaildate: ', this.detaildate);
-return this.detaildate;
-}
+  dateextractor(index:number){
+    let today = new Date()
+    let otherdate = new Date(today)
+    otherdate.setDate(otherdate.getDate() + index);
+    this.detaildate = this.datePipe.transform(otherdate,'yyyy-MM-dd');
+    console.log('this.detaildate: ', this.detaildate);
+    this.selectedExpense.sqdate = this.detaildate;
+    this.viewExpenseDetail(this.selectedExpense);
+    return this.detaildate;
+  }
 
 
   filterColumn(){
@@ -563,10 +546,15 @@ this.onsiteImages[index].status = 'approved';
 
   backnavigate(){
     this.isDetailView = false;
-    // setTimeout(() => {
-    //   // window.scrollBy(0, 500);
-    //   // this.renderAllTables();
-    // }, 200);
+    // this.dtTrigger.next();
+
+
+    setTimeout(() => {
+        // this.renderTable();
+        // this.dtTrigger.next();
+        this.dtTrigger.unsubscribe();
+        this.showAdminWiseWagesList();
+    }, 500);
   }
 
 // start: map --------------------------------------------------

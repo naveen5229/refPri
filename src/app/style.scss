@@ -317,13 +317,13 @@ $light: '.nb-theme-light';
 
 
 // datatable
-
-.dataTable {
+.ng-dataTable {
   border: 1px solid rgba(61, 105, 214, 0.5) !important;
   border-top: 0 !important;
 
   th {
     background-color: #3f69d6;
+    // background-color:#72b3c7;
     padding: 10px;
     color: #fff;
     border: 0 !important;
@@ -334,9 +334,9 @@ $light: '.nb-theme-light';
       border-right: 0 !important;
     }
 
-     td:first-child {
-       border-left: 0 !important;
-     }
+    td:first-child {
+      border-left: 0 !important;
+    }
   }
 
 }
