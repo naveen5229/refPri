@@ -30,7 +30,6 @@
     "build-prod-no-patch": "node ./replace.build.js && ng build — prod — base-href=./ && node ./versioning.build.js"
   },
   "dependencies": {
-    "@agm/core": "^1.0.0-beta.5",
     "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "^8.0.0",
     "@angular/cdk": "^8.0.0",

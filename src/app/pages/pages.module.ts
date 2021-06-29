@@ -73,7 +73,6 @@ import { LeaveManagementComponent } from './leave-management/leave-management.co
 import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
-import { AgmCoreModule } from '@agm/core';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -88,12 +87,7 @@ import { AgmCoreModule } from '@agm/core';
     TicketModule,
     DragDropModule,
     ChartModule,
-    DataTablesModule,
-    AgmCoreModule,
- AgmCoreModule.forRoot({
- apiKey: 'AIzaSyAvcDy5ZYc2ujCS6TTtI3RYX5QmuoV8Ffw',
- libraries: ['places', 'drawing', 'geometry'],
-    })
+    DataTablesModule
   ],
   declarations: [
     PagesComponent,
