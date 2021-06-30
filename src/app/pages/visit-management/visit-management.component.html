@@ -30,9 +30,10 @@
               <div class="col-md-3">
                 <div class="mb-0 action-block">
                   <div class="btn-block">
+                    <button type="button" class="btn btn-danger"> Reset </button>
                     <button type="button" class="btn btn-primary" (click)="showAdminWiseWagesList()">
                       Search </button>
-                    <button type="button" class="btn btn-danger"> Reset </button>
+
                   </div>
                 </div>
               </div>
@@ -42,13 +43,13 @@
             <thead>
               <tr>
                 <th>
-                  <div class="form-check user-check-label d-flex"> <label for=""> Sr. No. </label> <input
+                  <div class="form-check user-check-label d-flex"> <label for=""> S. No. </label> <input
                       class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
                       type="checkbox" value="" id="flexCheckChecked"></div>
                 </th>
                 <th>Name</th>
                 <th>Date</th>
-                <th>Total Expesne</th>
+                <th> Total Expesne</th>
                 <!-- <th>Status</th> -->
                 <th>Travel Distance</th>
                 <th>Total Image</th>
@@ -65,12 +66,19 @@
                 </td>
                 <td>{{item.name}}</td>
                 <td>{{item.sqdate | date :'dd/mm/yyyy' }}</td>
-                <td>{{item.total_expense}}</td>
+                <td class="expanse"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense}}</td>
                 <!-- <td>{{'status'}}</td> -->
                 <td>{{item.total_distance+' | '+ item.total_distance_live}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
-                <td> <input type="number" class="form-control" style="width: 40%;"
-                    [(ngModel)]="updatedExpenses[i]['total_amount']"></td>
+                <td class="expanse">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-rupee-sign"></i></span>
+                    </div>
+                    <input type="number" class="form-control" style="width: 40%;"
+                      [(ngModel)]="updatedExpenses[i]['total_amount']">
+                  </div>
+                </td>
                 <td>
                   <div class="action-block">
                     <div class="btn-block">
@@ -102,8 +110,8 @@
 <ng-container *ngIf="isDetailView">
   <nb-card>
     <nb-card-header class="position-relative mb-2">
+      <div class="row p-2">
 
-      <div class="row py-2">
         <div class="col-md-3 d-flex">
           <button class="btn btn-primary back-btn" (click)="backnavigate()">
             <i class="fa fa-arrow-left"></i> </button>
@@ -115,10 +123,10 @@
         </div>
 
         <div class="col-md-5">
-          <div class="date-container">
-            <button class="btn btn-primary caps" (click)="prevdate()"> Previous date </button>
+          <div class="date-container action-block">
+            <button class="btn btn-primary caps mr-0" (click)="prevdate()"> Previous date </button>
             <input type="text" class="form-control date-control" [value]="detaildate" [(ngModel)]="detaildate" readonly>
-            <button class="btn btn-primary caps" (click)="nextdate()"> Next date </button>
+            <button class="btn btn-primary caps mr-0" (click)="nextdate()"> Next date </button>
           </div>
         </div>
       </div>
@@ -172,7 +180,7 @@
                         <td class="actions">
                           <div class="action-block">
                             <!-- <button class="btn btn-success" (click)="modifyInfo(i,modifyList)"> Modify </button> -->
-                            <button class="btn btn-danger" (click)="item.amount_new = 0;item.status = false"> Reject
+                            <button class="btn btn-danger btn-reject" (click)="item.amount_new = 0;item.status = false">  {{item.status ? 'reject':'rejected' }}
                             </button>
                           </div>
                         </td>
@@ -193,13 +201,14 @@
                   <div class="expense-image-block">
                     <div class="expense-image" *ngFor="let item of expenseList;index as i"
                       [class.active]="expenseIndex == i" (click)="expenseIndex = i">
-                      <div class="image-block" *ngIf="item._url != null">
-                        <button class="btn image-view" data-toggle="modal" data-target="#image-model"
-                          [disabled]="!item._url" (click)="expenseImage = item._url;imageDialogue(itemImage,item._url)">
-                          <i class="fa fa-eye"></i>
-                        </button> <img [src]="item._url" [alt]="item.image">
-                        <img [src]="item._url" [alt]="item.image">
+                      <button class="btn image-view" data-toggle="modal" data-target="#image-model"
+                        [disabled]="!item._url" (click)="expenseImage = item._url;imageDialogue(itemImage,item._url)">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                      <div class="expance-rejected" *ngIf="item.status == false">
+                        <span> Rejected </span>
                       </div>
+                      <img  [src]="item._url" [alt]="item.image">
                     </div>
                   </div>
                 </div>
