@@ -6,6 +6,9 @@ import { TaskMessageComponent } from '../../modals/task-message/task-message.com
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
+import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
+import { EventInput } from '@fullcalendar/angular';
+import { scheduled } from 'rxjs';
 
 @Component({
   selector: 'ngx-meeting',
@@ -13,13 +16,54 @@ import { UserService } from '../../Service/user/user.service';
   styleUrls: ['./meeting.component.scss']
 })
 export class MeetingComponent implements OnInit {
+  TODAY_STR = new Date().toISOString().replace(/T.*$/, '');
+  // INITIAL_EVENTS: EventInput[] = [
+  //   {
+  //     id: this.createEventId(),
+  //     title: 'All-day event',
+  //     start: this.TODAY_STR
+  //   },
+  //   {
+  //     id: this.createEventId(),
+  //     title: 'Timed event',
+  //     start: this.TODAY_STR + 'T12:00:00'
+  //   }
+  // ];
+  currentEvents: EventApi[] = [];
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    weekends: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    // initialEvents: this.INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+    events: [],
+    // editable: true,
+    // selectable: true,
+    // selectMirror: true,
+    // dayMaxEvents: true,
+    // select: this.handleDateSelect.bind(this),
+    // eventClick: this.handleEventClick.bind(this),
+    // eventsSet: this.handleEvents.bind(this)
+  };
+  colorCodes = {
+    background: ['#B0E0E6', '#FFE4E1', '#98FB98', '#FFB6C1'],
+  }
+  isSearch = false;
   loggedInUser = null;
   adminList = [];
   groupList = [];
   departmentList = [];
   meetingData = {
-    startDate: this.common.getDate(-2),
+    startDate: this.common.getDate(-20),
     endDate: this.common.getDate(),
+    pastData: [],
+    upcomingData: []
+  }
+
+  meetingDataForFilter = {
     pastData: [],
     upcomingData: []
   }
@@ -28,6 +72,7 @@ export class MeetingComponent implements OnInit {
 
   constructor(public common: CommonService,
     public userService: UserService, public api: ApiService, public modalService: NgbModal,) {
+    console.log(this.calendarOptions)
     this.loggedInUser = this.userService._details.id;
     this.getAllAdmin();
     this.getUserGroupList();
@@ -42,6 +87,38 @@ export class MeetingComponent implements OnInit {
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMeetingListByType([0, 1]);
+  }
+
+  handleDateSelect(selectInfo: DateSelectArg) {
+    const title = prompt('Please enter a new title for your event');
+    const calendarApi = selectInfo.view.calendar;
+
+    calendarApi.unselect(); // clear date selection
+
+    if (title) {
+      calendarApi.addEvent({
+        id: this.createEventId(),
+        title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay
+      });
+    }
+  }
+
+  createEventId() {
+    let eventGuid = 0;
+    return String(eventGuid++);
+  }
+
+  handleEventClick(clickInfo: EventClickArg) {
+    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      clickInfo.event.remove();
+    }
+  }
+
+  handleEvents(events: EventApi[]) {
+    this.currentEvents = events;
   }
 
   getAllAdmin() {
@@ -111,6 +188,7 @@ export class MeetingComponent implements OnInit {
     });
   }
 
+  // index = 0;
   getMeetings(type, startDate, endDate) {
     this.common.loading++;
     let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
@@ -123,14 +201,24 @@ export class MeetingComponent implements OnInit {
         } else {
           this.meetingData.upcomingData = res['data'] || [];
         }
-        this.meetingData.pastData.map(meeting => {
-          meeting["task_subject"] = meeting["subject"];
-          meeting["_task_desc"] = meeting["_desc"];
-        });
-        this.meetingData.upcomingData.map(meeting => {
-          meeting["task_subject"] = meeting["subject"];
-          meeting["_task_desc"] = meeting["_desc"];
-        })
+
+        let indexpastData = 0;
+        let indexUpcomingData = 0;
+        for (let i = 0; i < this.meetingData.pastData.length; i++) {
+          this.meetingData.pastData[i]["task_subject"] = this.meetingData.pastData["subject"];
+          this.meetingData.pastData[i]["_task_desc"] = this.meetingData.pastData["_desc"];
+          this.meetingData.pastData[i]["colorCode"] = this.colorCodes.background[indexpastData];
+          if (indexpastData == 3) { indexpastData = 0 } else { indexpastData = indexpastData + 1 };
+        }
+
+        for (let i = 0; i < this.meetingData.upcomingData.length; i++) {
+          this.meetingData.upcomingData[i]["task_subject"] = this.meetingData.upcomingData["subject"];
+          this.meetingData.upcomingData[i]["_task_desc"] = this.meetingData.upcomingData["_desc"];
+          this.meetingData.upcomingData[i]["colorCode"] = this.colorCodes.background[indexUpcomingData];;
+          if (indexUpcomingData == 3) { indexUpcomingData = 0 } else { indexUpcomingData = indexUpcomingData + 1 };
+        }
+        this.meetingDataForFilter.pastData = this.meetingData.pastData;
+        this.meetingDataForFilter.upcomingData = this.meetingData.upcomingData;
         console.log("Past data", this.meetingData.pastData, "Upcoming Data", this.meetingData.upcomingData);
       },
       (err) => {
@@ -212,7 +300,7 @@ export class MeetingComponent implements OnInit {
       userList: this.adminList,
       groupList: this.groupList,
       formType: '2',
-      title: isEdit ? 'Edit Meeting' : 'Add Meeting',
+      title: isEdit ? (ticket._meeting_type != 2 ? 'Edit Meeting' : 'Edit ToDo') : 'Add Meeting',
       btn: 'Save'
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
@@ -367,6 +455,10 @@ export class MeetingComponent implements OnInit {
     if (state) this.followUpMeeting(this.holdForFollowUp['ticket'], this.holdForFollowUp['type'], this.holdForFollowUp['status'])
   }
 
+  closeCalenderMoadal() {
+    document.getElementById('calender').style.display = 'none';
+  }
+
   followUpMeeting(ticket, type, status) {
     this.common.params = {
       title: "Follow Up Meeting",
@@ -410,9 +502,64 @@ export class MeetingComponent implements OnInit {
     });
   }
 
+  getFilteredData(value) {
+    let keyToSearch = (value.trim()).toLowerCase();
+    console.log(keyToSearch)
+    if (!keyToSearch.length) {
+      this.meetingData.pastData = this.meetingDataForFilter.pastData;
+      this.meetingData.upcomingData = this.meetingDataForFilter.upcomingData;
+    } else {
+      this.filterPast(keyToSearch);
+      this.filterUpcoming(keyToSearch);
+
+      console.log('after', this.meetingData.pastData, this.meetingData.upcomingData)
+    }
+  }
+
+  filterPast(keyToSearch) {
+    let pastDataFiltered = JSON.parse(JSON.stringify(this.meetingDataForFilter.pastData));
+    pastDataFiltered = pastDataFiltered.filter(element => {
+      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch)))
+    });
+    this.meetingData.pastData = pastDataFiltered;
+  }
+
+  filterUpcoming(keyToSearch) {
+    let upcomingDataFiltered = JSON.parse(JSON.stringify(this.meetingDataForFilter.upcomingData));
+    upcomingDataFiltered = upcomingDataFiltered.filter(element => {
+      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch)))
+    });
+    this.meetingData.upcomingData = upcomingDataFiltered;
+  }
+
+  setDefaultData() {
+    this.meetingData.pastData = this.meetingDataForFilter.pastData;
+    this.meetingData.upcomingData = this.meetingDataForFilter.upcomingData;
+  }
 
   checkAvailability() {
+    let params = {
+      requestId: null,
+      roomId: null,
+      host: this.loggedInUser,
+      users: JSON.stringify([]),
+      date: this.common.dateFormatter1(new Date()),
+    }
 
+    this.common.loading++;
+    this.api.post('Admin/getMeetingSchedule', params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] === 1) {
+        let schedules = [];
+        res['data'].map(events => {
+          schedules.push({ start: events.meeting_time, end: events.meeting_end_time })
+        })
+        this.calendarOptions.events = schedules;
+        this.calendarOptions.initialView = 'dayGridMonth';
+        console.log('cslender', this.calendarOptions)
+        document.getElementById('calender').style.display = 'block';
+      }
+    });
   }
 
   myCalender() {
