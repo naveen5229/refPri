@@ -453,16 +453,18 @@ expenseListitem:any;
 //   }
 
 
-  updateOnsiteExpenseStatus(){
+  updateOnsiteExpenseStatus(expense=null){
     let param = {
-      "expenseInfo": this.expenseList
+      "expenseInfo": (expense) ? [expense] : this.expenseList
     };
+    // console.log("updateOnsiteExpenseStatus:",param); return false;
     this.common.loading++;
     this.api.post('Admin/updateOnsiteExpenseAmountMulti', param)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
           this.common.showToast(res['msg']);
+          (expense) ? expense.amount=0 : this.getExpenseWrtUserDate();
         } else {
           this.common.showError(res['msg']);
         }
@@ -833,65 +835,91 @@ updateList(index:number){
 
   getImages(id, lat, lng, time) {
     console.log('time:', id, lat, lng, time);
-    const params = `userId=${id}&lat=${lat}&long=${lng}&time=${time}`;
-    this.api.get("Admin/getImageOnClick?" + params).subscribe((res: any) => {
-      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
-      this.imageArrayonMap = res.data || []
-      console.log('images:', this.imageArrayonMap);
-      this.showImages(lat, lng);
-    }, err => {
-      this.common.showError(err.msg)
-    })
+    // const params = `userId=${id}&lat=${lat}&long=${lng}&time=${time}`;
+    // this.api.get("Admin/getImageOnClick?" + params).subscribe((res: any) => {
+    //   if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+    //   this.imageArrayonMap = res.data || []
+    //   console.log('images:', this.imageArrayonMap);
+    //   this.showImages(lat, lng);
+    // }, err => {
+    //   this.common.showError(err.msg)
+    // })
+    // let selectedImage = this.onsiteImages.find((x,key)=>{return (x._lat==lat && x._long==lng)});
+    this.onsiteImages.forEach((element,key) => {
+      if(element._lat==lat && element._long==lng){
+        this.detailDataIndex = key;
+      }
+    });
+    console.log("selectedImage:",this.detailDataIndex);
+    // if(selectedImage){
+
+    // }
+  }
+
+  searchLatLong(item){
+    console.log("searchLatLong1:",item);
+    this.showImages(item._lat, item._long);
+    // this.travelDistanceData[0]['wayPoints'].forEach((element,key) => {
+    //   if(element.lat==item._lat && element.long==item._long){
+    //     // this.detailDataIndex = key;
+    //     console.log("searchLatLong:",key);
+    //   }
+    // });
   }
 
   showImages(lat, lng) {
-    let images = this.imageArrayonMap;
+    // let images = this.imageArrayonMap;
     let suffix = new Date().getTime();
     let activeSlide = 0;
-    let html = `
-      <div id="jrx-slider" style="height: 300px; position:relative;">
-        <div id="pre-${suffix}" style="position: absolute;z-index: 999;color: #fff;font-size: 60px;top: 60px; cursor:pointer;">&lt;</div>
-        <div>
-          ${images.map((image, index) => {
-      return `<div class="jrx-slide" style="display: ${!index ? 'block' : 'none'}; "><img src="${image._url}" style="width:100%; height: 100%;"></div>`
-    }).join('')}
-        </div>
-        <div id="next-${suffix}" style="position: absolute;z-index: 999;color: #fff;font-size: 60px;top: 60px;right:0px; cursor:pointer;">&gt;</div>
-      </div>
-    `;
+    let html = `<div>Current Image</div>`;
+    // let html = `
+    //   <div id="jrx-slider" style="height: 300px; position:relative;">
+    //     <div id="pre-${suffix}" style="position: absolute;z-index: 999;color: #fff;font-size: 60px;top: 60px; cursor:pointer;">&lt;</div>
+    //     <div>
+    //       ${images.map((image, index) => {
+    //   return `<div class="jrx-slide" style="display: ${!index ? 'block' : 'none'}; "><img src="${image._url}" style="width:100%; height: 100%;"></div>`
+    // }).join('')}
+    //     </div>
+    //     <div id="next-${suffix}" style="position: absolute;z-index: 999;color: #fff;font-size: 60px;top: 60px;right:0px; cursor:pointer;">&gt;</div>
+    //   </div>
+    // `;
+    if (this.infowindow) {
+      this.infowindow.close();
+      this.infowindow.opened = false;
+    }
 
     this.infowindow = new google.maps.InfoWindow({
       content: html
     });
 
-    if (images.length > 0) {
+    // if (images.length > 0) {
       let loc = new google.maps.LatLng(lat, lng);
       this.infowindow.setPosition(loc);
       // this.infowindow.open(this.map, this.installerMarker);
       this.infowindow.open(this.map);
-    } else {
-      return;
-    }
+    // } else {
+    //   return;
+    // }
 
-    google.maps.event.addListener(this.infowindow, 'domready', () => {
-      let ele = document.getElementById('jrx-slider').children[1];
-      document.getElementById('pre-' + suffix).onclick = () => {
-        if (activeSlide === 0) activeSlide = images.length - 1;
-        else activeSlide--;
+    // google.maps.event.addListener(this.infowindow, 'domready', () => {
+    //   let ele = document.getElementById('jrx-slider').children[1];
+    //   document.getElementById('pre-' + suffix).onclick = () => {
+    //     if (activeSlide === 0) activeSlide = images.length - 1;
+    //     else activeSlide--;
 
-        for (let i = 0; i < images.length; i++) {
-          ele.children[i]['style'].display = i === activeSlide ? 'block' : 'none';
-        }
-      }
-      document.getElementById('next-' + suffix).onclick = () => {
-        if (activeSlide === images.length - 1) activeSlide = 0;
-        else activeSlide++;
+    //     for (let i = 0; i < images.length; i++) {
+    //       ele.children[i]['style'].display = i === activeSlide ? 'block' : 'none';
+    //     }
+    //   }
+    //   document.getElementById('next-' + suffix).onclick = () => {
+    //     if (activeSlide === images.length - 1) activeSlide = 0;
+    //     else activeSlide++;
 
-        for (let i = 0; i < images.length; i++) {
-          ele.children[i]['style'].display = i === activeSlide ? 'block' : 'none';
-        }
-      }
-    });
+    //     for (let i = 0; i < images.length; i++) {
+    //       ele.children[i]['style'].display = i === activeSlide ? 'block' : 'none';
+    //     }
+    //   }
+    // });
   }
 
   clearMap() {

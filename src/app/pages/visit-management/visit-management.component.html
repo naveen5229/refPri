@@ -172,7 +172,7 @@
                         <td class="actions">
                           <div class="action-block">
                             <!-- <button class="btn btn-success" (click)="modifyInfo(i,modifyList)"> Modify </button> -->
-                            <button class="btn btn-danger" (click)="item.amount_new = 0;item.status = false"> Reject
+                            <button class="btn btn-danger" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)"> Reject
                             </button>
                           </div>
                         </td>
@@ -235,6 +235,7 @@
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title"> location map</h5>
+                  <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch" (click)="switchLatLngHandler()">{{switchButton}}</button>
                 </div>
                 <div class="card-body">
                   <div class="location-map">
@@ -259,8 +260,7 @@
                       'approved':item.status =='approved',
                       'active':detailDataIndex == i,
                       'zoom':detailDataIndex == i && detailImageZoom }"
-                      (mouseover)="detailDataIndex = i;detailImageZoom = true" (mouseout)="detailImageZoom = false"
-                      (click)="getExpenseWrtImage(item._id)">
+                      (mouseover)="detailDataIndex = i;detailImageZoom = true;searchLatLong(item)" (mouseout)="detailImageZoom = false">
 
                       <img class="img-fluid" [src]="item._url" [alt]="item.image">
                       <div class="actions">
