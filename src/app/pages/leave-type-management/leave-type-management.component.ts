@@ -102,6 +102,7 @@ export class LeaveTypeManagementComponent implements OnInit {
     employeeType: this.empType,
     leaveType: this.leaveType,
     leaveDuration: this.lNum,
+    
      id: this.id,
    };
    console.log(params);
