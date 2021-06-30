@@ -26,15 +26,14 @@
               "src/favicon.ico",
               "src/favicon.png",
               "src/firebase-messaging-sw.js",
-              "src/manifest.json" ,
+              "src/manifest.json",
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
                 "output": "/assets/img/markers"
               }
             ],
-            "styles": [
-              {
+            "styles": [{
                 "input": "node_modules/@progress/kendo-theme-default/dist/all.css"
               },
               "node_modules/bootstrap/dist/css/bootstrap.css",
@@ -64,9 +63,14 @@
               "node_modules/echarts/dist/extension/bmap.min.js",
               "node_modules/chart.js/dist/Chart.min.js",
               "node_modules/jquery/dist/jquery.js",
-              "node_modules/popper.js/dist/popper.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/datatables.net/js/jquery.dataTables.js"
+              "node_modules/datatables.net/js/jquery.dataTables.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/jszip/dist/jszip.js",
+              "node_modules/datatables.net-buttons/js/dataTables.buttons.js",
+              "node_modules/datatables.net-buttons/js/buttons.colVis.js",
+              "node_modules/datatables.net-buttons/js/buttons.flash.js",
+              "node_modules/datatables.net-buttons/js/buttons.html5.js",
+              "node_modules/datatables.net-buttons/js/buttons.print.js"
             ]
           },
           "configurations": {
@@ -80,12 +84,10 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }]
             }
           }
         },
@@ -124,8 +126,7 @@
               "node_modules/echarts/dist/extension/bmap.min.js",
               "node_modules/chart.js/dist/Chart.min.js"
             ],
-            "styles": [
-              {
+            "styles": [{
                 "input": "node_modules/@progress/kendo-theme-default/dist/all.css"
               },
               "node_modules/bootstrap/dist/css/bootstrap.css",

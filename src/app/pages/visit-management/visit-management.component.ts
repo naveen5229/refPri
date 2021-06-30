@@ -46,9 +46,17 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
     pageLength: 5,
     lengthMenu: [5, 10, 25],
     processing: true,
+    dom: 'Bfrtip',
+        buttons: [
+        'copy',
+        'print',
+        'csv',
+        'excel',
+        'pdf'
+      ]
    }
   dtTrigger: Subject<any> = new Subject<any>();
-  
+
   updatedExpenses = [];
   expenseSearch = {
     admin : { id: null, name: 'All' }
@@ -203,6 +211,7 @@ expenseListitem:any;
           this.allVisits = res['data'] || [];
           // this.renderTable();
           this.updateExpenseArray();
+          // this.dtTrigger.unsubscribe();
           this.dtTrigger.next();
         } else {
           this.common.showError(res['msg']);
