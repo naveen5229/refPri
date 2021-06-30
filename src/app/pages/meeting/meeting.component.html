@@ -49,7 +49,7 @@
                   <i class="fa fa-caret-square-o-down pl-2" *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
                     (click)="editMeeting(meeting, 0, false)"></i>
                 </span>
-                <span id="statusAction" *ngIf="meeting._status != 5">
+                <span id="statusAction" *ngIf="meeting._status != 5 && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id)">
                   <i class="fa fa-thumbs-up text-success pl-2" title="Complete"
                     (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
                 </span>
