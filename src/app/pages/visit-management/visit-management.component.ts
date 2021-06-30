@@ -7,6 +7,7 @@ import { RouteMapperComponent } from '../../modals/route-mapper/route-mapper.com
 import { CommonService } from './../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { MapService } from './../../Service/map/map.service';
+import { UserService } from "../../Service/user/user.service";
 // import { expenses, expenseDetail } from './data';
 declare var google: any;
 import * as _ from 'lodash';
@@ -51,7 +52,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   
   updatedExpenses = [];
   expenseSearch = {
-    admin : { id: null, name: 'All' }
+    admin : { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
   };
 
   selectedExpense;
@@ -84,9 +85,10 @@ listModifyvalue:any;
 expenseListitem:any;
 
   constructor(public modalService: NgbModal,
-    public common:CommonService, public mapService: MapService, public api: ApiService,private datePipe:DatePipe) {
+    public common:CommonService, public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
+    this.showAdminWiseWagesList();
     this.detaildate = this.datePipe.transform(new Date(),'dd-MM-yyyy');
   }
 
@@ -132,7 +134,9 @@ expenseListitem:any;
   }
 
   refreshPage(){
+    this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
     this.getAllAdmin();
+    this.showAdminWiseWagesList();
     this.isDetailView = false;
     this.allVisits = [];
     this.allUsers = [{
@@ -249,44 +253,85 @@ expenseListitem:any;
     console.log('this.allVisits',this.allVisits);
   }
 
-  updateOnsiteImageStatusByUser(status,item){
-    if (!item._user_id) {
-      this.common.showError('Please select User');
-      return false;
-    }
-    if (!item.sqdate) {
-      this.common.showError('Date is missing');
-      return false;
-    }
-    let param = {
-      "userId":item._user_id,
-      "status":status,
-      "startDate":this.common.dateFormatter(item.sqdate),
-      "endDate":this.common.dateFormatter(item.sqdate)
-    };
-    this.common.loading++;
-    this.api.post('Admin/updateOnsiteImageStatusByUser', param)
-      .subscribe(res => {
-        this.common.loading--;
-        if (res['code'] == 1) {
-          this.common.showToast(res['msg']);
-        } else {
-          this.common.showError(res['msg']);
-        }
-      }, (err) => {
-        this.common.loading--;
-        this.common.showError();
-        console.log(err);
-      });
-  }
+  // updateOnsiteImageStatusByUser(status,item){
+  //   if (!item._user_id) {
+  //     this.common.showError('Please select User');
+  //     return false;
+  //   }
+  //   if (!item.sqdate) {
+  //     this.common.showError('Date is missing');
+  //     return false;
+  //   }
+  //   let param = {
+  //     "userId":item._user_id,
+  //     "status":status,
+  //     "startDate":this.common.dateFormatter(item.sqdate),
+  //     "endDate":this.common.dateFormatter(item.sqdate)
+  //   };
+  //   this.common.loading++;
+  //   this.api.post('Admin/updateOnsiteImageStatusByUser', param)
+  //     .subscribe(res => {
+  //       this.common.loading--;
+  //       if (res['code'] == 1) {
+  //         this.common.showToast(res['msg']);
+  //       } else {
+  //         this.common.showError(res['msg']);
+  //       }
+  //     }, (err) => {
+  //       this.common.loading--;
+  //       this.common.showError();
+  //       console.log(err);
+  //     });
+  // }
 
   saveVerifiedExpense() {
     console.log('adminWiseList', this.updatedExpenses);
+    if(!(this.allVisits && this.allVisits.find(x=>x.checked))){
+      this.common.showError("Please select atleast one row");
+      return false;
+    }
+    let expenseList = [];
+    if(this.allVisits && this.allVisits.length){
+      this.allVisits.forEach(element => {
+        if(element.checked){
+          expenseList.push(
+            JSON.parse(JSON.stringify(element))
+          );
+        }
+      });
+    }
+    // console.log("saveVerifiedExpense:",expenseList);return false;
     this.common.loading++;
     let params = {
-      expenses: JSON.stringify(this.updatedExpenses),
+      expenses: JSON.stringify(expenseList),
     }
-    this.api.post(`Admin/saveOnSiteExpenseByAdminNew`, params).subscribe(res => {
+    this.api.post(`Admin/saveOnSiteExpenseByAdmin`, params).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] == 1) {
+        if (res['data'][0]['y_id'] > 0) {
+          this.common.showToast(res['data'][0]['y_msg']);
+          this.showAdminWiseWagesList();
+        }
+      }else{
+        this.common.showError(res['msg']);
+      }
+    },err=>{
+      this.common.showError();
+    })
+  }
+
+  saveVerifiedExpenseSingle(status,item) {
+    console.log('adminWiseList', this.updatedExpenses);
+    if (status==-99){
+      item.total_amount = 0;
+    }
+    let expenseList = [item];
+    // console.log("saveVerifiedExpenseSingle:",expenseList);return false;
+    this.common.loading++;
+    let params = {
+      expenses: JSON.stringify(expenseList),
+    }
+    this.api.post(`Admin/saveOnSiteExpenseByAdmin`, params).subscribe(res => {
       this.common.loading--;
       if (res['code'] == 1) {
         if (res['data'][0]['y_id'] > 0) {

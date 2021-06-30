@@ -76,11 +76,11 @@
                     <div class="btn-block">
                       <button type="button" class="btn btn-success btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? updateOnsiteImageStatusByUser(1,item) : null">Approve</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">Approve</button>
 
                       <button type="button" class="btn btn-danger btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? updateOnsiteImageStatusByUser(-99,item) : null">Reject</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">Reject</button>
 
                       <button type="button" class="btn btn-primary btn-sm"
                         (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : viewExpenseDetail(item)">View</button>
