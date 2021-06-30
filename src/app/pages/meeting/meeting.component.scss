@@ -1,3 +1,11 @@
+nb-card-body {
+  background: #d3d3d3;
+}
+
+full-calendar {
+  width: 100%;
+}
+
 .meetingContainer {
   padding: 1rem;
 }
@@ -9,16 +17,19 @@
 }
 
 .meetingData {
-  height: 550px;
-  border-bottom: groove;
-  border-left: groove;
-  border-right: groove;
+  height: 556px;
+  background: #ffffff;
   overflow: auto;
 }
 
 .cardStyle {
-  margin: 5px;
-  border-style: groove;
+  //   margin: 3px;
+  margin: 5px -10px 5px -10px;
+  border-radius: 5px;
+  //   border-style: groove;
+  padding: 7px;
+//   border-bottom: 1px solid gray;
+  //   border-left: 5px solid black;
 }
 
 .textBind {
@@ -41,7 +52,27 @@
 }
 
 .labelPos {
-  position: absolute;
-  right: 25px;
-  top: 3px;
+  position: relative;
+  right: 0;
+  top: -9px;
+}
+
+.headFont {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.subFont {
+  font-size: 10px;
+}
+
+.search {
+  border-style: none;
+  color: grey;
+  font-size: 12px;
+  border-radius: 3px;
+}
+
+.calenderStyle {
+  height: 600px;
 }
