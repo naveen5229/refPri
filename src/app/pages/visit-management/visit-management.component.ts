@@ -41,9 +41,9 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   expenseIndex:number = -1;
   detailDataIndex:number = -1;
   @ViewChild(DataTableDirective, {static: false})
-  dtElement: DataTableDirective;
+  dtElement: any;
   // dtOptions: DataTables.Settings = {};
-  dtOptions =  this.table.options(10,7,'USER EXPANCES');
+  dtOptions =  this.table.options(10,7,'USER EXPENSES');
   dtTrigger: Subject<any> = new Subject<any>();
 
   updatedExpenses = [];
@@ -85,7 +85,6 @@ expenseListitem:any;
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
     this.showAdminWiseWagesList();
-    this.detaildate = this.datePipe.transform(new Date(),'dd-MM-yyyy');
   }
 
   ngOnInit() {
@@ -93,7 +92,8 @@ expenseListitem:any;
   }
 
   ngAfterViewInit() {
-    // this.dtTrigger.next();
+    this.dtTrigger.next();
+    this.showAdminWiseWagesList();
   }
 
   ngOnDestroy(): void {
@@ -203,8 +203,7 @@ expenseListitem:any;
           this.allVisits = res['data'] || [];
           // this.renderTable();
           this.updateExpenseArray();
-          // this.dtTrigger.unsubscribe();
-          this.dtTrigger.next();
+          this.renderTable();
         } else {
           this.common.showError(res['msg']);
         }
@@ -346,6 +345,7 @@ expenseListitem:any;
   viewExpenseDetail(item){
     this.selectedExpense = item;
     this.isDetailView = true;
+    this.detaildate = this.datePipe.transform(new Date(this.selectedExpense.sqdate),'dd-MM-yyyy');
     this.getOnSiteImagesByUser();
     setTimeout(() => {
       this.initializeMap();
@@ -372,16 +372,11 @@ expenseListitem:any;
         this.common.loading--;
         if (res['code'] == 1) {
           this.onsiteImages = res['data'] || [];
-          this.onsiteImages.map((item:any)=>{
-          item.status = 'default';
-          });
-
-
-          console.log('this.onsiteImages: ', this.onsiteImages);
+          // this.onsiteImages.map((item:any)=>{
+          //   item.status = 'default';
+          // });
           if(this.onsiteImages && this.onsiteImages.length){
             this.detailDataIndex = 0;
-            // this.getExpenseWrtImage(this.onsiteImages[0]['_id']);
-            // this.getExpenseWrtImage(1970);
           }
         } else {
           this.common.showError(res['msg']);
@@ -402,12 +397,6 @@ expenseListitem:any;
         this.common.loading--;
         if (res['code'] == 1) {
           this.expenseList = res['data'] || [];
-          this.expenseList.map((item:any)=>{
-          if(item._url == null){
-            item._url = '../../../assets/images/expense/no-image-avaiable.jpg',
-            item.image = 'No Image Available'
-          }
-          })
         } else {
           this.common.showError(res['msg']);
         }
@@ -417,35 +406,6 @@ expenseListitem:any;
         console.log(err);
       });
   }
-
-
-//     getExpenseWrtUserDate() {
-//  this.expenseList = [
-// {
-// description:'demo description 1',
-// amount:21515151,
-// },
-// {
-// description:'demo description 2',
-// amount:21515151,
-// },{
-// description:'demo description 3',
-// amount:21515151,
-// },{
-// description:'demo description 4',
-// amount:21515151,
-// },{
-// description:'demo description 5',
-// amount:21515151,
-// },{
-// description:'demo description 6',
-// amount:21515151,
-// },
-
-// ]
-
-//   }
-
 
   updateOnsiteExpenseStatus(expense=null){
     let param = {
@@ -484,6 +444,7 @@ expenseListitem:any;
         this.common.loading--;
         if (res['code'] == 1) {
           this.common.showToast(res['msg']);
+          item._status = status;
         } else {
           this.common.showError(res['msg']);
         }
@@ -507,104 +468,39 @@ expenseListitem:any;
     let today = new Date()
     let otherdate = new Date(today)
     otherdate.setDate(otherdate.getDate() + index);
-    this.detaildate = this.datePipe.transform(otherdate,'yyyy-MM-dd');
+    this.detaildate = this.datePipe.transform(otherdate,'dd-MM-yyyy');
+    let detaildate2 = this.datePipe.transform(otherdate,'yyyy-MM-dd');
     console.log('this.detaildate: ', this.detaildate);
-    this.selectedExpense.sqdate = this.detaildate;
+    this.selectedExpense.sqdate = detaildate2;
     this.viewExpenseDetail(this.selectedExpense);
     return this.detaildate;
   }
 
-
-  filterColumn(){
-  this.dtTrigger.next();
-  this.renderTable();
+  nextdate(){
+    let currentDate = this.common.getDate();
+    currentDate.setHours(0);
+    currentDate.setMinutes(0);
+    currentDate.setSeconds(0);
+    if(new Date(this.selectedExpense.sqdate)>= currentDate){
+      this.common.showError("Future date no allowed");return false;
+    }
+    this.dateindex++;
+    this.dateextractor(this.dateindex);
   }
 
-
-nextdate(){
-this.dateindex++;
-this.dateextractor(this.dateindex)
-}
-
-prevdate(){
-this.dateindex--;
-this.dateextractor(this.dateindex)
-}
-
-
-rejectExpance(index:any,event:any){
-event.stopPropagation();
-this.onsiteImages[index].status = 'rejected';
-}
-
-approeExpense(index:any,event:any){
-event.stopPropagation();
-this.onsiteImages[index].status = 'approved';
-}
-
+  prevdate(){
+    this.dateindex--;
+    this.dateextractor(this.dateindex)
+  }
 
   imageDialogue(selector:any,image:any){
- this.detailimageSrc = image;
- this.modalService.open(selector, {ariaLabelledBy: 'Expense Detail Image', size: 'lg' }).result.then((result) => {
-    }, (reason) => {
-    });
-
-}
-
-  // getAllvisits(){
-  //   let allvisitData = from(allvisits);
-  //   allvisitData.subscribe((item:any)=>{
-  //   this.allVisits = item ||+ [];
-  //   this.allVisits.map((item:any)=>{
-  //   item.checked = false;
-  //   })
-  // //  this.renderTable1();
-  //  })
-  // }
-
-  // getexpenses(){
-  //   let expense = from(expenses);
-  //   console.log('expense : ', expense);
-  //   expense.subscribe((item:any)=>{
-  //   this.expenseData = item;
-  //   // this.renderTable();
-  //   });
-  // }
-
-  selectedCategory(event:any){
-  this.category = event.name;
-  }
-
-  SubmitExpenses(){
-  console.log('expenseTypeVal',this.expenseTypeVal);
-  let params = {
-  expeenseType:this.expenseTypeVal,
-  status:this.status,
-  category:this.category,
-  }
-  console.log('params: ', params);
-  }
-
-  renderAllTables(): void {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next();
-    });
+    this.detailimageSrc = image;
+    this.modalService.open(selector, {ariaLabelledBy: 'Expense Detail Image', size: 'lg' }).result.then((result) => {
+      }, (reason) => {});
   }
 
   backnavigate(){
     this.isDetailView = false;
-    // this.dtTrigger.next();
-
-
-    setTimeout(() => {
-        // this.renderTable();
-        // this.dtTrigger.next();
-        this.dtTrigger.unsubscribe();
-        this.showAdminWiseWagesList();
-    }, 500);
   }
 
 // start: map --------------------------------------------------
@@ -613,7 +509,7 @@ this.onsiteImages[index].status = 'approved';
       this.common.showError('Select User')
     } else {
 
-      const params = '&installerId=' + this.selectedExpense._user_id + '&fromDate=' + this.common.dateFormatter(this.startDate) + '&toDate=' + this.common.dateFormatter(this.endDate);
+      const params = '&installerId=' + this.selectedExpense._user_id + '&fromDate=' + this.common.dateFormatter(this.selectedExpense.sqdate) + '&toDate=' + this.common.dateFormatter(this.selectedExpense.sqdate);
       this.common.loading++;
       this.api.get("Location/getLatLongBtwTime.json?" + params)
         .subscribe(res => {
@@ -678,40 +574,9 @@ this.onsiteImages[index].status = 'approved';
     return distance.value;
   }
 
-
-modifyInfo(index:number,selector:any){
- console.log('expenseList',this.expenseList[index]);
- this.listModifyvalue = this.expenseList[index].amount;
- this.modalService.open(selector, {ariaLabelledBy: 'Expense Amount Update', size: 'md',windowClass: 'update-amount-modal' }).result.then((result) => {
- this.expenseList[index].amount = this.listModifyvalue;
-    }, (reason) => {
-    });
-
-    // this.listModifyvalue = '';
-
-}
-
-deleteinfo(index:number,selector:any){
-this.expenseListitem = this.expenseList[index];
- this.modalService.open(selector, {ariaLabelledBy: 'Expense list item remove', size: 'md',windowClass: 'delete-expanse-modal' }).result.then((result) => {
- this.expenseList.splice(index, 1);
-    }, (reason) => {
-    });
-
-
-
-
-}
-
-updateList(index:number){
-
-}
-
   buildTable(values) {
     this.final = values;
   }
-
-
 
   haversine(lat1, long1, lat2, long2, range) {
     var R = 6371000;
@@ -828,92 +693,41 @@ updateList(index:number){
   }
 
   getImages(id, lat, lng, time) {
-    console.log('time:', id, lat, lng, time);
-    // const params = `userId=${id}&lat=${lat}&long=${lng}&time=${time}`;
-    // this.api.get("Admin/getImageOnClick?" + params).subscribe((res: any) => {
-    //   if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
-    //   this.imageArrayonMap = res.data || []
-    //   console.log('images:', this.imageArrayonMap);
-    //   this.showImages(lat, lng);
-    // }, err => {
-    //   this.common.showError(err.msg)
-    // })
-    // let selectedImage = this.onsiteImages.find((x,key)=>{return (x._lat==lat && x._long==lng)});
     this.onsiteImages.forEach((element,key) => {
       if(element._lat==lat && element._long==lng){
         this.detailDataIndex = key;
       }
     });
-    console.log("selectedImage:",this.detailDataIndex);
-    // if(selectedImage){
-
-    // }
   }
 
   searchLatLong(item){
-    console.log("searchLatLong1:",item);
     this.showImages(item._lat, item._long);
-    // this.travelDistanceData[0]['wayPoints'].forEach((element,key) => {
-    //   if(element.lat==item._lat && element.long==item._long){
-    //     // this.detailDataIndex = key;
-    //     console.log("searchLatLong:",key);
-    //   }
-    // });
   }
 
   showImages(lat, lng) {
-    // let images = this.imageArrayonMap;
-    let suffix = new Date().getTime();
-    let activeSlide = 0;
-    let html = `<div>Current Image</div>`;
-    // let html = `
-    //   <div id="jrx-slider" style="height: 300px; position:relative;">
-    //     <div id="pre-${suffix}" style="position: absolute;z-index: 999;color: #fff;font-size: 60px;top: 60px; cursor:pointer;">&lt;</div>
-    //     <div>
-    //       ${images.map((image, index) => {
-    //   return `<div class="jrx-slide" style="display: ${!index ? 'block' : 'none'}; "><img src="${image._url}" style="width:100%; height: 100%;"></div>`
-    // }).join('')}
-    //     </div>
-    //     <div id="next-${suffix}" style="position: absolute;z-index: 999;color: #fff;font-size: 60px;top: 60px;right:0px; cursor:pointer;">&gt;</div>
-    //   </div>
-    // `;
+    // let loc2 = new google.maps.LatLng(lat, lng);
+    // new google.maps.Marker({
+    //   position: loc2,
+    //   icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    //   map: this.map
+    // });
+    // let marker = new google.maps.Marker({
+    //   position: { lat: group[0].lat, lng: group[0].long },
+    //   label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
+    //   map: this.map
+    // });
     if (this.infowindow) {
       this.infowindow.close();
       this.infowindow.opened = false;
     }
 
     this.infowindow = new google.maps.InfoWindow({
-      content: html
+      content: 'Current Image',
+      pixelOffset: new google.maps.Size(0, -32)
     });
-
-    // if (images.length > 0) {
-      let loc = new google.maps.LatLng(lat, lng);
-      this.infowindow.setPosition(loc);
-      // this.infowindow.open(this.map, this.installerMarker);
-      this.infowindow.open(this.map);
-    // } else {
-    //   return;
-    // }
-
-    // google.maps.event.addListener(this.infowindow, 'domready', () => {
-    //   let ele = document.getElementById('jrx-slider').children[1];
-    //   document.getElementById('pre-' + suffix).onclick = () => {
-    //     if (activeSlide === 0) activeSlide = images.length - 1;
-    //     else activeSlide--;
-
-    //     for (let i = 0; i < images.length; i++) {
-    //       ele.children[i]['style'].display = i === activeSlide ? 'block' : 'none';
-    //     }
-    //   }
-    //   document.getElementById('next-' + suffix).onclick = () => {
-    //     if (activeSlide === images.length - 1) activeSlide = 0;
-    //     else activeSlide++;
-
-    //     for (let i = 0; i < images.length; i++) {
-    //       ele.children[i]['style'].display = i === activeSlide ? 'block' : 'none';
-    //     }
-    //   }
-    // });
+    let loc = new google.maps.LatLng(lat, lng);
+    this.infowindow.setPosition(loc);
+    this.infowindow.open(this.map);
   }
 
   clearMap() {

@@ -314,7 +314,7 @@ $color-primary:#72b3c7;
 
   .row {
     margin-bottom: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .expense-list {
@@ -736,4 +736,16 @@ td.expanse {
 
 .btn-reject {
   width: 100px;
+}
+
+td.name {
+  width: 150px !important;
+}
+
+td.expance-action {
+  width: 300px !important;
+}
+
+th.action.sorting{
+  background-image:none !important;
 }

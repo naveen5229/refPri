@@ -338,10 +338,14 @@ $color-dark:#000;
 }
 
 // datatable
-.ng-dataTable {
+.ng-dataTable,.dataTable {
 // .action-block button{
 //  height: 18px !important;
 // }
+  button{
+    height: auto !important;
+    padding: 10px 14px !important;
+  }
 
   border: 1px solid rgba(61, 105, 214, 0.5) !important;
   border-top: 0 !important;
