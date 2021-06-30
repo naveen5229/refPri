@@ -1171,6 +1171,11 @@ return dataobj;
 
 }
 
+backClicked() {
+  this.router.navigateByUrl('/#/pages');
+}
+
+
 }
 
 

@@ -70,6 +70,7 @@ import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
+import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -144,7 +145,8 @@ import { VisitManagementComponent } from '../pages/visit-management/visit-manage
     CallLogsComponent,
     ContinuityReportComponent,
     ExpenseTypeComponent,
-    VisitManagementComponent
+    VisitManagementComponent,
+    LeaveTypeManagementComponent
   ],
 })
 export class PagesModule {

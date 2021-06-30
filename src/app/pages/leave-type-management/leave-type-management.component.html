@@ -1,0 +1,149 @@
+<nb-card class="min-h-auto">
+  <nb-card-header>
+    <h5> {{title}}</h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    <form class="expense-form">
+      <div class="row align-items-center">
+       
+        <div class="col-md-3">
+        <label for=""> Select Employee type </label>
+        </div>
+        <div class="col-md-3">
+          <select name="empType" id="#empType" class="form-control" [(ngModel)]="empType">
+            <option selected="General" value="General">General</option>
+            <option value="Contract">Contract</option>
+            <option value="Probation">Probation</option>
+            <option value="Trainee">Trainee</option>
+            <option value="Intern">Intern</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-3">
+          <label for=""> Select Leave type </label>
+        </div>
+        <div class="col-md-3">
+          <select name="leaveType" id="#leaveType" class="form-control" [(ngModel)]="leaveType">
+            <option selected="Fixed" value="Fixed">Fixed</option>
+            <option value="Optional">Optional</option>
+            <option value="Other">Other</option>
+            <option value="utility">Utility</option>
+            <option value="medical">Medical</option>
+            <option value="entertainment">Entertainment</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for=""> Leave Name </label>    
+          </div>
+        </div>  
+        <div class="col-md-3">
+          <div class="form-group">
+        <input type="text" placeholder="Enter Leave Name" [(ngModel)]="leaveName"
+              [ngModelOptions]="{standalone: true}" class="form-control"> 
+            </div>
+          </div>  
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for=""> Leave Count </label>          
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+        <input type="text" placeholder="Enter Leave Count" [(ngModel)]="lCount"
+              [ngModelOptions]="{standalone: true}" class="form-control">
+            </div>
+          </div>
+        <div class="col-md-3">
+        <label> leaves / </label>
+        </div>
+        <div class="col-md-3 ">
+          <select name="lNum" id="#lNum" class="form-control" [(ngModel)]="lNum">
+            <option selected="Monthly" value="Monthly">Monthly</option>
+            <option value="Quaterly">Quaterly</option>
+            <option value="HalfYearly">Half Yearly</option>
+            <option value="Yearly">Yearly</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="BiMonthly">Bi-Monthly</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <button type="back" class="btn btn-danger" (click)="common.backClicked()" > Back  </button>
+          <button type="submit" class="btn btn-primary" (click)="SubmitLeaveType()"> {{btn}} </button>
+          <button type="reset" class="btn btn-danger" (click)="resetType()" > Reset  </button>
+        </div> 
+      </div>
+    </form>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>
+    <h5> Leave Types </h5>
+  </nb-card-header>
+  <nb-card-body>
+    <table datatable class="table table-primary" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+      <thead>
+        <tr>
+          <th>
+            S.No.
+          </th>
+          <th>
+            Leave type
+          </th>
+          <th>
+            Type Name
+          </th>
+          <th> Leave Count </th>
+          <th>Action </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of leaveTypeList;index as i">
+          <td> {{i+1}} </td>
+          <td>
+            {{item.description}}
+          </td>
+          <td>
+            {{item.expenses_category}}
+          </td>
+          <td>
+
+            {{(item.expense_status == 1)?"Active":"Inactive"}}
+          </td>
+
+          <td>
+            <div class="action-block">
+              <button class="btn btn-danger" (click)="deleteLeaveType(item)"> delete </button>
+              <button class="btn btn-success" (click)="editLeaveType(item)"> edit </button>
+              <button class="btn btn-info" (click)="viewExpenseType(item)"> View </button>
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </nb-card-body>
+
+</nb-card>
+
