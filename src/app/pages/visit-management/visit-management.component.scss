@@ -16,13 +16,13 @@ $color-primary:#72b3c7;
 
 .user-name {
   font-weight: bold;
-  color: #3f69d6;
+  color: #e16c40;
 }
 
 .expense-image {
-     padding: 5px;
-     position: relative;
-     flex: 0 0 25%;
+  padding: 5px;
+  position: relative;
+  flex: 0 0 25%;
 
   .image-view {
     display: none;
@@ -42,11 +42,11 @@ $color-primary:#72b3c7;
   }
 
   img {
-   width: 100%;
-   height: 80px;
-   object-fit: cover;
-   object-position: center center;
-   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    object-position: center center;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -203,9 +203,7 @@ $color-primary:#72b3c7;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  position: absolute;
-  left: 20px;
-  top: 7px;
+  margin-right: 10px;
   padding: 0 !important;
 }
 
@@ -387,13 +385,28 @@ $color-primary:#72b3c7;
     color: #656565;
     font-weight: 600;
 
+    .addtime {
+      font-size: 16px;
+      font-weight: bold;
+
+    }
+
+    p {
+      margin-bottom: 0;
+      font-size: 12px;
+      line-height: 20px;
+        span {
+          font-weight: bold;
+        }
+    }
+
     &:nth-child(odd) {
-      background-color: #c86f483b;
+      background-color: #f0f5fb;
 
     }
 
     &:nth-child(even) {
-      background-color: #84848466;
+      background-color: #e4e4e4;
     }
 
     &:last-child {
@@ -401,12 +414,12 @@ $color-primary:#72b3c7;
     }
 
     &.active {
-      color: #fff;
+      p {
+        color: #fff;
+      }
+
       background-color: #2696d2;
 
-      span:last-child {
-        font-weight: bold;
-      }
     }
   }
 }
@@ -492,7 +505,7 @@ $color-primary:#72b3c7;
 
   tbody {
     tr.active {
-      background-color: $color-primary;
+      background-color: #2696d2;
 
       td {
         font-weight: bold;
@@ -541,7 +554,7 @@ table {
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  margin: 0 10px;
+  margin:0;
 
   .date-control {
     padding: 5px !important;
@@ -614,6 +627,15 @@ table {
   }
 
 }
+
+
+.expense-info{
+ .card-body{
+  height: 300px;
+  @include scrollbars(4px, #0f2d4b, 3px);
+ }
+}
+
 
 
 .nb-theme-default tbody tr:nth-child(even) {
