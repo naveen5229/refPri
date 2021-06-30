@@ -1,3 +1,4 @@
+import { TableService } from './../../Service/Table/table.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit,ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -42,20 +43,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective;
   // dtOptions: DataTables.Settings = {};
-  dtOptions: any = {
-    pagingType: 'full_numbers',
-    pageLength: 5,
-    lengthMenu: [5, 10, 25],
-    processing: true,
-    dom: 'Bfrtip',
-        buttons: [
-        'copy',
-        'print',
-        'csv',
-        'excel',
-        'pdf'
-      ]
-   }
+  dtOptions =  this.table.options(10,7,'USER EXPANCES');
   dtTrigger: Subject<any> = new Subject<any>();
 
   updatedExpenses = [];
@@ -93,7 +81,7 @@ listModifyvalue:any;
 expenseListitem:any;
 
   constructor(public modalService: NgbModal,
-    public common:CommonService, public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe) {
+    public common:CommonService, public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
     this.showAdminWiseWagesList();
@@ -414,6 +402,12 @@ expenseListitem:any;
         this.common.loading--;
         if (res['code'] == 1) {
           this.expenseList = res['data'] || [];
+          this.expenseList.map((item:any)=>{
+          if(item._url == null){
+            item._url = '../../../assets/images/expense/no-image-avaiable.jpg',
+            item.image = 'No Image Available'
+          }
+          })
         } else {
           this.common.showError(res['msg']);
         }
