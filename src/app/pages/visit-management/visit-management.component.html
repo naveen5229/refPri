@@ -1,5 +1,5 @@
-<ng-container *ngIf="!isDetailView">
-  <nb-card>
+<ng-container>
+  <nb-card [class.d-none]="isDetailView">
     <nb-card-header>
       <h5> Visit Management</h5>
     </nb-card-header>
@@ -30,10 +30,11 @@
               <div class="col-md-3">
                 <div class="mb-0 action-block">
                   <div class="btn-block">
+                    <button type="button" class="btn btn-danger"> Reset </button>
                     <button type="button" class="btn btn-primary" (click)="showAdminWiseWagesList()">
                       Search </button>
-                    <button type="button" class="btn btn-secondary"> Reset </button>
-                    <button type="button" class="btn btn-danger"> Cancel </button></div>
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -42,18 +43,18 @@
             <thead>
               <tr>
                 <th>
-                  <div class="form-check user-check-label d-flex"> <label for=""> Sr. No. </label> <input
+                  <div class="form-check user-check-label d-flex"> <label for=""> S. No. </label> <input
                       class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
                       type="checkbox" value="" id="flexCheckChecked"></div>
                 </th>
                 <th>Name</th>
                 <th>Date</th>
-                <th>Total Expesne</th>
-                <th>Status</th>
+                <th> Total Expesne</th>
+                <!-- <th>Status</th> -->
                 <th>Travel Distance</th>
                 <th>Total Image</th>
                 <th>Approvable Expense</th>
-                <th>Action</th>
+                <th class="action">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -63,27 +64,34 @@
                       class="form-check-input" [(ngModel)]="item.checked" type="checkbox" value="" id="flexCheckChecked"
                       (click)="selectUser(i)"></div>
                 </td>
-                <td>{{item.name}}</td>
-                <td>{{item.sqdate}}</td>
-                <td>{{item.total_expense}}</td>
-                <td>{{'status'}}</td>
+                <td class="name">{{item.name}}</td>
+                <td>{{item.sqdate | date :'dd/mm/yyyy' }}</td>
+                <td class="expanse"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense}}</td>
+                <!-- <td>{{'status'}}</td> -->
                 <td>{{item.total_distance+' | '+ item.total_distance_live}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
-                <td> <input type="number" class="form-control" style="width: 40%;"
-                    [(ngModel)]="updatedExpenses[i]['total_amount']"></td>
-                <td>
+                <td class="expanse">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-rupee-sign"></i></span>
+                    </div>
+                    <input type="number" class="form-control" style="width: 40%;"
+                      [(ngModel)]="updatedExpenses[i]['total_amount']">
+                  </div>
+                </td>
+                <td class="expance-action">
                   <div class="action-block">
                     <div class="btn-block">
                       <button type="button" class="btn btn-success btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? updateOnsiteImageStatusByUser(1,item) : null">Approve</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">Approve</button>
 
                       <button type="button" class="btn btn-danger btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? updateOnsiteImageStatusByUser(-99,item) : null">Reject</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">Reject</button>
 
-                      <button type="button" class="btn btn-primary btn-sm"
-                        (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : viewExpenseDetail(item)">View</button>
+                      <button type="button" class="btn btn-primary btn-sm" [disabled]="!(item._onside_img && item._onside_img.length)"
+                        (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">View</button>
                     </div>
                   </div>
                 </td>
@@ -93,35 +101,32 @@
         </div>
       </div>
       <div *ngIf="allVisits && allVisits.length" class="row">
-        <div class="col-12"> <button class="btn btn-primary btn-sm mr-2" id="verifiedExpenseBtn"
-            (click)="saveVerifiedExpense()">Save Verified</button></div>
+        <div class="col-12 mt-2 d-flex justify-content-end"> <button class="btn btn-primary btn-sm"
+            id="verifiedExpenseBtn" (click)="saveVerifiedExpense()">Save Verified</button></div>
       </div>
     </nb-card-body>
   </nb-card>
 </ng-container>
-<ng-container *ngIf="isDetailView">
-  <nb-card>
-    <nb-card-header class="position-relative mb-2"> <button class="btn btn-primary back-btn" (click)="backnavigate()">
-        <i class="fa fa-arrow-left"></i> </button>
-      <h5 class="text-center">Expense Detail</h5>
-      <div class="header-block">
-        <div class="row">
-          <div class="col-md-4">
-            <h5>User Name : <span class="user-name"> {{(selectedExpense) ? selectedExpense.name : 'N/A'}} </span></h5>
-          </div>
+<ng-container>
+  <nb-card [class.d-none]="!isDetailView">
+    <nb-card-header class="position-relative">
+      <div class="row p-2">
 
-          <div class="col-md-8 d-flex justify-content-end">
-            <div class="date-container">
-              <button class="btn btn-primary" (click)="prevdate()"> Previous date </button>
-              <input type="text" class="form-control date-control" [value]="detaildate" [(ngModel)]="detaildate" readonly>
-              <button class="btn btn-primary" (click)="nextdate()"> Next date </button>
-            </div>
+        <div class="col-md-3 d-flex">
+          <button class="btn btn-primary back-btn" (click)="backnavigate()">
+            <i class="fa fa-arrow-left"></i> </button>
+          <h5 class="text-center mb-0">Expense Detail</h5>
+        </div>
 
-            <!-- <div class="expense-actions"> <button type="button" class="btn btn-primary" (click)="backnavigate()"> Back
-              </button> 
-              <button type="button" class="btn btn-success"
-                (click)="updateOnsiteExpenseStatus()">Approve</button>
-            </div> -->
+        <div class="col-md-4">
+          <h5>User Name : <span class="user-name"> {{(selectedExpense) ? selectedExpense.name : 'N/A'}} </span></h5>
+        </div>
+
+        <div class="col-md-5">
+          <div class="date-container action-block">
+            <button class="btn btn-primary caps mr-0" (click)="prevdate()"> Previous date </button>
+            <input type="text" class="form-control date-control" [value]="detaildate" [(ngModel)]="detaildate" readonly>
+            <button class="btn btn-primary caps mr-0" (click)="nextdate()"> Next date </button>
           </div>
         </div>
       </div>
@@ -133,9 +138,9 @@
             <div class="col-block">
               <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title"> Expenses</h5>
-                    <button *ngIf="expenseList && expenseList.length" type="button" class="btn btn-success"
-                    (click)="updateOnsiteExpenseStatus()">Approve</button>
+                  <h5 class="card-title"> Expenses</h5>
+                  <button *ngIf="expenseList && expenseList.length" type="button" class="btn btn-success"
+                    (click)="updateOnsiteExpenseStatus()">Approve All</button>
                 </div>
                 <div class="card-body">
                   <table class="table table-primary expense-table">
@@ -159,8 +164,8 @@
                         </td>
                         <td class="actions">
                           <div class="action-block">
-                            <!-- <button class="btn btn-success" (click)="modifyInfo(i,modifyList)"> Modify </button> -->
-                            <button class="btn btn-danger" (click)="item.amount_new = 0;item.status = false"> Reject </button>
+                            <button class="btn btn-danger btn-reject" [disabled]="!item.amount" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)">  {{item.amount ? 'reject':'rejected' }}
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -179,9 +184,16 @@
                 <div class="card-body">
                   <div class="expense-image-block">
                     <div class="expense-image" *ngFor="let item of expenseList;index as i"
-                      [class.active]="expenseIndex == i" (click)="expenseIndex = i"> <button class="btn image-view"
-                        data-toggle="modal" data-target="#image-model"  [disabled]="!item._url" (click)="expenseImage = item._url;imageDialogue(itemImage,item._url)"> <i
-                          class="fa fa-eye"></i> </button> <img [src]="item._url" [alt]="item.image"></div>
+                      [class.active]="expenseIndex == i" (click)="expenseIndex = i">
+                      <button *ngIf="item._url" class="btn image-view" data-toggle="modal" data-target="#image-model"
+                        [disabled]="!item._url" (click)="expenseImage = item._url;imageDialogue(itemImage,item._url)">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                      <div class="expance-rejected" *ngIf="!item.amount">
+                        <span> Rejected </span>
+                      </div>
+                      <img  [src]="item._url" [alt]="item.image" onerror="this.src='../../../assets/images/expense/no-image-avaiable.jpg';">
+                    </div>
                   </div>
                 </div>
               </div>
@@ -189,18 +201,20 @@
           </div>
         </div>
         <div class="row no-gutters expense-timeline">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="col-block">
               <div class="card">
                 <div class="card-header">
-                  <h5 class="card-title"> Location With Time</h5> <button class="btn btn-primary btn-sm mt-1"
-                    id="viewRouteBtn" (click)="viewRoute()">View Route</button>
+                  <h5 class="card-title"> Location With Time</h5>
                 </div>
                 <div class="card-body">
                   <ul class="location-list">
                     <li *ngFor="let item of onsiteImages;index as i" [class.active]="detailDataIndex == i"
-                      (click)="detailDataIndex = i;detailImageZoom = true"> <span>{{item.addtime}}</span> <span>
-                        {{item.site_name}}</span></li>
+                      (click)="detailDataIndex = i;detailImageZoom = true">
+                      <p class="addtime"> <span>{{item.addtime}}</span> </p>
+                      <p> {{(item.site_name) ? item.site_name : 'N/A'}} </p>
+                      <p> IN : <span> {{(item.site_in_time) ? item.site_in_time : 'N/A'}}</span> out : <span> {{(item.site_out_time) ? item.site_out_time : 'N/A'}} </span> </p>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -211,6 +225,8 @@
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title"> location map</h5>
+                  <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
+                  <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch" (click)="switchLatLngHandler()">{{switchButton}}</button>
                 </div>
                 <div class="card-body">
                   <div class="location-map">
@@ -222,7 +238,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-5">
             <div class="col-block">
               <div class="card">
                 <div class="card-header">
@@ -231,21 +247,23 @@
                 <div class="card-body">
                   <div class="detail-images-container">
                     <div *ngFor="let item of onsiteImages;index as i" class="detail-images" [ngClass]="{
-                      'rejected':item.status =='rejected',
-                      'approved':item.status =='approved',
+                      'rejected':[-99,-1].includes(item._status),
+                      'approved':item._status==1,
                       'active':detailDataIndex == i,
                       'zoom':detailDataIndex == i && detailImageZoom }"
-                      (mouseover)="detailDataIndex = i;detailImageZoom = true" (mouseout)="detailImageZoom = false"
-                      (click)="getExpenseWrtImage(item._id)">
+                      (mouseover)="detailDataIndex = i;detailImageZoom = true;searchLatLong(item)" (mouseout)="detailImageZoom = false">
 
                       <img class="img-fluid" [src]="item._url" [alt]="item.image">
                       <div class="actions">
-                        <button class="btn btn-primary" [disabled]="item._status==1" (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
+                        <button class="btn btn-primary" [disabled]="item._status==1"
+                          (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
                           {{item._status ==1 ?'approved':'approve'}}
                         </button>
-                        <button class="btn btn-danger" [disabled]="item._status==-1" (click)="(item._status==-1) ? null : updateOnsiteImageStatus(-1,item)">
-                          {{item._status  ==-1 ? 'rejected':'reject'}}</button>
+                        <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
+                          (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
+                          {{[-99,-1].includes(item._status) ? 'rejected':'reject'}}</button>
                         <button class="btn btn-info" (click)="imageDialogue(itemImage,item._url)"> View </button>
+                        <button class="btn btn-success"> Maping </button>
                       </div>
                     </div>
                   </div>
@@ -267,8 +285,6 @@
   <div class="modal-footer"> <button type="button" class="btn btn-outline-danger"
       (click)="modal.close('Save click')">Close</button></div>
 </ng-template>
-
-
 
 
 <ng-template #modifyList let-modal>

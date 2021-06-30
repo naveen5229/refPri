@@ -9,6 +9,18 @@ $light: '.nb-theme-light';
 @import '../../src/app/@theme/scss/themes/default/default.scss';
 
 
+
+$base-color:#fff;
+$color-primary:#3699ff;
+$color-secondary:#f4f5f6;
+$color-warning:#FF9914;
+$color-success: #1bc5bd;
+$color-danger:#F21B3F;
+$color-success-light:#ABFF4F;
+$color-muted:#605f5f;
+$color-dark:#000;
+
+
 // body{
 //   @include padding(null 1rem);
 // }
@@ -284,6 +296,11 @@ $light: '.nb-theme-light';
 
 //  custom style Item Redesign and development
 
+.dataTables_wrapper .dataTables_length {
+  float: left;
+  position: relative;
+  bottom: 3px;
+}
 
 .nb-theme-default {
   .action-block {
@@ -291,7 +308,7 @@ $light: '.nb-theme-light';
       padding: 5px 15px !important;
       text-transform: capitalize;
       margin-right: 7px;
-      height: 25px !important;
+      height: 26px !important;
       line-height: 5px;
       font-family: Poppins, sans-serif !important;
 
@@ -316,8 +333,20 @@ $light: '.nb-theme-light';
 
 
 
+.caps{
+ text-transform: capitalize;
+}
+
 // datatable
-.ng-dataTable {
+.ng-dataTable,.dataTable {
+// .action-block button{
+//  height: 18px !important;
+// }
+  button{
+    height: auto !important;
+    padding: 10px 14px !important;
+  }
+
   border: 1px solid rgba(61, 105, 214, 0.5) !important;
   border-top: 0 !important;
 
@@ -339,4 +368,62 @@ $light: '.nb-theme-light';
     }
   }
 
+}
+
+
+.dt-buttons {
+    display: inline-block;
+    margin-left: 0;
+    position: relative;
+    margin-bottom: 5px;
+    margin-left: 15px;
+
+  .dt-button {
+   display: inline-block;
+   font-weight: 600;
+   color: #fff;
+   text-align: center;
+   vertical-align: middle;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-color: transparent;
+   border: 1px solid transparent;
+   padding: 0.15rem 0.85rem;
+   text-transform: uppercase;
+   font-size: 14px;
+   line-height: 1.5;
+   border-radius: .25rem;
+   transition: color .15s ease-in-out,
+   background-color .15s ease-in-out,
+   border-color .15s ease-in-out,
+   box-shadow .15s ease-in-out;
+  }
+
+  .buttons-copy {
+    background-color: #007fbc;
+  }
+
+  .buttons-csv {
+    background-color: $color-danger
+  }
+
+  .buttons-excel {
+    background-color: $color-warning;
+  }
+
+  .buttons-print {
+    background-color: $color-success;
+  }
+}
+
+
+
+
+.dataTables_wrapper .dataTables_filter {
+  float: right;
+  text-align: right;
+  position: relative;
+  top: -2px;
 }

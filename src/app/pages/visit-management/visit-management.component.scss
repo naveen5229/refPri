@@ -16,13 +16,13 @@ $color-primary:#72b3c7;
 
 .user-name {
   font-weight: bold;
-  color: #3f69d6;
+  color: #e16c40;
 }
 
 .expense-image {
-     padding: 5px;
-     position: relative;
-     flex: 0 0 25%;
+  padding: 5px;
+  position: relative;
+  flex: 0 0 25%;
 
   .image-view {
     display: none;
@@ -42,11 +42,11 @@ $color-primary:#72b3c7;
   }
 
   img {
-   width: 100%;
-   height: 80px;
-   object-fit: cover;
-   object-position: center center;
-   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    object-position: center center;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -203,16 +203,14 @@ $color-primary:#72b3c7;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  position: absolute;
-  left: 20px;
-  top: 7px;
+  margin-right: 10px;
   padding: 0 !important;
 }
 
 .expense-image-block {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 0px;
 
 }
 
@@ -240,9 +238,9 @@ $color-primary:#72b3c7;
 
   img {
     width: 100%;
-    height: 80px;
+    height: 100px;
     object-fit: cover;
-    object-position: center center;
+    object-position: center 70%;
     box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
   }
 }
@@ -271,7 +269,15 @@ $color-primary:#72b3c7;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          height: 55px;
+          height: 40px;
+
+          button {
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 !important;
+          }
 
           .card-title {
             margin-bottom: 0;
@@ -308,7 +314,7 @@ $color-primary:#72b3c7;
 
   .row {
     margin-bottom: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .expense-list {
@@ -375,8 +381,8 @@ $color-primary:#72b3c7;
 .location-list {
   padding-left: 0;
   list-style: none;
-  border: 1px solid #2696d24f;
-  padding: 10px;
+  // border: 1px solid #2696d24f;
+  // padding: 10px;
   border-radius: 3px;
   margin-bottom: 0;
 
@@ -387,13 +393,29 @@ $color-primary:#72b3c7;
     color: #656565;
     font-weight: 600;
 
+    .addtime {
+      font-size: 16px;
+      font-weight: bold;
+
+    }
+
+    p {
+      margin-bottom: 0;
+      font-size: 12px;
+      line-height: 20px;
+
+      span {
+        font-weight: bold;
+      }
+    }
+
     &:nth-child(odd) {
-      background-color: #c86f483b;
+      background-color: #f0f5fb;
 
     }
 
     &:nth-child(even) {
-      background-color: #84848466;
+      background-color: #e4e4e4;
     }
 
     &:last-child {
@@ -401,12 +423,12 @@ $color-primary:#72b3c7;
     }
 
     &.active {
-      color: #fff;
+      p {
+        color: #fff;
+      }
+
       background-color: #2696d2;
 
-      span:last-child {
-        font-weight: bold;
-      }
     }
   }
 }
@@ -442,8 +464,8 @@ $color-primary:#72b3c7;
 
     button {
       padding: 0px 5px !important;
-      font-size: 10px !important;
-      height: 22px;
+      font-size: 9px !important;
+      height: 18px;
       box-shadow: none;
       font-family: inherit !important;
       font-weight: 600;
@@ -472,8 +494,8 @@ $color-primary:#72b3c7;
     }
 
     &.zoom {
-      transform: scale(1.25);
-      transition: all linear 0.2s;
+      transform: scale(1.15);
+      transition: all linear 0.3s;
     }
 
     img {
@@ -492,7 +514,7 @@ $color-primary:#72b3c7;
 
   tbody {
     tr.active {
-      background-color: $color-primary;
+      background-color: #2696d2;
 
       td {
         font-weight: bold;
@@ -541,7 +563,7 @@ table {
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  margin: 0 10px;
+  margin: 0;
 
   .date-control {
     padding: 5px !important;
@@ -549,7 +571,7 @@ table {
     line-height: 16px !important;
     width: 160px;
     margin: 0 5px;
-    height: 32px;
+    height: 25px;
   }
 
   .form-group {
@@ -616,6 +638,15 @@ table {
 }
 
 
+.expense-info {
+  .card-body {
+    height: 300px;
+    @include scrollbars(4px, #0f2d4b, 3px);
+  }
+}
+
+
+
 .nb-theme-default tbody tr:nth-child(even) {
   background-color: #f3f3f3;
 }
@@ -663,4 +694,58 @@ tr.ng-star-inserted {
 
     }
   }
+}
+
+
+td.expanse {
+
+  i.rupee {
+    font-size: 10px;
+    margin: 0;
+    position: relative;
+    top: -1px;
+  }
+
+  .input-group-prepend i {
+    font-size: 14px;
+    margin: 0;
+  }
+
+}
+
+
+
+
+
+.nb-theme-default .btn-danger:focus .nb-theme-default .btn-danger:active {
+  background-color: #c82333 !important;
+}
+
+
+.expance-rejected {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #c40000;
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(255, 148, 148, 0.5);
+}
+
+.btn-reject {
+  width: 100px;
+}
+
+td.name {
+  width: 150px !important;
+}
+
+td.expance-action {
+  width: 300px !important;
+}
+
+th.action.sorting{
+  background-image:none !important;
 }
