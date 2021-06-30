@@ -37,6 +37,7 @@ export class TmgDashboardComponent  implements OnInit {
       return;
     } else {
       this.selectedDashboard = this.seletionsArray[index + 1];
+      this.getDepartments();
     }
   }
   
@@ -48,12 +49,17 @@ export class TmgDashboardComponent  implements OnInit {
       return;
     } else {
       this.selectedDashboard = this.seletionsArray[index - 1];
+      this.getDepartments();
     }
   }
 
   getDepartments() {
     this.common.loading++;
-    this.api.get("Admin/getDepartmentList").subscribe(res => {
+    let url = "Admin/getDepartmentList";
+    if(this.selectedDashboard == 'tmgProcess'){
+      url = "Admin/getProcessList";
+    }
+    this.api.get(url).subscribe(res => {
       this.common.loading--;
       if (res['code'] >= 0) {
       this.departments = res['data'] || [];
