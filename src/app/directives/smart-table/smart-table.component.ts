@@ -78,6 +78,8 @@ export class SmartTableComponent implements OnInit {
     }
   }
   setData() {
+    console.log('smart table render time start');
+    console.time();
     this.headings = this.data.headings;
     this.handlePagination(this.pages.active);
     // this.columns = this.data.columns
@@ -93,6 +95,8 @@ export class SmartTableComponent implements OnInit {
       this.pages.count++;
     }
     this.columns.map((column, index) => column._smartId = index);
+    console.log('smart table render time end');
+    console.timeEnd();
   }
 
   filterData(key) {
@@ -209,8 +213,8 @@ export class SmartTableComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param column Previous Column 
+   *
+   * @param column Previous Column
    * @param heading Column key
    */
   handleMouseOut(column, heading) {

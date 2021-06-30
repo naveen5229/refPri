@@ -9,8 +9,20 @@ $light: '.nb-theme-light';
 @import '../../src/app/@theme/scss/themes/default/default.scss';
 
 
+
+$base-color:#fff;
+$color-primary:#3699ff;
+$color-secondary:#f4f5f6;
+$color-warning:#FF9914;
+$color-success: #1bc5bd;
+$color-danger:#F21B3F;
+$color-success-light:#ABFF4F;
+$color-muted:#605f5f;
+$color-dark:#000;
+
+
 // body{
-//   @include padding(null 1rem);  
+//   @include padding(null 1rem);
 // }
 
 
@@ -62,7 +74,7 @@ $light: '.nb-theme-light';
 }
 
 
-//  tab style 
+//  tab style
 @mixin tab-style {
   width: 100%;
   margin: 0px;
@@ -231,7 +243,19 @@ $light: '.nb-theme-light';
 
 }
 
-.iv-fullscreen{
+@mixin headings {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @content;
+  }
+}
+
+.iv-fullscreen {
   z-index: 9999 !important;
 }
 
@@ -265,6 +289,115 @@ $light: '.nb-theme-light';
   }
 }
 
-.div-input{
+.div-input {
   min-height: 27px;
+}
+
+
+//  custom style Item Redesign and development
+
+
+.nb-theme-default {
+  .action-block {
+    button {
+      padding: 5px 15px !important;
+      text-transform: capitalize;
+      margin-right: 7px;
+      height: 25px !important;
+      line-height: 5px;
+      font-family: Poppins, sans-serif !important;
+
+    }
+  }
+
+  table.dataTable {
+
+    td,
+    th {
+      vertical-align: middle;
+    }
+  }
+
+  table {
+    .action-block {
+      margin: 3px 0px;
+    }
+  }
+
+}
+
+
+
+.caps{
+ text-transform: capitalize;
+}
+
+// datatable
+.ng-dataTable {
+  border: 1px solid rgba(61, 105, 214, 0.5) !important;
+  border-top: 0 !important;
+
+  th {
+    background-color: #3f69d6;
+    // background-color:#72b3c7;
+    padding: 10px;
+    color: #fff;
+    border: 0 !important;
+  }
+
+  tbody {
+    td:last-child {
+      border-right: 0 !important;
+    }
+
+    td:first-child {
+      border-left: 0 !important;
+    }
+  }
+
+}
+
+
+.dt-buttons {
+    display: inline-block;
+    margin-left: 0;
+    position: relative;
+    margin-bottom: 5px;
+
+  .dt-button {
+    display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.20rem 0.75rem;
+    text-transform: uppercase;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,
+      background-color .15s ease-in-out,
+      border-color .15s ease-in-out,
+      box-shadow .15s ease-in-out;
+  }
+
+  .buttons-copy {
+    background-color: #007fbc;
+  }
+
+  .buttons-csv {
+    background-color: $color-danger
+  }
+
+  .buttons-excel {
+    background-color: $color-warning;
+  }
+
+  .buttons-print {
+    background-color: $color-success;
+  }
 }

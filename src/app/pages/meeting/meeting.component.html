@@ -1,0 +1,140 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-12">
+        <h5 class="heading-design">Meeting Management</h5>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="row">
+      <div class="col-6">
+        <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting" (click)="addMetting(2)"><i
+            class="fa fa-plus p-1" aria-hidden="true"></i>New Meeting</button>
+        <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting" title="Add Meeting"
+          (click)="checkAvailability()">Check Availability</button>
+        <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting" title="Add Meeting"
+          (click)="myCalender()">My Calender</button>
+      </div>
+      <div class="col-6"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 meetingContainer">
+        <div class="row ml-0 mr-0 meetingHeaders">Past Meetings</div>
+        <div class="row ml-0 mr-0 meetingData">
+          <div class="col-12">
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.pastData">
+              <div class="col-3 my-auto">{{meeting.schedule_time}}</div>
+              <div class="col-6 my-auto textBind" title="{{meeting.subject}}">{{meeting.subject}}</div>
+              <div class="col-2 my-auto">
+                <span id="chatIcon" title="Chat" *ngIf="loggedInUser != meeting._aduserid"
+                  (click)="ticketMessage(meeting, 0)">
+                  <i class="fas fa-comments pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments new-comment pl-2" *ngIf="meeting._unreadcount > 0"></i>
+                  <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
+                </span>
+                <span id="actionsForPast"
+                  *ngIf="[-1, 5, 2].includes(meeting._status) && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && meeting._tktid > 0 && meeting._meeting_type != 2">
+                  <!-- <i class="fa fa-retweet" (click)="changeTicketStatusWithConfirm(meeting, 0, 0)"></i> -->
+                  <i class="fa fa-caret-square-o-down pl-2" *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
+                    (click)="editMeeting(meeting, 0, false)"></i>
+                </span>
+                <span id="statusAction" *ngIf="meeting._status != 5">
+                  <i class="fa fa-thumbs-up text-success pl-2" title="Complete"
+                    (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
+                </span>
+              </div>
+              <div class="col-1 labelPos">
+                <div class="buttonJelly" *ngIf="meeting._meeting_type == 2">
+                  <p>Todo</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 meetingContainer">
+        <div class="row ml-0 mr-0 meetingHeaders">Upcoming Meetings</div>
+        <div class="row ml-0 mr-0 meetingData">
+          <div class="col-12">
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData">
+              <div class="col-3 my-auto">{{meeting.schedule_time}}</div>
+              <div class="col-6 my-auto textBind" title="{{meeting.subject}}">{{meeting.subject}}</div>
+              <div class="col-2 my-auto">
+                <span id="chatIcon" title="Chat" *ngIf="loggedInUser != meeting._aduserid"
+                  (click)="ticketMessage(meeting, 0)">
+                  <i class="fas fa-comments pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments new-comment pl-2" *ngIf="meeting._unreadcount > 0"></i>
+                  <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
+                </span>
+                <span id="editMeeting" *ngIf="meeting._host == loggedInUser && meeting._aduserid == loggedInUser">
+                  <i class="fas fa-edit pl-2" title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
+                    (click)="editMeeting(meeting, 2, true)"></i>
+                </span>
+              </div>
+              <div class="col-1 labelPos">
+                <div class="buttonJelly" *ngIf="meeting._meeting_type == 2">
+                  <p>Todo</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+
+
+  <!--meeting attendance status modal -->
+  <div class="modal" id="meetingAttendance" #meetingAttendance>
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">User Presence In Meeting</h5>
+          <button type="button" class="close" data-dismiss="modal"
+            (click)="closemeetingAttendanceMoadal(false)">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>S.NO</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Presence</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let user of meetingAttendiesList;let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{user.name}}</td>
+                  <td>{{user.status}}</td>
+                  <td>
+                    <select [(ngModel)]="user.presense" (change)="saveMeetingAttendiesStatus(user)">
+                      <option value="1">Present</option>
+                      <option value="0">Absent</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+
+          <div class="row float-right pr-2">
+            <button class="btn btn-primary btn-sm" id="saveMeetingAttendiesStatus"
+              (click)="closemeetingAttendanceMoadal(true)">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--meeting attendance status modal -->
+</nb-card>

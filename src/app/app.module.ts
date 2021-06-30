@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { DataTablesModule } from 'angular-datatables';
 
 import {
   NbChatModule,
@@ -124,6 +125,7 @@ import { AddExpectedHourComponent } from './modals/add-expected-hour/add-expecte
 import { FunctionalReportingMappingComponent } from './modals/functional-reporting-mapping/functional-reporting-mapping.component';
 import { AvailableTimeSlotComponent } from './modals/available-time-slot/available-time-slot.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+// import { SmartDataTableComponent } from './directives/smart-data-table/smart-data-table.component';
 
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
@@ -133,6 +135,7 @@ import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
+
 
 
 const PAGE_COMPONENTS = [
@@ -246,6 +249,7 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
+     // SmartDataTableComponent,
 
 
     // SendmessageComponent,
@@ -263,6 +267,7 @@ const PAGE_COMPONENTS = [
     AppRoutingModule,
     FormsModule,
     NbSpinnerModule,
+    DataTablesModule,
     ReactiveFormsModule,
     DirectiveModule,
     ThemeModule.forRoot(),
@@ -283,6 +288,7 @@ const PAGE_COMPONENTS = [
     AngularFireAuthModule,
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    ReactiveFormsModule,
   ],
   providers: [MessagingService,AsyncPipe,
     { provide: APP_BASE_HREF, useValue: '/' }

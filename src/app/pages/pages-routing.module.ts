@@ -1,5 +1,7 @@
+import { VisitManagementComponent } from './visit-management/visit-management.component';
+import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
@@ -74,6 +76,7 @@ import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { LeaveManagementComponent } from './leave-management/leave-management.component';
+import { MeetingComponent } from './meeting/meeting.component';
 
 const routes: Routes = [{
   path: '',
@@ -448,8 +451,22 @@ const routes: Routes = [{
       path: 'leave-management',
       component: LeaveManagementComponent,
       canActivate: [AuthGuard, RouteGuard]
-    }
-
+    },
+    {
+    path:'Expense-type',
+    component:ExpenseTypeComponent,
+    canActivate: [AuthGuard, RouteGuard]
+    },
+      {
+    path:'visit-management',
+    component:VisitManagementComponent,
+    canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+  path:'meeting',
+  component:MeetingComponent,
+  canActivate: [AuthGuard, RouteGuard]
+  }
   ],
 }];
 

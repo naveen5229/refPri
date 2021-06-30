@@ -1,0 +1,47 @@
+.meetingContainer {
+  padding: 1rem;
+}
+
+.meetingHeaders {
+  background: #36f;
+  color: #ffffff;
+  padding: 4px;
+}
+
+.meetingData {
+  height: 550px;
+  border-bottom: groove;
+  border-left: groove;
+  border-right: groove;
+  overflow: auto;
+}
+
+.cardStyle {
+  margin: 5px;
+  border-style: groove;
+}
+
+.textBind {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.buttonJelly {
+  background: #3498db;
+  width: fit-content;
+  //   border-radius: 3px;
+
+  p {
+    font-family: "Roboto";
+    text-align: center;
+    color: #fff;
+    margin: 3px;
+  }
+}
+
+.labelPos {
+  position: absolute;
+  right: 25px;
+  top: 3px;
+}

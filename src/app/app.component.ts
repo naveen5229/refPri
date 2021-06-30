@@ -1,3 +1,5 @@
+import { expenses } from './pages/expense-type/data';
+import { from } from 'rxjs';
 /**
  * @license
  * Copyright Akveo. All Rights Reserved.
@@ -26,6 +28,8 @@ export class AppComponent implements OnInit {
   // }
   title = 'push-notification';
   message;
+  datatabledata:any[] = [];
+
   constructor(private analytics: AnalyticsService,
     public common: CommonService,
     public user: UserService,
@@ -35,6 +39,9 @@ export class AppComponent implements OnInit {
     // if (this.user._details) {
     //   this.getUserPagesList();
     // }
+
+  let date = Date.now();
+  console.log('start time', date);
   }
 
   ngOnInit(): void {
@@ -43,6 +50,15 @@ export class AppComponent implements OnInit {
   this.messagingService.receiveMessage()
   this.message = this.messagingService.currentMessage
   }
+
+
+getdatatabledata(){
+let data = from(expenses);
+data.subscribe((item:any)=>{
+this.datatabledata = item;
+})
+
+}
 
   // getUserPagesList() {
   //   let userTypeId = this.user._loggedInBy == 'admin' ? 1 : 3;
