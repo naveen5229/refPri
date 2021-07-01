@@ -129,6 +129,31 @@ expenseListitem:any;
     var path = this.poly.getPath();
   }
 
+listhandler(index:number){
+this.detailDataIndex = index;
+this.detailImageZoom = true;
+let currentImageClass =  `.detail-images.index-${index}`;
+let currentImage =  document.querySelectorAll(currentImageClass);
+currentImage[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+}
+
+
+
+
+detailImageHandler(index:number){
+this.detailDataIndex = index;
+this.detailImageZoom = true;
+this.searchLatLong(this.onsiteImages[index]);
+this.detailDataIndex = index;
+this.detailImageZoom = true;
+let currentImageClass =  `.location-list .list-item-${index}`;
+let currentItem =  document.querySelectorAll(currentImageClass);
+currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+
+}
+
+
   refreshPage(){
     this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
     this.getAllAdmin();
