@@ -747,7 +747,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     }
 
     this.infowindow = new google.maps.InfoWindow({
-      content: 'Current Image',
+      content: 'Selected Image',
       pixelOffset: new google.maps.Size(0, -32)
     });
     let loc = new google.maps.LatLng(lat, lng);
