@@ -722,7 +722,7 @@ expenseListitem:any;
     }
 
     this.infowindow = new google.maps.InfoWindow({
-      content: 'Current Image',
+      content: 'Selected Image',
       pixelOffset: new google.maps.Size(0, -32)
     });
     let loc = new google.maps.LatLng(lat, lng);
