@@ -74,6 +74,18 @@ import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
 import { MeetingComponent } from './meeting/meeting.component';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  interactionPlugin
+]);
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -88,7 +100,8 @@ import { MeetingComponent } from './meeting/meeting.component';
     TicketModule,
     DragDropModule,
     ChartModule,
-    DataTablesModule
+    DataTablesModule,
+    FullCalendarModule
   ],
   declarations: [
     PagesComponent,

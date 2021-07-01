@@ -8,7 +8,7 @@
   </nb-card-header>
 
   <nb-card-body>
-    <div class="row">
+    <div class="row ">
       <div class="col-6">
         <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting" (click)="addMetting(2)"><i
             class="fa fa-plus p-1" aria-hidden="true"></i>New Meeting</button>
@@ -17,21 +17,29 @@
         <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting" title="Add Meeting"
           (click)="myCalender()">My Calender</button>
       </div>
-      <div class="col-6"></div>
+      <div class="col-6 text-right">
+        <input type="search" *ngIf="isSearch" (search)="getFilteredData($event.target.value)">
+        <button class="search" (click)="isSearch=!isSearch;!isSearch?setDefaultData():null">
+          <i class="fas fa-search p-1"></i></button>
+      </div>
     </div>
 
-    <div class="row">
+    <div class="row ">
       <div class="col-6 meetingContainer">
         <div class="row ml-0 mr-0 meetingHeaders">Past Meetings</div>
         <div class="row ml-0 mr-0 meetingData">
           <div class="col-12">
-            <div class="row cardStyle" *ngFor="let meeting of meetingData.pastData">
-              <div class="col-3 my-auto">{{meeting.schedule_time}}</div>
-              <div class="col-6 my-auto textBind" title="{{meeting.subject}}">{{meeting.subject}}</div>
-              <div class="col-2 my-auto">
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.pastData" [ngStyle]="{'background':meeting.colorCode}">
+              <div class="col-3 font-weight-bold headFont">{{meeting.schedule_time}}</div>
+              <div class="col-6">
+                <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
+                </div>
+                <div class="row subFont">{{meeting.host}}</div>
+              </div>
+              <div class="col-2 ">
                 <span id="chatIcon" title="Chat" *ngIf="loggedInUser != meeting._aduserid"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments text-success pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
                   <i class="fas fa-comments new-comment pl-2" *ngIf="meeting._unreadcount > 0"></i>
                   <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
@@ -41,13 +49,13 @@
                   <i class="fa fa-caret-square-o-down pl-2" *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
                     (click)="editMeeting(meeting, 0, false)"></i>
                 </span>
-                <span id="statusAction" *ngIf="meeting._status != 5">
+                <span id="statusAction" *ngIf="meeting._status != 5 && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id)">
                   <i class="fa fa-thumbs-up text-success pl-2" title="Complete"
                     (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
                 </span>
               </div>
-              <div class="col-1 labelPos">
-                <div class="buttonJelly" *ngIf="meeting._meeting_type == 2">
+              <div class="col-1 labelPos" *ngIf="meeting._meeting_type === 2">
+                <div class="buttonJelly">
                   <p>Todo</p>
                 </div>
               </div>
@@ -60,13 +68,17 @@
         <div class="row ml-0 mr-0 meetingHeaders">Upcoming Meetings</div>
         <div class="row ml-0 mr-0 meetingData">
           <div class="col-12">
-            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData">
-              <div class="col-3 my-auto">{{meeting.schedule_time}}</div>
-              <div class="col-6 my-auto textBind" title="{{meeting.subject}}">{{meeting.subject}}</div>
-              <div class="col-2 my-auto">
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData" [ngStyle]="{'background':meeting.colorCode}">
+              <div class="col-3 font-weight-bold headFont">{{meeting.schedule_time}}</div>
+              <div class="col-6">
+                <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
+                </div>
+                <div class="row subFont">{{meeting.host}}</div>
+              </div>
+              <div class="col-2 ">
                 <span id="chatIcon" title="Chat" *ngIf="loggedInUser != meeting._aduserid"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments text-success pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
                   <i class="fas fa-comments new-comment pl-2" *ngIf="meeting._unreadcount > 0"></i>
                   <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
@@ -137,4 +149,25 @@
     </div>
   </div>
   <!--meeting attendance status modal -->
+
+   <!--Calender -->
+   <div class="modal" id="calender" #calender>
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Availability</h5>
+          <button type="button" class="close" data-dismiss="modal"
+            (click)="closeCalenderMoadal(false)">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row calenderStyle">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Calender -->
 </nb-card>
