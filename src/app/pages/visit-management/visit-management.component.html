@@ -133,6 +133,83 @@
     </nb-card-header>
     <nb-card-body>
       <div class="expense-detail">
+   <div class="row no-gutters expense-timeline">
+     <div class="col-md-3">
+       <div class="col-block">
+         <div class="card">
+           <div class="card-header">
+             <h5 class="card-title"> Location With Time</h5>
+           </div>
+           <div class="card-body">
+             <ul class="location-list">
+               <li *ngFor="let item of onsiteImages;index as i"  [class]="'list-item-'+i"
+                 [class.active]="detailDataIndex == i"
+                 (click)="listhandler(i)">
+                 <p class="addtime"> <span>{{item.addtime}}</span> </p>
+                 <p> {{(item.site_name) ? item.site_name : 'N/A'}} </p>
+                 <p> IN : <span> {{(item.site_in_time) ? item.site_in_time : 'N/A'}}</span> out : <span>
+                     {{(item.site_out_time) ? item.site_out_time : 'N/A'}} </span> </p>
+               </li>
+             </ul>
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="col-md-4">
+       <div class="col-block">
+         <div class="card">
+           <div class="card-header">
+             <h5 class="card-title"> location map</h5>
+             <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
+             <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch"
+               (click)="switchLatLngHandler()">{{switchButton}}</button>
+           </div>
+           <div class="card-body">
+             <div class="location-map">
+               <div class="map-container">
+                 <div class="map" id="map" #map></div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="col-md-5">
+       <div class="col-block">
+         <div class="card">
+           <div class="card-header">
+             <h5 class="card-title"> visit images - {{(onsiteImages) ? onsiteImages.length +' Image' : 'N/A'}}</h5>
+           </div>
+           <div class="card-body">
+             <div class="detail-images-container">
+               <div *ngFor="let item of onsiteImages;index as i"  class="detail-images" [class]="'index-'+i"  [ngClass]="{
+                      'rejected':[-99,-1].includes(item._status),
+                      'approved':item._status==1,
+                      'active':detailDataIndex == i,
+                      'zoom':detailDataIndex == i && detailImageZoom }"
+                 (mouseover)="detailImageHandler(i)"
+                 (mouseout)="detailImageZoom = false">
+
+                 <img class="img-fluid" [src]="item._url" [alt]="item.image">
+                 <div class="actions">
+                   <button class="btn btn-primary" [disabled]="item._status==1"
+                     (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
+                     {{item._status ==1 ?'approved':'approve'}}
+                   </button>
+                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
+                     (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
+                     {{[-99,-1].includes(item._status) ? 'rejected':'reject'}}</button>
+                   <button class="btn btn-info" (click)="imageDialogue(itemImage,item._url)"> View </button>
+                   <button class="btn btn-success"> Maping </button>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
         <div class="row no-gutters expense-info">
           <div class="col-md-6">
             <div class="col-block">
@@ -200,78 +277,7 @@
             </div>
           </div>
         </div>
-        <div class="row no-gutters expense-timeline">
-          <div class="col-md-3">
-            <div class="col-block">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title"> Location With Time</h5>
-                </div>
-                <div class="card-body">
-                  <ul class="location-list">
-                    <li *ngFor="let item of onsiteImages;index as i" [class.active]="detailDataIndex == i"
-                      (click)="detailDataIndex = i;detailImageZoom = true">
-                      <p class="addtime"> <span>{{item.addtime}}</span> </p>
-                      <p> {{(item.site_name) ? item.site_name : 'N/A'}} </p>
-                      <p> IN : <span> {{(item.site_in_time) ? item.site_in_time : 'N/A'}}</span> out : <span> {{(item.site_out_time) ? item.site_out_time : 'N/A'}} </span> </p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="col-block">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title"> location map</h5>
-                  <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
-                  <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch" (click)="switchLatLngHandler()">{{switchButton}}</button>
-                </div>
-                <div class="card-body">
-                  <div class="location-map">
-                    <div class="map-container">
-                      <div class="map" id="map" #map></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="col-block">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title"> visit images - {{(onsiteImages) ? onsiteImages.length +' Image' : 'N/A'}}</h5>
-                </div>
-                <div class="card-body">
-                  <div class="detail-images-container">
-                    <div *ngFor="let item of onsiteImages;index as i" class="detail-images" [ngClass]="{
-                      'rejected':[-99,-1].includes(item._status),
-                      'approved':item._status==1,
-                      'active':detailDataIndex == i,
-                      'zoom':detailDataIndex == i && detailImageZoom }"
-                      (mouseover)="detailDataIndex = i;detailImageZoom = true;searchLatLong(item)" (mouseout)="detailImageZoom = false">
 
-                      <img class="img-fluid" [src]="item._url" [alt]="item.image">
-                      <div class="actions">
-                        <button class="btn btn-primary" [disabled]="item._status==1"
-                          (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
-                          {{item._status ==1 ?'approved':'approve'}}
-                        </button>
-                        <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
-                          (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
-                          {{[-99,-1].includes(item._status) ? 'rejected':'reject'}}</button>
-                        <button class="btn btn-info" (click)="imageDialogue(itemImage,item._url)"> View </button>
-                        <button class="btn btn-success"> Maping </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </nb-card-body>
   </nb-card>
