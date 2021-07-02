@@ -135,6 +135,7 @@ import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
+import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
 
 
 
@@ -228,6 +229,7 @@ const PAGE_COMPONENTS = [
   AddExpectedHourComponent,
   FunctionalReportingMappingComponent,
   AvailableTimeSlotComponent,
+  LocationEntityComponent,
 
  
 ];
