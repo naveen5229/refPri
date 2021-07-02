@@ -84,7 +84,7 @@ expenseListitem:any;
     public common:CommonService, public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
-    this.showAdminWiseWagesList();
+    // this.showAdminWiseWagesList();
   }
 
   ngOnInit() {
@@ -92,7 +92,7 @@ expenseListitem:any;
   }
 
   ngAfterViewInit() {
-    this.dtTrigger.next();
+    // this.dtTrigger.next();
     this.showAdminWiseWagesList();
   }
 

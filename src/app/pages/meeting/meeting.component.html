@@ -227,21 +227,11 @@
   <!-- Modal Header -->
   <!-- <div class="modal-header">
           <h5 class="modal-title">Availability</h5>
-          <button type="button" class="close" data-dismiss="modal" (click)="closeCalenderMoadal(false)">&times;</button>
-        </div> -->
-  <!-- Modal body -->
-  <!-- <div class="modal-body">
-          <div class="row">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
-              (onChanged)="schedule.time=$event" [dateTimeValue]="schedule.time">
-            </uj-date-time-picker>
-            <auto-suggestion [data]="adminList" display='name' (onSelected)="leaveArray.To = $event" seperator="-"
-              placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
-              [preSelected]="(schedule.user && schedule.user.id>0) ? {name: schedule.user.name} : {name:''}">
-            </auto-suggestion>
-            <button class="btn btn-primary text-capitalize" id="button" (click)="checkAvailability(0)">Submit</button>
-          </div>
-          <div class="row calenderStyle pt-2">
+          <button type="button" class="close" data-dismiss="modal"
+            (click)="closeCalenderMoadal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="row calenderStyle">
             <full-calendar [options]="calendarOptions"></full-calendar>
           </div>
         </div>
