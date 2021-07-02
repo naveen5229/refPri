@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
@@ -77,6 +77,12 @@ export class MeetingComponent implements OnInit {
   meetingAttendiesList = [];
   holdForFollowUp = {};
 
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    console.log('event triggered:', event);
+    if ((event.target.innerText >= 1 && event.target.innerText <= 10000) || event.target.innerText == 'Cancel' || event.target.innerText == 'Set' || ['feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'].includes(event.target.innerText.toLowerCase())) return;
+    if (document.getElementById('pastfilterPop')) document.getElementById('pastfilterPop').style.display = 'none';
+  }
   constructor(public common: CommonService,
     public userService: UserService, public api: ApiService, public modalService: NgbModal,) {
     console.log(this.calendarOptions)
@@ -94,6 +100,10 @@ export class MeetingComponent implements OnInit {
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMeetingListByType([0, 1]);
+  }
+
+  propogateEvent(event) {
+    event.stopPropagation();
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
@@ -422,6 +432,7 @@ export class MeetingComponent implements OnInit {
         (res) => {
           // this.common.loading--;
           if (res["code"] > 0) {
+            this.getMeetingListByType([0, 1]);
           } else {
             this.common.showError(res["data"]);
           }
@@ -540,7 +551,7 @@ export class MeetingComponent implements OnInit {
   filterPast(keyToSearch) {
     let pastDataFiltered = JSON.parse(JSON.stringify(this.meetingDataForFilter.pastData));
     pastDataFiltered = pastDataFiltered.filter(element => {
-      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch)))
+      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch))) || (element.schedule_time && (element.schedule_time.trim().match(keyToSearch)))
     });
     this.meetingData.pastData = pastDataFiltered;
   }
@@ -548,7 +559,7 @@ export class MeetingComponent implements OnInit {
   filterUpcoming(keyToSearch) {
     let upcomingDataFiltered = JSON.parse(JSON.stringify(this.meetingDataForFilter.upcomingData));
     upcomingDataFiltered = upcomingDataFiltered.filter(element => {
-      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch)))
+      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch))) || (element.schedule_time && (element.schedule_time.trim().match(keyToSearch)))
     });
     this.meetingData.upcomingData = upcomingDataFiltered;
   }
@@ -589,12 +600,12 @@ export class MeetingComponent implements OnInit {
   }
 
   filterEnable(type) {
-    let state = document.getElementById(type).style.display;
+    let state = document.getElementById('pastfilterPop').style.display;
     console.log(state)
     if (state == 'block') {
-      document.getElementById(type).style.display = 'none';
+      document.getElementById('pastfilterPop').style.display = 'none';
     } else {
-      document.getElementById(type).style.display = 'block'
+      document.getElementById('pastfilterPop').style.display = 'block'
     }
   }
 

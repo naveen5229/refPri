@@ -281,7 +281,7 @@
                 <!-- <span class="text-danger">*</span> -->
             </label>
         </div>
-        <div class="col-5 pr-0">
+        <div class="col-4 pr-0">
             <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
                 (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
             </uj-date-time-picker>
@@ -291,7 +291,7 @@
                 title="Reset Time"
                 (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } }"></i>
         </div>
-        <div class="col-2 pl-0">
+        <div class="col-3 pl-0">
             <input type="text" placeholder="Search Slot" class="form-control"
                 [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
                 readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
@@ -400,7 +400,7 @@
                 <!-- <span class="text-danger">*</span> -->
             </label>
         </div>
-        <div class="col-5 pr-0">
+        <div class="col-4 pr-0">
             <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
                 (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
             </uj-date-time-picker>
@@ -410,7 +410,7 @@
                 title="Reset Time"
                 (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } }"></i>
         </div>
-        <div class="col-2 pl-0">
+        <div class="col-3 pl-0">
             <input type="text" placeholder="Search Slot" class="form-control"
                 [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
                 readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
