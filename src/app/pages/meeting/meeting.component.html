@@ -16,7 +16,7 @@
           (click)="checkAvailability(1);windowType='userSchedule'"
           [ngClass]="windowType=='userSchedule'?'active':''">Check Availability</button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="meetingList"
-          (click)="getMeetingsDefault([0, 1]);windowType='meetings'" [ngClass]="windowType=='meetings'?'active':''">My
+          (click)="getMeetingsDefault();windowType='meetings'" [ngClass]="windowType=='meetings'?'active':''">My
           Calender</button>
       </div>
       <div class="col-6 text-right" *ngIf="windowType=='meetings'">
