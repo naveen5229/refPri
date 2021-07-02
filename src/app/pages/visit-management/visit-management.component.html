@@ -9,7 +9,7 @@
           <form action="" class="visit-management">
             <div class="row align-items-end">
               <div class="col-md-3">
-                <div class="form-group mb-0"> <label for="">select User </label>
+                <div class="form-group mb-0"> <label for="">Select User</label>
                   <auto-suggestion (onSelected)="selectedUser($event)" [data]="allUsers" display='name'
                     placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
                     [preSelected]="{name:expenseSearch.admin.name}"> </auto-suggestion>
@@ -30,7 +30,7 @@
               <div class="col-md-3">
                 <div class="mb-0 action-block">
                   <div class="btn-block">
-                    <button type="button" class="btn btn-danger"> Reset </button>
+                    <button type="button" class="btn btn-danger" (click)="resetData()"> Reset </button>
                     <button type="button" class="btn btn-primary" (click)="showAdminWiseWagesList()">
                       Search </button>
 
@@ -39,6 +39,12 @@
               </div>
             </div>
           </form>
+          <ng-template #expenseInfoPopContent>
+            <span><b>Expense Detail</b></span>
+            <ul *ngIf="expenseInfo && expenseInfo.length" class="replyPopContent">
+              <li *ngFor="let e of expenseInfo">{{e.name+' : '+e.amount}}</li>
+            </ul>
+          </ng-template>
           <table class="table table-primary ng-dataTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
             <thead>
               <tr>
@@ -49,10 +55,10 @@
                 </th>
                 <th>Name</th>
                 <th>Date</th>
-                <th> Total Expesne</th>
-                <!-- <th>Status</th> -->
-                <th>Travel Distance</th>
+                <th>User Expense</th>
+                <th>System Travel</th>
                 <th>Total Image</th>
+                <th>Status</th>
                 <th>Approvable Expense</th>
                 <th class="action">Action</th>
               </tr>
@@ -66,10 +72,10 @@
                 </td>
                 <td class="name">{{item.name}}</td>
                 <td>{{item.sqdate | date :'dd/mm/yyyy' }}</td>
-                <td class="expanse"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense}}</td>
-                <!-- <td>{{'status'}}</td> -->
-                <td>{{item.total_distance+' | '+ item.total_distance_live}}</td>
+                <td class="expanse"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense_actual}}</td>
+                <td>{{item.total_distance}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
+                <td>{{(item._onside_img) ? item.status : 'N/A'}}</td>
                 <td class="expanse">
                   <div class="input-group">
                     <div class="input-group-prepend">
@@ -81,17 +87,26 @@
                 </td>
                 <td class="expance-action">
                   <div class="action-block">
-                    <div class="btn-block">
+                    <div class="d-flex">
                       <button type="button" class="btn btn-success btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">Approve</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
+                        <!-- Approve -->
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                      </button>
 
                       <button type="button" class="btn btn-danger btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">Reject</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
+                        <!-- Reject -->
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                      </button>
 
                       <button type="button" class="btn btn-primary btn-sm" [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">View</button>
+                        (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">
+                        <!-- View -->
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                      </button>
                     </div>
                   </div>
                 </td>
@@ -119,20 +134,111 @@
         </div>
 
         <div class="col-md-4">
-          <h5>User Name : <span class="user-name"> {{(selectedExpense) ? selectedExpense.name : 'N/A'}} </span></h5>
+          <!-- <h5>User Name : <span class="user-name"> {{(selectedExpense) ? selectedExpense.name : 'N/A'}} </span></h5> -->
+          <!-- <div class="form-group mb-0"> -->
+            <auto-suggestion (onSelected)="selectedUserOnDetail($event)" [data]="allUsers" display='name'
+              placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+              [preSelected]="(selectedExpense && selectedExpense._user_id) ? {name:selectedExpense.name}: {name:null}"> </auto-suggestion>
+          <!-- </div> -->
         </div>
 
         <div class="col-md-5">
           <div class="date-container action-block">
-            <button class="btn btn-primary caps mr-0" (click)="prevdate()"> Previous date </button>
+            <button class="btn btn-primary caps mr-0" (click)="dateextractor(-1)"> Previous date </button>
             <input type="text" class="form-control date-control" [value]="detaildate" [(ngModel)]="detaildate" readonly>
-            <button class="btn btn-primary caps mr-0" (click)="nextdate()"> Next date </button>
+            <button class="btn btn-primary caps mr-0" (click)="dateextractor(1)"> Next date </button>
           </div>
         </div>
       </div>
     </nb-card-header>
     <nb-card-body>
       <div class="expense-detail">
+   <div class="row no-gutters expense-timeline">
+     <div class="col-1">
+       <div class="col-block">
+         <div class="card">
+           <div class="card-header">
+             <h5 class="card-title"> Location With Time</h5>
+           </div>
+           <div class="card-body">
+             <ul class="location-list">
+               <li *ngFor="let item of onsiteImages;index as i"  [class]="'list-item-'+i"
+                 [class.active]="detailDataIndex == i"
+                 (click)="listhandler(i)">
+                 <p class="addtime"> <span>{{item.addtime}}</span> </p>
+                 <p> {{(item.site_name) ? item.site_name : 'N/A'}} </p>
+                 <p> IN : <span> {{(item.site_in_time) ? item.site_in_time : 'N/A'}}</span> out : <span>
+                     {{(item.site_out_time) ? item.site_out_time : 'N/A'}} </span> </p>
+               </li>
+             </ul>
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="col-2">
+       <div class="col-block">
+         <div class="card">
+           <div class="card-header">
+             <h5 class="card-title"> location map</h5>
+             <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
+             <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch"
+               (click)="switchLatLngHandler()">{{switchButton}}</button>
+           </div>
+           <div class="card-body">
+             <div class="location-map">
+               <div class="map-container">
+                 <div class="map" id="map" #map></div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="col-3">
+       <div class="col-block">
+         <div class="card">
+           <div class="card-header">
+             <h5 class="card-title"> visit images - {{(onsiteImages) ? onsiteImages.length +' Image' : 'N/A'}}</h5>
+           </div>
+           <div class="card-body">
+             <div class="detail-images-container">
+               <div *ngFor="let item of onsiteImages;index as i"  class="detail-images" [class]="'index-'+i"  [ngClass]="{
+                      'rejected':[-99,-1].includes(item._status),
+                      'approved':item._status==1,
+                      'active':detailDataIndex == i,
+                      'zoom':detailDataIndex == i && detailImageZoom }"
+                 (mouseover)="detailImageHandler(i)"
+                 (mouseout)="detailImageZoom = false">
+
+                 <img class="img-fluid" [src]="item._url" [alt]="item.image">
+                 <div class="actions">
+                   <button class="btn btn-primary" [disabled]="item._status==1"
+                     (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
+                     <!-- approve -->
+                     <i class="fa fa-check" aria-hidden="true"></i>
+                   </button>
+                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
+                     (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
+                     <!-- reject -->
+                     <i class="fa fa-ban" aria-hidden="true"></i>
+                    </button>
+                   <button class="btn btn-info" (click)="imageDialogue(itemImage,item._url)">
+                     <!-- View  -->
+                     <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                   <button class="btn btn-success">
+                     <!-- Maping -->
+                     <i class="fa fa-map-marker"></i>
+                   </button>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
         <div class="row no-gutters expense-info">
           <div class="col-md-6">
             <div class="col-block">
@@ -200,78 +306,7 @@
             </div>
           </div>
         </div>
-        <div class="row no-gutters expense-timeline">
-          <div class="col-md-3">
-            <div class="col-block">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title"> Location With Time</h5>
-                </div>
-                <div class="card-body">
-                  <ul class="location-list">
-                    <li *ngFor="let item of onsiteImages;index as i" [class.active]="detailDataIndex == i"
-                      (click)="detailDataIndex = i;detailImageZoom = true">
-                      <p class="addtime"> <span>{{item.addtime}}</span> </p>
-                      <p> {{(item.site_name) ? item.site_name : 'N/A'}} </p>
-                      <p> IN : <span> {{(item.site_in_time) ? item.site_in_time : 'N/A'}}</span> out : <span> {{(item.site_out_time) ? item.site_out_time : 'N/A'}} </span> </p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="col-block">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title"> location map</h5>
-                  <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View Route</button>
-                  <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch" (click)="switchLatLngHandler()">{{switchButton}}</button>
-                </div>
-                <div class="card-body">
-                  <div class="location-map">
-                    <div class="map-container">
-                      <div class="map" id="map" #map></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="col-block">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title"> visit images - {{(onsiteImages) ? onsiteImages.length +' Image' : 'N/A'}}</h5>
-                </div>
-                <div class="card-body">
-                  <div class="detail-images-container">
-                    <div *ngFor="let item of onsiteImages;index as i" class="detail-images" [ngClass]="{
-                      'rejected':[-99,-1].includes(item._status),
-                      'approved':item._status==1,
-                      'active':detailDataIndex == i,
-                      'zoom':detailDataIndex == i && detailImageZoom }"
-                      (mouseover)="detailDataIndex = i;detailImageZoom = true;searchLatLong(item)" (mouseout)="detailImageZoom = false">
 
-                      <img class="img-fluid" [src]="item._url" [alt]="item.image">
-                      <div class="actions">
-                        <button class="btn btn-primary" [disabled]="item._status==1"
-                          (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
-                          {{item._status ==1 ?'approved':'approve'}}
-                        </button>
-                        <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
-                          (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
-                          {{[-99,-1].includes(item._status) ? 'rejected':'reject'}}</button>
-                        <button class="btn btn-info" (click)="imageDialogue(itemImage,item._url)"> View </button>
-                        <button class="btn btn-success"> Maping </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </nb-card-body>
   </nb-card>

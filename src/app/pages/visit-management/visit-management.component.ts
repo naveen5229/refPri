@@ -129,6 +129,31 @@ expenseListitem:any;
     var path = this.poly.getPath();
   }
 
+listhandler(index:number){
+this.detailDataIndex = index;
+this.detailImageZoom = true;
+let currentImageClass =  `.detail-images.index-${index}`;
+let currentImage =  document.querySelectorAll(currentImageClass);
+currentImage[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+}
+
+
+
+
+detailImageHandler(index:number){
+this.detailDataIndex = index;
+this.detailImageZoom = true;
+this.searchLatLong(this.onsiteImages[index]);
+this.detailDataIndex = index;
+this.detailImageZoom = true;
+let currentImageClass =  `.location-list .list-item-${index}`;
+let currentItem =  document.querySelectorAll(currentImageClass);
+currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+
+}
+
+
   refreshPage(){
     this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
     this.getAllAdmin();
@@ -181,6 +206,24 @@ expenseListitem:any;
       this.endDate = this.startDate;
     }
     this.expenseSearch.admin = { id: event.id, name: event.name };
+  }
+
+  selectedUserOnDetail(event:any){
+    this.selectedExpense._user_id = event.id;
+    this.selectedExpense.name = event.name;
+    this.viewExpenseDetail(this.selectedExpense);
+  }
+
+  resetData(){
+    this.startDate = new Date();
+    this.endDate = new Date();
+    this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name };
+    this.showAdminWiseWagesList();
+    this.isDetailView = false;
+    this.allVisits = [];
+    this.selectedExpense = null;
+    this.onsiteImages = [];
+    this.expenseList = [];
   }
 
   showAdminWiseWagesList() {
@@ -367,7 +410,7 @@ expenseListitem:any;
     }
     let param = `userId=${adminId}&startDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}&endDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}`;
     this.common.loading++;
-    this.api.get('Admin/getOnSiteImagesByUser?' + param)
+    this.api.get('Admin/getOnSiteImagesByUserNew?' + param)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] == 1) {
@@ -418,7 +461,7 @@ expenseListitem:any;
         this.common.loading--;
         if (res['code'] == 1) {
           this.common.showToast(res['msg']);
-          (expense) ? expense.amount=0 : this.getExpenseWrtUserDate();
+          (expense) ? null : this.getExpenseWrtUserDate();
         } else {
           this.common.showError(res['msg']);
         }
@@ -458,40 +501,50 @@ expenseListitem:any;
   renderTable() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
+      dtInstance.clear();
       dtInstance.destroy();
       // Call the dtTrigger to rerender again
       this.dtTrigger.next();
     });
   }
 
-  dateextractor(index:number){
-    let today = new Date()
-    let otherdate = new Date(today)
-    otherdate.setDate(otherdate.getDate() + index);
-    this.detaildate = this.datePipe.transform(otherdate,'dd-MM-yyyy');
-    let detaildate2 = this.datePipe.transform(otherdate,'yyyy-MM-dd');
-    console.log('this.detaildate: ', this.detaildate);
-    this.selectedExpense.sqdate = detaildate2;
-    this.viewExpenseDetail(this.selectedExpense);
-    return this.detaildate;
-  }
-
-  nextdate(){
+  dateextractor(number:number){
+    // let today = new Date()
     let currentDate = this.common.getDate();
     currentDate.setHours(0);
     currentDate.setMinutes(0);
     currentDate.setSeconds(0);
-    if(new Date(this.selectedExpense.sqdate)>= currentDate){
+    if(number==1 && new Date(this.selectedExpense.sqdate)>= currentDate){
       this.common.showError("Future date no allowed");return false;
+    }else{
+      let otherdate = new Date(this.selectedExpense.sqdate);
+      console.log('selectedExpense date: ', new Date(this.selectedExpense.sqdate));
+      otherdate.setDate(otherdate.getDate() + number);
+      this.detaildate = this.datePipe.transform(otherdate,'dd-MM-yyyy');
+      let detaildate2 = this.datePipe.transform(otherdate,'yyyy-MM-dd');
+      console.log('this.detaildate: ', this.detaildate);
+      this.selectedExpense.sqdate = detaildate2;
+      this.viewExpenseDetail(this.selectedExpense);
+      // return this.detaildate;
     }
-    this.dateindex++;
-    this.dateextractor(this.dateindex);
   }
 
-  prevdate(){
-    this.dateindex--;
-    this.dateextractor(this.dateindex)
-  }
+  // nextdate(){
+  //   let currentDate = this.common.getDate();
+  //   currentDate.setHours(0);
+  //   currentDate.setMinutes(0);
+  //   currentDate.setSeconds(0);
+  //   if(new Date(this.selectedExpense.sqdate)>= currentDate){
+  //     this.common.showError("Future date no allowed");return false;
+  //   }
+  //   this.dateindex++;
+  //   this.dateextractor(this.dateindex);
+  // }
+
+  // prevdate(){
+  //   this.dateindex--;
+  //   this.dateextractor(this.dateindex)
+  // }
 
   imageDialogue(selector:any,image:any){
     this.detailimageSrc = image;
@@ -501,6 +554,20 @@ expenseListitem:any;
 
   backnavigate(){
     this.isDetailView = false;
+  }
+
+  expenseInfo = [];
+  getExpenseInfo(item) {
+    this.expenseInfo = [];
+    if(item && item.length){
+      item.forEach(element => {
+        if(element.exp_img && element.exp_img.length){
+          element.exp_img.forEach(element2 => {
+            this.expenseInfo.push({"name":element2.expense_type,"amount":element2.amount});
+          });
+        }
+      });
+    }
   }
 
 // start: map --------------------------------------------------
@@ -722,7 +789,7 @@ expenseListitem:any;
     }
 
     this.infowindow = new google.maps.InfoWindow({
-      content: 'Current Image',
+      content: 'Selected Image',
       pixelOffset: new google.maps.Size(0, -32)
     });
     let loc = new google.maps.LatLng(lat, lng);
@@ -749,9 +816,17 @@ expenseListitem:any;
   // }
 
   viewRoute() {
+    let startdate = new Date(this.selectedExpense.sqdate);
+    let enddate = new Date(this.selectedExpense.sqdate);
+    startdate.setHours(0);
+    startdate.setMinutes(0);
+    startdate.setSeconds(0);
+    enddate.setHours(23);
+    enddate.setMinutes(59);
+    enddate.setSeconds(59);
     let report = {
-      startDate: this.startDate,
-      endDate: this.endDate,
+      startDate: startdate,
+      endDate: enddate,
       userId: this.selectedExpense._user_id
     }
     this.common.params = report;
