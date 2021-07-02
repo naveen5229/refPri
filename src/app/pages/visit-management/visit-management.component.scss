@@ -13,6 +13,11 @@ $color-primary:#72b3c7;
 
 }
 
+// @mixin widthDivider($mainwidth) {
+
+
+// }
+
 
 .user-name {
   font-weight: bold;
@@ -394,15 +399,17 @@ $color-primary:#72b3c7;
     font-weight: 600;
 
     .addtime {
-      font-size: 16px;
+      font-size: 12px;
       font-weight: bold;
+      margin-bottom: 5px;
 
     }
 
     p {
       margin-bottom: 0;
-      font-size: 12px;
-      line-height: 20px;
+      font-size: 10px;
+      line-height: 10px;
+      font-weight: 500;
 
       span {
         font-weight: bold;
@@ -509,8 +516,16 @@ $color-primary:#72b3c7;
 
 // expense table
 
+.expance-action {
+  button {
+    i {
+      color: #fff !important;
+      margin: 0;
+    }
+  }
+}
+
 .expense-table {
-  td.action-block {}
 
   tbody {
     tr.active {
@@ -631,6 +646,24 @@ table {
 
 
 .expense-timeline {
+  $mapwidth: 50%;
+  $otherwidth: (100% - $mapwidth) / 2;
+
+  .col-1 {
+    flex:0 0 #{$otherwidth};
+    max-width:#{$otherwidth};
+  }
+
+  .col-2 {
+    flex:0 0 #{$mapwidth};
+    max-width:#{$mapwidth};
+  }
+
+  .col-3 {
+    flex:0 0 #{$otherwidth};
+    max-width:#{$otherwidth};
+  }
+
   .card-body {
     height: 550px;
   }
@@ -743,9 +776,23 @@ td.name {
 }
 
 td.expance-action {
-  width: 300px !important;
+  width: 100px !important;
 }
 
-th.action.sorting{
-  background-image:none !important;
+th.action.sorting {
+  background-image: none !important;
 }
+
+
+
+// .user-expance-table{
+//   .dataTables_empty{
+//     display: none;
+//   }
+// }
+
+// :host ::ng-deep {
+//   table.user-expance-table td.dataTables_empty {
+//     display: none;
+//   }
+// }
