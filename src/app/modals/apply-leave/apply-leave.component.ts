@@ -583,6 +583,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       host: this.meetingForm.host.id,
       users: JSON.stringify(CC),
       date: this.common.dateFormatter1(this.meetingForm.fromTime),
+      endDate: this.common.dateFormatter1(this.meetingForm.fromTime)
     }
 
 
