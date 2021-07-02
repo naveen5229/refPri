@@ -17,7 +17,7 @@
     <ngx-image-viewer
       [images]="images"
       [idContainer]="'idOnHTML'" [loadOnInit]="true"
-      [download]="false" [fullscreen]="fullscreen" (onNext)="nextMove()" (onPrevious)="backMove()">
+      [download]="false" [fullscreen]="fullscreen" [activeIndex]="index+1" (onNext)="nextMove()" (onPrevious)="backMove()">
     </ngx-image-viewer>
   </div>
 </div>

@@ -50,6 +50,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
   @Input() showPDFOnlyLabel = 'Show only PDF';
   @Input() openInNewTabTooltipLabel = 'Open in new tab';
   @Input() enableTooltip = true;
+  @Input() activeIndex = 0;
 
   @Output() onNext = new EventEmitter();
   @Output() onPrevious = new EventEmitter();
@@ -163,6 +164,10 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     this.indexImagemAtual = 1;
     this.rotacaoImagemAtual = 0;
     this.totalImagens = this.images.length;
+
+    if(this.activeIndex>1){
+      this.indexImagemAtual = this.activeIndex;
+    }
 
     if (this.viewer) {
 
