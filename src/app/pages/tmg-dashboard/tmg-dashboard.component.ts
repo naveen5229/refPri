@@ -57,7 +57,7 @@ export class TmgDashboardComponent  implements OnInit {
     this.common.loading++;
     let url = "Admin/getDepartmentList";
     if(this.selectedDashboard == 'tmgProcess'){
-      url = "Admin/getProcessList";
+      url = "Processes/getProcessList";
     }
     this.api.get(url).subscribe(res => {
       this.common.loading--;
@@ -74,4 +74,9 @@ export class TmgDashboardComponent  implements OnInit {
     });
   }
 
+  selectDepartment(department){
+    console.log("department",department);
+    this.selectedDept.id = department._id;
+    this.selectedDept.name = department.name;
+  }
 }

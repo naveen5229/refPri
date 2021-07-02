@@ -200,7 +200,7 @@
                      (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
                      {{[-99,-1].includes(item._status) ? 'rejected':'reject'}}</button>
                    <button class="btn btn-info" (click)="imageDialogue(itemImage,item._url)"> View </button>
-                   <button class="btn btn-success"> Maping </button>
+                   <button class="btn btn-success" (click)="openMappingModal(item);"> Maping </button>
                  </div>
                </div>
              </div>

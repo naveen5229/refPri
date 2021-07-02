@@ -44,8 +44,8 @@
       <i class="fas fa-search"></i>
     </button>
     <div class="form-outline">
-     <select>
-     <option *ngFor="let dept of departments" (click)="alert(dept)">{{dept.name}}</option>
+     <select [(ngModel)]="selectedDept.id">
+     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
      </select>
     </div>
   </div>

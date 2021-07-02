@@ -12,6 +12,8 @@ import { UserService } from "../../Service/user/user.service";
 // import { expenses, expenseDetail } from './data';
 declare var google: any;
 import * as _ from 'lodash';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { LocationEntityComponent } from '../../modals/location-entity/location-entity.component';
 
 @Component({
   selector: 'ngx-visit-management',
@@ -81,7 +83,8 @@ listModifyvalue:any;
 expenseListitem:any;
 
   constructor(public modalService: NgbModal,
-    public common:CommonService, public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
+    public common:CommonService, 
+    public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
     this.showAdminWiseWagesList();
@@ -803,4 +806,15 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 // end: map ------------------------------------------------------
 
+
+// mapping modal open -----------------------------
+openMappingModal(itemImage){
+  console.log("itemImage",itemImage);
+  this.common.params = {imageId:itemImage._id,lat:itemImage._lat,lng:itemImage._long};
+  const activeModal = this.modalService.open(LocationEntityComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+  activeModal.result.then(data => {
+    if (data.response) {
+    }
+});
+}
 }
