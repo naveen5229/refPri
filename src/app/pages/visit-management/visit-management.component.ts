@@ -22,12 +22,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
  startDate = new Date();
  endDate = new Date();
  category:any;
- allUsers:any[] = [{
-  "id": null,
-  "name": "All",
-  "mobileno": null,
-  "department_name": null
-  }];
+ allUsers:any[] = [];
   allVisits:any[] = [];
   isDetailView:boolean = false;
   ExpenseDate:any;
@@ -157,15 +152,11 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   refreshPage(){
     this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
     this.getAllAdmin();
+    this.getReporters();
     this.showAdminWiseWagesList();
     this.isDetailView = false;
     this.allVisits = [];
-    this.allUsers = [{
-      "id": null,
-      "name": "All",
-      "mobileno": null,
-      "department_name": null
-    }];
+    this.allUsers = [];
 
     this.selectedExpense = null;
     this.onsiteImages = [];
@@ -173,14 +164,20 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 
   getAllAdmin() {
-    this.allUsers = [{
-      "id": null,
-      "name": "All",
-      "mobileno": null,
-      "department_name": null
-    }];
+    let apiName = "Admin/getAllAdmin.json";
+    if(this.userService._details['isSuperUser']){
+      this.allUsers = [{
+        "id": null,
+        "name": "All",
+        "mobileno": null,
+        "department_name": null
+      }];
+    }else{
+      this.allUsers = [];
+      apiName = "Admin/getAllReporter?userId="+this.userService.loggedInUser.id;
+    }
     this.common.loading++;
-    this.api.get('Admin/getAllAdmin.json')
+    this.api.get(apiName)
       .subscribe(res => {
         this.common.loading--;
         if(res['code']===0) { this.common.showError(res['msg']); return false;};
@@ -199,6 +196,24 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         this.common.showError();
         console.log(err);
       });
+  };
+
+  reporterList = [];
+  getReporters() {
+    let params = '?userId='+this.userService.loggedInUser.id;
+    this.api.get("Admin/getAllReporter"+params).subscribe(
+      (res) => {
+        if (res["code"] > 0) {
+          this.reporterList = res["data"] || [];
+        } else {
+          this.common.showError(res["msg"]);
+        }
+      },
+      (err) => {
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
   }
 
   selectedUser(event:any){
