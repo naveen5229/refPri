@@ -1,9 +1,21 @@
-nb-card-body {
-  background: #d3d3d3;
-}
+// nb-card-body {
+//   background: #d3d3d3;
+// }
 
 full-calendar {
   width: 100%;
+  height: 553px;
+}
+
+// ::ng-deep .fc .fc-button-primary{
+//     border-color: #2c3e50 !important;
+//     background-color: #ffffff !important;
+//     color: #000000 !important;
+// }
+
+.active {
+  background-color: #ea7736ba !important;
+  border-color: #ea7736 !important;
 }
 
 .meetingContainer {
@@ -14,12 +26,16 @@ full-calendar {
   background: #36f;
   color: #ffffff;
   padding: 4px;
+  box-shadow: 2px 0px 5px 1px rgba(0, 0, 0, 0.2);
 }
 
 .meetingData {
   height: 556px;
   background: #ffffff;
   overflow: auto;
+  border-style: groove;
+  border: navajowhite;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .cardStyle {
@@ -28,7 +44,7 @@ full-calendar {
   border-radius: 5px;
   //   border-style: groove;
   padding: 7px;
-//   border-bottom: 1px solid gray;
+  //   border-bottom: 1px solid gray;
   //   border-left: 5px solid black;
 }
 
@@ -68,11 +84,27 @@ full-calendar {
 
 .search {
   border-style: none;
-  color: grey;
+  color: #ffffff;
   font-size: 12px;
-  border-radius: 3px;
+//   border-radius: 3px;
+  padding: 5px;
+  background-color: #3366ff;
 }
 
-.calenderStyle {
-  height: 600px;
+// .calenderStyle {
+//   height: 600px;
+// }
+// ::ng-deep .fc-view-harness-active{
+//     height: 400px !important;
+// }
+.filterPop {
+  position: absolute;
+  right: 18px;
+  top: 16px;
+  z-index: 99999;
+  background: white;
+  padding: 7px;
+  color: black;
+  font-size: 12px;
+  display: none;
 }

@@ -13,24 +13,48 @@
         <button class="btn btn-primary btn-sm allicons" id="addMeeting" title="Add Meeting" (click)="addMetting(2)"><i
             class="fa fa-plus p-1" aria-hidden="true"></i>New Meeting</button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting" title="Add Meeting"
-          (click)="checkAvailability()">Check Availability</button>
-        <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting" title="Add Meeting"
-          (click)="myCalender()">My Calender</button>
+          (click)="checkAvailability(1);windowType='userSchedule'"
+          [ngClass]="windowType=='userSchedule'?'active':''">Check Availability</button>
+        <button class="btn btn-primary btn-sm allicons ml-2" id="meetingList"
+          (click)="getMeetingsDefault([0, 1]);windowType='meetings'" [ngClass]="windowType=='meetings'?'active':''">My
+          Calender</button>
       </div>
-      <div class="col-6 text-right">
-        <input type="search" *ngIf="isSearch" (search)="getFilteredData($event.target.value)">
-        <button class="search" (click)="isSearch=!isSearch;!isSearch?setDefaultData():null">
+      <div class="col-6 text-right" *ngIf="windowType=='meetings'">
+        <input type="search" [(ngModel)]="searchTerm" (search)="getFilteredData()" placeholder="Search...">
+        <button class="search" (click)="getFilteredData()">
           <i class="fas fa-search p-1"></i></button>
       </div>
     </div>
 
-    <div class="row ">
+    <div class="row" *ngIf="windowType=='meetings'">
       <div class="col-6 meetingContainer">
-        <div class="row ml-0 mr-0 meetingHeaders">Past Meetings</div>
+        <div class="row ml-0 mr-0 meetingHeaders">
+          <div class="col-4">Past Meetings</div>
+          <div class="col-8">
+            <i class="fas fa-filter float-right cursor-pointer" (click)="filterEnable('pastfilterPop')" title="Filter Date Range"></i>
+            <div id="pastfilterPop" class="filterPop">
+              <div>Start Date:<uj-date-time-picker [maxd]="currentDate" [isStart]="false" [isTime]="false"
+                  (onChanged)="meetingData.startDate=$event" [dateTimeValue]="meetingData.startDate">
+                </uj-date-time-picker>
+              </div>
+              <div>End Date:<uj-date-time-picker [maxd]="currentDate" [isStart]="false" [isTime]="false"
+                  (onChanged)="meetingData.endDate=$event" [dateTimeValue]="meetingData.endDate">
+                </uj-date-time-picker>
+              </div>
+              <div class="pt-2 float-right"><button class="btn btn-primary btn-sm allicons ml-2" id="meetingList"
+                  (click)="getMeetingListByType([0,1]);windowType='meetings'">Search</button></div>
+            </div>
+          </div>
+        </div>
         <div class="row ml-0 mr-0 meetingData">
           <div class="col-12">
-            <div class="row cardStyle" *ngFor="let meeting of meetingData.pastData" [ngStyle]="{'background':meeting.colorCode}">
-              <div class="col-3 font-weight-bold headFont">{{meeting.schedule_time}}</div>
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.pastData"
+              [ngStyle]="{'background':meeting._meeting_type==2 ? 'rgba(255, 238, 236)' : 'rgba(209, 242, 246'}">
+              <div class="col-3">
+                <div class="row textBind headFont font-weight-bold">{{meeting.schedule_time}}
+                </div>
+                <div class="row subFont">Duration : {{meeting.duration}}</div>
+              </div>
               <div class="col-6">
                 <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
                 </div>
@@ -49,14 +73,15 @@
                   <i class="fa fa-caret-square-o-down pl-2" *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
                     (click)="editMeeting(meeting, 0, false)"></i>
                 </span>
-                <span id="statusAction" *ngIf="meeting._status != 5 && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id)">
+                <span id="statusAction"
+                  *ngIf="meeting._status != 5 && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id)">
                   <i class="fa fa-thumbs-up text-success pl-2" title="Complete"
                     (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
                 </span>
               </div>
               <div class="col-1 labelPos" *ngIf="meeting._meeting_type === 2">
                 <div class="buttonJelly">
-                  <p>Todo</p>
+                  <p>To-Do</p>
                 </div>
               </div>
             </div>
@@ -65,11 +90,29 @@
       </div>
 
       <div class="col-6 meetingContainer">
-        <div class="row ml-0 mr-0 meetingHeaders">Upcoming Meetings</div>
+        <div class="row ml-0 mr-0 meetingHeaders">
+          <div class="col-4">Upcoming Meetings</div>
+          <div class="col-8">
+            <!-- <i class="fas fa-filter float-right cursor-pointer" (click)="filterEnable('upcomingfilterPop')" title="Filter Date Range"></i>
+            <div id="upcomingfilterPop" class="filterPop">
+              <div>Date:<uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                  (onChanged)="meetingData.endDate=$event" [dateTimeValue]="meetingData.endDate">
+                </uj-date-time-picker>
+              </div>
+              <div class="pt-2 float-right"><button class="btn btn-primary btn-sm allicons ml-2" id="meetingList"
+                  (click)="getMeetingListByType([1]);windowType='meetings'">Search</button></div>
+            </div> -->
+          </div>
+        </div>
         <div class="row ml-0 mr-0 meetingData">
           <div class="col-12">
-            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData" [ngStyle]="{'background':meeting.colorCode}">
-              <div class="col-3 font-weight-bold headFont">{{meeting.schedule_time}}</div>
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData"
+              [ngStyle]="{'background':meeting._meeting_type==2 ? 'rgba(255, 238, 236)' : 'rgba(209, 242, 246'}">
+              <div class="col-3">
+                <div class="row textBind headFont font-weight-bold">{{meeting.schedule_time}}
+                </div>
+                <div class="row subFont">Duration : {{meeting.duration}}</div>
+              </div>
               <div class="col-6">
                 <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
                 </div>
@@ -89,11 +132,38 @@
               </div>
               <div class="col-1 labelPos">
                 <div class="buttonJelly" *ngIf="meeting._meeting_type == 2">
-                  <p>Todo</p>
+                  <p>To-Do</p>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row p-3" *ngIf="windowType=='userSchedule'">
+      <div class="col-12">
+        <div class="row">
+          <!-- <div class="col-4">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+              (onChanged)="schedule.time=$event" [dateTimeValue]="schedule.time">
+            </uj-date-time-picker>
+          </div> -->
+          <div class="col-2">
+            Select user :
+          </div>
+          <div class="col-4">
+            <auto-suggestion [data]="adminList" display='name' (onSelected)="schedule.user = $event;checkAvailability()" seperator="-"
+              placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+              [preSelected]="(schedule.user && schedule.user.id>0) ? {name: schedule.user.name} : {name:''}">
+            </auto-suggestion>
+          </div>
+          <!-- <div class="col-4">
+            <button class="btn btn-primary text-capitalize" id="button" (click)="checkAvailability(0)">Submit</button>
+          </div> -->
+        </div>
+        <div class="row calenderStyle pt-2">
+          <full-calendar [options]="calendarOptions"></full-calendar>
         </div>
       </div>
     </div>
@@ -150,24 +220,34 @@
   </div>
   <!--meeting attendance status modal -->
 
-   <!--Calender -->
-   <div class="modal" id="calender" #calender>
+  <!--Calender -->
+  <!-- <div class="modal" id="calender" #calender>
     <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
+      <div class="modal-content"> -->
+  <!-- Modal Header -->
+  <!-- <div class="modal-header">
           <h5 class="modal-title">Availability</h5>
-          <button type="button" class="close" data-dismiss="modal"
-            (click)="closeCalenderMoadal(false)">&times;</button>
-        </div>
-        <!-- Modal body -->
-        <div class="modal-body">
-          <div class="row calenderStyle">
+          <button type="button" class="close" data-dismiss="modal" (click)="closeCalenderMoadal(false)">&times;</button>
+        </div> -->
+  <!-- Modal body -->
+  <!-- <div class="modal-body">
+          <div class="row">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+              (onChanged)="schedule.time=$event" [dateTimeValue]="schedule.time">
+            </uj-date-time-picker>
+            <auto-suggestion [data]="adminList" display='name' (onSelected)="leaveArray.To = $event" seperator="-"
+              placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+              [preSelected]="(schedule.user && schedule.user.id>0) ? {name: schedule.user.name} : {name:''}">
+            </auto-suggestion>
+            <button class="btn btn-primary text-capitalize" id="button" (click)="checkAvailability(0)">Submit</button>
+          </div>
+          <div class="row calenderStyle pt-2">
             <full-calendar [options]="calendarOptions"></full-calendar>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--Calender -->
+
 </nb-card>

@@ -7,8 +7,7 @@ import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
-import { EventInput } from '@fullcalendar/angular';
-import { scheduled } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'ngx-meeting',
@@ -16,6 +15,14 @@ import { scheduled } from 'rxjs';
   styleUrls: ['./meeting.component.scss']
 })
 export class MeetingComponent implements OnInit {
+  searchTerm = '';
+  windowType = 'meetings';
+  currentDate = new Date();
+  schedule = {
+    time: moment(),
+    endTime: moment().add(30, 'days'),
+    user: { id: this.userService._details.id, name: this.userService._details.name }
+  }
   TODAY_STR = new Date().toISOString().replace(/T.*$/, '');
   // INITIAL_EVENTS: EventInput[] = [
   //   {
@@ -34,7 +41,7 @@ export class MeetingComponent implements OnInit {
     initialView: 'dayGridMonth',
     weekends: true,
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
@@ -45,8 +52,8 @@ export class MeetingComponent implements OnInit {
     // selectMirror: true,
     // dayMaxEvents: true,
     // select: this.handleDateSelect.bind(this),
-    // eventClick: this.handleEventClick.bind(this),
-    // eventsSet: this.handleEvents.bind(this)
+    eventClick: this.handleEventClick.bind(this),
+    eventsSet: this.handleEvents.bind(this),
   };
   colorCodes = {
     background: ['#B0E0E6', '#FFE4E1', '#98FB98', '#FFB6C1'],
@@ -57,7 +64,7 @@ export class MeetingComponent implements OnInit {
   groupList = [];
   departmentList = [];
   meetingData = {
-    startDate: this.common.getDate(-20),
+    startDate: this.common.getDate(-2),
     endDate: this.common.getDate(),
     pastData: [],
     upcomingData: []
@@ -112,13 +119,15 @@ export class MeetingComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+    // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+    //   clickInfo.event.remove();
+    // }
+    console.log(clickInfo)
   }
 
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
+    console.log(this.currentEvents)
   }
 
   getAllAdmin() {
@@ -177,13 +186,23 @@ export class MeetingComponent implements OnInit {
     );
   }
 
+  getMeetingsDefault() {
+    this.meetingData = {
+      startDate: this.common.getDate(-2),
+      endDate: this.common.getDate(),
+      pastData: [],
+      upcomingData: []
+    }
+    this.getMeetingListByType([0, 1])
+  }
+
   getMeetingListByType(type, startDate = null, endDate = null) {
     if (this.meetingData.startDate && this.meetingData.endDate) {
       startDate = this.common.dateFormatter(this.meetingData.startDate);
       endDate = this.common.dateFormatter(this.meetingData.endDate);
     }
     type.map(type => {
-      if (type == 1) startDate = endDate;
+      // if (type == 1) startDate = endDate;
       this.getMeetings(type, startDate, endDate)
     });
   }
@@ -191,7 +210,7 @@ export class MeetingComponent implements OnInit {
   // index = 0;
   getMeetings(type, startDate, endDate) {
     this.common.loading++;
-    let params = "?type=" + type + "&startDate=" + startDate + "&endDate=" + endDate;
+    let params = "?type=" + type + "&startDate=" + ((type == 1) ? this.common.dateFormatter(this.currentDate) : startDate) + "&endDate=" + ((type == 1) ? this.common.dateFormatter(this.currentDate) : endDate);
     this.api.get("Admin/getMeetingListByType" + params).subscribe(
       (res) => {
         this.common.loading--;
@@ -212,13 +231,15 @@ export class MeetingComponent implements OnInit {
         }
 
         for (let i = 0; i < this.meetingData.upcomingData.length; i++) {
-          this.meetingData.upcomingData[i]["task_subject"] = this.meetingData.upcomingData["subject"];
-          this.meetingData.upcomingData[i]["_task_desc"] = this.meetingData.upcomingData["_desc"];
-          this.meetingData.upcomingData[i]["colorCode"] = this.colorCodes.background[indexUpcomingData];;
+          this.meetingData.upcomingData[i]["task_subject"] = this.meetingData.upcomingData[i]["subject"];
+          this.meetingData.upcomingData[i]["_task_desc"] = this.meetingData.upcomingData[i]["_desc"];
+          this.meetingData.upcomingData[i]["colorCode"] = this.colorCodes.background[indexUpcomingData];
           if (indexUpcomingData == 3) { indexUpcomingData = 0 } else { indexUpcomingData = indexUpcomingData + 1 };
         }
         this.meetingDataForFilter.pastData = this.meetingData.pastData;
         this.meetingDataForFilter.upcomingData = this.meetingData.upcomingData;
+        let state = document.getElementById('pastfilterPop').style.display;
+        if (state == 'block') document.getElementById('pastfilterPop').style.display = 'none';
         console.log("Past data", this.meetingData.pastData, "Upcoming Data", this.meetingData.upcomingData);
       },
       (err) => {
@@ -241,7 +262,7 @@ export class MeetingComponent implements OnInit {
       btn: btn
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
-      size: "lg",
+      size: "md",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -502,8 +523,8 @@ export class MeetingComponent implements OnInit {
     });
   }
 
-  getFilteredData(value) {
-    let keyToSearch = (value.trim()).toLowerCase();
+  getFilteredData() {
+    let keyToSearch = (this.searchTerm.trim()).toLowerCase();
     console.log(keyToSearch)
     if (!keyToSearch.length) {
       this.meetingData.pastData = this.meetingDataForFilter.pastData;
@@ -532,18 +553,21 @@ export class MeetingComponent implements OnInit {
     this.meetingData.upcomingData = upcomingDataFiltered;
   }
 
-  setDefaultData() {
-    this.meetingData.pastData = this.meetingDataForFilter.pastData;
-    this.meetingData.upcomingData = this.meetingDataForFilter.upcomingData;
-  }
-
-  checkAvailability() {
+  checkAvailability(modalState) {
+    // if (modalState) {
+    //   this.schedule = {
+    //     time: this.currentDate,
+    //     endTime: this.currentDate,
+    //     user: { id: this.userService._details.id, name: this.userService._details.name }
+    //   }
+    // }
     let params = {
       requestId: null,
       roomId: null,
-      host: this.loggedInUser,
+      host: this.schedule.user.id,
       users: JSON.stringify([]),
-      date: this.common.dateFormatter1(new Date()),
+      date: this.common.dateFormatter1(this.schedule.time),
+      endDate: this.common.dateFormatter1(this.schedule.endTime)
     }
 
     this.common.loading++;
@@ -551,15 +575,27 @@ export class MeetingComponent implements OnInit {
       this.common.loading--;
       if (res['code'] === 1) {
         let schedules = [];
-        res['data'].map(events => {
-          schedules.push({ start: events.meeting_time, end: events.meeting_end_time })
-        })
+        if (res['data'])
+          res['data'].map(events => {
+            schedules.push({ start: events.meeting_time, end: events.meeting_end_time })
+            // ,title:'fetching'
+          })
         this.calendarOptions.events = schedules;
         this.calendarOptions.initialView = 'dayGridMonth';
-        console.log('cslender', this.calendarOptions)
-        document.getElementById('calender').style.display = 'block';
+        console.log('cslender', this.calendarOptions);
+        // if(modalState) document.getElementById('calender').style.display = 'block';
       }
     });
+  }
+
+  filterEnable(type) {
+    let state = document.getElementById(type).style.display;
+    console.log(state)
+    if (state == 'block') {
+      document.getElementById(type).style.display = 'none';
+    } else {
+      document.getElementById(type).style.display = 'block'
+    }
   }
 
   myCalender() {
