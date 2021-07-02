@@ -2003,7 +2003,7 @@ export class TaskComponent implements OnInit {
           action: this.collapseUnreadTaskUpdateStatus.bind(this, ticket, type, 1),
           txt: "", title: "Mark ack as meeting user",
         });
-        icons.push({
+        icons.push({ 
           class: "fa fa-times text-danger",
           action: this.ackTaskByCcUser.bind(this, ticket, type, -1),
           txt: "",
