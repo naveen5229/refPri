@@ -633,20 +633,46 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
 
     this.markers.map(marker => marker.setMap(null));
     this.markers = [];
-
+    let count1 = 1;
     let groups = _.groupBy(values, loc => { return loc.lat + '_' + loc.long });
     console.log('groups:', groups);
     let count = 1;
     Object.keys(groups).map((key, i) => {
       const group = groups[key];
       let length = group.length
-
-      let marker = new google.maps.Marker({
-        position: { lat: group[0].lat, lng: group[0].long },
-        label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
-        map: this.map
+      let marker = null;
+      
+      this.onsiteImages.forEach(img => {
+        if(group[0].lat == img._lat&& group[0].long ==img._long){
+          group[0]["markerCreated"]=true;
+          marker = new google.maps.Marker({
+            position: { lat: group[0].lat, lng: group[0].long },
+            // label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
+            icon:"http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + count1 + "|" + "FF0000" + "|000000",
+            map: this.map
+          });
+          count1++;
+        }
+        
+        
       });
-
+      if( !group[0]["markerCreated"])
+      {
+          marker = new google.maps.Marker({
+            position: { lat: group[0].lat, lng: group[0].long },
+            // label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
+            icon:{
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 6,
+              fillColor: i==0?"#00FF00":i==Object.keys(groups).length-1?"#FF0000":"#FFFF00" ,
+              fillOpacity: 0.8,
+              strokeWeight: 1
+            },
+            map: this.map
+          });
+      }
+      
+     
       count += length;
 
       google.maps.event.addListener(marker, "click", (event) => {
@@ -673,6 +699,25 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
       this.markers.push(marker);
     })
   }
+
+  changeColorUsingLatlng (item,evtype = 1){
+    this.markers.forEach(marker => {
+      if(item._lat==marker.position.lat() && item._long==marker.position.lng() ){
+        if(evtype==1){
+      console.log(marker.icon);
+        marker['oldIcon'] = marker.icon;
+        let label = marker.icon ? ""+marker.icon.split("|")[1] :"";
+        console.log("label=",label);
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        marker.setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+ label+"|00ff00|000000");
+      }else  if(evtype==2){
+        marker.setIcon( marker['oldIcon']);
+        marker.setAnimation(null);
+      }
+    }
+    });
+  }
+
 
   setMultiMarkerContent(points) {
     let div = document.createElement('div');
@@ -727,7 +772,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 
   searchLatLong(item){
-    this.showImages(item._lat, item._long);
+    // this.showImages(item._lat, item._long);
   }
 
   showImages(lat, lng) {
