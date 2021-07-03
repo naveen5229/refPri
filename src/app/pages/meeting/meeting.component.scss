@@ -68,8 +68,9 @@ full-calendar {
 }
 
 .labelPos {
+  padding: 0;
   position: relative;
-  right: 0;
+  right: -9px;
   top: -9px;
 }
 
@@ -107,4 +108,9 @@ full-calendar {
   color: black;
   font-size: 12px;
   display: none;
+}
+
+.imgicn{
+  height: 19px;
+  width: 25px;
 }
