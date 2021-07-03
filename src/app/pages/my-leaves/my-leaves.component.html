@@ -1,63 +1,81 @@
 <nb-card>
   <nb-card-header>
     <div class="row">
-      <div class="col-4" style="float: left;">
+      <div class="col-xl-4 col-lg-6">
         <div class="out-topnav">
           <div class="toptab">
             <div class="hiddenby">
-              <p [class]="selectedTab=='recent'?'active':'default'" (click)="selectedTab='recent';leaveTypes =4;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='recent'}"
+                (click)="selectedTab='recent';leaveTypes =4;getMyLeaves()">
                 <b>Recent</b>
               </p>
             </div>
             <div class="hiddenby">
-              <p [class]="selectedTab=='to'?'active':'default'" (click)="selectedTab='to';leaveTypes =2;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='to'}"
+                (click)="selectedTab='to';leaveTypes =2;getMyLeaves()">
                 <b>To Me</b>
               </p>
             </div>
             <div class="hiddenby">
-              <p [class]="selectedTab=='cc'?'active':'default'" (click)="selectedTab='cc';leaveTypes =3;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='cc'}"
+                (click)="selectedTab='cc';leaveTypes =3;getMyLeaves()">
                 <b>CC</b>
               </p>
             </div>
             <div class="hiddenby">
-              <p [class]="selectedTab=='by'?'active':'default'" (click)="selectedTab='by';leaveTypes =1;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='by'}"
+                (click)="selectedTab='by';leaveTypes =1;getMyLeaves()">
                 <b>By Me</b>
               </p>
             </div>
           </div>
-         
-         </div>
         </div>
-      <div class="col-8" style="float: left; text-align: right;" >
-          <div class="circle orange">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
-          </div>
-        
-          <div class="circle orange">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
-          </div>
+      </div>
+    </div>
 
-          <div class="circle blue">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
-          </div>
+    <div class="row">
+      <div class="col-xl-10 col-lg-9 my-leaves">
+        <div class="card leave-record-card" *ngFor="let item of  leaveRecord;index as i">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div class="progress" [ngClass]="'progress-cirlce-'+(i+1)"
+                  [attr.data-percentage]="item.percentage | number: '1.0-0'">
+                  <span class="progress-left">
+                    <span class="progress-bar"></span>
+                  </span>
+                  <span class="progress-right">
+                    <span class="progress-bar"></span>
+                  </span>
+                  <div class="progress-value">
+                    <div>
+                      {{item.percentage+'%'}}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-          <div class="circle blue">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
-          </div>
+              <div class="col-md-6 col-sm-12">
+                <div>
+                  <h5 class="progress-title"> Fixed Leave </h5>
+                  <div class="info-block">
+                    <div class="info-body">
+                      <p class="title"> Total </p>
+                      <p class="value"> {{item.detail[0].total}} </p>
+                    </div>
 
-          <div class="circle red">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided test </span>
-          </div>
+                    <div class="info-body">
+                      <p class="title"> Available </p>
+                      <p class="value">{{item.detail[0].Available}}</p>
+                    </div>
+                  </div>
+                </div>
 
-        <div class="circle red">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided test </span>
+
+              </div>
+            </div>
           </div>
+        </div>
       </div>
     </div>
   </nb-card-header>

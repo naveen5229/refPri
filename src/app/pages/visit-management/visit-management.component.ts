@@ -145,7 +145,6 @@ this.detailImageZoom = true;
 // let currentItem =  document.querySelectorAll(currentImageClass);
 // currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
 
-
 }
 
 

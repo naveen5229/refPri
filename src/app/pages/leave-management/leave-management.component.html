@@ -1,36 +1,37 @@
 <nb-card style="border: 0px;">
-   <nb-card-header>
-      <div class="row">
-          <div class="col-3">
-              <h5 class="heading-design">Leave Management</h5>
-          </div>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3">
+        <h5 class="heading-design">Leave Management</h5>
       </div>
+    </div>
   </nb-card-header>
   <nb-card-body style="padding: 1rem .2rem;">
     <div class="out-topnav" style="text-align: center;">
-    <div class="toptab" style="text-align: center;">
-      <div class="hiddenby">
-        <p [class]="selectedPage=='my-leaves'?'active':'default'" (click)="selectedPage='my-leaves'">
-          <b>My Leaves</b>
-        </p>
+      <div class="toptab" style="text-align: center;">
+        <div class="hiddenby">
+          <p class="nav-link" [ngClass]="{'active':selectedPage=='my-leaves'}" (click)="selectedPage='my-leaves'">
+            <b>My Leaves</b>
+          </p>
+        </div>
+        <div class="hiddenby">
+          <p class="nav-link" [ngClass]="{'active':selectedPage=='holidays'}" (click)="selectedPage='holidays'">
+            <b>Holidays</b>
+          </p>
+        </div>
+        <div class="hiddenby">
+          <p class="nav-link" [ngClass]="{'active':selectedPage=='applyLeave'}"
+            (click)="selectedPage='applyLeave';applyLeave(null)">
+            <b>Apply Leave</b>
+          </p>
+        </div>
       </div>
-      <div class="hiddenby">
-        <p [class]="selectedPage=='holidays'?'active':'default'" (click)="selectedPage='holidays'">
-          <b>Holidays</b>
-        </p>
-      </div>
-      <div class="hiddenby">
-        <p [class]="selectedPage=='applyLeave'?'active':'default'" (click)="selectedPage='applyLeave';applyLeave(null)">
-          <b>Apply Leave</b>
-        </p>
-      </div>
+
     </div>
-   
-   </div>
 
-  
 
-   <ngx-my-leaves *ngIf="selectedPage=='my-leaves'"></ngx-my-leaves>
-   <ngx-holidays *ngIf="selectedPage=='holidays'"></ngx-holidays>
+
+    <ngx-my-leaves *ngIf="selectedPage=='my-leaves'"></ngx-my-leaves>
+    <ngx-holidays *ngIf="selectedPage=='holidays'"></ngx-holidays>
   </nb-card-body>
 </nb-card>
