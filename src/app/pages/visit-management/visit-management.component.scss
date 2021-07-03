@@ -503,7 +503,7 @@ $color-primary:#72b3c7;
 
     img {
       width: 100%;
-      height: 90px;
+      height: 110px;
       object-fit: cover;
     }
   }
@@ -666,9 +666,9 @@ table {
     max-width:#{$galeryWidth};
   }
 
-  .col-3 .card-body {
-    overflow: visible !important;
-  }
+  // .col-3 .card-body {
+  //   overflow: visible !important;
+  // }
 
   .card-body {
     height: 550px;
@@ -802,3 +802,20 @@ th.action.sorting {
 //     display: none;
 //   }
 // }
+
+::ng-deep {
+  #route-maper-map+.row {
+    margin-top: 15px;
+
+    .col-1 {
+      padding-left: 15px !important;
+    }
+
+    .speed-control {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
