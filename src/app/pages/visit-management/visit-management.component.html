@@ -47,7 +47,7 @@
                   <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No. </label>
                     <input
                       class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
-                      type="checkbox" value="" id="flexCheckChecked" [disabled]="item._user_id==userService.loggedInUser.id"></div>
+                      type="checkbox" value="" id="flexCheckChecked" [disabled]="!(allUsers && allUsers.length>1)"></div>
                 </th>
                 <th>Name</th>
                 <th>Date</th>
@@ -64,7 +64,7 @@
                 <td>
                   <div class="form-check user-check-label d-flex"> <label for=""> {{i+1}} </label> <input
                       class="form-check-input" [(ngModel)]="item.checked" type="checkbox" value="" id="flexCheckChecked"
-                      (click)="selectUser(i)"></div>
+                      (click)="selectUser(i)" [disabled]="item._user_id==userService.loggedInUser.id"></div>
                 </td>
                 <td class="name">{{item.name}}</td>
                 <td>{{item.sqdate2}}</td>
