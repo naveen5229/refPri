@@ -152,7 +152,6 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   refreshPage(){
     this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
     this.getAllAdmin();
-    this.getReporters();
     this.showAdminWiseWagesList();
     this.isDetailView = false;
     this.allVisits = [];
@@ -197,24 +196,6 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         console.log(err);
       });
   };
-
-  reporterList = [];
-  getReporters() {
-    let params = '?userId='+this.userService.loggedInUser.id;
-    this.api.get("Admin/getAllReporter"+params).subscribe(
-      (res) => {
-        if (res["code"] > 0) {
-          this.reporterList = res["data"] || [];
-        } else {
-          this.common.showError(res["msg"]);
-        }
-      },
-      (err) => {
-        this.common.showError();
-        console.log("Error: ", err);
-      }
-    );
-  }
 
   selectedUser(event:any){
     if(!event.id){
