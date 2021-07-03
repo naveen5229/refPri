@@ -88,14 +88,14 @@
                 <td class="expance-action">
                   <div class="action-block">
                     <div class="d-flex">
-                      <button type="button" class="btn btn-success btn-sm"
+                      <button *ngIf="allUsers && allUsers.length" type="button" class="btn btn-success btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
                         <!-- Approve -->
                         <i class="fa fa-check" aria-hidden="true"></i>
                       </button>
 
-                      <button type="button" class="btn btn-danger btn-sm"
+                      <button *ngIf="allUsers && allUsers.length" type="button" class="btn btn-danger btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
                         <!-- Reject -->
@@ -115,7 +115,7 @@
           </table>
         </div>
       </div>
-      <div *ngIf="allVisits && allVisits.length" class="row">
+      <div *ngIf="allVisits && allVisits.length && allUsers && allUsers.length" class="row">
         <div class="col-12 mt-2 d-flex justify-content-end"> <button class="btn btn-primary btn-sm"
             id="verifiedExpenseBtn" (click)="saveVerifiedExpense()">Save Verified</button></div>
       </div>
@@ -212,12 +212,12 @@
 
                  <img class="img-fluid" [src]="item._url" [alt]="item.image">
                  <div class="actions">
-                   <button class="btn btn-primary" [disabled]="item._status==1"
+                   <button *ngIf="allUsers && allUsers.length" class="btn btn-primary" [disabled]="item._status==1"
                      (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
                      <!-- approve -->
                      <i class="fa fa-check" aria-hidden="true"></i>
                    </button>
-                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
+                   <button *ngIf="allUsers && allUsers.length" class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
                      (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
                      <!-- reject -->
                      <i class="fa fa-ban" aria-hidden="true"></i>
@@ -245,7 +245,7 @@
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title"> Expenses</h5>
-                  <button *ngIf="expenseList && expenseList.length" type="button" class="btn btn-success"
+                  <button *ngIf="allUsers && allUsers.length && expenseList && expenseList.length" type="button" class="btn btn-success"
                     (click)="updateOnsiteExpenseStatus()">Approve All</button>
                 </div>
                 <div class="card-body">
@@ -270,7 +270,7 @@
                         </td>
                         <td class="actions">
                           <div class="action-block">
-                            <button class="btn btn-danger btn-reject" [disabled]="!item.amount" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)">  {{item.amount ? 'reject':'rejected' }}
+                            <button *ngIf="allUsers && allUsers.length" class="btn btn-danger btn-reject" [disabled]="!item.amount" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)">  {{item.amount ? 'reject':'rejected' }}
                             </button>
                           </div>
                         </td>
