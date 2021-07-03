@@ -93,21 +93,18 @@
                         [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
                         Approve
-                        <!-- <i class="fa fa-check" aria-hidden="true"></i> -->
                       </button>
 
                       <button *ngIf="allUsers && allUsers.length" type="button" class="btn btn-danger btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
                         Reject
-                        <!-- <i class="fa fa-ban" aria-hidden="true"></i> -->
                       </button>
 
                       <button type="button" *ngIf="(item._onside_img && item._onside_img.length)"
                         class="btn btn-primary btn-sm" [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">
                         View
-                        <!-- <i class="fa fa-eye" aria-hidden="true"></i> -->
                       </button>
                     </div>
                   </div>
@@ -217,21 +214,17 @@
                  <div class="actions">
                    <button *ngIf="allUsers && allUsers.length" class="btn btn-primary" [disabled]="item._status==1"
                      (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
-                     <!-- approve -->
-                     <i class="fa fa-check" aria-hidden="true"></i>
+                     approve
                    </button>
                    <button *ngIf="allUsers && allUsers.length" class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
                      (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
-                     <!-- reject -->
-                     <i class="fa fa-ban" aria-hidden="true"></i>
+                     Reject
                     </button>
                    <button class="btn btn-info" (click)="openLink(i,'detail Image')">
-                     <!-- View  -->
-                     <i class="fa fa-eye" aria-hidden="true"></i>
+                     View 
                     </button>
                    <button class="btn btn-success" (click)="openMappingModal(item);">
-                     <!-- Maping -->
-                     <i class="fa fa-map-marker"></i>
+                     Maping
                    </button>
                  </div>
                </div>
@@ -294,11 +287,6 @@
                   <div class="expense-image-block">
                     <div class="expense-image" *ngFor="let item of expenseList;index as i"
                       [class.active]="expenseIndex == i" (click)="expenseIndex = i">
-                      <!-- <button *ngIf="item._url" class="btn image-view" data-toggle="modal" data-target="#image-model"
-                        [disabled]="!item._url" (click)="expenseImage = item._url;imageDialogue(itemImage,item._url)">
-                        <i class="fa fa-eye"></i>
-                      </button> -->
-
                       <button *ngIf="item._url" class="btn image-view" data-toggle="modal" data-target="#image-model"
                         [disabled]="!item._url" (click)="openLink('detail Image',item._url)">
                         <i class="fa fa-eye"></i>
@@ -321,41 +309,3 @@
     </nb-card-body>
   </nb-card>
 </ng-container>
-
-
-
-<ng-template #modifyList let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title"> update expanse amount</h4> <button type="button" class="close"
-      aria-label="Close" (click)="modal.dismiss('Cross click')"> <span aria-hidden="true">&times;</span> </button>
-  </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <label for="">Expense Amount </label>
-      <input type="text" class="form-control" [value]="listModifyvalue" [(ngModel)]="listModifyvalue">
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.close('Save click')">Update Amount</button>
-  </div>
-</ng-template>
-
-
-
-<ng-template #deleteexpenseItem let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title"> delete expanse </h4> <button type="button" class="close"
-      aria-label="Close" (click)="modal.dismiss('Cross click')"> <span aria-hidden="true">&times;</span> </button>
-  </div>
-  <div class="modal-body">
-    <h5 class="alert-message text-danger"> Are You sure you want to delete this expense </h5>
-    <div class="expanse-detail">
-      <p> Expense Type: <span class="font-weight-bold">{{expenseListitem.description}} </span> </p>
-      <p> Expesne Amount: <span class="font-weight-bold"> {{expenseListitem.amount}} </span> </p>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Delete Expense</button>
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')">close</button>
-  </div>
-</ng-template>

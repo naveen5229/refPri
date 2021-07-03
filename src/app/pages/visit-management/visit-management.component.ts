@@ -73,10 +73,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   multiMarkerInfoWindow: any;
   // end: map
 
-dateindex:number = -1;
-detaildate:any;
-listModifyvalue:any;
-expenseListitem:any;
+  detaildate:any;
 
   constructor(public modalService: NgbModal,
     public common:CommonService, 
@@ -292,37 +289,6 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     console.log('this.allVisits',this.allVisits);
   }
 
-  // updateOnsiteImageStatusByUser(status,item){
-  //   if (!item._user_id) {
-  //     this.common.showError('Please select User');
-  //     return false;
-  //   }
-  //   if (!item.sqdate) {
-  //     this.common.showError('Date is missing');
-  //     return false;
-  //   }
-  //   let param = {
-  //     "userId":item._user_id,
-  //     "status":status,
-  //     "startDate":this.common.dateFormatter(item.sqdate),
-  //     "endDate":this.common.dateFormatter(item.sqdate)
-  //   };
-  //   this.common.loading++;
-  //   this.api.post('Admin/updateOnsiteImageStatusByUser', param)
-  //     .subscribe(res => {
-  //       this.common.loading--;
-  //       if (res['code'] == 1) {
-  //         this.common.showToast(res['msg']);
-  //       } else {
-  //         this.common.showError(res['msg']);
-  //       }
-  //     }, (err) => {
-  //       this.common.loading--;
-  //       this.common.showError();
-  //       console.log(err);
-  //     });
-  // }
-
   saveVerifiedExpense() {
     console.log('adminWiseList', this.updatedExpenses);
     if(!(this.allVisits && this.allVisits.find(x=>x.checked))){
@@ -420,9 +386,6 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         this.common.loading--;
         if (res['code'] == 1) {
           this.onsiteImages = res['data'] || [];
-          // this.onsiteImages.map((item:any)=>{
-          //   item.status = 'default';
-          // });
           if(this.onsiteImages && this.onsiteImages.length){
             this.detailDataIndex = 0;
           }
@@ -536,50 +499,14 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     }
   }
 
-  // nextdate(){
-  //   let currentDate = this.common.getDate();
-  //   currentDate.setHours(0);
-  //   currentDate.setMinutes(0);
-  //   currentDate.setSeconds(0);
-  //   if(new Date(this.selectedExpense.sqdate)>= currentDate){
-  //     this.common.showError("Future date no allowed");return false;
-  //   }
-  //   this.dateindex++;
-  //   this.dateextractor(this.dateindex);
-  // }
+  openLink(index:number,type) {
+    let images:any = [];
+    this.onsiteImages.map(data => {
+      images.push({name:type,image:data._url});
+    });
 
-  // prevdate(){
-  //   this.dateindex--;
-  //   this.dateextractor(this.dateindex)
-  // }
-
-  // imageDialogue(selector:any,image:any){
-  //     if(this.imageList){
-  //     console.log("imageList:",this.imageList);
-  //     this.images = this.imageList['images'].map(image => image.image);
-  //     this.title = this.imageList['title'];
-  //     this.activeImage = this.images[this.index];
-  //   }
-
-
-  //   this.detailimageSrc = image;
-  //   this.modalService.open(selector, {ariaLabelledBy: 'Expense Detail Image', size: 'lg' }).result.then((result) => {
-  //     }, (reason) => {});
-  // }
-
-
- openLink(index:number,type) {
- let images:any = [];
- this.onsiteImages.map(data => {
-   images.push({name:type,image:data._url});
- });
-
- console.log('images: ', images);
     const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout' });
     activeModal.componentInstance.index = index;
-    console.log('activeModal.componentInstance: ', activeModal.componentInstance);
-    // activeModal.componentInstance.galleryType = true;
-    // console.log('gallery Type',activeModal.componentInstance.galleryType)
     activeModal.componentInstance.imageList = { images, title: 'Image',index:index };
   }
 
@@ -839,13 +766,6 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     this.markers = [];
     path.clear();
   }
-
-  // resetData() {
-  //   this.final = [];
-  //   this.admin.id = null;
-  //   this.startDate = new Date();
-  //   this.endDate = new Date();
-  // }
 
   viewRoute() {
     let startdate = new Date(this.selectedExpense.sqdate);
