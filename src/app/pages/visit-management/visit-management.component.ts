@@ -76,7 +76,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   detaildate:any;
 
   constructor(public modalService: NgbModal,
-    public common:CommonService, 
+    public common:CommonService,
     public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
@@ -138,13 +138,12 @@ currentImage[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neare
 
 detailImageHandler(index:number){
 this.detailDataIndex = index;
-this.detailImageZoom = true;
 this.searchLatLong(this.onsiteImages[index]);
 this.detailDataIndex = index;
 this.detailImageZoom = true;
-let currentImageClass =  `.location-list .list-item-${index}`;
-let currentItem =  document.querySelectorAll(currentImageClass);
-currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+// let currentImageClass =  `.location-list .list-item-${index}`;
+// let currentItem =  document.querySelectorAll(currentImageClass);
+// currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
 
 
 }
