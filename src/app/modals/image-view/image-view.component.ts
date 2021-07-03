@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../Service/Api/api.service';
 // import { CommonService } from '../../Service/common/common.service';
@@ -22,8 +22,8 @@ export class ImageViewComponent implements OnInit {
   fullscreen = true;
   isDownload = false;
   constructor(public api: ApiService,private activeModal: NgbActiveModal) {
-      
-     
+
+
     // let ref = this.common.params.refdata;
 
     // if (this.common.params.refdata && this.common.params.refdata.refid) {
@@ -40,7 +40,7 @@ export class ImageViewComponent implements OnInit {
     //   this.title = this.common.params.title;
     //   this.activeImage = this.images[this.index];
     // }
-    
+
 
   }
 

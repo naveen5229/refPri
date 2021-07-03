@@ -1,3 +1,4 @@
+import { ImageViewComponent } from './../../modals/image-view/image-view.component';
 import { TableService } from './../../Service/Table/table.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit,ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
@@ -359,6 +360,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 
   saveVerifiedExpenseSingle(status,item) {
+    console.log('status,: ', status,);
     console.log('adminWiseList', this.updatedExpenses);
     if (status==-99){
       item.total_amount = 0;
@@ -385,6 +387,10 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 
   viewExpenseDetail(item){
+  let menusidebar = document.getElementsByClassName('menu-sidebar');
+  menusidebar[0].classList.remove('expanded');
+  menusidebar[0].classList.add('compacted');
+
     this.selectedExpense = item;
     this.isDetailView = true;
     this.detaildate = this.datePipe.transform(new Date(this.selectedExpense.sqdate),'dd-MM-yyyy');
@@ -429,6 +435,8 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         console.log(err);
       });
   }
+
+
 
   getExpenseWrtUserDate() {
     this.expenseList = [];
@@ -545,11 +553,36 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   //   this.dateextractor(this.dateindex)
   // }
 
-  imageDialogue(selector:any,image:any){
-    this.detailimageSrc = image;
-    this.modalService.open(selector, {ariaLabelledBy: 'Expense Detail Image', size: 'lg' }).result.then((result) => {
-      }, (reason) => {});
+  // imageDialogue(selector:any,image:any){
+  //     if(this.imageList){
+  //     console.log("imageList:",this.imageList);
+  //     this.images = this.imageList['images'].map(image => image.image);
+  //     this.title = this.imageList['title'];
+  //     this.activeImage = this.images[this.index];
+  //   }
+
+
+  //   this.detailimageSrc = image;
+  //   this.modalService.open(selector, {ariaLabelledBy: 'Expense Detail Image', size: 'lg' }).result.then((result) => {
+  //     }, (reason) => {});
+  // }
+
+
+ openLink(index:number,type) {
+ let images:any = [];
+ this.onsiteImages.map(data => {
+   images.push({name:type,image:data._url});
+ });
+
+ console.log('images: ', images);
+    const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout' });
+    activeModal.componentInstance.index = index;
+    console.log('activeModal.componentInstance: ', activeModal.componentInstance);
+    // activeModal.componentInstance.galleryType = true;
+    // console.log('gallery Type',activeModal.componentInstance.galleryType)
+    activeModal.componentInstance.imageList = { images, title: 'Image',index:index };
   }
+
 
   backnavigate(){
     this.isDetailView = false;
@@ -833,6 +866,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     // this.common.handleModalSize('class', 'modal-lg', '1200');
 
   }
+
 
   switchLatLngHandler() {
     switch (this.switchButton) {
