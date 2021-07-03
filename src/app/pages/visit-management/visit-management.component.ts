@@ -1,8 +1,8 @@
+import { Component, OnInit,ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ImageViewComponent } from './../../modals/image-view/image-view.component';
 import { TableService } from './../../Service/Table/table.service';
 import { DatePipe } from '@angular/common';
-import { Component, OnInit,ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { from, Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
 import { RouteMapperComponent } from '../../modals/route-mapper/route-mapper.component';
@@ -161,6 +161,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     this.selectedExpense = null;
     this.onsiteImages = [];
     this.expenseList = [];
+    this.alluserselect = false;
   }
 
   getAllAdmin() {
@@ -173,7 +174,13 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         "department_name": null
       }];
     }else{
-      this.allUsers = [];
+      // this.allUsers = [];
+      this.allUsers = [{
+        "id": this.userService.loggedInUser.id,
+        "name": this.userService.loggedInUser.name,
+        "mobileno": null,
+        "department_name": null
+      }];
       apiName = "Admin/getAllReporter?userId="+this.userService.loggedInUser.id;
     }
     this.common.loading++;
@@ -297,10 +304,10 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     }
     let expenseList = [];
     if(this.allVisits && this.allVisits.length){
-      this.allVisits.forEach(element => {
+      this.allVisits.forEach((element,key) => {
         if(element.checked){
           expenseList.push(
-            JSON.parse(JSON.stringify(element))
+            JSON.parse(JSON.stringify(this.updatedExpenses[key]))
           );
         }
       });
@@ -516,17 +523,22 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 
   expenseInfo = [];
-  getExpenseInfo(item) {
+  openExpenseInfoModal(item) {
     this.expenseInfo = [];
-    if(item && item.length){
-      item.forEach(element => {
+    if(item && item._onside_img && item._onside_img.length){
+      item._onside_img.forEach(element => {
         if(element.exp_img && element.exp_img.length){
           element.exp_img.forEach(element2 => {
-            this.expenseInfo.push({"name":element2.expense_type,"amount":element2.amount});
+            this.expenseInfo.push(element2);
           });
         }
       });
     }
+    document.getElementById('expenseInfoModal').style.display = 'block';
+  }
+
+  closEexpenseInfoModal() {
+    document.getElementById('expenseInfoModal').style.display = 'none';
   }
 
 // start: map --------------------------------------------------

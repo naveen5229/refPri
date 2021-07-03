@@ -39,12 +39,7 @@
               </div>
             </div>
           </form>
-          <ng-template #expenseInfoPopContent>
-            <span><b>Expense Detail</b></span>
-            <ul *ngIf="expenseInfo && expenseInfo.length" class="replyPopContent">
-              <li *ngFor="let e of expenseInfo">{{e.name+' : '+e.amount}}</li>
-            </ul>
-          </ng-template>
+
           <table class="table table-primary ng-dataTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
             <thead>
               <tr>
@@ -52,7 +47,7 @@
                   <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No. </label>
                     <input
                       class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
-                      type="checkbox" value="" id="flexCheckChecked"></div>
+                      type="checkbox" value="" id="flexCheckChecked" [disabled]="item._user_id==userService.loggedInUser.id"></div>
                 </th>
                 <th>Name</th>
                 <th>Date</th>
@@ -73,7 +68,7 @@
                 </td>
                 <td class="name">{{item.name}}</td>
                 <td>{{item.sqdate2}}</td>
-                <td class="expanse"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense_actual}}</td>
+                <td class="expanse text-primary" (mouseover)="(item.total_expense_actual>0) ? openExpenseInfoModal(item) : null"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense_actual}}</td>
                 <td>{{item.total_distance}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
                 <td>{{(item._onside_img) ? item.status : 'N/A'}}</td>
@@ -89,20 +84,19 @@
                 <td class="expance-action">
                   <div class="action-block">
                     <div class="d-flex">
-                      <button *ngIf="allUsers && allUsers.length" type="button" class="btn btn-success btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
+                      <button type="button" class="btn btn-success btn-sm"
+                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id)"
+                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
                         Approve
                       </button>
 
-                      <button *ngIf="allUsers && allUsers.length" type="button" class="btn btn-danger btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
+                      <button type="button" class="btn btn-danger btn-sm"
+                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0)"
+                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
                         Reject
                       </button>
 
-                      <button type="button" *ngIf="(item._onside_img && item._onside_img.length)"
-                        class="btn btn-primary btn-sm" [disabled]="!(item._onside_img && item._onside_img.length)"
+                      <button type="button" class="btn btn-primary btn-sm" [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">
                         View
                       </button>
@@ -114,9 +108,9 @@
           </table>
         </div>
       </div>
-      <div *ngIf="allVisits && allVisits.length && allUsers && allUsers.length" class="row">
+      <div *ngIf="allVisits && allVisits.length && allUsers && allUsers.length>1" class="row">
         <div class="col-12 mt-2 d-flex justify-content-end"> <button class="btn btn-primary btn-sm"
-            id="verifiedExpenseBtn" (click)="saveVerifiedExpense()">Save Verified</button></div>
+            id="verifiedExpenseBtn" (click)="saveVerifiedExpense()">Approve Selected Visit</button></div>
       </div>
     </nb-card-body>
   </nb-card>
@@ -212,12 +206,12 @@
 
                  <img class="img-fluid" [src]="item._url" [alt]="item.image">
                  <div class="actions">
-                   <button *ngIf="allUsers && allUsers.length" class="btn btn-primary" [disabled]="item._status==1"
-                     (click)="(item._status==1) ? null : updateOnsiteImageStatus(1,item)">
+                   <button class="btn btn-primary" [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id"
+                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(1,item)">
                      approve
                    </button>
-                   <button *ngIf="allUsers && allUsers.length" class="btn btn-danger" [disabled]="[-99,-1].includes(item._status)"
-                     (click)="([-99,-1].includes(item._status)) ? null : updateOnsiteImageStatus(-99,item)">
+                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id"
+                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(-99,item)">
                      Reject
                     </button>
                    <button class="btn btn-info" (click)="openLink(i,'detail Image')">
@@ -241,7 +235,7 @@
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title"> Expenses</h5>
-                  <button *ngIf="allUsers && allUsers.length && expenseList && expenseList.length" type="button" class="btn btn-success"
+                  <button *ngIf="expenseList && expenseList.length && selectedExpense._user_id!=userService.loggedInUser.id" type="button" class="btn btn-success"
                     (click)="updateOnsiteExpenseStatus()">Approve All</button>
                 </div>
                 <div class="card-body">
@@ -266,7 +260,7 @@
                         </td>
                         <td class="actions">
                           <div class="action-block">
-                            <button *ngIf="allUsers && allUsers.length" class="btn btn-danger btn-reject" [disabled]="!item.amount" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)">  {{item.amount ? 'reject':'rejected' }}
+                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id" class="btn btn-danger btn-reject" [disabled]="!item.amount" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)">  {{item.amount ? 'reject':'rejected' }}
                             </button>
                           </div>
                         </td>
@@ -309,3 +303,39 @@
     </nb-card-body>
   </nb-card>
 </ng-container>
+
+<!--start: expenseInfoModal -->
+<div class="modal" id="expenseInfoModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Expense Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="closEexpenseInfoModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+              <table class="table table-border">
+                <thead>
+                  <tr>
+                    <th>Expense Type</th>
+                    <th>Amount</th>
+                    <th>Updated Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let e of expenseInfo">
+                    <td>{{e.expense_type}}</td>
+                    <td>{{e.amount}}</td>
+                    <td>{{e.updated_amount}}</td>
+                  </tr>
+                  <tr *ngIf="!(expenseInfo && expenseInfo.length)">
+                    <td colspan="3">No Record</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end: expenseInfoModal -->
