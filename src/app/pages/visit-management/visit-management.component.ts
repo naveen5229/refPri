@@ -716,7 +716,8 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
 
       let marker = new google.maps.Marker({
         position: { lat: group[0].lat, lng: group[0].long },
-        label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
+        // label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
+        icon:"http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + group[0].label + "|" + "FF0000" + "|000000",
         map: this.map
       });
 
@@ -800,7 +801,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
   }
 
   searchLatLong(item){
-    this.showImages(item._lat, item._long);
+    // this.showImages(item._lat, item._long);
   }
 
   showImages(lat, lng) {
@@ -839,6 +840,30 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
     this.markers = [];
     path.clear();
   }
+
+  changeColorUsingLatlng (item,evtype = 1){
+    this.markers.forEach(marker => {
+      console.log(marker.position,marker.position.lat(),marker.position.lng())
+      if(item._lat==marker.position.lat() &&marker.position.lng() ){
+        if(evtype==1){
+        marker['oldIcon'] = marker.icon;
+        let label = ""+marker.icon.split("|")[1];
+        console.log("label=",label);
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        marker.setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+ label+"|00ff00|000000");
+      }else  if(evtype==2){
+        marker.setIcon( marker['oldIcon']);
+        marker.setAnimation(null);
+      }
+    }
+    });
+  //   if(evtype==1){
+  //   this.markers[index]['oldIcon'] = this.markers[index].icon;
+  //   this.markers[index].setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+(index+1)+"|000000|0088ff");
+  // }else{
+  //   this.markers[index].setIcon( this.markers[index]['oldIcon']);
+  // }
+   }
 
   // resetData() {
   //   this.final = [];

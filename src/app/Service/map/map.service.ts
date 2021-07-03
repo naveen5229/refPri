@@ -715,4 +715,15 @@ export class MapService {
     
    
   }
+  changeColor (index,evtype = 1){
+    console.log("markers======",this.markers);
+    if(evtype==1){
+    this.markers[index]['oldIcon'] = this.markers[index].icon;
+    this.markers[index].setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+(index+1)+"|000000|0088ff");
+  }else{
+    this.markers[index].setIcon( this.markers[index]['oldIcon']);
+  }
+}
+
+
 }

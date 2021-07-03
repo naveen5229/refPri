@@ -210,8 +210,8 @@
                       'rejected':[-99,-1].includes(item._status),
                       'approved':item._status==1,
                       'active':detailDataIndex == i,
-                      'zoom':detailDataIndex == i && detailImageZoom }" (mouseover)="detailImageHandler(i)"
-                      (mouseout)="detailImageZoom = false">
+                      'zoom':detailDataIndex == i && detailImageZoom }" (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
+                      (mouseout)="detailImageZoom = false;changeColorUsingLatlng (item,2)">
 
                  <img class="img-fluid" [src]="item._url" [alt]="item.image">
                  <div class="actions">
