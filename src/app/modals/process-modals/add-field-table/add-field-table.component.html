@@ -19,7 +19,7 @@
                     <label>Column Name</label>
                     <input type="text" name="name" id="name" [(ngModel)]="childArray.param" class="form-control"
                         *ngIf="childArray.type !='entity'" maxlength="25">
-                    <select *ngIf="childArray.type =='entity'" class="form-control" [(ngModel)]="childArray.param">
+                    <select *ngIf="childArray.type =='entity'" class="form-control" [(ngModel)]="childArray._param_name">
                         <option *ngFor="let t of entityTypeList" [value]="t._id">{{t.type}}</option>
                     </select>
                 </div>

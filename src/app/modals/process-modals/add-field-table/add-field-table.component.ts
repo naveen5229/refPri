@@ -23,6 +23,7 @@ export class AddFieldTableComponent implements OnInit {
   childArray = {
     index: null,
     param: '',
+    _param_name: '',
     type: '',
     order: null,
     is_required: false,
@@ -99,13 +100,17 @@ export class AddFieldTableComponent implements OnInit {
 
   Add() {
     console.log("Add:", this.childArray);
+    this.entityTypeList.map(ele => {
+      if (ele._id == this.childArray._param_name) this.childArray.param = ele.type;
+    })
     if (!this.childArray.param || !this.childArray.type) {
       this.common.showError('Field Name or Type is missing');
       return false;
     }
     let temp = JSON.parse(JSON.stringify(this.childArray));
+    console.log(" ~ temp", temp)
     let error_multi_notbind = false;
-    if (this.isFixedValue && this.fixValues && this.fixValues.length>0) {
+    if (this.isFixedValue && this.fixValues && this.fixValues.length > 0) {
       let notbindList = this.fixValues.filter(x => x.isNonBind);
       if (notbindList && notbindList.length > 1) {
         error_multi_notbind = true;
@@ -224,6 +229,7 @@ export class AddFieldTableComponent implements OnInit {
     this.childArray = {
       index: index,
       param: data.param,
+      _param_name: data._param_name,
       type: data.type,
       order: data.order,
       is_required: data.is_required,
@@ -249,6 +255,7 @@ export class AddFieldTableComponent implements OnInit {
     this.childArray = {
       index: null,
       param: '',
+      _param_name: '',
       type: '',
       order: null,
       is_required: false,
