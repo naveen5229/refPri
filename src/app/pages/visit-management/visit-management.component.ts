@@ -870,6 +870,7 @@ openMappingModal(itemImage){
   const activeModal = this.modalService.open(LocationEntityComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
   activeModal.result.then(data => {
     if (data.response) {
+      this.getOnSiteImagesByUser();
     }
 });
 }
