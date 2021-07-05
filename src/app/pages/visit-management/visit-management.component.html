@@ -217,7 +217,7 @@
                    <button class="btn btn-info" (click)="openLink(i,'detail Image')">
                      View 
                     </button>
-                   <button class="btn btn-success" (click)="openMappingModal(item);">
+                   <button class="btn btn-success" [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'" [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
                      Maping
                    </button>
                  </div>
@@ -260,7 +260,7 @@
                         </td>
                         <td class="actions">
                           <div class="action-block">
-                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id" class="btn btn-danger btn-reject" [disabled]="!item.amount" (click)="item.amount_new = 0;item.status = false;updateOnsiteExpenseStatus(item)">  {{item.amount ? 'reject':'rejected' }}
+                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id" class="btn btn-danger btn-reject" [disabled]="item.amount_new===0" (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">  {{item.amount_new===0 ? 'Rejected':'Reject' }}
                             </button>
                           </div>
                         </td>
@@ -286,11 +286,11 @@
                         <i class="fa fa-eye"></i>
                       </button>
 
-                      <div class="expance-rejected" *ngIf="item._url != null">
+                      <div class="expance-rejected" *ngIf="item.amount_new===0">
                         <span> Rejected </span>
                       </div>
                       <img [src]="item._url" [alt]="item.image"
-                        onerror="this.src='../../../assets/images/expense/no-image-avaiable.jpg';">
+                        onerror="this.src='./assets/images/expense/no-image-avaiable.jpg';">
                     </div>
                   </div>
                 </div>
