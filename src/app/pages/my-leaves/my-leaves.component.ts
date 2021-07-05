@@ -85,8 +85,9 @@ export class MyLeavesComponent implements OnInit {
   }
 
   getMyLeaves() {
+    let startDate = this.leaveTypes==4?new Date():this.startDate;
   let params = "leaveType="+ this.leaveTypes+
-  "&startDate="+this.common.dateFormatter1(this.startDate)+
+  "&startDate="+ this.common.dateFormatter1(startDate)+
   "&endDate="+this.common.dateFormatter1(this.endDate);
    console.log("params====",params);
     this.resetTable();

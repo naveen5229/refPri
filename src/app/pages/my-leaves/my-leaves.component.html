@@ -5,7 +5,8 @@
         <div class="out-topnav">
           <div class="toptab">
             <div class="hiddenby">
-              <p [class]="selectedTab=='recent'?'active':'default'" (click)="selectedTab='recent';leaveTypes =4;getMyLeaves()">
+              <p [class]="selectedTab=='recent'?'active':'default'"
+                (click)="selectedTab='recent';leaveTypes =4;getMyLeaves()">
                 <b>Recent</b>
               </p>
             </div>
@@ -25,39 +26,52 @@
               </p>
             </div>
           </div>
-         
-         </div>
+
         </div>
-      <div class="col-8" style="float: left; text-align: right;" >
-          <div class="circle orange">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
+        <div class="row" *ngIf="selectedTab!='recent'">
+          <div class="col-5 pl-0">
+            <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
+            </uj-date-time-picker>
           </div>
-        
-          <div class="circle orange">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
+          <div class="col-5 pl-0">
+            <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false">
+            </uj-date-time-picker>
           </div>
+          <div class="col-2 pl-0">
+            <button class="btn btn-primary" (click)="getMyLeaves()" >Submit</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-8" style="float: left; text-align: right;">
+        <div class="circle orange">
+          <span class="numberText">56</span><br>
+          <span class="stringText">Provided</span>
+        </div>
 
-          <div class="circle blue">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
-          </div>
+        <div class="circle orange">
+          <span class="numberText">56</span><br>
+          <span class="stringText">Provided</span>
+        </div>
 
-          <div class="circle blue">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided</span>
-          </div>
+        <div class="circle blue">
+          <span class="numberText">56</span><br>
+          <span class="stringText">Provided</span>
+        </div>
 
-          <div class="circle red">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided test </span>
-          </div>
+        <div class="circle blue">
+          <span class="numberText">56</span><br>
+          <span class="stringText">Provided</span>
+        </div>
 
         <div class="circle red">
-            <span class="numberText">56</span><br>
-            <span class="stringText">Provided test </span>
-          </div>
+          <span class="numberText">56</span><br>
+          <span class="stringText">Provided test </span>
+        </div>
+
+        <div class="circle red">
+          <span class="numberText">56</span><br>
+          <span class="stringText">Provided test </span>
+        </div>
       </div>
     </div>
   </nb-card-header>
