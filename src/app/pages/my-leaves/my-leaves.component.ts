@@ -1,5 +1,8 @@
-import { from } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { filter } from 'rxjs/operators';
+import { DataTableDirective } from 'angular-datatables';
+import { TableService } from './../../Service/Table/table.service';
+import { from, Subject } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../@core/mock/users.service';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
@@ -22,6 +25,12 @@ export class MyLeavesComponent implements OnInit {
  endDate = new Date();
  myAllLeaves:any = [];
  allLeaves:any = [];
+ // dtOptions: DataTables.Settings = {};
+  dtOptions:any = {};
+
+ @ViewChild(DataTableDirective, { static: false })
+  dtElement: any;
+  dttrigger: any = new Subject();
 
   table = {
     data: {
@@ -38,6 +47,7 @@ export class MyLeavesComponent implements OnInit {
   constructor(public common: CommonService,
     public user: UserService,
     public api: ApiService,
+    public tableservice:TableService,
     public modalService: NgbModal) {
     this.common.refresh = this.refresh.bind(this);
     this.getAllAdmin();
@@ -46,11 +56,21 @@ export class MyLeavesComponent implements OnInit {
   }
   ngOnInit() {
   this.renderCircleProgress();
+    this.dtOptions =  this.tableservice.options(10,7,'USER EXPENSES');
    }
 
   refresh() {
     this.getMyLeaves();
   }
+
+ renderTable() {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+      this.dttrigger.next();
+    });
+  }
+
+
 
 
 renderCircleProgress(){
@@ -122,7 +142,9 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
           this.allmyLeaves = res['data'] || [];
           console.log(' this.allmyLeaves: ',  this.allmyLeaves);
           this.myLeaves = res['data'] || [];
-          this.myLeaves.length ? this.setTable() : this.resetTable();
+          this.renderTable();
+          // console.log('this.myLeaves: ', this.myLeaves);
+          // this.myLeaves.length ? this.setTable() : this.resetTable();
         }
       }, err => {
         this.common.loading--;
@@ -350,4 +372,18 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
     }
   }
 
+ngOnDestroy(): void {
+this.dttrigger.unsubscribe();
+}
+
+ngAfterViewInit(): void {
+this.dttrigger.next();
+this.getMyLeaves();
+}
+
+deleteLeave(leave){
+console.log('leave',leave)
+this.myLeaves = this.myLeaves.filter(ele => ele._tktid != leave._tktid);
+this.common.showToast('Leave Request Test Delete Success')
+}
 }
