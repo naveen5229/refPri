@@ -20,20 +20,26 @@
           (click)="getMeetingsDefault();windowType='meetings'" [ngClass]="windowType=='meetings'?'active':''">My
           Calender</button>
       </div>
+
       <div class="col-6 text-right" *ngIf="windowType=='meetings'">
-        <input type="search" [(ngModel)]="searchTerm" (search)="getFilteredData()"
-          placeholder="Search By Meeting Title/Date/Host Name" size="45">
-        <button class="search" (click)="getFilteredData()">
-          <i class="fas fa-search p-1"></i></button>
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-8" style="display: flex;">
+            <input type="search" class="form-control" [(ngModel)]="searchTerm" (search)="getFilteredData()"
+              placeholder="Search By Meeting Title/Date/Host Name">
+            <button class="search" style="border-radius: 0px 6px 6px 0px;" (click)="getFilteredData()">
+              <i class="fas fa-search p-1"></i></button>
+          </div>
+        </div>
       </div>
 
       <div class="col-6" *ngIf="windowType=='userSchedule'">
         <div class="row">
-          <div class="col-1"></div>
-          <div class="col-3">
+          <div class="col-2"></div>
+          <div class="col-2 my-auto pl-0 pr-0" style="font-size: 14px;">
             Select User :
           </div>
-          <div class="col-8">
+          <div class="col-8 pl-0">
             <auto-suggestion [data]="adminList" display='name' (onSelected)="schedule.user = $event;checkAvailability()"
               seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
               [preSelected]="(schedule.user && schedule.user.id>0) ? {name: schedule.user.name} : {name:''}">
@@ -79,27 +85,30 @@
                 <div class="row subFont">{{meeting.host}}</div>
               </div>
               <div class="col-3">
-                <span id="chatIcon" title="Chat" *ngIf="loggedInUser != meeting._aduserid"
+                <span id="chatIcon" title="Chat"
+                  *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments text-success pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
-                  <i class="fas fa-comments new-comment pl-2" *ngIf="meeting._unreadcount > 0"></i>
-                  <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
+                  <i class="fas fa-comments text-warning pl-2 font-size"
+                    *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments new-comment pl-2 font-size" *ngIf="meeting._unreadcount > 0"
+                    title="{{meeting._unreadcount}}"><span>{{meeting._unreadcount}}</span></i>
+                  <i class="fas fa-comments no-comment pl-2 font-size" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
                 <span id="actionsForPast"
                   *ngIf="[-1, 5, 2].includes(meeting._status) && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && meeting._tktid > 0 && meeting._meeting_type != 2">
                   <!-- <i class="fa fa-retweet" (click)="changeTicketStatusWithConfirm(meeting, 0, 0)"></i> -->
-                  <!-- <i class="fa fa-caret-square-o-down pl-2" *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
-                    (click)="editMeeting(meeting, 0, false)"></i> -->
-                  <img src="../../../assets//meetingActions/followup.png" class="imgicn pl-2"
+                  <i class="fa fa-caret-square-o-down pl-2 font-size" *ngIf="meeting._status == 5"
+                    title="Create FolloUp Meeting" (click)="editMeeting(meeting, 0, false)"></i>
+                  <!-- <img src="../../../assets//meetingActions/followup.png" class="imgicn pl-2"
                     *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
-                    (click)="editMeeting(meeting, 0, false)">
+                    (click)="editMeeting(meeting, 0, false)"> -->
                 </span>
                 <span id="statusAction"
                   *ngIf="meeting._status != 5 && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id)">
-                  <!-- <i class="fa fa-thumbs-up text-success pl-2" title="Complete"
-                    (click)="getUserActivityUpdate(meeting, 0, 5)"></i> -->
-                  <img src="../../../assets//meetingActions/completed.png" class="imgicn pl-2" title="Complete"
-                    (click)="getUserActivityUpdate(meeting, 0, 5)">
+                  <i class="fa fa-thumbs-up text-success pl-2 font-size" title="Complete"
+                    (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
+                  <!-- <img src="../../../assets//meetingActions/completed.png" class="imgicn pl-2" title="Complete"
+                    (click)="getUserActivityUpdate(meeting, 0, 5)"> -->
                 </span>
               </div>
               <div class="col-1 labelPos" *ngIf="meeting._meeting_type === 2">
@@ -142,24 +151,35 @@
                 <div class="row subFont">{{meeting.host}}</div>
               </div>
               <div class="col-3">
-                <span id="chatIcon" title="Chat" *ngIf="loggedInUser != meeting._aduserid"
+                <span id="chatIcon" title="Chat"
+                  *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments text-success pl-2" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
-                  <i class="fas fa-comments new-comment pl-2" *ngIf="meeting._unreadcount > 0"></i>
-                  <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
+                  <i class="fas fa-comments text-warning pl-2 font-size"
+                    *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+
+                  <div style="display:inline; position: relative;"><i class="fas fa-comments text-success new-comment pl-2 font-size"
+                      *ngIf="meeting._unreadcount > 0"><span>{{meeting._unreadcount}}</span></i>
+                  </div>
+
+                  <i class="fas fa-comments no-comment pl-2 font-size" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
                 <span id="editMeeting" *ngIf="meeting._host == loggedInUser && meeting._aduserid == loggedInUser">
-                  <!-- <i class="fas fa-edit pl-2" title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
-                    (click)="editMeeting(meeting, 2, true)"></i> -->
-                  <img src="../../../assets//meetingActions//edit.png" class="imgicn pl-2"
+                  <i class="fas fa-edit text-info pl-2 font-size"
                     title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
-                    (click)="editMeeting(meeting, 2, true)">
+                    (click)="editMeeting(meeting, 2, true)"></i>
+                  <!-- <img src="../../../assets//meetingActions//edit.png" class="imgicn pl-2"
+                    title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
+                    (click)="editMeeting(meeting, 2, true)"> -->
                 </span>
                 <span id="acceptReject" *ngIf="meeting._tktype == 110 && meeting._mp_status == 0">
-                  <img src="../../../assets//meetingActions/acknowledge.png" class="imgicn pl-2" title="Ack"
+                  <i class="fa fa-check-square text-secondary pl-2 font-size" title="Ack"
+                    (click)="ackTaskByCcUser(meeting, null, 1)"></i>
+                  <i class="fas fa-window-close text-danger pl-2 font-size" title="Reject"
+                    (click)="ackTaskByCcUser(meeting, null, -1)"></i>
+                  <!-- <img src="../../../assets//meetingActions/acknowledge.png" class="imgicn pl-2" title="Ack"
                     (click)="ackTaskByCcUser(meeting, null, 1)">
                   <img src="../../../assets/meetingActions/rejected.png" class="imgicn pl-2" title="Reject"
-                    (click)="ackTaskByCcUser(meeting, null, -1)">
+                    (click)="ackTaskByCcUser(meeting, null, -1)"> -->
                 </span>
               </div>
               <div class="col-1 labelPos">
@@ -173,7 +193,7 @@
       </div>
     </div>
 
-    <div class="row p-3" *ngIf="windowType=='userSchedule'">
+    <div class="row p-3 mt-3" style="border-top: 1px solid #d1d9e8;" *ngIf="windowType=='userSchedule'">
       <div class="col-12">
         <!-- <div class="row"> -->
         <!-- <div class="col-4">

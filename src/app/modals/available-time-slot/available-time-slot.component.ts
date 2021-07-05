@@ -113,7 +113,7 @@ export class AvailableTimeSlotComponent implements OnInit {
   setMinTime() {
     let min = parseInt(moment(this.today).format("mm"));
     console.log(min);
-    if (min > 1 && min <= 15) {
+    if (min >= 0 && min <= 15) {
       return parseFloat(moment(this.today).format("HH") + '.25');
     } else if (min > 15 && min <= 30) {
       return parseFloat(moment(this.today).format("HH") + '.50');

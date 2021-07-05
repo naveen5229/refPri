@@ -582,13 +582,13 @@ export class MeetingComponent implements OnInit {
     }
 
     this.common.loading++;
-    this.api.post('Admin/getMeetingSchedule', params).subscribe(res => {
+    this.api.post('Admin/getCalendarSchedule', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] === 1) {
         let schedules = [];
         if (res['data'])
           res['data'].map(events => {
-            schedules.push({ start: events.meeting_time, end: events.meeting_end_time })
+            schedules.push({ start: events.meeting_time, end: events.meeting_end_time, title: events.title })
             // ,title:'fetching'
           })
         this.calendarOptions.events = schedules;
