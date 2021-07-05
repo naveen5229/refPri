@@ -85,13 +85,17 @@
                 <div class="row subFont">{{meeting.host}}</div>
               </div>
               <div class="col-3">
-                <span id="chatIcon" title="Chat"
+                <span id="chatIcon" title="Chat" class="cursor-pointer"
                   *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
                   <i class="fas fa-comments text-warning pl-2 font-size"
                     *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
-                  <i class="fas fa-comments new-comment pl-2 font-size" *ngIf="meeting._unreadcount > 0"
-                    title="{{meeting._unreadcount}}"><span>{{meeting._unreadcount}}</span></i>
+
+                  <div style="display:inline; position: relative;"><i
+                      class="fas fa-comments text-success new-comment pl-2 font-size"
+                      *ngIf="meeting._unreadcount > 0"><span>{{meeting._unreadcount}}</span></i>
+                  </div>
+
                   <i class="fas fa-comments no-comment pl-2 font-size" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
                 <span id="actionsForPast"
@@ -151,13 +155,14 @@
                 <div class="row subFont">{{meeting.host}}</div>
               </div>
               <div class="col-3">
-                <span id="chatIcon" title="Chat"
+                <span id="chatIcon" title="Chat" class="cursor-pointer"
                   *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
                   <i class="fas fa-comments text-warning pl-2 font-size"
                     *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
 
-                  <div style="display:inline; position: relative;"><i class="fas fa-comments text-success new-comment pl-2 font-size"
+                  <div style="display:inline; position: relative;"><i
+                      class="fas fa-comments text-success new-comment pl-2 font-size"
                       *ngIf="meeting._unreadcount > 0"><span>{{meeting._unreadcount}}</span></i>
                   </div>
 

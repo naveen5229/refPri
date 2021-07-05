@@ -234,8 +234,8 @@ export class MeetingComponent implements OnInit {
         let indexpastData = 0;
         let indexUpcomingData = 0;
         for (let i = 0; i < this.meetingData.pastData.length; i++) {
-          this.meetingData.pastData[i]["task_subject"] = this.meetingData.pastData["subject"];
-          this.meetingData.pastData[i]["_task_desc"] = this.meetingData.pastData["_desc"];
+          this.meetingData.pastData[i]["task_subject"] = this.meetingData.pastData[i]["subject"];
+          this.meetingData.pastData[i]["_task_desc"] = this.meetingData.pastData[i]["_desc"];
           this.meetingData.pastData[i]["colorCode"] = this.colorCodes.background[indexpastData];
           if (indexpastData == 3) { indexpastData = 0 } else { indexpastData = indexpastData + 1 };
         }
@@ -384,6 +384,7 @@ export class MeetingComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
+    console.log('ticket',ticket)
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -415,6 +416,7 @@ export class MeetingComponent implements OnInit {
       if (ticket._cc_user_id && !ticket._cc_status) {
         this.ackTaskByCcUser(ticket, type);
       }
+      this.getMeetingListByType([0, 1]);
     });
   }
 

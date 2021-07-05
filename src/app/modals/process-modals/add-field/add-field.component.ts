@@ -403,6 +403,7 @@ export class AddFieldComponent implements OnInit {
       data._param_child.map((ele, index) => {
         this.childArray.push({ param: '', type: '', order: null, is_required: false, _param_info: null, _param_id: null, _used_in: null });
         this.childArray[index]['param'] = ele.param_name;
+        this.childArray[index]['_param_name'] = ele._param_name;
         this.childArray[index]['type'] = ele.param_type;
         this.childArray[index]['order'] = ele.param_order;
         this.childArray[index]['is_required'] = ele.is_required;
@@ -447,6 +448,7 @@ export class AddFieldComponent implements OnInit {
   }
 
   openAddFieldTable() {
+    console.log('childarray:',this.childArray)
     this.common.params = { data: (this.childArray && this.childArray.length > 0) ? this.childArray : null, formType: this.formType };
     const activeModal = this.modalService.open(AddFieldTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
