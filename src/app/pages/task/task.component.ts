@@ -230,7 +230,7 @@ export class TaskComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   clickout(event) {
     console.log('event triggered:', event);
-    if ((event.target.innerText >= 1 && event.target.innerText <= 10000) || event.target.innerText == 'Cancel' || event.target.innerText == 'Set'|| ['feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].includes(event.target.innerText.toLowerCase())) return;
+    if ((event.target.innerText >= 1 && event.target.innerText <= 10000) || event.target.innerText == 'Cancel' || event.target.innerText == 'Set' || ['feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'].includes(event.target.innerText.toLowerCase())) return;
     (this.todoVisi) ? this.todoVisi = false : null;
     (this.fabAction) ? this.fabAction = false : null;
   }
@@ -2003,7 +2003,7 @@ export class TaskComponent implements OnInit {
           action: this.collapseUnreadTaskUpdateStatus.bind(this, ticket, type, 1),
           txt: "", title: "Mark ack as meeting user",
         });
-        icons.push({ 
+        icons.push({
           class: "fa fa-times text-danger",
           action: this.ackTaskByCcUser.bind(this, ticket, type, -1),
           txt: "",
@@ -2244,7 +2244,7 @@ export class TaskComponent implements OnInit {
             // else {
             //   this.getTaskByType(type);
             // }
-            if(type!=-8){
+            if (type != -8) {
               this.getTaskByType(type);
             }
             if (this.activeTab == 'meeting') {
@@ -2684,6 +2684,7 @@ export class TaskComponent implements OnInit {
             // } else {
             //   this.getTaskByType(type)
             // };
+            if (status == -1) this.getTaskByType(type);
           } else {
             this.common.showError(res["data"]);
           }
@@ -2702,46 +2703,48 @@ export class TaskComponent implements OnInit {
   collapseUnreadTaskUpdateStatus(ticket, type, status) {
     console.log(ticket)
     let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
-    if (type === -8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)) {
-      if (activeRowData._isremind == 1 || activeRowData._is_star_mark == 1) {
-      } else {
-        this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
-      }
+    if (activeRowData._isremind == 1 || activeRowData._is_star_mark == 1) {
+    } else {
+      this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+    }
 
-      console.log(this.unreadTaskForMeList)
-      console.log(activeRowData)
-      if (ticket._cc_user_id && !ticket._cc_status) {
-        activeRowData._cc_status = 1;
-        console.log('Mark Ack as CC Task : 1');
-        this.ackTaskByCcUser(ticket, type);
-      }
-      if (ticket._tktype == 110 && !ticket._mp_status) {
-        activeRowData._mp_status = (status) ? status : 1;
-        console.log('Mark ack as meeting user : 2');
-        this.ackTaskByCcUser(ticket, type);
-      }
-      if (ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) {
-        activeRowData._status = 2;
-        console.log('Mark Ack : 3');
-        this.updateTicketStatus(ticket, type, 2);
-      }
-      if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) {
-        activeRowData._assigned_user_status = 1;
-        console.log('Mark Ack as Assigner : 4');
-        this.ackTaskByAssignerBehalf(ticket, type);
-      }
-      if ([101, 102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
-        activeRowData._pu_status = 1;
-        console.log('Mark Ack as Project Task : 5');
-        this.ackTaskByProjectUser(ticket, type)
-      }
-      if (ticket._status == 5 && ticket._assigned_user_id == this.userService.loggedInUser.id) {
-        activeRowData._status = 1;
-        console.log('Mark Ack as Completed Task : 6');
-        this.ackTaskByAssigner(ticket,type);
-      }
-      console.log('edited:', activeRowData)
-      this.setTableUnreadTaskForMe(type);
+    console.log(this.unreadTaskForMeList)
+    console.log(activeRowData)
+    if (ticket._cc_user_id && !ticket._cc_status) {
+      activeRowData._cc_status = 1;
+      console.log('Mark Ack as CC Task : 1');
+      this.ackTaskByCcUser(ticket, type);
+    }
+    if (ticket._tktype == 110 && !ticket._mp_status) {
+      activeRowData._mp_status = (status) ? status : 1;
+      console.log('Mark ack as meeting user : 2');
+      this.ackTaskByCcUser(ticket, type);
+    }
+    if (ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) {
+      activeRowData._status = 2;
+      console.log('Mark Ack : 3');
+      this.updateTicketStatus(ticket, type, 2);
+    }
+    if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) {
+      activeRowData._assigned_user_status = 1;
+      console.log('Mark Ack as Assigner : 4');
+      this.ackTaskByAssignerBehalf(ticket, type);
+    }
+    if ([101, 102].includes(ticket._tktype) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
+      activeRowData._pu_status = 1;
+      console.log('Mark Ack as Project Task : 5');
+      this.ackTaskByProjectUser(ticket, type)
+    }
+    if (ticket._status == 5 && ticket._assigned_user_id == this.userService.loggedInUser.id) {
+      activeRowData._status = 1;
+      console.log('Mark Ack as Completed Task : 6');
+      this.ackTaskByAssigner(ticket, type);
+    }
+    console.log('edited:', activeRowData)
+
+    this.setTableUnreadTaskForMe(type);
+    if (type === -8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)) {
+      // this.setTableUnreadTaskForMe(type);
     } else {
       this.getTaskByType(type)
     };

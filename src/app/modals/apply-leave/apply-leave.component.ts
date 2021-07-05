@@ -583,7 +583,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       host: this.meetingForm.host.id,
       users: JSON.stringify(CC),
       date: this.common.dateFormatter1(this.meetingForm.fromTime),
-      endDate: this.common.dateFormatter1(this.meetingForm.fromTime)
+      // endDate: this.common.dateFormatter1(this.meetingForm.fromTime)
     }
 
 
@@ -808,12 +808,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   availableSlot(preBookedScheduler) {
-    console.log('today', this.common.getDate().getDate(), 'selected date', this.meetingForm.fromTime.getDate())
+    console.log('today', this.common.dateFormatter1(this.meetingForm.fromTime),this.common.dateFormatter1(this.common.getDate()))
     this.common.params = {
       title: 'User Availability',
       preBookedScheduler: preBookedScheduler,
       selectedTime: this.selectedTime,
-      timeRestrict: (this.meetingForm.fromTime.getDate() <= this.common.getDate().getDate()) ? ((this.meetingForm.fromTime.getMonth() == this.common.getDate().getMonth()) ? true : false) : false,
+      timeRestrict: (this.common.dateFormatter1(this.meetingForm.fromTime) <= this.common.dateFormatter1(this.common.getDate())) ? true : false,
     }
     const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {

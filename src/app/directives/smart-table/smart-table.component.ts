@@ -46,6 +46,7 @@ export class SmartTableComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
+    console.log('columns',this.columns,this.headings)
     console.log('Changes: ', changes);
     this.data = changes.data.currentValue;
     if (changes.settings)
