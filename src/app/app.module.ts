@@ -134,6 +134,10 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MessagingService } from './Service/messaging.service';
+import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
+import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
+
+
 
 const PAGE_COMPONENTS = [
   WorkLogComponent,
@@ -225,6 +229,9 @@ const PAGE_COMPONENTS = [
   AddExpectedHourComponent,
   FunctionalReportingMappingComponent,
   AvailableTimeSlotComponent,
+  LocationEntityComponent,
+
+ 
 ];
 
 @NgModule({
@@ -244,7 +251,7 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
-    // SmartDataTableComponent,
+     // SmartDataTableComponent,
 
 
     // SendmessageComponent,
@@ -283,7 +290,7 @@ const PAGE_COMPONENTS = [
     AngularFireAuthModule,
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [MessagingService,AsyncPipe,
     { provide: APP_BASE_HREF, useValue: '/' }

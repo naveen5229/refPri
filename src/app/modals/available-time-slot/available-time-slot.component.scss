@@ -86,8 +86,8 @@
   .custom-slider.range2:not(:first-child) {
     position: absolute;
     top: 0px;
-    right: 15px;
-    width: 500.66px;
+    right: 0;
+    width: 100%;
   }
   .custom-slider.range2:not(:first-child)
     .ngx-slider
@@ -127,7 +127,7 @@
   overflow: auto;
   top: 50px;
   z-index: 32;
-  width: 500.66px;
+  width: 100%;
   box-shadow: inset 2px 1px 3px #b5b2b2;
   .custom-slider.range2{
     width: 98%;

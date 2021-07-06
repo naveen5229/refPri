@@ -694,4 +694,36 @@ export class MapService {
     });
   }
 
+  afterDragLat = null;
+  afterDragLng= null;
+  createDraggableMarker(lat = 26.9124336, lng = 75.78727090000007) {
+    console.log("lat=",lat,"long",lng)
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: new google.maps.LatLng(lat, lng),
+      draggable: true,
+     
+    });
+    this.setBounds(new google.maps.LatLng(lat, lng));
+    this.zoomMap(16);
+    google.maps.event.addListener(marker, 'dragend', evt => { 
+      this.afterDragLat=evt.latLng.lat();
+      this.afterDragLng=evt.latLng.lng();
+      console.log( evt.latLng,this.afterDragLat, this.afterDragLng);
+    });
+    
+   
+  }
+  changeColor (index,evtype = 1){
+    console.log("markers======",this.markers);
+    if(evtype==1){
+    this.markers[index]['oldIcon'] = this.markers[index].icon;
+    this.markers[index].setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+(index+1)+"|000000|0088ff");
+  }else{
+    this.markers[index].setIcon( this.markers[index]['oldIcon']);
+  }
+}
+
+
 }

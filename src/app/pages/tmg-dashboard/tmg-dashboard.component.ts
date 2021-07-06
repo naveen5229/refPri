@@ -37,6 +37,7 @@ export class TmgDashboardComponent  implements OnInit {
       return;
     } else {
       this.selectedDashboard = this.seletionsArray[index + 1];
+      this.getDepartments();
     }
   }
   
@@ -48,16 +49,21 @@ export class TmgDashboardComponent  implements OnInit {
       return;
     } else {
       this.selectedDashboard = this.seletionsArray[index - 1];
+      this.getDepartments();
     }
   }
 
   getDepartments() {
     this.common.loading++;
-    this.api.get("Admin/getDepartmentList").subscribe(res => {
+    let url = "Admin/getDepartmentList";
+    if(this.selectedDashboard == 'tmgProcess'){
+      url = "Processes/getProcessList";
+    }
+    this.api.get(url).subscribe(res => {
       this.common.loading--;
       if (res['code'] >= 0) {
       this.departments = res['data'] || [];
-      this.departments.splice(0,0,{id:null,name:'All'});
+      this.departments.splice(0,0,{_id:null,name:'All'});
       } else{
         this.common.showError(res['msg']);
       };
@@ -68,4 +74,9 @@ export class TmgDashboardComponent  implements OnInit {
     });
   }
 
+  selectDepartment(department){
+    console.log("department",department);
+    this.selectedDept.id = department._id;
+    this.selectedDept.name = department.name;
+  }
 }

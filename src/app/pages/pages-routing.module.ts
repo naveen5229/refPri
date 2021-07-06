@@ -76,6 +76,8 @@ import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
 import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
+import { LeaveManagementComponent } from './leave-management/leave-management.component';
+import { MeetingComponent } from './meeting/meeting.component';
 
 const routes: Routes = [{
   path: '',
@@ -447,6 +449,11 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
+      path: 'leave-management',
+      component: LeaveManagementComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
     path:'Expense-type',
     component:ExpenseTypeComponent,
     canActivate: [AuthGuard, RouteGuard]
@@ -461,6 +468,11 @@ const routes: Routes = [{
       component:LeaveTypeManagementComponent,
       canActivate: [AuthGuard, RouteGuard]
       },
+      {
+  path:'meeting',
+  component:MeetingComponent,
+  canActivate: [AuthGuard, RouteGuard]
+  }
   ],
 }];
 

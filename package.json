@@ -1,6 +1,6 @@
 {
   "name": "ngx-admin",
-  "version": "0.0.163",
+  "version": "0.0.177",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -30,7 +30,6 @@
     "build-prod-no-patch": "node ./replace.build.js && ng build — prod — base-href=./ && node ./versioning.build.js"
   },
   "dependencies": {
-    "@agm/core": "^1.0.0-beta.5",
     "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "^8.0.0",
     "@angular/cdk": "^8.0.0",
@@ -45,6 +44,11 @@
     "@angular/platform-browser-dynamic": "^8.0.0",
     "@angular/router": "^8.0.0",
     "@asymmetrik/ngx-leaflet": "3.0.1",
+    "@fullcalendar/angular": "^5.8.0",
+    "@fullcalendar/daygrid": "^5.8.0",
+    "@fullcalendar/interaction": "^5.8.0",
+    "@fullcalendar/list": "^5.8.0",
+    "@fullcalendar/timegrid": "^5.8.0",
     "@nebular/auth": "4.1.2",
     "@nebular/eva-icons": "4.1.2",
     "@nebular/security": "4.1.2",
@@ -64,7 +68,7 @@
     "angular2-chartjs": "^0.5.1",
     "angular2-toaster": "^7.0.0",
     "angular5-csv": "^0.2.11",
-    "bootstrap": "^4.3.1",
+    "bootstrap": "^4.6.0",
     "bourbon": "^7.0.0",
     "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^0.7.0",
@@ -97,6 +101,7 @@
     "ng2-ckeditor": "^1.2.2",
     "ng2-completer": "2.0.8",
     "ng2-smart-table": "1.3.5",
+    "ngx-bootstrap": "^6.2.0",
     "ngx-echarts": "^4.0.1",
     "ngx-qrcode2": "0.0.9",
     "normalize.css": "6.0.0",

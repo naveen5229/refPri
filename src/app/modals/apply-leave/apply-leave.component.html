@@ -46,7 +46,7 @@
     </div>
 
     <div class="row mt-2" *ngIf="leaveArray.type!=1">
-        <div class="col-4">
+        <div class="col-2">
             <label>Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
@@ -77,10 +77,10 @@
     </div>
 
     <div class="row mt-2">
-        <div class="col-4">
+        <div class="col-2">
             <label>To:<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-9">
             <auto-suggestion [data]="userList" display='name' (onSelected)="leaveArray.To = $event" seperator="-"
                 placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
                 [preSelected]="(leaveArray.To && leaveArray.To.id>0) ? {name: leaveArray.To.name} : {name:''}">
@@ -89,21 +89,21 @@
     </div>
 
     <div class="row mt-2">
-        <div class="col-4">
+        <div class="col-2">
             <label>CC:</label>
         </div>
-        <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users"
+        <div class="col-9">
+            <auto-suggestion class="cc-users" [data]="userList" display="name" seperator="-" placeholder="Select CC Users"
                 (onSelected)="leaveArray.cc = $event" inputId="ccUsers" name="ccUsers" [preSelected]="leaveArray.cc"
                 isMultiSelect="true"></auto-suggestion>
         </div>
     </div>
 
     <div class="row mt-2 ">
-        <div class="col-4">
+        <div class="col-2">
             <label>Reason:<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-9">
             <textarea row="2" cols="15" maxlength="500" placeholder="Enter Task" id="normaltask" name="nomaltask"
                 class="form-control" [(ngModel)]="leaveArray.reason"></textarea>
         </div>
@@ -111,6 +111,8 @@
 
     <div class="row mt-1">
         <div class="col-12 text-right">
+            <button class="btn btn-danger text-capitalize" id="button" (click)="closeModal(false)"
+                style="margin-right: 20px;">Cancel</button>
             <button class="btn btn-primary text-capitalize" id="button" (click)="requestLeave()">{{btn}}</button>
         </div>
     </div>
@@ -179,11 +181,28 @@
 <!-- end:broadcast -->
 <!-- start:meeting -->
 <div class="modal-body" *ngIf="formType==2" (keydown)="eventPropogate($event)">
+    <div class="row mb-2" *ngIf="!isEdit">
+        <div class="offset-3 col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" value="8" [(ngModel)]="formType"
+                    (click)="meetingForm.type = 2;title='Add ToDo'">
+                ToDo
+            </label>
+        </div>
+        <div class="col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" value="2" [(ngModel)]="formType"
+                    (click)="meetingForm.type = 0;meetingForm.buzz=true;title='Add Meeting'">
+                Meeting
+            </label>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-4">
             <label>Subject<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <input id="meetingSub" name="meetingSub" placeholder="Enter Subject" class="form-control" maxlength="50"
                 [(ngModel)]="meetingForm.subject">
         </div>
@@ -193,7 +212,7 @@
         <div class="col-4">
             <label>Details</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <textarea id="meetingDesc" name="meetingDesc" row="2" cols="15" placeholder="Enter Details"
                 class="form-control" [(ngModel)]="meetingForm.desc"></textarea>
         </div>
@@ -203,7 +222,7 @@
         <div class="col-4">
             <label>Host<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User"
                 (onSelected)="meetingForm.host = $event" inputId="meetinghost" name="meetinghost"
                 [preSelected]="meetingForm.host"></auto-suggestion>
@@ -214,7 +233,7 @@
         <div class="col-4">
             <label>Users<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <auto-suggestion [data]="userWithGroup" display="name" seperator="-" placeholder="Select Users"
                 (onSelected)="meetingForm.cc = $event" inputId="meetingFormUsers" name="meetingFormUsers"
                 [preSelected]="meetingForm.cc" isMultiSelect="true" [bGConditions]="bGConditions"></auto-suggestion>
@@ -225,7 +244,7 @@
         <div class="col-4">
             <label>Meeting Type</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <select class="form-control" [(ngModel)]="meetingForm.type"
                 (change)="meetingForm.type == 0 ? meetingForm.link = null : meetingForm.roomId = null">
                 <option value=0>Offline</option>
@@ -238,7 +257,7 @@
         <div class="col-4">
             <label>Select Room</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <select class="form-control" [(ngModel)]="meetingForm.roomId">
                 <option value="">Seelct Room</option>
                 <option *ngFor="let room of meetingRoomList" [value]="room._id">{{room.room_name+'-'+room.office_name}}
@@ -251,33 +270,20 @@
         <div class="col-4">
             <label>Link</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <input class="form-control" id="meetingLink" name="meetingLink" placeholder="Enter Link"
                 [(ngModel)]="meetingForm.link" />
         </div>
     </div>
-
-    <div class="row mt-2">
-        <div class="col-4">
-            <label>Meeting Duration<span class="text-danger">*</span></label>
-        </div>
-        <div class="col-6">
-            <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
-                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration"
-                [isTimeDisabled]="true">
-            </uj-date-time-picker>
-        </div>
-    </div>
-
     <div class="row mt-2">
         <div class="col-4">
             <label>Meeting Time
                 <!-- <span class="text-danger">*</span> -->
             </label>
         </div>
-        <div class="col-3 pr-0">
-            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false" (onChanged)="meetingForm.fromTime=$event"
-                [dateTimeValue]="meetingForm.fromTime">
+        <div class="col-4 pr-0">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
             </uj-date-time-picker>
         </div>
         <div class="col-1 pr-0 pl-0">
@@ -285,18 +291,31 @@
                 title="Reset Time"
                 (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } }"></i>
         </div>
-        <div class="col-2 pl-0">
+        <div class="col-3 pl-0">
             <input type="text" placeholder="Search Slot" class="form-control"
                 [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
                 readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
         </div>
     </div>
 
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Meeting Duration<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-8">
+            <uj-date-time-picker [isStart]="false" [isDate]="false" [isTime]="true"
+                (onChanged)="meetingForm.duration=$event" [dateTimeValue]="meetingForm.duration"
+                [isTimeDisabled]="true">
+            </uj-date-time-picker>
+        </div>
+    </div>
+
+
     <div class="row mt-2 ">
         <div class="col-4">
-            <label>Buzz</label>
+            <label>Reminder</label>
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <input type="checkbox" [checked]="meetingForm.buzz" (change)="meetingForm.buzz = !meetingForm.buzz" />
         </div>
     </div>
@@ -310,6 +329,113 @@
     <!-- <button (click)="availableSlot()">modal</button> -->
 </div>
 <!-- end:meeting -->
+
+
+<!-- start:Todo -->
+<div class="modal-body" *ngIf="formType==8" (keydown)="eventPropogate($event)">
+    <div class="row mb-2" *ngIf="!isEdit">
+        <div class="offset-3 col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" value="8" [(ngModel)]="formType"
+                    (click)="meetingForm.type = 2;title='Add ToDo'">
+                ToDo
+            </label>
+        </div>
+        <div class="col-3">
+            <label class="form-check-inline">
+                <input class="form-check-input" type="radio" name="mode" value="2" [(ngModel)]="formType"
+                    (click)="meetingForm.type = 0;meetingForm.buzz=true;title='Add Meeting'">
+                Meeting
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <label>Subject<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-8">
+            <input id="meetingSub" name="meetingSub" placeholder="Enter Subject" class="form-control" maxlength="50"
+                [(ngModel)]="meetingForm.subject">
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Details</label>
+        </div>
+        <div class="col-8">
+            <textarea id="meetingDesc" name="meetingDesc" row="2" cols="15" placeholder="Enter Details"
+                class="form-control" [(ngModel)]="meetingForm.desc"></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Host<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-8">
+            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User"
+                (onSelected)="todoUserChangeEvent($event)" inputId="meetinghost" name="meetinghost"
+                [preSelected]="meetingForm.host"></auto-suggestion>
+        </div>
+    </div>
+
+    <div class="row mt-2 ">
+        <div class="col-4">
+            <label>Select Room</label>
+        </div>
+        <div class="col-8">
+            <select class="form-control" [(ngModel)]="meetingForm.roomId">
+                <option value="">Seelct Room</option>
+                <option *ngFor="let room of meetingRoomList" [value]="room._id">{{room.room_name+'-'+room.office_name}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <label>Meeting Time
+                <!-- <span class="text-danger">*</span> -->
+            </label>
+        </div>
+        <div class="col-4 pr-0">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="false"
+                (onChanged)="meetingForm.fromTime=$event" [dateTimeValue]="meetingForm.fromTime">
+            </uj-date-time-picker>
+        </div>
+        <div class="col-1 pr-0 pl-0">
+            <i class="fas fa-undo cursor-pointer" [ngClass]="{'disableSelection' : !meetingForm.fromTime}"
+                title="Reset Time"
+                (click)="meetingForm.fromTime=null;meetingForm.duration=null;selectedTime = { from: { hh: null, mm: null }, to: { hh: null, mm: null } }"></i>
+        </div>
+        <div class="col-3 pl-0">
+            <input type="text" placeholder="Search Slot" class="form-control"
+                [value]="(selectedTime.from.hh && selectedTime.from.mm) ? selectedTime.from.hh + ':' + selectedTime.from.mm + '-' +selectedTime.to.hh + ':' + selectedTime.to.mm : null"
+                readonly /><i class="fas fa-clock clockPos" (click)="checkAvailability()"></i>
+        </div>
+    </div>
+
+    <div class="row mt-2 " *ngIf="isBuzzandButton">
+        <div class="col-4">
+            <label>Reminder</label>
+        </div>
+        <div class="col-8">
+            <input type="checkbox" [checked]="meetingForm.buzz" (change)="meetingForm.buzz = !meetingForm.buzz" />
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm mr-2" id="addMeetingBtn" (click)="addMeeting()">{{btn}}</button>
+            <button class="btn btn-primary btn-sm" id="saveWithChat" *ngIf="isBuzzandButton"
+                (click)="addMeeting(1)">Save With Chat</button>
+        </div>
+    </div>
+    <!-- <button (click)="availableSlot()">modal</button> -->
+</div>
+<!-- end:Todo -->
 
 
 

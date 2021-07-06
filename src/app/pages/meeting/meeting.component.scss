@@ -1,0 +1,137 @@
+// nb-card-body {
+//   background: #d3d3d3;
+// }
+
+full-calendar {
+  width: 100%;
+  height: 553px;
+}
+
+// ::ng-deep .fc .fc-button-primary{
+//     border-color: #2c3e50 !important;
+//     background-color: #ffffff !important;
+//     color: #000000 !important;
+// }
+
+.active {
+  background-color: #ea7736ba !important;
+  border-color: #ea7736 !important;
+}
+
+.meetingContainer {
+  padding: 1rem;
+}
+
+.meetingHeaders {
+  background: #36f;
+  color: #ffffff;
+  padding: 4px;
+  box-shadow: 2px 0px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.meetingData {
+  height: 520px;
+  background: #ffffff;
+  overflow: auto;
+  border-style: groove;
+  border: navajowhite;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+.cardStyle {
+  //   margin: 3px;
+  margin: 5px -10px 5px -10px;
+  border-radius: 5px;
+  //   border-style: groove;
+  padding: 7px;
+  //   border-bottom: 1px solid gray;
+  //   border-left: 5px solid black;
+}
+
+.textBind {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.buttonJelly {
+  background: #3498db;
+  width: fit-content;
+  //   border-radius: 3px;
+
+  p {
+    font-family: "Roboto";
+    text-align: center;
+    color: #fff;
+    margin: 3px;
+  }
+}
+
+.labelPos {
+  padding: 0;
+  position: relative;
+  right: -9px;
+  top: -9px;
+}
+
+.headFont {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.subFont {
+  font-size: 10px;
+}
+
+.search {
+  border-style: none;
+  color: #ffffff;
+  font-size: 12px;
+//   border-radius: 3px;
+  padding: 5px;
+  background-color: #3366ff;
+}
+
+// .calenderStyle {
+//   height: 600px;
+// }
+// ::ng-deep .fc-view-harness-active{
+//     height: 400px !important;
+// }
+.filterPop {
+  position: absolute;
+  right: 18px;
+  top: 16px;
+  z-index: 99999;
+  background: white;
+  padding: 7px;
+  color: black;
+  font-size: 12px;
+  display: none;
+}
+
+.imgicn{
+  height: 19px;
+  width: 25px;
+}
+
+.font-size{
+  font-size: 22px;
+}
+
+.new-comment span{
+  min-width: 13px;
+  min-height: 13px;
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+  top: -1px;
+  left: 10px;
+  padding: 1px;
+  font-size: 10px;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 11px;
+  background: transparent;
+}

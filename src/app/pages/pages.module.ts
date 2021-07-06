@@ -1,7 +1,9 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -68,9 +70,25 @@ import { TmgTaskComponent } from './tmg-task/tmg-task.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
+import { LeaveManagementComponent } from './leave-management/leave-management.component';
+import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
 import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
+import { MeetingComponent } from './meeting/meeting.component';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import { NgxEchartsModule } from 'ngx-echarts';
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  interactionPlugin
+]);
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -85,7 +103,10 @@ import { LeaveTypeManagementComponent } from './leave-type-management/leave-type
     TicketModule,
     DragDropModule,
     ChartModule,
-    DataTablesModule
+    DataTablesModule,
+    FullCalendarModule,
+    NgxChartsModule,
+    NgbModule
   ],
   declarations: [
     PagesComponent,
@@ -144,9 +165,12 @@ import { LeaveTypeManagementComponent } from './leave-type-management/leave-type
     SettingsComponent,
     CallLogsComponent,
     ContinuityReportComponent,
+    LeaveManagementComponent,
+    MyLeavesComponent,
     ExpenseTypeComponent,
     VisitManagementComponent,
-    LeaveTypeManagementComponent
+    LeaveTypeManagementComponent,
+    MeetingComponent
   ],
 })
 export class PagesModule {

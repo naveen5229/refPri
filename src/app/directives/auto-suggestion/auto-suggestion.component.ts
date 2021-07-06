@@ -39,6 +39,7 @@ export class AutoSuggestionComponent implements OnInit {
 
   @Input() url: string;
   @Input() display: any;
+  @Input() isNewLabelAdd:boolean =false;
   @Input() className: string;
   @Input() placeholder: string;
   @Input() preSelected: any;
@@ -139,12 +140,11 @@ export class AutoSuggestionComponent implements OnInit {
       return;
     }
     if (this.searchText.length < this.apiHitLimit) return;
-
     clearTimeout(this.suggestionApiHitTimer);
-    this.suggestionApiHitTimer = setTimeout(this.getSuggestionsFromApi.bind(this), 400);
+    this.suggestionApiHitTimer = setTimeout(this.getSuggestionsFromApi.bind(this,this.isNewLabelAdd), 400);
   }
 
-  getSuggestionsFromApi() {
+  getSuggestionsFromApi(isNewLabelAdd) {
     let params = '?';
     if (this.url.includes('?')) {
       params = '&'
@@ -154,7 +154,10 @@ export class AutoSuggestionComponent implements OnInit {
     this.api[this.apiMethod](this.url + params, this.apiBase)
       .subscribe(res => {
         if(res['code']===0){ this.common.showError(res['msg']); return false;}
-        this.suggestions = res['data'];
+        this.suggestions = res['data']||[];
+        if(isNewLabelAdd){
+        this.suggestions.push({[this.display]:this.searchText + " (Add New Value) "});
+        }
         if (this.isNoDataFoundEmit && !this.suggestions.length) this.noDataFound.emit({
           search: this.searchText
         });

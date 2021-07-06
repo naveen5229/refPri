@@ -1,0 +1,97 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">Location {{entityTypeName}} Mapping</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <div class="row">
+    <div class="col-7 map-container">
+      <div id="map1" style="width: 100%; height:68vh">
+      </div>
+    </div>
+    <div class="col-5">
+      <!-- <div class="row" style="text-align: center;">
+        <div class="form-check col-6" style="text-align: center;">
+          <input class="form-check-input" type="radio" selected value="entity" [(ngModel)]="type" id="type" name="type"
+            (select)="getEntityType();">
+          <label class="form-check-label" for="flexCheckDefault">
+            Entity
+          </label>
+        </div>
+
+        <div class="form-check col-6" style="text-align: center;">
+          <input class="form-check-input" type="radio" value="job" [(ngModel)]="type" id="type" name="type"
+            (select)="getEntityType();">
+          <label class="form-check-label" for="flexCheckDefault">
+            Job
+          </label>
+        </div>
+
+
+      </div> -->
+      <div class="row">
+        <div class="col-5">
+          <label>
+            Select Entity Type
+          </label>
+        </div>
+        <div class="col-7">
+          <auto-suggestion [data]="entityTypes" display="type" seperator="-" placeholder="Select Entity Type"
+            (onSelected)="entityType = $event._id;entityTypeName = $event.type" inputId="entityTypeId" name="entityTypeId" autocomplete="off" [preSelected]="{type:entityTypeName}">
+          </auto-suggestion>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-5">
+          <label>
+            Enter {{entityTypeName}}
+          </label>
+        </div>
+        <div class="col-7">
+
+          <!-- <auto-suggestion (onSelected)="selectFoUser($event)" url="Suggestion/getFoUsersList" display="name"
+            placeholder="Fo" [preSelected]="null"></auto-suggestion> -->
+          <auto-suggestion [url]="'Entities/getMatchedEntityList?entityTypeId='+entityType" display="name" seperator="-" placeholder="Select Entity"
+            (onSelected)="setEntity($event)" inputId="entityId" name="entityId" autocomplete="off" isNewLabelAdd = "true">
+          </auto-suggestion>
+          
+        </div>
+        <!-- <div class="col-2">
+          <button class="btn btn-primary" (click)="saveEntity()" style="margin-left: -15px;">Save</button>
+        </div> -->
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-5">
+          <label>
+            Latitude
+          </label>
+        </div>
+        <div class="col-7">
+            <label> {{mapService.afterDragLat}}</label><br>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-5">
+          <label>
+            Longitude
+          </label>
+        </div>
+        <div class="col-7">
+            <label> {{mapService.afterDragLng}}</label>
+        </div>
+      </div>
+
+      <div class="row mt-2" style="text-align: right; ">
+        <div class="col-12" style="text-align: right; ">
+          <button class="btn btn-primary" (click)="mapEntity()" style="margin-left: -15px;">Map {{entityTypeName}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
