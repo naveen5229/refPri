@@ -44,13 +44,14 @@
             <thead>
               <tr>
                 <th>
-                  <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No. </label>
-                    <input
-                      class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
-                      type="checkbox" value="" id="flexCheckChecked" [disabled]="!(allUsers && allUsers.length>1)"></div>
+                  <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No.
+                    </label>
+                    <input class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
+                      type="checkbox" value="" id="flexCheckChecked" [disabled]="!(allUsers && allUsers.length>1)">
+                  </div>
                 </th>
                 <th>Name</th>
-                <th>Date</th>
+                <th class="date">Date</th>
                 <th>User Expense</th>
                 <th>System Travel</th>
                 <th>Total Image</th>
@@ -67,8 +68,15 @@
                       (click)="selectUser(i)" [disabled]="item._user_id==userService.loggedInUser.id"></div>
                 </td>
                 <td class="name">{{item.name}}</td>
-                <td>{{item.sqdate2}}</td>
-                <td class="expanse text-primary" (mouseover)="(item.total_expense_actual>0) ? openExpenseInfoModal(item) : null"><i class="fas fa-rupee-sign rupee"></i> {{item.total_expense_actual}}</td>
+                <td class="date">{{item.sqdate2}}</td>
+                <td class="expanse">
+                  <p class="mb-0 text-primary"
+                    (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
+                    [ngbTooltip]="tipContent"   container="body"
+                    [disableTooltip]="item.total_expense_actual <= 0"> <i class="fas fa-rupee-sign rupee"></i>
+                    {{item.total_expense_actual}} </p>
+
+                </td>
                 <td>{{item.total_distance}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
                 <td [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">{{(item._onside_img) ? item.status : 'N/A'}}</td>
@@ -96,7 +104,8 @@
                         Reject
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-sm" [disabled]="!(item._onside_img && item._onside_img.length)"
+                      <button type="button" class="btn btn-primary btn-sm"
+                        [disabled]="!(item._onside_img && item._onside_img.length)"
                         (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">
                         View
                       </button>
@@ -201,7 +210,8 @@
                       'rejected':[-99,-1].includes(item._status),
                       'approved':item._status==1,
                       'active':detailDataIndex == i,
-                      'zoom':detailDataIndex == i && detailImageZoom }" (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
+                      'zoom':detailDataIndex == i && detailImageZoom }"
+                      (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
                       (mouseout)="detailImageZoom = false;changeColorUsingLatlng (item,2)">
 
                  <img class="img-fluid" [src]="item._url" [alt]="item.image">
@@ -235,8 +245,9 @@
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title"> Expenses</h5>
-                  <button *ngIf="expenseList && expenseList.length && selectedExpense._user_id!=userService.loggedInUser.id" type="button" class="btn btn-success"
-                    (click)="updateOnsiteExpenseStatus()">Approve All</button>
+                  <button
+                    *ngIf="expenseList && expenseList.length && selectedExpense._user_id!=userService.loggedInUser.id"
+                    type="button" class="btn btn-success" (click)="updateOnsiteExpenseStatus()">Approve All</button>
                 </div>
                 <div class="card-body">
                   <table class="table table-primary expense-table">
@@ -305,37 +316,30 @@
 </ng-container>
 
 <!--start: expenseInfoModal -->
-<div class="modal" id="expenseInfoModal">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Expense Detail</h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="closEexpenseInfoModal()">&times;</button>
-            </div>
 
-            <div class="modal-body p-0">
-              <table class="table table-primary expense-table m-0">
-                <thead>
-                  <tr>
-                    <th>Expense Type</th>
-                    <th>Amount</th>
-                    <th>Updated Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let e of expenseInfo">
-                    <td>{{e.expense_type}}</td>
-                    <td>{{e.amount}}</td>
-                    <td>{{e.updated_amount}}</td>
-                  </tr>
-                  <tr *ngIf="!(expenseInfo && expenseInfo.length)">
-                    <td colspan="3">No Record</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+<ng-template #tipContent>
+  <div class="modal-body tooltip-modal">
+    <table class="table table-primary expense-table">
+      <thead>
+        <tr>
+          <th>Expense Type</th>
+          <th>Amount</th>
+          <th>Updated Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of expenseInfo">
+          <td>{{e.expense_type}}</td>
+          <td>{{e.amount}}</td>
+          <td>{{e.updated_amount}}</td>
+        </tr>
+        <tr *ngIf="!(expenseInfo && expenseInfo.length)">
+          <td colspan="3">No Record</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
 
-        </div>
-    </div>
-</div>
+
 <!--end: expenseInfoModal -->

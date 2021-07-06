@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { UserService } from '../../Service/user/user.service';
 import { ErrorReportComponent } from '../../modals/error-report/error-report.component';
+import { TableService } from '../../Service/Table/table.service';
 
 @Component({
   selector: 'ngx-holidays',
@@ -12,6 +15,11 @@ import { ErrorReportComponent } from '../../modals/error-report/error-report.com
 })
 export class HolidaysComponent implements OnInit {
   holidayList: any;
+   @ViewChild(DataTableDirective, {static: false})
+  dtElement: any;
+  // dtOptions: DataTables.Settings = {};
+  dtOptions =  this.tableservice.options(10,7,'USER EXPENSES');
+  dttrigger: Subject<any> = new Subject<any>();
   table = {
     data: {
       headings: {},
@@ -24,17 +32,40 @@ export class HolidaysComponent implements OnInit {
   holidayCsv = null;
   allHolidayList = [];
 
-  constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal) {
+  constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal,public tableservice:TableService) {
     this.common.refresh = this.refresh.bind(this);
     this.getHolidayCalendar();
   }
-  ngOnInit() { }
+  ngOnInit() {
+console.log('this.table.data',this.table.data)
+
+   }
 
   refresh() {
     this.getHolidayCalendar();
   }
 
-  getHolidayCalendar() {
+  // getHolidayCalendar() {
+  //   this.resetTable();
+  //   this.common.loading++;
+  //   this.api.get('Admin/getHolidayCalendar')
+  //     .subscribe(res => {
+  //       this.common.loading--;
+  //       if(res['code']===0) { this.common.showError(res['msg']); return false;};
+  //       if (res['data'] && res['data']) {
+  //         this.allHolidayList = res['data'] || [];
+  //         this.holidayList = res['data'] || [];
+  //         this.holidayList.length ? this.setTable() : this.resetTable();
+  //       }
+  //     }, err => {
+  //       this.common.loading--;
+  //       this.common.showError();
+  //       console.log(err);
+  //     });
+  // }
+
+
+getHolidayCalendar() {
     this.resetTable();
     this.common.loading++;
     this.api.get('Admin/getHolidayCalendar')
@@ -44,14 +75,16 @@ export class HolidaysComponent implements OnInit {
         if (res['data'] && res['data']) {
           this.allHolidayList = res['data'] || [];
           this.holidayList = res['data'] || [];
-          this.holidayList.length ? this.setTable() : this.resetTable();
-        }
+          console.log('this.holidayList: ', this.holidayList);
+          }
       }, err => {
         this.common.loading--;
         this.common.showError();
         console.log(err);
       });
   }
+
+
 
   resetTable() {
     this.table.data = {
@@ -65,7 +98,9 @@ export class HolidaysComponent implements OnInit {
       headings: this.generateHeadings(),
       columns: this.getTableColumns()
     };
+   console.log('this.table.data : ', this.table.data );
     return true;
+
   }
 
   generateHeadings() {

@@ -43,7 +43,6 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   // dtOptions: DataTables.Settings = {};
   dtOptions =  this.table.options(10,7,'USER EXPENSES');
   dtTrigger: Subject<any> = new Subject<any>();
-
   updatedExpenses = [];
   expenseSearch = {
     admin : { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
@@ -88,7 +87,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit() {
-    // this.dtTrigger.next();
+    this.dtTrigger.next();
     this.showAdminWiseWagesList();
   }
 
@@ -144,7 +143,6 @@ this.detailImageZoom = true;
 // let currentImageClass =  `.location-list .list-item-${index}`;
 // let currentItem =  document.querySelectorAll(currentImageClass);
 // currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-
 
 }
 
@@ -522,7 +520,9 @@ this.detailImageZoom = true;
   }
 
   expenseInfo = [];
-  openExpenseInfoModal(item) {
+  openExpenseInfoModal(item,event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.expenseInfo = [];
     if(item && item._onside_img && item._onside_img.length){
       item._onside_img.forEach(element => {
@@ -533,12 +533,10 @@ this.detailImageZoom = true;
         }
       });
     }
-    document.getElementById('expenseInfoModal').style.display = 'block';
+
   }
 
-  closEexpenseInfoModal() {
-    document.getElementById('expenseInfoModal').style.display = 'none';
-  }
+
 
 // start: map --------------------------------------------------
   getTravelDistance() {
@@ -652,7 +650,7 @@ this.detailImageZoom = true;
       const group = groups[key];
       let length = group.length
       let marker = null;
-      
+
       this.onsiteImages.forEach(img => {
         if(group[0].lat == img._lat&& group[0].long ==img._long){
           group[0]["markerCreated"]=true;
@@ -664,8 +662,8 @@ this.detailImageZoom = true;
           });
           count1++;
         }
-        
-        
+
+
       });
       if( !group[0]["markerCreated"])
       {
@@ -682,8 +680,8 @@ this.detailImageZoom = true;
             map: this.map
           });
       }
-      
-     
+
+
       count += length;
 
       google.maps.event.addListener(marker, "click", (event) => {

@@ -1,83 +1,139 @@
 <nb-card>
   <nb-card-header>
     <div class="row">
-      <div class="col-4" style="float: left;">
+      <div class="col-xl-9 col-lg-8 my-leaves">
+        <div class="card leave-record-card" *ngFor="let item of  leaveRecord;index as i">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div class="progress" [ngClass]="'progress-cirlce-'+(i+1)"
+                  [attr.data-percentage]="item.percentage | number: '1.0-0'">
+                  <span class="progress-left">
+                    <span class="progress-bar"></span>
+                  </span>
+                  <span class="progress-right">
+                    <span class="progress-bar"></span>
+                  </span>
+                  <div class="progress-value">
+                    <div>
+                      {{item.percentage+'%'}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-12">
+                <div>
+                  <h5 class="progress-title"> Fixed Leave </h5>
+                  <div class="info-block">
+                    <div class="info-body">
+                      <p class="title"> Total </p>
+                      <p class="value"> {{item.detail[0].total}} </p>
+                    </div>
+
+                    <div class="info-body">
+                      <p class="title"> Available </p>
+                      <p class="value">{{item.detail[0].Available}}</p>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div>
+      <div class="row justify-content-end">
         <div class="out-topnav">
           <div class="toptab">
             <div class="hiddenby">
-              <p [class]="selectedTab=='recent'?'active':'default'"
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='recent'}"
                 (click)="selectedTab='recent';leaveTypes =4;getMyLeaves()">
                 <b>Recent</b>
               </p>
             </div>
             <div class="hiddenby">
-              <p [class]="selectedTab=='to'?'active':'default'" (click)="selectedTab='to';leaveTypes =2;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='to'}"
+                (click)="selectedTab='to';leaveTypes =2;getMyLeaves()">
                 <b>To Me</b>
               </p>
             </div>
             <div class="hiddenby">
-              <p [class]="selectedTab=='cc'?'active':'default'" (click)="selectedTab='cc';leaveTypes =3;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='cc'}"
+                (click)="selectedTab='cc';leaveTypes =3;getMyLeaves()">
                 <b>CC</b>
               </p>
             </div>
             <div class="hiddenby">
-              <p [class]="selectedTab=='by'?'active':'default'" (click)="selectedTab='by';leaveTypes =1;getMyLeaves()">
+              <p class="nav-link" [ngClass]="{'active': selectedTab=='by'}"
+                (click)="selectedTab='by';leaveTypes =1;getMyLeaves()">
                 <b>By Me</b>
               </p>
             </div>
           </div>
+          <div class="date-filter">
+            <uj-date-time-picker [isTime]="false"> </uj-date-time-picker>
+            <uj-date-time-picker [isTime]="false"> </uj-date-time-picker>
+          </div>
 
         </div>
-        <div class="row" *ngIf="selectedTab!='recent'">
-          <div class="col-5 pl-0">
-            <uj-date-time-picker (onChanged)="startDate=$event" [dateTimeValue]="startDate" [isTime]="false">
-            </uj-date-time-picker>
-          </div>
-          <div class="col-5 pl-0">
-            <uj-date-time-picker (onChanged)="endDate=$event" [dateTimeValue]="endDate" [isTime]="false">
-            </uj-date-time-picker>
-          </div>
-          <div class="col-2 pl-0">
-            <button class="btn btn-primary" (click)="getMyLeaves()" >Submit</button>
-          </div>
-        </div>
+
       </div>
-      <div class="col-8" style="float: left; text-align: right;">
-        <div class="circle orange">
-          <span class="numberText">56</span><br>
-          <span class="stringText">Provided</span>
-        </div>
+      <!-- <smart-table [data]="table.data" [settings]="table.settings" id="tableLeaves"></smart-table> -->
 
-        <div class="circle orange">
-          <span class="numberText">56</span><br>
-          <span class="stringText">Provided</span>
-        </div>
+      <table class="table table-primary ng-datatable" datatable [dtOptions]="dtOptions" [dtTrigger]="dttrigger">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Task Subject</th>
+            <th>Status</th>
+            <th>AssignedBy</th>
+            <th>AssignedTo</th>
+            <th>From Date</th>
+            <th> To Date </th>
+            <th>Completed Date</th>
+            <th>Tickect Type</th>
+            <th class="action">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of myLeaves;index as i">
+            <td>{{i+1}}</td>
+            <td> {{item.task_subject}}</td>
+            <td>{{item.Status}}</td>
+            <td>{{item.assignedby}}</td>
+            <td>{{item.assignedto}}</td>
+            <td>{{item.from_date}}</td>
+            <td>{{item.to_date}}</td>
+            <td>{{item.completeddate}}</td>
+            <td>{{item.ticket_type}}</td>
+            <td>
 
-        <div class="circle blue">
-          <span class="numberText">56</span><br>
-          <span class="stringText">Provided</span>
-        </div>
+              <div class="action-block icon-action">
+                <!-- <button class="btn btn-success"> <i class="fa fa-check" aria-hidden="true"></i> </button>
+                <button class="btn btn-danger" (click)="deleteLeave(item)"> <i class="fas fa-trash-alt"></i> </button>
+                <button class="btn btn-warning"> <i class="fa fa-ban" aria-hidden="true"></i> </button> -->
 
-        <div class="circle blue">
-          <span class="numberText">56</span><br>
-          <span class="stringText">Provided</span>
-        </div>
+                <i class="fa fa-check" aria-hidden="true"></i>
+                <i class="fas fa-trash-alt" (click)="deleteLeave(item)"></i>
+                <i class="fa fa-ban" aria-hidden="true"></i>
+              </div>
 
-        <div class="circle red">
-          <span class="numberText">56</span><br>
-          <span class="stringText">Provided test </span>
-        </div>
 
-        <div class="circle red">
-          <span class="numberText">56</span><br>
-          <span class="stringText">Provided test </span>
-        </div>
-      </div>
-    </div>
-  </nb-card-header>
-  <nb-card-body>
-    <div>
-      <smart-table [data]="table.data" [settings]="table.settings" id="tableLeaves"></smart-table>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
     </div>
   </nb-card-body>
 </nb-card>

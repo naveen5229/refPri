@@ -46,7 +46,7 @@
     </div>
 
     <div class="row mt-2" *ngIf="leaveArray.type!=1">
-        <div class="col-4">
+        <div class="col-2">
             <label>Date:<span class="text-danger">*</span></label>
         </div>
         <div class="col-6">
@@ -77,10 +77,10 @@
     </div>
 
     <div class="row mt-2">
-        <div class="col-4">
+        <div class="col-2">
             <label>To:<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-9">
             <auto-suggestion [data]="userList" display='name' (onSelected)="leaveArray.To = $event" seperator="-"
                 placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
                 [preSelected]="(leaveArray.To && leaveArray.To.id>0) ? {name: leaveArray.To.name} : {name:''}">
@@ -89,21 +89,21 @@
     </div>
 
     <div class="row mt-2">
-        <div class="col-4">
+        <div class="col-2">
             <label>CC:</label>
         </div>
-        <div class="col-6">
-            <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select CC Users"
+        <div class="col-9">
+            <auto-suggestion class="cc-users" [data]="userList" display="name" seperator="-" placeholder="Select CC Users"
                 (onSelected)="leaveArray.cc = $event" inputId="ccUsers" name="ccUsers" [preSelected]="leaveArray.cc"
                 isMultiSelect="true"></auto-suggestion>
         </div>
     </div>
 
     <div class="row mt-2 ">
-        <div class="col-4">
+        <div class="col-2">
             <label>Reason:<span class="text-danger">*</span></label>
         </div>
-        <div class="col-6">
+        <div class="col-9">
             <textarea row="2" cols="15" maxlength="500" placeholder="Enter Task" id="normaltask" name="nomaltask"
                 class="form-control" [(ngModel)]="leaveArray.reason"></textarea>
         </div>

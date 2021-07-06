@@ -666,6 +666,7 @@ table {
     max-width:#{$galeryWidth};
   }
 
+
   // .col-3 .card-body {
   //   overflow: visible !important;
   // }
@@ -753,6 +754,10 @@ td.expanse {
 }
 
 
+td.date{
+ width: 100px;
+}
+
 
 
 
@@ -804,6 +809,10 @@ th.action.sorting {
 // }
 
 ::ng-deep {
+.tooltip{
+ left: -35px !important;
+}
+
   #route-maper-map+.row {
     margin-top: 15px;
 
@@ -818,4 +827,62 @@ th.action.sorting {
       justify-content: center;
     }
   }
+}
+
+
+.expanse p {
+  padding:0;
+  font-size: 12px;
+  cursor: pointer;
+  backface-visibility: hidden;
+}
+
+
+.expenseInfoModal {
+  backface-visibility: hidden;
+  transition: all linear 0.2s;
+
+  .modal-dialog {
+    backface-visibility: hidden;
+  }
+
+}
+
+
+div#expenseInfoModal {
+  width: auto;
+  height: auto;
+}
+
+
+
+
+ ::ng-deep {
+.modal-body.tooltip-modal {
+  width: 500px;
+  height: auto;
+  padding: 0;
+
+  table {
+    margin-bottom: 0;
+  }
+
+}
+.arrow::before {
+  top: 0;
+  border-width: 0.4rem 0.4rem 0;
+  border-top-color: #72b3c7 !important;
+}
+
+
+.tooltip-inner {
+  max-width: unset;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+  background-color: transparent;
+  border-radius: 0.25rem;
+}
+
+
 }

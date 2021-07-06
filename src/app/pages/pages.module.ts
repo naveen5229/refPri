@@ -1,8 +1,9 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { NbMenuModule, NbCardModule } from '@nebular/theme';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -79,6 +80,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -101,7 +103,9 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     DragDropModule,
     ChartModule,
     DataTablesModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgxChartsModule,
+    NgbModule
   ],
   declarations: [
     PagesComponent,
