@@ -71,7 +71,7 @@ export class LocationEntityComponent implements OnInit {
 
   setEntity(event){
     if(event._id){
-      this.entity=event.id;
+      this.entity=event._id;
     }else{
       this.saveEntity();
     }
@@ -90,6 +90,7 @@ export class LocationEntityComponent implements OnInit {
       this.common.loading--;
       if (res['data'][0]['y_id'] > 0) {
         this.common.showToast(res['msg']);
+        this.closeModal({res:true});
       } else {
         this.common.showError(res['msg']);
       }
