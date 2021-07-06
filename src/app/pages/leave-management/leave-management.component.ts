@@ -1,3 +1,5 @@
+import { TableService } from './../../Service/Table/table.service';
+import { Subject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
@@ -13,11 +15,15 @@ export class LeaveManagementComponent implements OnInit {
   selectedPage = 'my-leaves';
   adminList = [];
   groupList = [];
+
+
+
   constructor(
     public common: CommonService,
     public modalService: NgbModal,
-    public api: ApiService
-  ) { 
+    public api: ApiService,
+    public table:TableService
+  ) {
     this.getAllAdmin();
     this.getUserGroupList()
   }
@@ -68,7 +74,7 @@ export class LeaveManagementComponent implements OnInit {
   applyLeave(formType) {
     let title = "Apply Leave";
     let btn = "Apply";
-   
+
     this.common.params = {
       meetingData: null,
       userList: this.adminList,

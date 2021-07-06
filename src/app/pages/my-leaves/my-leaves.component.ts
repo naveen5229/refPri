@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { filter } from 'rxjs/operators';
+import { DataTableDirective } from 'angular-datatables';
+import { TableService } from './../../Service/Table/table.service';
+import { from, Subject } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../@core/mock/users.service';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { myLeaves } from './data';
 
 @Component({
   selector: 'ngx-my-leaves',
@@ -18,6 +23,15 @@ export class MyLeavesComponent implements OnInit {
   groupList = [];
  startDate = new Date(new Date().setDate(new Date().getDate() - 15));
  endDate = new Date();
+ myAllLeaves:any = [];
+ allLeaves:any = [];
+ // dtOptions: DataTables.Settings = {};
+  dtOptions:any = {};
+
+ @ViewChild(DataTableDirective, { static: false })
+  dtElement: any;
+  dttrigger: any = new Subject();
+
   table = {
     data: {
       headings: {},
@@ -28,21 +42,47 @@ export class MyLeavesComponent implements OnInit {
     }
   };
   allmyLeaves = [];
+  leaveRecord:any = [];
   leaveTypes = 4;
-  constructor(public common: CommonService, 
-    public user: UserService, 
-    public api: ApiService, 
+  constructor(public common: CommonService,
+    public user: UserService,
+    public api: ApiService,
+    public tableservice:TableService,
     public modalService: NgbModal) {
     this.common.refresh = this.refresh.bind(this);
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMyLeaves();
   }
-  ngOnInit() { }
+  ngOnInit() {
+  this.renderCircleProgress();
+    this.dtOptions =  this.tableservice.options(10,7,'USER EXPENSES');
+   }
 
   refresh() {
     this.getMyLeaves();
   }
+
+ renderTable() {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+      this.dttrigger.next();
+    });
+  }
+
+
+
+
+renderCircleProgress(){
+this.myAllLeaves = from(myLeaves);
+this.myAllLeaves.subscribe((item:any)=>{
+this.leaveRecord = item;
+this.leaveRecord.map((item:any)=>{
+item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
+// item.percentage = `${item.percentage.toFixed(0)}%`
+});
+})
+}
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
@@ -95,13 +135,16 @@ export class MyLeavesComponent implements OnInit {
     this.api.get('AdminTask/getLeaveRequestData?'+params)
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { 
+        if(res['code']===0) {
           this.common.showError(res['msg']); return false;
         }
         if (res['data'] && res['data']) {
           this.allmyLeaves = res['data'] || [];
+          console.log(' this.allmyLeaves: ',  this.allmyLeaves);
           this.myLeaves = res['data'] || [];
-          this.myLeaves.length ? this.setTable() : this.resetTable();
+          this.renderTable();
+          // console.log('this.myLeaves: ', this.myLeaves);
+          // this.myLeaves.length ? this.setTable() : this.resetTable();
         }
       }, err => {
         this.common.loading--;
@@ -196,7 +239,7 @@ export class MyLeavesComponent implements OnInit {
       });
     }
     return icons;
-  } 
+  }
 
 
   createChildTicket(ticket, type) {
@@ -329,4 +372,18 @@ export class MyLeavesComponent implements OnInit {
     }
   }
 
+ngOnDestroy(): void {
+this.dttrigger.unsubscribe();
+}
+
+ngAfterViewInit(): void {
+this.dttrigger.next();
+this.getMyLeaves();
+}
+
+deleteLeave(leave){
+console.log('leave',leave)
+this.myLeaves = this.myLeaves.filter(ele => ele._tktid != leave._tktid);
+this.common.showToast('Leave Request Test Delete Success')
+}
 }
