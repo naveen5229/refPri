@@ -101,24 +101,25 @@ export class AddentityfieldsComponent implements OnInit {
     this.activeModal.close(res);
   }
 
+  entityTypeName = null;
   getEntityType() {
     this.common.loading++;
     this.api.get('Entities/getEntityTypes').subscribe(res => {
-        this.common.loading--;
-        if(res['code']>0) { 
-          if (!res['data']) return;
-          let entityTypes = res['data'] || [];
-          this.entityTypes = (entityTypes && entityTypes.length>0) ? entityTypes.map(data => { return { id: data._id, name: data.type } }) : [];
-        }else{
-          this.common.showError(res['msg']);
-        }
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log(err);
-      });
+      this.common.loading--;
+      if (res['code'] > 0) {
+        if (!res['data']) return;
+        this.entityTypes = res['data'] || [];
+        this.ticketContactForm.entityType = res['data'][0]._id;
+        this.entityTypeName = res['data'][0].type;
+      } else {
+        this.common.showError(res['msg']);
+      }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
   }
-
   getEntitiesList() {
     this.common.loading++;
     this.api.get('Entities/getEntities').subscribe(res => {
@@ -134,6 +135,42 @@ export class AddentityfieldsComponent implements OnInit {
         this.common.showError();
         console.log(err);
       });
+  }
+
+  setEntity(event){
+    if(event._id){
+      this.ticketContactForm.entityId=event._id;
+    }else{
+      this.saveEntity();
+    }
+  }
+  
+
+  saveEntity() {
+    console.log(document.getElementById('entityId')['value']);
+    let params = {
+      name: document.getElementById('entityId')['value'],
+      entityTypeId: this.ticketContactForm.entityType
+    };
+
+    let apiBase = `Entities/saveEntity`;
+    // console.log('final data',apiBase,params);return;
+    this.common.loading++;
+this.api.post(apiBase, params).subscribe(res => {
+  this.common.loading--;
+  if (res['code'] == 1) {
+    console.log(res);
+    this.ticketContactForm.entityId = res['data'][0].y_id;
+    this.common.showToast(res['msg']);
+  } else {
+    this.common.showError(res['msg']);
+  }
+}, err => {
+  this.common.loading--;
+  this.common.showError();
+  console.log('Error: ', err);
+});
+console.log(apiBase, params)
   }
 
   save() {

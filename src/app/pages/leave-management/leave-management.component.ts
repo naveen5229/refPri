@@ -93,6 +93,9 @@ export class LeaveManagementComponent implements OnInit {
       if (data.response) {
         this.selectedPage = 'my-leaves';
       }
+ // alert('active modal closed');
+ this.selectedPage='my-leaves';
+
     });
   }
 }

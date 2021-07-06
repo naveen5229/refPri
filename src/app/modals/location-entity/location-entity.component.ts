@@ -41,7 +41,9 @@ export class LocationEntityComponent implements OnInit {
     this.mapService.mapIntialize("map1", 16);
     this.mapService.setMapType(0);
     setTimeout(() => {
-      this.marker = this.mapService.createDraggableMarker(this.location.lat, this.location.long);
+      this.marker = this.mapService.createDraggableMarker(this.location.lat, this.location.long,50);
+      let center = this.mapService.createLatLng(this.location.lat, this.location.long);
+      this.mapService.createCirclesOnPostion(center,50,"#ff0000","#ff0000");
     }, 2000)
   }
 
@@ -68,6 +70,7 @@ export class LocationEntityComponent implements OnInit {
   closeModal(res) {
     this.activeModal.close({ response: res });
   }
+
 
   setEntity(event){
     if(event._id){

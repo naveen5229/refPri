@@ -1,0 +1,550 @@
+<div class="contentsection">
+
+  <!----- First row ----->
+  <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-3" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Ticket Trend Period</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart> -->
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Process</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetailsOpen</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!----- Second row ----->
+  <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-3" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Ticket Trend Period</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart>
+      </div>
+      <div class="outer mt-3" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+        <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart>
+        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetailsOpen</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+   <!----- Third row ----->
+   <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-3" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Ticket Trend Period</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart>
+      </div>
+      <div class="outer mt-3" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+        <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart>
+        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetailsOpen</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+   <!----- fourth row ----->
+   <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-3" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Ticket Trend Period</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart>
+      </div>
+      <div class="outer mt-3" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+        <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart>
+        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetailsOpen</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+   <!----- fifth row ----->
+   <div class="row mb-0 mr-0" style="height: 100%;">
+    <div class="col-3" style="height: 100%; overflow: hidden;">
+      <div class="outer" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Ticket Trend Period</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthgraph',{totalrecord: 3,stepno: -1},120,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+        </chart>
+      </div>
+      <div class="outer mt-3" style="height: calc(50% - 10px);">
+        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+        <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart>
+        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetailsOpen</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0 right">
+      <div class="outer" style="height: 100%">
+        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
+        <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p>
+       <table class="table" *ngIf="openTicketLive.length>0">
+          <thead class="thead">
+            <th>Status</th>
+            <th>Count</th>
+          </thead>
+          <tbody class="tbody">
+            <tr>
+              <td>Open</td>
+              <td>getDetails'Open'</td>
+            </tr>
+            <tr>
+              <td>Hold</td>
+              <td>getDetails'Hold'</td>
+            </tr>
+            <tr>
+              <td>OverDue</td>
+              <td>getDetails'Overdue'</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

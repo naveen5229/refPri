@@ -76,7 +76,7 @@
   </div>
 </div>
 <div class="modal-body" *ngIf="modalType == 4">
-  <div class="row mb-2 text-center">
+  <!-- <div class="row mb-2 text-center">
     <div class="col-6">
       <label class="form-check-inline">
         <input class="form-check-input" type="radio" name="contactAddType" [value]='0' [(ngModel)]="ticketContactForm.type" (click) = "ticketContactForm.entityId = null">
@@ -89,10 +89,10 @@
         On Existing Entity
       </label>
     </div>
-  </div>
+  </div> -->
 
-  <div *ngIf="ticketContactForm.type==1" class="mb-2">
-    <div class="row mb-2">
+  <div  class="mb-2">
+    <!-- <div class="row mb-2">
       <div class="col-3">
         <label>Select Entity Type:<span class="text-danger">*</span></label>
       </div>
@@ -111,11 +111,38 @@
           (onSelected)="ticketContactForm.entityId = $event._id" inputId="entityId" name="entityId" autocomplete="off">
         </auto-suggestion>
       </div>
+    </div> -->
+    <div class="row">
+      <div class="col-5">
+        <label>
+          Select Entity Type
+        </label>
+      </div>
+      <div class="col-7">
+        <auto-suggestion [data]="entityTypes" display="type" seperator="-" placeholder="Select Entity Type"
+          (onSelected)="ticketContactForm.entityType = $event._id;entityTypeName = $event.type" inputId="entityTypeId" name="entityTypeId" autocomplete="off" [preSelected]="{type:entityTypeName}">
+        </auto-suggestion>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-5">
+        <label>
+          Enter {{entityTypeName}}
+        </label>
+      </div>
+      <div class="col-7">
+        <auto-suggestion [url]="'Entities/getMatchedEntityList?entityTypeId='+ticketContactForm.entityType" display="name" seperator="-" placeholder="Select Entity"
+          (onSelected)="setEntity($event)" inputId="entityId" name="entityId" autocomplete="off" isNewLabelAdd = "true">
+        </auto-suggestion>
+        
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col-12 text-right">
-      <button class="btn btn-primary btn-sm" (click)="onNext()" [disabled]="ticketContactForm.type==1 && !ticketContactForm.entityId">Next</button>
+      <!-- <button class="btn btn-primary btn-sm" id="button"
+      (click)="save()">Save</button> -->
+      <button class="btn btn-primary btn-sm" (click)="opentContactModal()" [disabled]="ticketContactForm.type==1 && !ticketContactForm.entityId">Next</button>
     </div>
   </div>
 </div>
