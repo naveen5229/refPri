@@ -185,7 +185,7 @@
                   <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View
                     Route</button>
                   <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch"
-                    (click)="switchLatLngHandler()">{{switchButton}}</button>
+                    (click)="switchLatLngHandler()">{{(switchButton=="Live"? 'Actual Route' : 'Ideal Route')}}</button>
                 </div>
                 <div class="card-body">
                   <div class="location-map">
