@@ -72,14 +72,16 @@
                 <td class="expanse">
                   <p class="mb-0 text-primary"
                     (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
-                    [ngbTooltip]="tipContent"   container="body"
-                    [disableTooltip]="item.total_expense_actual <= 0"> <i class="fas fa-rupee-sign rupee"></i>
+                    [ngbTooltip]="tipContent" container="body" [disableTooltip]="item.total_expense_actual <= 0"> <i
+                      class="fas fa-rupee-sign rupee"></i>
                     {{item.total_expense_actual}} </p>
 
                 </td>
                 <td>{{item.total_distance}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
-                <td [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">{{(item._onside_img) ? item.status : 'N/A'}}</td>
+                <td
+                  [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">
+                  {{(item._onside_img) ? item.status : 'N/A'}}</td>
                 <td class="expanse">
                   <div class="input-group">
                     <div class="input-group-prepend">
@@ -214,30 +216,34 @@
                       (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
                       (mouseout)="detailImageZoom = false;changeColorUsingLatlng (item,2)">
 
-                 <img class="img-fluid" [src]="item._url" [alt]="item.image">
-                 <div class="actions">
-                   <button class="btn btn-primary" [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id"
-                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(1,item)">
-                     approve
-                   </button>
-                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id"
-                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(-99,item)">
-                     Reject
-                    </button>
-                   <button class="btn btn-info" (click)="openLink(i,'detail Image')">
-                     View 
-                    </button>
-                   <button class="btn btn-success" [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'" [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
-                     Maping
-                   </button>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
+                      <img class="img-fluid" [src]="item._url" [alt]="item.image">
+                      <div class="actions">
+                        <button class="btn btn-primary"
+                          [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id"
+                          (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(1,item)">
+                          approve
+                        </button>
+                        <button class="btn btn-danger"
+                          [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id"
+                          (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(-99,item)">
+                          Reject
+                        </button>
+                        <button class="btn btn-info" (click)="openLink(i,'detail Image')">
+                          View
+                        </button>
+                        <button class="btn btn-success"
+                          [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'"
+                          [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
+                          link
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="row no-gutters expense-info">
           <div class="col-md-6">
@@ -271,7 +277,10 @@
                         </td>
                         <td class="actions">
                           <div class="action-block">
-                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id" class="btn btn-danger btn-reject" [disabled]="item.amount_new===0" (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">  {{item.amount_new===0 ? 'Rejected':'Reject' }}
+                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id"
+                              class="btn btn-danger btn-reject" [disabled]="item.amount_new===0"
+                              (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">
+                              {{item.amount_new===0 ? 'Rejected':'Reject' }}
                             </button>
                           </div>
                         </td>
