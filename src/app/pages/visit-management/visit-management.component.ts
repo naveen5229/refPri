@@ -299,6 +299,7 @@ this.detailImageZoom = true;
       this.common.showError("Please select atleast one row");
       return false;
     }
+    let isSelfVisit = false;
     let expenseList = [];
     if(this.allVisits && this.allVisits.length){
       this.allVisits.forEach((element,key) => {
@@ -306,8 +307,16 @@ this.detailImageZoom = true;
           expenseList.push(
             JSON.parse(JSON.stringify(this.updatedExpenses[key]))
           );
+        
+          if(element._user_id==this.userService.loggedInUser.id){
+            isSelfVisit = true;
+          }
         }
       });
+    }
+    if(isSelfVisit){
+      this.common.showError("You can't change your own visit");
+      return false;
     }
     // console.log("saveVerifiedExpense:",expenseList);return false;
     this.common.loading++;
@@ -332,6 +341,10 @@ this.detailImageZoom = true;
   saveVerifiedExpenseSingle(status,item) {
     console.log('status,: ', status,);
     console.log('adminWiseList', this.updatedExpenses);
+    if(item._user_id==this.userService.loggedInUser.id){
+      this.common.showError("You can't change your own visit");
+      return false;
+    }
     if (status==-99){
       item.total_amount = 0;
     }
