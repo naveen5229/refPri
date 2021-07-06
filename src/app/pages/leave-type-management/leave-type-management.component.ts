@@ -16,8 +16,8 @@ export class LeaveTypeManagementComponent implements OnInit {
   endDate = new Date();
   expensdetail:any;
   leaveName:any;
-  lCount:any;
-  id:any;
+  lCount:number = null;
+  id:any = null;
   empType : any = 'General';
   leaveType: any = 'Fixed';
   lNum : any = 'Monthly';
@@ -102,8 +102,7 @@ export class LeaveTypeManagementComponent implements OnInit {
     employeeType: this.empType,
     leaveType: this.leaveType,
     leaveDuration: this.lNum,
-    
-     id: this.id,
+    id: this.id
    };
    console.log(params);
    this.common.loading++;

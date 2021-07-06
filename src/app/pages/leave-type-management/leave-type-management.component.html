@@ -47,8 +47,8 @@
         </div>  
         <div class="col-md-3">
           <div class="form-group">
-        <input type="text" placeholder="Enter Leave Name" [(ngModel)]="leaveName"
-              [ngModelOptions]="{standalone: true}" class="form-control"> 
+        <input type="text" placeholder="Enter Leave Name" [(ngModel)]="leaveName" [ngModelOptions]="{standalone: true}"
+         class="form-control"> 
             </div>
           </div>  
       </div>
@@ -61,11 +61,11 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-        <input type="text" placeholder="Enter Leave Count" [(ngModel)]="lCount"
-              [ngModelOptions]="{standalone: true}" class="form-control">
+        <input type="number" placeholder="Enter Leave Count" [(ngModel)]="lCount" 
+        [ngModelOptions]="{standalone: true}" class="form-control" min="0">
             </div>
           </div>
-        <div class="col-md-3">
+        <div class="col-md-1">
         <label> leaves / </label>
         </div>
         <div class="col-md-3 ">
@@ -118,14 +118,14 @@
         <tr *ngFor="let item of leaveTypeList;index as i">
           <td> {{i+1}} </td>
           <td>
-            {{item.description}}
+            {{item.leaveType}}
           </td>
           <td>
-            {{item.expenses_category}}
+            {{item.leaveName}}
           </td>
           <td>
 
-            {{(item.expense_status == 1)?"Active":"Inactive"}}
+            {{item.leaveDays}}
           </td>
 
           <td>
