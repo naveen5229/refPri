@@ -178,7 +178,7 @@ export class AddFieldComponent implements OnInit {
   }
 
   confirmAdd() {
-    let childArray = (this.childArray && this.childArray.length > 0) ? this.childArray.map(x => { return { param: x.param, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
+    let childArray = (this.childArray && this.childArray.length > 0) ? this.childArray.map(x => { return { param: x.param, _param_name: x._param_name, type: x.type, order: x.order, is_required: x.is_required, drpOption: x._param_info, param_id: x._param_id } }) : null;
     let tmpJson = {
       param: this.name,
       type: this.typeId,
@@ -224,7 +224,7 @@ export class AddFieldComponent implements OnInit {
       return false;
     }
     let apiName = (this.formType == 11) ? 'Ticket/addTicketProcessMatrix' : 'Processes/addProcessMatrix';
-    // console.log("apiName:", apiName,params,tmpJson); return false;
+    // console.log("apiName:", apiName, params, tmpJson); return false;
     this.common.loading++;
     this.api.post(apiName, params).subscribe(res => {
       this.common.loading--;
@@ -262,6 +262,7 @@ export class AddFieldComponent implements OnInit {
           if (!res['data']) return;
           this.data = res['data'];
           this.data.length ? this.setTable() : this.resetTable();
+          console.log(this.data)
         } else {
           this.common.showError(res['msg']); return false;
         };
@@ -448,7 +449,7 @@ export class AddFieldComponent implements OnInit {
   }
 
   openAddFieldTable() {
-    console.log('childarray:',this.childArray)
+    console.log('childarray:', this.childArray)
     this.common.params = { data: (this.childArray && this.childArray.length > 0) ? this.childArray : null, formType: this.formType };
     const activeModal = this.modalService.open(AddFieldTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {

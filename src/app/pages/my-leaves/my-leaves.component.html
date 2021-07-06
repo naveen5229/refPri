@@ -121,9 +121,21 @@
                 <button class="btn btn-danger" (click)="deleteLeave(item)"> <i class="fas fa-trash-alt"></i> </button>
                 <button class="btn btn-warning"> <i class="fa fa-ban" aria-hidden="true"></i> </button> -->
 
-                <i class="fa fa-check" aria-hidden="true"></i>
+                <span id="chatIcon" title="Chat" class="cursor-pointer" (click)="ticketMessage(item, 0)">
+                  <i class="fas fa-comments text-warning pl-2 font-size"
+                    *ngIf="item._tktid > 0 && !item._unreadcount"></i>
+
+                  <div style="display:inline; position: relative;"><i
+                      class="fas fa-comments  text-success pl-2 font-size new-commentt"
+                      *ngIf="item._unreadcount > 0"><span>{{item._unreadcount}}</span></i>
+                  </div>
+
+                  <i class="fas fa-comments no-comment pl-2 font-size" *ngIf="item._unreadcount == -1"></i>
+                </span>
+
+                <i class="fa fa-check" aria-hidden="true" *ngIf="item._status==0" (click)="updateStatus(item,2)"></i>
                 <i class="fas fa-trash-alt" (click)="deleteLeave(item)"></i>
-                <i class="fa fa-ban" aria-hidden="true"></i>
+                <i class="fa fa-times" aria-hidden="true" *ngIf="item._status==0" (click)="updateStatus(item,-1)"></i>
               </div>
 
 

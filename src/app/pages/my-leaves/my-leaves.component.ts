@@ -10,6 +10,7 @@ import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 import { myLeaves } from './data';
+import { TaskMessageComponent } from '../../modals/task-message/task-message.component';
 
 @Component({
   selector: 'ngx-my-leaves',
@@ -21,14 +22,14 @@ export class MyLeavesComponent implements OnInit {
   myLeaves: any;
   adminList = [];
   groupList = [];
- startDate = new Date(new Date().setDate(new Date().getDate() - 15));
- endDate = new Date();
- myAllLeaves:any = [];
- allLeaves:any = [];
- // dtOptions: DataTables.Settings = {};
-  dtOptions:any = {};
+  startDate = new Date(new Date().setDate(new Date().getDate() - 15));
+  endDate = new Date();
+  myAllLeaves: any = [];
+  allLeaves: any = [];
+  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
 
- @ViewChild(DataTableDirective, { static: false })
+  @ViewChild(DataTableDirective, { static: false })
   dtElement: any;
   dttrigger: any = new Subject();
 
@@ -42,28 +43,32 @@ export class MyLeavesComponent implements OnInit {
     }
   };
   allmyLeaves = [];
-  leaveRecord:any = [];
+  leaveRecord: any = [];
   leaveTypes = 4;
+  departmentList = [];
+
   constructor(public common: CommonService,
     public user: UserService,
     public api: ApiService,
-    public tableservice:TableService,
+    public tableservice: TableService,
     public modalService: NgbModal) {
     this.common.refresh = this.refresh.bind(this);
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMyLeaves();
+    this.getDepartmentList();
   }
   ngOnInit() {
-  this.renderCircleProgress();
-    this.dtOptions =  this.tableservice.options(10,7,'USER EXPENSES');
-   }
+    this.renderCircleProgress();
+    this.dtOptions = this.tableservice.options(10, 7, 'USER EXPENSES');
+  }
 
   refresh() {
     this.getMyLeaves();
+    this.getDepartmentList();
   }
 
- renderTable() {
+  renderTable() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
       this.dttrigger.next();
@@ -73,16 +78,16 @@ export class MyLeavesComponent implements OnInit {
 
 
 
-renderCircleProgress(){
-this.myAllLeaves = from(myLeaves);
-this.myAllLeaves.subscribe((item:any)=>{
-this.leaveRecord = item;
-this.leaveRecord.map((item:any)=>{
-item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
-// item.percentage = `${item.percentage.toFixed(0)}%`
-});
-})
-}
+  renderCircleProgress() {
+    this.myAllLeaves = from(myLeaves);
+    this.myAllLeaves.subscribe((item: any) => {
+      this.leaveRecord = item;
+      this.leaveRecord.map((item: any) => {
+        item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
+        // item.percentage = `${item.percentage.toFixed(0)}%`
+      });
+    })
+  }
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
@@ -93,6 +98,22 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
           this.adminList = adminList.map((x) => {
             return { id: x.id, name: x.name + " - " + x.department_name };
           });
+        } else {
+          this.common.showError(res["msg"]);
+        }
+      },
+      (err) => {
+        this.common.showError();
+        console.log("Error: ", err);
+      }
+    );
+  }
+
+  getDepartmentList() {
+    this.api.get("Admin/getDepartmentList.json").subscribe(
+      (res) => {
+        if (res["code"] > 0) {
+          this.departmentList = res["data"] || [];
         } else {
           this.common.showError(res["msg"]);
         }
@@ -125,22 +146,23 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
   }
 
   getMyLeaves() {
-    let startDate = this.leaveTypes==4?new Date():this.startDate;
-  let params = "leaveType="+ this.leaveTypes+
-  "&startDate="+ this.common.dateFormatter1(startDate)+
-  "&endDate="+this.common.dateFormatter1(this.endDate);
-   console.log("params====",params);
+    this.myLeaves = [];
+    let startDate = this.leaveTypes == 4 ? new Date() : this.startDate;
+    let params = "leaveType=" + this.leaveTypes +
+      "&startDate=" + this.common.dateFormatter1(startDate) +
+      "&endDate=" + this.common.dateFormatter1(this.endDate);
+    console.log("params====", params);
     this.resetTable();
     this.common.loading++;
-    this.api.get('AdminTask/getLeaveRequestData?'+params)
+    this.api.get('AdminTask/getLeaveRequestData?' + params)
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) {
+        if (res['code'] === 0) {
           this.common.showError(res['msg']); return false;
         }
         if (res['data'] && res['data']) {
           this.allmyLeaves = res['data'] || [];
-          console.log(' this.allmyLeaves: ',  this.allmyLeaves);
+          console.log(' this.allmyLeaves: ', this.allmyLeaves);
           this.myLeaves = res['data'] || [];
           this.renderTable();
           // console.log('this.myLeaves: ', this.myLeaves);
@@ -204,7 +226,7 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
 
   }
 
-  actionIcons(row){
+  actionIcons(row) {
     let icons = [];
     if ([101, 102, 104, 111, 112, 113, 114, 115].includes(row._tktype)) {
       icons.push({
@@ -218,14 +240,14 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
       //for hold
       icons.push({
         class: "fa fa-pause-circle",
-        action: this.changerowStatusWithConfirm.bind( this, row, -101, 3),
+        action: this.changerowStatusWithConfirm.bind(this, row, -101, 3),
         txt: "",
         title: "Mark Task as Hold",
       });
     } else if (row._status == 3 && [101, 102].includes(row._tktype)) {
       icons.push({
         class: "fa fa-play-circle",
-        action: this.changerowStatusWithConfirm.bind(this,row,-101,2),
+        action: this.changerowStatusWithConfirm.bind(this, row, -101, 2),
         txt: "",
         title: "Make Task as Unhold",
       });
@@ -372,18 +394,122 @@ item.percentage = `${(item.detail[0].Available / item.detail[0].total * 100)}`;
     }
   }
 
-ngOnDestroy(): void {
-this.dttrigger.unsubscribe();
-}
+  ngOnDestroy(): void {
+    this.dttrigger.unsubscribe();
+  }
 
-ngAfterViewInit(): void {
-this.dttrigger.next();
-this.getMyLeaves();
-}
+  ngAfterViewInit(): void {
+    this.dttrigger.next();
+    this.getMyLeaves();
+  }
 
-deleteLeave(leave){
-console.log('leave',leave)
-this.myLeaves = this.myLeaves.filter(ele => ele._tktid != leave._tktid);
-this.common.showToast('Leave Request Test Delete Success')
-}
+  deleteLeave(leave) {
+    if (leave._refid) {
+      let params = {
+        taskId: leave._refid,
+      };
+      this.common.params = {
+        title: "Delete Leave",
+        description: `<b>&nbsp;` + "Are You Sure To Delete This Record" + `<b>`,
+      };
+
+      const activeModal = this.modalService.open(ConfirmComponent, {
+        size: "sm",
+        container: "nb-layout",
+        backdrop: "static",
+        keyboard: false,
+        windowClass: "accountModalClass",
+      });
+      activeModal.result.then((data) => {
+        if (data.response) {
+          // this.common.loading++;
+          this.api.post("AdminTask/deleteTicket", params).subscribe(
+            (res) => {
+              // this.common.loading--;
+              if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+              this.myLeaves = this.myLeaves.filter(task => task._tktid !== leave._tktid);
+              // this.common.showToast(res["msg"]);
+              // this.getTaskByType(type);
+            },
+            (err) => {
+              // this.common.loading--;
+              this.common.showError();
+              console.log("Error: ", err);
+            }
+          );
+        }
+      });
+    } else {
+      this.common.showError("Task ID Not Available");
+    }
+  }
+
+  updateStatus(leave, status) {
+    console.log(leave)
+    // this.myLeaves = this.myLeaves.filter(task => task._tktid !== leave._tktid);
+    if (leave._tktid) {
+      let params = {
+        ticketId: leave._tktid,
+        statusId: status,
+        statusOld: leave._status,
+        remark: null,
+        taskId: leave._refid,
+        ticketType: leave._tktype,
+      };
+      this.api.post("AdminTask/updateTicketStatus", params).subscribe(
+        (res) => {
+          // this.common.loading--;
+          if (res["code"] > 0) {
+            this.myLeaves = this.myLeaves.filter(task => task._tktid !== leave._tktid);
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          // this.common.loading--;
+          this.common.showError();
+          console.log("Error: ", err);
+        }
+      );
+    } else {
+      this.common.showError("Ticket ID Not Available");
+    }
+  }
+
+  ticketMessage(ticket, type) {
+    console.log('ticket', ticket)
+    let ticketEditData = {
+      ticketData: ticket,
+      ticketId: ticket._tktid,
+      statusId: ticket._status,
+      lastSeenId: ticket._lastreadid,
+      taskId:
+        ticket._tktype == 101 || ticket._tktype == 102 ? ticket._refid : null,
+      taskType: ticket._tktype,
+      tabType: type,
+      isChecked: ticket._is_star_mark
+    };
+
+    let subTitle = ticket.task_subject + ((ticket._task_desc) ? ":<br>" + ticket._task_desc : '');
+    this.common.params = {
+      ticketEditData,
+      title: "Ticket Comment",
+      button: "Save",
+      subTitle: subTitle,
+      userList: this.adminList,
+      groupList: this.groupList,
+      departmentList: this.departmentList
+    };
+    const activeModal = this.modalService.open(TaskMessageComponent, {
+      size: "xl",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      // if (ticket._cc_user_id && !ticket._cc_status) {
+      //   this.ackTaskByCcUser(ticket, type);
+      // }
+      this.getMyLeaves();
+    });
+  }
 }
