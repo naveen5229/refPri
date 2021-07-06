@@ -70,6 +70,7 @@ export class MyLeavesComponent implements OnInit {
 
   renderTable() {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear();
       dtInstance.destroy();
       this.dttrigger.next();
     });
