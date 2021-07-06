@@ -340,14 +340,14 @@ export class MapService {
 
 
 
-  createCirclesOnPostion(center, radius) {
+  createCirclesOnPostion(center, radius,strokeColor="#0000FF",fillColor= '#0000FF') {
     console.log("center,radius", center, radius);
     return new google.maps.Circle({
-      strokeColor: '#0000FF',
+      strokeColor: strokeColor,
       strokeOpacity: 1,
       strokeWeight: 2,
-      fillColor: '#0000FF',
-      fillOpacity: 0.2,
+      fillColor:fillColor,
+      fillOpacity: 0.3,
       map: this.map,
       center: center,
       radius: radius
@@ -696,20 +696,39 @@ export class MapService {
 
   afterDragLat = null;
   afterDragLng= null;
-  createDraggableMarker(lat = 26.9124336, lng = 75.78727090000007) {
+  createDraggableMarker(lat = 26.9124336, lng = 75.78727090000007,distanceLimit=null) {
     console.log("lat=",lat,"long",lng)
     let marker = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.DROP,
       position: new google.maps.LatLng(lat, lng),
       draggable: true,
+      scale: 1,
+      strokeWeight: 1,
+      icon: "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + " " + "|" + "ff0000" + "|000000"
      
     });
     this.setBounds(new google.maps.LatLng(lat, lng));
     this.zoomMap(16);
     google.maps.event.addListener(marker, 'dragend', evt => { 
-      this.afterDragLat=evt.latLng.lat();
-      this.afterDragLng=evt.latLng.lng();
+      if(distanceLimit){
+       let dist =  this.common.distanceFromAToB(lat,lng,evt.latLng.lat(),evt.latLng.lng(),'Mt');
+       if(dist>distanceLimit){
+        var position = marker.getPosition();
+         alert("You can move marker here distance is more than"+distanceLimit);
+        let newpos =  new google.maps.LatLng(lat, lng);
+         marker.setPosition(newpos);
+       }
+       else{
+        this.afterDragLat=evt.latLng.lat();
+        this.afterDragLng=evt.latLng.lng();
+       }
+      }
+      else{
+        this.afterDragLat=evt.latLng.lat();
+        this.afterDragLng=evt.latLng.lng();
+      }
+     
       console.log( evt.latLng,this.afterDragLat, this.afterDragLng);
     });
     

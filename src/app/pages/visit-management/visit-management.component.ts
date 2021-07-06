@@ -648,7 +648,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
           marker = new google.maps.Marker({
             position: { lat: group[0].lat, lng: group[0].long },
             // label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
-            icon:"http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + count1 + "|" + "FF0000" + "|000000",
+            icon:"http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + count1 + "|" + "808080" + "|ffffff",
             map: this.map
           });
           count1++;
@@ -656,8 +656,16 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         
         
       });
-      if( !group[0]["markerCreated"])
-      {
+      if( !group[0]["markerCreated"] && (i==0 ||i==Object.keys(groups).length-1 )){
+        let color = i==0?"00FF00":i==Object.keys(groups).length-1?"FF0000":"FFFF00";
+        let point =  i==0?"S":i==Object.keys(groups).length-1?"D":"W";
+        marker = new google.maps.Marker({
+          position: { lat: group[0].lat, lng: group[0].long },   
+          icon:"http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + point + "|" + color + "|000000",
+          map: this.map
+        });
+      }
+      else if(!group[0]["markerCreated"]){
           marker = new google.maps.Marker({
             position: { lat: group[0].lat, lng: group[0].long },
             // label: length > 1 ? group[0].label + '-' + group[length - 1].label : group[0].label.toString(),
@@ -709,7 +717,7 @@ currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "neares
         let label = marker.icon ? ""+marker.icon.split("|")[1] :"";
         console.log("label=",label);
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        marker.setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+ label+"|00ff00|000000");
+        marker.setIcon( "http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|"+ label+"|0000ff|000000");
       }else  if(evtype==2){
         marker.setIcon( marker['oldIcon']);
         marker.setAnimation(null);
