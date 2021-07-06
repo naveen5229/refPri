@@ -33,6 +33,7 @@ export class CommonService {
 
   chartData: any;
   chartOptions: any;
+  currencyClass = "fas fa-rupee-sign rupee";
 
   constructor(private toastrService: NbToastrService, public modalService: NgbModal,
     private datePipe: DatePipe, public router: Router, public api: ApiService, private sanitizer: DomSanitizer) { }

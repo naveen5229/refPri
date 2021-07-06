@@ -73,7 +73,7 @@
                   <p class="mb-0 text-primary"
                     (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
                     [ngbTooltip]="tipContent"   container="body"
-                    [disableTooltip]="item.total_expense_actual <= 0"> <i class="fas fa-rupee-sign rupee"></i>
+                    [disableTooltip]="item.total_expense_actual <= 0"> <i [class]="common.currencyClass"></i>
                     {{item.total_expense_actual}} </p>
 
                 </td>
@@ -83,7 +83,7 @@
                 <td class="expanse">
                   <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-rupee-sign"></i></span>
+                      <span class="input-group-text" id="basic-addon1"><i [class]="common.currencyClass"></i></span>
                     </div>
                     <input type="number" class="form-control" style="width: 40%;"
                       [(ngModel)]="updatedExpenses[i]['total_amount']">
@@ -185,7 +185,7 @@
                   <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View
                     Route</button>
                   <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch"
-                    (click)="switchLatLngHandler()">{{switchButton}}</button>
+                    (click)="switchLatLngHandler()">{{(switchButton=="Live"? 'Actual Route' : 'Ideal Route')}}</button>
                 </div>
                 <div class="card-body">
                   <div class="location-map">
@@ -228,7 +228,7 @@
                      View 
                     </button>
                    <button class="btn btn-success" [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'" [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
-                     Maping
+                    link
                    </button>
                  </div>
                </div>
