@@ -1,3 +1,4 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
@@ -103,7 +104,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ChartModule,
     DataTablesModule,
     FullCalendarModule,
-    NgxChartsModule
+    NgxChartsModule,
+    NgbModule
   ],
   declarations: [
     PagesComponent,
