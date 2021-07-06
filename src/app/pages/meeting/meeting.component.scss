@@ -4,8 +4,52 @@
 
 full-calendar {
   width: 100%;
-  height: 553px;
+  height: 753px;
 }
+
+
+::ng-deep {
+  .fc-toolbar-chunk {
+    .fc-button-group {
+
+      .fc-button {
+        background: aliceblue;
+        color: #343a40 !important;
+        text-transform: capitalize;
+        transition: all linear 0.2s;
+
+        &:hover,
+        &:active,
+        &:focus,
+        &.fc-button-active {
+          background-color: #656565;
+          color: #fff !important;
+
+          .fc-icon {
+            color: #fff;
+          }
+        }
+      }
+
+    }
+
+  }
+}
+
+.fc .fc-button-group>.fc-button {
+  background: aliceblue;
+}
+
+.fc-button-group {
+  .fc-button {
+    background-color: rgb(219, 219, 219);
+    color: #fff;
+    text-transform: capitalize
+  }
+
+}
+
+
 
 // ::ng-deep .fc .fc-button-primary{
 //     border-color: #2c3e50 !important;
@@ -87,7 +131,7 @@ full-calendar {
   border-style: none;
   color: #ffffff;
   font-size: 12px;
-//   border-radius: 3px;
+  //   border-radius: 3px;
   padding: 5px;
   background-color: #3366ff;
 }
@@ -110,16 +154,16 @@ full-calendar {
   display: none;
 }
 
-.imgicn{
+.imgicn {
   height: 19px;
   width: 25px;
 }
 
-.font-size{
+.font-size {
   font-size: 22px;
 }
 
-.new-comment span{
+.new-comment span {
   min-width: 13px;
   min-height: 13px;
   display: block;

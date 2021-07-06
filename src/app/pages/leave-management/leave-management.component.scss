@@ -3,7 +3,7 @@
     color: #000;
     font-size: 0.85rem;
     text-align: center;
-    padding:10px 40px;
+    padding: 10px 40px;
     background-color: #c4c4c4;
     color: #fff;
     cursor: pointer;
@@ -14,7 +14,7 @@
     margin-right: 10px;
 
     &:hover {
-       background-color: #EA7736;
+      background-color: #EA7736;
       color: #fff;
       cursor: pointer;
     }
@@ -110,4 +110,13 @@
 .toptab:hover .hiddenby {
   opacity: 1;
   transition: 1s;
+}
+
+
+::ng-deep {
+  .cc-users {
+    .tagsinput {
+      min-height: 150px !important;
+    }
+  }
 }

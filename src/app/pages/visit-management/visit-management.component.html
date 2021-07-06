@@ -79,7 +79,9 @@
                 </td>
                 <td>{{item.total_distance}}</td>
                 <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
-                <td [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">{{(item._onside_img) ? item.status : 'N/A'}}</td>
+                <td
+                  [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">
+                  {{(item._onside_img) ? item.status : 'N/A'}}</td>
                 <td class="expanse">
                   <div class="input-group">
                     <div class="input-group-prepend">
@@ -271,7 +273,10 @@
                         </td>
                         <td class="actions">
                           <div class="action-block">
-                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id" class="btn btn-danger btn-reject" [disabled]="item.amount_new===0" (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">  {{item.amount_new===0 ? 'Rejected':'Reject' }}
+                            <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id"
+                              class="btn btn-danger btn-reject" [disabled]="item.amount_new===0"
+                              (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">
+                              {{item.amount_new===0 ? 'Rejected':'Reject' }}
                             </button>
                           </div>
                         </td>
