@@ -420,3 +420,23 @@ Due to the split circle of progress-left and progress right, we must use the ani
     left: 346px;
     display: flex;
 }
+
+.new-commentt  {
+  span{
+    min-width: 13px;
+    min-height: 13px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: 8px;
+    padding: 1px;
+    font-size: 8px;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 11px;
+    background: transparent;
+  }
+ 
+}
