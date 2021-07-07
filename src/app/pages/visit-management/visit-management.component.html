@@ -1,7 +1,14 @@
 <ng-container>
   <nb-card [class.d-none]="isDetailView">
     <nb-card-header>
-      <h5> Visit Management</h5>
+      <div class="row">
+        <div class="col-6">
+          <h5> Visit Management</h5>
+        </div>
+        <div class="col-6 text-right">
+          <button class="btn btn-primary btn-sm" (click)="openUnmappedVisitModal()">Visit Report</button>
+        </div>
+      </div>
     </nb-card-header>
     <nb-card-body>
       <div class="row">
@@ -96,13 +103,13 @@
                     <div class="d-flex">
                       <button type="button" class="btn btn-success btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id)"
-                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
+                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingleWithConfirm(1,updatedExpenses[i]) : null">
                         Approve
                       </button>
 
                       <button type="button" class="btn btn-danger btn-sm"
                         [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0)"
-                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
+                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingleWithConfirm(-1,updatedExpenses[i]) : null">
                         Reject
                       </button>
 
@@ -219,11 +226,11 @@
                  <img class="img-fluid" [src]="item._url" [alt]="item.image">
                  <div class="actions">
                    <button class="btn btn-primary" [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id"
-                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(1,item)">
+                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(1,item)">
                      approve
                    </button>
                    <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id"
-                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(-99,item)">
+                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(-1,item)">
                      Reject
                     </button>
                    <button class="btn btn-info" (click)="openLink(i,'detail Image')">
