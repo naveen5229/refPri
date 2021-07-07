@@ -1234,10 +1234,7 @@ odoMultiplierWithMeter(distance: number) {
 }
 
 
-backClicked() {
-  this.router.navigateByUrl('/#/pages');
 
 }
 
 
-}
