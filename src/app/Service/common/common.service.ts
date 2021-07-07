@@ -1172,6 +1172,7 @@ return dataobj;
 
 }
 
+
 distanceFromAToB(lat1, lon1, lat2, lon2, unit, isFixed = true, isMultiply = true): any {
   if (lat1 == lat2 && lon1 == lon2) {
     return 0;
@@ -1227,11 +1228,16 @@ odoMultiplierWithMeter(distance: number) {
     distance = distance * 1.15;
   }
   return distance;
+
+
+
+}
+
+
 backClicked() {
   this.router.navigateByUrl('/#/pages');
-}
-
 
 }
 
 
+}
