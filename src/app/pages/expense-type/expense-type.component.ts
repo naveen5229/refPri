@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { from, Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from '../../Service/Api/api.service';
 @Component({
   selector: 'ngx-expense-type',
   templateUrl: './expense-type.component.html',
@@ -19,13 +21,14 @@ export class ExpenseTypeComponent implements OnInit {
  allUsers:any[] = [];
  allVisits:any[] = [];
  expensdetail:any;
- expenseTypeVal:any;
- status:any;
+ expenseType:any;
+ typestatus:any;
+ id:any;
  @ViewChild(DataTableDirective, { static: false })
   dtElement: any;
   dtTrigger: any = new Subject();
   categories:any[] = [];
-  expenseData:any[] = [];
+  expenseTypeList:any[] = [];
   dtOptions: any = {
     pagingType: 'full_numbers',
     pageLength: 5,
@@ -43,11 +46,12 @@ export class ExpenseTypeComponent implements OnInit {
     //     data: 'Status'
     //   }],
   }
-
+  title = "Add Expense Type";
+  btn = "Save";
 
 ngAfterViewInit() {
     this.dtTrigger.next();
-    this.getexpenses();
+    this.getExpenseTypeList();
 
   }
 
@@ -76,7 +80,9 @@ ngAfterViewInit() {
 
   }
 
-  constructor(public common:CommonService, public mapService:MapService) {
+  constructor(public common:CommonService, public mapService:MapService,
+    public api: ApiService,
+    public modalService: NgbModal) {
 
   }
 
@@ -89,62 +95,132 @@ this.renderTable();
 
 
 
-getCategoris(){
-let catrgories = from ([[
-{name:'Car'},
-{name:'Bus'},
-{name:'Hotel'},
-{name:'Bike'},
-{name:'Truck'},
-{name:'Travel'},
-]])
+// getCategoris(){
+// let catrgories = from ([[
+// {name:'Car'},
+// {name:'Bus'},
+// {name:'Hotel'},
+// {name:'Bike'},
+// {name:'Truck'},
+// {name:'Travel'},
+// ]])
 
-catrgories.subscribe((item:any)=>{
-this.categories = item;
-console.log('this.categories: ', this.categories);
+// catrgories.subscribe((item:any)=>{
+// this.categories = item;
+// console.log('this.categories: ', this.categories);
 
-})
+// })
 
 
+// }
+
+
+
+getExpenseTypeList(){
+  this.expenseTypeList = [];
+
+  this.common.loading++;
+  this.api.get('Expense/getExpenseTypeList.json')
+    .subscribe(res => {
+      this.common.loading--;
+      if (res['code'] !=1) { this.common.showError(res['msg']); return false; };
+      this.expenseTypeList = res['data'] || [];
+   //   this.renderTable();
+      console.log(this.expenseTypeList);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
 }
 
-
-
-getexpenses(){
-let expense = from(expenses);
-console.log('expense : ', expense);
-expense.subscribe((item:any)=>{
-this.expenseData = item;
-// this.renderTable();
-});
-}
-
-selectedCategory(event:any){
-this.category = event.name;
-}
+// selectedCategory(event:any){
+// this.category = event.name;
+// }
 
 
 
 SubmitExpenses(){
-console.log('expenseTypeVal',this.expenseTypeVal);
-let params = {
-expeenseType:this.expenseTypeVal,
-status:this.status,
-category:this.category,
-}
-console.log('params: ', params);
+  let params: any = {
+    description: this.expenseType,
+    expenseStatus: this.typestatus,
+    expenseCategory: this.category,
+    id: this.id,
+  };
+  console.log(params);
+  this.common.loading++;
+  this.api.post('Expense/SubmitExpenseType.json', params).subscribe(res => {
+    this.common.loading--;
+    if (res['code'] == 1) {
+      this.common.showToast(res['msg']);
+      this.getExpenseTypeList();
+      this.resetType();
+    } else {
+      this.common.showError(res['msg']);
+    }
+  }, err => {
+    this.common.loading--;
+    this.common.showError();
+    console.log("error:", err);
+  }
+  
+  );
 
 }
+
+editExpenseType(item?:any) {
+  this.resetType();
+  console.log('item',item);
+  this.id = item.id;
+  this.expenseType = item.description;
+    this.typestatus = (item.expense_status == 1)?"Active":"Inactive";
+    this.category = item.expenses_category;
+    this.title = "Update Expense Type";
+    this.btn = 'Update';
+
+}
+
+ viewDetails(row?: any) {
+   this.common.params = { details: [row], title: 'info' }
+  console.log('row',row);
+//   const activeModal = this.modalService.open(ViewDetailsComponent, { size: 'lg' });
+
+ }
 
 selectedUser(event:any){
 
 }
 
+resetType(){
+  this.category = 'accommodation';
+  this.expenseType = '';
+  this.typestatus = null;
+  this.id = null;
+  this.btn = 'Save';
+  this.title = "Add Expense Type";
+}
 
+deleteExpenseType(item?: any) {
+  this.common.loading++;
+  let params: any = {
+    id: item.id,
+  }
+
+  this.api.post('Expense/deleteExpenseType.json', params)
+    .subscribe((res: any) => {
+      this.common.loading--;
+      this.getExpenseTypeList();
+      this.resetType();
+      console.log('id',this.id);
+    }, (err: any) => {
+      console.error('Error: ', err);
+      this.common.loading--;
+    });
+}
 
   ngOnInit() {
-  this.getCategoris();
-
+  // this.getCategoris();
+  this.getExpenseTypeList();
   }
 
 }

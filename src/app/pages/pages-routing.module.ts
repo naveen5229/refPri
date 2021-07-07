@@ -75,6 +75,7 @@ import { TmgDashboardComponent } from './tmg-dashboard/tmg-dashboard.component';
 import { SettingsComponent } from './company-setting/company-setting.component';
 import { CallLogsComponent } from './call-logs/call-logs.component';
 import { ContinuityReportComponent } from './continuity-report/continuity-report.component';
+import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 import { LeaveManagementComponent } from './leave-management/leave-management.component';
 import { MeetingComponent } from './meeting/meeting.component';
 
@@ -463,6 +464,11 @@ const routes: Routes = [{
     canActivate: [AuthGuard, RouteGuard]
     },
     {
+      path:'leave-type-management',
+      component:LeaveTypeManagementComponent,
+      canActivate: [AuthGuard, RouteGuard]
+      },
+      {
   path:'meeting',
   component:MeetingComponent,
   canActivate: [AuthGuard, RouteGuard]

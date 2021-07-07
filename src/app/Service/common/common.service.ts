@@ -1227,6 +1227,8 @@ odoMultiplierWithMeter(distance: number) {
     distance = distance * 1.15;
   }
   return distance;
+backClicked() {
+  this.router.navigateByUrl('/#/pages');
 }
 
 
