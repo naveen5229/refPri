@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  //  I_URL: string = 'http://localhost/itrm_webservices/';
-  I_URL: string = 'http://192.168.0.101/itrm_webservices/';
+   I_URL: string = 'http://localhost/itrm_webservices/';
+  // I_URL: string = 'http://192.168.0.101/itrm_webservices/';
 
   //  I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'https://dev.elogist.in/booster_webservices/';
