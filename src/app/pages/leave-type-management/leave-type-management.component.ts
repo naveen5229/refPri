@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
@@ -18,9 +19,17 @@ export class LeaveTypeManagementComponent implements OnInit {
   leaveName:any;
   lCount:number = null;
   id:any = null;
-  empType : any = 'General';
+  employeeType = [];
   leaveType: any = 'Fixed';
   lNum : any = 'Monthly';
+  EmpTypeList = [
+    {id: 1, empType: 'General'},
+    {id: 2, empType: 'Contract'},
+    {id: 3, empType: 'Probation'},
+    {id: 4, empType: 'Trainee'},
+    {id: 5, empType: 'Intern'},
+    {id: 6, empType: 'Other'},
+  ];
   @ViewChild(DataTableDirective, { static: false })
    dtElement: any;
    dtTrigger: any = new Subject();
@@ -81,25 +90,36 @@ export class LeaveTypeManagementComponent implements OnInit {
        console.log(err);
      });
  }
-
+emT:string[] = [];
  editLeaveType(item?:any) {
   this.resetType();
   console.log('item',item);
-  this.id = item.id;
-  this.leaveName = item.leaveName;
-    this.lCount = item.leaveDays;
-    this.empType = item.employeeType;
-    this.leaveType = item.leaveType;
-    this.lNum = item.leaveDuration;
+    this.id = item.id;
+    this.leaveName = item.leave_name;
+    this.lCount = item.leave_days;
+    let element = item.employee_type;
+    let ccUsers = [];
+    let ccUser = this.EmpTypeList.find(x => x.empType == element);
+              if (ccUser) {
+                ccUsers.push(ccUser);
+              }
+              console.log(ccUsers);
+    this.employeeType = ccUsers;
+    this.leaveType = item.leave_type;
+    this.lNum = item.leave_duration;
     this.title = "Update Leave Name";
     this.btn = 'Update';
 }
   
  SubmitLeaveType(){
+   let empT: any[] = [];
+   this.employeeType.map((item:any) => {
+     empT.push(item.empType);
+   });
    let params: any = {
     leaveName: this.leaveName,
     leaveDays: this.lCount,
-    employeeType: this.empType,
+    employeeType: empT,
     leaveType: this.leaveType,
     leaveDuration: this.lNum,
     id: this.id
@@ -137,7 +157,7 @@ export class LeaveTypeManagementComponent implements OnInit {
  }
  
  resetType(){
-   this.empType = 'General';
+   this.employeeType = [];
    this.leaveType = 'Fixed';
    this.lNum = 'Monthly';
    this.leaveName = '';

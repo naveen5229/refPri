@@ -82,6 +82,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { TmgTicketComponent } from './tmg-ticket/tmg-ticket.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -170,7 +171,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ExpenseTypeComponent,
     VisitManagementComponent,
     LeaveTypeManagementComponent,
-    MeetingComponent
+    MeetingComponent,
+    TmgTicketComponent
   ],
 })
 export class PagesModule {
