@@ -42,47 +42,47 @@ export class LeaveTypeManagementComponent implements OnInit {
    }
    title = "Add Leave Name";
    btn = "Save";
- 
+
  ngAfterViewInit() {
      this.dtTrigger.next();
      this.getLeaveTypeList();
- 
+
    }
- 
+
   ngOnDestroy(): void {
      this.dtTrigger.unsubscribe();
    }
-  
+
     renderTable() {
      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
            dtInstance.destroy();
            this.dtTrigger.next();
- 
+
      });
- 
+
    }
- 
+
    constructor(public common:CommonService, public mapService:MapService,
      public api: ApiService,
      public modalService: NgbModal) {
- 
+
    }
- 
+
  filterColumn(){
  this.dtTrigger.next();
  this.renderTable();
  }
-  
+
  getLeaveTypeList(){
    this.leaveTypeList = [];
- 
+
    this.common.loading++;
    this.api.get('Leave/getLeaveTypeList.json')
      .subscribe(res => {
        this.common.loading--;
        if (res['code'] !=1) { this.common.showError(res['msg']); return false; };
        this.leaveTypeList = res['data'] || [];
-    //   this.renderTable();
+       this.renderTable();
        console.log(this.leaveTypeList);
      }, err => {
        this.common.loading--;
@@ -110,7 +110,7 @@ emT:string[] = [];
     this.title = "Update Leave Name";
     this.btn = 'Update';
 }
-  
+
  SubmitLeaveType(){
    let empT: any[] = [];
    this.employeeType.map((item:any) => {
@@ -140,22 +140,22 @@ emT:string[] = [];
      this.common.showError();
      console.log("error:", err);
    }
-   
+
    );
- 
+
  }
-  
+
   viewDetails(row?: any) {
     this.common.params = { details: [row], title: 'info' }
    console.log('row',row);
  //   const activeModal = this.modalService.open(ViewDetailsComponent, { size: 'lg' });
- 
+
   }
- 
+
  selectedUser(event:any){
- 
+
  }
- 
+
  resetType(){
    this.employeeType = [];
    this.leaveType = 'Fixed';
@@ -166,7 +166,7 @@ emT:string[] = [];
    this.btn = 'Save';
    this.title = "Add Leave Name";
  }
- 
+
  deleteLeaveType(item?: any) {
    this.common.loading++;
    let params: any = {
@@ -183,10 +183,10 @@ emT:string[] = [];
        this.common.loading--;
      });
  }
- 
+
    ngOnInit() {
    this.getLeaveTypeList();
    }
- 
+
  }
- 
+
