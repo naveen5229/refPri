@@ -2,17 +2,17 @@
   <thead>
     <tr>
       <th *ngFor="let item of dataheading">{{item}}</th>
-      <th *ngIf="setting?.action"> Action </th>
+      <!-- <th *ngIf="setting?.action"> Action </th> -->
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of datavalues">
       <td *ngFor="let value of item"> {{value}} </td>
-      <td *ngIf="setting?.action">
+      <!-- <td *ngIf="setting?.action">
         <div [class]="setting.action.class || 'action-block'">
           <i *ngFor="let item of setting.action" [class]="setting.action.icon" (click)="setting.action.action()"></i>
         </div>
-      </td>
+      </td> -->
     </tr>
   </tbody>
 </table>
