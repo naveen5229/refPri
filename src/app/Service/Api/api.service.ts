@@ -11,7 +11,7 @@ export class ApiService {
    I_URL: string = 'http://localhost/itrm_webservices/';
   // I_URL: string = 'http://13.232.190.178/itrm_webservices/';
 
- //  I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
+  // I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'https://dev.elogist.in/booster_webservices/';
   T_URL: string = 'https://dev.elogist.in/transtrucknew/';
 
