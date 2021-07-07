@@ -1,9 +1,9 @@
-<nb-card class="min-h-auto">
+<nb-card>
   <nb-card-header>
     <h5> {{title}}</h5>
   </nb-card-header>
 
-  <nb-card-body>
+  <nb-card-body class="min-h-auto">
     <form class="expense-form">
       <div class="row align-items-center">
         <div class="col-md-3 form-group">
@@ -68,22 +68,25 @@
         </div>
       </div>
 
-      <div class="row align-items-center">
+      <div class="row align-items-center mt-4">
         <div class="col-md-10">
-          <button type="back" class="btn btn-danger" (click)="common.backClicked()"> Back </button>
-          <button type="submit" class="btn btn-primary" (click)="SubmitLeaveType()"> {{btn}} </button>
-          <button type="reset" class="btn btn-danger" (click)="resetType()"> Reset </button>
+          <div class="action-block">
+            <button type="back" class="btn btn-danger" (click)="common.backClicked()"> Back </button>
+            <button type="submit" class="btn btn-primary" (click)="SubmitLeaveType()"> {{btn}} </button>
+            <button type="reset" class="btn btn-danger" (click)="resetType()"> Reset </button>
+          </div>
+
         </div>
       </div>
     </form>
   </nb-card-body>
 </nb-card>
 
-<nb-card class="min-h-auto">
+<nb-card>
   <nb-card-header>
     <h5> Leave Types </h5>
   </nb-card-header>
-  <nb-card-body>
+  <nb-card-body class="min-h-auto">
     <table datatable class="table table-primary ng-datatable" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
       <thead>
         <tr>
