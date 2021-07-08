@@ -1053,6 +1053,7 @@ export class CommonService {
     return [...new Map(list.map(item => [item[key], item])).values()];
   }
   chartScaleLabelAndGrid(arr) {
+    console.log("arr",arr);
     let chartObj = {
       yaxisLabel: '',
       scaleData: null,

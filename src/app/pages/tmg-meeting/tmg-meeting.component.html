@@ -1,0 +1,195 @@
+<div class="contentsection">
+
+  <div class="row mb-0 mr-0" style="height: 100%;">
+    <!-- first column -->
+    <div class="col-4" style="height: 100%; overflow: hidden;">
+      <div class="row">
+        <div class="col-12">
+          <div class="outer" style="height: auto; margin-bottom: 10px;">
+            <h6 style="text-align:center"><b class="charthead">Trend</b></h6>
+            <p class="link"
+              (click)="getDetails('AdminTask/getTmgMeetingTrends',{totalrecord: 3,stepno: -1},30,'days')"><i
+                title="More Details" class="fa fa-list"></i>
+            </p>
+            <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.dataSet" style="margin-right:5px;min-height: 300px;height: 90%; padding-left: 10px;" [options]="chart1.options">
+            </chart>
+          </div>
+        </div>
+      </div>   
+      <div class="row">
+        <div class="col-12">
+          <div class="outer" style="height: auto; margin-bottom: 10px;">
+            <h6 style="text-align:center"><b class="charthead">Dept-Meeting</b></h6>
+            <p class="link"
+              (click)="getDetails('AdminTask/getDeptMeetings',{totalrecord: 3,stepno: -1},30,'days')"><i
+                title="More Details" class="fa fa-list"></i>
+            </p>
+            <chart *ngIf="chart.type" [type]="chart.type" [data]="chart.data"
+              style="margin-right:5px;min-height: 300px;height: 90%;padding-left: 10px;" [options]="chart.options">
+            </chart>
+          </div>
+        </div>
+      </div> 
+    </div>
+  
+      <!-- second column -->
+      <div class="col-4" style="height: 100%; overflow: hidden;">
+        <div class="row">
+          <div class="col-12">
+            <div class="outer" style="height:auto">
+              <h6 style="text-align:center"><b class="charthead">Meeting Plan</b></h6>
+              <p class="link"
+                (click)="getDetails('AdminTask/getMeetingPlans',{totalrecord: 3,stepno: -1},30,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+              <table class="table" *ngIf = "meetingPlans.length>0">
+                <thead class="thead">
+                  <th>Day</th>
+                  <th>Count</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor = "let mp of meetingPlans">
+                    <td>{{mp.day}}</td>
+                    <td>{{mp.count}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>    
+        <div class="row">
+          <div class="col-12">
+            <div class="outer" style="height:auto">
+              <h6 style="text-align:center"><b class="charthead">Worst 3 Cancel (30 days)</b></h6>
+              <p class="link"
+                (click)="getDetails('AdminTask/getMeetingWorst3Cancel30days',{totalrecord: 3,stepno: -1},30,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+              <table class="table" *ngIf="worst3Cancel30days.length>0">
+                <thead class="thead">
+                  <th>Name</th>
+                  <th>Total</th>
+                  <th>Cancelled</th>
+                  <th>%</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let wc of worst3Cancel30days">
+                    <td>{{wc.name}}</td>
+                    <td>{{wc.total}}</td>
+                    <td>{{wc.cancelled}}</td>
+                    <td>{{wc.percent}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>   
+        <div class="row">
+          <div class="col-12">
+            <div class="outer" style="height:auto">
+              <h6 style="text-align:center"><b class="charthead">Reporting User (Worst Meeting Count)</b></h6>
+              <p class="link"
+                (click)="getDetails('AdminTask/getReportingUserWorstMeetingCounts',{totalrecord: 3,stepno: -1},30,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+              <table class="table" *ngIf="reportingUserWorstMeetingCounts.length>0">
+                <thead class="thead">
+                  <th>Reporting User</th>
+                  <th>Meeting Count</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let ru of reportingUserWorstMeetingCounts">
+                    <td>{{ru.name}}</td>
+                    <td>{{ru["Meeting(count)"]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>  
+      </div>
+
+       <!-- third column -->
+       <div class="col-4" style="height: 100%; overflow: hidden;">
+        <div class="row">
+          <div class="col-12">
+            <div class="outer" style="height:auto">
+              <h6 style="text-align:center"><b class="charthead">Top 3 user (Last 30 days)</b></h6>
+              <p class="link"
+                (click)="getDetails('AdminTask/getMeetingTop3UserLast30Days',{totalrecord: 3,stepno: -1},30,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+              <table class="table" *ngIf="top3UserLast30Days.length>0">
+                <thead class="thead">
+                  <th>Name</th>
+                  <th>Time (Hr)</th>
+                  <th>Count</th>
+                </thead>
+                <tbody class="tbody" *ngFor="let tu of top3UserLast30Days">
+                  <tr>
+                    <td>{{tu.name}}</td>
+                    <td>{{tu['duration(hours)']}}</td>
+                    <td>{{tu['Meeting(count)']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>    
+        <div class="row">
+          <div class="col-12">
+            <div class="outer" style="height:auto">
+              <h6 style="text-align:center"><b class="charthead">Worst 3 User (Drop from last month)</b></h6>
+              <p class="link"
+                (click)="getDetails('AdminTask/getMeetingWorst3UserDropFromLastMonths',{totalrecord: 3,stepno: -1},30,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+              <table class="table" *ngIf="worst3UserDropFromLastMonths.length>0">
+                <thead class="thead">
+                  <th>Name</th>
+                  <th>Last Month</th>
+                  <th>Current</th>
+                  <th>% Drop</th>
+                </thead>
+                <tbody class="tbody" *ngFor = "let wu of worst3UserDropFromLastMonths">
+                  <tr>
+                    <td>{{wu.name}}</td>
+                    <td>{{wu.last_month}}</td>
+                    <td>{{wu.current_month}}</td>
+                    <td>{{wu["drop%"]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>   
+        <div class="row">
+          <div class="col-12">
+            <div class="outer" style="height:auto">
+              <h6 style="text-align:center"><b class="charthead">Worst 3 User (30D Meeting not managed)</b></h6>
+              <p class="link"
+                (click)="getDetails('AdminTask/getWorst3User30DayMeetingNotManaged',{totalrecord: 3,stepno: -1},30,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+              <table class="table" *ngIf="worst3User30DayMeetingNotManaged.length>0">
+                <thead class="thead">
+                  <th>User</th>
+                  <th>Total</th>
+                  <th>Not Managed</th>
+                  <th>%</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let wm of worst3User30DayMeetingNotManaged">
+                    <td>{{wm.name}}</td>
+                    <td>{{wm.total}}</td>
+                    <td>{{wm.not_managed}}</td>
+                    <td>{{wm['%percent']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>  
+      </div>
+  </div>
+</div>
