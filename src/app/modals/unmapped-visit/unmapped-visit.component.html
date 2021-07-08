@@ -49,6 +49,7 @@
           <th class="date">Date</th>
           <th>Image</th>
           <th>Status</th>
+          <th>Entity Name</th>
           <th class="action">Action</th>
         </tr>
       </thead>
@@ -57,6 +58,7 @@
           <td class="name">{{s.name}}</td>
           <td class="date">{{s.addtime}}</td>
           <td><i class="blue" (click)="viewImage(s.url)">View Image</i></td>
+          <td>{{s.entity_name}}</td>
           <td>{{s.status}}</td>
           <td></td>
         </tr>

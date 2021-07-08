@@ -228,7 +228,9 @@ this.detailImageZoom = true;
     this.expenseList = [];
   }
 
+  isAllCheckboxDisable = false;
   showAdminWiseWagesList() {
+    this.isAllCheckboxDisable = false;
     let adminId = this.expenseSearch.admin.id;
     // if (!adminId) {
     //   this.common.showError('Please select User');
@@ -251,6 +253,9 @@ this.detailImageZoom = true;
           this.allVisits = res['data'] || [];
           // this.renderTable();
           this.updateExpenseArray();
+          if(this.allVisits && (this.allVisits.find(x=>x.is_disable) || this.allVisits.find(x=>x._user_id==this.userService.loggedInUser.id))){
+            this.isAllCheckboxDisable = true;
+          }
           this.renderTable();
         } else {
           this.common.showError(res['msg']);

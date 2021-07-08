@@ -21,7 +21,7 @@ export class UnmappedVisitComponent implements OnInit, OnDestroy, AfterViewInit 
   dataList = [];
   @ViewChild(DataTableDirective, {static: false})
   dtElement: any;
-  dtOptions =  this.tableService.options(10,4,'visit_report');
+  dtOptions =  this.tableService.options(10,5,'visit_report');
   dtTrigger: Subject<any> = new Subject<any>();
   constructor(public activeModal: NgbActiveModal, public modalService: NgbModal, public api: ApiService,
     public common: CommonService, public tableService:TableService) {
