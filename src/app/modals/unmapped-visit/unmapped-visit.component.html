@@ -57,9 +57,9 @@
         <tr *ngFor="let s of dataList;let i = index">
           <td class="name">{{s.name}}</td>
           <td class="date">{{s.addtime}}</td>
-          <td><i class="blue" (click)="viewImage(s.url)">View Image</i></td>
-          <td>{{s.entity_name}}</td>
+          <td><i [ngClass]="(s._url) ? 'blue' : ''" (click)="viewImage(s._url)">View Image</i></td>
           <td>{{s.status}}</td>
+          <td>{{s.entity_name}}</td>
           <td></td>
         </tr>
       </tbody>
