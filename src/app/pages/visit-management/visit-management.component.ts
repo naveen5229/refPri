@@ -23,10 +23,11 @@ import { UnmappedVisitComponent } from '../../modals/unmapped-visit/unmapped-vis
   styleUrls: ['./visit-management.component.scss']
 })
 export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewInit {
- startDate = new Date();
- endDate = new Date();
- category:any;
- allUsers:any[] = [];
+  currentDate = this.common.getDate();
+  startDate = new Date();
+  endDate = new Date();
+  category:any;
+  allUsers:any[] = [];
   allVisits:any[] = [];
   isDetailView:boolean = false;
   ExpenseDate:any;

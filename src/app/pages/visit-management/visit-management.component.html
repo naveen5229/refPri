@@ -31,7 +31,7 @@
                 <div class="form-group mb-0"> <label>End Date</label>
                   <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="false"
                     [isStart]="false" [isDateDisabled]="!expenseSearch.admin.id"
-                    [isTimeDisabled]="!expenseSearch.admin.id"> </uj-date-time-picker>
+                    [isTimeDisabled]="!expenseSearch.admin.id" [maxd]="currentDate"> </uj-date-time-picker>
                 </div>
               </div>
               <div class="col-md-3">
