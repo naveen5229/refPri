@@ -10,7 +10,7 @@ import { Console } from 'console';
 @Component({
   selector: 'tmg-task',
   templateUrl: './tmg-task.component.html',
-  styleUrls: ['./tmg-task.component.scss']
+  styleUrls: ['./tmg-task.component.scss','../tmg-dashboard/tmg-dashboard.component.scss']
 })
 export class TmgTaskComponent implements OnInit {
   challansMonthGraph = [];
@@ -96,7 +96,7 @@ export class TmgTaskComponent implements OnInit {
       this.getoverduetask(2);
       this.getuserwisereadtat(8);
       this.getMissedCallNotRevertedData(5);
-      
+
     }
     else {
       this.getuserwisereadtat(1);
@@ -418,7 +418,7 @@ export class TmgTaskComponent implements OnInit {
     this.api.get(apiname)
       .subscribe(res => {
         this.readingTatGraphData = res['data'];
-       
+
         this.hideLoader(index);
         this.handleChart();
       }, err => {
@@ -520,7 +520,7 @@ export class TmgTaskComponent implements OnInit {
         lable3 = "";
       }
     }
-  
+
 
     // challansMonthGraph
     dataList.map(tlt => {
@@ -666,7 +666,7 @@ export class TmgTaskComponent implements OnInit {
     let label = "Hour";
     if (this.pageType == "Tmg-worklog") {
       label = "Defaulter %";
-    } 
+    }
     else if(this.pageType == "tmgCallDashboard") {
       label = "call %";
     }
@@ -742,7 +742,7 @@ export class TmgTaskComponent implements OnInit {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 
