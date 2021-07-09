@@ -47,10 +47,10 @@
         <tr>
           <th>Name</th>
           <th class="date">Date</th>
-          <th>Image</th>
+          <th class="bg-none">Image</th>
           <th>Status</th>
           <th>Entity Name</th>
-          <th class="action">Action</th>
+          <th class="action bg-none">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -60,7 +60,13 @@
           <td><i [ngClass]="(s._url) ? 'blue' : ''" (click)="viewImage(s._url)">View Image</i></td>
           <td>{{s.status}}</td>
           <td>{{s.entity_name}}</td>
-          <td></td>
+          <td>
+            <div class="action-block">
+              <button *ngIf="!s._refid>0" class="btn btn-success" [title]="(s._refid>0) ? 'Already mapped with an entity':'Click to map with an entity'" [disabled]="s._refid>0" (click)="(s._refid>0) ? null : openMappingModal(s);">
+                link
+              </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
