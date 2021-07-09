@@ -351,11 +351,16 @@ this.detailImageZoom = true;
   }
 
   saveVerifiedExpenseSingleWithConfirm(status,item) {
-    if(status==-1){
+    let msg = "<b>All the visit images will be rejected that are attached with same date.<br>Are you sure to reject anyway?<b>";
+    if(status==1){
+      msg = "<b>This Approval will result in all the details(Visit Images & expenses) to be approved and it can not be edited after that.<br>Are you sure to approve anyway?<b>";
+    }
+    // else{
+
+    // }
       this.common.params = {
-        title: "Reject Visit",
-        description:
-          "<b>All the visit images will be rejected that are attached with same date.<br>Are you sure to reject anyway?<b>",
+        title: (status==1) ? "Approve Visit" : "Reject Visit",
+        description: msg,
         isRemark: false,
       };
       const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
@@ -364,9 +369,9 @@ this.detailImageZoom = true;
           this.saveVerifiedExpenseSingle(status,item);
         }
       });
-    }else{
-      this.saveVerifiedExpenseSingle(status,item);
-    }
+    // }else{
+    //   this.saveVerifiedExpenseSingle(status,item);
+    // }
   }
 
   saveVerifiedExpenseSingle(status,item) {
