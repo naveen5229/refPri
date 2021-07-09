@@ -42,7 +42,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(DataTableDirective, {static: false})
   dtElement: any;
   // dtOptions: DataTables.Settings = {};
-  dtOptions =  this.table.options(10,7,'USER EXPENSES');
+  dtOptions =  this.table.options(10,9,'USER EXPENSES');
   dtTrigger: Subject<any> = new Subject<any>();
   updatedExpenses = [];
   expenseSearch = {
@@ -582,6 +582,7 @@ this.detailImageZoom = true;
 
   backnavigate(){
     this.isDetailView = false;
+    this.showAdminWiseWagesList();
   }
 
   expenseInfo = [];

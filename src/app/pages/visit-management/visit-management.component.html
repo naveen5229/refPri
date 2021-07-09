@@ -59,6 +59,8 @@
                 </th>
                 <th>Name</th>
                 <th class="date">Date</th>
+                <th>Travel Expense</th>
+                <th>Other Expense</th>
                 <th>User Expense</th>
                 <th>System Travel</th>
                 <th>Total Image</th>
@@ -76,11 +78,13 @@
                 </td>
                 <td class="name">{{item.name}}</td>
                 <td class="date">{{item.sqdate2}}</td>
+                <td class="date">{{(item.system_expense>0) ? item.system_expense : item.travel_amount}}</td>
+                <td class="date">{{item.other_amount}}</td>
                 <td class="expanse">
                   <p class="mb-0 text-primary"
                     (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
                     [ngbTooltip]="tipContent"   container="body"
-                    [disableTooltip]="item.total_expense_actual <= 0"> <i [class]="common.currencyClass"></i>
+                    [disableTooltip]="!item.total_expense_actual"> <i [class]="common.currencyClass"></i>
                     {{item.total_expense_actual}} </p>
 
                 </td>
