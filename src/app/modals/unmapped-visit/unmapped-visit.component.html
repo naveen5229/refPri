@@ -1,0 +1,68 @@
+<div class="modal-header">
+  <h5>Visit Report</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <!-- <div class="col-3">
+      <div class="form-group mb-0">
+        <label for="">Select User</label>
+        <auto-suggestion (onSelected)="selectedUser = $event" [data]="allUsers" display='name'
+          placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+          [preSelected]="{name:selectedUser.name}"> </auto-suggestion>
+      </div>
+    </div> -->
+      
+      <div class="col-3">
+        <div class="form-group mb-0">
+          <label>Start Date</label>
+          <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="false" [isStart]="true">
+          </uj-date-time-picker>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-group mb-0">
+          <label>End Date</label>
+          <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="false"> </uj-date-time-picker>
+        </div>
+      </div>
+      <div class="col-2">
+        <label>Filter</label>
+        <select class="form-control" [(ngModel)]="listType">
+          <option value="2">All</option>
+          <option value="0">Mapped</option>
+          <option value="1">UnMapped</option>
+        </select>
+      </div>
+      <div class="col-3">
+          <button type="button" class="btn btn-primary btn-sm mr-2 mt-4" (click)="getUnMappedOnsiteImages()">Submit</button>
+      </div>
+    </div>
+  <div class="pt-2">
+      
+    <table class="table table-primary ng-dataTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th class="date">Date</th>
+          <th>Image</th>
+          <th>Status</th>
+          <th>Entity Name</th>
+          <th class="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of dataList;let i = index">
+          <td class="name">{{s.name}}</td>
+          <td class="date">{{s.addtime}}</td>
+          <td><i [ngClass]="(s._url) ? 'blue' : ''" (click)="viewImage(s._url)">View Image</i></td>
+          <td>{{s.status}}</td>
+          <td>{{s.entity_name}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
