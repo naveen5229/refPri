@@ -238,6 +238,21 @@
 }
 
 
+.flex-column-4 {
+  display: flex;
+  gap: 5px;
+  height: 100%;
+
+  .column-block,
+  [class^='col-'] {
+    height: calc(25% - 20px);
+  }
+
+
+}
+
+
+
 .section-row {
   // padding: 0;
   // margin: 0;
