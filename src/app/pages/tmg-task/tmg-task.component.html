@@ -49,9 +49,11 @@
             </div>
 
             <div class="card-body">
-              <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
-                style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
-              </chart>
+              <div class="h-100">
+                <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+                  style="margin-right:5px;height: 100%;padding-left: 10px;" [options]="chart1.options">
+                </chart>
+              </div>
             </div>
           </div>
         </div>
@@ -280,7 +282,7 @@
 <!-- end: tmg-task -->
 
 <!-- start: tmg-worklog -->
-<div *ngIf="pageType=='Tmg-worklog'" class="contentsection">
+<div *ngIf="pageType=='Tmg-worklog'" class="contentsection tmg-worklog">
   <div class="row section-row column-2">
     <div class="col-4">
       <div class="row flex-column-3">
@@ -296,7 +298,8 @@
               </p>
             </div>
             <div class="card-body">
-              <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" [options]="chart1.options">
+              <chart *ngIf="chart1.type" style="margin-right:5px;height: 95%; padding-left: 10px;" [type]="chart1.type"
+                [data]="chart1.data" [options]="chart1.options">
               </chart>
             </div>
 
@@ -317,8 +320,11 @@
             </div>
 
             <div class="card-body">
-              <chart [type]="chart2.type" [data]="chart2.data" [options]="chart2.options">
-              </chart>
+              <div class="h-100">
+                <chart [type]="chart2.type" [data]="chart2.data" style="height: 100%;" [options]="chart2.options">
+                </chart>
+              </div>
+
             </div>
           </div>
         </div>
@@ -337,7 +343,8 @@
             </div>
 
             <div class="card-body">
-              <chart [type]="chart3.type" [data]="chart3.data" [options]="chart3.options">
+              <chart [type]="chart3.type" style="margin-right:5px;height: 95%; padding-left: 10px;" [data]="chart3.data"
+                [options]="chart3.options">
               </chart>
             </div>
           </div>
@@ -559,7 +566,7 @@
 <!-- end: tmg-worklog -->
 
 <!-- start:tmgProcess -->
-<div *ngIf="pageType=='tmgProcess'" class="contentsection">
+<div *ngIf="pageType=='tmgProcess'" class="contentsection tmg-task-selection">
   <div class="row section-row ">
     <div class="col-3">
       <div class="row flex-column-3">
@@ -575,16 +582,17 @@
               </p>
             </div>
             <div class="card-body">
-              <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-top: -12px;"
-                [options]="chart1.options">
-              </chart>
+              <div class="h-100">
+                <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+                  style="margin-top: -12px;height: 100%;" [options]="chart1.options">
+                </chart>
+              </div>
             </div>
           </div>
 
 
 
         </div>
-
         <div class="col-12">
           <div class="card">
             <div class="card-header">
@@ -599,8 +607,12 @@
             </div>
 
             <div class="card-body">
-              <chart [type]="chart2.type" [data]="chart2.data" style="margin-top: -12px;" [options]="chart2.options">
-              </chart>
+              <div class="h-100">
+                <chart [type]="chart2.type" [data]="chart2.data" style="margin-top: -12px;height: 100%;"
+                  [options]="chart2.options">
+                </chart>
+              </div>
+
             </div>
           </div>
         </div>
@@ -616,7 +628,11 @@
       </p> -->
             </div>
             <div class="card-body">
-              <chart [type]="chart3.type" [data]="null" style="margin-top: -12px;" [options]="chart3.options"></chart>
+              <div class="h-100">
+                <chart [type]="chart3.type" [data]="null" style="margin-top: -12px;height: 100%;"
+                  [options]="chart3.options"></chart>
+              </div>
+
             </div>
 
           </div>
@@ -956,7 +972,7 @@
 
 
 <!-- start: tmg-call -Dasboard -->
-<div *ngIf="pageType=='tmgCallDashboard'" class="contentsection">
+<div *ngIf="pageType=='tmgCallDashboard'" class="contentsection tmg-call-selection">
   <div class="row section-row">
     <div class="col-4">
       <div class="row flex-column-3">
@@ -973,10 +989,12 @@
             </div>
 
             <div class="card-body">
-              <chart *ngIf="doubleChart.type" [type]="doubleChart.type" [data]="doubleChart.dataSet"
-                style="margin-right:5px;min-height: 200px;height: 90%; padding-left: 10px;"
-                [options]="doubleChart.options">
-              </chart>
+              <div class="h-100">
+                <chart *ngIf="doubleChart.type" [type]="doubleChart.type" [data]="doubleChart.dataSet"
+                  style="margin-right:5px;min-height: 200px;height: 100%; padding-left: 10px;"
+                  [options]="doubleChart.options">
+                </chart>
+              </div>
             </div>
 
           </div>
@@ -1067,9 +1085,13 @@
             </div>
 
             <div class="card-body">
-              <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
-                style="margin-right:5px;height: 90%; padding-left: 10px;" [options]="chart1.options">
-              </chart>
+              <div class="h-100">
+                <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+                  style="margin-right:5px;height: 100%; padding-left: 10px;" [options]="chart1.options">
+                </chart>
+              </div>
+
+
             </div>
           </div>
         </div>

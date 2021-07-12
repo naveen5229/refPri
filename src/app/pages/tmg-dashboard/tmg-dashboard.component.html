@@ -4,80 +4,98 @@
   </nb-card-header> -->
   <nb-card-body style="padding: 1rem .2rem;">
     <div class="out-topnav">
-    <div>
-      <p class="dirbtn" (click)="backwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-left"  ></i></p>
-    </div>
-    <div class="toptab">
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'" (click)="selectedDashboard='Tmg-Task';selectedDept = {id:null,name:null};getDepartments()">
-          <b>Task DashBoard</b>
-        </p>
+      <div>
+        <p class="dirbtn" (click)="backwardMove();selectedDept = {id:null,name:null}"><i
+            class="fas fa-chevron-left"></i></p>
       </div>
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='Tmg-worklog'?'active':'default'" (click)="selectedDashboard='Tmg-worklog';selectedDept = {id:null,name:null};getDepartments()">
-          <b>WorkLog DashBoard</b>
-        </p>
-      </div>
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='tmgProcess'?'active':'default'" (click)="selectedDashboard='tmgProcess';selectedDept = {id:null,name:null};getDepartments()">
-          <b>Process DashBoard</b>
-        </p>
-      </div>
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='tmgCallDashboard'?'active':'default'" (click)="selectedDashboard='tmgCallDashboard';selectedDept = {id:null,name:null};getDepartments()">
-          <b>Call DashBoard</b>
-        </p>
-      </div>
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='tmgTicketDashboard'?'active':'default'" (click)="selectedDashboard='tmgTicketDashboard';selectedDept = {id:null,name:null};getDepartments()">
-          <b>Ticket DashBoard</b>
-        </p>
-      </div>
+      <div class="toptab">
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='Tmg-Task'?'active':'default'"
+            (click)="selectedDashboard='Tmg-Task';selectedDept = {id:null,name:null};getDepartments()">
+            <b>Task DashBoard</b>
+          </p>
+        </div>
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='Tmg-worklog'?'active':'default'"
+            (click)="selectedDashboard='Tmg-worklog';selectedDept = {id:null,name:null};getDepartments()">
+            <b>WorkLog DashBoard</b>
+          </p>
+        </div>
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='tmgProcess'?'active':'default'"
+            (click)="selectedDashboard='tmgProcess';selectedDept = {id:null,name:null};getDepartments()">
+            <b>Process DashBoard</b>
+          </p>
+        </div>
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='tmgCallDashboard'?'active':'default'"
+            (click)="selectedDashboard='tmgCallDashboard';selectedDept = {id:null,name:null};getDepartments()">
+            <b>Call DashBoard</b>
+          </p>
+        </div>
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='tmgTicketDashboard'?'active':'default'"
+            (click)="selectedDashboard='tmgTicketDashboard';selectedDept = {id:null,name:null};getDepartments()">
+            <b>Ticket DashBoard</b>
+          </p>
+        </div>
 
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='tmgMeetingDashboard'?'active':'default'" (click)="selectedDashboard='tmgMeetingDashboard';selectedDept = {id:null,name:null};getDepartments()">
-          <b>Meeting DashBoard</b>
-        </p>
-      </div>
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='tmgMeetingDashboard'?'active':'default'"
+            (click)="selectedDashboard='tmgMeetingDashboard';selectedDept = {id:null,name:null};getDepartments()">
+            <b>Meeting DashBoard</b>
+          </p>
+        </div>
 
-      <div class="hiddenby">
-        <p [class]="selectedDashboard=='tmgVisitDashboard'?'active':'default'" (click)="selectedDashboard='tmgVisitDashboard';selectedDept = {id:null,name:null};getDepartments()">
-          <b>Visit DashBoard</b>
-        </p>
-      </div>
-      <!-- <div *ngIf="selectedDashboard=='Tmg-worklog'">
+        <div class="hiddenby">
+          <p [class]="selectedDashboard=='tmgVisitDashboard'?'active':'default'"
+            (click)="selectedDashboard='tmgVisitDashboard';selectedDept = {id:null,name:null};getDepartments()">
+            <b>Visit DashBoard</b>
+          </p>
+        </div>
+        <!-- <div *ngIf="selectedDashboard=='Tmg-worklog'">
         <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:''}">
         </auto-suggestion>
       </div> -->
+      </div>
+
+      <div>
+        <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i
+            class="fas fa-chevron-right"></i></p>
+      </div>
     </div>
 
-    <div>
-      <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
+
+    <div class="search-group">
+      <div class="input-group">
+        <label for=""> Department: </label>
+        <button type="button" class="btn search-btn btn-primary">
+          <i class="fas fa-search"></i>
+        </button>
+        <div class="form-outline">
+          <select [(ngModel)]="selectedDept.id" class="form-control">
+            <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for=""> Ticket Process: </label>
+        <button type="button" class="btn search-btn btn-primary">
+          <i class="fas fa-search"></i>
+        </button>
+        <div class="form-outline">
+          <select [(ngModel)]="selectedTicketProcess.id" class="form-control">
+            <option *ngFor="let tp of ticketProcesses" [value]="tp._id">{{tp.name}}</option>
+          </select>
+        </div>
+      </div>
+
     </div>
 
-   </div>
-   <div class="input-group">
-    <i>Department: </i>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-    <div class="form-outline">
-     <select [(ngModel)]="selectedDept.id">
-     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
-     </select>
-    </div>
-    <i>Ticket Process: </i>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-    <div class="form-outline">
-     <select [(ngModel)]="selectedTicketProcess.id">
-     <option *ngFor="let tp of ticketProcesses" [value]="tp._id">{{tp.name}}</option>
-     </select>
-    </div>
-  </div>
 
-   <!-- <div class="out-topnav-dept" *ngIf="['Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)">
+
+    <!-- <div class="out-topnav-dept" *ngIf="['Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)">
     <div class="toptabdept" *ngFor="let dept of departments">
       <div class="hiddenby">
         <p [class]="selectedDept.id==dept.id?'active':'default'" (click)="selectedDept=dept">
@@ -87,10 +105,15 @@
     </div>
    </div> -->
 
-   <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
-   <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-ticket>
-   <ngx-tmg-meeting *ngIf="selectedDashboard == 'tmgMeetingDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-meeting>
-   <ngx-tmg-visit *ngIf="selectedDashboard == 'tmgVisitDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-visit>
-   <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id" [tpId]="selectedTicketProcess.id"></ngx-tmg-ticket>
+    <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)"
+      [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
+    <!-- <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard"
+      [deptId]="selectedDept.id"></ngx-tmg-ticket> -->
+    <ngx-tmg-meeting *ngIf="selectedDashboard == 'tmgMeetingDashboard'" [pageType]="selectedDashboard"
+      [deptId]="selectedDept.id"></ngx-tmg-meeting>
+    <ngx-tmg-visit *ngIf="selectedDashboard == 'tmgVisitDashboard'" [pageType]="selectedDashboard"
+      [deptId]="selectedDept.id"></ngx-tmg-visit>
+    <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard"
+      [deptId]="selectedDept.id" [tpId]="selectedTicketProcess.id"></ngx-tmg-ticket>
   </nb-card-body>
 </nb-card>

@@ -1,71 +1,641 @@
-<div class="contentsection">
+<div class="contentsection ticket-content-selection">
+  <div class="row section-row">
+    <div class="col-3">
+      <div class="row flex-column-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Ticket Trend Period
+              </h3>
+              <p class="link" (click)="getDetails('AdminTask/getTmgTicketTrend',{totalrecord: 3,stepno: -1},30,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
 
-  <div class="row mb-0 mr-0" style="height: 100%;">
+            <div class="card-body">
+              <chart *ngIf="chart.type" [type]="chart.type" [data]="chart.data" style="margin-top: -12px;"
+                [options]="chart.options">
+              </chart>
+            </div>
 
-    <div class="col-3" style="height: 100%; overflow: hidden;">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Ticket Trend Period</b></h6>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Completion TAT Period
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketCompletionTatPeriod',{totalrecord: 3,stepno: -1},120,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+                style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
+              </chart>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Calling TAT Period
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketCallingTatPeriod',{totalrecord: 3,stepno: -1},120,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+            <div class="card-body">
+              <chart *ngIf="chart2.type" [type]="chart2.type" [data]="chart2.data"
+                style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart2.options">
+              </chart>
+            </div>
+          </div>
+
+          <!-- <div class="outer mt-3">
+        <h6><b class="charthead"> Reading TAT</b></h6>
         <p class="link"
-          (click)="getDetails('AdminTask/getTmgTicketTrend',{totalrecord: 3,stepno: -1},30,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <chart *ngIf="chart.type" [type]="chart.type" [data]="chart.data" style="margin-top: -12px;" [options]="chart.options">
-        </chart>
-      </div>
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgOpenTicketCount',{totalrecord: 3,stepno: -1}, 1 , 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket Process</th>
-            <th>Count</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let un of openTicketCount">
-              <td>{{un['name']}}</td>
-              <td>{{un['count']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Incomplete (Userwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketIncompleteUserwise',{totalrecord: 3,stepno: -1}, 30 , 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Name</th>
-            <th>Total Task</th>
-            <th>Incomplete Task</th>
-           
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let un of incompleteUserWise30D">
-              <td>{{un['name']}}</td>
-              <td>{{un['total']}}</td>
-              <td>{{un['incompleted']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Open Ticket Count (Live)</b></h6> -->
-        <!-- <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
             title="More Details" class="fa fa-list"></i>
         </p> -->
-       <!-- <table class="table" *ngIf="openTicketLive.length>0">
+          <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+          <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart> -->
+          <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+          <!-- </div> -->
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Claim TAT Period
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketClaimTatPeriod',{totalrecord: 3,stepno: -1},120,'days')"><i
+                  title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <chart *ngIf="chart3.type" [type]="chart3.type" [data]="chart3.data"
+                style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart3.options">
+              </chart>
+            </div>
+
+          </div>
+
+
+
+          <!-- <div class="outer mt-3">
+        <h6><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p> -->
+          <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+          <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart> -->
+          <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+          <!-- </div> -->
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Acknowledge TAT Period
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketAcknowledgeTatPeriod',{totalrecord: 3,stepno: -1},120,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <chart *ngIf="chart4.type" [type]="chart4.type" [data]="chart4.data"
+                style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart4.options">
+              </chart>
+            </div>
+
+          </div>
+
+          <!-- <div class="outer mt-3">
+        <h6><b class="charthead"> Reading TAT</b></h6>
+        <p class="link"
+          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
+            title="More Details" class="fa fa-list"></i>
+        </p> -->
+          <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
+          <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
+          [options]="chart.options"></chart> -->
+          <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
+      </chart> -->
+          <!-- </div> -->
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="row flex-column-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Open Ticket Count (Live)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgOpenTicketCount',{totalrecord: 3,stepno: -1}, 1 , 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket Process</th>
+                  <th>Count</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let un of openTicketCount">
+                    <td>{{un['name']}}</td>
+                    <td>{{un['count']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Completion TAT (Userwise - 30 Days)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketCompletionTatUserwise',{totalrecord: 3,stepno: -1},30,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>User</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of completetionTatUserWise;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Calling TAT (Userwise - 30 Days)
+              </h3>
+
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketCallingTatUserwise',{totalrecord: 3,stepno: -1}, 30, 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>User</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of callingTatUser30D;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Claim TAT (Userwise - 30 Days)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketClaimTatUserwise',{totalrecord: 3,stepno: -1}, 30 , 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>User</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of claimTatUser30D;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Acknowledge TAT (Userwise - 30 Days)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketAcknowledgeTatUserwise',{totalrecord: 3,stepno: -1}, 30, 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>User</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of acknowledgeTatUser30D;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="row flex-column-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Incomplete (Userwise - 30 Days)
+              </h3>
+
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketIncompleteUserwise',{totalrecord: 3,stepno: -1}, 30 , 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Name</th>
+                  <th>Total Task</th>
+                  <th>Incomplete Task</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let un of incompleteUserWise30D">
+                    <td>{{un['name']}}</td>
+                    <td>{{un['total']}}</td>
+                    <td>{{un['incompleted']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Completion TAT (Processwise - 30 Days)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketCompletionTatProcesswise',{totalrecord: 3,stepno: -1}, 30, 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of completetionTatProcess30D">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Calling TAT (Processwise - 30 Days)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketCallingTatProcesswise',{totalrecord: 3,stepno: -1}, 30, 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>User</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of callingTatUser30D;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Claim TAT (Processwise - 30 Days)
+              </h3>
+
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketClaimTatProcesswise',{totalrecord: 3,stepno: -1}, 30 ,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of claimTatProcess30D;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Acknowledge TAT (Processwise - 30 Days)
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketAcknowledgeTatProcesswise',{totalrecord: 3,stepno: -1}, 30, 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>TAT (Hr)</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of acknowledgeTatProcess30D;">
+                    <td>{{item['name']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+
+    <div class="col-3">
+      <div class="row flex-column-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Longest Pending Ticket
+              </h3>
+              <p class="link" (click)="getDetails('AdminTask/getTmgLongestPendingTicket',{totalrecord: 3,stepno: -1})">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>Process</th>
+                  <th>User </th>
+                  <th>Hour</th>
+                </thead>
+                <tbody class="tbody">
+                  <tr *ngFor="let item of longestPendingTicket;">
+                    <td>{{item['ticket']}}</td>
+                    <td>{{item['process']}}</td>
+                    <td>{{item['user']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Longest Calling Pending
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketLongestPendingCalling',{totalrecord: 3,stepno: -1}, 30 , 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>Process</th>
+                  <th>User </th>
+                  <th>Hour</th>
+                </thead>
+                <tbody class="tbody">
+                  <!-- <longestCallingPending> -->
+                  <tr *ngFor="let item of longestPendingTicket;">
+                    <td>{{item['ticket']}}</td>
+                    <td>{{item['process']}}</td>
+                    <td>{{item['user']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Longest Claim Pending
+              </h3>
+
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketLongestPendingClaim',{totalrecord: 3,stepno: -1},30,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>Process</th>
+                  <th>User </th>
+                  <th>Hour</th>
+                </thead>
+                <tbody class="tbody">
+                  <!-- <longestClaimPending> -->
+                  <tr *ngFor="let item of longestPendingTicket;">
+                    <td>{{item['ticket']}}</td>
+                    <td>{{item['process']}}</td>
+                    <td>{{item['user']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Longest Un-Acknowledge Pending
+              </h3>
+              <p class="link"
+                (click)="getDetails('AdminTask/getTmgTicketLongestUnAckPending',{totalrecord: 3,stepno: -1}, 30, 'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <table class="table">
+                <thead class="thead">
+                  <th>Ticket</th>
+                  <th>Process</th>
+                  <th>User </th>
+                  <th>Hour</th>
+                </thead>
+                <tbody class="tbody">
+                  <!-- <"longestAcknowledgePending"> -->
+                  <tr *ngFor="let item of longestPendingTicket;">
+                    <td>{{item['ticket']}}</td>
+                    <td>{{item['process']}}</td>
+                    <td>{{item['user']}}</td>
+                    <td>{{item['hour']}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="col-12">
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- <div class="col-3">
+      <div class="outer">
+        <h6><b class="charthead">Open Ticket Count (Live)</b></h6> -->
+    <!-- <p class="link" (click)="getDetails('AdminTask/getDashboardTaskSnapshot',{totalrecord: 3,stepno: -1})"><i
+            title="More Details" class="fa fa-list"></i>
+        </p> -->
+    <!-- <table class="table" *ngIf="openTicketLive.length>0">
           <thead class="thead">
             <th>Status</th>
             <th>Count</th>
@@ -85,377 +655,7 @@
             </tr>
           </tbody>
         </table> -->
-      <!-- </div>
+    <!-- </div>
     </div> -->
   </div>
-
-  <div class="row mb-0 mr-0" style="height: 100%;">
-    <div class="col-3" style="height: 100%; overflow: hidden;">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Completion TAT Period</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getTmgTicketCompletionTatPeriod',{totalrecord: 3,stepno: -1},120,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
-          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart1.options">
-        </chart>
-      </div>
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Completion TAT (Userwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketCompletionTatUserwise',{totalrecord: 3,stepno: -1},30,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-       <table class="table">
-          <thead class="thead">
-            <th>User</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of completetionTatUserWise;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Completion TAT (Processwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketCompletionTatProcesswise',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of completetionTatProcess30D">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Longest Pending Ticket</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgLongestPendingTicket',{totalrecord: 3,stepno: -1})"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>Process</th>
-            <th>User </th>
-            <th>Hour</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of longestPendingTicket;">
-              <td>{{item['ticket']}}</td>
-              <td>{{item['process']}}</td>
-              <td>{{item['user']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-
-
-
-   <div class="row mb-0 mr-0" style="height: 100%;">
-    <div class="col-3" style="height: 100%; overflow: hidden;">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Calling TAT Period</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getTmgTicketCallingTatPeriod',{totalrecord: 3,stepno: -1},120,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <chart *ngIf="chart2.type" [type]="chart2.type" [data]="chart2.data"
-          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart2.options">
-        </chart>
-      </div>
-      <!-- <div class="outer mt-3" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p> -->
-        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
-        <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
-          [options]="chart.options"></chart> -->
-        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
-      </chart> -->
-      <!-- </div> -->
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Calling TAT (Userwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketCallingTatUserwise',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>User</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of callingTatUser30D;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Calling TAT (Processwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketCallingTatProcesswise',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>User</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of callingTatUser30D;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Longest Calling Pending</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketLongestPendingCalling',{totalrecord: 3,stepno: -1}, 30 , 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>Process</th>
-            <th>User </th>
-            <th>Hour</th>
-          </thead>
-          <tbody class="tbody">
-            <!-- <longestCallingPending> -->
-            <tr *ngFor="let item of longestPendingTicket;">
-              <td>{{item['ticket']}}</td>
-              <td>{{item['process']}}</td>
-              <td>{{item['user']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-
-
-
-   <div class="row mb-0 mr-0" style="height: 100%;">
-    <div class="col-3" style="height: 100%; overflow: hidden;">
-      <div class="outer" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Claim TAT Period</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getTmgTicketClaimTatPeriod',{totalrecord: 3,stepno: -1},120,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <chart *ngIf="chart3.type" [type]="chart3.type" [data]="chart3.data"
-          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart3.options">
-        </chart>
-      </div>
-      <!-- <div class="outer mt-3" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p> -->
-        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
-        <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
-          [options]="chart.options"></chart> -->
-        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
-      </chart> -->
-      <!-- </div> -->
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Claim TAT (Userwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketClaimTatUserwise',{totalrecord: 3,stepno: -1}, 30 , 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>User</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of claimTatUser30D;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Claim TAT (Processwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketClaimTatProcesswise',{totalrecord: 3,stepno: -1}, 30 ,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of claimTatProcess30D;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Longest Claim Pending</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketLongestPendingClaim',{totalrecord: 3,stepno: -1},30,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>Process</th>
-            <th>User </th>
-            <th>Hour</th>
-          </thead>
-          <tbody class="tbody">
-            <!-- <longestClaimPending> -->
-            <tr *ngFor="let item of longestPendingTicket;">
-              <td>{{item['ticket']}}</td>
-              <td>{{item['process']}}</td>
-              <td>{{item['user']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-
-
-   <div class="row mb-0 mr-0" style="height: 100%;">
-    <div class="col-3" style="height: 100%; overflow: hidden;">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Acknowledge TAT Period</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getTmgTicketAcknowledgeTatPeriod',{totalrecord: 3,stepno: -1},120,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <chart *ngIf="chart4.type" [type]="chart4.type" [data]="chart4.data"
-          style="margin-right:5px;height: 90%;padding-left: 10px;" [options]="chart4.options">
-        </chart>
-      </div>
-      <!-- <div class="outer mt-3" style="height: calc(50% - 10px);">
-        <h6 style="text-align:center"><b class="charthead"> Reading TAT</b></h6>
-        <p class="link"
-          (click)="getDetails('AdminTask/getDashboardTaskMonthwiseUnreadTat',{totalrecord: 3,stepno: -1},30,'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p> -->
-        <!-- (click)="getDetails('AdminTask/getDashboardTaskUserwiseUnreadtat',{totalrecord: 3,stepno: -1},30,'days')" -->
-        <!-- <chart [type]="chart.type" [data]="chart.data" style="margin-right:5px;height: 90%;padding-left: 10px;"
-          [options]="chart.options"></chart> -->
-        <!-- <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 300px;max-height: 300px;" [options]="chart1.options">
-      </chart> -->
-      <!-- </div> -->
-    </div>
-
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Acknowledge TAT (Userwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketAcknowledgeTatUserwise',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>User</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of acknowledgeTatUser30D;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Acknowledge TAT (Processwise - 30 Days)</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketAcknowledgeTatProcesswise',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>TAT (Hr)</th>
-          </thead>
-          <tbody class="tbody">
-            <tr *ngFor="let item of acknowledgeTatProcess30D;">
-              <td>{{item['name']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-3 pl-0 pr-0 right">
-      <div class="outer" style="height: calc(60% - 10px);">
-        <h6 style="text-align:center"><b class="charthead">Longest Un-Acknowledge Pending</b></h6>
-        <p class="link" (click)="getDetails('AdminTask/getTmgTicketLongestUnAckPending',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
-            title="More Details" class="fa fa-list"></i>
-        </p>
-       
-        <table class="table">
-          <thead class="thead">
-            <th>Ticket</th>
-            <th>Process</th>
-            <th>User </th>
-            <th>Hour</th>
-          </thead>
-          <tbody class="tbody">
-            <!-- <"longestAcknowledgePending"> -->
-            <tr *ngFor="let item of longestPendingTicket;">
-              <td>{{item['ticket']}}</td>
-              <td>{{item['process']}}</td>
-              <td>{{item['user']}}</td>
-              <td>{{item['hour']}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div> -->
+</div>
