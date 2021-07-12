@@ -11,6 +11,7 @@ import {
 import { LoginComponent } from './auth/login/login.component';
 import { AdminToolComponent } from './pages/admin-tool/admin-tool.component';
 import { AuthGuard } from './guards/auth.guard';
+import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
 
 const routes: Routes = [
 
@@ -67,8 +68,10 @@ const routes: Routes = [
     loadChildren: () => import('../app/ticket/ticket.module')
       .then(m => m.TicketModule),
   },
-  { path: '', redirectTo: 'pages', pathMatch: 'full' },
-  { path: '**', redirectTo: 'pages' },
+  { path: 'pages/leave-type-management/:id', component: ModalContainerComponent },
+   { path: '', redirectTo: 'pages', pathMatch: 'full' },
+   { path: '**', redirectTo: 'pages' },
+ 
 ];
 
 const config: ExtraOptions = {

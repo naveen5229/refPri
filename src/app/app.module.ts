@@ -137,6 +137,8 @@ import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
 import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.component';
+import { ModalComponent } from './modals/modal/modal.component';
+import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
 
 
 
@@ -232,7 +234,8 @@ const PAGE_COMPONENTS = [
   AvailableTimeSlotComponent,
   LocationEntityComponent,
   UnmappedVisitComponent,
-
+  ModalComponent,
+  ModalContainerComponent,
  
 ];
 
@@ -254,7 +257,6 @@ const PAGE_COMPONENTS = [
     AddProcessPropertyComponent,
     MobileNoComponent,
      // SmartDataTableComponent,
-
 
     // SendmessageComponent,
     // GenericModelComponent,
