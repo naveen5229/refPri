@@ -255,7 +255,7 @@
 
     <div class="row mt-2 " *ngIf="meetingForm.type == 0">
         <div class="col-4">
-            <label>Select Room</label>
+            <label>Select Room<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
             <select class="form-control" [(ngModel)]="meetingForm.roomId">
@@ -372,7 +372,7 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Host<span class="text-danger">*</span></label>
+            <label>To-Do Creator<span class="text-danger">*</span></label>
         </div>
         <div class="col-8">
             <auto-suggestion [data]="userList" display="name" seperator="-" placeholder="Select Host User"
@@ -396,7 +396,7 @@
 
     <div class="row mt-2">
         <div class="col-4">
-            <label>Meeting Time
+            <label>To-Do Time
                 <!-- <span class="text-danger">*</span> -->
             </label>
         </div>

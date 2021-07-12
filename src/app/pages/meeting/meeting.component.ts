@@ -54,6 +54,8 @@ export class MeetingComponent implements OnInit {
     // select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
+    eventMouseEnter: this.handleMouseEnter.bind(this),
+    eventMouseLeave: this.handleMouseLeave.bind(this)
   };
   colorCodes = {
     background: ['#B0E0E6', '#FFE4E1', '#98FB98', '#FFB6C1'],
@@ -76,6 +78,10 @@ export class MeetingComponent implements OnInit {
   }
   meetingAttendiesList = [];
   holdForFollowUp = {};
+  entityTypes = [];
+  allEntities = [];
+  filteredEnitity = [];
+  advFldForMtngCmplt = { is_external: false, mapped_refid: null }
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
@@ -90,6 +96,7 @@ export class MeetingComponent implements OnInit {
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMeetingListByType([0, 1]);
+    this.getEntityDetails();
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -121,6 +128,23 @@ export class MeetingComponent implements OnInit {
         allDay: selectInfo.allDay
       });
     }
+  }
+
+  handleMouseEnter(event) {
+    console.log(event, event.event._def);
+    var tooltip = document.getElementById('tooltipText');
+    tooltip.innerText = event.event._def.title;
+
+    var ele = document.getElementById('tooltipPos');
+    console.log(event.jsEvent.x,event.jsEvent.y)
+    ele.style.top = `${event.jsEvent.y-150}px`;
+    ele.style.left = `${event.jsEvent.x-150}px`;
+    ele.style.visibility = 'visible';
+  }
+
+  handleMouseLeave(event) {
+    var ele = document.getElementById('tooltipPos');
+    ele.style.visibility = 'hidden';
   }
 
   createEventId() {
@@ -158,6 +182,28 @@ export class MeetingComponent implements OnInit {
         console.log("Error: ", err);
       }
     );
+  }
+
+  getEntityDetails() {
+    this.api.get('Entities/getEntityTypes').subscribe(res => {
+      if (res['code'] == 1) {
+        this.entityTypes = res['data'];
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.showError();
+    });
+
+    this.api.get('Entities/getEntities').subscribe(res => {
+      if (res['code'] == 1) {
+        this.allEntities = res['data'];
+      } else {
+        this.common.showError(res['msg'])
+      }
+    }, err => {
+      this.common.showError();
+    });
   }
 
   getUserGroupList() {
@@ -335,7 +381,7 @@ export class MeetingComponent implements OnInit {
       btn: 'Save'
     };
     const activeModal = this.modalService.open(ApplyLeaveComponent, {
-      size: "lg",
+      size: "md",
       container: "nb-layout",
       backdrop: "static",
     });
@@ -351,6 +397,7 @@ export class MeetingComponent implements OnInit {
   }
 
   updateTicketStatus(ticket, type, status, remark = null) {
+    console.log(this.advFldForMtngCmplt)
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -359,6 +406,8 @@ export class MeetingComponent implements OnInit {
         remark: remark,
         taskId: ticket._refid,
         ticketType: ticket._tktype,
+        isExternal: this.advFldForMtngCmplt.is_external,
+        mappedRefid: this.advFldForMtngCmplt.mapped_refid
       };
       // if (status != -1) this.collapseUnreadTaskUpdateStatus(type, ticket, status);
       // console.log("params:", params, ticket, this.unreadTaskForMeList); return false;
@@ -367,10 +416,11 @@ export class MeetingComponent implements OnInit {
         (res) => {
           // this.common.loading--;
           if (res["code"] > 0) {
-            this.getMeetingListByType([type]);
+            this.getMeetingListByType([0, 1]);
           } else {
             this.common.showError(res["msg"]);
           }
+          this.advFldForMtngCmplt = { is_external: false, mapped_refid: null }
         },
         (err) => {
           // this.common.loading--;
@@ -384,7 +434,7 @@ export class MeetingComponent implements OnInit {
   }
 
   ticketMessage(ticket, type) {
-    console.log('ticket',ticket)
+    console.log('ticket', ticket)
     let ticketEditData = {
       ticketData: ticket,
       ticketId: ticket._tktid,
@@ -413,15 +463,69 @@ export class MeetingComponent implements OnInit {
       backdrop: "static",
     });
     activeModal.result.then((data) => {
-      if (ticket._cc_user_id && !ticket._cc_status) {
-        this.ackTaskByCcUser(ticket, type);
-      }
+      // if (ticket._cc_user_id && !ticket._cc_status) {
+      //   this.updateMeetingStatus(ticket, type);
+      // }
       this.getMeetingListByType([0, 1]);
     });
   }
 
-  ackTaskByCcUser(ticket, type, status = 1) {
-    console.log(ticket)
+  updateMeetingStatus(ticket, type, statusType) {
+    console.log(ticket);
+    if (type == 'upcoming') {
+      if ((ticket._tktype == 110 && ticket._mp_status == 0) && (ticket._status == 0 && ticket._host == this.userService.loggedInUser.id)) {
+        if (statusType == 'ack') {
+          this.updateAsCcUser(ticket, 1);
+          this.updateTicketStatus(ticket, 0, 2);
+        } else if (statusType == 'reject') {
+          this.updateAsCcUser(ticket, -1);
+          this.updateTicketStatus(ticket, 0, -1);
+        }
+      } else {
+        if (ticket._tktype == 110 && ticket._mp_status == 0) {
+          if (statusType == 'ack') {
+            this.updateAsCcUser(ticket, 1);
+          } else if (statusType == 'reject') {
+            this.updateAsCcUser(ticket, -1);
+          }
+        } else if (ticket._status == 0 && ticket._host == this.userService.loggedInUser.id) {
+          if (statusType == 'ack') {
+            this.updateTicketStatus(ticket, 0, 2);
+          } else if (statusType == 'reject') {
+            this.updateTicketStatus(ticket, 0, -1);
+          }
+        }
+      }
+    } else if (type == 'past') {
+      if ((ticket._tktype == 110 && ticket._mp_status != -1) && (ticket._status != -1 && ticket._host == this.userService.loggedInUser.id)) {
+        if (statusType == 'ack') {
+          this.updateAsCcUser(ticket, 1);
+          this.updateTicketStatus(ticket, 0, 2);
+        } else if (statusType == 'reject') {
+          this.updateAsCcUser(ticket, -1);
+          this.updateTicketStatus(ticket, 0, -1);
+        }
+      } else {
+        if (ticket._tktype == 110 && ticket._mp_status != -1) {
+          if (statusType == 'ack') {
+            this.updateAsCcUser(ticket, 1);
+          } else if (statusType == 'reject') {
+            this.updateAsCcUser(ticket, -1);
+          }
+        } else if (ticket._status != -1 && ticket._host == this.userService.loggedInUser.id) {
+          if (statusType == 'ack') {
+            this.updateTicketStatus(ticket, 0, 2);
+          } else if (statusType == 'reject') {
+            this.updateTicketStatus(ticket, 0, -1);
+          }
+        }
+      }
+    }
+
+
+  }
+
+  updateAsCcUser(ticket, status) {
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -450,8 +554,41 @@ export class MeetingComponent implements OnInit {
     }
   }
 
+  attendanceFieldShow = false;
   getUserActivityUpdate(ticket, type, status) {
     this.holdForFollowUp = { ticket: ticket, type: type, status: status };
+    this.common.params = {
+      title: "Status Type",
+      description: `<b>&nbsp;` + `${ticket._meeting_type != 2 ? 'Meeting is External?' : 'To-Do is External?'} ` + `<b>`,
+      btn1: 'Yes',
+      btn2: 'No'
+    };
+
+    const activeModal = this.modalService.open(ConfirmComponent, {
+      size: "sm",
+      container: "nb-layout",
+      backdrop: "static",
+      keyboard: false,
+      windowClass: "accountModalClass",
+    });
+    activeModal.result.then((data) => {
+      // return console.log(data)
+      this.advFldForMtngCmplt.is_external = data.response;
+      if (data.response) {
+        if (ticket._meeting_type != 2) {
+          this.attendanceFieldShow = true;
+          this.checkStatus(ticket, type, status);
+        } else {
+          this.attendanceFieldShow = false;
+          this.mapEntities(ticket, type, status);
+        }
+      } else {
+        if (data.apiHit != -1) this.updateTicketStatus(ticket, type, status);
+      }
+    });
+  }
+
+  checkStatus(ticket, type, status) {
     let params = {
       ticketId: ticket._tktid,
       ticketType: 110
@@ -484,6 +621,17 @@ export class MeetingComponent implements OnInit {
     }
   }
 
+  mapEntities(ticket, type, status) {
+    document.getElementById('meetingAttendance').style.display = 'block';
+  }
+
+  getEntitiesFilter(id) {
+    let entities = JSON.parse(JSON.stringify(this.allEntities));
+    this.filteredEnitity = entities.filter(entity => { return entity._entity_type_id == id });
+    console.log(this.filteredEnitity)
+  }
+
+
   closemeetingAttendanceMoadal(state) {
     document.getElementById('meetingAttendance').style.display = 'none';
     if (state) this.followUpMeeting(this.holdForFollowUp['ticket'], this.holdForFollowUp['type'], this.holdForFollowUp['status'])
@@ -494,28 +642,32 @@ export class MeetingComponent implements OnInit {
   }
 
   followUpMeeting(ticket, type, status) {
-    this.common.params = {
-      title: "Follow Up Meeting",
-      description:
-        `<b>&nbsp;` + `Press Yes to create a follow up meeting and No will close this meeting without any followup.`,
-      isRemark: false,
-      btn1: 'Yes',
-      btn2: 'No'
-    };
-    const activeModal = this.modalService.open(ConfirmComponent, {
-      size: "sm",
-      container: "nb-layout",
-      backdrop: "static",
-      keyboard: false,
-      windowClass: "accountModalClass",
-    });
-    activeModal.result.then((data) => {
-      if (data.response) {
-        this.editMeeting(ticket, type, false);
-      } else {
-        (!data.apiHit) ? this.updateTicketStatus(ticket, type, status) : null;
-      }
-    });
+    if (ticket._meeting_type != 2) {
+      this.common.params = {
+        title: "Follow Up Meeting",
+        description:
+          `<b>&nbsp;` + `Press Yes to create a follow up meeting and No will close this meeting without any followup.`,
+        isRemark: false,
+        btn1: 'Yes',
+        btn2: 'No'
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, {
+        size: "sm",
+        container: "nb-layout",
+        backdrop: "static",
+        keyboard: false,
+        windowClass: "accountModalClass",
+      });
+      activeModal.result.then((data) => {
+        if (data.response) {
+          this.editMeeting(ticket, type, false);
+        } else {
+          (!data.apiHit) ? this.updateTicketStatus(ticket, type, status) : null;
+        }
+      });
+    } else {
+      this.updateTicketStatus(ticket, type, status)
+    }
   }
 
   saveMeetingAttendiesStatus(user) {
@@ -553,7 +705,7 @@ export class MeetingComponent implements OnInit {
   filterPast(keyToSearch) {
     let pastDataFiltered = JSON.parse(JSON.stringify(this.meetingDataForFilter.pastData));
     pastDataFiltered = pastDataFiltered.filter(element => {
-      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch))) || (element.schedule_time && (element.schedule_time.trim().match(keyToSearch)))
+      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch))) || (element.schedule_time && (element.schedule_time.trim().match(keyToSearch))) || (element._mtype && (element._mtype.toLowerCase().match(keyToSearch)))
     });
     this.meetingData.pastData = pastDataFiltered;
   }
@@ -561,7 +713,7 @@ export class MeetingComponent implements OnInit {
   filterUpcoming(keyToSearch) {
     let upcomingDataFiltered = JSON.parse(JSON.stringify(this.meetingDataForFilter.upcomingData));
     upcomingDataFiltered = upcomingDataFiltered.filter(element => {
-      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch))) || (element.schedule_time && (element.schedule_time.trim().match(keyToSearch)))
+      return (element.subject && (element.subject.toLowerCase()).match(keyToSearch)) || (element.host && (element.host.toLowerCase().match(keyToSearch))) || (element.schedule_time && (element.schedule_time.trim().match(keyToSearch))) || (element._mtype && (element._mtype.toLowerCase().match(keyToSearch)))
     });
     this.meetingData.upcomingData = upcomingDataFiltered;
   }
@@ -590,7 +742,7 @@ export class MeetingComponent implements OnInit {
         let schedules = [];
         if (res['data'])
           res['data'].map(events => {
-            schedules.push({ start: events.meeting_time, end: events.meeting_end_time, title: events.title })
+            schedules.push({ start: events.meeting_time, end: events.meeting_end_time, title: events.title, color: events.m_type == 2 ? 'rgb(212 135 127)' : 'rgb(133 196 204)', description: events.title })
             // ,title:'fetching'
           })
         this.calendarOptions.events = schedules;
