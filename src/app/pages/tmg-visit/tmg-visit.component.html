@@ -8,15 +8,15 @@
           <div class="outer" style="height: auto; margin-bottom: 10px;">
             <h6 style="text-align:center"><b class="charthead">Visit/Day</b></h6>
             <p class="link"
-              (click)="getDetails('AdminTask/getTmgMeetingTrends',{totalrecord: 3,stepno: -1},30,'days')"><i
+              (click)="getDetails('AdminTask/getVisitsPerDays',{totalrecord: 3,stepno: -1},180,'days')"><i
                 title="More Details" class="fa fa-list"></i>
             </p>
-            <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.dataSet" style="margin-right:5px;min-height: 300px;height: 90%; padding-left: 10px;" [options]="chart1.options">
+            <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 250px;height: 90%; padding-left: 10px;" [options]="chart1.options">
             </chart>
           </div>
         </div>
       </div>   
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-12">
           <div class="outer" style="height: auto; margin-bottom: 10px;">
             <h6 style="text-align:center"><b class="charthead">Chart</b></h6>
@@ -24,21 +24,21 @@
               (click)="getDetails('AdminTask/getTmgMeetingTrends',{totalrecord: 3,stepno: -1},30,'days')"><i
                 title="More Details" class="fa fa-list"></i>
             </p>
-            <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.dataSet" style="margin-right:5px;min-height: 300px;height: 90%; padding-left: 10px;" [options]="chart1.options">
+            <chart *ngIf="chart2.type" [type]="chart2.type" [data]="chart2.dataSet" style="margin-right:5px;min-height: 300px;height: 90%; padding-left: 10px;" [options]="chart2.options">
             </chart>
           </div>
         </div>
-      </div> 
+      </div>  -->
       <div class="row">
         <div class="col-12">
           <div class="outer" style="height: auto; margin-bottom: 10px;">
             <h6 style="text-align:center"><b class="charthead">Visit/Client</b></h6>
             <p class="link"
-              (click)="getDetails('AdminTask/getDeptMeetings',{totalrecord: 3,stepno: -1},30,'days')"><i
+              (click)="getDetails('AdminTask/getVisitPerClient',{totalrecord: 3,stepno: -1},180,'days')"><i
                 title="More Details" class="fa fa-list"></i>
             </p>
-            <chart *ngIf="chart.type" [type]="chart.type" [data]="chart.data"
-              style="margin-right:5px;min-height: 300px;height: 90%;padding-left: 10px;" [options]="chart.options">
+            <chart *ngIf="chart3.type" [type]="chart3.type" [data]="chart3.data"
+              style="margin-right:5px;min-height: 250px;height: 90%;padding-left: 10px;" [options]="chart3.options">
             </chart>
           </div>
         </div>
@@ -52,17 +52,17 @@
             <div class="outer" style="height:auto">
               <h6 style="text-align:center"><b class="charthead">Worst 3 User Visit Present Day</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getworst3UserVisitPresentDay',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getWorst3UserVisitPresentDay',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf = "worst3UserVisitPresentDay.length>0">
                 <thead class="thead">
-                  <th>Day</th>
-                  <th>Count</th>
+                  <th>User</th>
+                  <th>Visit/Day</th>
                 </thead>
                 <tbody class="tbody">
                   <tr *ngFor = "let mp of worst3UserVisitPresentDay">
-                    <td>{{mp.day}}</td>
+                    <td>{{mp.name}}</td>
                     <td>{{mp.count}}</td>
                   </tr>
                 </tbody>
@@ -75,22 +75,22 @@
             <div class="outer" style="height:auto">
               <h6 style="text-align:center"><b class="charthead">Worst 3 Max Drop 30 D</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getMeetingWorst3Cancel30days',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getWorst3MaxDrop30D',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf="worst3MaxDrop30D.length>0">
                 <thead class="thead">
                   <th>Name</th>
-                  <th>Total</th>
-                  <th>Cancelled</th>
-                  <th>%</th>
+                  <th>Last Month</th>
+                  <th>Current Month</th>
+                  <th>% Drop</th>
                 </thead>
                 <tbody class="tbody">
                   <tr *ngFor="let wc of worst3MaxDrop30D">
                     <td>{{wc.name}}</td>
-                    <td>{{wc.total}}</td>
-                    <td>{{wc.cancelled}}</td>
-                    <td>{{wc.percent}}</td>
+                    <td>{{wc.last_month}}</td>
+                    <td>{{wc.current_month}}</td>
+                    <td>{{wc['drop%']}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -102,18 +102,20 @@
             <div class="outer" style="height:auto">
               <h6 style="text-align:center"><b class="charthead">Client Wise Visit (Top 3) 30D</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getclientWiseVisitTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getClientWiseVisitTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf="clientWiseVisitTop3.length>0">
                 <thead class="thead">
-                  <th>Reporting User</th>
-                  <th>Meeting Count</th>
+                  <th>Client</th>
+                  <th>Visit</th>
+                  <th>User(Visit)</th>
                 </thead>
                 <tbody class="tbody">
                   <tr *ngFor="let ru of clientWiseVisitTop3">
                     <td>{{ru.name}}</td>
-                    <td>{{ru["Meeting(count)"]}}</td>
+                    <td>{{ru["visit"]}}</td>
+                    <td>{{ru["user(visit)"]}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -130,13 +132,15 @@
               </p>
               <table class="table" *ngIf="userWiseVisitTop3.length>0">
                 <thead class="thead">
-                  <th>Reporting User</th>
-                  <th>Meeting Count</th>
+                  <th>Name</th>
+                  <th>Visits</th>
+                  <th>Visit/Client</th>
                 </thead>
                 <tbody class="tbody">
                   <tr *ngFor="let ru of userWiseVisitTop3">
                     <td>{{ru.name}}</td>
-                    <td>{{ru["Meeting(count)"]}}</td>
+                    <td>{{ru["visits"]}}</td>
+                    <td>{{ru["visit\/client"]}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -150,22 +154,26 @@
         <div class="row">
           <div class="col-12">
             <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead">Top 3 User Expense/Visit </b></h6>
+              <h6 style="text-align:center"><b class="charthead"> User Expense/Visit (Top 3)</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getMeetingtop3UserExpensePerVisit',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getTop3UserExpensePerVisit',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf="top3UserExpensePerVisit.length>0">
                 <thead class="thead">
                   <th>Name</th>
-                  <th>Time (Hr)</th>
-                  <th>Count</th>
+                  <th>Visits</th>
+                  <th>Km/Visit</th>
+                  <th>Manual</th>
+                  <th>Total</th>
                 </thead>
                 <tbody class="tbody" *ngFor="let tu of top3UserExpensePerVisit">
                   <tr>
                     <td>{{tu.name}}</td>
-                    <td>{{tu['duration(hours)']}}</td>
-                    <td>{{tu['Meeting(count)']}}</td>
+                    <td>{{tu['visits']}}</td>
+                    <td>{{tu['km\/visit']}}</td>
+                    <td>{{tu['manual']}}</td>
+                    <td>{{tu['total']}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -175,24 +183,24 @@
         <div class="row">
           <div class="col-12">
             <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead">Expense Increased Top3</b></h6>
+              <h6 style="text-align:center"><b class="charthead">Expense Increased (Top 3)</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getMeetingexpenseIncreasedTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getExpenseIncreasedTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf="expenseIncreasedTop3.length>0">
                 <thead class="thead">
                   <th>Name</th>
                   <th>Last Month</th>
-                  <th>Current</th>
-                  <th>% Drop</th>
+                  <th>Current Month</th>
+                  <th>% Increase</th>
                 </thead>
                 <tbody class="tbody" *ngFor = "let wu of expenseIncreasedTop3">
                   <tr>
                     <td>{{wu.name}}</td>
                     <td>{{wu.last_month}}</td>
                     <td>{{wu.current_month}}</td>
-                    <td>{{wu["drop%"]}}</td>
+                    <td>{{wu["Increase%"]}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -204,22 +212,22 @@
             <div class="outer" style="height:auto">
               <h6 style="text-align:center"><b class="charthead">Most Expensive Visit 30D</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getmostExpensiveVisit30D',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getMostExpensiveVisit30D',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf="mostExpensiveVisit30D.length>0">
                 <thead class="thead">
-                  <th>User</th>
+                  <th>Visits</th>
+                  <th>Km/Visit</th>
+                  <th>Manual Expense</th>
                   <th>Total</th>
-                  <th>Not Managed</th>
-                  <th>%</th>
                 </thead>
                 <tbody class="tbody">
                   <tr *ngFor="let wm of mostExpensiveVisit30D">
-                    <td>{{wm.name}}</td>
+                    <td>{{wm.visit}}</td>
+                    <td>{{wm['km/visit']}}</td>
+                    <td>{{wm.manual_expense}}</td>
                     <td>{{wm.total}}</td>
-                    <td>{{wm.not_managed}}</td>
-                    <td>{{wm['%percent']}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -229,24 +237,24 @@
         <div class="row">
           <div class="col-12">
             <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead">Max Deduction Top 3</b></h6>
+              <h6 style="text-align:center"><b class="charthead">Max Deduction (Top 3)</b></h6>
               <p class="link"
-                (click)="getDetails('AdminTask/getmostExpensiveVisit30D',{totalrecord: 3,stepno: -1},30,'days')"><i
+                (click)="getDetails('AdminTask/getMaxDeductionTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
               <table class="table" *ngIf="maxDeductionTop3.length>0">
                 <thead class="thead">
-                  <th>User</th>
-                  <th>Total</th>
-                  <th>Not Managed</th>
-                  <th>%</th>
+                  <th>Name</th>
+                  <th>Claimed</th>
+                  <th>Approved</th>
+                  <th>% Deduct</th>
                 </thead>
                 <tbody class="tbody">
                   <tr *ngFor="let wm of maxDeductionTop3">
                     <td>{{wm.name}}</td>
-                    <td>{{wm.total}}</td>
-                    <td>{{wm.not_managed}}</td>
-                    <td>{{wm['%percent']}}</td>
+                    <td>{{wm.claimed}}</td>
+                    <td>{{wm.approved}}</td>
+                    <td>{{wm['%Deduct']}}</td>
                   </tr>
                 </tbody>
               </table>

@@ -13,12 +13,12 @@ export class TmgVisitComponent implements OnInit {
   @Input() pageType: string = "Tmg-Task";
   @Input() deptId: string = null;
 
-  chart = {
+  chart1 = {
     type: '',
     data: {},
     options: {},
   };
-  chart1 = {
+  chart2 = {
     data: {
       dataGraph1: [],
       dataGraph2: []
@@ -30,7 +30,11 @@ export class TmgVisitComponent implements OnInit {
     },
     options: null
   };
-
+  chart3 = {
+    type: '',
+    data: {},
+    options: {},
+  };
 
   visitsPerDays = [];
   visitPerClient = [];
@@ -87,13 +91,13 @@ export class TmgVisitComponent implements OnInit {
       todate: this.common.dateFormatter1(endDate)
     };
     this.showLoader(0);
-    let apiname = 'AdminTask/getTmgMeetingvisitsPerDays?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    let apiname = 'AdminTask/getVisitsPerDays?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
         this.hideLoader(0);
         if (res['data']) {
-          this.getlabelValue(res['data']);
-
+          this.visitsPerDays = res['data'];
+          this.handleChart1();
         }
       }, err => {
         this.hideLoader(0);
@@ -102,25 +106,24 @@ export class TmgVisitComponent implements OnInit {
   }
   getVisitPerClient() {
     this.visitPerClient = [];
-    let days = 30;
+    let days = 180;
     let startDate = new Date(new Date().setDate(new Date().getDate() - days));
     let endDate = new Date();
     let params = {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(1);
+    this.showLoader(2);
     let apiname = 'AdminTask/getVisitPerClient?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(1);
+        this.hideLoader(2);
         if (res['data']) {
-          this.visitPerClient= res['data'];
-         this.handleChart();
-
+          this.visitPerClient = res['data'];
+          this.handleChart3();
         }
       }, err => {
-        this.hideLoader(1);
+        this.hideLoader(2);
         console.log('Err:', err);
       });
 
@@ -134,11 +137,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(2);
+    this.showLoader(3);
     let apiname = 'AdminTask/getWorst3UserVisitPresentDay?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(2);
+        this.hideLoader(3);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -150,7 +153,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(2);
+        this.hideLoader(3);
         console.log('Err:', err);
       });
 
@@ -164,11 +167,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(3);
-    let apiname = 'AdminTask/getMeetingworst3MaxDrop30D?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.showLoader(4);
+    let apiname = 'AdminTask/getWorst3MaxDrop30D?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(3);
+        this.hideLoader(4);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -180,7 +183,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(3);
+        this.hideLoader(4);
         console.log('Err:', err);
       });
 
@@ -194,11 +197,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(4);
+    this.showLoader(5);
     let apiname = 'AdminTask/getClientWiseVisitTop3?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(4);
+        this.hideLoader(5);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -210,7 +213,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(4);
+        this.hideLoader(5);
         console.log('Err:', err);
       });
 
@@ -225,11 +228,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(4);
+    this.showLoader(6);
     let apiname = 'AdminTask/getUserWiseVisitTop3?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(4);
+        this.hideLoader(6);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -241,7 +244,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(4);
+        this.hideLoader(6);
         console.log('Err:', err);
       });
 
@@ -255,11 +258,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(5);
-    let apiname = 'AdminTask/getMeetingtop3UserExpensePerVisit?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.showLoader(7);
+    let apiname = 'AdminTask/getTop3UserExpensePerVisit?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(5);
+        this.hideLoader(7);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -271,7 +274,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(5);
+        this.hideLoader(7);
         console.log('Err:', err);
       });
 
@@ -285,11 +288,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(6);
-    let apiname = 'AdminTask/getMeetingexpenseIncreasedTop3?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
+    this.showLoader(8);
+    let apiname = 'AdminTask/getExpenseIncreasedTop3?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(6);
+        this.hideLoader(8);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -301,7 +304,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(6);
+        this.hideLoader(8);
         console.log('Err:', err);
       });
 
@@ -315,11 +318,31 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(7);
+    this.showLoader(9);
     let apiname = 'AdminTask/getMostExpensiveVisit30D?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(7);
+        this.hideLoader(9);
+        res['data'] = [
+          {
+          visit:"V1",
+          'km/visit':100,
+          manual_expense:300,
+          total:400,
+        },
+        {
+          visit:"V2",
+          'km/visit':80,
+          manual_expense:250,
+          total:330,
+        },
+        {
+          visit:"V3",
+          'km/visit':60,
+          manual_expense:200,
+          total:120,
+        },
+      ]
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -331,7 +354,7 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(7);
+        this.hideLoader(9);
         console.log('Err:', err);
       });
 
@@ -346,11 +369,11 @@ export class TmgVisitComponent implements OnInit {
       fromdate: this.common.dateFormatter1(startDate),
       todate: this.common.dateFormatter1(endDate)
     };
-    this.showLoader(7);
+    this.showLoader(10);
     let apiname = 'AdminTask/getMaxDeductionTop3?startDate=' + params.fromdate + '&endDate=' + params.todate + '&deptId=' + this.deptId;;
     this.api.get(apiname)
       .subscribe(res => {
-        this.hideLoader(7);
+        this.hideLoader(10);
         if (res['data']) {
           res['data'].map((val, index1) => {
             if (index1 < 3) {
@@ -362,73 +385,145 @@ export class TmgVisitComponent implements OnInit {
 
         }
       }, err => {
-        this.hideLoader(7);
+        this.hideLoader(10);
         console.log('Err:', err);
       });
 
   }
 
-  xAxisData= [];
+  xAxisData = [];
   yaxisObj1 = null;
   yaxisObj2 = null;
   getlabelValue(dataList = null) {
-    this.xAxisData= [];
+    this.xAxisData = [];
     this.yaxisObj1 = null;
     this.yaxisObj2 = null;
     if (dataList && dataList.length) {
       dataList.forEach((cmg) => {
-        this.chart1.data.dataGraph1.push(cmg['Meeting(count)']);
-        this.chart1.data.dataGraph2.push(cmg['duration(hours)']);
+        this.chart2.data.dataGraph1.push(cmg['Meeting(count)']);
+        this.chart2.data.dataGraph2.push(cmg['duration(hours)']);
         this.xAxisData.push(cmg['Month']);
-    });
+      });
+    }
+    this.handleChart2("line", "Hours", "line", "Count");
   }
-  this.handleChart1("line", "Hours", "line", "Count");
-}
 
-handleChart1(chartType1, label1, chartType2, label2) {
-  this.yaxisObj1 = this.common.chartScaleLabelAndGrid(this.chart1.data.dataGraph1);
-  this.yaxisObj2 = this.common.chartScaleLabelAndGrid(this.chart1.data.dataGraph2);
-  console.log("this.yaxisObj1", this.yaxisObj1, "this.yaxisObj2", this.yaxisObj2);
-  let data = {
-    labels: this.xAxisData,
-    datasets: []
-  };
+  
+  handleChart1() {
+    console.log("this.pageType ", this.pageType);
+    let yaxis = [];
+    let xaxis = [];
+    let label = "Hour";
+    this.visitsPerDays.map(tlt => {
+      xaxis.push(tlt['Month']);
+      yaxis.push(tlt['count']);
+    });
 
-  data.datasets.push({
-    type: chartType1,
-    label: label1,
-    borderColor: '#ed7d31',
-    backgroundColor: '#ed7d31',
-    pointHoverRadius: 8,
-    pointHoverBackgroundColor: '#FFEB3B',
-    fill: false,
-    data: this.yaxisObj2.scaleData,
-    yAxisID: 'y-axis-2'
-  });
-
-  data.datasets.push({
-    type: chartType2,
-    label: label2,
-    borderColor: '#386ac4',
-    backgroundColor: '#386ac4',
-    fill: false,
-    data: this.yaxisObj1.scaleData.map(value => { return value.toFixed(2) }),
-    pointHoverRadius: 8,
-    pointHoverBackgroundColor: '#FFEB3B',
-    yAxisID: 'y-axis-1',
-  });
-
-  this.chart1 = {
-    data: {
-      dataGraph1: [],
-      dataGraph2: []
+    let yaxisObj = this.common.chartScaleLabelAndGrid(yaxis);
+    console.log("handleChart", xaxis, yaxis);
+    this.chart1.type = 'line'
+    this.chart1.data = {
+      labels: xaxis,
+      datasets: [
+        {
+          label: label,
+          data: yaxisObj.scaleData,
+          borderColor: '#3d6fc9',
+          backgroundColor: '#3d6fc9',
+          fill: false,
+          pointHoverRadius: 8,
+          pointHoverBackgroundColor: '#FFEB3B',
+        },
+      ]
     },
-    type: 'linear',
-    dataSet: data,
-    options: this.setChartOptions("Calls Count", "Hours", "Month")
-  };
+      this.chart1.options = {
+        responsive: true,
+        legend: {
+          label: 'sac',
+          position: 'bottom',
+          display: true
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Count' +yaxisObj.yaxisLabel,
+          fontSize: 17,
+        },
 
-}
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+        },
+        display: true,
+        elements: {
+          line: {
+            tension: 0
+          }
+        },
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString:   'Count' +yaxisObj.yaxisLabel,
+            },
+            ticks: {
+              beginAtZero: true,
+              stepSize: yaxisObj.gridSize
+            },//beginAtZero: true,min:0, 
+            suggestedMin: yaxisObj.minValue,
+          },
+
+
+          ]
+        }
+      };
+
+
+  }
+
+  handleChart2(chartType1, label1, chartType2, label2) {
+    this.yaxisObj1 = this.common.chartScaleLabelAndGrid(this.chart2.data.dataGraph1);
+    this.yaxisObj2 = this.common.chartScaleLabelAndGrid(this.chart2.data.dataGraph2);
+    console.log("this.yaxisObj1", this.yaxisObj1, "this.yaxisObj2", this.yaxisObj2);
+    let data = {
+      labels: this.xAxisData,
+      datasets: []
+    };
+
+    data.datasets.push({
+      type: chartType1,
+      label: label1,
+      borderColor: '#ed7d31',
+      backgroundColor: '#ed7d31',
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: '#FFEB3B',
+      fill: false,
+      data: this.yaxisObj2.scaleData,
+      yAxisID: 'y-axis-2'
+    });
+
+    data.datasets.push({
+      type: chartType2,
+      label: label2,
+      borderColor: '#386ac4',
+      backgroundColor: '#386ac4',
+      fill: false,
+      data: this.yaxisObj1.scaleData.map(value => { return value.toFixed(2) }),
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: '#FFEB3B',
+      yAxisID: 'y-axis-1',
+    });
+
+    this.chart2 = {
+      data: {
+        dataGraph1: [],
+        dataGraph2: []
+      },
+      type: 'linear',
+      dataSet: data,
+      options: this.setChartOptions("Calls Count", "Hours", "Month")
+    };
+
+  }
 
   setChartOptions(leftSideLabel, rightSideLabel, xaxisString) {
     let options = {
@@ -489,24 +584,25 @@ handleChart1(chartType1, label1, chartType2, label2) {
       },
     });
     return options;
-  
+
   }
 
 
-  handleChart() {
+
+  handleChart3() {
     console.log("this.pageType ", this.pageType);
     let yaxis = [];
     let xaxis = [];
     let label = "Hour";
     this.visitPerClient.map(tlt => {
-      xaxis.push(tlt['department']);
-      yaxis.push(tlt['Meeting(count)']);
+      xaxis.push(tlt['Month']);
+      yaxis.push(tlt['count']);
     });
 
     let yaxisObj = this.common.chartScaleLabelAndGrid(yaxis);
     console.log("handleChart", xaxis, yaxis);
-    this.chart.type = 'bar'
-    this.chart.data = {
+    this.chart3.type = 'bar'
+    this.chart3.data = {
       labels: xaxis,
       datasets: [
         {
@@ -520,7 +616,7 @@ handleChart1(chartType1, label1, chartType2, label2) {
         },
       ]
     },
-      this.chart.options = {
+      this.chart3.options = {
         responsive: true,
         legend: {
           label: 'sac',
@@ -529,7 +625,7 @@ handleChart1(chartType1, label1, chartType2, label2) {
         },
         scaleLabel: {
           display: true,
-          labelString: 'Hour' + yaxisObj.yaxisLabel,
+          labelString: 'Count' + yaxisObj.yaxisLabel,
           fontSize: 17,
         },
 
@@ -547,7 +643,7 @@ handleChart1(chartType1, label1, chartType2, label2) {
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Hour' + yaxisObj.yaxisLabel,
+              labelString: 'Count' + yaxisObj.yaxisLabel,
             },
             ticks: {
               beginAtZero: true,
@@ -565,7 +661,7 @@ handleChart1(chartType1, label1, chartType2, label2) {
   }
 
 
-  
+
   getDetails(url, params, value = 0, type = 'days') {
     let dataparams = {
       view: {
