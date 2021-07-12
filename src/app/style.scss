@@ -366,8 +366,9 @@ $color-dark:#000;
     border: 0 !important;
   }
 
-  th.action {
+  th.action,.bg-none {
     background-image: none;
+    pointer-events: none; 
   }
 
   tbody {
@@ -409,8 +410,9 @@ $color-dark:#000;
     border: 0 !important;
   }
 
-  th.action {
+  th.action,.bg-none {
     background-image: none;
+    pointer-events: none; 
   }
 
   tbody {

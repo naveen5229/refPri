@@ -105,15 +105,9 @@
     </div>
    </div> -->
 
-    <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)"
-      [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
-    <!-- <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard"
-      [deptId]="selectedDept.id"></ngx-tmg-ticket> -->
-    <ngx-tmg-meeting *ngIf="selectedDashboard == 'tmgMeetingDashboard'" [pageType]="selectedDashboard"
-      [deptId]="selectedDept.id"></ngx-tmg-meeting>
-    <ngx-tmg-visit *ngIf="selectedDashboard == 'tmgVisitDashboard'" [pageType]="selectedDashboard"
-      [deptId]="selectedDept.id"></ngx-tmg-visit>
-    <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard"
-      [deptId]="selectedDept.id" [tpId]="selectedTicketProcess.id"></ngx-tmg-ticket>
+   <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
+   <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-ticket>
+   <ngx-tmg-meeting *ngIf="selectedDashboard == 'tmgMeetingDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-meeting>
+   <ngx-tmg-visit *ngIf="selectedDashboard == 'tmgVisitDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-visit>
   </nb-card-body>
 </nb-card>
