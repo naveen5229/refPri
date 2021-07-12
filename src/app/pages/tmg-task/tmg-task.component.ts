@@ -207,6 +207,7 @@ export class TmgTaskComponent implements OnInit {
             this.TaskSnapchatTop3 = _.uniqBy(this.TaskSnapchatTop3, 'name');
           }
         }
+        console.log("TaskSnapchatTop3:",this.TaskSnapchatTop3);
         this.hideLoader(index);
       }, err => {
         this.hideLoader(index);
