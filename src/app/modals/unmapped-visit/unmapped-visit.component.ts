@@ -6,6 +6,7 @@ import { CommonService } from './../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { TableService } from './../../Service/Table/table.service';
 import { ImageViewComponent } from '../image-view/image-view.component';
+import { LocationEntityComponent } from '../location-entity/location-entity.component';
 
 @Component({
   selector: 'ngx-unmapped-visit',
@@ -83,6 +84,17 @@ export class UnmappedVisitComponent implements OnInit, OnDestroy, AfterViewInit 
       const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout' });
       activeModal.componentInstance.imageList = { images, title: 'Image' };
     }
+  }
+
+  openMappingModal(item){
+    console.log("itemImage",item);
+    this.common.params = {imageId:item._id,lat:item._lat,lng:item._long};
+    const activeModal = this.modalService.open(LocationEntityComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      if (data.response) {
+        this.getUnMappedOnsiteImages();
+      }
+  });
   }
 
 }

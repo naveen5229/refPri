@@ -23,10 +23,11 @@ import { UnmappedVisitComponent } from '../../modals/unmapped-visit/unmapped-vis
   styleUrls: ['./visit-management.component.scss']
 })
 export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewInit {
- startDate = new Date();
- endDate = new Date();
- category:any;
- allUsers:any[] = [];
+  currentDate = this.common.getDate();
+  startDate = new Date();
+  endDate = new Date();
+  category:any;
+  allUsers:any[] = [];
   allVisits:any[] = [];
   isDetailView:boolean = false;
   ExpenseDate:any;
@@ -42,7 +43,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(DataTableDirective, {static: false})
   dtElement: any;
   // dtOptions: DataTables.Settings = {};
-  dtOptions =  this.table.options(10,7,'USER EXPENSES');
+  dtOptions =  this.table.options(10,9,'USER EXPENSES');
   dtTrigger: Subject<any> = new Subject<any>();
   updatedExpenses = [];
   expenseSearch = {
@@ -350,11 +351,16 @@ this.detailImageZoom = true;
   }
 
   saveVerifiedExpenseSingleWithConfirm(status,item) {
-    if(status==-1){
+    let msg = "<b>All the visit images will be rejected that are attached with same date.<br>Are you sure to reject anyway?<b>";
+    if(status==1){
+      msg = "<b>This Approval will result in all the details(Visit Images & expenses) to be approved and it can not be edited after that.<br>Are you sure to approve anyway?<b>";
+    }
+    // else{
+
+    // }
       this.common.params = {
-        title: "Reject Visit",
-        description:
-          "<b>All the visit images will be rejected that are attached with same date.<br>Are you sure to reject anyway?<b>",
+        title: (status==1) ? "Approve Visit" : "Reject Visit",
+        description: msg,
         isRemark: false,
       };
       const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
@@ -363,9 +369,9 @@ this.detailImageZoom = true;
           this.saveVerifiedExpenseSingle(status,item);
         }
       });
-    }else{
-      this.saveVerifiedExpenseSingle(status,item);
-    }
+    // }else{
+    //   this.saveVerifiedExpenseSingle(status,item);
+    // }
   }
 
   saveVerifiedExpenseSingle(status,item) {
@@ -582,6 +588,7 @@ this.detailImageZoom = true;
 
   backnavigate(){
     this.isDetailView = false;
+    this.showAdminWiseWagesList();
   }
 
   expenseInfo = [];
