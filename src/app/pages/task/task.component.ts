@@ -382,6 +382,7 @@ export class TaskComponent implements OnInit {
       this.tableUnreadTaskForMeList.settings.arrow = true;
     });
   }
+
   showTaskPopup() {
     this.tableUnreadTaskForMeList.settings.arrow = false;
     this.common.params = { userList: this.adminList, groupList: this.groupList, parentTaskId: null };
@@ -1999,7 +2000,7 @@ export class TaskComponent implements OnInit {
       } else if (ticket._tktype == 110 && ticket._mp_status == 0) {
         icons.push({
           class: "fa fa-check-square text-warning",
-          // action: this.ackTaskByCcUser.bind(this, ticket, type), 
+          // action: this.ackTaskByCcUser.bind(this, ticket, type),
           action: this.collapseUnreadTaskUpdateStatus.bind(this, ticket, type, 1),
           txt: "", title: "Mark ack as meeting user",
         });

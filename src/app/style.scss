@@ -259,6 +259,11 @@ $color-dark:#000;
   z-index: 9999 !important;
 }
 
+.min-h-auto{
+ min-height: auto !important;
+
+}
+
 .mentioned_user {
   max-width: 50%;
   max-height: 50vh;
@@ -361,8 +366,9 @@ $color-dark:#000;
     border: 0 !important;
   }
 
-  th.action {
+  th.action,.bg-none {
     background-image: none;
+    pointer-events: none; 
   }
 
   tbody {
@@ -377,6 +383,48 @@ $color-dark:#000;
 
 
 
+}
+
+
+:host ::ng-deep{
+  .ng-dataTable,
+.ng-datatable,
+.dataTable {
+
+  // .action-block button{
+  //  height: 18px !important;
+  // }
+  button {
+    height: auto !important;
+    padding: 10px 14px !important;
+  }
+
+  border: 1px solid rgba(61, 105, 214, 0.5) !important;
+  border-top: 0 !important;
+
+  th {
+    background-color: #3f69d6;
+    // background-color:#72b3c7;
+    padding: 10px;
+    color: #fff;
+    border: 0 !important;
+  }
+
+  th.action,.bg-none {
+    background-image: none;
+    pointer-events: none; 
+  }
+
+  tbody {
+    td:last-child {
+      border-right: 0 !important;
+    }
+
+    td:first-child {
+      border-left: 0 !important;
+    }
+  }
+}
 }
 
 

@@ -74,6 +74,7 @@ import { LeaveManagementComponent } from './leave-management/leave-management.co
 import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
 import { VisitManagementComponent } from '../pages/visit-management/visit-management.component';
+import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
@@ -81,6 +82,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { TmgTicketComponent } from './tmg-ticket/tmg-ticket.component';
+import { TmgMeetingComponent } from './tmg-meeting/tmg-meeting.component';
+import { TmgVisitComponent } from './tmg-visit/tmg-visit.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -168,8 +171,11 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MyLeavesComponent,
     ExpenseTypeComponent,
     VisitManagementComponent,
+    LeaveTypeManagementComponent,
     MeetingComponent,
-    TmgTicketComponent
+    TmgTicketComponent,
+    TmgMeetingComponent,
+    TmgVisitComponent
   ],
 })
 export class PagesModule {

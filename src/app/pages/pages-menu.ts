@@ -411,6 +411,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/wifi-logs',
         home: true,
       },
+      {
+        title: 'Leave Type',
+        icon: 'wifi-outline',
+        link: '/pages/leave-type-management',
+        home: true,
+      },
     ]
   },
   {

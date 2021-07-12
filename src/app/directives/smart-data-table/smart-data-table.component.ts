@@ -8,6 +8,10 @@ import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angu
   styleUrls: ['./smart-data-table.component.scss']
 })
 export class SmartDataTableComponent implements OnInit {
+
+
+
+
 @ViewChild(DataTableDirective, { static: false })
 @Input() data:any;
 @Input() SearchFilter:any;
@@ -15,11 +19,16 @@ export class SmartDataTableComponent implements OnInit {
 @Input() dtTrigger:any;
 @Input() filterColumn:any;
 @Input() renderFunction:any;
+@Input() setting:any;
+
 @Output() getData = new EventEmitter();
 @Output() filter = new EventEmitter();
 dataheading:any = [];
 datavalues:any[] = [];
 purifieddata:any[] = [];
+
+
+
   constructor() { }
 
 

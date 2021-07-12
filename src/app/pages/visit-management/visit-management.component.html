@@ -1,7 +1,14 @@
 <ng-container>
   <nb-card [class.d-none]="isDetailView">
     <nb-card-header>
-      <h5> Visit Management</h5>
+      <div class="row">
+        <div class="col-6">
+          <h5> Visit Management</h5>
+        </div>
+        <div class="col-6 text-right">
+          <button class="btn btn-primary btn-sm" (click)="openUnmappedVisitModal()">Visit Report</button>
+        </div>
+      </div>
     </nb-card-header>
     <nb-card-body>
       <div class="row">
@@ -24,7 +31,7 @@
                 <div class="form-group mb-0"> <label>End Date</label>
                   <uj-date-time-picker (onChanged)="endDate=($event)" [dateTimeValue]="endDate" [isTime]="false"
                     [isStart]="false" [isDateDisabled]="!expenseSearch.admin.id"
-                    [isTimeDisabled]="!expenseSearch.admin.id"> </uj-date-time-picker>
+                    [isTimeDisabled]="!expenseSearch.admin.id" [maxd]="currentDate"> </uj-date-time-picker>
                 </div>
               </div>
               <div class="col-md-3">
@@ -46,12 +53,14 @@
                 <th>
                   <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No.
                     </label>
-                    <input class="form-check-input" [(ngModel)]="alluserselect" (click)="selectAllUser($event)"
-                      type="checkbox" value="" id="flexCheckChecked" [disabled]="!(allUsers && allUsers.length>1)">
+                    <input class="form-check-input" [(ngModel)]="alluserselect" (click)="(!(allUsers && allUsers.length>1) || isAllCheckboxDisable) ? selectAllUser($event) : null"
+                      type="checkbox" value="" id="flexCheckChecked" [disabled]="!(allUsers && allUsers.length>1) || isAllCheckboxDisable">
                   </div>
                 </th>
                 <th>Name</th>
                 <th class="date">Date</th>
+                <th>Travel Expense</th>
+                <th>Other Expense</th>
                 <th>User Expense</th>
                 <th>System Travel</th>
                 <th>Total Image</th>
@@ -65,15 +74,17 @@
                 <td>
                   <div class="form-check user-check-label d-flex"> <label for=""> {{i+1}} </label> <input
                       class="form-check-input" [(ngModel)]="item.checked" type="checkbox" value="" id="flexCheckChecked"
-                      (click)="selectUser(i)" [disabled]="item._user_id==userService.loggedInUser.id"></div>
+                      (click)="selectUser(i)" [disabled]="item._user_id==userService.loggedInUser.id || item.is_disable"></div>
                 </td>
                 <td class="name">{{item.name}}</td>
                 <td class="date">{{item.sqdate2}}</td>
+                <td class="date">{{(item.system_expense>0) ? item.system_expense : item.travel_amount}}</td>
+                <td class="date">{{item.other_amount}}</td>
                 <td class="expanse">
                   <p class="mb-0 text-primary"
                     (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
                     [ngbTooltip]="tipContent"   container="body"
-                    [disableTooltip]="item.total_expense_actual <= 0"> <i [class]="common.currencyClass"></i>
+                    [disableTooltip]="!item.total_expense_actual"> <i [class]="common.currencyClass"></i>
                     {{item.total_expense_actual}} </p>
 
                 </td>
@@ -95,14 +106,14 @@
                   <div class="action-block">
                     <div class="d-flex">
                       <button type="button" class="btn btn-success btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id)"
-                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingle(1,updatedExpenses[i]) : null">
+                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) || item.is_disable"
+                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingleWithConfirm(1,updatedExpenses[i]) : null">
                         Approve
                       </button>
 
                       <button type="button" class="btn btn-danger btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0)"
-                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingle(-99,updatedExpenses[i]) : null">
+                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) || item.is_disable"
+                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingleWithConfirm(-1,updatedExpenses[i]) : null">
                         Reject
                       </button>
 
@@ -218,12 +229,12 @@
 
                  <img class="img-fluid" [src]="item._url" [alt]="item.image">
                  <div class="actions">
-                   <button class="btn btn-primary" [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id"
-                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(1,item)">
+                   <button class="btn btn-primary" [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id || selectedExpense.is_disable"
+                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(1,item)">
                      approve
                    </button>
-                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id"
-                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatus(-99,item)">
+                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id || selectedExpense.is_disable"
+                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(-1,item)">
                      Reject
                     </button>
                    <button class="btn btn-info" (click)="openLink(i,'detail Image')">
@@ -248,7 +259,7 @@
                 <div class="card-header">
                   <h5 class="card-title"> Expenses</h5>
                   <button
-                    *ngIf="expenseList && expenseList.length && selectedExpense._user_id!=userService.loggedInUser.id"
+                    *ngIf="expenseList && expenseList.length && selectedExpense._user_id!=userService.loggedInUser.id && !selectedExpense.is_disable"
                     type="button" class="btn btn-success" (click)="updateOnsiteExpenseStatus()">Approve All</button>
                 </div>
                 <div class="card-body">
@@ -274,7 +285,7 @@
                         <td class="actions">
                           <div class="action-block">
                             <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id"
-                              class="btn btn-danger btn-reject" [disabled]="item.amount_new===0"
+                              class="btn btn-danger btn-reject" [disabled]="item.amount_new===0 || selectedExpense.is_disable"
                               (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">
                               {{item.amount_new===0 ? 'Rejected':'Reject' }}
                             </button>
