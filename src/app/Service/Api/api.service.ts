@@ -21,7 +21,6 @@ export class ApiService {
 
   entryMode = this.user._loggedInBy == 'admin' ? '1' : '3';
 
-
   constructor(private http: HttpClient,
     public router: Router,
     public user: UserService) {
