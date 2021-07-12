@@ -1,20 +1,56 @@
-<div class="contentsection">
+<div class="contentsection tmg-visit">
 
   <div class="row section-row">
     <!-- first column -->
     <div class="col-4">
-      <div class="row flex-column-3">
+      <div class="row flex-column-2">
         <div class="col-12">
-          <div class="outer" style="height: auto; margin-bottom: 10px;">
-            <h6 style="text-align:center"><b class="charthead">Visit/Day</b></h6>
-            <p class="link"
-              (click)="getDetails('AdminTask/getVisitsPerDays',{totalrecord: 3,stepno: -1},180,'days')"><i
-                title="More Details" class="fa fa-list"></i>
-            </p>
-            <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data" style="margin-right:5px;min-height: 250px;height: 90%; padding-left: 10px;" [options]="chart1.options">
-            </chart>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Visit/Day
+              </h3>
+              <p class="link" (click)="getDetails('AdminTask/getVisitsPerDays',{totalrecord: 3,stepno: -1},180,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <div class="h-100">
+                <chart *ngIf="chart1.type" [type]="chart1.type" [data]="chart1.data"
+                  style="margin-right:5px;min-height:180px;height: 100%; padding-left: 10px;"
+                  [options]="chart1.options">
+                </chart>
+              </div>
+            </div>
+
           </div>
 
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Visit/Client
+              </h3>
+
+              <p class="link"
+                (click)="getDetails('AdminTask/getVisitPerClient',{totalrecord: 3,stepno: -1},180,'days')">
+                <i title="More Details" class="fa fa-list"></i>
+              </p>
+            </div>
+
+            <div class="card-body">
+              <div class="h-100">
+                <chart *ngIf="chart3.type" [type]="chart3.type" [data]="chart3.data"
+                  style="margin-right:5px;height:100%;min-height:180px;padding-left: 10px;" [options]="chart3.options">
+                </chart>
+              </div>
+
+            </div>
+
+          </div>
         </div>
       </div>
       <!-- <div class="row">
@@ -30,20 +66,6 @@
           </div>
         </div>
       </div>  -->
-      <div class="row">
-        <div class="col-12">
-          <div class="outer" style="height: auto; margin-bottom: 10px;">
-            <h6 style="text-align:center"><b class="charthead">Visit/Client</b></h6>
-            <p class="link"
-              (click)="getDetails('AdminTask/getVisitPerClient',{totalrecord: 3,stepno: -1},180,'days')"><i
-                title="More Details" class="fa fa-list"></i>
-            </p>
-            <chart *ngIf="chart3.type" [type]="chart3.type" [data]="chart3.data"
-              style="margin-right:5px;min-height: 250px;height: 90%;padding-left: 10px;" [options]="chart3.options">
-            </chart>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- second column -->
@@ -56,8 +78,8 @@
                 Worst 3 User Visit Present Day
               </h3>
               <p class="link"
-                (click)="getDetails('AdminTask/getWorst3UserVisitPresentDay',{totalrecord: 3,stepno: -1},30,'days')"><i
-                  title="More Details" class="fa fa-list"></i>
+                (click)="getDetails('AdminTask/getWorst3UserVisitPresentDay',{totalrecord: 3,stepno: -1},30,'days')">
+                <i title="More Details" class="fa fa-list"></i>
               </p>
             </div>
 
@@ -68,7 +90,7 @@
                   <th>Visit/Day</th>
                 </thead>
                 <tbody class="tbody">
-                  <tr *ngFor = "let mp of worst3UserVisitPresentDay">
+                  <tr *ngFor="let mp of worst3UserVisitPresentDay">
                     <td>{{mp.name}}</td>
                     <td>{{mp.count}}</td>
                   </tr>
@@ -113,6 +135,8 @@
           </div>
 
         </div>
+
+
 
         <div class="col-12">
           <div class="card">
@@ -182,15 +206,22 @@
         </div>
       </div>
 
-       <!-- third column -->
-       <div class="col-4" style="height: 100%; overflow: hidden;">
-        <div class="row">
-          <div class="col-12">
-            <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead"> User Expense/Visit (Top 3)</b></h6>
+
+    </div>
+
+    <!-- third column -->
+    <div class="col-4">
+      <div class="row flex-column-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                User Expense/Visit (Top 3)
+              </h3>
+
               <p class="link"
-                (click)="getDetails('AdminTask/getTop3UserExpensePerVisit',{totalrecord: 3,stepno: -1},30,'days')"><i
-                  title="More Details" class="fa fa-list"></i>
+                (click)="getDetails('AdminTask/getTop3UserExpensePerVisit',{totalrecord: 3,stepno: -1},30,'days')">
+                <i title="More Details" class="fa fa-list"></i>
               </p>
             </div>
 
@@ -214,13 +245,16 @@
                 </tbody>
               </table>
             </div>
-
           </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead">Expense Increased (Top 3)</b></h6>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Expense Increased (Top 3)
+              </h3>
+
               <p class="link"
                 (click)="getDetails('AdminTask/getExpenseIncreasedTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
@@ -248,14 +282,21 @@
 
           </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead">Most Expensive Visit 30D</b></h6>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Most Expensive Visit 30D
+              </h3>
+
               <p class="link"
                 (click)="getDetails('AdminTask/getMostExpensiveVisit30D',{totalrecord: 3,stepno: -1},30,'days')"><i
                   title="More Details" class="fa fa-list"></i>
               </p>
+            </div>
+
+            <div class="card-body">
               <table class="table" *ngIf="mostExpensiveVisit30D.length>0">
                 <thead class="thead">
                   <th>Visits</th>
@@ -273,16 +314,24 @@
                 </tbody>
               </table>
             </div>
+
           </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="outer" style="height:auto">
-              <h6 style="text-align:center"><b class="charthead">Max Deduction (Top 3)</b></h6>
+
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                Max Deduction (Top 3)
+              </h3>
               <p class="link"
-                (click)="getDetails('AdminTask/getMaxDeductionTop3',{totalrecord: 3,stepno: -1},30,'days')"><i
-                  title="More Details" class="fa fa-list"></i>
+                (click)="getDetails('AdminTask/getMaxDeductionTop3',{totalrecord: 3,stepno: -1},30,'days')">
+                <i title="More Details" class="fa fa-list"></i>
               </p>
+
+            </div>
+
+            <div class="card-body">
               <table class="table" *ngIf="maxDeductionTop3.length>0">
                 <thead class="thead">
                   <th>Name</th>
@@ -300,9 +349,9 @@
                 </tbody>
               </table>
             </div>
+          </div>
 
         </div>
       </div>
     </div>
   </div>
-</div>
