@@ -179,3 +179,19 @@ full-calendar {
   line-height: 11px;
   background: transparent;
 }
+
+.no-comment{
+  color: #656565;
+}
+
+.toolTip{
+    background-color: white;
+    border: 1px solid #b2b2b2;
+    padding: 0px 5px;
+    position: absolute;
+    z-index: 999999;
+    visibility: hidden;
+    label{
+      font-size: 12px;
+    }
+}

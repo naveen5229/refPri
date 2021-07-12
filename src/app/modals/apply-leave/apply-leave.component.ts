@@ -143,7 +143,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           parentId: null,
           subject: this.common.params.meetingData.subject,
           desc: this.common.params.meetingData._desc,
-          cc: JSON.parse(JSON.stringify(this.common.params.meetingData._user)),
+          cc: this.common.params.meetingData._user ? JSON.parse(JSON.stringify(this.common.params.meetingData._user)) : [],
           roomId: this.common.params.meetingData._room_id,
           type: this.common.params.meetingData._meeting_type,
           link: this.common.params.meetingData._link,
