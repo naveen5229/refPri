@@ -26,7 +26,7 @@
             <th>Count</th>
           </thead>
           <tbody class="tbody">
-            <tr *ngFor="let un of openTicketLive">
+            <tr *ngFor="let un of openTicketCount">
               <td>{{un['name']}}</td>
               <td>{{un['count']}}</td>
             </tr>
@@ -136,7 +136,7 @@
             <th>TAT (Hr)</th>
           </thead>
           <tbody class="tbody">
-            <tr *ngFor="let item of completetionTatProcessWise;">
+            <tr *ngFor="let item of completetionTatProcess30D">
               <td>{{item['name']}}</td>
               <td>{{item['hour']}}</td>
             </tr>
