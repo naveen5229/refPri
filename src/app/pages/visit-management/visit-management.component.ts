@@ -15,6 +15,7 @@ declare var google: any;
 import * as _ from 'lodash';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { LocationEntityComponent } from '../../modals/location-entity/location-entity.component';
+import { UnmappedVisitComponent } from '../../modals/unmapped-visit/unmapped-visit.component';
 
 @Component({
   selector: 'ngx-visit-management',
@@ -227,12 +228,17 @@ this.detailImageZoom = true;
     this.expenseList = [];
   }
 
+  isAllCheckboxDisable = false;
   showAdminWiseWagesList() {
+    this.isAllCheckboxDisable = false;
     let adminId = this.expenseSearch.admin.id;
     // if (!adminId) {
     //   this.common.showError('Please select User');
     //   return;
     // }
+    if (!adminId) {
+      this.endDate = this.startDate;
+    }
     if (this.startDate > this.endDate) {
       this.common.showError('End Date should be grater than Start Date')
       return;
@@ -247,6 +253,9 @@ this.detailImageZoom = true;
           this.allVisits = res['data'] || [];
           // this.renderTable();
           this.updateExpenseArray();
+          if(this.allVisits && (this.allVisits.find(x=>x.is_disable) || this.allVisits.find(x=>x._user_id==this.userService.loggedInUser.id))){
+            this.isAllCheckboxDisable = true;
+          }
           this.renderTable();
         } else {
           this.common.showError(res['msg']);
@@ -263,7 +272,7 @@ this.detailImageZoom = true;
     this.updatedExpenses = this.allVisits.map(data => {
       data['checked'] = false;
       return {
-        user_id: this.expenseSearch.admin.id,
+        user_id: data._user_id,
         date: data.sqdate,
         user_amount: data.travel_amount,
         system_amount: data.system_expense,
@@ -322,6 +331,7 @@ this.detailImageZoom = true;
     this.common.loading++;
     let params = {
       expenses: JSON.stringify(expenseList),
+      status: 1
     }
     this.api.post(`Admin/saveOnSiteExpenseByAdmin`, params).subscribe(res => {
       this.common.loading--;
@@ -334,8 +344,28 @@ this.detailImageZoom = true;
         this.common.showError(res['msg']);
       }
     },err=>{
+      this.common.loading--;
       this.common.showError();
     })
+  }
+
+  saveVerifiedExpenseSingleWithConfirm(status,item) {
+    if(status==-1){
+      this.common.params = {
+        title: "Reject Visit",
+        description:
+          "<b>All the visit images will be rejected that are attached with same date.<br>Are you sure to reject anyway?<b>",
+        isRemark: false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+      activeModal.result.then((data) => {
+        if (data.response) {
+          this.saveVerifiedExpenseSingle(status,item);
+        }
+      });
+    }else{
+      this.saveVerifiedExpenseSingle(status,item);
+    }
   }
 
   saveVerifiedExpenseSingle(status,item) {
@@ -345,7 +375,7 @@ this.detailImageZoom = true;
       this.common.showError("You can't change your own visit");
       return false;
     }
-    if (status==-99){
+    if (status==-1){
       item.total_amount = 0;
     }
     let expenseList = [item];
@@ -353,6 +383,7 @@ this.detailImageZoom = true;
     this.common.loading++;
     let params = {
       expenses: JSON.stringify(expenseList),
+      status:status
     }
     this.api.post(`Admin/saveOnSiteExpenseByAdmin`, params).subscribe(res => {
       this.common.loading--;
@@ -365,6 +396,7 @@ this.detailImageZoom = true;
         this.common.showError(res['msg']);
       }
     },err=>{
+      this.common.loading--;
       this.common.showError();
     })
   }
@@ -416,8 +448,6 @@ this.detailImageZoom = true;
       });
   }
 
-
-
   getExpenseWrtUserDate() {
     this.expenseList = [];
     let param = `userId=${this.selectedExpense._user_id}&startDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}&endDate=${this.common.dateFormatter(this.selectedExpense.sqdate)}`;
@@ -458,6 +488,25 @@ this.detailImageZoom = true;
         console.log(err);
       });
   }
+  
+  updateOnsiteImageStatusWithConfirm(status,item) {
+    if(status==-1){
+      this.common.params = {
+        title: "Reject Visit Image",
+        description:
+          "<b>Rejecting this visit, will reject all the attached expenses. <br>Are you sure to reject anyway?<b>",
+        isRemark: false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+      activeModal.result.then((data) => {
+        if (data.response) {
+          this.updateOnsiteImageStatus(status,item);
+        }
+      });
+    }else{
+      this.updateOnsiteImageStatus(status,item);
+    }
+  }
 
   updateOnsiteImageStatus(status,item){
     if (!item._id) {
@@ -475,6 +524,9 @@ this.detailImageZoom = true;
         if (res['code'] == 1) {
           this.common.showToast(res['msg']);
           item._status = status;
+          if(status==-1){
+            this.getExpenseWrtUserDate();
+          }
         } else {
           this.common.showError(res['msg']);
         }
@@ -893,4 +945,10 @@ openMappingModal(itemImage){
     }
 });
 }
+
+  openUnmappedVisitModal() {
+    const activeModal = this.modalService.open(UnmappedVisitComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
+    activeModal.componentInstance.allUsers = { allUsers: this.allUsers, title: 'Visit-Report' };
+    activeModal.result.then(data => {});
+  }
 }

@@ -39,34 +39,37 @@
             <input type="text" placeholder="Enter Leave Name" [(ngModel)]="leaveName"
               [ngModelOptions]="{standalone: true}" class="form-control">
           </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for=""> Leave Count </label>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <input type="number" placeholder="Enter Leave Count" [(ngModel)]="lCount"
-              [ngModelOptions]="{standalone: true}" class="form-control" min="0">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <label> leaves </label>
-        </div>
-        <div class="col-md-3 ">
-          <select name="lNum" id="#lNum" class="form-control" [(ngModel)]="lNum">
-            <option selected="Monthly" value="Monthly">Monthly</option>
-            <option value="Quaterly">Quaterly</option>
-            <option value="HalfYearly">Half Yearly</option>
-            <option value="Yearly">Yearly</option>
-            <option value="Daily">Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="BiMonthly">Bi-Monthly</option>
-          </select>
+          
         </div>
       </div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="form-group">
+      <label for=""> Leave Count </label>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-group">
+      <input type="number" placeholder="Enter Leave Count" [(ngModel)]="lCount"
+        [ngModelOptions]="{standalone: true}" class="form-control" min="0">
+    </div>
+  </div>
+  <div class="col-md-1">
+    <label> leaves </label>
+  </div>
+  <div class="col-md-3 ">
+    <select name="lNum" id="#lNum" class="form-control" [(ngModel)]="lNum">
+      <option selected="Monthly" value="Monthly">Monthly</option>
+      <option value="Quaterly">Quaterly</option>
+      <option value="HalfYearly">Half Yearly</option>
+      <option value="Yearly">Yearly</option>
+      <option value="Daily">Daily</option>
+      <option value="Weekly">Weekly</option>
+      <option value="BiMonthly">Bi-Monthly</option>
+    </select>
+  </div>
+</div>
 
       <div class="row align-items-center mt-4">
         <div class="col-md-10">

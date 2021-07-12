@@ -11,10 +11,13 @@ export class TmgDashboardComponent  implements OnInit {
   seletionsArray = ['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard','tmgTicketDashboard','tmgMeetingDashboard','tmgVisitDashboard'];
   selectedDashboard = 'Tmg-Task';
   selectedDept = {id:null,name:'All'};
+  selectedTicketProcess =  {id:null,name:'All'};
   departments = [];
+  ticketProcesses = [];
   constructor(public api: ApiService,
     public common: CommonService) {
     this.getDepartments();
+    this.getTicketProcessList();
   }
 
   ngOnDestroy(){}
@@ -78,5 +81,28 @@ export class TmgDashboardComponent  implements OnInit {
     console.log("department",department);
     this.selectedDept.id = department._id;
     this.selectedDept.name = department.name;
+  }
+
+  getTicketProcessList() {
+    this.common.loading++;
+    this.api.get('Ticket/getTicketProcessList').subscribe(res => {
+      this.common.loading--;
+      if (res['code'] >= 0) {
+        this.ticketProcesses = res['data'] || [];
+        this.ticketProcesses.splice(0,0,{_id:null,name:'All'});
+        } else{
+          this.common.showError(res['msg']);
+        };
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
+  }
+
+  selectTProcess(TProcess){
+    console.log("TProcess",TProcess);
+    this.selectedTicketProcess.id = TProcess._id;
+    this.selectedTicketProcess.name = TProcess.name;
   }
 }

@@ -136,6 +136,7 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
+import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.component';
 
 
 
@@ -230,6 +231,7 @@ const PAGE_COMPONENTS = [
   FunctionalReportingMappingComponent,
   AvailableTimeSlotComponent,
   LocationEntityComponent,
+  UnmappedVisitComponent,
 
  
 ];

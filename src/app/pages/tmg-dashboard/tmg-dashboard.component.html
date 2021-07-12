@@ -1,6 +1,6 @@
 <nb-card style="border: 0px;">
   <!-- <nb-card-header>
-   
+
   </nb-card-header> -->
   <nb-card-body style="padding: 1rem .2rem;">
     <div class="out-topnav">
@@ -50,13 +50,14 @@
         </auto-suggestion>
       </div> -->
     </div>
-   
+
     <div>
       <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
     </div>
-   
+
    </div>
    <div class="input-group">
+    <i>Department: </i>
     <button type="button" class="btn btn-primary">
       <i class="fas fa-search"></i>
     </button>
@@ -65,9 +66,16 @@
      <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
      </select>
     </div>
+    <i>Ticket Process: </i>
+    <button type="button" class="btn btn-primary">
+      <i class="fas fa-search"></i>
+    </button>
+    <div class="form-outline">
+     <select [(ngModel)]="selectedTicketProcess.id">
+     <option *ngFor="let tp of ticketProcesses" [value]="tp._id">{{tp.name}}</option>
+     </select>
+    </div>
   </div>
-
-
 
    <!-- <div class="out-topnav-dept" *ngIf="['Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)">
     <div class="toptabdept" *ngFor="let dept of departments">
@@ -83,5 +91,6 @@
    <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-ticket>
    <ngx-tmg-meeting *ngIf="selectedDashboard == 'tmgMeetingDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-meeting>
    <ngx-tmg-visit *ngIf="selectedDashboard == 'tmgVisitDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-visit>
+   <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id" [tpId]="selectedTicketProcess.id"></ngx-tmg-ticket>
   </nb-card-body>
 </nb-card>
