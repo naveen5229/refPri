@@ -34,11 +34,46 @@ export class TicketClosingFormComponent implements OnInit {
       this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
 
       this.getTicketFormField();
+
+setTimeout(() => {
+        this.checkAllExpandedTables();
+}, 200);
+
+
     }
   }
 
-  ngOnInit() {
+
+
+//  AddTableRow() {
+//     let temp = JSON.parse(JSON.stringify(this.tableHeader));
+//     temp.forEach(e => {
+//       e.param_value = (e.param_type == 'date') ? new Date() : null;
+//     });
+//     this.additionalFields.push(temp);
+//   }
+
+//   addTransaction() {
+//     console.log("additionalFields:", this.additionalFields);
+//     this.additionalFields.forEach(element => {
+//       element.forEach(element2 => {
+//         if (element2['isNotBindFixedvalue']) {
+//           element2['param_value'] = element2['notBindFixedvalue'];
+//         }
+//       });
+//     });
+//     this.tableUpdate.next(this.additionalFields);
+//     // this.tableUpdate.next(details);
+//   }
+
+
+  submitFormDetail(){
+
+  console.log('oddArray',this.oddArray);
+  console.log('evenArray',this.evenArray);
+
   }
+
   getTicketFormField() {
     const params = "refId=" + this.refId + "&refType=" + this.refType + "&ticketId=" + this.ticketId;
     console.log("params", params);
@@ -48,7 +83,8 @@ export class TicketClosingFormComponent implements OnInit {
       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (res['data']) {
         let ticketFormFields = res['data'];
-        this.ticketFormFields = ticketFormFields.map(data => { data.isExpand = false; return data })
+        this.ticketFormFields = ticketFormFields.map(data => { data.isExpand = false;
+        return data })
         this.formatArray();
       }
     }, err => {
@@ -116,6 +152,7 @@ export class TicketClosingFormComponent implements OnInit {
 
   saveFromDetail(isContinue) {
     let detailsTemp = this.evenArray.concat(this.oddArray);
+    console.log('detailsTemp: ', detailsTemp);
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
@@ -244,12 +281,19 @@ export class TicketClosingFormComponent implements OnInit {
       this.oddArray[i]._param_child = JSON.parse(JSON.stringify(event));
       this.oddArray[i].isExpand = false;
     }
-  }
+    }
 
-  checkAllExpandedTables(checkedOf, arrayType, status) {
-    console.log(checkedOf, arrayType, status);
+  checkAllExpandedTables() {
     this.oddArray.forEach(obj => { obj.isExpand = true; });
+    console.log('this.oddArray: ', this.oddArray);
     this.evenArray.forEach(obj => { obj.isExpand = true; });
+    console.log('this.evenArray: ', this.evenArray);
+
+  //  setTimeout(() => {
+  //  let submit = document.querySelectorAll('ngx-table-view .submit-btn');
+  //  submit.forEach(item=>  item.remove());
+  //  }, 100);
+
 
 
     // if (arrayType === 'odd') {
@@ -266,4 +310,11 @@ export class TicketClosingFormComponent implements OnInit {
     //   console.log(index, status)
     // }
   }
+
+  ngOnInit() {
+  this.checkAllExpandedTables();
+  }
+
 }
+
+
