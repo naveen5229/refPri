@@ -150,17 +150,23 @@ this.detailImageZoom = true;
 
 
   refreshPage(){
-    this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
-    this.getAllAdmin();
-    this.showAdminWiseWagesList();
-    this.isDetailView = false;
-    this.allVisits = [];
-    this.allUsers = [];
+    if(this.isDetailView){
+      this.viewExpenseDetail(this.selectedExpense);
+    }else{
+      this.startDate = new Date();
+      this.endDate = new Date();
+      this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
+      this.getAllAdmin();
+      this.showAdminWiseWagesList();
+      // this.isDetailView = false;
+      this.allVisits = [];
+      this.allUsers = [];
 
-    this.selectedExpense = null;
-    this.onsiteImages = [];
-    this.expenseList = [];
-    this.alluserselect = false;
+      this.selectedExpense = null;
+      this.onsiteImages = [];
+      this.expenseList = [];
+      this.alluserselect = false;
+    }
   }
 
   getAllAdmin() {
