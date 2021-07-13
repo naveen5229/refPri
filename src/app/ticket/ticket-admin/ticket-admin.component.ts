@@ -508,6 +508,21 @@ callDetails(ticket,type,isDate=false) {
       headings = this.userWiseTicketTable.data.headings;
       title = 'User-Wise-Summary';
     }
+    else if(this.activeTab=='completedTicket'){
+      data = this.completedTicketList;
+      headings = this.completedTicketTable.data.headings;
+      title = 'Completed Ticket';
+    }
+    else if(this.activeTab=='current'){
+      data = this.currentTicketList;
+      headings = this.currentTicketTable.data.headings;
+      title = "Today's Ticket";
+    }
+    else if(this.activeTab=='missedCall'){
+      data = this.missedCallList;
+      headings = this.missedCallTable.data.headings;
+      title = "Process Call Logs";
+    }
     if (data.length == 0) {
       this.common.showError('No Data Found')
     } else {

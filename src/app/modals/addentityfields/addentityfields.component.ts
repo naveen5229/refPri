@@ -3,6 +3,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../Service/user/user.service';
+import { ErrorReportComponent } from '../error-report/error-report.component';
 
 @Component({
   selector: 'ngx-addentityfields',
@@ -179,11 +180,20 @@ console.log(apiBase, params)
     switch (this.modalType) {
       case 1: apiBase = `Entities/saveEntityType`, params = this.entityTypeForm;
         break;
-      case 2: apiBase = `Entities/saveEntity`, params = { name: this.entityListForm.name, entityTypeId: this.entityListForm.entityType.id, requestId: this.entityListForm.requestId };
+      case 2: 
+      if(this.addType == "import"){
+        console.log("import-----");
+        this.uploadCsv();
+        return;
+      }else{
+        apiBase = `Entities/saveEntity`, params = { name: this.entityListForm.name, entityTypeId: this.entityListForm.entityType.id, requestId: this.entityListForm.requestId };
+
+      }
         break;
       case 3: apiBase = `Entities/saveEntityContact`, params = this.contactForm;
         break;
     }
+    console.log("--withoutimport----")
     // console.log('final data on save',apiBase,params);return;
     this.common.loading++;
     this.api.post(apiBase, params).subscribe(res => {
@@ -238,6 +248,69 @@ console.log(apiBase, params)
     if(this.ticketContactForm.entityType>0 && this.entityList && this.entityList.length>0){
       this.filterdEntityList = this.entityList.filter(x=>x._entity_type_id==this.ticketContactForm.entityType);
     }
+  }
+  addType="individual";
+  entityCsv =null;
+  handleFileSelection(event) {
+    this.common.loading++;
+    this.common.getBase64(event.target.files[0])
+      .then(res => {
+        this.common.loading--;
+        let file = event.target.files[0];
+        console.log("file-type:", file.type);
+        if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {
+        }
+        else {
+          alert("valid Format Are : csv");
+          return false;
+        }
+
+        res = res.toString().replace('vnd.ms-excel', 'csv');
+        this.entityCsv = res;
+      }, err => {
+        this.common.loading--;
+        console.error('Base Err: ', err);
+      })
+  }
+
+  uploadCsv() {
+    let params = {
+      entityCsv: this.entityCsv,
+      entityTypeId:this.entityListForm.entityType.id
+    };
+    if (!params.entityCsv) {
+      return this.common.showError("CSV is missing");
+    }
+    this.common.loading++;
+    this.api.post("Entities/importEntityCsv", params)
+      .subscribe(res => {
+        this.common.loading--;
+        if (res["code"] > 0) {
+          this.common.showToast(res["msg"]);
+          let successData = res['data']['success'];
+          let errorData = res['data']['fail'];
+          alert(res["msg"]);
+          this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
+          const activeModal = this.modalSService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+          activeModal.result.then(data => {
+            if (data.response) {
+              // this.activeModal.close({ response: true });
+              this.entityCsv = null;
+              this.getEntitiesList();
+            }
+          });
+        } else {
+          this.common.showError(res["msg"]);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+        console.log(err);
+      });
+  }
+
+  sampleCsv() {
+    window.open(this.api.I_URL + "sample/entitySample.csv");
   }
 
 }
