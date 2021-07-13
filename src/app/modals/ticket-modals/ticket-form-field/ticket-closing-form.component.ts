@@ -248,20 +248,22 @@ export class TicketClosingFormComponent implements OnInit {
 
   checkAllExpandedTables(checkedOf, arrayType, status) {
     console.log(checkedOf, arrayType, status);
-    this.oddArray.forEach(obj => { obj.isExpand = false; });
-    this.evenArray.forEach(obj => { obj.isExpand = false; });
-    if (arrayType === 'odd') {
-      let index = this.oddArray.findIndex(ele => {
-        return ele.r_colid === checkedOf.r_colid
-      });
-      this.oddArray[index].isExpand = status
-      console.log(index, status)
-    } else {
-      let index = this.evenArray.findIndex(ele => {
-        return ele.r_colid === checkedOf.r_colid
-      });
-      this.evenArray[index].isExpand = status;
-      console.log(index, status)
-    }
+    this.oddArray.forEach(obj => { obj.isExpand = true; });
+    this.evenArray.forEach(obj => { obj.isExpand = true; });
+
+
+    // if (arrayType === 'odd') {
+    //   let index = this.oddArray.findIndex(ele => {
+    //     return ele.r_colid === checkedOf.r_colid
+    //   });
+    //   this.oddArray[index].isExpand = status
+    //   console.log(index, status)
+    // } else {
+    //   let index = this.evenArray.findIndex(ele => {
+    //     return ele.r_colid === checkedOf.r_colid
+    //   });
+    //   this.evenArray[index].isExpand = status;
+    //   console.log(index, status)
+    // }
   }
 }
