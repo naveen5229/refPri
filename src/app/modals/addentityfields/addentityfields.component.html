@@ -1,8 +1,8 @@
 <div class="modal-header">
   <h5>{{entityContactFieldsTitle}}</h5>
   <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-  <span aria-hidden="true">&times;</span>
-</button>
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body" *ngIf="modalType == 1">
   <div class="row mb-1">
@@ -10,7 +10,8 @@
       <label>Name:</label>
     </div>
     <div class="col-9">
-      <input type="text" class="form-control" maxlength="40" placeholder="Entity Type" [(ngModel)]="entityTypeForm.name">
+      <input type="text" class="form-control" maxlength="40" placeholder="Entity Type"
+        [(ngModel)]="entityTypeForm.name">
     </div>
   </div>
 </div>
@@ -22,19 +23,54 @@
     </div>
     <div class="col-9">
       <auto-suggestion [data]="entityTypes" display="name" seperator="-" placeholder="Select Entity Type"
-        (onSelected)="entityListForm.entityType = $event" inputId="entityType" name="entityType"
-        autocomplete="off"
+        (onSelected)="entityListForm.entityType = $event" inputId="entityType" name="entityType" autocomplete="off"
         [preSelected]="(entityListForm.entityType.id>0) ? {name: entityListForm.entityType.name} : {name: ''}">
       </auto-suggestion>
     </div>
   </div>
 
+
   <div class="row mb-2">
+    <div class="col-3">
+      <label>Add Type :</label>
+    </div>
+    <div class="col-9">
+      <fieldset>
+        <div class="some-class">
+          <input type="radio" class="radio" name="addType" value='individual' [(ngModel)]="addType" id="y" />
+          <label for="y" style="margin-right:20px">Individual</label>
+          <input type="radio" class="radio" name="addType" value='import' [(ngModel)]="addType" />
+          <label for="z"> CSV</label>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="row mb-2" *ngIf='addType=="import"'>
+    <div class="col-3">
+      Entity Csv <span class="require">*</span>
+    </div>
+    <div class="col-5">
+      <div class="upload-btn-wrapper">
+        <input type="file" name="csv" (change)="handleFileSelection($event)">
+      </div>
+    </div>
+    <!-- <div class="col-2">
+      <button class="btn btn-primary btn-sm mr-2 mb-1" type="button" (click)="uploadCsv()">Import</button>
+    </div> -->
+    <div class="col-4">
+      <span  (click)="sampleCsv()" style="color: blue; text-decoration: underline; cursor: pointer;">Sample
+        Csv</span>
+    </div>
+  </div>
+
+  <div class="row mb-2" *ngIf='addType=="individual"'>
     <div class="col-3">
       <label>Name:</label>
     </div>
     <div class="col-9">
-      <input type="text" class="form-control" maxlength="60" placeholder="Entity Name" [(ngModel)]="entityListForm.name">
+      <input type="text" class="form-control" maxlength="60" placeholder="Entity Name"
+        [(ngModel)]="entityListForm.name">
     </div>
   </div>
 </div>
@@ -91,7 +127,7 @@
     </div>
   </div> -->
 
-  <div  class="mb-2">
+  <div class="mb-2">
     <!-- <div class="row mb-2">
       <div class="col-3">
         <label>Select Entity Type:<span class="text-danger">*</span></label>
@@ -120,7 +156,8 @@
       </div>
       <div class="col-7">
         <auto-suggestion [data]="entityTypes" display="type" seperator="-" placeholder="Select Entity Type"
-          (onSelected)="ticketContactForm.entityType = $event._id;entityTypeName = $event.type" inputId="entityTypeId" name="entityTypeId" autocomplete="off" [preSelected]="{type:entityTypeName}">
+          (onSelected)="ticketContactForm.entityType = $event._id;entityTypeName = $event.type" inputId="entityTypeId"
+          name="entityTypeId" autocomplete="off" [preSelected]="{type:entityTypeName}">
         </auto-suggestion>
       </div>
     </div>
@@ -131,10 +168,11 @@
         </label>
       </div>
       <div class="col-7">
-        <auto-suggestion [url]="'Entities/getMatchedEntityList?entityTypeId='+ticketContactForm.entityType" display="name" seperator="-" placeholder="Select Entity"
-          (onSelected)="setEntity($event)" inputId="entityId" name="entityId" autocomplete="off" isNewLabelAdd = "true">
+        <auto-suggestion [url]="'Entities/getMatchedEntityList?entityTypeId='+ticketContactForm.entityType"
+          display="name" seperator="-" placeholder="Select Entity" (onSelected)="setEntity($event)" inputId="entityId"
+          name="entityId" autocomplete="off" isNewLabelAdd="true">
         </auto-suggestion>
-        
+
       </div>
     </div>
   </div>
@@ -142,15 +180,14 @@
     <div class="col-12 text-right">
       <!-- <button class="btn btn-primary btn-sm" id="button"
       (click)="save()">Save</button> -->
-      <button class="btn btn-primary btn-sm" (click)="opentContactModal()" [disabled]="ticketContactForm.type==1 && !ticketContactForm.entityId">Next</button>
+      <button class="btn btn-primary btn-sm" (click)="opentContactModal()"
+        [disabled]="ticketContactForm.type==1 && !ticketContactForm.entityId">Next</button>
     </div>
   </div>
 </div>
 
 <div *ngIf="modalType != 4" class="row mb-2 mr-2">
   <div class="col-12 text-right">
-    <button class="btn btn-primary btn-sm" id="button"
-      (click)="save()">Save</button>
+    <button class="btn btn-primary btn-sm" id="button" (click)="save()">Save</button>
   </div>
 </div>
-

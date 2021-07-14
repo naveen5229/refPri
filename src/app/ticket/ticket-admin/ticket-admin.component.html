@@ -4,8 +4,9 @@
             <div class="col-8">
                 <h5 class="heading-design">Ticket-Admin</h5>
             </div>
-            <div class="col-4 text-right">
-                <button *ngIf="['processWise','userWise'].includes(activeTab)" class="btn btn-primary btn-sm mr-2" (click)="exportCSV()" title="Download Excel"><i class="fas fa-download"></i></button>
+            <div class="col-4 text-right"> 
+                <!-- *ngIf="['processWise','userWise'].includes(activeTab)" -->
+                <button  class="btn btn-primary btn-sm mr-2" (click)="exportCSV()" title="Download Excel"><i class="fas fa-download"></i></button>
             </div>
         </div>
     </nb-card-header>
