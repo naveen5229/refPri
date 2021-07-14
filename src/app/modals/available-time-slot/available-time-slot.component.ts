@@ -43,6 +43,8 @@ export class AvailableTimeSlotComponent implements OnInit {
     schedule: [],
     userid: null
   };
+  timeRangeSlotSwitch = [];
+  rangePos = 1;
 
 
   constructor(public activeModal: NgbActiveModal,
@@ -52,6 +54,8 @@ export class AvailableTimeSlotComponent implements OnInit {
     public userService: UserService) {
     console.log('params', this.common.params, moment(this.today).format("HH"));
     this.title = this.common.params.title;
+
+    this.timeRangeSlotSwitch = this.common.params.freeSlots;
 
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
     let bookedSchedules = [];
@@ -81,14 +85,14 @@ export class AvailableTimeSlotComponent implements OnInit {
         case '30': slotFrom = (this.common.params.selectedTime.from.hh + '.50'); break;
         case '45': slotFrom = (this.common.params.selectedTime.from.hh + '.75'); break;
         // default: slotFrom = this.common.params.selectedTime.from.hh ? this.common.params.selectedTime.from.hh : this.setMinTime();
-        default: slotFrom = this.setMinTime();
+        default: slotFrom = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].start) : this.setMinTime(this.today);
       }
       switch (this.common.params.selectedTime.to.mm) {
         case '15': slotTo = (this.common.params.selectedTime.to.hh + '.25'); break;
         case '30': slotTo = (this.common.params.selectedTime.to.hh + '.50'); break;
         case '45': slotTo = (this.common.params.selectedTime.to.hh + '.75'); break;
         // default: slotTo = this.common.params.selectedTime.to.hh ? this.common.params.selectedTime.to.hh : this.setMinTime() + 1;
-        default: slotTo = this.setMinTime() + 1;
+        default: slotTo = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].to) : this.setMinTime(this.today) + 1;
       }
       this.value = slotFrom;
       this.highValue = slotTo;
@@ -97,9 +101,9 @@ export class AvailableTimeSlotComponent implements OnInit {
 
     //if time restricted
     if (this.common.params.timeRestrict) {
-      this.value = this.setMinTime();
-      this.highValue = this.setMinTime() + 1;
-      this.options.minLimit = this.setMinTime();
+      this.value = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].start) : this.setMinTime(this.today);
+      this.highValue = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].end) : this.setMinTime(this.today) + 1;
+      this.options.minLimit = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].start) : this.setMinTime(this.today);
     }
   }
 
@@ -110,17 +114,19 @@ export class AvailableTimeSlotComponent implements OnInit {
     this.activeModal.close({ response: res, range: range });
   }
 
-  setMinTime() {
-    let min = parseInt(moment(this.today).format("mm"));
+  setMinTime(day) {
+    let min = parseInt(moment(day).format("mm"));
     console.log(min);
-    if (min >= 0 && min <= 15) {
-      return parseFloat(moment(this.today).format("HH") + '.25');
+    if(min == 0){
+      return parseInt(moment(day).format("HH"));
+    }else if (min >= 0 && min <= 15) {
+      return parseFloat(moment(day).format("HH") + '.25');
     } else if (min > 15 && min <= 30) {
-      return parseFloat(moment(this.today).format("HH") + '.50');
+      return parseFloat(moment(day).format("HH") + '.50');
     } else if (min > 30 && min <= 45) {
-      return parseFloat(moment(this.today).format("HH") + '.75');
+      return parseFloat(moment(day).format("HH") + '.75');
     } else {
-      return parseInt(moment(this.today).format("HH")) + 1;
+      return parseInt(moment(day).format("HH")) + 1;
     }
   }
 
@@ -181,6 +187,16 @@ export class AvailableTimeSlotComponent implements OnInit {
         ele.detaildIcon = iconState
       }
     });
-    console.log('edited:',this.busySchedules)
+    console.log('edited:', this.busySchedules)
+  }
+
+  shiftSlot() {
+    this.value = this.setMinTime(this.timeRangeSlotSwitch[this.rangePos].start);
+    this.highValue = this.setMinTime(this.timeRangeSlotSwitch[this.rangePos].end);
+    if (this.rangePos >= this.timeRangeSlotSwitch.length - 1) {
+      this.rangePos = 0;
+    } else {
+      this.rangePos = this.rangePos + 1;
+    }
   }
 }
