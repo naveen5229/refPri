@@ -469,6 +469,13 @@ this.detailImageZoom = true;
         this.common.loading--;
         if (res['code'] == 1) {
           this.expenseList = res['data'] || [];
+          if(this.expenseList && this.expenseList.length) {
+            this.expenseList.forEach(element => {
+              if(!element['amount_new'] && element['amount_new']!==0){
+                element['amount_new'] = element['amount'];
+              }
+            });
+          }
         } else {
           this.common.showError(res['msg']);
         }
@@ -602,6 +609,7 @@ this.detailImageZoom = true;
     event.preventDefault();
     event.stopPropagation();
     this.expenseInfo = [];
+    this.expenseInfo.push({expense_type:"expense_type",amount:0,updated_amount:0});
     if(item && item._onside_img && item._onside_img.length){
       item._onside_img.forEach(element => {
         if(element.exp_img && element.exp_img.length){
