@@ -39,10 +39,12 @@ export class TaskNewComponent implements OnInit {
     date: null,
     ticketId: null,
     dateOld: null,
-    reason: null
+    reason: null,
+    lastDate: null
   }
   returnNewDate = null;
   editType = 0;//0=new,1=child-task,2=new with param,3=edit-project
+  ticketType = 103;
   userGroupList = [];
   userWithGroup = [];
   bGConditions = [
@@ -94,6 +96,9 @@ export class TaskNewComponent implements OnInit {
         this.updateLastDateForm.date = new Date(this.common.params.editData._expdate);
         this.updateLastDateForm.dateOld = this.common.params.editData._expdate;
         this.updateLastDateForm.ticketId = this.common.params.editData._tktid;
+       this.updateLastDateForm.lastDate = new Date(this.common.params.editData._lastdate);
+      //  this.updateLastDateForm.lastDate = this.common.params.editData._expdate;
+        this.ticketType = this.common.params.editData._tktype;
       } else if (this.common.params.editType == 2) {
         // console.log("🚀 ~ file: task-new.component.ts ~ line 90 ~ TaskNewComponent ~ this.normalTask.projectId", this.normalTask.projectId)
         if(this.common.params.project._id){

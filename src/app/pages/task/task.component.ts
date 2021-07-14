@@ -1343,7 +1343,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: [101, 102].includes(ticket._tktype)
+            action: [101, 102, 103].includes(ticket._tktype)
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -2118,6 +2118,7 @@ export class TaskComponent implements OnInit {
 
   editTask(ticket, type, isProject = false) {
     console.log("type:", type);
+    console.log("ticket",ticket);
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
@@ -2127,6 +2128,9 @@ export class TaskComponent implements OnInit {
       editData: ticket,
       ticketId: ticket._tktid,
       ticketType: ticket._tktype,
+       lastDate: ticket._lastdate,
+     // lastDate: ticket.expdate,
+      expDate: ticket.expdate,
       project: { id: (ticket.project.toLowerCase() != 'standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase() != 'standalone') ? ticket.project : null }
     };
 
