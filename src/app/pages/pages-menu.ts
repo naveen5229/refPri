@@ -273,6 +273,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/meeting',
         home: true,
+      },
+      {
+        title: 'Meeting-Room',
+        icon: 'file-text-outline',
+        link: '/pages/meeting-room',
+        home: true,
       }
     ]
   },

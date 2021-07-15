@@ -2129,6 +2129,7 @@ export class TaskComponent implements OnInit {
       ticketId: ticket._tktid,
       ticketType: ticket._tktype,
        lastDate: ticket._lastdate,
+       addtime: ticket.addtime,
      // lastDate: ticket.expdate,
       expDate: ticket.expdate,
       project: { id: (ticket.project.toLowerCase() != 'standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase() != 'standalone') ? ticket.project : null }

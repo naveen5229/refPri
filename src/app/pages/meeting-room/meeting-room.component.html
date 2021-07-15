@@ -1,0 +1,41 @@
+<nb-card>
+  <nb-card-header>
+    <h5> {{title}}</h5>
+  </nb-card-header>
+
+  <nb-card-body class="min-h-auto">
+      <div class="row align-items-center">
+  <div class="col-3">
+    <div class="col-12" style="display:inline-block;">
+      <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
+      placeholder="FO User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
+      </auto-suggestion>
+    </div>
+  </div>
+  <div class="col-3">
+    <!-- <div class="col-12" style="display:inline-block;"> -->
+      <auto-suggestion (onSelected)="selectOffice($event)" [display]="['name']" [data]="officeDataForWifi"
+      placeholder="Office" seperator="-"  [preSelected]="{name:name}" className="borderStyle" inputId="id">
+      </auto-suggestion>
+    <!-- </div> -->
+  </div>
+  <div class="col-3">
+    <input type="text" class="form-control"  id="meetingRoomName" placeholder="Enter Meeting Room Name" [(ngModel)]="meetingRoomName">
+  </div>
+  <div class="col-3 text-right">
+    <button (click)='addMeetingRoom()' class="btn btn-primary">{{btn}}</button>
+  </div>
+  </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>
+    <h5> Meeting Rooms </h5>
+  </nb-card-header>
+  <nb-card-body class="min-h-auto">
+  <div class="col-12 mt-2">
+    <smart-table [data]="tableRoom.data" [settings]="tableRoom.settings"></smart-table>
+  </div>
+</nb-card-body>
+</nb-card>

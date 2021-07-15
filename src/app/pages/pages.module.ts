@@ -84,6 +84,7 @@ import listPlugin from '@fullcalendar/list';
 import { TmgTicketComponent } from './tmg-ticket/tmg-ticket.component';
 import { TmgMeetingComponent } from './tmg-meeting/tmg-meeting.component';
 import { TmgVisitComponent } from './tmg-visit/tmg-visit.component';
+import { MeetingRoomComponent } from './meeting-room/meeting-room.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -175,7 +176,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MeetingComponent,
     TmgTicketComponent,
     TmgMeetingComponent,
-    TmgVisitComponent
+    TmgVisitComponent,
+    MeetingRoomComponent,
   ],
 })
 export class PagesModule {
