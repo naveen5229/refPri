@@ -345,16 +345,11 @@
       <thead>
         <tr>
           <th>Expense Type</th>
-          <th>Applied Amount</th>
-          <th>Approved Amount</th>
+          <th>Applied Expense</th>
+          <th>Approved Expense</th>
         </tr>
       </thead>
       <tbody>
-        <!-- <tr *ngIf="selectedExpense">
-          <td>System Expense</td>
-          <td>{{selectedExpense.system_expense}}</td>
-          <td>{{selectedExpense.system_expense}}</td>
-        </tr> -->
         <tr *ngFor="let e of expenseInfo">
           <td>{{e.expense_type}}</td>
           <td>{{e.amount}}</td>
