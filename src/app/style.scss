@@ -504,7 +504,12 @@ $color-dark:#000;
     }
   }
 }
+.accountModalClass{ 
+  .modal-dialog{
+      max-width: 90%!important;
+  }
 
+}
 
 table.dataTable tbody th {
   padding: 3px 10px !important;

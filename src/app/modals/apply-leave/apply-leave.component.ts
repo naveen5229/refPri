@@ -819,7 +819,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       timeRestrict: (this.common.dateFormatter1(this.meetingForm.fromTime) <= this.common.dateFormatter1(this.common.getDate())) ? true : false,
       freeSlots:this.freeSchedulesForShifting
     }
-    const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    const activeModal = this.modalService.open(AvailableTimeSlotComponent, {  container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
       if (data.response) {
         console.log('modal Works', data);
