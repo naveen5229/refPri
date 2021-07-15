@@ -1970,26 +1970,35 @@ export class TaskComponent implements OnInit {
           title: "Mark Rejected",
         });
       }
-    } else if (type == -8) {
-      if (
-        ticket._status == 0 &&
-        ticket._assignee_user_id == this.userService.loggedInUser.id
-      ) {
-        icons.push({
-          class: "fa fa-check-square text-warning",
-          // action: this.updateTicketStatus.bind(this, ticket, type, 2),
-          action: this.collapseUnreadTaskUpdateStatus.bind(this, ticket, type, 2),
-          txt: "",
-          title: "Mark Ack",
-        });
+    }
+    else if (type == -8) {
+      if (ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) {
+        if ([111, 112, 113, 114].includes(ticket._tktype)) {
+          icons.push({
+            class: "fa fa-thumbs-up text-warning",
+            // action: this.updateTicketStatus.bind(this, ticket, type, 2),
+            action: this.openConfirmAlert.bind(this, ticket, type),//this.collapseUnreadTaskUpdateStatus.bind(this, ticket, type, 2),
+            txt: "",
+            title: "Approval",
+          });
+        }
+        else {
+          icons.push({
+            class: "fa fa-check-square text-warning",
+            // action: this.updateTicketStatus.bind(this, ticket, type, 2),
+            action: this.collapseUnreadTaskUpdateStatus.bind(this, ticket, type, 2),
+            txt: "",
+            title: "Mark Ack",
+          });
+        }
         icons.push({
           class: "fa fa-times text-danger",
           action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
           txt: "",
           title: "Mark Rejected",
         });
-      } else if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id
-      ) {
+      }
+      else if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) {
         icons.push({
           class: "fa fa-check-square text-warning",
           // action: this.ackTaskByAssignerBehalf.bind(this, ticket, type),
@@ -1997,7 +2006,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Ack as Assigner",
         });
-      } else if (ticket._tktype == 110 && ticket._mp_status == 0) {
+      }
+      else if (ticket._tktype == 110 && ticket._mp_status == 0) {
         icons.push({
           class: "fa fa-check-square text-warning",
           // action: this.ackTaskByCcUser.bind(this, ticket, type),
@@ -2010,7 +2020,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark rejected as meeting user",
         });
-      } else if (ticket._cc_user_id && !ticket._cc_status) {
+      }
+      else if (ticket._cc_user_id && !ticket._cc_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
           // action: this.ackTaskByCcUser.bind(this, ticket, type),
@@ -2018,12 +2029,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Ack as CC Task",
         });
-      } else if (
-        (ticket._tktype == 101 || ticket._tktype == 102) &&
-        ticket._project_id > 0 &&
-        ticket._pu_user_id &&
-        !ticket._pu_status
-      ) {
+      }
+      else if ((ticket._tktype == 101 || ticket._tktype == 102) && ticket._project_id > 0 && ticket._pu_user_id && !ticket._pu_status) {
         icons.push({
           class: "fa fa-check-square text-warning",
           // action: this.ackTaskByProjectUser.bind(this, ticket, type),
@@ -2031,7 +2038,8 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Ack as Project Task",
         });
-      } else if (ticket._status == 5) {
+      }
+      else if (ticket._status == 5) {
         if (ticket._assigned_user_id == this.userService.loggedInUser.id) {
           icons.push({
             class: "fa fa-retweet",
@@ -2048,7 +2056,8 @@ export class TaskComponent implements OnInit {
           });
         }
       }
-    } else if (type == -9) {
+    }
+    else if (type == -9) {
       if (ticket._status == 3) {
         icons.push({
           class: "fa fa-play-circle",
@@ -3592,6 +3601,38 @@ export class TaskComponent implements OnInit {
         }
       }
       this.tableUnreadTaskForMeList.settings.arrow = true;
+    });
+  }
+
+
+  openConfirmAlert(ticket, type) {
+    this.common.params = {
+      title: 'Approval ',
+      description: `<b>&nbsp;` + 'Do you Want Approve this Leave Request' + `<b>`,
+      btn1: "Approved",
+      btn2: "Later"
+    }
+
+    const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.result.then(data => {
+      console.log("data---", data);
+      if (data.response) {
+        this.updateTicketStatus(ticket, type, 5);
+      }
+      else {
+        this.updateTicketStatus(ticket, type, 2);
+      }
+      let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
+      if (activeRowData._isremind == 1 || activeRowData._is_star_mark == 1) {
+      } else {
+        this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+      }
+      this.setTableUnreadTaskForMe(type);
+      if (type === -8 && (this.unreadTaskForMeList && this.unreadTaskForMeList.length >= 3)) {
+        // this.setTableUnreadTaskForMe(type);
+      } else {
+        this.getTaskByType(type)
+      };
     });
   }
 

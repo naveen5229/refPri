@@ -548,6 +548,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     })
   }
 
+  freeSchedulesForShifting = [];
+
   checkAvailability() {
     console.log("checkAvailability:", this.meetingForm, this.formType)
     if (this.formType == 2 && (!this.meetingForm.cc || !this.meetingForm.cc.length)) {
@@ -594,6 +596,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         console.log(res);
         console.log(this.hours, this.minutes);
         // this.selectedTime = { hh: '', mm: '' };
+        this.freeSchedulesForShifting = (res['data'] && res['data'].length > 0) ? res['data'][0].available_slots : [];
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
@@ -814,8 +817,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       preBookedScheduler: preBookedScheduler,
       selectedTime: this.selectedTime,
       timeRestrict: (this.common.dateFormatter1(this.meetingForm.fromTime) <= this.common.dateFormatter1(this.common.getDate())) ? true : false,
+      freeSlots:this.freeSchedulesForShifting
     }
-    const activeModal = this.modalService.open(AvailableTimeSlotComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    const activeModal = this.modalService.open(AvailableTimeSlotComponent, {  container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "timeslot" });
     activeModal.result.then(data => {
       if (data.response) {
         console.log('modal Works', data);

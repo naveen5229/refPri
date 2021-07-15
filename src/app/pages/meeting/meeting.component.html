@@ -10,11 +10,11 @@
   <nb-card-body>
     <div class="row ">
       <div class="col-6">
-        <button class="btn btn-primary btn-sm allicons" id="addMeeting" (click)="addMetting(2)"><i class="fa fa-plus"
+        <button class="btn btn-primary btn-sm allicons cursor-pointer" id="addMeeting" (click)="addMetting(2)"><i class="fa fa-plus"
             style="font-size: 13px;" aria-hidden="true"></i><label class="pl-1">New
             Meeting</label></button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting"
-          (click)="checkAvailability(1);windowType='userSchedule'"
+          (click)="checkAvailability();windowType='userSchedule'"
           [ngClass]="windowType=='userSchedule'?'active':''">Check Availability</button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="meetingList"
           (click)="getMeetingsDefault();windowType='meetings'" [ngClass]="windowType=='meetings'?'active':''">My
@@ -35,14 +35,35 @@
 
       <div class="col-6" *ngIf="windowType=='userSchedule'">
         <div class="row">
-          <div class="col-2"></div>
+          <div class="col-4">
+            <div class="row mb-2">
+              <div class="col-6">
+                  <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="mode" value="0" (click)="checkSchedule('0')" checked>
+                      User
+                  </label>
+              </div>
+              <div class="col-6">
+                  <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="mode" value="1" (click)="checkSchedule('1')">
+                      Room
+                  </label>
+              </div>
+          </div>
+          </div>
           <div class="col-2 my-auto pl-0 pr-0" style="font-size: 14px;">
             Select User :
           </div>
-          <div class="col-8 pl-0">
+          <div class="col-6 pl-0" *ngIf="scheduleType==0">
             <auto-suggestion [data]="adminList" display='name' (onSelected)="schedule.user = $event;checkAvailability()"
               seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
               [preSelected]="(schedule.user && schedule.user.id>0) ? {name: schedule.user.name} : {name:''}">
+            </auto-suggestion>
+          </div>
+          <div class="col-6 pl-0" *ngIf="scheduleType==1">
+            <auto-suggestion [data]="roomList" display='name' (onSelected)="schedule.room = $event;checkAvailability()"
+              seperator="-" placeholder="Search Room" autocomplete="off" name="roomId" inputId="roomId"
+              [preSelected]="(schedule.room && schedule.room.id>0) ? {name: schedule.room.name} : {name:''}">
             </auto-suggestion>
           </div>
         </div>
@@ -87,7 +108,13 @@
               <div class="col-6">
                 <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
                 </div>
-                <div class="row subFont">{{meeting.host}}</div>
+                <div class="row subFont">
+                  <div class="col-6 p-0">{{meeting.host}}</div>
+                  <div class="col-6 pr-0" *ngIf="meeting._room_id"><i class="fas fa-door-open pr-2" title="Room No."></i>{{meeting.info}}
+                  </div>
+                  <div class="col-6 pr-0" *ngIf="!meeting._room_id && meeting._link"><i class="fab fa-chrome pr-2" title="Follow Link"></i><a
+                      href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
+                </div>
               </div>
               <div class="col-3">
                 <span id="chatIcon" title="Chat" class="cursor-pointer"
@@ -182,7 +209,13 @@
               <div class="col-6">
                 <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
                 </div>
-                <div class="row subFont">{{meeting.host}}</div>
+                <div class="row subFont">
+                  <div class="col-6 p-0">{{meeting.host}}</div>
+                  <div class="col-6 pr-0" *ngIf="meeting._room_id"><i class="fas fa-door-open pr-2" title="Room No."></i>{{meeting.info}}
+                  </div>
+                  <div class="col-6 pr-0" *ngIf="!meeting._room_id && meeting._link"><i class="fab fa-chrome pr-2" title="Follow Link"></i><a
+                      href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
+                </div>
               </div>
               <div class="col-3">
                 <span id="chatIcon" title="Chat" class="cursor-pointer"

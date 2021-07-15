@@ -8,6 +8,7 @@ import { CommonService } from '../../Service/common/common.service';
 import { UserService } from '../../Service/user/user.service';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
 import * as moment from 'moment';
+import { param } from 'jquery';
 
 @Component({
   selector: 'ngx-meeting',
@@ -15,13 +16,15 @@ import * as moment from 'moment';
   styleUrls: ['./meeting.component.scss']
 })
 export class MeetingComponent implements OnInit {
+  scheduleType = '0';
   searchTerm = '';
   windowType = 'meetings';
   currentDate = new Date();
   schedule = {
     time: moment(),
     endTime: moment().add(30, 'days'),
-    user: { id: this.userService._details.id, name: this.userService._details.name }
+    user: { id: this.userService._details.id, name: this.userService._details.name },
+    room: { id: null, name: null }
   }
   TODAY_STR = new Date().toISOString().replace(/T.*$/, '');
   // INITIAL_EVENTS: EventInput[] = [
@@ -38,7 +41,7 @@ export class MeetingComponent implements OnInit {
   // ];
   currentEvents: EventApi[] = [];
   calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
+    initialView: 'timeGridDay',
     weekends: true,
     headerToolbar: {
       left: 'prev,next',
@@ -76,6 +79,7 @@ export class MeetingComponent implements OnInit {
     pastData: [],
     upcomingData: []
   }
+  roomList = [];
   meetingAttendiesList = [];
   holdForFollowUp = {};
   entityTypes = [];
@@ -89,6 +93,7 @@ export class MeetingComponent implements OnInit {
     if ((event.target.innerText >= 1 && event.target.innerText <= 10000) || event.target.innerText == 'Cancel' || event.target.innerText == 'Set' || ['feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'].includes(event.target.innerText.toLowerCase())) return;
     if (document.getElementById('pastfilterPop')) document.getElementById('pastfilterPop').style.display = 'none';
   }
+
   constructor(public common: CommonService,
     public userService: UserService, public api: ApiService, public modalService: NgbModal,) {
     console.log(this.calendarOptions)
@@ -97,6 +102,7 @@ export class MeetingComponent implements OnInit {
     this.getUserGroupList();
     this.getMeetingListByType([0, 1]);
     this.getEntityDetails();
+    this.getRoomList();
     this.common.refresh = this.refresh.bind(this);
   }
 
@@ -107,6 +113,7 @@ export class MeetingComponent implements OnInit {
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMeetingListByType([0, 1]);
+    this.getRoomList();
   }
 
   propogateEvent(event) {
@@ -136,9 +143,9 @@ export class MeetingComponent implements OnInit {
     tooltip.innerText = event.event._def.title;
 
     var ele = document.getElementById('tooltipPos');
-    console.log(event.jsEvent.x,event.jsEvent.y)
-    ele.style.top = `${event.jsEvent.y-150}px`;
-    ele.style.left = `${event.jsEvent.x-150}px`;
+    console.log(event.jsEvent.x, event.jsEvent.y)
+    ele.style.top = `${event.jsEvent.y - 150}px`;
+    ele.style.left = `${event.jsEvent.x - 150}px`;
     ele.style.visibility = 'visible';
   }
 
@@ -216,6 +223,28 @@ export class MeetingComponent implements OnInit {
             this.groupList = groupList.map((x) => {
               return { id: x._id, name: x.name, groupId: x._id, groupuser: x._employee };
             });
+          } else {
+            this.common.showError(res["msg"]);
+          }
+        },
+        (err) => {
+          this.common.showError();
+          console.log("Error: ", err);
+        });
+  }
+
+  getRoomList() {
+    this.api.get('Admin/getMeetingRoomList')
+      .subscribe(
+        (res) => {
+          console.log(" Group data", res["data"]);
+          if (res["code"] > 0) {
+            let meetingRooms = res['data'] || [];
+            this.roomList = meetingRooms.map((x) => {
+              return { id: x._id, name: x.room_name };
+            });
+            this.schedule.room = this.roomList[0];
+            console.log(this.schedule.room, this.roomList)
           } else {
             this.common.showError(res["msg"]);
           }
@@ -718,7 +747,7 @@ export class MeetingComponent implements OnInit {
     this.meetingData.upcomingData = upcomingDataFiltered;
   }
 
-  checkAvailability(modalState) {
+  checkAvailability() {
     // if (modalState) {
     //   this.schedule = {
     //     time: this.currentDate,
@@ -728,13 +757,20 @@ export class MeetingComponent implements OnInit {
     // }
     let params = {
       requestId: null,
-      roomId: null,
+      roomId: this.schedule.room.id,
       host: this.schedule.user.id,
       users: JSON.stringify([]),
       date: this.common.dateFormatter1(this.schedule.time),
       endDate: this.common.dateFormatter1(this.schedule.endTime)
     }
 
+    if (this.scheduleType == '0') {
+      params.roomId = null;
+    } else if (this.scheduleType == '1') {
+      params.host = null;
+    }
+
+    // return console.log(params,this.scheduleType)
     this.common.loading++;
     this.api.post('Admin/getCalendarSchedule', params).subscribe(res => {
       this.common.loading--;
@@ -746,11 +782,15 @@ export class MeetingComponent implements OnInit {
             // ,title:'fetching'
           })
         this.calendarOptions.events = schedules;
-        this.calendarOptions.initialView = 'dayGridMonth';
+        this.calendarOptions.initialView = 'timeGridDay';
         console.log('cslender', this.calendarOptions);
         // if(modalState) document.getElementById('calender').style.display = 'block';
       }
-    });
+    },
+      (err) => {
+        this.common.loading--;
+        this.common.showError();
+      });
   }
 
   filterEnable(type) {
@@ -765,5 +805,10 @@ export class MeetingComponent implements OnInit {
 
   myCalender() {
 
+  }
+
+  checkSchedule(type) {
+    this.scheduleType = type;
+    this.checkAvailability()
   }
 }
