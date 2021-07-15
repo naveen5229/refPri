@@ -39,7 +39,8 @@ export class TmgTicketComponent implements OnInit {
   acknowledgeTatUser30D = [];
   acknowledgeTatProcess30D = [];
   longestAcknowledgePending = [];
-
+  openTicketLive:any[] = [];
+  completetionTatProcessWise:any[] = [];
   ngOnDestroy() { }
   ngOnInit() { }
 
@@ -121,7 +122,7 @@ export class TmgTicketComponent implements OnInit {
     // });
     this.handleChart(ticketTrend, type);
   }
-  
+
 }
 
 handleChart(ticketTrend, type) {
@@ -236,10 +237,10 @@ handleChart(ticketTrend, type) {
     this.chart.type = chartType
     this.chart.data = chartData;
     this.chart.options = chartOptions;
-  } 
+  }
 
 }
- 
+
 
 
   handleChart1() {
@@ -301,7 +302,7 @@ handleChart(ticketTrend, type) {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 
@@ -372,7 +373,7 @@ handleChart(ticketTrend, type) {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 
@@ -443,7 +444,7 @@ handleChart(ticketTrend, type) {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 
@@ -514,7 +515,7 @@ handleChart(ticketTrend, type) {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 
