@@ -14,7 +14,7 @@
             style="font-size: 13px;" aria-hidden="true"></i><label class="pl-1">New
             Meeting</label></button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting"
-          (click)="checkAvailability(1);windowType='userSchedule'"
+          (click)="checkAvailability();windowType='userSchedule'"
           [ngClass]="windowType=='userSchedule'?'active':''">Check Availability</button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="meetingList"
           (click)="getMeetingsDefault();windowType='meetings'" [ngClass]="windowType=='meetings'?'active':''">My
