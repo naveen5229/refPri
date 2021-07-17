@@ -79,6 +79,7 @@ import { LeaveTypeManagementComponent } from './leave-type-management/leave-type
 import { LeaveManagementComponent } from './leave-management/leave-management.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { MeetingRoomComponent } from './meeting-room/meeting-room.component';
+import { LeaveSettingComponent } from './leave-setting/leave-setting.component';
 
 const routes: Routes = [{
   path: '',
@@ -478,7 +479,12 @@ const routes: Routes = [{
       path:'meeting-room',
       component:MeetingRoomComponent,
       canActivate: [AuthGuard, RouteGuard]
-  }
+  },
+  {
+    path:'leave-setting',
+    component:LeaveSettingComponent,
+    canActivate: [AuthGuard, RouteGuard]
+    },
   ],
 }];
 

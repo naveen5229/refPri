@@ -1936,7 +1936,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if ([104, 111, 112, 113, 115].includes(ticket._tktype)) {//leave reject
+        if ([104, 111, 112, 113, 115, 211, 212, 213].includes(ticket._tktype)) {//leave or WFH reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),

@@ -518,3 +518,15 @@ table.dataTable tbody th {
 table.dataTable tbody td{
    padding: 3px 11px !important;
 }
+
+  nb-card-body.min-h-auto{
+  min-height: auto !important;  
+  overflow: visible !important;
+ } 
+
+:host ::ng-deep{
+ nb-card-body.min-h-auto{
+  min-height: auto !important; 
+  overflow: visible !important;
+ } 
+}
