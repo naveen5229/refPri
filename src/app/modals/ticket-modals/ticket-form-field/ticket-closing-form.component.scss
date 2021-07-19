@@ -1,0 +1,16 @@
+table thead th  {
+.table-field{
+color: #212529 !important;
+vertical-align: middle;
+
+}
+
+&.required {
+  background: #c7c7c7;
+}
+
+
+i{
+ font-size: 8px;
+}
+}

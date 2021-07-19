@@ -1,13 +1,13 @@
 .footer-icon {
     font-size: xx-large;
   }
-  
+
   .image-viewer-tooltip {
     position: relative;
     display: inline-block;
     z-index: 1000;
   }
-  
+
   .image-viewer-tooltip .tooltiptext {
     visibility: hidden;
     width: 120px;
@@ -24,7 +24,7 @@
     opacity: 0;
     transition: opacity 0.3s;
   }
-  
+
   .image-viewer-tooltip .tooltiptext::after {
     content: "";
     position: absolute;
@@ -35,8 +35,34 @@
     border-style: solid;
     border-color: #555 transparent transparent transparent;
   }
-  
+
   .image-viewer-tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
   }
+
+:host ::ng-deep {
+  pdf-viewer {
+    width: 1500px;
+    height: 1000px;
+  }
+
+  #scroller {
+    height: 91% !important;
+  }
+}
+
+::ng-deep {
+  pdf-viewer {
+    width: 1500px;
+    height: 1000px;
+  }
+
+  #scroller {
+    height: 91% !important;
+  }
+}
+
+#scroller {
+  height: 91% !important;
+}

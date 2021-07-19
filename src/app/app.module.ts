@@ -137,9 +137,13 @@ import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
 import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.component';
+<<<<<<< HEAD
 import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
 import { ModalComponent } from './modals/modal/modal.component';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
+=======
+import { TicketFieldsComponent } from './modals/process-modals/ticket-fields/ticket-fields.component';
+>>>>>>> fe855c0fc896e1697bbd59cb8455426242d83f4f
 
 
 
@@ -258,7 +262,11 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
+<<<<<<< HEAD
     ApplyWFHComponent,
+=======
+    TicketFieldsComponent,
+>>>>>>> fe855c0fc896e1697bbd59cb8455426242d83f4f
      // SmartDataTableComponent,
 
     // SendmessageComponent,

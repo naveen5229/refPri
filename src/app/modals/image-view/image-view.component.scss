@@ -18,7 +18,7 @@
 :host ::ng-deep .image-gallery-2 {
     width: 100%;
     position: relative;
-    height: 600px;
+    height: 648px;
     background: $dark-1;
     margin-top: 45px;
     margin-bottom: 0px;
@@ -41,4 +41,44 @@
         margin: -10px -1rem -1rem auto;
         outline: none !important;
     }
+}
+
+
+:host ::ng-deep {
+pdf-viewer{
+ width: 1500px;
+ height: 1000px;
+}
+
+ #scroller {
+    height: 91% !important;
+  }
+}
+
+::ng-deep {
+pdf-viewer {
+  width: 1500px;
+  height: 1000px;
+}
+
+  #scroller {
+    height: 91% !important;
+  }
+}
+
+
+// :host-context #scroller {
+//   background-color: #eef;
+//   height: 91% !important;
+// }
+
+
+// /deep/{
+//    #scroller {
+//      height: 91% !important;
+//    }
+
+// }
+ #scroller {
+  height: 91% !important;
 }

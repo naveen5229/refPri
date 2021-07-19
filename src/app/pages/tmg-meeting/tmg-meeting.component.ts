@@ -7,7 +7,7 @@ import { GenericModelComponent } from '../../modals/generic-model/generic-model.
 @Component({
   selector: 'ngx-tmg-meeting',
   templateUrl: './tmg-meeting.component.html',
-  styleUrls: ['./tmg-meeting.component.scss']
+  styleUrls: ['./tmg-meeting.component.scss','../tmg-dashboard/tmg-dashboard.component.scss']
 })
 export class TmgMeetingComponent implements OnInit {
   @Input() pageType: string = "Tmg-Task";
@@ -421,7 +421,7 @@ handleChart1(chartType1, label1, chartType2, label2) {
       },
     });
     return options;
-  
+
   }
 
 
@@ -484,7 +484,7 @@ handleChart1(chartType1, label1, chartType2, label2) {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 

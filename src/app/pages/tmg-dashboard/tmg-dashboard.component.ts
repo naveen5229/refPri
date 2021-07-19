@@ -1,3 +1,5 @@
+import { LayoutService } from './../../@core/utils/layout.service';
+import { NbSidebarService } from '@nebular/theme';
 import { Component, OnInit, Output } from '@angular/core';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
@@ -15,7 +17,9 @@ export class TmgDashboardComponent  implements OnInit {
   departments = [];
   ticketProcesses = [];
   constructor(public api: ApiService,
-    public common: CommonService) {
+    public common: CommonService,
+    public sidebarService:NbSidebarService,
+    public layoutService:LayoutService) {
     this.getDepartments();
     this.getTicketProcessList();
   }
@@ -23,7 +27,7 @@ export class TmgDashboardComponent  implements OnInit {
   ngOnDestroy(){}
 
   ngOnInit() { }
-  
+
   getIndex() {
     for (let i = 0; i <= this.seletionsArray.length; i++) {
       if (this.seletionsArray[i] == this.selectedDashboard) {
@@ -31,7 +35,7 @@ export class TmgDashboardComponent  implements OnInit {
       }
     }
   }
-  
+
   forwardMove() {
     let index = this.getIndex();
     console.log("index", index);
@@ -43,7 +47,7 @@ export class TmgDashboardComponent  implements OnInit {
       this.getDepartments();
     }
   }
-  
+
   backwardMove() {
     let index = this.getIndex();
     console.log("index", index);
@@ -57,6 +61,9 @@ export class TmgDashboardComponent  implements OnInit {
   }
 
   getDepartments() {
+    // this.sidebarService.collapse('menu-sidebar');
+    // this.layoutService.changeLayoutSize();
+
     this.common.loading++;
     let url = "Admin/getDepartmentList";
     if(this.selectedDashboard == 'tmgProcess'){

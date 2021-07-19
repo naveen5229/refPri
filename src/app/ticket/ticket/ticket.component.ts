@@ -928,7 +928,7 @@ export class TicketComponent implements OnInit {
       }
 
       icons.push({ class: "fas fa-plus-square", action: this.updatePrimaryInfo.bind(this, ticket, type), txt: '', title: "Update Primary Info" });
-      
+
     } else if (type == 100) {
       if(ticket._claim_ticket==1){
         icons.push({ class: "fa fa-hand-lizard-o text-warning", action: this.claimTicket.bind(this, ticket, type), txt: '', title: "Claim Ticket" });
@@ -951,7 +951,7 @@ export class TicketComponent implements OnInit {
       refType: 2,
     };
     this.common.params = { actionData, title: title, button: "Save" };
-    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', scrollable: true  });
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data, 'response');

@@ -7,7 +7,7 @@ import { GenericModelComponent } from '../../modals/generic-model/generic-model.
 @Component({
   selector: 'ngx-tmg-ticket',
   templateUrl: './tmg-ticket.component.html',
-  styleUrls: ['./tmg-ticket.component.scss']
+  styleUrls: ['./tmg-ticket.component.scss','../tmg-dashboard/tmg-dashboard.component.scss']
 })
 
 export class TmgTicketComponent implements OnInit {
