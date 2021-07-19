@@ -4,7 +4,6 @@ import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddGlobalFieldComponent } from '../add-global-field/add-global-field.component';
-
 @Component({
   selector: 'ngx-assign-fields',
   templateUrl: './assign-fields.component.html',
@@ -17,11 +16,18 @@ export class AssignFieldsComponent implements OnInit {
   processId = null;
   refId = null;
   refType = null;
+  tableData:any;
+  closeResult:any;
+  fielddata:any;
+
+
   assign = {
     left: [],
     right: []
   }
-  formType = null;
+formType = null;
+
+
 
 
   constructor(
@@ -45,39 +51,74 @@ export class AssignFieldsComponent implements OnInit {
     this.activeModal.close({ response: res });
   }
 
+
+setfieldRequired(index:number){
+// let isrequired = this.tableData.paramchild[index].r_isdashboard_info;
+// isrequired = !isrequired;
+// this.assignOrder()[0]._param_child = [];
+// this.assignOrder()[0]._param_child = this.tableData.paramchild;
+// console.log('this.assignOrder(): ', this.assignOrder());
+
+}
+
+
+gettablefields(item:any,content:any,index:number){
+this.fielddata = item;
+let paramchild = JSON.parse(item._param_child);
+this.tableData = {};
+this.tableData.paramchild = [...paramchild];
+// this.tableData.paramchild.map((item:any)=>{
+// item.isrequired = false;
+// })
+this.tableData.coltitle = item.r_coltitle;
+
+if(this.tableData.paramchild.length){
+
+  this.common.params = { process: { id: this.processId, name: null } };
+    const activeModal = this.modalService.open(content, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+    activeModal.result.then(data => {
+      // this.getFields();
+    });
+}
+
+}
+
+
   getFields() {
     this.common.loading++;
     let api = this.formType == 11 ? 'Ticket/getTicketMatrixCalAssigned?' : 'Processes/getProcessFormField?';
     let params = "processId=" + this.processId + "&refId=" + this.refId + "&refType=" + this.refType
+
     this.api.get(api + params)
       .subscribe(res => {
         this.common.loading--;
         if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.fields = res['data'] || [];
+        console.log('this.fields : ', this.fields );
         this.colinitialization();
       }, err => {
         this.common.loading--;
         this.common.showError();
-        console.log(err);
+
       });
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    console.log("drop", event);
+
     if (event.previousContainer === event.container) {
       if (event.container.id == "unassign")
         return;
 
       if (event.previousContainer.id == event.container.id) {
         if (event.previousContainer.id === 'assign-left') {
-          console.log('working from assign-left', this.assign.right[event.currentIndex], this.assign.left[event.previousIndex], this.assign.left[event.currentIndex])
+
           if (this.formType==11 && (this.assign.right[event.currentIndex] || this.assign.right[event.previousIndex]) && ((this.assign.left[event.previousIndex] && this.assign.left[event.previousIndex].param_type === "table") || (this.assign.left[event.currentIndex] && this.assign.left[event.currentIndex].param_type === "table"))) {
-            console.log('table');
+
             this.common.showError('can not drop type table corresponding to other');
             return;
             // this.assign.right[event.currentIndex + 1] = this.unassign[event.previousIndex];
           } else {
-            console.log('not tabel', this.assign.left[event.currentIndex]);
+
             if (this.assign.left[event.currentIndex]) {
               let completeLeft = JSON.parse(JSON.stringify(this.assign.left));
               completeLeft[event.previousIndex] = this.assign.left[event.currentIndex];
@@ -91,13 +132,13 @@ export class AssignFieldsComponent implements OnInit {
             }
           }
         } else if (event.previousContainer.id === 'assign-right') {
-          console.log('working from assign-right')
+
           if (this.formType==11 && this.assign.left[event.currentIndex] && this.assign.left[event.currentIndex].param_type === "table") {
             this.common.showError('can not drop corresponding to type table');
             return;
             // this.assign.right[event.currentIndex + 1] = this.unassign[event.previousIndex];
           } else {
-            console.log('not table in right', this.assign.right[event.currentIndex]);
+
             if (this.assign.right[event.currentIndex]) {
               let completeRight = JSON.parse(JSON.stringify(this.assign.right));
               completeRight[event.previousIndex] = this.assign.right[event.currentIndex];
@@ -177,7 +218,7 @@ export class AssignFieldsComponent implements OnInit {
     //   // this.assign.right[event.previousIndex] = val;
     // }
 
-    console.log('Left:', this.assign.left, 'Right:', this.assign.right)
+
   }
 
   colinitialization() {
@@ -202,6 +243,50 @@ export class AssignFieldsComponent implements OnInit {
 
   }
 
+saveRequired(){
+
+    let apiBase = this.formType == 11 ? 'Ticket/saveTicketMatrixCalAssign' : 'Processes/saveProcessMatrixCalAssign';
+    let params = {
+      refId: this.refId,
+      refType: this.refType,
+      info: JSON.stringify(this.assignOrder()),
+    };
+
+console.log('params',JSON.parse(params.info));
+
+ let Sentparams = {
+      refId: this.refId,
+      refType: this.refType,
+      info: this.assignOrder(),
+    };
+
+ console.log('Sentparams: ', Sentparams);
+
+    this.common.loading++;
+
+    this.api.post(apiBase, params)
+      .subscribe(res => {
+      console.log('res : ', res );
+        this.common.loading--;
+        if (res['code'] == 1) {
+          if (res['data'][0].y_id > 0) {
+            this.common.showToast(res['data'][0].y_msg);
+            this.activeModal.close(true);
+            this.getFields();
+          } else {
+            this.common.showError(res['data'][0].y_msg);
+          }
+
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        this.common.showError();
+
+      });
+}
+
 
   saveColumns() {
     let apiBase = this.formType == 11 ? 'Ticket/saveTicketMatrixCalAssign' : 'Processes/saveProcessMatrixCalAssign';
@@ -210,11 +295,12 @@ export class AssignFieldsComponent implements OnInit {
       refType: this.refType,
       info: JSON.stringify(this.assignOrder()),
     }
-    // console.log("Params", params);
+
     // return;
     this.common.loading++;
     this.api.post(apiBase, params)
       .subscribe(res => {
+      console.log('res: ', res);
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
@@ -229,7 +315,7 @@ export class AssignFieldsComponent implements OnInit {
       }, err => {
         this.common.loading--;
         this.common.showError();
-        console.log(err);
+
       });
   }
 
@@ -254,7 +340,7 @@ export class AssignFieldsComponent implements OnInit {
       count++;
     }
 
-    this.unassign.map(col => {
+    this.unassign.map((col,index) => {
       col.r_selected = false;
       col.r_colorder = -1;
     });
@@ -263,7 +349,7 @@ export class AssignFieldsComponent implements OnInit {
   }
 
   markImportant(item) {
-    console.log("AssignFieldsComponent -> markImportant -> item", item)
+
     item.r_isdashboard_info = !item.r_isdashboard_info;
   }
 

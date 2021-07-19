@@ -1,92 +1,145 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
-        <span aria-hidden="true">&times;</span>
-    </button>
+  <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body">
-    <div class="clearfix">
-            <div class="row mt-2">
-                <div class="col-10">
-                    <p *ngIf="formType == 11 && refType==0" style="font-size: 15px;"><span style="color:red">*</span>Use global field "contact name" and "mobile number" to add
-                        in contact into the contact list and to show on the dashboard of the ticket.</p>
-                </div>
-                <div *ngIf="formType != 11" class="col-2 text-right">
-                    <button class="btn btn-primary btn-sm" id="addGlobalfield" (click)="addGlobalfield()">Add Field</button>
-                </div>
-            </div>
-            
-        <div *ngIf="fields.length>0">
-            <div class="row mt-2">
-                <div class="col-4">
-                    <div class="drag-container">
-                        <h2 style="text-align: center;font-size: 19px;">Unassigned</h2>
-                        <div id="unassign" cdkDropList #unAssignList="cdkDropList" [cdkDropListData]="unassign"
-                            [cdkDropListConnectedTo]="[assignLeft,assignRight]" class="drag-list"
-                            (cdkDropListDropped)="drop($event)">
-                            <div class="drag-box " style="background: #D3D3D3;min-height:60px"
-                                *ngFor="let item of unassign" cdkDrag>
-                                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control">
-                                    <div>{{item.r_blockname}}</div>
-                                </div>
-                                <div><input type="checkbox" [(ngModel)]="item.r_required"> is required</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div Class="col-4">
-                    <div class="drag-container">
-                        <h2 style="text-align: center;font-size: 19px;">Left</h2>
-                        <div id="assign-left" cdkDropList #assignLeft="cdkDropList" [cdkDropListData]="assign.left"
-                            [cdkDropListConnectedTo]="[unAssignList, assignRight]" class="drag-list"
-                            (cdkDropListDropped)="drop($event)">
-                            <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.left" cdkDrag>
-                                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
-                                    <div>{{item.r_blockname}}</div>
-                                </div>
-                                <div *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType))) && (item.param_type != 'attachment' && item.param_type != 'table')">
-                                    <i class="fa fa-star cursorOnStar"
-                                        [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
-                                        aria-hidden="true"
-                                        [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
-                                        (click)="markImportant(item)"></i>
-                                </div>
-                                <div *ngIf="item">
-                                    <input type="checkbox" [(ngModel)]="item.r_required"> is required
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div Class="col-4">
-                    <div class="drag-container">
-                        <h2 style="text-align: center;font-size: 19px;">Right</h2>
-                        <div id="assign-right" cdkDropList #assignRight="cdkDropList" [cdkDropListData]="assign.right"
-                            [cdkDropListConnectedTo]="[unAssignList, assignLeft]" class="drag-list"
-                            (cdkDropListDropped)="drop($event)">
-                            <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.right" cdkDrag>
-                                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
-                                    <div>{{item.r_blockname}}</div>
-                                </div>
-                                <div *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType))) && (item.param_type != 'attachment' && item.param_type != 'table')">
-                                    <i class="fa fa-star cursorOnStar"
-                                        [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'"
-                                        aria-hidden="true"
-                                        [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
-                                        (click)="markImportant(item)"></i>
-                                </div>
-                                <div *ngIf="item">
-                                    <input type="checkbox" [(ngModel)]="item.r_required"> is required
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="clearfix">
+    <div class="row mt-2">
+      <div class="col-10">
+        <p *ngIf="formType == 11 && refType==0" style="font-size: 15px;"><span style="color:red">*</span>Use global
+          field "contact name" and "mobile number" to add
+          in contact into the contact list and to show on the dashboard of the ticket.</p>
+      </div>
+      <div *ngIf="formType != 11" class="col-2 text-right">
+        <button class="btn btn-primary btn-sm" id="addGlobalfield" (click)="addGlobalfield()">Add Field</button>
+      </div>
     </div>
+
+    <div *ngIf="fields.length>0">
+      <div class="row mt-2">
+        <div class="col-4">
+          <div class="drag-container">
+            <h2 style="text-align: center;font-size: 19px;">Unassigned</h2>
+            <div id="unassign" cdkDropList #unAssignList="cdkDropList" [cdkDropListData]="unassign"
+              [cdkDropListConnectedTo]="[assignLeft,assignRight]" class="drag-list" (cdkDropListDropped)="drop($event)">
+              <div class="drag-box " style="background: #D3D3D3;min-height:60px" *ngFor="let item of unassign;index as i" cdkDrag>
+                <div><input type="text" (click)="gettablefields(item,content,i)" [(ngModel)]=item.r_coltitle
+                    class="form control">
+
+                  <div>{{item.r_blockname}}</div>
+                </div>
+                <div><input type="checkbox" [(ngModel)]="item.r_required"> is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div Class="col-4">
+          <div class="drag-container">
+            <h2 style="text-align: center;font-size: 19px;">Left</h2>
+            <div id="assign-left" cdkDropList #assignLeft="cdkDropList" [cdkDropListData]="assign.left"
+              [cdkDropListConnectedTo]="[unAssignList, assignRight]" class="drag-list"
+              (cdkDropListDropped)="drop($event)">
+              <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.left;index as i" cdkDrag>
+                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control"
+                    (click)="gettablefields(item,content,i)">
+                  <div>{{item.r_blockname}}</div>
+                </div>
+
+                <div
+                  *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType))) && (item.param_type != 'attachment' && item.param_type != 'table')">
+                  <i class="fa fa-star cursorOnStar"
+                    [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'" aria-hidden="true"
+                    [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
+                    (click)="markImportant(item)"></i>
+                </div>
+
+                <div *ngIf="item">
+                  <input type="checkbox" [(ngModel)]="item.r_required"> is required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div Class="col-4">
+          <div class="drag-container">
+            <h2 style="text-align: center;font-size: 19px;">Right</h2>
+            <div id="assign-right" cdkDropList #assignRight="cdkDropList" [cdkDropListData]="assign.right"
+              [cdkDropListConnectedTo]="[unAssignList, assignLeft]" class="drag-list"
+              (cdkDropListDropped)="drop($event)">
+              <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.right;index as i" cdkDrag>
+                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control"
+                    (click)="gettablefields(item,content,i)">
+                  <div>{{item.r_blockname}}</div>
+                </div>
+                <div
+                  *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType))) && (item.param_type != 'attachment' && item.param_type != 'table')">
+                  <i class="fa fa-star cursorOnStar"
+                    [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'" aria-hidden="true"
+                    [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
+                    (click)="markImportant(item)"></i>
+                </div>
+                <div *ngIf="item">
+                  <input type="checkbox" [(ngModel)]="item.r_required"> is required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="fields.length>0" class="modal-footer">
-    <button class="btn btn-primary" (click)="saveColumns();">Save</button>
+  <button class="btn btn-primary" (click)="saveColumns();">Save</button>
 </div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title text-white text-capitalize" id="modal-basic-title"> table Fields </h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form action="">
+      <div class="row">
+        <div class="col-md-12">
+          <h5 class="modal-title text-center"> Table: {{tableData.coltitle}} </h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-primary mb-0">
+            <thead>
+              <tr>
+                <th> Fields </th>
+                <th> Required </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of tableData.paramchild;index as i">
+                <td> {{item.r_coltitle}} </td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" (click)="setfieldRequired(i)"
+                      [(ngModel)]="item.r_isdashboard_info" [ngModelOptions]="{standalone: true}" value=""
+                      id="flexCheckDefault">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="saveColumns()">Save</button>
+  </div>
+</ng-template>

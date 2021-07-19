@@ -6,6 +6,7 @@ import { UserService } from '../../../Service/user/user.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormDataTableComponent } from '../../process-modals/form-data-table/form-data-table.component';
 
+
 @Component({
   selector: 'ngx-ticket-closing-form',
   templateUrl: './ticket-closing-form.component.html',
@@ -33,7 +34,6 @@ export class TicketClosingFormComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.title = this.common.params.title ? this.common.params.title : 'Ticket Closing Form';
-    console.log("TicketClosingFormComponent -> constructor -> common", common)
     if (this.common.params && this.common.params.actionData) {
       this.ticketId = this.common.params.actionData.ticketId;
       this.refId = this.common.params.actionData.refId;
@@ -45,10 +45,9 @@ export class TicketClosingFormComponent implements OnInit {
 setTimeout(() => {
         this.checkAllExpandedTables();
 }, 200);
+}
 
-
-    }
-  }
+}
 
 
 
@@ -83,7 +82,6 @@ renderTableView(){
 
     let attr = document.getElementById('option');
     console.log('attr:',attr)
-    console.log("additionalFields:", this.tableHeader, this.oddArray);
 }
 
 
@@ -100,6 +98,7 @@ renderTableView(){
 
   AddTableRow() {
     let temp = JSON.parse(JSON.stringify(this.tableHeader));
+    console.log('temp: ', temp);
     temp.forEach(e => {
       e.param_value = (e.param_type == 'date') ? new Date() : null;
     });
@@ -107,8 +106,8 @@ renderTableView(){
   }
 
   addTransaction() {
-    console.log("additionalFields:", this.oddArray);
-    console.log('this.oddArray',this.oddArray);
+   console.log("additionalFields:", this.oddArray);
+    // console.log('this.oddArray',this.oddArray);
     // this.oddArray.forEach(element => {
     //   element.forEach(element2 => {
     //     if (element2['isNotBindFixedvalue']) {
@@ -186,6 +185,8 @@ renderTableView(){
     });
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
+    // this.oddArray[0]._param_child[0][1].is_required = true;
+    // this.oddArray[0]._param_child[0][2].is_required = true;
   }
 
   dismiss(res, isContinue) {
@@ -225,6 +226,7 @@ renderTableView(){
     this.common.loading++;
     this.api.post('Ticket/saveTicketFormByRefId', params)
       .subscribe(res => {
+      console.log('res: ', res);
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {

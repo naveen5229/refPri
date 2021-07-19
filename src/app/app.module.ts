@@ -137,6 +137,7 @@ import { MessagingService } from './Service/messaging.service';
 import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
 import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.component';
+import { TicketFieldsComponent } from './modals/process-modals/ticket-fields/ticket-fields.component';
 
 
 
@@ -253,6 +254,7 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
+    TicketFieldsComponent,
      // SmartDataTableComponent,
 
 
