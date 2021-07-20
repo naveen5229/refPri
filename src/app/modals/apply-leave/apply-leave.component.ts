@@ -111,7 +111,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       if (this.common.params.meetingData && this.common.params.isEdit) {
         if(this.common.params.meetingData._meeting_type == 2) this.formType = 8;
         this.isEdit = this.common.params.isEdit;
-        
+
         let durationtime = null;
         if (this.common.params.meetingData.duration && this.common.params.meetingData.schedule_time) {
           let timeduration = (this.common.params.meetingData.duration).split(':');
@@ -443,7 +443,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
     //  else if (!this.meetingForm.duration) {
     //   return this.common.showError("Meeting duration is missing");
-    // } 
+    // }
     //  else if (!this.meetingForm.fromTime) {
     //   return this.common.showError("Meeting time is missing");
     // }
@@ -485,6 +485,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       requestId: (this.meetingForm.reqId) ? this.meetingForm.reqId : null
     }
     // console.log("add meeting:", params); return false;
+      console.log("add meeting:", params);
     if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId && this.formType==2) {
       this.common.params = {
         title: 'Alert',
@@ -591,13 +592,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.api.post('Admin/getMeetingSchedule', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] === 1) {
-        console.log(res);
+        console.log('getMeetingSchedule',res);
         console.log(this.hours, this.minutes);
         // this.selectedTime = { hh: '', mm: '' };
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
           return { userid: (timeranges.userid) ? timeranges.userid : timeranges.room_id, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name, is_todo: timeranges.is_todo }
+          console.log(': ', );
         }) : [];
 
 
