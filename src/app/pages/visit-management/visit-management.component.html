@@ -238,7 +238,7 @@
                      Reject
                     </button>
                    <button class="btn btn-info" (click)="openLink(i,'detail Image')">
-                     View 
+                     View
                     </button>
                    <button class="btn btn-success" [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'" [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
                     link

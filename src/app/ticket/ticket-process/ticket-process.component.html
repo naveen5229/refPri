@@ -1,211 +1,207 @@
 <nb-card>
-    <nb-card-header>
-        <div class="row ">
-            <div class="col-9">
-                <h5 class="heading-design">Ticket Process</h5>
-            </div>
-            <div class="col-3 text-right">
-                <button class="btn btn-primary btn-sm" id="button" (click)="addTicket()">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
-        </div>
-    </nb-card-header>
-    <nb-card-body>
-        <div class="row">
-            <div class="smart-table">
-                <smart-table *ngIf="ticketData.length" [data]="table.data" [settings]="table.settings"></smart-table>
-            </div>
-        </div>
+  <nb-card-header>
+    <div class="row ">
+      <div class="col-9">
+        <h5 class="heading-design">Ticket Process</h5>
+      </div>
+      <div class="col-3 text-right">
+        <button class="btn btn-primary btn-sm" id="button" (click)="addTicket()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="smart-table">
+        <smart-table *ngIf="ticketData.length" [data]="table.data" [settings]="table.settings"></smart-table>
+      </div>
+    </div>
 
-    </nb-card-body>
+  </nb-card-body>
 </nb-card>
 
 <!-- start : Add Ticket Modal-->
 <div class="modal" id="addTicket">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Ticket Process</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeaddticketModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Process Name<span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" class="form-control" placeholder="Process Name" name="processName"
-                            [(ngModel)]="ticketForm.name">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Start Date<span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-8">
-                        <uj-date-time-picker (onChanged)="ticketForm.startTime = $event"
-                            [dateTimeValue]="ticketForm.startTime" [isTime]="false">
-                        </uj-date-time-picker>
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>End Date</label>
-                    </div>
-                    <div class="col-8">
-                        <uj-date-time-picker (onChanged)="ticketForm.endTime = $event" [isStart]="false"
-                            [dateTimeValue]="(ticketForm.endTime) ? ticketForm.endTime : null" [isTime]="false">
-                        </uj-date-time-picker>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Pri Category Alias</label>
-                    </div>
-
-                    <div class="col-7">
-                        <input type="text" class="form-control" name="priCatAlias" placeholder="Primary Category Alias"
-                            [(ngModel)]="ticketForm.priCatAlias">
-                    </div>
-                    <div class="col-1">
-                        <button class="btn btn-primary btn-sm" id="button" (click)="addFields('priCatList')"
-                            *ngIf="!ticketForm.id">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Sec Category Alias</label>
-                    </div>
-                    <div class="col-7">
-                        <input type="text" class="form-control" name="secCatAlias"
-                            placeholder="Secondary Category Alias" [(ngModel)]="ticketForm.secCatAlias">
-                    </div>
-                    <div class="col-1">
-                        <button class="btn btn-primary btn-sm" id="button" (click)="addFields('secCatList')"
-                            *ngIf="!ticketForm.id">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="row form-group" *ngIf="!ticketForm.id">
-                    <div class="col-4">
-                        <label>Type List</label>
-                    </div>
-                    <div class="col-1">
-                        <button class="btn btn-primary btn-sm" id="button" (click)="addFields('typeList')">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>isActive</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="checkbox" [(ngModel)]="ticketForm.isActive">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Ticket Input</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="ticketInputValues" display="name" placeholder="Ticket Input"
-                            name="ticketInput" id="ticketInput" (onSelected)="ticketForm.ticketInput=$event;"
-                            [preSelected]="(ticketForm.ticketInput.id>=0) ? {name: ticketForm.ticketInput.name}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Ticket Closure</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="ticketInputValues" display="name" placeholder="Ticket Input"
-                            name="ticketInput" id="ticketInput" (onSelected)="ticketForm.ticketClosure=$event;"
-                            [preSelected]="(ticketForm.ticketClosure.id>=0) ? {name: ticketForm.ticketClosure.name}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-
-                <div class="row form-group" *ngIf="displayAdvance">
-                    <div class="col-4">
-                        <label>Check Status Url</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="url" class="form-control" [(ngModel)]="ticketForm.url.checkStatus">
-                    </div>
-                </div>
-
-                <div class="row form-group" *ngIf="displayAdvance">
-                    <div class="col-4">
-                        <label>Update Status Url</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="url" class="form-control" [(ngModel)]="ticketForm.url.updateStatus">
-                    </div>
-                </div>
-
-                <div class="row form-group" *ngIf="displayAdvance">
-                    <div class="col-4">
-                        <label>Live Feed Url</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="url" class="form-control" [(ngModel)]="ticketForm.url.liveFeed">
-                    </div>
-                </div>
-
-                <div class="row form-group" *ngIf="displayAdvance">
-                    <div class="col-4">
-                        <label>Add User To CC On Ticket Forward</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="checkbox" [(ngModel)]="ticketForm.ccUserPresense">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4"><label class="linkStyle"
-                            (click)="optionLink = (optionLink === 'Advance..') ? 'Less..' : 'Advance..';displayAdvance = (displayAdvance) ? false : true">{{optionLink}}</label>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="row footer">
-                    <div class="col ">
-                        <button class="btn btn-danger btn-sm" type="button" id="cancel "
-                            (click)="closeaddticketModal()">Cancel</button>
-                    </div>
-                    <div class="col text-right">
-                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
-                            (click)="saveTicketProcess()">Next</button>
-                    </div>
-                </div>
-            </div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Ticket Process</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeaddticketModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Process Name<span class="text-danger">*</span></label>
+          </div>
+          <div class="col-8">
+            <input type="text" class="form-control" placeholder="Process Name" name="processName"
+              [(ngModel)]="ticketForm.name">
+          </div>
         </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Start Date<span class="text-danger">*</span></label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker (onChanged)="ticketForm.startTime = $event" [dateTimeValue]="ticketForm.startTime"
+              [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>End Date</label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker (onChanged)="ticketForm.endTime = $event" [isStart]="false"
+              [dateTimeValue]="(ticketForm.endTime) ? ticketForm.endTime : null" [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Pri Category Alias</label>
+          </div>
+
+          <div class="col-7">
+            <input type="text" class="form-control" name="priCatAlias" placeholder="Primary Category Alias"
+              [(ngModel)]="ticketForm.priCatAlias">
+          </div>
+          <div class="col-1">
+            <button class="btn btn-primary btn-sm" id="button" (click)="addFields('priCatList')" *ngIf="!ticketForm.id">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Sec Category Alias</label>
+          </div>
+          <div class="col-7">
+            <input type="text" class="form-control" name="secCatAlias" placeholder="Secondary Category Alias"
+              [(ngModel)]="ticketForm.secCatAlias">
+          </div>
+          <div class="col-1">
+            <button class="btn btn-primary btn-sm" id="button" (click)="addFields('secCatList')" *ngIf="!ticketForm.id">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row form-group" *ngIf="!ticketForm.id">
+          <div class="col-4">
+            <label>Type List</label>
+          </div>
+          <div class="col-1">
+            <button class="btn btn-primary btn-sm" id="button" (click)="addFields('typeList')">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>isActive</label>
+          </div>
+          <div class="col-8">
+            <input type="checkbox" [(ngModel)]="ticketForm.isActive">
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Ticket Input</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="ticketInputValues" display="name" placeholder="Ticket Input" name="ticketInput"
+              id="ticketInput" (onSelected)="ticketForm.ticketInput=$event;"
+              [preSelected]="(ticketForm.ticketInput.id>=0) ? {name: ticketForm.ticketInput.name}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Ticket Closure</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="ticketInputValues" display="name" placeholder="Ticket Input" name="ticketInput"
+              id="ticketInput" (onSelected)="ticketForm.ticketClosure=$event;"
+              [preSelected]="(ticketForm.ticketClosure.id>=0) ? {name: ticketForm.ticketClosure.name}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+
+        <div class="row form-group" *ngIf="displayAdvance">
+          <div class="col-4">
+            <label>Check Status Url</label>
+          </div>
+          <div class="col-8">
+            <input type="url" class="form-control" [(ngModel)]="ticketForm.url.checkStatus">
+          </div>
+        </div>
+
+        <div class="row form-group" *ngIf="displayAdvance">
+          <div class="col-4">
+            <label>Update Status Url</label>
+          </div>
+          <div class="col-8">
+            <input type="url" class="form-control" [(ngModel)]="ticketForm.url.updateStatus">
+          </div>
+        </div>
+
+        <div class="row form-group" *ngIf="displayAdvance">
+          <div class="col-4">
+            <label>Live Feed Url</label>
+          </div>
+          <div class="col-8">
+            <input type="url" class="form-control" [(ngModel)]="ticketForm.url.liveFeed">
+          </div>
+        </div>
+
+        <div class="row form-group" *ngIf="displayAdvance">
+          <div class="col-4">
+            <label>Add User To CC On Ticket Forward</label>
+          </div>
+          <div class="col-8">
+            <input type="checkbox" [(ngModel)]="ticketForm.ccUserPresense">
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4"><label class="linkStyle"
+              (click)="optionLink = (optionLink === 'Advance..') ? 'Less..' : 'Advance..';displayAdvance = (displayAdvance) ? false : true">{{optionLink}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row footer">
+          <div class="col ">
+            <button class="btn btn-danger btn-sm" type="button" id="cancel "
+              (click)="closeaddticketModal()">Cancel</button>
+          </div>
+          <div class="col text-right">
+            <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
+              (click)="saveTicketProcess()">Next</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- end : Add Ticket modal -->
 
 <!--start: add Lists -->
 <div class="modal" id="addFields">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add {{listModalTitle}} List</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeFieldsModal(null)">&times;</button>
-            </div>
-            <!-- <div class="modal-body">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add {{listModalTitle}} List</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeFieldsModal(null)">&times;</button>
+      </div>
+      <!-- <div class="modal-body">
                 <div class="row form-group" *ngFor="let ele of ticketForm[listTarget]; let i = index">
                     <div class="col-4">
                         <label>Name<span class="text-danger">*</span></label>
@@ -227,436 +223,433 @@
                 </div>
             </div> -->
 
-            <div class="modal-body" *ngIf="!catForm.tpId">
-                <div class="row form-group" *ngFor="let ele of ticketForm[listTarget]; let i = index">
-                    <div class="col-4">
-                        <label>Name<span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-6">
-                        <input type="text" class="form-control" name="processName" [(ngModel)]="ele.name">
-                    </div>
-                    <div class="col-2">
-                        <i class="fa fa-plus" *ngIf="i == ticketForm[listTarget].length-1"
-                            (click)="insertFields(listTarget)"></i>&nbsp;
-                        <i class="fa fa-trash" (click)="ticketForm[listTarget].splice(i,1)" *ngIf="i !== 0"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-body" *ngIf="catForm.tpId">
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Name<span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-6">
-                        <input type="text" class="form-control" name="processName" [(ngModel)]="catForm.name">
-                    </div>
-                    <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-sm" id="addTpCatBtn" data-dismiss="modal"
-                            (click)="addTpCatByType(listTarget)">Add</button>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <smart-table *ngIf="ticketForm[listTarget] && ticketForm[listTarget].length" [data]="tableCat.data"
-                        [settings]="tableCat.settings"></smart-table>
-                </div>
-            </div>
-
-            <div *ngIf="!catForm.tpId" class="modal-footer">
-                <div class="row footer">
-                    <div class="col ">
-                        <button class="btn btn-danger btn-sm" type="button" id="cancel "
-                            (click)="closeFieldsModal(listTarget)">reset</button>
-                    </div>
-                    <div class="col text-right">
-                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
-                            (click)="closeFieldsModal(null)">save</button>
-                    </div>
-                </div>
-            </div>
+      <div class="modal-body" *ngIf="!catForm.tpId">
+        <div class="row form-group" *ngFor="let ele of ticketForm[listTarget]; let i = index">
+          <div class="col-4">
+            <label>Name<span class="text-danger">*</span></label>
+          </div>
+          <div class="col-6">
+            <input type="text" class="form-control" name="processName" [(ngModel)]="ele.name">
+          </div>
+          <div class="col-2">
+            <i class="fa fa-plus" *ngIf="i == ticketForm[listTarget].length-1"
+              (click)="insertFields(listTarget)"></i>&nbsp;
+            <i class="fa fa-trash" (click)="ticketForm[listTarget].splice(i,1)" *ngIf="i !== 0"></i>
+          </div>
         </div>
+      </div>
+
+      <div class="modal-body" *ngIf="catForm.tpId">
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Name<span class="text-danger">*</span></label>
+          </div>
+          <div class="col-6">
+            <input type="text" class="form-control" name="processName" [(ngModel)]="catForm.name">
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-primary btn-sm" id="addTpCatBtn" data-dismiss="modal"
+              (click)="addTpCatByType(listTarget)">Add</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <smart-table *ngIf="ticketForm[listTarget] && ticketForm[listTarget].length" [data]="tableCat.data"
+            [settings]="tableCat.settings"></smart-table>
+        </div>
+      </div>
+
+      <div *ngIf="!catForm.tpId" class="modal-footer">
+        <div class="row footer">
+          <div class="col ">
+            <button class="btn btn-danger btn-sm" type="button" id="cancel "
+              (click)="closeFieldsModal(listTarget)">reset</button>
+          </div>
+          <div class="col text-right">
+            <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
+              (click)="closeFieldsModal(null)">save</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!--end: add Lists -->
 
 <!--start: Ticket Property -->
 <div class="modal" id="ticketPropertyList">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ticket Property List</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeTicketPropertyModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 text-right">
-                        <button class="btn btn-primary btn-sm" id="button" (click)="addTicketProperty()">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <smart-table *ngIf="ticketPropertyData.length" [data]="ticketPropertyTable.data"
-                        [settings]="ticketPropertyTable.settings"></smart-table>
-                </div>
-            </div>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ticket Property List</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeTicketPropertyModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="button" (click)="addTicketProperty()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
         </div>
+        <div class="row">
+          <smart-table *ngIf="ticketPropertyData.length" [data]="ticketPropertyTable.data"
+            [settings]="ticketPropertyTable.settings"></smart-table>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!--end: Ticket Property -->
 
 <!--start:add Ticket Property -->
 <div class="modal" id="addTicketProperty">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Ticket Property</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeAddTicketPropertyModal()">&times;</button>
-            </div>
-            <div class="modal-body height-adjust" style="max-height: calc(80vh - 50px);
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Ticket Property</h5>
+        <button type="button" class="close" data-dismiss="modal"
+          (click)="closeAddTicketPropertyModal()">&times;</button>
+      </div>
+      <div class="modal-body height-adjust" style="max-height: calc(80vh - 50px);
             overflow-y: auto;overflow-x: hidden;">
-                <div class="row form-group">
+        <div class="row form-group">
 
-                    <div class="form-divider form-divider-first col-md-12">
-                        <div class="row">
-                            <div class="col-md-12  text-center">
-                                <h3 class="inner-heading"> Category </h3>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-4">
-                        <label>Primary Category</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="primaryCategoryListForProperty" display="name"
-                            placeholder="Primary Category" name="defaultOwn" id="defaultOwn"
-                            (onSelected)="ticketPropertyForm.priCatId=$event;"
-                            [preSelected]="ticketPropertyForm.priCatId['id'] ? {name: ticketPropertyForm.priCatId['name']}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Secondary Category</label>
-                    </div>
-
-                    <div class="col-8">
-                        <auto-suggestion [data]="secondaryCategoryListForProperty" display="name"
-                            placeholder="Secondary Category" name="defaultOwn" id="defaultOwn"
-                            (onSelected)="ticketPropertyForm.SecCatId=$event;"
-                            [preSelected]="ticketPropertyForm.SecCatId['id'] ? {name: ticketPropertyForm.SecCatId['name']}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-
-                </div>
-                <div class="row form-group">
-                    <div class="form-divider col-md-12">
-                        <div class="row">
-                            <div class="col-md-12  text-center">
-                                <h3 class="inner-heading"> Properties </h3>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4">
-                        <label>Type</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="typeCategoryListForProperty" display="name" placeholder="Type"
-                            name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.typeId=$event;"
-                            [preSelected]="ticketPropertyForm.typeId['id'] ? {name: ticketPropertyForm.typeId['name']}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Allocation Auto</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto"
-                            name="allocation" id="allocation"
-                            (onSelected)="ticketPropertyForm.allocationAuto=$event;ticketPropertyForm.allocationAuto.id==1 ? ticketPropertyForm.claimStatus=false :''"
-                            [preSelected]="(ticketPropertyForm.allocationAuto.id>=0) ? {name: ticketPropertyForm.allocationAuto.name}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Esclation Auto</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="claimStatusData" display="name" placeholder="Esclation Auto"
-                            name="esclation" id="esclation" (onSelected)="ticketPropertyForm.esclationAuto=$event;"
-                            [preSelected]="(ticketPropertyForm.esclationAuto.id>=0) ? {name: ticketPropertyForm.esclationAuto.name}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Esclation Time for user Ack</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.escTime">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Complete Remaining Time</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.complRemTime">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Esclation time for tkt complete</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.complEscTime">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Unique Fields</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="ticketFormFields" display="r_coltitle" placeholder="Unique Fields"
-                            name="uniqueFields" id="uniqueFields" (onSelected)="ticketPropertyForm.uniqueFields=$event;"
-                            [preSelected]="ticketPropertyForm.uniqueFields" [isMultiSelect]="true">
-                        </auto-suggestion>
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Repeat Duration</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" min="0" [(ngModel)]="ticketPropertyForm.repeatDuration">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>isUrgent</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="checkbox" [(ngModel)]="ticketPropertyForm.isUrgent">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>isActive</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="checkbox" [(ngModel)]="ticketPropertyForm.isActive">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Call Required</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="checkbox" [(ngModel)]="ticketPropertyForm.callRequired">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Claim</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="checkbox" [(ngModel)]="ticketPropertyForm.claimStatus"
-                            [disabled]="ticketPropertyForm.allocationAuto.id==1">
-                    </div>
-                </div>
-
-
-                <div class="row form-group">
-
-                    <div class="form-divider col-md-12">
-                        <div class="row">
-                            <div class="col-md-12  text-center">
-                                <h3 class="inner-heading"> Benchmark </h3>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4">
-                        <label>Calling Benchmark</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.callingBenchmark">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Completion Benchmark</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" [(ngModel)]="ticketPropertyForm.completionBenchmark">
-                    </div>
-                </div>
+          <div class="form-divider form-divider-first col-md-12">
+            <div class="row">
+              <div class="col-md-12  text-center">
+                <h3 class="inner-heading"> Category </h3>
+              </div>
             </div>
-            <div class="modal-footer">
-                <div class="row footer">
-                    <div class="col ">
-                        <button class="btn btn-danger btn-sm" type="button" id="cancel "
-                            (click)="closeAddTicketPropertyModal()">Cancel</button>
-                    </div>
-                    <div class="col text-right">
-                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
-                            (click)="saveTicketPropertyList()">Save</button>
-                    </div>
-                </div>
-            </div>
+
+          </div>
+
+
+          <div class="col-4">
+            <label>Primary Category</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="primaryCategoryListForProperty" display="name" placeholder="Primary Category"
+              name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.priCatId=$event;"
+              [preSelected]="ticketPropertyForm.priCatId['id'] ? {name: ticketPropertyForm.priCatId['name']}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
         </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Secondary Category</label>
+          </div>
+
+          <div class="col-8">
+            <auto-suggestion [data]="secondaryCategoryListForProperty" display="name" placeholder="Secondary Category"
+              name="defaultOwn" id="defaultOwn" (onSelected)="ticketPropertyForm.SecCatId=$event;"
+              [preSelected]="ticketPropertyForm.SecCatId['id'] ? {name: ticketPropertyForm.SecCatId['name']}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+
+        </div>
+        <div class="row form-group">
+          <div class="form-divider col-md-12">
+            <div class="row">
+              <div class="col-md-12  text-center">
+                <h3 class="inner-heading"> Properties </h3>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-4">
+            <label>Type</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="typeCategoryListForProperty" display="name" placeholder="Type" name="defaultOwn"
+              id="defaultOwn" (onSelected)="ticketPropertyForm.typeId=$event;"
+              [preSelected]="ticketPropertyForm.typeId['id'] ? {name: ticketPropertyForm.typeId['name']}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Allocation Auto</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="claimStatusData" display="name" placeholder="Allocation Auto" name="allocation"
+              id="allocation"
+              (onSelected)="ticketPropertyForm.allocationAuto=$event;ticketPropertyForm.allocationAuto.id==1 ? ticketPropertyForm.claimStatus=false :''"
+              [preSelected]="(ticketPropertyForm.allocationAuto.id>=0) ? {name: ticketPropertyForm.allocationAuto.name}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Esclation Auto</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="claimStatusData" display="name" placeholder="Esclation Auto" name="esclation"
+              id="esclation" (onSelected)="ticketPropertyForm.esclationAuto=$event;"
+              [preSelected]="(ticketPropertyForm.esclationAuto.id>=0) ? {name: ticketPropertyForm.esclationAuto.name}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Esclation Time for user Ack</label>
+          </div>
+          <div class="col-8">
+            <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.escTime">
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Complete Remaining Time</label>
+          </div>
+          <div class="col-8">
+            <input type="number" class="form-control" [(ngModel)]="ticketPropertyForm.complRemTime">
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Esclation time for tkt complete</label>
+          </div>
+          <div class="col-8">
+            <input type="number" [(ngModel)]="ticketPropertyForm.complEscTime">
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Unique Fields</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="ticketFormFields" display="r_coltitle" placeholder="Unique Fields"
+              name="uniqueFields" id="uniqueFields" (onSelected)="ticketPropertyForm.uniqueFields=$event;"
+              [preSelected]="ticketPropertyForm.uniqueFields" [isMultiSelect]="true">
+            </auto-suggestion>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Repeat Duration</label>
+          </div>
+          <div class="col-8">
+            <input type="number" min="0" [(ngModel)]="ticketPropertyForm.repeatDuration">
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>isUrgent</label>
+          </div>
+          <div class="col-8">
+            <input type="checkbox" [(ngModel)]="ticketPropertyForm.isUrgent">
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>isActive</label>
+          </div>
+          <div class="col-8">
+            <input type="checkbox" [(ngModel)]="ticketPropertyForm.isActive">
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Call Required</label>
+          </div>
+          <div class="col-8">
+            <input type="checkbox" [(ngModel)]="ticketPropertyForm.callRequired">
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Claim</label>
+          </div>
+          <div class="col-8">
+            <input type="checkbox" [(ngModel)]="ticketPropertyForm.claimStatus"
+              [disabled]="ticketPropertyForm.allocationAuto.id==1">
+          </div>
+        </div>
+
+
+        <div class="row form-group">
+
+          <div class="form-divider col-md-12">
+            <div class="row">
+              <div class="col-md-12  text-center">
+                <h3 class="inner-heading"> Benchmark </h3>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-4">
+            <label>Calling Benchmark</label>
+          </div>
+          <div class="col-8">
+            <input type="number" [(ngModel)]="ticketPropertyForm.callingBenchmark">
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Completion Benchmark</label>
+          </div>
+          <div class="col-8">
+            <input type="number" [(ngModel)]="ticketPropertyForm.completionBenchmark">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row footer">
+          <div class="col ">
+            <button class="btn btn-danger btn-sm" type="button" id="cancel "
+              (click)="closeAddTicketPropertyModal()">Cancel</button>
+          </div>
+          <div class="col text-right">
+            <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
+              (click)="saveTicketPropertyList()">Save</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!--end:add Ticket Property -->
 
 <!--start: Ticket Property Esclation Matrix -->
 <div class="modal" id="esclationMatrix">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">User Matrix</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeTicketEsclationMatrixModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>User</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="adminList" display="name" placeholder="User" name="defaultOwn"
-                            id="defaultOwn" (onSelected)="esclationMatrix.userId=$event;"
-                            [preSelected]="esclationMatrix.userId['id'] ? {name: esclationMatrix.userId['name']}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>User Level</label>
-                    </div>
-                    <div class="col-8">
-                        <select class="form-control w-50" [(ngModel)]="esclationMatrix.userLevel">
-                            <option selected disabled>--Select--</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Senior User</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="adminList" display="name" placeholder="Senior User" name="defaultOwn"
-                            id="defaultOwn" (onSelected)="esclationMatrix.seniorUserId=$event;"
-                            [preSelected]="esclationMatrix.seniorUserId['id'] ? {name: esclationMatrix.seniorUserId['name']}:{name:''}"
-                            autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>From Time<span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-8">
-                        <uj-date-time-picker (onChanged)="esclationMatrix.fromTime = $event"
-                            [dateTimeValue]="esclationMatrix.fromTime" [isTime]="false">
-                        </uj-date-time-picker>
-                    </div>
-                </div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Matrix</h5>
+        <button type="button" class="close" data-dismiss="modal"
+          (click)="closeTicketEsclationMatrixModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row form-group">
+          <div class="col-4">
+            <label>User</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="adminList" display="name" placeholder="User" name="defaultOwn" id="defaultOwn"
+              (onSelected)="esclationMatrix.userId=$event;"
+              [preSelected]="esclationMatrix.userId['id'] ? {name: esclationMatrix.userId['name']}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>User Level</label>
+          </div>
+          <div class="col-8">
+            <select class="form-control w-50" [(ngModel)]="esclationMatrix.userLevel">
+              <option selected disabled>--Select--</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Senior User</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="adminList" display="name" placeholder="Senior User" name="defaultOwn"
+              id="defaultOwn" (onSelected)="esclationMatrix.seniorUserId=$event;"
+              [preSelected]="esclationMatrix.seniorUserId['id'] ? {name: esclationMatrix.seniorUserId['name']}:{name:''}"
+              autocomplete="off">
+            </auto-suggestion>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>From Time<span class="text-danger">*</span></label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker (onChanged)="esclationMatrix.fromTime = $event"
+              [dateTimeValue]="esclationMatrix.fromTime" [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
 
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>To Time</label>
-                    </div>
-                    <div class="col-8">
-                        <uj-date-time-picker (onChanged)="esclationMatrix.toTime = $event" [isStart]="false"
-                            [dateTimeValue]="esclationMatrix.toTime" [isTime]="false">
-                        </uj-date-time-picker>
-                    </div>
-                </div>
-            </div>
+        <div class="row form-group">
+          <div class="col-4">
+            <label>To Time</label>
+          </div>
+          <div class="col-8">
+            <uj-date-time-picker (onChanged)="esclationMatrix.toTime = $event" [isStart]="false"
+              [dateTimeValue]="esclationMatrix.toTime" [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
+      </div>
 
-            <div class="modal-footer">
-                <div class="row footer">
-                    <!-- <div class="col ">
+      <div class="modal-footer">
+        <div class="row footer">
+          <!-- <div class="col ">
                         <button class="btn btn-danger btn-sm" type="button" id="cancel " (click)="closeTicketEsclationMatrixModal()">Cancel</button>
                     </div> -->
-                    <div class="col text-right">
-                        <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
-                            (click)="saveTicketEsclationMatrixModal()">Save</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="row footer">
-                    <smart-table *ngIf="esclationMatrixList && esclationMatrixList.length" [data]="esclationTable.data"
-                        [settings]="esclationTable.settings" class="ksr-smrt"></smart-table>
-                </div>
-            </div>
+          <div class="col text-right">
+            <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
+              (click)="saveTicketEsclationMatrixModal()">Save</button>
+          </div>
         </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="row footer">
+          <smart-table *ngIf="esclationMatrixList && esclationMatrixList.length" [data]="esclationTable.data"
+            [settings]="esclationTable.settings" class="ksr-smrt"></smart-table>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!--end: Ticket Property Esclation Matrix -->
 
 <!--start: Ticket Form Matrix Type -->
 <div class="modal" id="ticketFormMatrixType">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ticket Form Type</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    (click)="closeTicketFormMatrixTypeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label>Form Type</label>
-                    </div>
-                    <div class="col-8">
-                        <auto-suggestion [data]="formTypeFields" display="name" placeholder="Form Type"
-                            name="formTypeFields" id="formTypeFields"
-                            [preSelected]="formRefType.formFieldRefType.id >= 0  ? {name: formRefType.formFieldRefType.name}:{name:''}"
-                            (onSelected)="formRefType.formFieldRefType=$event;" autocomplete="off">
-                        </auto-suggestion>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <div class="row footer">
-                        <div class="col text-right">
-                            <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
-                                (click)="saveTicketFormMatrixTypeModal()">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ticket Form Type</h5>
+        <button type="button" class="close" data-dismiss="modal"
+          (click)="closeTicketFormMatrixTypeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row form-group">
+          <div class="col-4">
+            <label>Form Type</label>
+          </div>
+          <div class="col-8">
+            <auto-suggestion [data]="formTypeFields" display="name" placeholder="Form Type" name="formTypeFields"
+              id="formTypeFields"
+              [preSelected]="formRefType.formFieldRefType.id >= 0  ? {name: formRefType.formFieldRefType.name}:{name:''}"
+              (onSelected)="formRefType.formFieldRefType=$event;" autocomplete="off">
+            </auto-suggestion>
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <div class="row footer">
+            <div class="col text-right">
+              <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="save"
+                (click)="saveTicketFormMatrixTypeModal()">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!--end: Ticket Form Matrix Type -->

@@ -1,18 +1,20 @@
-<table class="table table-primary">
+<table class="table table-primary ng-datatable" datatable="ng" datatable [dtOptions]="dtOptions"
+  [dtTrigger]="dttrigger">
   <thead>
     <tr>
-      <th *ngFor="let item of dataheading">{{item}}</th>
-      <!-- <th *ngIf="setting?.action"> Action </th> -->
+      <th *ngFor="let item of dataheading;index as data">{{item}}</th>
+      <th *ngIf="setting?.actions"> Action </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of datavalues">
       <td *ngFor="let value of item"> {{value}} </td>
-      <!-- <td *ngIf="setting?.action">
-        <div [class]="setting.action.class || 'action-block'">
-          <i *ngFor="let item of setting.action" [class]="setting.action.icon" (click)="setting.action.action()"></i>
+      <td *ngIf="setting?.actions" class="actions">
+        <div [class]="setting.actions.class || 'action-block'">
+          <i *ngFor="let item of setting.actions;index as i" [class]="item.icon"
+            (click)="item.action && item.action()"></i>
         </div>
-      </td> -->
+      </td>
     </tr>
   </tbody>
 </table>

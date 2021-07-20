@@ -368,7 +368,7 @@ $color-dark:#000;
 
   th.action,.bg-none {
     background-image: none;
-    pointer-events: none; 
+    pointer-events: none;
   }
 
   tbody {
@@ -412,7 +412,7 @@ $color-dark:#000;
 
   th.action,.bg-none {
     background-image: none;
-    pointer-events: none; 
+    pointer-events: none;
   }
 
   tbody {
@@ -517,4 +517,10 @@ table.dataTable tbody th {
 
 table.dataTable tbody td{
    padding: 3px 11px !important;
+}
+
+
+.bg-none{
+ background-image:none;
+ pointer-events: none;
 }

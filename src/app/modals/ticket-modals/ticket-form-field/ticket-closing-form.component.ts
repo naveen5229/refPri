@@ -1,9 +1,11 @@
+import { Subject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
 import { UserService } from '../../../Service/user/user.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormDataTableComponent } from '../../process-modals/form-data-table/form-data-table.component';
+
 
 @Component({
   selector: 'ngx-ticket-closing-form',
@@ -23,10 +25,15 @@ export class TicketClosingFormComponent implements OnInit {
   info = null;
   isDisabled = false;
   attachmentFile = [{ name: null, file: null }];
+  tableUpdate:any = new Subject();
+
+  additionalFields = [];
+  tableHeader = null;
+
+
 
   constructor(public activeModal: NgbActiveModal, public common: CommonService, public api: ApiService, public modalService: NgbModal, public userService: UserService) {
     this.title = this.common.params.title ? this.common.params.title : 'Ticket Closing Form';
-    console.log("TicketClosingFormComponent -> constructor -> common", common)
     if (this.common.params && this.common.params.actionData) {
       this.ticketId = this.common.params.actionData.ticketId;
       this.refId = this.common.params.actionData.refId;
@@ -34,11 +41,87 @@ export class TicketClosingFormComponent implements OnInit {
       this.isDisabled = (this.common.params.actionData.isDisabled) ? true : false;
 
       this.getTicketFormField();
+
+setTimeout(() => {
+        this.checkAllExpandedTables();
+}, 200);
+}
+
+}
+
+
+
+
+renderTableView(){
+    if (this.oddArray && this.oddArray.length > 0) {
+      this.oddArray.forEach(element => {
+        element.forEach(e => {
+          e["isNotBindFixedvalue"] = (e["isNotBindFixedvalue"]) ? e["isNotBindFixedvalue"] : false;
+          e["notBindFixedvalue"] = (e["notBindFixedvalue"]) ? e["notBindFixedvalue"] : null;
+          if (e.param_type == 'date') {
+            e.param_value = (e.param_value) ? new Date(e.param_value) : new Date();
+          }else if (e.param_type == 'entity') {
+            if (e.param_value > 0 && e.param_info && e.param_info.length) {
+              let entity_value = e.param_info.find(x => { return x._id == e.param_value });
+              e['entity_value'] = (entity_value) ? entity_value.option : null;
+            } else {
+              e['entity_value'] = null;
+            }
+          }else if (e.param_value && e.param_info && e.param_info.length) { // for not bind dropdown
+            let notBindFixedvalue = e.param_info.find(x => { return x.option == e.param_value });
+            if (!notBindFixedvalue) {
+              let notBindOption = e.param_info.find(x => x.isNonBind);
+              e["isNotBindFixedvalue"] = true;
+              e["notBindFixedvalue"] = e.param_value;
+              e["param_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
+            }
+          }
+        });
+      });
+    }
+
+    let attr = document.getElementById('option');
+    console.log('attr:',attr)
+}
+
+
+ onSelectNotBind(event, row) {
+    console.log(event)
+    let selectEl = event.target;
+    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
+    console.log(testval)
+    row.isNotBindFixedvalue = false;
+    if (JSON.parse(testval)) {
+      row.isNotBindFixedvalue = true;
     }
   }
 
-  ngOnInit() {
+  AddTableRow() {
+    let temp = JSON.parse(JSON.stringify(this.tableHeader));
+    console.log('temp: ', temp);
+    temp.forEach(e => {
+      e.param_value = (e.param_type == 'date') ? new Date() : null;
+    });
+    this.oddArray.push(temp);
   }
+
+  addTransaction() {
+   console.log("additionalFields:", this.oddArray);
+    // console.log('this.oddArray',this.oddArray);
+    // this.oddArray.forEach(element => {
+    //   element.forEach(element2 => {
+    //     if (element2['isNotBindFixedvalue']) {
+    //       element2['param_value'] = element2['notBindFixedvalue'];
+    //     }
+    //   });
+    // });
+    // this.tableUpdate.next(this.oddArray);
+    // this.tableUpdate.next(details);
+
+  }
+
+
+
   getTicketFormField() {
     const params = "refId=" + this.refId + "&refType=" + this.refType + "&ticketId=" + this.ticketId;
     console.log("params", params);
@@ -48,7 +131,8 @@ export class TicketClosingFormComponent implements OnInit {
       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       if (res['data']) {
         let ticketFormFields = res['data'];
-        this.ticketFormFields = ticketFormFields.map(data => { data.isExpand = false; return data })
+        this.ticketFormFields = ticketFormFields.map(data => { data.isExpand = false;
+        return data })
         this.formatArray();
       }
     }, err => {
@@ -58,14 +142,7 @@ export class TicketClosingFormComponent implements OnInit {
     });
   }
 
-  onSelectNotBind(event, row) {
-    let selectEl = event.target;
-    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
-    row.isNotBindFixedvalue = false;
-    if (JSON.parse(testval)) {
-      row.isNotBindFixedvalue = true;
-    }
-  }
+
 
   formatArray() {
     this.evenArray = [];
@@ -108,14 +185,25 @@ export class TicketClosingFormComponent implements OnInit {
     });
     console.log("evenArray", this.evenArray);
     console.log("oddArray", this.oddArray);
+    // this.oddArray[0]._param_child[0][1].is_required = true;
+    // this.oddArray[0]._param_child[0][2].is_required = true;
   }
 
   dismiss(res, isContinue) {
     this.activeModal.close({ response: res, isContinue: isContinue });
   }
 
+  submitFormDetail(){
+
+  console.log('oddArray',this.oddArray);
+  console.log('evenArray',this.evenArray);
+    let detailsTemp = this.evenArray.concat(this.oddArray);
+    console.log('detailsTemp: ', detailsTemp);
+  }
+
   saveFromDetail(isContinue) {
     let detailsTemp = this.evenArray.concat(this.oddArray);
+    console.log('detailsTemp: ', detailsTemp);
     let details = detailsTemp.map(detail => {
       let copyDetails = Object.assign({}, detail);
       if (detail['r_coltype'] == 'date' && detail['r_value']) {
@@ -137,6 +225,7 @@ export class TicketClosingFormComponent implements OnInit {
     this.common.loading++;
     this.api.post('Ticket/saveTicketFormByRefId', params)
       .subscribe(res => {
+      console.log('res: ', res);
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
@@ -244,24 +333,26 @@ export class TicketClosingFormComponent implements OnInit {
       this.oddArray[i]._param_child = JSON.parse(JSON.stringify(event));
       this.oddArray[i].isExpand = false;
     }
+    }
+
+  checkAllExpandedTables() {
+    this.oddArray.forEach(obj => { obj.isExpand = true; });
+    console.log('this.oddArray: ', this.oddArray);
+    this.evenArray.forEach(obj => { obj.isExpand = true; });
+    console.log('this.evenArray: ', this.evenArray);
+
+  //  setTimeout(() => {
+  //  let submit = document.querySelectorAll('ngx-table-view .submit-btn');
+  //  submit.forEach(item=>  item.remove() );
+  //  }, 100);
+
   }
 
-  checkAllExpandedTables(checkedOf, arrayType, status) {
-    console.log(checkedOf, arrayType, status);
-    this.oddArray.forEach(obj => { obj.isExpand = false; });
-    this.evenArray.forEach(obj => { obj.isExpand = false; });
-    if (arrayType === 'odd') {
-      let index = this.oddArray.findIndex(ele => {
-        return ele.r_colid === checkedOf.r_colid
-      });
-      this.oddArray[index].isExpand = status
-      console.log(index, status)
-    } else {
-      let index = this.evenArray.findIndex(ele => {
-        return ele.r_colid === checkedOf.r_colid
-      });
-      this.evenArray[index].isExpand = status;
-      console.log(index, status)
-    }
+  ngOnInit() {
+  this.checkAllExpandedTables();
+  this.renderTableView();
   }
+
 }
+
+

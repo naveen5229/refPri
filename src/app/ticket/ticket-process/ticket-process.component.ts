@@ -729,7 +729,8 @@ export class TicketProcessComponent implements OnInit {
       completionBenchmark: this.ticketPropertyForm.completionBenchmark,
       requestId: reqId,
       repeatDuration: this.ticketPropertyForm.repeatDuration,
-      uniqueFields: (this.ticketPropertyForm.uniqueFields.length > 0) ? JSON.stringify(this.ticketPropertyForm.uniqueFields) : null
+      uniqueFields:JSON.stringify(this.ticketPropertyForm.uniqueFields) || null
+
     }
 
     console.log('params', params);
