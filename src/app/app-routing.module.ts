@@ -70,10 +70,10 @@ const routes: Routes = [
       .then(m => m.TicketModule),
   },
   { path: 'pages/leave-type-management/:id', component: ModalContainerComponent },
-  
- 
-  { path: '', redirectTo: localStorage.getItem("LANDING_PAGE"), pathMatch: 'full' },
-  { path: '**', redirectTo: localStorage.getItem("LANDING_PAGE") },
+
+
+  { path: '', redirectTo: 'pages/task', pathMatch: 'full' },
+  { path: '**', redirectTo: 'pages/task' },
 ];
 
 const config: ExtraOptions = {
