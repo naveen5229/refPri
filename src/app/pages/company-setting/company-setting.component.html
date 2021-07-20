@@ -11,6 +11,9 @@
         <li [ngClass]="activeTab==2?'active':''" (click)="activeTab=2;setHeaderFormat();">
           Kanban Board
         </li>
+        <li [ngClass]="activeTab==3?'active':''" (click)="activeTab=3;setHeaderFormat();">
+         General
+        </li>
       </ul>
     </div>
 
@@ -87,13 +90,15 @@
 
                 <input type="number" min="0" [(ngModel)]="data.profile_value" *ngIf="data.profile_name === 'Completed'">
 
-                <select [(ngModel)]="data.profile_value" *ngIf="data.profile_name !== 'Completed'">
+                <select [(ngModel)]="data.profile_value" *ngIf="data.profile_name !== 'Completed' && data._field_type != 'auto'">
                   <option *ngFor="let option of data.info">{{option.option}}</option>
                 </select>
-                <!-- <auto-suggestion [data]="data.info" display="option"
-                  (onSelected)="data.profile_value = $event['option']" [preSelected]="{option:data.profile_value}"
-                  name="{{data.profile_id}}" inputId="{{data.profile_id}}" seperator="-" autocomplete="off">
-                </auto-suggestion> -->
+
+
+                <auto-suggestion [data]="pages" display="link" *ngIf="data._field_type == 'auto'"
+                  (onSelected)="data.profile_value = $event['link']" [preSelected]="{link:data.profile_value}"
+                  inputId="{{data.profile_id}}" seperator="-" autocomplete="off">
+                </auto-suggestion>
               </td>
               <td>
                 <i class="fas fa-save text-success" (click)="saveSettings(setting,1)"></i>

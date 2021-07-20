@@ -78,6 +78,7 @@ import { ContinuityReportComponent } from './continuity-report/continuity-report
 import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 import { LeaveManagementComponent } from './leave-management/leave-management.component';
 import { MeetingComponent } from './meeting/meeting.component';
+import { CallAdminReportComponent } from './call-admin-report/call-admin-report.component';
 
 const routes: Routes = [{
   path: '',
@@ -454,25 +455,31 @@ const routes: Routes = [{
       canActivate: [AuthGuard, RouteGuard]
     },
     {
-    path:'Expense-type',
-    component:ExpenseTypeComponent,
-    canActivate: [AuthGuard, RouteGuard]
-    },
-      {
-    path:'visit-management',
-    component:VisitManagementComponent,
-    canActivate: [AuthGuard, RouteGuard]
+      path: 'Expense-type',
+      component: ExpenseTypeComponent,
+      canActivate: [AuthGuard, RouteGuard]
     },
     {
-      path:'leave-type-management',
-      component:LeaveTypeManagementComponent,
+      path: 'visit-management',
+      component: VisitManagementComponent,
       canActivate: [AuthGuard, RouteGuard]
-      },
-      {
-  path:'meeting',
-  component:MeetingComponent,
-  canActivate: [AuthGuard, RouteGuard]
-  }
+    },
+    {
+      path: 'leave-type-management',
+      component: LeaveTypeManagementComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'meeting',
+      component: MeetingComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    },
+    {
+      path: 'call-admin-report',
+      component: CallAdminReportComponent,
+      canActivate: [AuthGuard, RouteGuard]
+    }
+    
   ],
 }];
 

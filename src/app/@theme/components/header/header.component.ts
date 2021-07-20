@@ -153,9 +153,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (!this.common.refresh) {
       // this.router.navigateByUrl('/pages/dashboard');
       if(this.user._loggedInBy == 'customer'){
-        this.router.navigate(['/pages/shift-logs']);
+        this.router.navigate([localStorage.getItem("LANDING_PAGE")]);
       }else{
-        this.router.navigate(['/pages/task']);
+        this.router.navigate([localStorage.getItem("LANDING_PAGE")]);
       }
       return;
     }
@@ -239,9 +239,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.userService.filterMenu("pages", "pages");
           if(type==1){
             if(this.user._loggedInBy == 'customer'){
-              this.router.navigate(['/pages/shift-logs']);
+              this.router.navigate([localStorage.getItem("LANDING_PAGE")]);
             }else{
-              this.router.navigate(['/pages/task']);
+              this.router.navigate([localStorage.getItem("LANDING_PAGE")]);
             }
           }
         }else{

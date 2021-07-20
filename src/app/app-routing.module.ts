@@ -11,6 +11,7 @@ import {
 import { LoginComponent } from './auth/login/login.component';
 import { AdminToolComponent } from './pages/admin-tool/admin-tool.component';
 import { AuthGuard } from './guards/auth.guard';
+import { UserService } from './Service/user/user.service';
 
 const routes: Routes = [
 
@@ -67,8 +68,8 @@ const routes: Routes = [
     loadChildren: () => import('../app/ticket/ticket.module')
       .then(m => m.TicketModule),
   },
-  { path: '', redirectTo: 'pages', pathMatch: 'full' },
-  { path: '**', redirectTo: 'pages' },
+  { path: '', redirectTo: localStorage.getItem("LANDING_PAGE"), pathMatch: 'full' },
+  { path: '**', redirectTo: localStorage.getItem("LANDING_PAGE") },
 ];
 
 const config: ExtraOptions = {
@@ -79,5 +80,7 @@ const config: ExtraOptions = {
   imports: [RouterModule.forRoot(routes, config)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
+export class AppRoutingModule extends UserService{
+
+  
 }

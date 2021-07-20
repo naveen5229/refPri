@@ -39,20 +39,20 @@
             <div class="row mb-2">
               <div class="col-6">
                   <label class="form-check-inline">
-                      <input class="form-check-input" type="radio" name="mode" value="0" (click)="checkSchedule('0')" checked>
+                      <input class="form-check-input"  type="radio" name="mode" value="0" (click)="checkSchedule('0')" checked>
                       User
                   </label>
               </div>
               <div class="col-6">
                   <label class="form-check-inline">
-                      <input class="form-check-input" type="radio" name="mode" value="1" (click)="checkSchedule('1')">
+                      <input class="form-check-input"  type="radio" name="mode" value="1" (click)="checkSchedule('1')">
                       Room
                   </label>
               </div>
           </div>
           </div>
           <div class="col-2 my-auto pl-0 pr-0" style="font-size: 14px;">
-            Select User :
+            {{selectAvailability}} 
           </div>
           <div class="col-6 pl-0" *ngIf="scheduleType==0">
             <auto-suggestion [data]="adminList" display='name' (onSelected)="schedule.user = $event;checkAvailability()"

@@ -1,0 +1,65 @@
+<nb-card>
+  <nb-card-header>
+      <div class="row m-0">
+              <h5 class="heading-design">Call Admin Report</h5>
+      </div>
+  </nb-card-header>
+
+
+
+
+<nb-card-body>
+  <div class="tabs_style_main">
+    <ul class="tabs_style text-left">
+        <li [ngClass]="activeTab=='current'?'active':''"
+            (click)="activeTab='current';getData()">
+            Current
+        </li>
+        <li [ngClass]="activeTab=='period-to-period'?'active':''"
+            (click)="activeTab='period-to-period';getData()">
+            Period To Period
+        </li>
+        <li [ngClass]="activeTab=='entity'?'active':''"
+            (click)="activeTab='entity';getData() ">
+            Entity
+        </li>
+       
+    </ul>
+</div>
+  <div class="row ml-1">
+      <div class="col-2" *ngIf = "activeTab=='period-to-period'">
+          <label style="margin-left: 10px;">Start Date</label>
+          <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+          </uj-date-time-picker>
+      </div>
+      <div class="col-2" *ngIf = "activeTab=='period-to-period'">
+          <label>End Date</label>
+          <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false" [isStart]="false">
+          </uj-date-time-picker>
+      </div>
+      <div class="col-2">
+          <label>select User</label>
+          <auto-suggestion (onSelected)="selectedUser($event)" [data]="allUsers" display='name'
+          placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+          [preSelected]="{name:admin.name}"> </auto-suggestion>
+      </div>
+      
+      <div class="col-2">
+          <label>Select Department</label>
+          <auto-suggestion (onSelected)="selectedDept = $event" [data]="departments" display="name" placeholder="Select Department" inputId="selectDepartment" name="selectDepartment" [preSelected]="(selectedDept.id>0)?{name:selectedDept.name}:{name:'All Departments'}">
+          </auto-suggestion>
+      </div>
+      <div class="col-2">
+          <button type="submit" id="submit" (click)="getData()" class="btn btn-primary" style="margin-top: 20px;"> Submit
+        </button>
+
+      </div>
+  </div>
+  <div class="row ml-1">
+  <div class="col-12 pl-0">
+    <smart-table *ngIf="callAdminList.length!=0" [data]="table.data" [settings]="table.settings" id="callAdminList">
+    </smart-table>
+</div>
+</div>
+  </nb-card-body>
+  </nb-card>
