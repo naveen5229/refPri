@@ -102,7 +102,7 @@ export class LeaveManagementComponent implements OnInit {
     });
   }
 
-  applyWFH(formType) {
+  applyWFH(formType:any) {
     let title = "Apply WFH";
     let btn = "Apply";
 

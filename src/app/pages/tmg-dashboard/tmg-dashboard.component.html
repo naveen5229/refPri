@@ -64,10 +64,6 @@
             class="fas fa-chevron-right"></i></p>
       </div>
     </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4079d4356c58e01dd775983d7bac7bde9b6a5272
 
 
     <div class="search-group">
@@ -96,66 +92,6 @@
       </div>
 
     </div>
-<<<<<<< HEAD
-=======
-   
-    <div>
-      <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
-    </div>
-   
-   </div>
-   <div class="input-group" *ngIf="['Tmg-Task','Tmg-worklog','tmgCallDashboard'].includes(selectedDashboard)">
-    <i>Department: </i>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-    <div class="form-outline">
-     <select [(ngModel)]="selectedDept.id">
-     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
-     </select>
-    </div>
-  </div>
-
-  <div class="input-group" *ngIf="selectedDashboard == 'tmgProcess'">
-    <i>Process: </i>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-    <div class="form-outline">
-     <select [(ngModel)]="selectedDept.id">
-     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
-     </select>
-    </div> 
-  </div>
-
-  <div class="input-group" *ngIf="selectedDashboard == 'tmgTicketDashboard'">
-    <i>Department: </i>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-    <div class="form-outline">
-     <select [(ngModel)]="selectedDept.id">
-     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
-     </select>
-    </div>
-
-    <i>Ticket Process: </i>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-    <div class="form-outline">
-     <select [(ngModel)]="selectedTicketProcess.id">
-     <option *ngFor="let tp of ticketProcesses" [value]="tp._id">{{tp.name}}</option>
-     </select>
-    </div>
-    
-  </div>
->>>>>>> c6f396ed13043f6c0fa0ba82a8b6b985c49620a2
-=======
->>>>>>> 4079d4356c58e01dd775983d7bac7bde9b6a5272
-
-
-
     <!-- <div class="out-topnav-dept" *ngIf="['Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)">
     <div class="toptabdept" *ngFor="let dept of departments">
       <div class="hiddenby">
