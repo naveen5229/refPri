@@ -33,6 +33,7 @@ export class SettingsComponent implements OnInit {
 
   selectedSettingType = null;
   allSettings = [];
+  pages = [];
 
   constructor(public common: CommonService,
     public api: ApiService,
@@ -94,7 +95,9 @@ export class SettingsComponent implements OnInit {
             this.settingFormat.push(data);
           });
         }
-      })
+      });
+
+      
     }
 
     //gettingsettings here
@@ -131,6 +134,10 @@ export class SettingsComponent implements OnInit {
         console.log("Error: ", err);
       }
     );
+    if(this.activeTab==3){
+      this.getPageData();
+      console.log("pages+++++++++++",this.pages);
+    }
   }
 
   getAllAdmin() {
@@ -315,5 +322,23 @@ export class SettingsComponent implements OnInit {
     //   console.log('index:', index)
     //   this.allSettings.splice(index,1);
     // }
+  }
+
+  getPageData() {
+    this.common.loading++;
+    this.pages = [];
+    const params = 'adminId=' + this.userService['_details']['id'];
+    this.api.get("UserRole/getAdminPages.json?" + params).subscribe(res => {
+      this.common.loading--;
+      if(res['code']===0) { this.common.showError(res['msg']); return false;};
+      res['data'].map(dt=>{
+        this.pages.push ({profile_id : dt._id,link : dt.route,option:dt.title});
+      });
+      console.log("pages-----",this.pages);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log('Error: ', err);
+    });
   }
 }

@@ -514,6 +514,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/continuity-report',
         home: true,
       },
+      {
+        title: 'Call Admin Report',
+        icon: 'phone-outline',
+        link: '/pages/call-admin-report',
+        home: true,
+      },
     ]
   },
   {

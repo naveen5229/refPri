@@ -86,6 +86,7 @@ import { TmgMeetingComponent } from './tmg-meeting/tmg-meeting.component';
 import { TmgVisitComponent } from './tmg-visit/tmg-visit.component';
 import { MeetingRoomComponent } from './meeting-room/meeting-room.component';
 import { LeaveSettingComponent } from './leave-setting/leave-setting.component';
+import { CallAdminReportComponent } from './call-admin-report/call-admin-report.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -180,6 +181,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     TmgVisitComponent,
     MeetingRoomComponent,
     LeaveSettingComponent,
+    CallAdminReportComponent
   ],
 })
 export class PagesModule {
