@@ -138,12 +138,19 @@ import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
 import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.component';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { TicketFieldsComponent } from './modals/process-modals/ticket-fields/ticket-fields.component';
 =======
 import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
 import { ModalComponent } from './modals/modal/modal.component';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
 >>>>>>> c6f396ed13043f6c0fa0ba82a8b6b985c49620a2
+=======
+import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
+import { ModalComponent } from './modals/modal/modal.component';
+import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
+import { TicketFieldsComponent } from './modals/process-modals/ticket-fields/ticket-fields.component';
+>>>>>>> 4079d4356c58e01dd775983d7bac7bde9b6a5272
 
 
 
@@ -263,10 +270,15 @@ const PAGE_COMPONENTS = [
     AddProcessPropertyComponent,
     MobileNoComponent,
 <<<<<<< HEAD
+<<<<<<< HEAD
     TicketFieldsComponent,
 =======
     ApplyWFHComponent,
 >>>>>>> c6f396ed13043f6c0fa0ba82a8b6b985c49620a2
+=======
+    ApplyWFHComponent,
+    TicketFieldsComponent,
+>>>>>>> 4079d4356c58e01dd775983d7bac7bde9b6a5272
      // SmartDataTableComponent,
 
     // SendmessageComponent,
