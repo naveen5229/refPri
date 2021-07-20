@@ -199,7 +199,6 @@ renderTableView(){
   console.log('evenArray',this.evenArray);
     let detailsTemp = this.evenArray.concat(this.oddArray);
     console.log('detailsTemp: ', detailsTemp);
-
   }
 
   saveFromDetail(isContinue) {

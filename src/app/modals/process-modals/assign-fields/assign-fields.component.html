@@ -114,15 +114,15 @@
 
       <div class="row">
         <div class="col-md-12">
-          <table class="table table-primary mb-0">
+          <table class="table table-primary ticket-field-table mb-0">
             <thead>
               <tr>
                 <th> Fields </th>
-                <th> Required </th>
+                <th> <i class="fa fa-star text-danger required"></i> </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of tableData.paramchild;index as i">
+              <tr *ngFor="let item of tableData._param_child;index as i">
                 <td> {{item.r_coltitle}} </td>
                 <td>
                   <div class="form-check">
@@ -139,7 +139,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
-    <button type="button" class="btn btn-outline-dark" (click)="saveColumns()">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cross click')">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="saveRequired()">Save</button>
   </div>
 </ng-template>

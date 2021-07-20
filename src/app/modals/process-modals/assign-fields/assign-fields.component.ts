@@ -53,32 +53,33 @@ formType = null;
 
 
 setfieldRequired(index:number){
-// let isrequired = this.tableData.paramchild[index].r_isdashboard_info;
-// isrequired = !isrequired;
-// this.assignOrder()[0]._param_child = [];
-// this.assignOrder()[0]._param_child = this.tableData.paramchild;
-// console.log('this.assignOrder(): ', this.assignOrder());
 
+let isrequired = this.tableData._param_child[index].r_isdashboard_info;
+isrequired = !isrequired;
 }
 
-
 gettablefields(item:any,content:any,index:number){
-this.fielddata = item;
-let paramchild = JSON.parse(item._param_child);
+// this.fielddata = item;
+
+console.log('this.fielddata: ', this.fielddata);
 this.tableData = {};
-this.tableData.paramchild = [...paramchild];
-// this.tableData.paramchild.map((item:any)=>{
-// item.isrequired = false;
-// })
+this.tableData = item;
+console.log('this.tableData: ', this.tableData);
+this.tableData.r_selected = true;
 this.tableData.coltitle = item.r_coltitle;
 
-if(this.tableData.paramchild.length){
-
+if(this.tableData._param_child){
   this.common.params = { process: { id: this.processId, name: null } };
+
     const activeModal = this.modalService.open(content, { size: 'md', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
-      // this.getFields();
+    console.log('data: ', data);
+      activeModal.close();
     });
+}
+
+else{
+ this.common.showError('No data for this fields');
 }
 
 }
@@ -95,11 +96,14 @@ if(this.tableData.paramchild.length){
         if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.fields = res['data'] || [];
         console.log('this.fields : ', this.fields );
+
+        this.fields.map((item:any)=>{
+        item._param_child =  JSON.parse(item._param_child);
+        });
         this.colinitialization();
       }, err => {
         this.common.loading--;
         this.common.showError();
-
       });
   }
 
@@ -243,35 +247,38 @@ if(this.tableData.paramchild.length){
 
   }
 
+
 saveRequired(){
+// let extarray =   JSON.stringify(this.assignOrder());
+let updatedarray = this.assignOrder()
+
+let dummyarray = [];
+updatedarray.map(item => dummyarray.push(item.r_colid));
+let arrindex = dummyarray.indexOf(this.tableData.r_colid);
+updatedarray[arrindex]._param_child = this.tableData._param_child;
+updatedarray[arrindex].r_selected = true;
+console.log('updatedarray[arrindex].r_selected: ', updatedarray[arrindex].r_selected);
+
+console.log('this.assignOrder() after json parsing',updatedarray);
 
     let apiBase = this.formType == 11 ? 'Ticket/saveTicketMatrixCalAssign' : 'Processes/saveProcessMatrixCalAssign';
     let params = {
       refId: this.refId,
       refType: this.refType,
-      info: JSON.stringify(this.assignOrder()),
+      info: JSON.stringify(updatedarray),
     };
 
-console.log('params',JSON.parse(params.info));
-
- let Sentparams = {
-      refId: this.refId,
-      refType: this.refType,
-      info: this.assignOrder(),
-    };
-
- console.log('Sentparams: ', Sentparams);
+    console.log('params: ', params);
 
     this.common.loading++;
-
     this.api.post(apiBase, params)
-      .subscribe(res => {
-      console.log('res : ', res );
+      .subscribe((res:any) => {
+      console.log('save response : ', res.info);
         this.common.loading--;
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            this.activeModal.close(true);
+            // this.activeModal.close(true);
             this.getFields();
           } else {
             this.common.showError(res['data'][0].y_msg);
