@@ -273,6 +273,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/meeting',
         home: true,
+      },
+      {
+        title: 'Meeting-Room',
+        icon: 'file-text-outline',
+        link: '/pages/meeting-room',
+        home: true,
       }
     ]
   },
@@ -415,6 +421,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Leave Type',
         icon: 'wifi-outline',
         link: '/pages/leave-type-management',
+        home: true,
+      },
+      {
+        title: 'Leave Setting',
+        icon: 'wifi-outline',
+        link: '/pages/leave-setting',
         home: true,
       },
     ]

@@ -39,7 +39,8 @@ export class TmgTicketComponent implements OnInit {
   acknowledgeTatUser30D = [];
   acknowledgeTatProcess30D = [];
   longestAcknowledgePending = [];
-
+  openTicketLive:any[] = [];
+  completetionTatProcessWise:any[] = [];
   ngOnDestroy() { }
   ngOnInit() { }
 

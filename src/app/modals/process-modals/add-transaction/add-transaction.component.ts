@@ -86,7 +86,17 @@ export class AddTransactionComponent implements OnInit {
       this.transForm.identity = this.common.params.rowData.identity;
       this.transForm.priOwn.id = this.common.params.rowData.priOwnId;
       this.isDisabled = (this.common.params.rowData.isDisabled) ? true : false;
-      this.transForm.isAutoIdentity = (this.common.params.rowData._default_identity) ? 1 : 0;
+    }
+    if (this.common.params && this.common.params.processList){
+      for (var i=0; i<this.common.params.processList.length; i++){
+        if(this.transForm.process.id==this.common.params.processList[i]._id){
+        console.log(this.common.params.processList[i]);
+          this.transForm.isAutoIdentity = this.common.params.processList[i]._default_identity
+        }
+        
+     }
+      console.log("this.transForm.isAutoIdentity",this.transForm.isAutoIdentity);
+
       this.onSelectProcess();
     }
   }

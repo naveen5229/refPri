@@ -10,7 +10,6 @@ import { CommonService } from './../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
 import { MapService } from './../../Service/map/map.service';
 import { UserService } from "../../Service/user/user.service";
-// import { expenses, expenseDetail } from './data';
 declare var google: any;
 import * as _ from 'lodash';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
@@ -42,7 +41,6 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   detailDataIndex:number = -1;
   @ViewChild(DataTableDirective, {static: false})
   dtElement: any;
-  // dtOptions: DataTables.Settings = {};
   dtOptions =  this.table.options(10,9,'USER EXPENSES');
   dtTrigger: Subject<any> = new Subject<any>();
   updatedExpenses = [];
@@ -75,18 +73,16 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   // end: map
 
   detaildate:any;
+  isAllCheckboxDisable = false;
 
   constructor(public modalService: NgbModal,
     public common:CommonService,
     public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
-    // this.showAdminWiseWagesList();
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.dtTrigger.next();
@@ -126,28 +122,20 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
     var path = this.poly.getPath();
   }
 
-listhandler(index:number){
-this.detailDataIndex = index;
-this.detailImageZoom = true;
-let currentImageClass =  `.detail-images.index-${index}`;
-let currentImage =  document.querySelectorAll(currentImageClass);
-currentImage[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-}
+  listhandler(index:number){
+    this.detailDataIndex = index;
+    this.detailImageZoom = true;
+    let currentImageClass =  `.detail-images.index-${index}`;
+    let currentImage =  document.querySelectorAll(currentImageClass);
+    currentImage[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+  }
 
-
-
-
-detailImageHandler(index:number){
-this.detailDataIndex = index;
-this.searchLatLong(this.onsiteImages[index]);
-this.detailDataIndex = index;
-this.detailImageZoom = true;
-// let currentImageClass =  `.location-list .list-item-${index}`;
-// let currentItem =  document.querySelectorAll(currentImageClass);
-// currentItem[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-
-}
-
+  detailImageHandler(index:number){
+    this.detailDataIndex = index;
+    this.searchLatLong(this.onsiteImages[index]);
+    this.detailDataIndex = index;
+    this.detailImageZoom = true;
+  }
 
   refreshPage(){
     if(this.isDetailView){
@@ -158,10 +146,8 @@ this.detailImageZoom = true;
       this.expenseSearch.admin = { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
       this.getAllAdmin();
       this.showAdminWiseWagesList();
-      // this.isDetailView = false;
       this.allVisits = [];
       this.allUsers = [];
-
       this.selectedExpense = null;
       this.onsiteImages = [];
       this.expenseList = [];
@@ -179,7 +165,6 @@ this.detailImageZoom = true;
         "department_name": null
       }];
     }else{
-      // this.allUsers = [];
       this.allUsers = [{
         "id": this.userService.loggedInUser.id,
         "name": this.userService.loggedInUser.name,
@@ -194,7 +179,6 @@ this.detailImageZoom = true;
         this.common.loading--;
         if(res['code']===0) { this.common.showError(res['msg']); return false;};
         let allUsers = res['data'] || [];
-
         allUsers.map(x=>{
           this.allUsers.push({
             "id": x.id,
@@ -235,7 +219,6 @@ this.detailImageZoom = true;
     this.expenseList = [];
   }
 
-  isAllCheckboxDisable = false;
   showAdminWiseWagesList() {
     this.isAllCheckboxDisable = false;
     let adminId = this.expenseSearch.admin.id;
@@ -258,7 +241,6 @@ this.detailImageZoom = true;
         this.common.loading--;
         if (res['code'] == 1) {
           this.allVisits = res['data'] || [];
-          // this.renderTable();
           this.updateExpenseArray();
           if(this.allVisits && (this.allVisits.find(x=>x.is_disable) || this.allVisits.find(x=>x._user_id==this.userService.loggedInUser.id))){
             this.isAllCheckboxDisable = true;
@@ -361,9 +343,6 @@ this.detailImageZoom = true;
     if(status==1){
       msg = "<b>This Approval will result in all the details(Visit Images & expenses) to be approved and it can not be edited after that.<br>Are you sure to approve anyway?<b>";
     }
-    // else{
-
-    // }
       this.common.params = {
         title: (status==1) ? "Approve Visit" : "Reject Visit",
         description: msg,
@@ -375,14 +354,9 @@ this.detailImageZoom = true;
           this.saveVerifiedExpenseSingle(status,item);
         }
       });
-    // }else{
-    //   this.saveVerifiedExpenseSingle(status,item);
-    // }
   }
 
   saveVerifiedExpenseSingle(status,item) {
-    console.log('status,: ', status,);
-    console.log('adminWiseList', this.updatedExpenses);
     if(item._user_id==this.userService.loggedInUser.id){
       this.common.showError("You can't change your own visit");
       return false;
@@ -414,9 +388,9 @@ this.detailImageZoom = true;
   }
 
   viewExpenseDetail(item){
-  let menusidebar = document.getElementsByClassName('menu-sidebar');
-  menusidebar[0].classList.remove('expanded');
-  menusidebar[0].classList.add('compacted');
+    let menusidebar = document.getElementsByClassName('menu-sidebar');
+    menusidebar[0].classList.remove('expanded');
+    menusidebar[0].classList.add('compacted');
 
     this.selectedExpense = item;
     this.isDetailView = true;
@@ -469,6 +443,13 @@ this.detailImageZoom = true;
         this.common.loading--;
         if (res['code'] == 1) {
           this.expenseList = res['data'] || [];
+          if(this.expenseList && this.expenseList.length) {
+            this.expenseList.forEach(element => {
+              if(!element['amount_new'] && element['amount_new']!==0){
+                element['amount_new'] = element['amount'];
+              }
+            });
+          }
         } else {
           this.common.showError(res['msg']);
         }
@@ -560,7 +541,6 @@ this.detailImageZoom = true;
   }
 
   dateextractor(number:number){
-    // let today = new Date()
     let currentDate = this.common.getDate();
     currentDate.setHours(0);
     currentDate.setMinutes(0);
@@ -569,11 +549,11 @@ this.detailImageZoom = true;
       this.common.showError("Future date no allowed");return false;
     }else{
       let otherdate = new Date(this.selectedExpense.sqdate);
-      console.log('selectedExpense date: ', new Date(this.selectedExpense.sqdate));
+      // console.log('selectedExpense date: ', new Date(this.selectedExpense.sqdate));
       otherdate.setDate(otherdate.getDate() + number);
       this.detaildate = this.datePipe.transform(otherdate,'dd-MM-yyyy');
       let detaildate2 = this.datePipe.transform(otherdate,'yyyy-MM-dd');
-      console.log('this.detaildate: ', this.detaildate);
+      // console.log('this.detaildate: ', this.detaildate);
       this.selectedExpense.sqdate = detaildate2;
       this.viewExpenseDetail(this.selectedExpense);
       // return this.detaildate;
@@ -602,6 +582,7 @@ this.detailImageZoom = true;
     event.preventDefault();
     event.stopPropagation();
     this.expenseInfo = [];
+    this.expenseInfo.push({expense_type:"System Expense",amount:item.system_expense,updated_amount:item.system_expense});
     if(item && item._onside_img && item._onside_img.length){
       item._onside_img.forEach(element => {
         if(element.exp_img && element.exp_img.length){
@@ -611,10 +592,7 @@ this.detailImageZoom = true;
         }
       });
     }
-
   }
-
-
 
 // start: map --------------------------------------------------
   getTravelDistance() {

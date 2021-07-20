@@ -61,7 +61,7 @@
                 <th class="date">Date</th>
                 <th>Travel Expense</th>
                 <th>Other Expense</th>
-                <th>User Expense</th>
+                <th>Total Expense</th>
                 <th>System Travel</th>
                 <th>Total Image</th>
                 <th>Status</th>
@@ -267,14 +267,20 @@
                     <thead class="bg-primary text-white mb-0">
                       <tr>
                         <th>Expense Type</th>
-                        <th>Expense</th>
-                        <th>Updated Expense</th>
+                        <th>Applied Expense</th>
+                        <th>Approved Expense</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       <!-- <tr (click)="expenseIndex=i" *ngFor="let item of expenseList;index as i"
                         [class.active]="expenseIndex == i"> -->
+                      <tr *ngIf="selectedExpense">
+                        <td>System Expense</td>
+                        <td>{{selectedExpense.system_expense}}</td>
+                        <td>{{selectedExpense.system_expense}}</td>
+                        <td></td>
+                      </tr>
                       <tr (click)="expenseIndex=i" *ngFor="let item of expenseList;index as i"
                         [class.active]="expenseIndex == i">
                         <td> {{item.description}}</td>
@@ -339,15 +345,15 @@
       <thead>
         <tr>
           <th>Expense Type</th>
-          <th>Amount</th>
-          <th>Updated Amount</th>
+          <th>Applied Expense</th>
+          <th>Approved Expense</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let e of expenseInfo">
           <td>{{e.expense_type}}</td>
           <td>{{e.amount}}</td>
-          <td>{{e.updated_amount}}</td>
+          <td>{{(!e.updated_amount && e.updated_amount!==0) ? e.amount  : e.updated_amount}}</td>
         </tr>
         <tr *ngIf="!(expenseInfo && expenseInfo.length)">
           <td colspan="3">No Record</td>

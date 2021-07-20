@@ -70,7 +70,7 @@ export class KanbanBoardComponent implements OnInit {
 
   refresh() {
     if (this.dashboardState) {
-      this.goToBoard({ _id: this.processId, name: this.processName });
+      this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       this.getProcessListByUser();
     } else {
       this.getProcessListByUser();
@@ -313,7 +313,7 @@ export class KanbanBoardComponent implements OnInit {
       if (data.response) {
         this.saveActivityLog(ticket, 0, 0);
       } else {
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       }
     });
   }
@@ -333,7 +333,7 @@ export class KanbanBoardComponent implements OnInit {
       windowClass: "accountModalClass",
     });
     activeModal.result.then((data) => {
-      this.goToBoard({ _id: this.processId, name: this.processName });
+      this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
     });
   }
 
@@ -366,7 +366,7 @@ export class KanbanBoardComponent implements OnInit {
         // }
         if (this.taskStatusBarData[0].data[0]) {
           this.common.showError('A Task Already In Progress');
-          this.goToBoard({ _id: this.processId, name: this.processName });
+          this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
           return false;
         }
         // this.taskStatusBarData[0].data[0] = ticket;
@@ -495,10 +495,10 @@ export class KanbanBoardComponent implements OnInit {
         if (data.nextFormType == 2 && data.isFormHere == 1) {
           this.openTransFormData(lead, type, data.nextFormType);
         } else {
-          this.goToBoard({ _id: this.processId, name: this.processName });
+          this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
         }
       } else {
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       }
       if (data.response) {
         this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
@@ -538,21 +538,22 @@ export class KanbanBoardComponent implements OnInit {
           this.openTransAction(lead, type, 1);
         } else if (formType == 1) {
           // this.openTransAction(lead, type, 2);
-          this.goToBoard({ _id: this.processId, name: this.processName });
+          this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
         } else {
-          this.goToBoard({ _id: this.processId, name: this.processName });
+          this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
         }
       } else {
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       }
     });
   }
 
 
   saveTransNextState(transaction, lead) {
+    console.log("lead",lead,"this.common.params.defaultIdentity",this.common.params.defaultIdentity);
     if (!transaction._next_state_id) {
       this.common.showError('Next state is missing');
-      this.goToBoard({ _id: this.processId, name: this.processName });
+      this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
     }
     else {
       const params = {
@@ -581,7 +582,8 @@ export class KanbanBoardComponent implements OnInit {
               this.openTransFormData(transaction, null, 1);
             } else {
               // this.openTransAction(lead, type, 2);
-              this.goToBoard({ _id: this.processId, name: this.processName });
+              console.log("this.common.params.defaultIdentity",this.common.params.defaultIdentity);
+              this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
             }
             // if (transaction._state_type == 2) {
             //   setTimeout(() => {
@@ -591,7 +593,7 @@ export class KanbanBoardComponent implements OnInit {
             //   // this.openTransAction(lead, type, 2);
             //   this.goToBoard({ _id: this.processId, name: this.processName });
             // }
-            this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
+            // this.saveActivityLog(lead, 0, 100, lead['log_start_time'], this.common.getDate());
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -669,7 +671,7 @@ export class KanbanBoardComponent implements OnInit {
       };
       const activeModal = this.modalService.open(ChatboxComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static' });
       activeModal.result.then(data => {
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       });
     } else {
       this.common.showError("Invalid Lead");
@@ -800,13 +802,13 @@ export class KanbanBoardComponent implements OnInit {
         } else {
           this.common.showError(res["msg"]);
         }
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       },
       (err) => {
         this.common.loading--;
         this.common.showError();
         console.log("Error: ", err);
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       }
     );
   }
@@ -867,7 +869,7 @@ export class KanbanBoardComponent implements OnInit {
   closeotherTaskStatus() {
     document.getElementById('taskStatus').style.display = 'none';
     this.resetProgressForm();
-    this.goToBoard({ _id: this.processId, name: this.processName });
+    this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
   }
 
   resetProgressForm() {
@@ -889,7 +891,7 @@ export class KanbanBoardComponent implements OnInit {
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       if (data.response) {
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       }
     });
   }
@@ -908,7 +910,7 @@ export class KanbanBoardComponent implements OnInit {
     activeModal.result.then((data) => {
       if (data.response) {
         // ticket.expected_hour = data.expectedHour;
-        this.goToBoard({ _id: this.processId, name: this.processName });
+        this.goToBoard({ _id: this.processId, name: this.processName,_default_identity:this.common.params.defaultIdentity });
       }
     });
   }

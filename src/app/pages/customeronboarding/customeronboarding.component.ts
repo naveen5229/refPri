@@ -84,8 +84,7 @@ export class CustomeronboardingComponent implements OnInit {
   formattedData = [];
   isShow = false;
 
-  meetingRoomName = null;
-  meetingRoomList = [];
+
   tableRoom = {
     data: {
       headings: {},
@@ -126,10 +125,7 @@ export class CustomeronboardingComponent implements OnInit {
       this.formattedData = [];
       this.isShow = false;
       this.adminList = [];
-    } else if (this.activeTab == "room") {
-      this.meetingRoomName = null;
-      this.meetingRoomList = [];
-    }
+    } 
   }
 
   addFoAdminUser() {
@@ -149,10 +145,6 @@ export class CustomeronboardingComponent implements OnInit {
     } else if (this.activeTab == 'wifi') {
       this.wifiFoId = event.id;
       this.getWifiList(event.id);
-      this.getOfficeDataForWifi(event.id);
-    } else if (this.activeTab == 'room') {
-      this.wifiFoId = event.id;
-      this.getMeetingRoomList(event.id);
       this.getOfficeDataForWifi(event.id);
     } else if (this.activeTab == 'userRole') {
       this.foId = event;
@@ -521,25 +513,6 @@ export class CustomeronboardingComponent implements OnInit {
       });
   }
   
-  getMeetingRoomList(id) {
-    this.meetingRoomList = [];
-    this.common.loading++;
-    this.api.get('Admin/getMeetingRoomList?foid='+id, 'I').subscribe(res => {
-      this.common.loading--;
-      if (res['code'] >0){
-        this.meetingRoomList = res['data'] || [];
-        console.log("meetingRoomList:",this.meetingRoomList);
-        (this.meetingRoomList && this.meetingRoomList.length) ? this.setTableRoom() : null;
-      }else{ 
-        this.common.showError(res['msg']); 
-      };
-    }, err => {
-      this.common.loading--;
-      this.common.showError();
-      console.log(err);
-    });
-  }
-
   selectOffice(event) {
     console.log("OfficeDataforWifi:", event);
     this.officeListId = event._id;
@@ -652,69 +625,6 @@ export class CustomeronboardingComponent implements OnInit {
   }
 
   // start: meeting room
-  setTableRoom() {
-    this.tableRoom.data = {
-      headings: this.generateHeadingsRoom(),
-      columns: this.getTableColumnsRoom()
-    };
-    return true;
-  }
-
-  generateHeadingsRoom() {
-    let headings = {};
-    for (var key in this.meetingRoomList[0]) {
-      if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
-      }
-    }
-    return headings;
-  }
-
-  getTableColumnsRoom() {
-    let columns = [];
-    this.meetingRoomList.map(campaign => {
-      let column = {};
-      for (let key in this.generateHeadingsRoom()) {
-        column[key] = { value: campaign[key], class: 'black', action: '' };
-      }
-      columns.push(column);
-    })
-    return columns;
-  }
-
-  addMeetingRoom() {
-    let param = {
-      foid: this.wifiFoId,
-      name: this.meetingRoomName,
-      officeid: this.officeListId,
-      requestId: null
-    }
-    if(!param.foid){
-      this.common.showError("FO-User is missing");
-      return false;
-    }
-    if(!param.name || param.name.trim()==""){
-      this.common.showError("Room Name is missing");
-      return false;
-    }
-    // console.log('param:', param); return false;
-    this.common.loading++;
-    this.api.post("Admin/addMeetingRoom", param, "I")
-      .subscribe(res => {
-        this.common.loading--;
-        if (res['code']>0) {
-          this.meetingRoomName = null;
-          this.common.showToast(res['msg']);
-          this.getMeetingRoomList(param.foid);
-        } else {
-          this.common.showError(res['msg']);
-        }
-      }, err => {
-        this.common.loading--;
-        this.common.showError();
-        console.log(err);
-      });
-  }
   // end: meeting room
 
   // start: userrole-----------------------------

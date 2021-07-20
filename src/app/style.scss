@@ -504,7 +504,12 @@ $color-dark:#000;
     }
   }
 }
+.timeslot{ 
+  .modal-dialog{
+      max-width: 90%!important;
+  }
 
+}
 
 table.dataTable tbody th {
   padding: 3px 10px !important;
@@ -514,8 +519,14 @@ table.dataTable tbody td{
    padding: 3px 11px !important;
 }
 
+  nb-card-body.min-h-auto{
+  min-height: auto !important;  
+  overflow: visible !important;
+ } 
 
-.bg-none{
- background-image:none;
- pointer-events: none;
+:host ::ng-deep{
+ nb-card-body.min-h-auto{
+  min-height: auto !important; 
+  overflow: visible !important;
+ } 
 }

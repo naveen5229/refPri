@@ -141,7 +141,7 @@
 </div>
 
 <!-- start: update date form -->
-<div class="modal-body" *ngIf="editType==1">
+<div class="modal-body" *ngIf="editType==1 && ticketType!=103">
     <div class="row mt-2">
         <div class="col-3">
             <label>Last Date:<span class="text-danger">*</span></label>
@@ -166,6 +166,43 @@
     </div>
 </div>
 <!-- end: update date form -->
+
+<!-- start: update scheduled date form -->
+<div class="modal-body" *ngIf="ticketType==103 && currentDate<updateLastDateForm.date && updateLastDateForm.lastDate>updateLastDateForm.date">
+    <div class="row mt-2">
+        <div class="col-3">
+            <label>Last Updated Date:<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <uj-date-time-picker [mind]="currentDate" [isStart]="false" [isTime]="true" (onChanged)="updateLastDateForm.date=$event" 
+            [dateTimeValue]="updateLastDateForm.date" [maxd]="updateLastDateForm.lastDate"  [maxt]="updateLastDateForm.lastDate">
+         
+            </uj-date-time-picker>
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-3">
+            <label>Reason:</label>
+        </div>
+        <div class="col-6">
+            <textarea row="2" cols="15" placeholder="Enter Reason" id="reason" name="reason" class="form-control" [(ngModel)]="updateLastDateForm.reason"></textarea>
+        </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col-12 text-right">
+            <button class="btn btn-primary btn-sm" id="updateExpDatebtn" (click)="updateAssignDate()">Update</button>
+        </div>
+    </div>
+</div>
+<!-- end: update scheduled date form -->
+
+<div class="modal-body" *ngIf="ticketType==103 && currentDate>updateLastDateForm.date || ticketType==103 && updateLastDateForm.lastDate<updateLastDateForm.date">
+    <div class="row">
+        <div class="col-6">
+            <label>Can't Update the date</label>
+        </div>
+    </div>
+</div>
 
 <!-- start: update project form -->
 <div class="modal-body" *ngIf="editType==3">
