@@ -1343,7 +1343,7 @@ export class TaskComponent implements OnInit {
           column[key] = {
             value: ticket[key],
             class: ticket["time_left"] <= 0 ? "blue font-weight-bold" : "blue",
-            action: [101, 102].includes(ticket._tktype)
+            action: [101, 102, 103].includes(ticket._tktype)
               ? this.editTask.bind(this, ticket, type)
               : null,
           };
@@ -1936,7 +1936,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Task as Hold",
           });
         }
-        if ([104, 111, 112, 113, 115].includes(ticket._tktype)) {//leave reject
+        if ([104, 111, 112, 113, 115, 211, 212, 213].includes(ticket._tktype)) {//leave or WFH reject
           icons.push({
             class: "fa fa-times text-danger",
             action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -2127,6 +2127,7 @@ export class TaskComponent implements OnInit {
 
   editTask(ticket, type, isProject = false) {
     console.log("type:", type);
+    console.log("ticket",ticket);
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
@@ -2136,6 +2137,10 @@ export class TaskComponent implements OnInit {
       editData: ticket,
       ticketId: ticket._tktid,
       ticketType: ticket._tktype,
+       lastDate: ticket._lastdate,
+       addtime: ticket.addtime,
+     // lastDate: ticket.expdate,
+      expDate: ticket.expdate,
       project: { id: (ticket.project.toLowerCase() != 'standalone') ? ticket._projectid : null, name: (ticket.project.toLowerCase() != 'standalone') ? ticket.project : null }
     };
 

@@ -5,6 +5,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApplyLeaveComponent } from '../../modals/apply-leave/apply-leave.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
+import { ApplyWFHComponent } from '../../modals/apply-wfh/apply-wfh.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-leave-management',
@@ -22,7 +24,8 @@ export class LeaveManagementComponent implements OnInit {
     public common: CommonService,
     public modalService: NgbModal,
     public api: ApiService,
-    public table:TableService
+    public table:TableService,
+    private router: Router
   ) {
     this.getAllAdmin();
     this.getUserGroupList()
@@ -97,5 +100,39 @@ export class LeaveManagementComponent implements OnInit {
  this.selectedPage='my-leaves';
 
     });
+  }
+
+  applyWFH(formType) {
+    let title = "Apply WFH";
+    let btn = "Apply";
+
+    this.common.params = {
+      userList: this.adminList,
+      groupList: this.groupList,
+      formType: formType,
+      title: title,
+      btn: btn
+    };
+    const activeModal = this.modalService.open(ApplyWFHComponent, {
+      size: "lg",
+      container: "nb-layout",
+      backdrop: "static",
+    });
+    activeModal.result.then((data) => {
+      console.log("data.response = ", data.response);
+      if (data.response) {
+        this.selectedPage = 'my-leaves';
+      }
+ this.selectedPage='my-leaves';
+
+    });
+  }
+
+  leaveType(formType) {
+    this.router.navigate(['/pages/leave-type-management']);
+  }
+
+  leaveSetting(formType) {
+    this.router.navigate(['/pages/leave-setting']);
   }
 }

@@ -86,7 +86,7 @@ export class MeetingComponent implements OnInit {
   allEntities = [];
   filteredEnitity = [];
   advFldForMtngCmplt = { is_external: false, mapped_refid: null }
-
+  selectAvailability = "Select User";
   @HostListener('document:click', ['$event'])
   clickout(event) {
     console.log('event triggered:', event);
@@ -808,7 +808,8 @@ export class MeetingComponent implements OnInit {
   }
 
   checkSchedule(type) {
+    this.selectAvailability = type == 0?"Select User " : "Select Room";
     this.scheduleType = type;
-    this.checkAvailability()
+    this.checkAvailability();
   }
 }

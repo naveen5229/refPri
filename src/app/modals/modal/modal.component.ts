@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,8 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
-  // Output() modalClose : EventEmitter<any> = new EventEmitter<any>();
-  // constructor(private router : Router) { }
+  @Input() photo;
+  // @Output() modalClose : EventEmitter<any> = new EventEmitter<any>();
+  //  constructor(private router : Router) { }
 
   ngOnInit() {
   }
@@ -18,7 +19,7 @@ export class ModalComponent implements OnInit {
   //   this.modalClose.next($event);
   // }
 
-  @Input() photo;
+  
 
   getLargeImageUrl(imageId) {
     return `https://picsum.photos/500?image=${imageId}`;

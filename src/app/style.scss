@@ -504,7 +504,7 @@ $color-dark:#000;
     }
   }
 }
-.accountModalClass{ 
+.timeslot{ 
   .modal-dialog{
       max-width: 90%!important;
   }
@@ -519,8 +519,22 @@ table.dataTable tbody td{
    padding: 3px 11px !important;
 }
 
+<<<<<<< HEAD
 
 .bg-none{
  background-image:none;
  pointer-events: none;
 }
+=======
+  nb-card-body.min-h-auto{
+  min-height: auto !important;  
+  overflow: visible !important;
+ } 
+
+:host ::ng-deep{
+ nb-card-body.min-h-auto{
+  min-height: auto !important; 
+  overflow: visible !important;
+ } 
+}
+>>>>>>> c6f396ed13043f6c0fa0ba82a8b6b985c49620a2

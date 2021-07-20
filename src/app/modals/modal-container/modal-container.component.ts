@@ -28,9 +28,9 @@ export class ModalContainerComponent implements OnDestroy  {
 
         // Go back to home page after the modal is closed
         this.currentDialog.result.then(result => {
-            router.navigateByUrl('/');
+            router.navigateByUrl('pages/leave-type-management');
         }, reason => {
-            router.navigateByUrl('/');
+            router.navigateByUrl('pages/leave-type-management');
         });
     });
   }

@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit {
       this.common.loading++;
       this.api.post('FoAdmin/login', params).subscribe(res => {
         this.common.loading--;
-        if (res['code']>0) {
+        if (res['code'] > 0) {
           this.listenOTP = true;
           this.otpCount = 30;
           if (res['data'] && res['data']['login_type'] && res['data']['login_type'] > 0) {
@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit {
       this.api.post('Login/login', params)
         .subscribe(res => {
           this.common.loading--;
-          if (res['code']>0) {
+          if (res['code'] > 0) {
             this.listenOTP = true;
             this.otpCount = 30;
             this.qrCodeRegenrate();
@@ -177,10 +177,22 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('ITRM_USER_TOKEN', res['data'][0]['authkey']);
           localStorage.setItem('ITRM_USER_DETAILS', JSON.stringify(res['data'][0]));
           localStorage.setItem('ITRM_LOGGED_IN_BY', this.user._loggedInBy);
+          if (res['data'][0]["generalProfiles"]) {
+            res['data'][0]["generalProfiles"].forEach(ele => {
+              if (ele.profile_name == 'Landing Page') {
+                // localStorage.setItem('LANDING_PAGE','pages/task' );
+                localStorage.setItem('LANDING_PAGE', ele.profile_value.substring(1, ele.profile_value.length));
+              }else{
+                localStorage.setItem('LANDING_PAGE','pages/task' );
+              }
+            });
+          }else{
+            localStorage.setItem('LANDING_PAGE','pages/task' );
+          }
 
           this.user._details = res['data'][0];
           this.user._token = res['data'][0]['authkey'];
-          this.user.loggedInUser = {id: this.user._details.id, name: this.user._details.name};
+          this.user.loggedInUser = { id: this.user._details.id, name: this.user._details.name };
           this.getUserPagesList();
           this.messageService.updateWebToken();
         } else {
@@ -260,14 +272,15 @@ export class LoginComponent implements OnInit {
     this.api.get('UserRole/getUserPages.json?adminId=' + this.user._details.id)
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         this.user._pages = res['data'].filter(page => { return page._userid; });
         localStorage.setItem('ITRM_USER_PAGES', JSON.stringify(this.user._pages));
         this.user.filterMenu("pages", "pages");
-        if(this.user._loggedInBy == 'customer'){
-          this.router.navigate(['/pages/shift-logs']);
-        }else{
-          this.router.navigate(['/pages/task']);
+        console.log("UserService._landingPage", localStorage.getItem("LANDING_PAGE"));
+        if (this.user._loggedInBy == 'customer') {
+          this.router.navigate([localStorage.getItem("LANDING_PAGE")]);
+        } else {
+          this.router.navigate([localStorage.getItem("LANDING_PAGE")]);
         }
       }, err => {
         this.common.loading--;
