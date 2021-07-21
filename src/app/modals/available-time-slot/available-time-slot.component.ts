@@ -33,7 +33,7 @@ export class AvailableTimeSlotComponent implements OnInit {
         case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
         default: return `${parseInt(JSON.stringify(value))}`;
       }
-    }
+    },
   };
 
   busySchedules = [];
@@ -65,6 +65,18 @@ export class AvailableTimeSlotComponent implements OnInit {
       }
     });
     console.log(this.busySchedules, bookedSchedules);
+    console.log('book schedules', bookedSchedules);
+    console.log('param values',this.common.params);
+
+    this.common.params.preBookedScheduler.map((item:any)=>{
+    item.option.translate((value:any)=>{
+    console.log('translate values',value);
+    });
+    });
+
+  for(let item of this.common.params.preBookedScheduler){
+   console.log('trasnslate options',item.option.translate);
+  }
 
     this.options.getTickColor = (value: number): string => {
       for (let i = 0; i < bookedSchedules.length; i++) {

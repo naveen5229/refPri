@@ -195,3 +195,13 @@ full-calendar {
       font-size: 12px;
     }
 }
+
+
+:host ::ng-deep{
+.fc-timegrid-event-harness {
+  height: 24px;
+  transform: translate(0px, 10px);
+}
+}
+
+
