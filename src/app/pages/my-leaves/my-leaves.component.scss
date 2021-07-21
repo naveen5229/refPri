@@ -113,17 +113,17 @@ $active-btn:#ea7736;
 }
 
 .toptab {
-      padding: 10px 0px;
-      margin: 0;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      gap: 5px;
-      align-items: center;
-      position: absolute;
-      right: 235px;
-      top: 3px;
-      width: 100%;
+   padding: 10px 0px;
+   margin: 0;
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-end;
+   gap: 5px;
+   align-items: center;
+   position: absolute;
+   right: 228px;
+   top: 3px;
+   width: 100%;
 }
 
 .out-topnav-dept::-webkit-scrollbar {
@@ -132,6 +132,18 @@ $active-btn:#ea7736;
   background-color: #c1c1c1 !important;
 }
 
+.search-block {
+ button.search-btn{
+height: 28px;
+display: flex;
+align-items: center;
+justify-content: center;
+ }
+
+
+}
+
+
 .hiddenby {
   opacity: 1;
   transition: .5s;
@@ -139,7 +151,7 @@ $active-btn:#ea7736;
   .nav-link {
       font-size: .75rem;
       text-align: center;
-      padding: 4px 20px;
+      padding: 4px 15px;
       background-color: #c4c4c4;
       color: #fff;
       cursor: pointer;
@@ -443,11 +455,10 @@ Due to the split circle of progress-left and progress right, we must use the ani
     font-size: 8px;
     color: white;
     text-align: center;
-    vertical-align: middle;
     line-height: 11px;
     background: transparent;
   }
- 
+
 }
 
 

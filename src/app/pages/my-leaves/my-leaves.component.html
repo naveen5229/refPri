@@ -81,7 +81,11 @@
           <div class="date-filter">
             <uj-date-time-picker [isTime]="false"> </uj-date-time-picker>
             <uj-date-time-picker [isTime]="false"> </uj-date-time-picker>
+             <div class="search-block">
+               <button type="button" class="btn btn-primary search-btn"> <i class="fa fa-search"></i> </button>
+             </div>
           </div>
+
 
         </div>
 
@@ -110,30 +114,23 @@
             <td>{{item.Status}}</td>
             <td>{{item.assignedby}}</td>
             <td>{{item.assignedto}}</td>
+
             <td>{{item.from_date}}</td>
             <td>{{item.to_date}}</td>
             <td>{{item.completeddate}}</td>
             <td>{{item.ticket_type}}</td>
             <td>
-
               <div class="action-block icon-action">
-                <!-- <button class="btn btn-success"> <i class="fa fa-check" aria-hidden="true"></i> </button>
-                <button class="btn btn-danger" (click)="deleteLeave(item)"> <i class="fas fa-trash-alt"></i> </button>
-                <button class="btn btn-warning"> <i class="fa fa-ban" aria-hidden="true"></i> </button> -->
-
-                <i class="fa fa-check" aria-hidden="true"></i>
-                <i class="fas fa-trash-alt" (click)="deleteLeave(item)"></i>
-                <i class="fa fa-ban" aria-hidden="true"></i>
+                <i class="fa fa-check" *ngIf="selectedTab != 'cc'" aria-hidden="true"></i>
+                <i class="fas fa-trash-alt" *ngIf="selectedTab != 'cc'" (click)="deleteLeave(item)"></i>
+                <i class="fa fa-ban" aria-hidden="true" *ngIf="selectedTab != 'cc'"></i>
+                <i class="fas fa-check-square text-warning" *ngIf="selectedTab == 'cc'" aria-hidden="true"></i>
+                <i class="fas fa-comments" aria-hidden="true"></i>
               </div>
-
-
-
             </td>
           </tr>
         </tbody>
       </table>
-
-
     </div>
   </nb-card-body>
 </nb-card>
