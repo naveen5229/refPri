@@ -140,6 +140,7 @@ import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.c
 import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
 import { ModalComponent } from './modals/modal/modal.component';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
+import { GeneralModalComponent } from './modals/general-modal/general-modal.component';
 
 
 
@@ -238,6 +239,7 @@ const PAGE_COMPONENTS = [
   ModalComponent,
   ModalContainerComponent,
   ApplyWFHComponent,
+  GeneralModalComponent,
  
 ];
 

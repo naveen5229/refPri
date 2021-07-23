@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h5 class="modal-title text-capitalize" id="modal-basic-title">{{title}}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal(false)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row modal-info" *ngFor="let number of numbers;">
+    <div class="col head">
+      <label>{{data[number*2]['heading']+':'}}</label>
+    </div>
+    <div class="col value">
+      <p class="mb-0"> {{data[number*2]['value']}} </p>
+
+    </div>
+    <div *ngIf="data[number*2+1]" class="col head">
+      <label>{{data[number*2+1]?data[number*2+1]['heading']+':':''}}</label>
+    </div>
+    <div *ngIf="data[number*2+1]" class="col value">
+      <p class="mb-0"> {{data[number*2+1]?data[number*2+1]['value']:''}} </p>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer" *ngIf="isBtn">
+  <div class="row">
+    <button class="btn btn-primary" (click)="closeModal(false)">Back</button>
+    <button class="btn btn-primary" (click)="closeModal(true)">SAVE</button>
+  </div>
+</div>
