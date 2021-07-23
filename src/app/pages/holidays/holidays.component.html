@@ -24,17 +24,12 @@
       <div class="col-2">Filter:</div>
       <div class="col-3">
         <select class="form-control" (change)="onSelectFilter($event.target.value)">
-          <option value="">All</option>
-          <option value="1">Fixed</option>
-          <option value="2">Optional</option>
-          <option value="3">Without Sunday</option>
+          <option *ngFor="let item of holidaytypes;index as i" [value]="i">{{item}}</option>
         </select>
       </div>
     </div>
     <div>
       <smart-table [data]="table.data" [settings]="table.settings" id="tableHoliday"></smart-table>
-
-
     </div>
   </nb-card-body>
 </nb-card>

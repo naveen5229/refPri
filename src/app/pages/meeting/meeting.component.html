@@ -8,10 +8,10 @@
   </nb-card-header>
 
   <nb-card-body>
-    <div class="row ">
+    <div class="row" (click)="$event.target.id == 'filterPop'? filterEnabled = false:null">
       <div class="col-6">
-        <button class="btn btn-primary btn-sm allicons cursor-pointer" id="addMeeting" (click)="addMetting(2)"><i class="fa fa-plus"
-            style="font-size: 13px;" aria-hidden="true"></i><label class="pl-1">New
+        <button class="btn btn-primary btn-sm allicons cursor-pointer" id="addMeeting" (click)="addMetting(2)"><i
+            class="fa fa-plus" style="font-size: 13px;" aria-hidden="true"></i><label class="pl-1">New
             Meeting</label></button>
         <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting"
           (click)="checkAvailability();windowType='userSchedule'"
@@ -34,27 +34,28 @@
       </div>
 
       <div class="col-6" *ngIf="windowType=='userSchedule'">
-        <div class="row">
+        <div class="row align-items-center">
           <div class="col-4">
-            <div class="row mb-2">
+            <div class="row">
               <div class="col-6">
-                  <label class="form-check-inline">
-                      <input class="form-check-input"  type="radio" name="mode" value="0" (click)="checkSchedule('0')" checked>
-                      User
-                  </label>
+                <label class="form-check-inline">
+                  <input class="form-check-input" type="radio" name="mode" value="0" (click)="checkSchedule('0')"
+                    checked>
+                  User
+                </label>
               </div>
               <div class="col-6">
-                  <label class="form-check-inline">
-                      <input class="form-check-input"  type="radio" name="mode" value="1" (click)="checkSchedule('1')">
-                      Room
-                  </label>
+                <label class="form-check-inline">
+                  <input class="form-check-input" type="radio" name="mode" value="1" (click)="checkSchedule('1')">
+                  Room
+                </label>
               </div>
-          </div>
+            </div>
           </div>
           <div class="col-2 my-auto pl-0 pr-0" style="font-size: 14px;">
-            {{selectAvailability}} 
+            {{selectAvailability}}
           </div>
-          <div class="col-6 pl-0" *ngIf="scheduleType==0">
+          <div class="col-6 pl-0" *ngIf="scheduleType == 0">
             <auto-suggestion [data]="adminList" display='name' (onSelected)="schedule.user = $event;checkAvailability()"
               seperator="-" placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
               [preSelected]="(schedule.user && schedule.user.id>0) ? {name: schedule.user.name} : {name:''}">
@@ -75,9 +76,9 @@
         <div class="row ml-0 mr-0 meetingHeaders">
           <div class="col-4">Past Meetings</div>
           <div class="col-8 my-auto" (click)="propogateEvent($event)">
-            <i class="fas fa-filter float-right cursor-pointer" (click)="filterEnable('pastfilterPop')"
+            <i class="fas fa-filter float-right cursor-pointer" (click)="filterEnabled = !filterEnabled"
               title="Filter Date Range"></i>
-            <div id="pastfilterPop" class="filterPop">
+            <div *ngIf="filterEnabled" id="filterPop" class="filterPop">
               <div>Start Date:<uj-date-time-picker [maxd]="currentDate" [isStart]="false" [isTime]="false"
                   (onChanged)="meetingData.startDate=$event" [dateTimeValue]="meetingData.startDate">
                 </uj-date-time-picker>
@@ -95,58 +96,61 @@
           <div class="col-12">
             <div class="row cardStyle" *ngFor="let meeting of meetingData.pastData"
               [ngStyle]="{'background':meeting._meeting_type==2 ? 'rgba(255, 238, 236)' : 'rgba(209, 242, 246)'}">
-              <div class="col-2" *ngIf="meeting.schedule_time">
-                <div class="row textBind headFont font-weight-bold">{{meeting.schedule_time}}
+              <div class="col-3 pl-0" *ngIf="meeting.schedule_time">
+                <div class="textBind headFont font-weight-bold">{{meeting.schedule_time}}
                 </div>
-                <div class="row subFont">Duration : {{meeting.duration}}</div>
+                <div class="subFont">Duration : {{meeting.duration}}</div>
               </div>
 
-              <div class="col-2 my-auto" *ngIf="!meeting.schedule_time">
+              <div class="col-3 px-0" *ngIf="!meeting.schedule_time">
                 <div class="row subFont">Unscheduled</div>
               </div>
 
-              <div class="col-6">
+              <div class="col-5">
                 <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
                 </div>
                 <div class="row subFont">
                   <div class="col-6 p-0">{{meeting.host}}</div>
-                  <div class="col-6 pr-0" *ngIf="meeting._room_id"><i class="fas fa-door-open pr-2" title="Room No."></i>{{meeting.info}}
+                  <div class="col-6 px-0" *ngIf="meeting._room_id"><i class="fas fa-door-open pr-2"
+                      title="Room No."></i>{{meeting.info}}
                   </div>
-                  <div class="col-6 pr-0" *ngIf="!meeting._room_id && meeting._link"><i class="fab fa-chrome pr-2" title="Follow Link"></i><a
-                      href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
+                  <div class="col-6 pr-0" *ngIf="!meeting._room_id && meeting._link"><i class="fab fa-chrome pr-2"
+                      title="Follow Link"></i><a href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
                 </div>
               </div>
-              <div class="col-3">
+              <div class="col-4 pr-0 meeting-actions">
                 <span id="chatIcon" title="Chat" class="cursor-pointer"
                   *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments text-warning pl-2 font-size"
+                  <i class="fas fa-comments text-warning pl-2"
                     *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
 
                   <div style="display:inline; position: relative;"><i
-                      class="fas fa-comments text-success new-comment pl-2 font-size"
+                      class="fas fa-comments text-success new-comment pl-2"
                       *ngIf="meeting._unreadcount > 0"><span>{{meeting._unreadcount}}</span></i>
                   </div>
 
-                  <i class="fas fa-comments no-comment pl-2 font-size" *ngIf="meeting._unreadcount == -1"></i>
+                  <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
+
+
 
                 <span id="editMeeting"
                   *ngIf="[meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && [0,2].includes(meeting._status)">
-                  <i class="fas fa-edit text-info pl-2 font-size"
+                  <i class="fas fa-edit text-info pl-2"
                     title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
                     (click)="editMeeting(meeting, 2, true)"></i>
                 </span>
 
                 <span id="reject"
                   *ngIf=" (![-1,5].includes(meeting._status) && meeting._host == this.userService.loggedInUser.id)">
-                  <i class="fas fa-window-close text-danger pl-2 font-size" title="Cancel"
+                  <i class="fas fa-window-close text-danger pl-2" title="Cancel"
                     (click)="updateMeetingStatus(meeting, 'past','reject')"></i>
                 </span>
 
                 <span id="actionsForPast"
                   *ngIf="[5, 2].includes(meeting._status) && [meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && meeting._tktid > 0 && meeting._meeting_type != 2">
-                  <i class="fa fa-caret-square-o-down pl-2 font-size" *ngIf="meeting._status == 5"
+                  <i class="fa fa-caret-square-o-down pl-2" *ngIf="meeting._status == 5"
                     title="Create Follow Up Meeting" (click)="editMeeting(meeting, 0, false)"></i>
                   <!-- <img src="../../../assets//meetingActions/followup.png" class="imgicn pl-2"
                     *ngIf="meeting._status == 5" title="Create FolloUp Meeting"
@@ -155,13 +159,13 @@
 
                 <span id="retweet"
                   *ngIf="[meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && meeting._tktid > 0  && [5,-1].includes(meeting._status) && meeting._meeting_type != 2">
-                  <i class="fa fa-retweet pl-2 font-size" title="Re-Active"
+                  <i class="fa fa-retweet pl-2" title="Re-Active"
                     (click)="changeTicketStatusWithConfirm(meeting, 0, 0)"></i>
                 </span>
 
                 <span id="statusAction"
                   *ngIf="[0,2].includes(meeting._status) && [meeting._host].includes(this.userService.loggedInUser.id)">
-                  <i class="fa fa-thumbs-up text-success pl-2 font-size" title="Complete"
+                  <i class="fa fa-thumbs-up text-success pl-2" title="Complete"
                     (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
                   <!-- <img src="../../../assets//meetingActions/completed.png" class="imgicn pl-2" title="Complete"
                     (click)="getUserActivityUpdate(meeting, 0, 5)"> -->
@@ -194,46 +198,55 @@
         </div>
         <div class="row ml-0 mr-0 meetingData">
           <div class="col-12">
-            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData"
+            <div class="row cardStyle" *ngFor="let meeting of meetingData.upcomingData;index as i"
               [ngStyle]="{'background':meeting._meeting_type==2 ? 'rgba(255, 238, 236)' : 'rgba(209, 242, 246'}">
-              <div class="col-2" *ngIf="meeting.schedule_time">
-                <div class="row textBind headFont font-weight-bold">{{meeting.schedule_time}}
+              <div class="col-3 pl-0" *ngIf="meeting.schedule_time">
+                <div class=" textBind headFont font-weight-bold">{{meeting.schedule_time}}
                 </div>
-                <div class="row subFont">Duration : {{meeting.duration}}</div>
+                <div class=" subFont">Duration : {{meeting.duration}}</div>
               </div>
 
-              <div class="col-2 my-auto" *ngIf="!meeting.schedule_time">
+              <div class="col-3 pl-0 my-auto" *ngIf="!meeting.schedule_time">
                 <div class="row subFont">Unscheduled</div>
               </div>
 
-              <div class="col-6">
-                <div class="row textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
+              <div class="col-4 px-0">
+                <div class="textBind headFont font-weight-bold" title="{{meeting.subject}}">{{meeting.subject}}
                 </div>
-                <div class="row subFont">
-                  <div class="col-6 p-0">{{meeting.host}}</div>
-                  <div class="col-6 pr-0" *ngIf="meeting._room_id"><i class="fas fa-door-open pr-2" title="Room No."></i>{{meeting.info}}
+                <div class="subFont row no-gutters">
+                  <p class="col-6" class="mb-0"> {{meeting.host}}</p>
+
+                  <div class="col-6 text-right" *ngIf="meeting._room_id"><i class="fas fa-door-open pr-2"
+                      title="Room No."></i>{{meeting.info}}
                   </div>
-                  <div class="col-6 pr-0" *ngIf="!meeting._room_id && meeting._link"><i class="fab fa-chrome pr-2" title="Follow Link"></i><a
-                      href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
+                  <div *ngIf="!meeting._room_id && meeting._link"><i class="fab fa-chrome pr-2"
+                      title="Follow Link"></i><a href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
                 </div>
               </div>
-              <div class="col-3">
+
+              <div class="col-4 pr-0 meeting-actions">
                 <span id="chatIcon" title="Chat" class="cursor-pointer"
                   *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments text-warning pl-2 font-size"
-                    *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments text-warning" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
 
-                  <div style="display:inline; position: relative;"><i
-                      class="fas fa-comments text-success new-comment pl-2 font-size"
+                  <div style="display:inline; position: relative;"><i class="fas fa-comments text-success new-comment"
                       *ngIf="meeting._unreadcount > 0"><span>{{meeting._unreadcount}}</span></i>
                   </div>
 
-                  <i class="fas fa-comments no-comment pl-2 font-size" *ngIf="meeting._unreadcount == -1"></i>
+                  <i class="fas fa-comments no-comment" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
+
+                <span class="cancel-meeting"> <i class="fa fa-times text-danger"></i> </span>
+                <span class="mark-complete"> <i class="fa fa-thumbs-up text-success"></i> </span>
+                <span (click)="deleteMeeting(i)"> <i class="fa fa-trash text-danger"></i> </span>
+                <!-- <span class="mark-complete"> <i class="fa fa-thumbs-up text-warning"></i> </span> -->
+                <!-- <span class="reactive ml-2"> <i class="fa fa-retweet"></i></span> -->
+
+                <!-- <span class=""></span> -->
+
                 <span id="editMeeting" *ngIf="meeting._host == loggedInUser && meeting._aduserid == loggedInUser">
-                  <i class="fas fa-edit text-info pl-2 font-size"
-                    title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
+                  <i class="fas fa-edit text-info" title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
                     (click)="editMeeting(meeting, 2, true)"></i>
                   <!-- <img src="../../../assets//meetingActions//edit.png" class="imgicn pl-2"
                     title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
@@ -241,9 +254,9 @@
                 </span>
                 <span id="acceptReject" *ngIf="(meeting._tktype == 110 && meeting._mp_status == 0) || (meeting._status == 0 &&
                 meeting._host == this.userService.loggedInUser.id)">
-                  <i class="fa fa-check-square text-secondary pl-2 font-size" title="Ack"
+                  <i class="fa fa-check-square text-secondary" title="Ack"
                     (click)="updateMeetingStatus(meeting, 'upcoming','ack')"></i>
-                  <i class="fas fa-window-close text-danger pl-2 font-size" title="Reject"
+                  <i class="fas fa-window-close text-danger" title="Reject"
                     (click)="updateMeetingStatus(meeting, 'upcoming','reject')"></i>
                   <!-- <img src="../../../assets//meetingActions/acknowledge.png" class="imgicn pl-2" title="Ack"
                     (click)="ackTaskByCcUser(meeting, null, 1)">
@@ -251,7 +264,7 @@
                     (click)="ackTaskByCcUser(meeting, null, -1)"> -->
                 </span>
               </div>
-              <div class="col-1 labelPos">
+              <div class="col-1 pr-0 labelPos">
                 <div class="buttonJelly" *ngIf="meeting._meeting_type == 2">
                   <p>To-Do</p>
                 </div>
