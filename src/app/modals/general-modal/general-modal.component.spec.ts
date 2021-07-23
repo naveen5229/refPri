@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeaveSettingComponent } from './leave-setting.component';
+import { GeneralModalComponent } from './general-modal.component';
 
-describe('LeaveSettingComponent', () => {
-  let component: LeaveSettingComponent;
-  let fixture: ComponentFixture<LeaveSettingComponent>;
+describe('GeneralModalComponent', () => {
+  let component: GeneralModalComponent;
+  let fixture: ComponentFixture<GeneralModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LeaveSettingComponent ]
+      declarations: [ GeneralModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LeaveSettingComponent);
+    fixture = TestBed.createComponent(GeneralModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
