@@ -242,12 +242,9 @@ const PAGE_COMPONENTS = [
   ModalComponent,
   ModalContainerComponent,
   ApplyWFHComponent,
-<<<<<<< HEAD
 
-=======
   GeneralModalComponent,
  
->>>>>>> prashant
 ];
 
 @NgModule({
