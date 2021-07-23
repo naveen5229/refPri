@@ -121,9 +121,12 @@
             <td>{{item.ticket_type}}</td>
             <td>
               <div class="action-block icon-action">
-                <i class="fa fa-check" *ngIf="selectedTab != 'cc'" aria-hidden="true"></i>
-                <i class="fas fa-trash-alt" *ngIf="selectedTab != 'cc'" (click)="deleteLeave(item)"></i>
-                <i class="fa fa-ban" aria-hidden="true" *ngIf="selectedTab != 'cc'"></i>
+                <i class="fa fa-check" *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
+                  aria-hidden="true"></i>
+                <i class="fas fa-trash-alt" *ngIf="selectedTab != 'cc' && item.assignedby == currentUser"
+                  (click)="deleteLeave(item)"></i>
+                <i class="fa fa-ban" aria-hidden="true"
+                  *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"></i>
                 <i class="fas fa-check-square text-warning" *ngIf="selectedTab == 'cc'" aria-hidden="true"></i>
                 <i class="fas fa-comments" aria-hidden="true"></i>
               </div>

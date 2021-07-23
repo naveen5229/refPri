@@ -1,4 +1,4 @@
-<nb-card style="border: 0px;">
+<nb-card>
   <!-- <nb-card-header>
 
   </nb-card-header> -->
@@ -69,9 +69,7 @@
     <div class="search-group">
       <div class="input-group">
         <label for=""> Department: </label>
-        <button type="button" class="btn search-btn btn-primary">
-          <i class="fas fa-search"></i>
-        </button>
+     
         <div class="form-outline">
           <select [(ngModel)]="selectedDept.id" class="form-control">
             <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
@@ -81,9 +79,7 @@
 
       <div class="input-group">
         <label for=""> Ticket Process: </label>
-        <button type="button" class="btn search-btn btn-primary">
-          <i class="fas fa-search"></i>
-        </button>
+      
         <div class="form-outline">
           <select [(ngModel)]="selectedTicketProcess.id" class="form-control">
             <option *ngFor="let tp of ticketProcesses" [value]="tp._id">{{tp.name}}</option>

@@ -242,10 +242,8 @@ const PAGE_COMPONENTS = [
   ModalComponent,
   ModalContainerComponent,
   ApplyWFHComponent,
-
   GeneralModalComponent,
- 
-];
+ ];
 
 @NgModule({
   declarations: [AppComponent,

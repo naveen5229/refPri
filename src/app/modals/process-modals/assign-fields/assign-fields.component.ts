@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonService } from '../../../Service/common/common.service';
 import { ApiService } from '../../../Service/Api/api.service';
@@ -19,8 +19,7 @@ export class AssignFieldsComponent implements OnInit {
   tableData:any;
   closeResult:any;
   fielddata:any;
-
-
+  activeModal1:any;
   assign = {
     left: [],
     right: []
@@ -53,9 +52,9 @@ formType = null;
 
 
 setfieldRequired(index:number){
-
-let isrequired = this.tableData._param_child[index].r_isdashboard_info;
+let isrequired:boolean = this.tableData._param_child[index].r_isdashboard_info;
 isrequired = !isrequired;
+console.log('isrequired: ', isrequired);
 }
 
 gettablefields(item:any,content:any,index:number){
@@ -70,13 +69,11 @@ this.tableData.coltitle = item.r_coltitle;
 
 if(this.tableData._param_child){
   this.common.params = { process: { id: this.processId, name: null } };
-
-    const activeModal = this.modalService.open(content, { size: 'md', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-    console.log('data: ', data);
-      activeModal.close();
+     this.activeModal1 = this.modalService.open(content, { size: 'md', container: 'nb-layout', backdrop: 'static' });
+     this.activeModal1.result.then(data => {
+      this.getFields();
     });
-}
+  }
 
 else{
  this.common.showError('No data for this fields');
@@ -278,8 +275,9 @@ console.log('this.assignOrder() after json parsing',updatedarray);
         if (res['code'] == 1) {
           if (res['data'][0].y_id > 0) {
             this.common.showToast(res['data'][0].y_msg);
-            // this.activeModal.close(true);
-            this.getFields();
+                 this.getFields();
+                //  this.closebutton.nativeElement.click();
+                this.activeModal1.close();
           } else {
             this.common.showError(res['data'][0].y_msg);
           }
@@ -356,8 +354,8 @@ console.log('this.assignOrder() after json parsing',updatedarray);
   }
 
   markImportant(item) {
-
     item.r_isdashboard_info = !item.r_isdashboard_info;
+    console.log('item.r_isdashboard_info: ', item);
   }
 
   addGlobalfield() {
