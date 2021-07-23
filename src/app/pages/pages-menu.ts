@@ -424,9 +424,9 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       },
       {
-        title: 'Leave Setting',
+        title: 'Leave Policy',
         icon: 'wifi-outline',
-        link: '/pages/leave-setting',
+        link: '/pages/leave-policy',
         home: true,
       },
     ]
