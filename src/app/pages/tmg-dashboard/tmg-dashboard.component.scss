@@ -1,3 +1,14 @@
+nb-card{
+  border: 0px;
+  height: calc(100vh - 44px);
+  overflow: auto;
+}
+tmg-task, tmg-task, ngx-tmg-ticket, ngx-tmg-meeting, ngx-tmg-visit{
+  height: calc(100vh - 136px);
+  overflow: auto;
+  display: block;
+}
+
 .default {
   color: #000;
   // border-radius: 4.17rem;
