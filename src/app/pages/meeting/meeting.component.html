@@ -118,7 +118,7 @@
                       title="Follow Link"></i><a href="{{meeting.info}}" target="blank" class="pl-2">Link</a></div>
                 </div>
               </div>
-              <div class="col-4 pr-0 meeting-actions">
+              <div class="col-4 pr-0 past-meeting-actions">
                 <span id="chatIcon" title="Chat" class="cursor-pointer"
                   *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
@@ -127,7 +127,7 @@
 
                   <div style="display:inline; position: relative;"><i
                       class="fas fa-comments text-success new-comment pl-2"
-                      *ngIf="meeting._unreadcount > 0"><span>{{meeting._unreadcount}}</span></i>
+                      *ngIf="meeting._unreadcount > 0"><span class="chat-items">{{meeting._unreadcount}}</span></i>
                   </div>
 
                   <i class="fas fa-comments no-comment pl-2" *ngIf="meeting._unreadcount == -1"></i>

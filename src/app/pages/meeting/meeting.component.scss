@@ -206,11 +206,27 @@ full-calendar {
 
 
 .meeting-actions {
-  span  {
+  span {
     font-size: 18px;
     margin-left: 7px;
   }
 }
+
+.past-meeting-actions {
+  span {
+    font-size: 20px;
+    margin-left: 4px;
+  }
+span.chat-items {
+ font-size: 8px;
+ position: relative;
+ top: -19px;
+ left: -5px;
+//  font-weight: 600;
+}
+}
+
+
 
 .meeting-actions {
   display: flex;
