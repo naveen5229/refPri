@@ -140,6 +140,7 @@ import { TicketFieldsComponent } from './modals/process-modals/ticket-fields/tic
 import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
 import { ModalComponent } from './modals/modal/modal.component';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
+import { GeneralModalComponent } from './modals/general-modal/general-modal.component';
 
 
 
@@ -241,6 +242,7 @@ const PAGE_COMPONENTS = [
   ModalComponent,
   ModalContainerComponent,
   ApplyWFHComponent,
+  GeneralModalComponent,
 
 ];
 
