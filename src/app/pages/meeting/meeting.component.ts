@@ -47,7 +47,7 @@ export class MeetingComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      right: 'timeGridDay,dayGridMonth,timeGridWeek'
     },
     // initialEvents: this.INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     events: [],
@@ -308,6 +308,7 @@ this.meetingData.upcomingData.splice(index,1);
         if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
         if (!type) {
           this.meetingData.pastData = res['data'] || [];
+          console.log('this.meetingData.pastData: ', this.meetingData.pastData);
         } else {
           this.meetingData.upcomingData = res['data'] || [];
         }

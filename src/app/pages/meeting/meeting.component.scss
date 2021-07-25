@@ -213,17 +213,29 @@ full-calendar {
 }
 
 .past-meeting-actions {
+  display: flex;
+  align-items: center;
+
+ span:hover {
+   cursor: pointer;
+   i {
+     transition: all linear 0.2s;
+     transform: scale(1.3);
+   }
+ }
+
   span {
     font-size: 20px;
     margin-left: 4px;
   }
-span.chat-items {
- font-size: 8px;
- position: relative;
- top: -19px;
- left: -5px;
-//  font-weight: 600;
-}
+
+  span.chat-items {
+    font-size: 8px;
+    position: relative;
+    top: -19px;
+    left: -5px;
+    //  font-weight: 600;
+  }
 }
 
 
@@ -232,4 +244,36 @@ span.chat-items {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
+  .fa-times {
+    font-size: 125%;
+  }
+
+  // span{
+  //  width: 30px;
+  //  height: 30px;
+  //  border-radius:50%;
+
+  // }
+
+  span:hover {
+    cursor: pointer;
+
+    i {
+      transition: all linear 0.2s;
+      transform: scale(1.3);
+    }
+
+  }
+
+  span.new-comment {
+    font-size: 8px;
+    position: absolute;
+    left: -6px;
+    top: 3px;
+
+  }
 }
+
+
+

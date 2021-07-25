@@ -127,7 +127,8 @@
                   (click)="deleteLeave(item)"></i>
                 <i class="fa fa-ban" aria-hidden="true"
                   *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"></i>
-                <i class="fas fa-check-square text-warning" *ngIf="selectedTab == 'cc'" aria-hidden="true"></i>
+                <i class="fas fa-check-square text-warning" *ngIf="selectedTab == 'cc'" aria-hidden="true"
+                  (click)="updateTransactionStatusWithConfirm()"></i>
                 <i class="fas fa-comments" aria-hidden="true"></i>
               </div>
             </td>
