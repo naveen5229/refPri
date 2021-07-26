@@ -26,6 +26,7 @@ export class UserService {
     this._token = localStorage.getItem('ITRM_USER_TOKEN') || '';
     this._details = JSON.parse(localStorage.getItem('ITRM_USER_DETAILS'));
     this._loggedInBy = localStorage.getItem('ITRM_LOGGED_IN_BY') || '';
+    localStorage.setItem('LANDING_PAGE','pages/task' );
     if (localStorage.getItem("ITRM_USER_PAGES")) {
       this._pages = JSON.parse(localStorage.getItem("ITRM_USER_PAGES"));
       this.filterMenu("pages", "pages");
@@ -50,7 +51,6 @@ export class UserService {
     delete: false,
   };
 
-  
   filterMenu(type?, collection?) {
     this._menu[type] = JSON.parse(COLLECTION[collection])
       .map((menuItem) => {

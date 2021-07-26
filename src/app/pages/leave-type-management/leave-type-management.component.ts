@@ -16,20 +16,9 @@ export class LeaveTypeManagementComponent implements OnInit {
   startDate = new Date();
   endDate = new Date();
   expensdetail:any;
-  leaveName:any;
   lCount:number = null;
   id:any = null;
-  employeeType = [];
-  leaveType: any = 'Fixed';
-  lNum : any = 'Monthly';
-  EmpTypeList = [
-    {id: 1, empType: 'General'},
-    {id: 2, empType: 'Contract'},
-    {id: 3, empType: 'Probation'},
-    {id: 4, empType: 'Trainee'},
-    {id: 5, empType: 'Intern'},
-    {id: 6, empType: 'Other'},
-  ];
+  leaveType: any = '';
   @ViewChild(DataTableDirective, { static: false })
    dtElement: any;
    dtTrigger: any = new Subject();
@@ -40,7 +29,7 @@ export class LeaveTypeManagementComponent implements OnInit {
      lengthMenu: [5, 10, 25],
      processing: true,
    }
-   title = "Add Leave Name";
+   title = "Add Leave Type";
    btn = "Save";
 
  ngAfterViewInit() {
@@ -91,37 +80,22 @@ export class LeaveTypeManagementComponent implements OnInit {
      });
  }
 emT:string[] = [];
+
  editLeaveType(item?:any) {
   this.resetType();
   console.log('item',item);
     this.id = item.id;
-    this.leaveName = item.leave_name;
     this.lCount = item.leave_days;
-    let element = item.employee_type;
-    let ccUsers = [];
-    let ccUser = this.EmpTypeList.find(x => x.empType == element);
-              if (ccUser) {
-                ccUsers.push(ccUser);
-              }
-              console.log(ccUsers);
-    this.employeeType = ccUsers;
     this.leaveType = item.leave_type;
-    this.lNum = item.leave_duration;
-    this.title = "Update Leave Name";
+    this.title = "Update Leave Type";
     this.btn = 'Update';
 }
 
  SubmitLeaveType(){
    let empT: any[] = [];
-   this.employeeType.map((item:any) => {
-     empT.push(item.empType);
-   });
    let params: any = {
-    leaveName: this.leaveName,
     leaveDays: this.lCount,
-    employeeType: empT,
     leaveType: this.leaveType,
-    leaveDuration: this.lNum,
     id: this.id
    };
    console.log(params);
@@ -161,14 +135,11 @@ emT:string[] = [];
 }
 
  resetType(){
-   this.employeeType = [];
-   this.leaveType = 'Fixed';
-   this.lNum = 'Monthly';
-   this.leaveName = '';
+   this.leaveType = '';
    this.lCount = null;
    this.id = null;
    this.btn = 'Save';
-   this.title = "Add Leave Name";
+   this.title = "Add Leave Type";
  }
 
  deleteLeaveType(item?: any) {

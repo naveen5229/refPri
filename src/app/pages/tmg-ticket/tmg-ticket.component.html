@@ -46,7 +46,7 @@
             <th>Name</th>
             <th>Total Task</th>
             <th>Incomplete Task</th>
-           
+
           </thead>
           <tbody class="tbody">
             <tr *ngFor="let un of incompleteUserWise30D">
@@ -144,7 +144,7 @@
         </table>
       </div>
     </div>
-    
+
     <div class="col-3 pl-0 pr-0 right">
       <div class="outer" style="height: calc(50% - 10px);">
         <h6 style="text-align:center"><b class="charthead">Longest Pending Ticket</b></h6>
@@ -228,11 +228,11 @@
         </p>
         <table class="table">
           <thead class="thead">
-            <th>User</th>
+            <th>Process</th>
             <th>TAT (Hr)</th>
           </thead>
           <tbody class="tbody">
-            <tr *ngFor="let item of callingTatUser30D;">
+            <tr *ngFor="let item of callingTatProcess30D;">
               <td>{{item['name']}}</td>
               <td>{{item['hour']}}</td>
             </tr>
@@ -437,7 +437,7 @@
         <p class="link" (click)="getDetails('AdminTask/getTmgTicketLongestUnAckPending',{totalrecord: 3,stepno: -1}, 30, 'days')"><i
             title="More Details" class="fa fa-list"></i>
         </p>
-       
+
         <table class="table">
           <thead class="thead">
             <th>Ticket</th>

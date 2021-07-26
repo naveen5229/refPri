@@ -38,9 +38,25 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     desc: null,
     to: null,
     cc: [],
-    endDate: this.common.getDate(2),
+    //endDate: new Date,
+     endDate: this.getDate(),
     type: 4,
     chatFeature: false
+  }
+
+  getDate(days = null, addType = null) {
+    let tempDate = new Date();
+    if (days && days != "") {
+      if (addType && addType == 'minus') {
+        tempDate.setDate(tempDate.getDate() - days);
+      } else {
+        tempDate.setDate(tempDate.getDate() + days);
+      }
+    }
+    else if (!days && !addType){
+      return null;
+    }
+    return tempDate;
   }
 
   userGroupList = [];
@@ -111,7 +127,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       if (this.common.params.meetingData && this.common.params.isEdit) {
         if(this.common.params.meetingData._meeting_type == 2) this.formType = 8;
         this.isEdit = this.common.params.isEdit;
-        
+
         let durationtime = null;
         if (this.common.params.meetingData.duration && this.common.params.meetingData.schedule_time) {
           let timeduration = (this.common.params.meetingData.duration).split(':');
@@ -330,9 +346,10 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     if (!this.broadcast.subject) {
       return this.common.showError("Subject is missing");
     }
-    if (!this.broadcast.endDate) {
-      return this.common.showError("Date is missing");
-    } else if (this.broadcast.endDate && this.broadcast.endDate < this.common.getDate()) {
+    // if (!this.broadcast.endDate) {
+    //   return this.common.showError("Date is missing");
+    // } else
+    if (this.broadcast.endDate && this.broadcast.endDate < this.common.getDate()) {
       return this.common.showError("Date must be Current/future date");
     } else if (!this.broadcast.cc || !this.broadcast.cc.length) {
       return this.common.showError("User is missing");
@@ -351,8 +368,16 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       })
     }
 
+  let dat:any;
+  if(this.broadcast.endDate == null){
+    dat = 'null';
+  }
+  else {
+    dat = this.common.dateFormatter(this.broadcast.endDate);
+  }
+    console.log("end date", dat);
     let params = {
-      date: this.common.dateFormatter(this.broadcast.endDate),
+      date: dat,
       to: this.userService.loggedInUser.id,
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,
@@ -443,7 +468,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
     //  else if (!this.meetingForm.duration) {
     //   return this.common.showError("Meeting duration is missing");
-    // } 
+    // }
     //  else if (!this.meetingForm.fromTime) {
     //   return this.common.showError("Meeting time is missing");
     // }

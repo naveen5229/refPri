@@ -10,6 +10,7 @@ import { CommonService } from '../../Service/common/common.service';
 })
 export class MeetingRoomComponent implements OnInit {
   btn = "Submit";
+  title = "Meeting Room";
   transId:any;
   id = null;
   constructor(public common: CommonService,
@@ -44,7 +45,7 @@ export class MeetingRoomComponent implements OnInit {
   console.log("Elogist Company:", event);
     this.wifiFoId = event.id;
     this.getMeetingRoomList(event.id);
-    this.getOfficeDataForWifi(event.id); 
+    this.getOfficeDataForWifi(event.id);
 }
 
 getOfficeDataForWifi(id) {
@@ -88,8 +89,8 @@ getMeetingRoomList(id) {
       this.meetingRoomList = res['data'] || [];
       console.log("meetingRoomList:",this.meetingRoomList);
       (this.meetingRoomList && this.meetingRoomList.length) ? this.setTableRoom() : null;
-    }else{ 
-      this.common.showError(res['msg']); 
+    }else{
+      this.common.showError(res['msg']);
     };
   }, err => {
     this.common.loading--;
@@ -186,9 +187,9 @@ editMeetingRoom(param:any){
     }
     else
     this.id = param[property];
-  } 
+  }
      this.wifiFoId = this.transId;
-  
+
 console.log("edit param", param);
 this.btn = "update";
 }
@@ -198,7 +199,7 @@ let id:any;
   for(const property in param) {
     if(property.charAt(0)=="_")
            id = param[property];
-  } 
+  }
   let params = {
     foid: this.wifiFoId,
   }

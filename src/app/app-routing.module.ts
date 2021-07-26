@@ -1,3 +1,4 @@
+
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import {
@@ -13,6 +14,7 @@ import { AdminToolComponent } from './pages/admin-tool/admin-tool.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
 import { UserService } from './Service/user/user.service';
+import { TaskComponent } from './pages/task/task.component';
 
 const routes: Routes = [
 
@@ -70,8 +72,7 @@ const routes: Routes = [
       .then(m => m.TicketModule),
   },
   { path: 'pages/leave-type-management/:id', component: ModalContainerComponent },
-  
- 
+  // { path: 'pages/task/chatbox', component: TaskComponent},
   { path: '', redirectTo: localStorage.getItem("LANDING_PAGE"), pathMatch: 'full' },
   { path: '**', redirectTo: localStorage.getItem("LANDING_PAGE") },
 ];
