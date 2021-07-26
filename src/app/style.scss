@@ -368,7 +368,7 @@ $color-dark:#000;
 
   th.action,.bg-none {
     background-image: none;
-    pointer-events: none; 
+    pointer-events: none;
   }
 
   tbody {
@@ -412,7 +412,7 @@ $color-dark:#000;
 
   th.action,.bg-none {
     background-image: none;
-    pointer-events: none; 
+    pointer-events: none;
   }
 
   tbody {
@@ -434,7 +434,7 @@ $color-dark:#000;
   position: relative;
   margin-bottom: 5px;
   margin-left: 15px;
-
+  z-index: 30;
   .dt-button {
     display: inline-block;
     font-weight: 600;
@@ -504,7 +504,12 @@ $color-dark:#000;
     }
   }
 }
+.timeslot{
+  .modal-dialog{
+      max-width: 90%!important;
+  }
 
+}
 
 table.dataTable tbody th {
   padding: 3px 10px !important;
@@ -512,4 +517,23 @@ table.dataTable tbody th {
 
 table.dataTable tbody td{
    padding: 3px 11px !important;
+}
+
+
+.bg-none{
+ background-image:none;
+ pointer-events: none;
+}
+
+
+  nb-card-body.min-h-auto{
+  min-height: auto !important;
+  overflow: visible !important;
+ }
+
+:host ::ng-deep{
+ nb-card-body.min-h-auto{
+  min-height: auto !important;
+  overflow: visible !important;
+ }
 }

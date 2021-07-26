@@ -76,7 +76,7 @@ export class SendmessageComponent implements OnInit {
         console.log(file);
         if (file.type == "application/vnd.ms-excel" || file.type == "text/csv" || ext.toLowerCase() == 'csv') {
         } else {
-          alert("valid Format Are : csv");
+          alert("valid Format is : csv");
           return false;
         }
 

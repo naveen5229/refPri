@@ -156,6 +156,10 @@ emT:string[] = [];
 
  }
 
+ getImageUrl(imageId) {
+  return `https://picsum.photos/100?image=${imageId}`;
+}
+
  resetType(){
    this.employeeType = [];
    this.leaveType = 'Fixed';

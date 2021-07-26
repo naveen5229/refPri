@@ -11,6 +11,7 @@ import { SmartTableComponent } from './smart-table/smart-table.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { DndDirective } from './dndDirective/dnd.directive';
 import { TableViewComponent } from './table-view/table-view.component';
+import { CustomSmartTableComponent } from './custom-smart-table/custom-smart-table.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, DateInputsModule, DataTablesModule],
@@ -25,9 +26,10 @@ import { TableViewComponent } from './table-view/table-view.component';
         DndDirective,
         TableViewComponent,
         SmartDataTableComponent,
+        CustomSmartTableComponent
 
     ],
-    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective, TableViewComponent,SmartDataTableComponent],
+    declarations: [AutoSuggestionComponent, DateTimePickerComponent, MonthPickerComponent, SmartTableComponent, ImageViewerComponent, DndDirective, TableViewComponent,SmartDataTableComponent, CustomSmartTableComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [],
 })

@@ -1,12 +1,33 @@
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CommonService } from '../../Service/common/common.service';
-import { ApiService } from '../../Service/Api/api.service';
-import { UserService } from '../../Service/user/user.service';
-import { ErrorReportComponent } from '../../modals/error-report/error-report.component';
-import { TableService } from '../../Service/Table/table.service';
+import {
+  DataTableDirective
+} from 'angular-datatables';
+import {
+  Subject
+} from 'rxjs';
+import {
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  NgbActiveModal,
+  NgbModal
+} from '@ng-bootstrap/ng-bootstrap';
+import {
+  CommonService
+} from '../../Service/common/common.service';
+import {
+  ApiService
+} from '../../Service/Api/api.service';
+import {
+  UserService
+} from '../../Service/user/user.service';
+import {
+  ErrorReportComponent
+} from '../../modals/error-report/error-report.component';
+import {
+  TableService
+} from '../../Service/Table/table.service';
 
 @Component({
   selector: 'ngx-holidays',
@@ -15,11 +36,15 @@ import { TableService } from '../../Service/Table/table.service';
 })
 export class HolidaysComponent implements OnInit {
   holidayList: any;
-   @ViewChild(DataTableDirective, {static: false})
+  @ViewChild(DataTableDirective, {
+    static: false
+  })
   dtElement: any;
   // dtOptions: DataTables.Settings = {};
-  dtOptions =  this.tableservice.options(10,7,'USER EXPENSES');
-  dttrigger: Subject<any> = new Subject<any>();
+  dtOptions = this.tableservice.options(10, 7, 'USER EXPENSES');
+  dttrigger: Subject < any > = new Subject < any > ();
+  holidaytypes: any = ['All', 'Fixed', 'Optional', 'Without Sunday'];
+  allHolidays:any = [];
   table = {
     data: {
       headings: {},
@@ -32,17 +57,20 @@ export class HolidaysComponent implements OnInit {
   holidayCsv = null;
   allHolidayList = [];
 
-  constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal,public tableservice:TableService) {
+  constructor(public common: CommonService, public user: UserService, public api: ApiService, public modalService: NgbModal, public tableservice: TableService) {
     this.common.refresh = this.refresh.bind(this);
     this.getHolidayCalendar();
   }
-  ngOnInit() {
-console.log('this.table.data',this.table.data)
 
-   }
+  ngOnInit() {
+  }
 
   refresh() {
     this.getHolidayCalendar();
+  }
+
+  ngAfterContentInit(): void {
+
   }
 
   // getHolidayCalendar() {
@@ -60,30 +88,34 @@ console.log('this.table.data',this.table.data)
   //     }, err => {
   //       this.common.loading--;
   //       this.common.showError();
-  //       console.log(err);
+  //
   //     });
   // }
 
 
-getHolidayCalendar() {
+  getHolidayCalendar() {
     this.resetTable();
     this.common.loading++;
     this.api.get('Admin/getHolidayCalendar')
       .subscribe(res => {
         this.common.loading--;
-        if(res['code']===0) { this.common.showError(res['msg']); return false;};
+        if (res['code'] === 0) {
+          this.common.showError(res['msg']);
+          return false;
+        };
         if (res['data'] && res['data']) {
           this.allHolidayList = res['data'] || [];
+          // this.allHolidays = res['data'] || [];
           this.holidayList = res['data'] || [];
-          console.log('this.holidayList: ', this.holidayList);
-          }
+          this.onSelectFilter(0);
+
+        }
       }, err => {
         this.common.loading--;
         this.common.showError();
-        console.log(err);
+
       });
   }
-
 
 
   resetTable() {
@@ -98,7 +130,7 @@ getHolidayCalendar() {
       headings: this.generateHeadings(),
       columns: this.getTableColumns()
     };
-   console.log('this.table.data : ', this.table.data );
+
     return true;
 
   }
@@ -107,7 +139,10 @@ getHolidayCalendar() {
     let headings = {};
     for (var key in this.holidayList[0]) {
       if (key.charAt(0) != "_") {
-        headings[key] = { title: key, placeholder: this.common.formatTitle(key) };
+        headings[key] = {
+          title: key,
+          placeholder: this.common.formatTitle(key)
+        };
         if (key == 'date') {
           headings[key]["type"] = "date";
         }
@@ -129,12 +164,16 @@ getHolidayCalendar() {
             // icons: this.actionIcons(inventory)
           };
         } else {
-          column[key] = { value: shift[key], class: 'black', action: '' };
+          column[key] = {
+            value: shift[key],
+            class: 'black',
+            action: ''
+          };
         }
       }
       columns.push(column);
     });
-    console.log(columns);
+
     return columns;
 
   }
@@ -145,11 +184,9 @@ getHolidayCalendar() {
       .then(res => {
         this.common.loading--;
         let file = event.target.files[0];
-        console.log("file-type:", file.type);
-        if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {
-        }
-        else {
-          alert("valid Format Are : csv");
+
+        if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {} else {
+          alert("valid Format is : csv");
           return false;
         }
 
@@ -177,8 +214,16 @@ getHolidayCalendar() {
           let successData = res['data']['success'];
           let errorData = res['data']['fail'];
           alert(res["msg"]);
-          this.common.params = { successData, errorData, title: 'csv Uploaded Data' };
-          const activeModal = this.modalService.open(ErrorReportComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+          this.common.params = {
+            successData,
+            errorData,
+            title: 'csv Uploaded Data'
+          };
+          const activeModal = this.modalService.open(ErrorReportComponent, {
+            size: 'lg',
+            container: 'nb-layout',
+            backdrop: 'static'
+          });
           activeModal.result.then(data => {
             if (data.response) {
               // this.activeModal.close({ response: true });
@@ -192,30 +237,29 @@ getHolidayCalendar() {
       }, err => {
         this.common.loading--;
         this.common.showError();
-        console.log(err);
+
       });
   }
 
   onSelectFilter(e) {
+  console.log('e: ', e);
     this.resetTable();
-    let selectedList = null;
-    if (e) {
-      console.log("e:", e);
-      if (this.allHolidayList && this.allHolidayList.length > 0) {
-        if (e == 1) {
-          selectedList = this.allHolidayList.filter(x => x._type == 1);
-        } else if (e == 2) {
-          selectedList = this.allHolidayList.filter(x => x._type == 0);
-        } else if (e == 3) {
-          selectedList = this.allHolidayList.filter(x => !(x.name == 'Sunday' || x.name == 'sunday'));
+        if (e == 0) {
+           this.holidayList = this.allHolidayList;
+           console.log('this.holidayList: ', this.holidayList);
         }
-      }
-    } else {
-      selectedList = this.allHolidayList;
-    }
-    this.holidayList = selectedList;
+        else if (e == 1) {
+          this.holidayList = this.allHolidayList.filter(x => x._type == 1);
+          console.log('this.holidayList: ', this.holidayList);
+        } else if (e == 2) {
+          this.holidayList = this.allHolidayList.filter(x => x._type == 0);
+          console.log('this.holidayList: ', this.holidayList);
+        } else if (e == 3) {
+          this.holidayList = this.allHolidayList.filter(x => !(x.name == 'Sunday' || x.name == 'sunday'));
+          console.log('this.holidayList: ', this.holidayList);
+        }
     this.setTable();
-    console.log("selectedList:", selectedList);
+
   }
 
   sampleCsv() {

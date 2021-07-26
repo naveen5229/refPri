@@ -221,6 +221,10 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     iframe.style.height = `${heightIframe}px`;
     iframe.src = `${this.converterPDFBase64ParaBlob()}`;
 
+    let myiFrame:any = document.getElementsByTagName('iframe');
+    let doc = myiFrame.contentDocument;
+    console.log('doc: ', doc);
+    // doc.body.innerHTML = doc.body.innerHTML + '<style>/******* Put your styles here *******</style>';
     this.renderer.appendChild(ivImageWrap, iframe);
   }
 

@@ -7,7 +7,7 @@
     font-size : 11px;
     font-weight: 600;
 }
-:host::ng-deep.table tr td{   
+:host::ng-deep.table tr td{
     padding: 2px 2px !important;
 }
 :host::ng-deep.table thead th{
@@ -21,7 +21,7 @@
     background: #f5faff;
     border: 1px solid #e7eaf2;
      box-shadow: 0 0.66875rem 2.3875rem rgba(31,10,6,0.03), 0 1.1375rem 1.60625rem rgba(31,10,6,0.03), 0 0.45rem 0.73125rem rgba(31,10,6,0.05), 0 0.325rem 0.3875rem rgba(31,10,6,0.03);
-   
+
 
 }
 .outer:hover{
@@ -45,11 +45,11 @@
             padding: 10px 2px !important;
 
         }
-        
+
 }
 }
 .table tr td {
-   
+
     vertical-align: middle;
 }
 .table-bordered th, .table-bordered td {
@@ -90,10 +90,10 @@
       .row.thirdlast{
         height: calc(36% - .5rem);
       }
-      
+
   }
   h6, .h6 { text-align: center;}
-  
+
 
   @media (max-width: 1441px){
   .table tr td {font-size: 10px !important; font-weight: 500;}
@@ -103,4 +103,8 @@
   .table{height: auto;}
   .table .thead th {    padding: 0px 2px !important;}
   .link {    margin-bottom: 0;}
+  }
+
+  .contentsection.tmg-visit{
+  height: calc(100vh - 80px);
   }

@@ -7,7 +7,7 @@ import { GenericModelComponent } from '../../modals/generic-model/generic-model.
 @Component({
   selector: 'ngx-tmg-visit',
   templateUrl: './tmg-visit.component.html',
-  styleUrls: ['./tmg-visit.component.scss']
+  styleUrls: ['./tmg-visit.component.scss','../tmg-dashboard/tmg-dashboard.component.scss']
 })
 export class TmgVisitComponent implements OnInit {
   @Input() pageType: string = "Tmg-Task";
@@ -648,7 +648,7 @@ export class TmgVisitComponent implements OnInit {
             ticks: {
               beginAtZero: true,
               stepSize: yaxisObj.gridSize
-            },//beginAtZero: true,min:0, 
+            },//beginAtZero: true,min:0,
             suggestedMin: yaxisObj.minValue,
           },
 

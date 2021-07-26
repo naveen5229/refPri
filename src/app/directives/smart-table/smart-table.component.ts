@@ -46,12 +46,12 @@ export class SmartTableComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    console.log('columns',this.columns,this.headings)
-    console.log('Changes: ', changes);
+
+
     this.data = changes.data.currentValue;
     if (changes.settings)
       this.settings = changes.settings.currentValue;
-    console.log('Data', this.data);
+
     this.setData();
     this.activeRow = -1;
   }
@@ -59,7 +59,7 @@ export class SmartTableComponent implements OnInit {
   ngAfterViewInit() {
     this.setData();
     this.selectedRow = (this.settings && this.settings.arrow) ? 0 : -20;
-    console.log('settings', this.settings);
+
   }
 
   keyHandler(event) {
@@ -67,7 +67,7 @@ export class SmartTableComponent implements OnInit {
     let activeId = document.activeElement.id;
 
     if (this.columns.length && (this.settings && this.settings.arrow)) {
-      // console.log('selected row data',this.selectedRow,'row count ',this.columns[this.selectedRow]);
+      //
       if((key.includes('arrowup') || key.includes('arrowdown'))){
         if (key == 'arrowup' && this.selectedRow != 0) this.selectedRow--;
         else if (this.selectedRow != this.columns.length - 1) this.selectedRow++;
@@ -79,13 +79,13 @@ export class SmartTableComponent implements OnInit {
     }
   }
   setData() {
-    console.log('smart table render time start');
+
     console.time();
     this.headings = this.data.headings;
     this.handlePagination(this.pages.active);
     // this.columns = this.data.columns
-    console.log(this.headings);
-    console.log(this.columns);
+
+
     this.cdr.detectChanges();
     if (this.search.txt && this.search.key) {
       this.headings[this.search.key].value = this.search.txt;
@@ -96,13 +96,13 @@ export class SmartTableComponent implements OnInit {
       this.pages.count++;
     }
     this.columns.map((column, index) => column._smartId = index);
-    console.log('smart table render time end');
+
     console.timeEnd();
   }
 
   filterData(key) {
     this.selectedRow = (this.settings && this.settings.arrow) ? 0 : -20;
-    console.log("filterData:",this.selectedRow);
+
     let search = this.headings[key].value.toLowerCase();
     this.search = { key, txt: search };
     this.columns = this.data.columns.filter(column => {
@@ -201,7 +201,7 @@ export class SmartTableComponent implements OnInit {
 
 
   handleColDoubleClick(column, heading) {
-    console.log('Column :', column);
+
     if (column[heading].colActions && column[heading].colActions.dblclick) {
       column[heading].colActions.dblclick()
     }

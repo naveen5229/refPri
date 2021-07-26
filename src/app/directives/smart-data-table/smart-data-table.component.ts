@@ -1,44 +1,43 @@
+import { TableService } from './../../Service/Table/table.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'ngx-smart-data-table',
   templateUrl: './smart-data-table.component.html',
   styleUrls: ['./smart-data-table.component.scss']
 })
-export class SmartDataTableComponent implements OnInit {
+export class SmartDataTableComponent implements OnInit,OnChanges {
+
+   @ViewChild(DataTableDirective, {static: false})
+  dtElement: any;
+  // dtOptions: DataTables.Settings = {};
+  dtOptions =  this.tableservice.options(10,7,'USER EXPENSES');
+  dttrigger: Subject<any> = new Subject<any>();
 
 
-
-
-@ViewChild(DataTableDirective, { static: false })
-@Input() data:any;
+@Input() data:any[];
 @Input() SearchFilter:any;
-@Input() dtOptions:any;
-@Input() dtTrigger:any;
+// @Input() dtOptions:any;
+// @Input() dtTrigger:any;
 @Input() filterColumn:any;
 @Input() renderFunction:any;
 @Input() setting:any;
 
 @Output() getData = new EventEmitter();
 @Output() filter = new EventEmitter();
+@Output() actionBind = new EventEmitter();
 dataheading:any = [];
 datavalues:any[] = [];
 purifieddata:any[] = [];
 
-
-
-  constructor() { }
+constructor(public tableservice:TableService) { }
 
 
 renderTable(){
 this.dataheading = [];
 this.datavalues = [];
-console.log('this.data: ', this.data);
-
-console.log('data Before filter',this.data);
-
 this.data.map((item:any)=>{
 const deleteKeysBy = (obj:any, predicate:any) =>
   Object.keys(obj)
@@ -46,7 +45,6 @@ const deleteKeysBy = (obj:any, predicate:any) =>
       if(key.startsWith('_')){
        delete(obj[key]);
       }
-     console.log('key',key);
     });
 
 deleteKeysBy(item, val => !val);
@@ -62,14 +60,22 @@ this.datavalues.push(Object.values(item));
 }
 }
 
-
 Filter(){
 this.filter.emit();
 }
 
 
- ngOnInit() {
+ngOnInit(): void {
     this.renderTable();
+  }
+
+ngOnChanges(change:SimpleChanges): void{
+    this.renderTable();
+  }
+
+ngAfterViewInit():void{
+  this.renderTable();
+
   }
 
 }

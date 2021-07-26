@@ -273,6 +273,12 @@ export const MENU_ITEMS = JSON.stringify([
         icon: 'file-text-outline',
         link: '/pages/meeting',
         home: true,
+      },
+      {
+        title: 'Meeting-Room',
+        icon: 'file-text-outline',
+        link: '/pages/meeting-room',
+        home: true,
       }
     ]
   },
@@ -417,6 +423,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/leave-type-management',
         home: true,
       },
+      {
+        title: 'Leave Policy',
+        icon: 'wifi-outline',
+        link: '/pages/leave-policy',
+        home: true,
+      },
     ]
   },
   {
@@ -500,6 +512,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Continuity Report',
         icon: 'file-text-outline',
         link: '/pages/continuity-report',
+        home: true,
+      },
+      {
+        title: 'Call Admin Report',
+        icon: 'phone-outline',
+        link: '/pages/call-admin-report',
         home: true,
       },
     ]

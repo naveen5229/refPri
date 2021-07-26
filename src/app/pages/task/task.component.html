@@ -12,6 +12,8 @@
                             <option>By User</option>
                         </select>
                     </div>
+
+
                     <div class="col-10">
                         <span *ngIf="SearchBy === 'By Task'">
                             <input type="text" class="form-controls col-9 searchbtn" id="searchtask"
@@ -68,6 +70,7 @@
                             (click)="showProjectPopup()">
                             <img src="./assets/images/addproject.svg" alt="Add Project">
                         </button>
+
                         <button class="btn btn-primary btn-sm allicons" id="taskpopup" title="Add Normal Task"
                             (click)="showTaskPopup()">
                             <img src="./assets/images/addtask.svg" alt="Add Normal Task"></button>
