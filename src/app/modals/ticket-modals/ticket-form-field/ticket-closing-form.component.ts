@@ -239,12 +239,28 @@ export class TicketClosingFormComponent implements OnInit {
     console.log("tableEvents - event", event, tableType);
     if (tableType === 'even') {
       this.evenArray[i]._param_child = JSON.parse(JSON.stringify(event));
-      this.evenArray[i].isExpand = false;
+      this.evenArray[i].isExpand = true;
     } else {
       this.oddArray[i]._param_child = JSON.parse(JSON.stringify(event));
-      this.oddArray[i].isExpand = false;
+      this.oddArray[i].isExpand = true;
     }
   }
+
+ addTransaction() {
+   console.log("additionalFields:", this.oddArray);
+    // console.log('this.oddArray',this.oddArray);
+    // this.oddArray.forEach(element => {
+    //   element.forEach(element2 => {
+    //     if (element2['isNotBindFixedvalue']) {
+    //       element2['param_value'] = element2['notBindFixedvalue'];
+    //     }
+    //   });
+    // });
+    // this.tableUpdate.next(this.oddArray);
+    // this.tableUpdate.next(details);
+
+  }
+
 
   checkAllExpandedTables(checkedOf, arrayType, status) {
     console.log(checkedOf, arrayType, status);
@@ -264,4 +280,5 @@ export class TicketClosingFormComponent implements OnInit {
       console.log(index, status)
     }
   }
+
 }

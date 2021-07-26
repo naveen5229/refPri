@@ -15,7 +15,7 @@ export class ImportbulkvehicleComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal,
     public modalService: NgbModal,
     public api: ApiService,
-    public common: CommonService) { 
+    public common: CommonService) {
       this.common.handleModalSize('class', 'modal-lg', '800');
     }
 
@@ -47,7 +47,7 @@ export class ImportbulkvehicleComponent implements OnInit {
         if (file.type == "application/vnd.ms-excel") {
         }
         else {
-          alert("valid Format Are : csv");
+          alert("valid Format is : csv");
           return false;
         }
 

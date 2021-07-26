@@ -76,7 +76,7 @@ export class CsvUploadComponent implements OnInit {
         if (file.type == "application/vnd.ms-excel" || file.type == "text/csv") {
         }
         else {
-          alert("valid Format Are : csv");
+          alert("valid Format is : csv");
           return false;
         }
 

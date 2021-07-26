@@ -305,7 +305,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
           expenseList.push(
             JSON.parse(JSON.stringify(this.updatedExpenses[key]))
           );
-        
+
           if(element._user_id==this.userService.loggedInUser.id){
             isSelfVisit = true;
           }
@@ -481,7 +481,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
         console.log(err);
       });
   }
-  
+
   updateOnsiteImageStatusWithConfirm(status,item) {
     if(status==-1){
       this.common.params = {
@@ -725,7 +725,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
         let color = i==0?"00FF00":i==Object.keys(groups).length-1?"FF0000":"FFFF00";
         let point =  i==0?"S":i==Object.keys(groups).length-1?"D":"W";
         marker = new google.maps.Marker({
-          position: { lat: group[0].lat, lng: group[0].long },   
+          position: { lat: group[0].lat, lng: group[0].long },
           icon:"http://chart.apis.google.com/chart?chst=d_map_xpin_letter&chld=pin|" + point + "|" + color + "|000000",
           map: this.map
         });

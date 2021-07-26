@@ -16,10 +16,11 @@ import { param } from 'jquery';
   styleUrls: ['./meeting.component.scss']
 })
 export class MeetingComponent implements OnInit {
-  scheduleType = '0';
+  scheduleType:any = '0';
   searchTerm = '';
   windowType = 'meetings';
   currentDate = new Date();
+  filterEnabled:boolean = false;
   schedule = {
     time: moment(),
     endTime: moment().add(30, 'days'),
@@ -292,6 +293,11 @@ export class MeetingComponent implements OnInit {
     });
   }
 
+deleteMeeting(index:number){
+this.meetingData.upcomingData.splice(index,1);
+}
+
+
   // index = 0;
   getMeetings(type, startDate, endDate) {
     this.common.loading++;
@@ -323,9 +329,7 @@ export class MeetingComponent implements OnInit {
         }
         this.meetingDataForFilter.pastData = this.meetingData.pastData;
         this.meetingDataForFilter.upcomingData = this.meetingData.upcomingData;
-        let state = document.getElementById('pastfilterPop').style.display;
-        if (state == 'block') document.getElementById('pastfilterPop').style.display = 'none';
-        console.log("Past data", this.meetingData.pastData, "Upcoming Data", this.meetingData.upcomingData);
+        this.filterEnabled = false;
       },
       (err) => {
         this.common.loading--;
@@ -793,15 +797,6 @@ export class MeetingComponent implements OnInit {
       });
   }
 
-  filterEnable(type) {
-    let state = document.getElementById('pastfilterPop').style.display;
-    console.log(state)
-    if (state == 'block') {
-      document.getElementById('pastfilterPop').style.display = 'none';
-    } else {
-      document.getElementById('pastfilterPop').style.display = 'block'
-    }
-  }
 
   myCalender() {
 

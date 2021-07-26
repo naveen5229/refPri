@@ -20,7 +20,7 @@ export class AddDashboardFieldComponent implements OnInit {
     refType: null,
     infoId: null,
     info: null,
-    order: null,
+    r_colorder: null,
     stateActionId: null
   }
   stateOrActionList = [];
@@ -262,7 +262,7 @@ export class AddDashboardFieldComponent implements OnInit {
     this.form.infoId = null;
     this.form.stateActionId = null;
     this.form.info = null;
-    this.form.order = null;
+    this.form.r_colorder = null;
     this.stateOrActionList = [];
     this.fieldDataList = [];
   }
@@ -330,7 +330,7 @@ export class AddDashboardFieldComponent implements OnInit {
       if (selected) {
         this.form.refId = selected.refid;
         this.form.refType = selected.reftype;
-        this.form.info = { r_colid: selected.r_colid, r_isdynamic: selected.r_isdynamic, r_selected: selected.r_selected,r_ismasterfield: selected.r_ismasterfield,reftype: selected.reftype,refid: selected.refid, r_colorder: (this.form.order) ? this.form.order : null };
+        this.form.info = { r_colid: selected.r_colid, r_isdynamic: selected.r_isdynamic, r_selected: selected.r_selected,r_ismasterfield: selected.r_ismasterfield,reftype: selected.reftype,refid: selected.refid, r_colorder: (this.form.r_colorder) ? this.form.r_colorder : null };
       } else {
         this.form.info = null;
       }
@@ -338,6 +338,7 @@ export class AddDashboardFieldComponent implements OnInit {
   }
 
   AddField() {
+    this.form.info['r_colorder'] = (this.form.r_colorder) ? this.form.r_colorder : null ;
     let params = {
       requestId: this.form.requestId,
       processId: this.form.process.id,

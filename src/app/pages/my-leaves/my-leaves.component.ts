@@ -1,10 +1,10 @@
+import { UserService } from './../../Service/user/user.service';
 import { filter } from 'rxjs/operators';
 import { DataTableDirective } from 'angular-datatables';
 import { TableService } from './../../Service/Table/table.service';
 import { from, Subject } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '../../@core/mock/users.service';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { TaskNewComponent } from '../../modals/task-new/task-new.component';
 import { ApiService } from '../../Service/Api/api.service';
@@ -46,10 +46,12 @@ export class MyLeavesComponent implements OnInit {
   leaveRecord: any = [];
   leaveTypes = 4;
   departmentList = [];
+  currentUser:any;
 
   constructor(public common: CommonService,
     public user: UserService,
     public api: ApiService,
+    public userService: UserService,
     public tableservice: TableService,
     public modalService: NgbModal) {
     this.common.refresh = this.refresh.bind(this);
@@ -57,6 +59,7 @@ export class MyLeavesComponent implements OnInit {
     this.getUserGroupList();
     this.getMyLeaves();
     this.getDepartmentList();
+    this.currentUser = this.user._details.name
   }
   ngOnInit() {
     this.renderCircleProgress();
@@ -166,7 +169,7 @@ export class MyLeavesComponent implements OnInit {
           console.log(' this.allmyLeaves: ', this.allmyLeaves);
           this.myLeaves = res['data'] || [];
           this.renderTable();
-          // console.log('this.myLeaves: ', this.myLeaves);
+          console.log('this.myLeaves: ', this.myLeaves);
           // this.myLeaves.length ? this.setTable() : this.resetTable();
         }
       }, err => {

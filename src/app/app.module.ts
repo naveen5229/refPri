@@ -134,17 +134,21 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MessagingService } from './Service/messaging.service';
-import { MyLeavesComponent } from './pages/my-leaves/my-leaves.component';
 import { LocationEntityComponent } from './modals/location-entity/location-entity.component';
 import { UnmappedVisitComponent } from './modals/unmapped-visit/unmapped-visit.component';
+import { TicketFieldsComponent } from './modals/process-modals/ticket-fields/ticket-fields.component';
 import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
 import { ModalComponent } from './modals/modal/modal.component';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
+import { GeneralModalComponent } from './modals/general-modal/general-modal.component';
 
 
 
 const PAGE_COMPONENTS = [
+  TicketFieldsComponent,
+
   WorkLogComponent,
+  TicketFieldsComponent,
   TaskAssignUserComponent,
   AddComponentComponent,
   TaskStatusCheckComponent,
@@ -238,8 +242,8 @@ const PAGE_COMPONENTS = [
   ModalComponent,
   ModalContainerComponent,
   ApplyWFHComponent,
- 
-];
+  GeneralModalComponent,
+ ];
 
 @NgModule({
   declarations: [AppComponent,
@@ -258,7 +262,10 @@ const PAGE_COMPONENTS = [
     UserEsclationComponent,
     AddProcessPropertyComponent,
     MobileNoComponent,
+    TicketFieldsComponent,
     ApplyWFHComponent,
+    ApplyWFHComponent,
+    TicketFieldsComponent,
      // SmartDataTableComponent,
 
     // SendmessageComponent,

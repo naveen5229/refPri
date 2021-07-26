@@ -510,6 +510,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       requestId: (this.meetingForm.reqId) ? this.meetingForm.reqId : null
     }
     // console.log("add meeting:", params); return false;
+      console.log("add meeting:", params);
     if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId && this.formType==2) {
       this.common.params = {
         title: 'Alert',
@@ -618,7 +619,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.api.post('Admin/getMeetingSchedule', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] === 1) {
-        console.log(res);
+        console.log('getMeetingSchedule',res);
         console.log(this.hours, this.minutes);
         // this.selectedTime = { hh: '', mm: '' };
         this.freeSchedulesForShifting = (res['data'] && res['data'].length > 0) ? res['data'][0].available_slots : [];
@@ -626,6 +627,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
           return { userid: (timeranges.userid) ? timeranges.userid : timeranges.room_id, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name, is_todo: timeranges.is_todo }
+          console.log(': ', );
         }) : [];
 
 
@@ -688,13 +690,20 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
         console.log('preBookedScheduler:', preBookedScheduler);
         preBookedScheduler.map(data => data.option.translate = (value: number): string => {
+        console.log('translate value',value);
+
           switch (value - parseInt(JSON.stringify(value))) {
             case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
             case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
             case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
             default: return `${parseInt(JSON.stringify(value))}`;
           }
-        })
+        });
+
+        // preBookedScheduler.map(data => data.option.getLegend = (value: number): string => {
+        //     return '<b>T</b>' + value;
+        // });
+
 
         this.availableSlot(preBookedScheduler);
 

@@ -51,12 +51,16 @@
             *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
 
           <!-- <span *ngIf="oddArray[i].r_coltype == 'table'" (click)="AdditionalForm('oddArray',i)"><i class="fa fa-table" aria-hidden="true"></i></span> -->
-          <span *ngIf="oddArray[i].r_coltype == 'table'" >
-            <i class="fas fa-expand" *ngIf="!oddArray[i].isExpand" (click)="checkAllExpandedTables(oddArray[i],'odd',true)"></i>
-            <i class="fas fa-compress" *ngIf="oddArray[i].isExpand" (click)="checkAllExpandedTables(oddArray[i],'odd',false)"></i>
-          </span>
+          <!-- <span *ngIf="oddArray[i].r_coltype == 'table'">
+            <i class="fas fa-expand" *ngIf="!oddArray[i].isExpand"
+              (click)="checkAllExpandedTables(oddArray[i],'odd',true)"></i>
+            <i class="fas fa-compress" *ngIf="oddArray[i].isExpand"
+              (click)="checkAllExpandedTables(oddArray[i],'odd',false)"></i>
+          </span> -->
+
           <ngx-table-view [additionalFields]="oddArray[i]._param_child" [tableHeader]="oddArray[i]._param_child[0]"
-            (tableUpdate)="tableEvents($event,i,'odd')" *ngIf="oddArray[i].r_coltype == 'table' && oddArray[i].isExpand">
+            (tableUpdate)="tableEvents($event,i,'odd')"
+            *ngIf="oddArray[i].r_coltype == 'table'">
           </ngx-table-view>
 
           <!-- dynamic dropdown -->
@@ -131,13 +135,16 @@
 
           <!-- <span *ngIf="evenArray[i].r_coltype == 'table'" (click)="AdditionalForm('evenArray',i)"><i class="fa fa-table"
               aria-hidden="true"></i></span> -->
-          <span *ngIf="evenArray[i].r_coltype == 'table'">
-            <i class="fas fa-expand" *ngIf="!evenArray[i].isExpand" (click)="checkAllExpandedTables(evenArray[i],'even',true)"></i>
-            <i class="fas fa-compress" *ngIf="evenArray[i].isExpand" (click)="checkAllExpandedTables(evenArray[i],'even',false)"></i>
-          </span>
+          <!-- <span *ngIf="evenArray[i].r_coltype == 'table'">
+            <i class="fas fa-expand" *ngIf="!evenArray[i].isExpand"
+              (click)="checkAllExpandedTables(evenArray[i],'even',true)"></i>
+            <i class="fas fa-compress" *ngIf="evenArray[i].isExpand"
+              (click)="checkAllExpandedTables(evenArray[i],'even',false)"></i>
+          </span> -->
           <ngx-table-view [additionalFields]="evenArray[i]._param_child" [tableHeader]="evenArray[i]._param_child[0]"
-            (tableUpdate)="tableEvents($event,i,'even')" *ngIf="evenArray[i].r_coltype == 'table' && evenArray[i].isExpand"></ngx-table-view>
-\
+            (tableUpdate)="tableEvents($event,i,'even')"
+            *ngIf="evenArray[i].r_coltype == 'table'"></ngx-table-view>
+
           <!-- dynamic data array -->
           <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
             *ngIf="evenArray[i].r_fixedvalues && evenArray[i].r_coltype !='entity'"
@@ -172,6 +179,8 @@
   </div>
   <div class="row" *ngIf="oddArray && oddArray.length>0 && !isDisabled">
     <div class="col-12 text-right">
+          <!-- <button class="btn btn-primary btn-sm mr-2" form="worklog-form" type='submit'
+            (click)="addTransaction()">Submit</button> -->
       <button class="btn btn-primary btn-sm" form="worklog-form" type='submit' id="saveTicketForm"
         (click)="saveFromDetail(false)">Save</button>
       <button *ngIf="refType==1" class="btn btn-primary btn-sm ml-2" form="worklog-form" type='submit'
