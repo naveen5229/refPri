@@ -1922,7 +1922,20 @@ export class TaskComponent implements OnInit {
           title: "Mark Ack as CC Task",
         });
       }
-        else{
+      // else if(ticket.status=="Ack" && ticket._tktype == 114){
+      //   icons.push({
+      //     class: "fa fa-thumbs-up text-success",
+      //     action: this.changeTicketStatusWithConfirm.bind(
+      //       this,
+      //       ticket,
+      //       type,
+      //       5
+      //     ),
+      //     txt: "",
+      //     title: "Mark Completed",
+      //   });
+      // }
+      else{
         icons.push({
           class: "fa fa-thumbs-up text-success",
           action: this.changeTicketStatusWithConfirm.bind(
@@ -2229,6 +2242,8 @@ export class TaskComponent implements OnInit {
         remark: remark,
         taskId: ticket._refid,
         ticketType: ticket._tktype,
+        assignedby: ticket._assignee_user_id,
+        tabType: type
       };
       // if (status != -1) this.collapseUnreadTaskUpdateStatus(type, ticket, status);
       // console.log("params:", params, ticket, this.unreadTaskForMeList); return false;
@@ -2687,7 +2702,8 @@ export class TaskComponent implements OnInit {
         ticketType: ticket._tktype,
         status: status,
         userName: this.userService.loggedInUser.name,
-        expdate: ticket._expdate
+        expdate: ticket._expdate,
+        assignedby: ticket._assignee_user_id,
       };
       // this.unreadTaskForMeList = this.unreadTaskForMeList.filter(ele => { return ele._tktid != params.ticketId });
       // this.setTableUnreadTaskForMe(type);
@@ -2775,6 +2791,7 @@ export class TaskComponent implements OnInit {
       console.log('Mark Ack as Completed Task : 6');
       this.ackTaskByAssigner(ticket, type);
     }
+
     console.log('edited:', activeRowData)
 
     this.setTableUnreadTaskForMe(type);
