@@ -66,7 +66,7 @@ export class LeaveTypeManagementComponent implements OnInit {
    this.leaveTypeList = [];
 
    this.common.loading++;
-   this.api.get('Leave/getLeaveTypeList.json')
+   this.api.get('LeavePolicy/getLeaveTypeList.json')
      .subscribe(res => {
        this.common.loading--;
        if (res['code'] !=1) { this.common.showError(res['msg']); return false; };
@@ -100,7 +100,7 @@ emT:string[] = [];
    };
    console.log(params);
    this.common.loading++;
-   this.api.post('Leave/SubmitLeaveType.json', params).subscribe(res => {
+   this.api.post('LeavePolicy/SubmitLeaveType.json', params).subscribe(res => {
      this.common.loading--;
      if (res['code'] == 1) {
        this.common.showToast(res['msg']);
@@ -147,12 +147,15 @@ emT:string[] = [];
    let params: any = {
      id: item.id,
    }
-   this.api.post('Leave/deleteLeaveType.json', params)
+   this.api.post('LeavePolicy/deleteLeaveType.json', params)
      .subscribe((res: any) => {
-       this.common.loading--;
-       this.getLeaveTypeList();
-       this.resetType();
-       console.log('id',this.id);
+      if (res['code'] == 1) {
+        this.common.showToast(res['msg']);
+        this.getLeaveTypeList();
+        this.resetType();
+      } else {
+        this.common.showError(res['msg']);
+      }
      }, (err: any) => {
        console.error('Error: ', err);
        this.common.loading--;
