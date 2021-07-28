@@ -216,17 +216,18 @@ full-calendar {
   display: flex;
   align-items: center;
 
- span:hover {
-   cursor: pointer;
-   i {
-     transition: all linear 0.2s;
-     transform: scale(1.3);
-   }
- }
+  span:hover {
+    cursor: pointer;
+
+    i {
+      transition: all linear 0.2s;
+      transform: scale(1.3);
+    }
+  }
 
   span {
     font-size: 20px;
-    margin-left: 4px;
+    padding-left: 10px;
   }
 
   span.chat-items {
@@ -274,6 +275,3 @@ full-calendar {
 
   }
 }
-
-
-

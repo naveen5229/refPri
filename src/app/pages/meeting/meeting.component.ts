@@ -49,6 +49,8 @@ export class MeetingComponent implements OnInit {
       center: 'title',
       right: 'timeGridDay,dayGridMonth,timeGridWeek'
     },
+    slotMinTime: '09:00:00',
+    slotMaxTime: '24:00:00',
     // initialEvents: this.INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     events: [],
     // editable: true,
@@ -58,9 +60,12 @@ export class MeetingComponent implements OnInit {
     // select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
-    eventMouseEnter: this.handleMouseEnter.bind(this),
+     eventMouseEnter: this.handleMouseEnter.bind(this),
     eventMouseLeave: this.handleMouseLeave.bind(this)
   };
+
+
+
   colorCodes = {
     background: ['#B0E0E6', '#FFE4E1', '#98FB98', '#FFB6C1'],
   }
@@ -97,7 +102,7 @@ export class MeetingComponent implements OnInit {
 
   constructor(public common: CommonService,
     public userService: UserService, public api: ApiService, public modalService: NgbModal,) {
-    console.log(this.calendarOptions)
+    console.log('this.calendarOptions',this.calendarOptions)
     this.loggedInUser = this.userService._details.id;
     this.getAllAdmin();
     this.getUserGroupList();
@@ -108,6 +113,7 @@ export class MeetingComponent implements OnInit {
   }
 
   ngOnInit() {
+ console.log('calendarOptions',this.calendarOptions);
   }
 
   refresh() {
@@ -161,6 +167,7 @@ export class MeetingComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
+  console.log('clickInfo: ', clickInfo);
     // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
     //   clickInfo.event.remove();
     // }
@@ -169,15 +176,18 @@ export class MeetingComponent implements OnInit {
 
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
+    // events.
     console.log(this.currentEvents)
   }
+
+
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
       (res) => {
         if (res["code"] > 0) {
           let adminList = res["data"] || [];
-          console.log(adminList)
+          console.log('adminList',adminList);
           this.adminList = adminList.map((x) => {
             return { id: x.id, name: x.name + " - " + x.department_name };
           });
@@ -782,11 +792,19 @@ this.meetingData.upcomingData.splice(index,1);
       if (res['code'] === 1) {
         let schedules = [];
         if (res['data'])
+        console.log('res[data]', res['data']);
           res['data'].map(events => {
-            schedules.push({ start: events.meeting_time, end: events.meeting_end_time, title: events.title, color: events.m_type == 2 ? 'rgb(212 135 127)' : 'rgb(133 196 204)', description: events.title })
+            schedules.push({
+              start: events.meeting_time,
+              end: events.meeting_end_time,
+              title: `${events.title},Host:${events.meeting_host}`,
+               color: events.m_type == 2 ? 'rgb(212 135 127)' : 'rgb(133 196 204)',
+              description: events.title
+             })
             // ,title:'fetching'
           })
         this.calendarOptions.events = schedules;
+        console.log('this.calendarOptions.events: ', this.calendarOptions.events);
         this.calendarOptions.initialView = 'timeGridDay';
         console.log('cslender', this.calendarOptions);
         // if(modalState) document.getElementById('calender').style.display = 'block';

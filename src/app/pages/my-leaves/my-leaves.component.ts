@@ -80,6 +80,46 @@ export class MyLeavesComponent implements OnInit {
   }
 
 
+
+
+
+   changeTicketStatusWithConfirm(ticket, type, status) {
+    console.log(status, 'status')
+    if (ticket._refid) {
+      let preTitle = "Complete";
+      if (!status) {
+        preTitle = "Re-Active";
+      } else if (status === -1) {
+        preTitle = "Reject";
+      } else if (status == 3) {
+        preTitle = "Hold";
+      } else if (ticket._status == 3) {
+        preTitle = "Unhold";
+      }
+      this.common.params = {
+        title: preTitle + " Task ",
+        description:
+          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Task" + `<b>`,
+        isRemark: status == 3 ? true : false,
+      };
+      const activeModal = this.modalService.open(ConfirmComponent, {
+        size: "sm",
+        container: "nb-layout",
+        backdrop: "static",
+        keyboard: false,
+        windowClass: "accountModalClass",
+      });
+      activeModal.result.then((data) => {
+        console.log("Confirm response:", data);
+        if (data.response) {
+          this.updateTicketStatus(ticket, type, status, data.remark);
+        }
+      });
+    } else {
+      this.common.showError("Task ID Not Available");
+    }
+  }
+
     updateTransactionStatusWithConfirm(lead, type, status) {
     let preText = "Complete";
     this.common.params = {

@@ -37,6 +37,7 @@ export class LeaveManagementComponent implements OnInit {
 
 
 
+
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(
       (res) => {

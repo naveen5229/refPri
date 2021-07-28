@@ -4,6 +4,16 @@
     //background: #ffe4d1;
     // height: 2px;
   }
+.ngx-slider[disabled] .ngx-slider-tick{
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+
+.ngx-slider[disabled]{
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+
   .custom-slider .ngx-slider .ngx-slider-selection {
     background: orange;
   }

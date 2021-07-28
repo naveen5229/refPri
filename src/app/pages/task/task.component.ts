@@ -2283,6 +2283,9 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
+  console.log('status: ', status);
+  console.log('type: ', type);
+  console.log('ticket: ', ticket);
     console.log(status, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
