@@ -53,7 +53,6 @@ export class UserService {
     delete: false,
   };
 
-  
   filterMenu(type?, collection?) {
     this._menu[type] = JSON.parse(COLLECTION[collection])
       .map((menuItem) => {

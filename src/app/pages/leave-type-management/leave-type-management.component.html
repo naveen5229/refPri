@@ -6,70 +6,25 @@
   <nb-card-body class="min-h-auto">
     <form class="expense-form">
       <div class="row align-items-center">
-        <div class="col-md-3 form-group">
-          <label for=""> Select Employee type </label>
-        </div>
-        <div class="col-md-3 form-group">
-          <auto-suggestion class="cc-users" [data]="EmpTypeList" display="empType" placeholder="Select Employee Type"
-            (onSelected)="employeeType = $event" inputId="emplType" name="emplType" [preSelected]="employeeType"
-            isMultiSelect="true"></auto-suggestion>
-        </div>
-
-        <div class="col-md-3 form-group">
+        <div class="col-md-2 form-group">
           <label for=""> Select Leave type </label>
         </div>
         <div class="col-md-3 form-group">
-          <select name="leaveType" id="#leaveType" class="form-control" [(ngModel)]="leaveType">
-            <option selected="Fixed" value="Fixed">Fixed</option>
-            <option value="Optional">Optional</option>
-            <option value="Other">Other</option>
-            <option value="utility">Utility</option>
-            <option value="medical">Medical</option>
-            <option value="entertainment">Entertainment</option>
-          </select>
+          <input type="text" placeholder="Enter Leave Type" [(ngModel)]="leaveType"
+            [ngModelOptions]="{standalone: true}" class="form-control">
         </div>
 
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for=""> Leave Name </label>
-          </div>
+        <div class="col-md-2 form-group">
+            <label for=""> Leave Count (in days) </label>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <input type="text" placeholder="Enter Leave Name" [(ngModel)]="leaveName"
-              [ngModelOptions]="{standalone: true}" class="form-control">
+            <input type="number" placeholder="Enter Leave Count" [(ngModel)]="lCount"
+              [ngModelOptions]="{standalone: true}" class="form-control" min="0">
           </div>
-          
         </div>
+
       </div>
-
-<div class="row">
-  <div class="col-md-3">
-    <div class="form-group">
-      <label for=""> Leave Count </label>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="form-group">
-      <input type="number" placeholder="Enter Leave Count" [(ngModel)]="lCount"
-        [ngModelOptions]="{standalone: true}" class="form-control" min="0">
-    </div>
-  </div>
-  <div class="col-md-1">
-    <label> leaves </label>
-  </div>
-  <div class="col-md-3 ">
-    <select name="lNum" id="#lNum" class="form-control" [(ngModel)]="lNum">
-      <option selected="Monthly" value="Monthly">Monthly</option>
-      <option value="Quaterly">Quaterly</option>
-      <option value="HalfYearly">Half Yearly</option>
-      <option value="Yearly">Yearly</option>
-      <option value="Daily">Daily</option>
-      <option value="Weekly">Weekly</option>
-      <option value="BiMonthly">Bi-Monthly</option>
-    </select>
-  </div>
-</div>
 
       <div class="row align-items-center mt-4">
         <div class="col-md-10">
@@ -94,9 +49,7 @@
       <thead>
         <tr>
           <th> S.No. </th>
-          <th> Employee type </th>
           <th> Leave type </th>
-          <th> Type Name </th>
           <th> Leave Count </th>
           <th> Action </th>
         </tr>
@@ -104,9 +57,7 @@
       <tbody>
         <tr *ngFor="let item of leaveTypeList;index as i">
           <td> {{i+1}} </td>
-          <td> {{item.employee_type}} </td>
           <td> {{item.leave_type}} </td>
-          <td> {{item.leave_name}} </td>
           <td> {{item.leave_days}}
           </td>
           <td>
