@@ -1,4 +1,4 @@
-<nb-card>
+<nb-card (click)="$event.target.id != 'filterPop' ? filterEnabled = false:null ">
   <nb-card-header>
     <div class="row">
       <div class="col-12">
@@ -8,7 +8,7 @@
   </nb-card-header>
 
   <nb-card-body>
-    <div class="row" (click)="$event.target.id == 'filterPop'? filterEnabled = false:null">
+    <div class="row">
       <div class="col-6">
         <button class="btn btn-primary btn-sm allicons cursor-pointer" id="addMeeting" (click)="addMetting(2)"><i
             class="fa fa-plus" style="font-size: 13px;" aria-hidden="true"></i><label class="pl-1">New
