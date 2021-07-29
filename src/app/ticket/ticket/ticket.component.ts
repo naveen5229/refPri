@@ -295,6 +295,7 @@ export class TicketComponent implements OnInit {
       if (res['code'] > 0) {
         if (res['data']) {
           this.ticketFormFields = res['data'];
+          console.log('fields data',this.ticketFormFields)
           // if (this.activeTab == 'completedTkt') {
             if (refType == 1) {
               this.closingFormInfo = this.ticketFormFields;
@@ -384,15 +385,25 @@ export class TicketComponent implements OnInit {
 //     this.activeModal.close({ response: res, data: (this.additionalFields && this.additionalFields.length > 0) ? this.additionalFields : null });
 //   }
 
-  AddTableRow() {
-    let temp = JSON.parse(JSON.stringify(this.tableHeader));
+  // AddTableRow() {
+  //   let temp = JSON.parse(JSON.stringify(this.tableHeader));
+  //   temp.forEach(e => {
+  //     e.param_value = (e.param_type == 'date') ? new Date() : null;
+  //   });
+  //   this.additionalFields.push(temp);
+  // }
+
+
+    AddTableRow(header,fields) {
+    let temp = JSON.parse(JSON.stringify(header));
     temp.forEach(e => {
       e.param_value = (e.param_type == 'date') ? new Date() : null;
     });
-    this.additionalFields.push(temp);
+    fields.push(temp);
   }
 
  addTransaction() {
+ console.log('oddarray',this.oddArray);
     // console.log("additionalFields:", this.additionalFields);
     // this.close(true);
   }
@@ -1217,6 +1228,7 @@ export class TicketComponent implements OnInit {
   }
 
   saveTicket() {
+    console.log('this.oddarray',this.oddArray);
     let detailsInfo = this.evenArray.concat(this.oddArray);
     let details = detailsInfo.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -1273,9 +1285,7 @@ export class TicketComponent implements OnInit {
   AdditionalFormNew(data) {
     console.log('final data:',data);
     this.common.params = { additionalform: (data.length > 0) ? data : null,isDisabled:true };
-    this.additionalFields = this.common.params.additionalform;
-    this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
-    console.log('this.additionalFields: ', this.additionalFields);
+    const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 
   openAssignUserModal(ticket, type) {

@@ -161,7 +161,7 @@
                   [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                 </auto-suggestion>
                 <auto-suggestion
-                  *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='seconday category'"
+                  *ngIf="oddArray[i].r_coltype ==='auto' && (oddArray[i].r_coltitle).toLowerCase()==='seconday category'"
                   [data]="secCatList" display="name"
                   [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Secondary Category'"
                   name="secCat" id="secCat"
@@ -180,59 +180,52 @@
                   *ngIf="oddArray[i].r_coltype == 'checkbox' && !oddArray[i].r_fixedvalues">
 
                 <div *ngIf="oddArray[i].r_coltype == 'table'">
-                  <div class="table-responsive">
-                    <table class="table-bordered" width="100%">
-                      <thead>
-                        <tr>
-                          <th *ngFor="let head of this.oddArray[i]._param_child[0];">{{head.param_name}}</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let tr of this.oddArray[i]._param_child;let i=index">
-                          <td *ngFor="let td of tr;let vi=index">
-                            <input type="text" class="form-control" [(ngModel)]="td.param_value"
-                              *ngIf="td.param_type == 'text'  && !td.param_info">
-                            <input type="number" class="form-control" [(ngModel)]="td.param_value"
-                              *ngIf="td.param_type == 'number'  && !td.param_info">
-                            <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value"
-                              *ngIf="td.param_type =='date'" [isTime]="false">
-                            </uj-date-time-picker>
-                            <select [(ngModel)]="td.param_value" class="form-conrol col-12"
-                              *ngIf="td.param_info && td.param_type!= 'entity'" (change)="onSelectNotBind($event,td)">
-                              <option [value]="fixValue.option" *ngFor="let fixValue of td.param_info"
-                                [attr.isNotBind]="fixValue.isNonBind">
-                                {{fixValue.option}}</option>
-                            </select>
-                            <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
-                              placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
-                            <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
-                              [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
-                              name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
-                              [preSelected]="{option: td.entity_value}" autocomplete="off">
-                            </auto-suggestion>
-                          </td>
-                          <td>
-                            <button *ngIf="i == additionalFields.length-1 && !isDisabled" type="button"
-                              class="btn btn-bg-transparent" title="Add Row" (click)="AddTableRow()">
-                              <i class="fa fa-plus text-primary cursor-pointer"></i>
-                            </button>
-                            <button *ngIf="i !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                              title="Remove Row" (click)="additionalFields.splice(i,1)">
-                              <i class="fa fa-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <table class="table-bordered" width="100%">
+                    <thead>
+                      <tr>
+                        <th *ngFor="let head of oddArray[i]._param_child[0];">{{head.param_name}}</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let tr of oddArray[i]._param_child;let v = index">
+                        <td *ngFor="let td of tr;let vi=index">
+                          <input type="text" class="form-control" [(ngModel)]="td.param_value"
+                            *ngIf="td.param_type == 'text'  && !td.param_info">
+                          <input type="number" class="form-control" [(ngModel)]="td.param_value"
+                            *ngIf="td.param_type == 'number'  && !td.param_info">
+                          <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value"
+                            *ngIf="td.param_type =='date'" [isTime]="false">
+                          </uj-date-time-picker>
+                          <select [(ngModel)]="td.param_value" class="form-conrol col-12"
+                            *ngIf="td.param_info && td.param_type!= 'entity'" (change)="onSelectNotBind($event,td)">
+                            <option [value]="fixValue.option" *ngFor="let fixValue of td.param_info"
+                              [attr.isNotBind]="fixValue.isNonBind">
+                              {{fixValue.option}}</option>
+                          </select>
+                          <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
+                            placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
+                          <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
+                            [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
+                            name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
+                            [preSelected]="{option: td.entity_value}" autocomplete="off">
+                          </auto-suggestion>
+                        </td>
+                        <td>
+                          <button type="button" *ngIf="v == oddArray[i]._param_child.length-1"
+                            class="btn btn-bg-transparent" title="Add Row"
+                            (click)="AddTableRow(oddArray[i]._param_child[0],oddArray[i]._param_child)">
+                            <i class="fa fa-plus text-primary cursor-pointer"></i>
+                          </button>
+                          <button *ngIf="v !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
+                            title="Remove Row" (click)="oddArray[i]._param_child.splice(v,1)">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
 
-                  <div class="row mt-2">
-                    <div class="col-12 text-right">
-                      <button type="button" *ngIf="!isDisabled" class="btn btn-primary btn-sm"
-                        (click)="addTransaction()">Submit</button>
-                    </div>
-                  </div>
                 </div>
 
                 <!-- dynamic dropdown -->
@@ -317,63 +310,53 @@
 
                 <input type="checkbox" style="margin: 7px 0 0 0;" [(ngModel)]="evenArray[i].r_value"
                   *ngIf="evenArray[i].r_coltype == 'checkbox' && !evenArray[i].r_fixedvalues">
-
-
-  <div *ngIf="evenArray[i].r_coltype == 'table'">
-    <div class="table-responsive">
-      <table class="table-bordered" width="100%">
-        <thead>
-          <tr>
-            <th *ngFor="let head of this.evenArray[i]._param_child[0];">{{head.param_name}}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let tr of this.evenArray[i]._param_child;let i=index">
-            <td *ngFor="let td of tr;let vi=index">
-              <input type="text" class="form-control" [(ngModel)]="td.param_value"
-                *ngIf="td.param_type == 'text'  && !td.param_info">
-              <input type="number" class="form-control" [(ngModel)]="td.param_value"
-                *ngIf="td.param_type == 'number'  && !td.param_info">
-              <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value"
-                *ngIf="td.param_type =='date'" [isTime]="false">
-              </uj-date-time-picker>
-              <select [(ngModel)]="td.param_value" class="form-conrol col-12"
-                *ngIf="td.param_info && td.param_type!= 'entity'" (change)="onSelectNotBind($event,td)">
-                <option [value]="fixValue.option" *ngFor="let fixValue of td.param_info"
-                  [attr.isNotBind]="fixValue.isNonBind">
-                  {{fixValue.option}}</option>
-              </select>
-              <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
-                placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
-              <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
-                [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'" name="entityFieldTable"
-                id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
-                [preSelected]="{option: td.entity_value}" autocomplete="off">
-              </auto-suggestion>
-            </td>
-            <td>
-              <button *ngIf="i == additionalFields.length-1 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                title="Add Row" (click)="AddTableRow()">
-                <i class="fa fa-plus text-primary cursor-pointer"></i>
-              </button>
-              <button *ngIf="i !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row"
-                (click)="additionalFields.splice(i,1)">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-12 text-right">
-        <button type="button" *ngIf="!isDisabled" class="btn btn-primary btn-sm"
-          (click)="addTransaction()">Submit</button>
-      </div>
-    </div>
-  </div>
+                <div *ngIf="evenArray[i].r_coltype == 'table'">
+                  <table class="table-bordered" width="100%">
+                    <thead>
+                      <tr>
+                        <th *ngFor="let head of evenArray[i]._param_child[0];">{{head.param_name}}</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let tr of evenArray[i]._param_child;let v = index">
+                        <td *ngFor="let td of tr;let vi=index">
+                          <input type="text" class="form-control" [(ngModel)]="td.param_value"
+                            *ngIf="td.param_type == 'text'  && !td.param_info">
+                          <input type="number" class="form-control" [(ngModel)]="td.param_value"
+                            *ngIf="td.param_type == 'number'  && !td.param_info">
+                          <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value"
+                            *ngIf="td.param_type =='date'" [isTime]="false">
+                          </uj-date-time-picker>
+                          <select [(ngModel)]="td.param_value" class="form-conrol col-12"
+                            *ngIf="td.param_info && td.param_type!= 'entity'" (change)="onSelectNotBind($event,td)">
+                            <option [value]="fixValue.option" *ngFor="let fixValue of td.param_info"
+                              [attr.isNotBind]="fixValue.isNonBind">
+                              {{fixValue.option}}</option>
+                          </select>
+                          <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
+                            placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
+                          <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
+                            [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
+                            name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
+                            [preSelected]="{option: td.entity_value}" autocomplete="off">
+                          </auto-suggestion>
+                        </td>
+                        <td>
+                          <button type="button" *ngIf="v == evenArray[i]._param_child.length - 1"
+                            class="btn btn-bg-transparent" title="Add Row"
+                            (click)="AddTableRow(evenArray[i]._param_child[0],evenArray[i]._param_child)">
+                            <i class="fa fa-plus text-primary cursor-pointer"></i>
+                          </button>
+                          <button *ngIf="v !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
+                            title="Remove Row" (click)="evenArray[i]._param_child.splice(v,1)">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
                 <!-- dynamic data array -->
                 <select [(ngModel)]="evenArray[i].r_value" class="form-conrol col-12"
@@ -413,66 +396,6 @@
             </span>
           </div>
         </div>
-
-        <div class="row" *ngIf="additionalFields.length" [ngClass]="{'justify-content-end': !evenArray.length }">
-          <!-- <div [class]="evenArray.length > 0 ? 'col-12' : 'col-8'">
-            <div class="table-responsive">
-              <table class="table-bordered" width="100%">
-                <thead>
-                  <tr>
-                    <th *ngFor="let head of tableHeader;">{{head.param_name}}</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let tr of additionalFields;let i=index">
-                    <td *ngFor="let td of tr;let vi=index">
-                      <input type="text" class="form-control" [(ngModel)]="td.param_value"
-                        *ngIf="td.param_type == 'text'  && !td.param_info">
-                      <input type="number" class="form-control" [(ngModel)]="td.param_value"
-                        *ngIf="td.param_type == 'number'  && !td.param_info">
-                      <uj-date-time-picker (onChanged)="td.param_value = $event" [dateTimeValue]="td.param_value"
-                        *ngIf="td.param_type =='date'" [isTime]="false">
-                      </uj-date-time-picker>
-                      <select [(ngModel)]="td.param_value" class="form-conrol col-12"
-                        *ngIf="td.param_info && td.param_type!= 'entity'" (change)="onSelectNotBind($event,td)">
-                        <option [value]="fixValue.option" *ngFor="let fixValue of td.param_info"
-                          [attr.isNotBind]="fixValue.isNonBind">
-                          {{fixValue.option}}</option>
-                      </select>
-                      <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
-                        placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
-                      <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
-                        [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
-                        name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
-                        [preSelected]="{option: td.entity_value}" autocomplete="off">
-                      </auto-suggestion>
-                    </td>
-                    <td>
-                      <button *ngIf="i == additionalFields.length-1 && !isDisabled" type="button"
-                        class="btn btn-bg-transparent" title="Add Row" (click)="AddTableRow()">
-                        <i class="fa fa-plus text-primary cursor-pointer"></i>
-                      </button>
-                      <button *ngIf="i !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                        title="Remove Row" (click)="additionalFields.splice(i,1)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-             <div class="row mt-2">
-               <div class="col-12 text-right">
-                 <button type="button" *ngIf="!isDisabled" class="btn btn-primary btn-sm"
-                   (click)="addTransaction()">Submit</button>
-               </div>
-             </div>
-          </div> -->
-        </div>
-
-
         <!-- end: dyn field -->
         <div class="row footer mt-2">
           <div class="col text-right">
@@ -759,12 +682,3 @@
   </div>
 </div>
 <!--end: Detailed Info -->
-
-
-
-
-<!-- <div class="row mt-2">
-   <div class="col-12 text-right">
-     <button type="button" *ngIf="!isDisabled" class="btn btn-primary btn-sm" (click)="addTransaction()">Submit</button>
-   </div>
- </div> -->
