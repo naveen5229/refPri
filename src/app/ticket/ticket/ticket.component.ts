@@ -376,15 +376,7 @@ export class TicketComponent implements OnInit {
         this.oddArray.push(dd);
       }
     });
-    console.log("evenArray", this.evenArray);
-    console.log("oddArray", this.oddArray);
-console.log('closingFormInfo',this.closingFormInfo);
-console.log('this.oddArray',this.oddArray);
-if(this.oddArray[3].r_coltype == 'table'){
-  this.AdditionalForm('oddArray',3)
-}
 
-    console.log('this.primaryFormInfo',this.primaryFormInfo);
   }
 
 
@@ -1268,44 +1260,22 @@ if(this.oddArray[3].r_coltype == 'table'){
     })
   }
 
-  AdditionalForm(arraytype, i) {
-  console.log('arraytype: ', arraytype);
-  console.log('i: ', i);
- console.log('oddArray',this.oddArray);
-
-    let additionalData = null;
-    if (arraytype === 'oddArray') {
-      additionalData = this.oddArray[i]._param_child;
-    } else if (arraytype === 'evenArray') {
-      additionalData = this.evenArray[i]._param_child;
-    }
-    console.log(additionalData, 'final data');
-    this.common.params = { additionalform: (additionalData && additionalData.length > 0) ? additionalData : null };
-    this.additionalFields = this.common.params.additionalform;
-    this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
-    console.log('this.additionalFields: ', this.additionalFields);
-    // const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    // activeModal.result.then(data => {
-    //   if (data.response) {
-    //     console.log(data.data, 'response')
-    //     if (data.data) {
-    //       if (arraytype === 'oddArray') {
-    //         this.oddArray[i]._param_child = data.data;
-    //       } else if (arraytype === 'evenArray') {
-    //         this.evenArray[i]._param_child = data.data;
-    //       }
-    //     }
-    //   }
-    // });
-  }
+  // AdditionalForm(arraytype, i) {
+  //   console.log('arraytype: ', arraytype);
+  //   console.log('oddarray',this.oddArray)
+  //   let additionalData:any = null;
+  //   additionalData = arraytype == 'oddArray' ? this.oddArray[i]._param_child : this.evenArray[i]._param_child;
+  //   this.additionalFields =  additionalData ? additionalData: null;
+  //   this.tableHeader = this.additionalFields[0];
+  //   console.log('this.additionalFields: ', this.additionalFields);
+  //   }
 
   AdditionalFormNew(data) {
     console.log('final data:',data);
     this.common.params = { additionalform: (data.length > 0) ? data : null,isDisabled:true };
     this.additionalFields = this.common.params.additionalform;
     this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
-     console.log('this.additionalFields: ', this.additionalFields);
-    // const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
+    console.log('this.additionalFields: ', this.additionalFields);
   }
 
   openAssignUserModal(ticket, type) {
