@@ -34,7 +34,7 @@ export class AvailableTimeSlotComponent implements OnInit {
         default: return `${parseInt(JSON.stringify(value))}`;
       }
     },
-  };
+   };
 
   busySchedules = [];
   seperateInfo = {
@@ -52,31 +52,45 @@ export class AvailableTimeSlotComponent implements OnInit {
     public common: CommonService,
     public modalService: NgbModal,
     public userService: UserService) {
-    console.log('params', this.common.params, moment(this.today).format("HH"));
+
     this.title = this.common.params.title;
 
     this.timeRangeSlotSwitch = this.common.params.freeSlots;
 
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
+    console.log('this.common.params.preBookedScheduler: ', this.common.params.preBookedScheduler);
+
+this.common.params.preBookedScheduler.forEach((element:any,mainindex:number,mainarray:any) => {
+mainarray.forEach((item:any,index:number,array:any)=>{
+console.log('item: ', item);
+console.log('item.schedule[0].meeting_host',item.schedule[0].meeting_host);
+ element.option.ticksTooltip = (val: any): any => `Host: ${item.schedule[0].meeting_host}`;
+})
+
+});
+
+
     let bookedSchedules = [];
     this.common.params.preBookedScheduler.map(schedule => {
+
       if (schedule['schedule'] && schedule['schedule'].length > 0) {
         schedule['schedule'].map(data => bookedSchedules.push(data));
       }
     });
-    console.log(this.busySchedules, bookedSchedules);
-    console.log('book schedules', bookedSchedules);
-    console.log('param values',this.common.params);
+
+
+
 
     this.common.params.preBookedScheduler.map((item:any)=>{
     item.option.translate((value:any)=>{
-    console.log('translate values',value);
+
     });
     });
 
   for(let item of this.common.params.preBookedScheduler){
-   console.log('trasnslate options',item.option.translate);
+
   }
+
 
     this.options.getTickColor = (value: number): string => {
       for (let i = 0; i < bookedSchedules.length; i++) {
@@ -108,7 +122,7 @@ export class AvailableTimeSlotComponent implements OnInit {
       }
       this.value = slotFrom;
       this.highValue = slotTo;
-      console.log('after time assign', this.value, this.highValue);
+
     }
 
     //if time restricted
@@ -128,7 +142,7 @@ export class AvailableTimeSlotComponent implements OnInit {
 
   setMinTime(day) {
     let min = parseInt(moment(day).format("mm"));
-    console.log(min);
+
     if(min == 0){
       return parseInt(moment(day).format("HH"));
     }else if (min >= 0 && min <= 15) {
@@ -157,7 +171,7 @@ export class AvailableTimeSlotComponent implements OnInit {
       fromTime.set({ minute: 0 });
       toTime.set({ minute: 0 });
 
-      console.log(from[1], to[1]);
+
       switch (from[1]) {
         case '25': { interval.from.mm = '15', fromTime.set({ minute: 15 }); } break;
         case '5': { interval.from.mm = '30', fromTime.set({ minute: 30 }); } break;
@@ -173,13 +187,13 @@ export class AvailableTimeSlotComponent implements OnInit {
       let timeDuration = moment.utc(toTime.diff(fromTime)).format('HH:mm:ss');
       interval.duration.hh = timeDuration.split(':')[0];
       interval.duration.mm = timeDuration.split(':')[1];
-      console.log('fromTime:', fromTime, 'toTime:', toTime, 'timeDuration', timeDuration);
+
       this.closeModal(true, interval)
     }
   }
 
   // getSeperateInfo(event, schedule) {
-  //   console.log(" schedule", event, schedule);
+  //
   //   this.seperateInfo = schedule;
   //   if (this.seperateInfo.schedule && this.seperateInfo.schedule.length > 1) {
   //     // let tooltipEle = document.getElementById('ngx-tooltip');
@@ -194,12 +208,15 @@ export class AvailableTimeSlotComponent implements OnInit {
 
   manageIcons(schedule, iconState) {
     this.busySchedules.forEach(ele => {
-      ele.detaildIcon = true
+
+    ele.detaildIcon = true;
+    ele.option.ticksTooltip = (val: string): string => `Host: ${ele.host}`;
+
       if (ele.userid == schedule.userid) {
         ele.detaildIcon = iconState
       }
     });
-    console.log('edited:', this.busySchedules)
+
   }
 
   shiftSlot() {
@@ -212,3 +229,5 @@ export class AvailableTimeSlotComponent implements OnInit {
     }
   }
 }
+
+//  ticksTooltip: (val: number): string => `Tooltip: ${val}`,
