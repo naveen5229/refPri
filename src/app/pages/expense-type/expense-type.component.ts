@@ -17,7 +17,7 @@ import { ApiService } from '../../Service/Api/api.service';
 export class ExpenseTypeComponent implements OnInit {
  startDate = new Date();
  endDate = new Date();
- category:any;
+ category:any = 'accommodation';
  allUsers:any[] = [];
  allVisits:any[] = [];
  expensdetail:any;
@@ -163,7 +163,7 @@ SubmitExpenses(){
     this.common.showError();
     console.log("error:", err);
   }
-  
+
   );
 
 }

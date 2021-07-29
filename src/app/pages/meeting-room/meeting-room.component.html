@@ -5,12 +5,15 @@
 
   <nb-card-body class="min-h-auto">
       <div class="row align-items-center">
-  <div class="col-3">
+  <!-- <div class="col-3">
     <div class="col-12" style="display:inline-block;">
       <auto-suggestion (onSelected)="foUsers($event)" [display]="['name','mobileno']" [data]="FoData"
       placeholder="FO User" seperator="-"  [preSelected]="null" className="borderStyle" inputId="id">
       </auto-suggestion>
     </div>
+  </div> -->
+  <div class = "col-1">
+    <label>Select Office</label>
   </div>
   <div class="col-3">
     <!-- <div class="col-12" style="display:inline-block;"> -->
@@ -19,11 +22,15 @@
       </auto-suggestion>
     <!-- </div> -->
   </div>
+  <div class="col-2">
+    <label>Enter Meeting Room Name</label>
+  </div>
   <div class="col-3">
     <input type="text" class="form-control"  id="meetingRoomName" placeholder="Enter Meeting Room Name" [(ngModel)]="meetingRoomName">
   </div>
   <div class="col-3">
     <button (click)='addMeetingRoom()' class="btn btn-primary">{{btn}}</button>
+    <button type="reset" class="btn btn-danger" (click)="resetDetails()"> Reset </button>
   </div>
   </div>
   </nb-card-body>
