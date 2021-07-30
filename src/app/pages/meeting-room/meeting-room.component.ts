@@ -10,23 +10,24 @@ import { CommonService } from '../../Service/common/common.service';
 })
 export class MeetingRoomComponent implements OnInit {
   btn = "Submit";
+  title = "Meeting Room";
   transId:any;
   id = null;
-  title:any;
   constructor(public common: CommonService,
     public api: ApiService,
     public modalService: NgbModal) {
       this.id = null;
-      this.getFoData(null);
-      this.getOfficeDataForWifi(null);
+      // this.getFoData(null);
+      this.getMeetingRoomList();
+      this.getOfficeDataForWifi();
      }
   meetingRoomName = null;
   meetingRoomList = [];
   wifiFoId = null;
-  officeListId = null;
+  officeListId = 1;
   officeDataForWifi = [];
   FoData = [];
-  name="";
+  name="Elogist(605-606)";
 
  resetDetails(){
     this.meetingRoomName = null;
@@ -35,23 +36,24 @@ export class MeetingRoomComponent implements OnInit {
       headings: {},
       columns: [],
     };
-    this.officeListId = null;
-    this.name = "";
+    this.officeListId = 1;
+    this.name = "Elogist(605-606)";
     this.btn = "submit";
     this.id = null;
+    this.getMeetingRoomList();
  }
 
- foUsers(event) {
-  console.log("Elogist Company:", event);
-    this.wifiFoId = event.id;
-    this.getMeetingRoomList(event.id);
-    this.getOfficeDataForWifi(event.id);
-}
+//  foUsers(event) {
+//   console.log("Elogist Company:", event);
+//     this.wifiFoId = event.id;
+//     this.getMeetingRoomList(event.id);
+//     this.getOfficeDataForWifi(event.id);
+// }
 
-getOfficeDataForWifi(id) {
+getOfficeDataForWifi() {
   this.officeDataForWifi = [];
   this.common.loading++;
-  this.api.getTranstruck('Admin/getOfficeList?foUserId=' + id, 'I')
+  this.api.getTranstruck('Admin/getOfficeList', 'I')
     .subscribe(res => {
       this.common.loading--;
       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
@@ -64,26 +66,27 @@ getOfficeDataForWifi(id) {
     });
 }
 
-getFoData(id) {
-  this.common.loading++;
-  this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId=' + id)
-    .subscribe(res => {
-      this.common.loading--;
-      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
-      if (!res['data']) return;
-      this.FoData = res['data'];
-    }, err => {
-      this.common.loading--;
-      this.common.showError();
-      console.log(err);
-    });
-}
+// getFoData(id) {
+//   this.common.loading++;
+//   this.api.getTranstruck('AxesUserMapping/getElogistCompany.json?elPartnerId=' + id)
+//     .subscribe(res => {
+//       this.common.loading--;
+//       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+//       if (!res['data']) return;
+//       this.FoData = res['data'];
+//     }, err => {
+//       this.common.loading--;
+//       this.common.showError();
+//       console.log(err);
+//     });
+// }
 
-getMeetingRoomList(id) {
-  this.transId = id;
+getMeetingRoomList() {
+  // this.transId = id;
   this.meetingRoomList = [];
   this.common.loading++;
-  this.api.get('Admin/getMeetingRoomList?foid='+id, 'I').subscribe(res => {
+  // this.api.get('Admin/getMeetingRoomList?foid='+id, 'I').subscribe(res => {
+    this.api.get('Admin/getMeetingRoomList', 'I').subscribe(res => {
     this.common.loading--;
     if (res['code'] >0){
       this.meetingRoomList = res['data'] || [];
@@ -135,7 +138,7 @@ generateHeadingsRoom() {
 }
 
 actionIcons(param:any) {
-  console.log("params",param);
+  console.log("action icons params",param);
   let Icons = [{
     class: "btn btn-primary cursor-pointer",
     action: this.editMeetingRoom.bind(this,param),
@@ -176,19 +179,21 @@ getTableColumnsRoom() {
 
 editMeetingRoom(param:any){
   for(const property in param) {
-    if(property=="office_name"){
-    let y = this.officeDataForWifi.find(x => x.name === param[property]);
-    console.log("y",y);
-    this.officeListId = y._id;
-    this.name = y.name;
+    if(property.charAt(0)=="_"){
+      this.id = param[property];
+    console.log("this.id", this.id);
     }
     else if(property=="room_name"){
       this.meetingRoomName = param[property];
     }
-    else
-    this.id = param[property];
+    else{
+      let y = this.officeDataForWifi.find(x => x.name === param[property]);
+      console.log("y office id",y);
+      this.officeListId = y._id;
+      this.name = y.name;
+    }
   }
-     this.wifiFoId = this.transId;
+    //  this.wifiFoId = this.transId;
 
 console.log("edit param", param);
 this.btn = "update";
@@ -200,9 +205,9 @@ let id:any;
     if(property.charAt(0)=="_")
            id = param[property];
   }
-  let params = {
-    foid: this.wifiFoId,
-  }
+  // let params = {
+  //   foid: this.wifiFoId,
+  // }
   let par: any = {
     id: id,
   }
@@ -210,7 +215,11 @@ let id:any;
   .subscribe((res: any) => {
     this.common.loading--;
     if (res['code']>0) {
-      this.getMeetingRoomList(params.foid);
+      // this.getMeetingRoomList(params.foid);
+      this.resetDetails();
+      this.getMeetingRoomList();
+      this.getOfficeDataForWifi();
+
     } else {
       this.common.showError("error");
     }
@@ -223,16 +232,16 @@ console.log("delete id", id);
 
 addMeetingRoom() {
   let param = {
-    foid: this.wifiFoId,
+    // foid: this.wifiFoId,
     name: this.meetingRoomName,
     officeid: this.officeListId,
     nId:this.id,
     requestId: null
   }
-  if(!param.foid){
-    this.common.showError("FO-User is missing");
-    return false;
-  }
+  // if(!param.foid){
+  //   this.common.showError("FO-User is missing");
+  //   return false;
+  // }
   if(!param.name || param.name.trim()==""){
     this.common.showError("Room Name is missing");
     return false;
@@ -245,7 +254,8 @@ addMeetingRoom() {
       if (res['code']>0) {
         this.resetDetails();
         this.common.showToast(res['msg']);
-        this.getMeetingRoomList(param.foid);
+        this.getMeetingRoomList();
+        this.getOfficeDataForWifi();
       } else {
         this.common.showError(res['msg']);
       }

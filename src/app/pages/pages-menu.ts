@@ -15,7 +15,7 @@ export const MENU_ITEMS = JSON.stringify([
     //   }
     // ]
   },
- 
+
   {
     title: "Admin",
     icon: 'people-outline',
@@ -429,6 +429,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/leave-policy',
         home: true,
       },
+      {
+        title: 'Employee Leave Balance',
+        icon: 'wifi-outline',
+        link: '/pages/employee-leave-balance',
+        home: true,
+      },
     ]
   },
   {
@@ -518,6 +524,12 @@ export const MENU_ITEMS = JSON.stringify([
         title: 'Call Admin Report',
         icon: 'phone-outline',
         link: '/pages/call-admin-report',
+        home: true,
+      },
+      {
+        title: 'Meeting Admin Report',
+        icon: 'phone-outline',
+        link: '/pages/meeting-admin-report',
         home: true,
       },
     ]

@@ -137,6 +137,7 @@ export class TaskMessageComponent implements OnInit {
       this.tabType = (this.common.params.ticketEditData.tabType) ? this.common.params.ticketEditData.tabType : null;
       this.ticketData = this.common.params.ticketEditData.ticketData;
       this.isChecked = this.common.params.ticketEditData.isChecked;
+      this.checkPresent = this.ticketType == 110?1:0;
       if (!this.ticketData || this.ticketType == 114) {
         this.getTicketDataByTktId();
       } else if (this.tabType == -8 && this.ticketType == 103 || this.ticketData._tktype == 103) {
@@ -429,8 +430,9 @@ export class TaskMessageComponent implements OnInit {
       this.common.showError();
     });
   }
-
+  checkPresent = 0;
   addNewCCUserToTask() {
+    
     let accessUsers = [this.userListByTask['taskUsers'][0]._assignee_user_id, this.userListByTask['taskUsers'][0]._assigner_id];
     if (this.userListByTask['ccUsers'].length > 0) {
       this.userListByTask['ccUsers'].forEach(element => {
@@ -455,12 +457,12 @@ export class TaskMessageComponent implements OnInit {
       if (x.groupId != null) {
         x.groupuser.forEach(x2 => {
           if (!accessUsers.includes(x2._id)) {
-            CCUsers.push({ user_id: x2._id });
+            CCUsers.push({ user_id: x2._id,name:x2.name });
           }
         })
       } else {
         if (!accessUsers.includes(x.id)) {
-          CCUsers.push({ user_id: x.id });
+          CCUsers.push({ user_id: x.id,name:x.name });
         }
       }
     });
@@ -470,7 +472,9 @@ export class TaskMessageComponent implements OnInit {
         ticketId: this.ticketId,
         taskId: this.ticketData._refid,
         ccUserId: JSON.stringify(CCUsers),
-        ticketType: this.ticketType
+        ticketType: this.ticketType,
+        time:this.ticketData.schedule_time ? this.common.dateFormatter1(new Date(this.ticketData.schedule_time)) : null,
+        checkPresent:this.checkPresent 
       }
       this.common.loading++;
       this.api.post('AdminTask/addNewCCUserToTask', params).subscribe(res => {
@@ -478,7 +482,20 @@ export class TaskMessageComponent implements OnInit {
         if (res['code'] == 1) {
           this.getAllUserByTask();
           this.newCCUserId = [];
-        } else {
+        } else if (res['code'] === -99) {
+          this.common.params = {
+            title: 'User Availability',
+            description: `<b>${res['msg']}`
+          }
+          const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+          activeModal.result.then(data => {
+            if (data.response) {
+              this.checkPresent = 0;
+              this.addNewCCUserToTask();
+            }
+          });
+        } 
+        else {
           this.common.showError(res['msg']);
         }
       }, err => {

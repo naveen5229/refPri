@@ -1,0 +1,105 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row m-0">
+      <h5 class="heading-design">Employee Leave Balance</h5>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body class="min-h-auto">
+    <fieldset>
+      <h6>Add Leaves</h6>
+      <div class="row mb-2">
+        <div class="col-3">
+          <label>Add Type :</label>
+        </div>
+        <div class="col-9">
+          <fieldset>
+            <div class="some-class">
+              <input type="radio" class="radio" name="addType" value='individual' [(ngModel)]="addType" id="y" />
+              <label for="y" style="margin-right:20px">Individual</label>
+              <input type="radio" class="radio" name="addType" value='import' [(ngModel)]="addType" />
+              <label for="z"> CSV</label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    
+      <div class="row mb-2" *ngIf='addType=="import"'>
+        <div class="col-3">
+          Employee Leave Balance Csv <span class="require">*</span>
+        </div>
+        <div class="col-5">
+          <div class="upload-btn-wrapper">
+            <input type="file" name="csv" (change)="handleFileSelection($event)">
+          </div>
+        </div>
+        <!-- <div class="col-2">
+          <button class="btn btn-primary btn-sm mr-2 mb-1" type="button" (click)="uploadCsv()">Import</button>
+        </div> -->
+        <div class="col-4">
+          <span  (click)="sampleCsv()" style="color: blue; text-decoration: underline; cursor: pointer;">Sample
+            Csv</span>
+        </div>
+      </div>
+
+      <div class="row align-items-center mb-2" *ngIf='addType=="individual"'>
+        <div class="col-md-2 form-group">
+          <label for=""> Select Employee </label>
+        </div>
+        <div class="col-md-2 form-group">
+          <auto-suggestion (onSelected)="selectedUser($event)" [data]="allUsers" display='name'
+                    placeholder="Search User" autocomplete="off" name="primaryUser" inputId="primaryUser"
+                    [preSelected]="{name:userName}"> </auto-suggestion>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for=""> W.e.f. </label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <uj-date-time-picker (onChanged)="leaves.wef=($event)"
+              [dateTimeValue]="leaves.wef" [isTime]="false">
+            </uj-date-time-picker>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for=""> Added Leaves </label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <input type="number" placeholder="Added Leave" [(ngModel)]="leaves.count"
+              class="form-control" min="0">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row align-items-center mt-1">
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+          <button class="btn btn-danger" (click)="resetForm()">Reset</button>
+          <button class="btn btn-primary" style="margin-left:20px" (click)="saveData()">{{btnText}}</button>
+        </div>
+      </div>
+
+    </fieldset>
+
+
+  </nb-card-body>
+
+
+  <nb-card-body>
+    <div class="row ml-1">
+      <div class="col-12 pl-0">
+        <smart-table *ngIf="employeeLeaves.length!=0" [data]="table.data" [settings]="table.settings"
+          id="leavesPloicies">
+        </smart-table>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>

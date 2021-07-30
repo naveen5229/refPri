@@ -58,18 +58,39 @@
         </auto-suggestion>
       </div> -->
       </div>
-
-      <div>
-        <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i
-            class="fas fa-chevron-right"></i></p>
-      </div>
+    <div>
+      <p class="dirbtn" (click)="forwardMove();selectedDept = {id:null,name:null}"><i class="fas fa-chevron-right" ></i></p>
     </div>
 
+   </div>
+   <div class="input-group" *ngIf="['Tmg-Task','Tmg-worklog','tmgCallDashboard'].includes(selectedDashboard)">
+    <i>Department: </i>
+    <button type="button" class="btn btn-primary">
+      <i class="fas fa-search"></i>
+    </button>
+    <div class="form-outline">
+     <select [(ngModel)]="selectedDept.id">
+     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
+     </select>
+    </div>
+  </div>
 
-    <div class="search-group">
+  <div class="input-group" *ngIf="selectedDashboard == 'tmgProcess'">
+    <i>Process: </i>
+    <button type="button" class="btn btn-primary">
+      <i class="fas fa-search"></i>
+    </button>
+    <div class="form-outline">
+     <select [(ngModel)]="selectedDept.id">
+     <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
+     </select>
+    </div>
+  </div>
+
+    <div class="search-group" *ngIf="selectedDashboard == 'tmgTicketDashboard'">
       <div class="input-group">
         <label for=""> Department: </label>
-     
+
         <div class="form-outline">
           <select [(ngModel)]="selectedDept.id" class="form-control">
             <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
@@ -79,7 +100,7 @@
 
       <div class="input-group">
         <label for=""> Ticket Process: </label>
-      
+
         <div class="form-outline">
           <select [(ngModel)]="selectedTicketProcess.id" class="form-control">
             <option *ngFor="let tp of ticketProcesses" [value]="tp._id">{{tp.name}}</option>
@@ -99,7 +120,7 @@
    </div> -->
 
    <tmg-task *ngIf="['Tmg-Task','Tmg-worklog','tmgProcess','tmgCallDashboard'].includes(selectedDashboard)" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></tmg-task>
-   <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-ticket>
+   <ngx-tmg-ticket *ngIf="selectedDashboard == 'tmgTicketDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id" [tpId]="selectedTicketProcess.id"></ngx-tmg-ticket>
    <ngx-tmg-meeting *ngIf="selectedDashboard == 'tmgMeetingDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-meeting>
    <ngx-tmg-visit *ngIf="selectedDashboard == 'tmgVisitDashboard'" [pageType]="selectedDashboard" [deptId]="selectedDept.id"></ngx-tmg-visit>
   </nb-card-body>
