@@ -1,0 +1,49 @@
+<nb-card>
+  <nb-card-header>
+      <div class="row m-0">
+          <h5 class="heading-design">Meeting Admin Report</h5>
+      </div>
+  </nb-card-header>
+
+  <nb-card-body>
+      <div class="tabs_style_main">
+          <ul class="tabs_style text-left">
+              <li [ngClass]="activeTab=='user-meeting'?'active':''" (click)="activeTab='user-meeting';getData()">
+                  User Meeting List
+              </li>
+              <li [ngClass]="activeTab=='follow-up-meeting'?'active':''"
+                  (click)="activeTab='follow-up-meeting';getData()">
+                  Follow-up Meetings
+              </li>
+          </ul>
+      </div>
+
+      <div class="row ml-1">
+          <div class="col-2">
+              <label style="margin-left: 10px;">Start Date</label>
+              <uj-date-time-picker (onChanged)="startTime=($event)" [dateTimeValue]="startTime" [isTime]="false">
+              </uj-date-time-picker>
+          </div>
+          <div class="col-2">
+              <label>End Date</label>
+              <uj-date-time-picker (onChanged)="endTime=($event)" [dateTimeValue]="endTime" [isTime]="false"
+                  [isStart]="false">
+              </uj-date-time-picker>
+          </div>
+          <div class="col-2">
+              <button type="submit" id="submit" (click)="getData()" class="btn btn-primary" style="margin-top: 20px;">
+                  Submit
+              </button>
+          </div>
+      </div>
+
+      <div class="row ml-1">
+          <div class="col-12 pl-0">
+              <smart-table *ngIf="meetingAdminList.length!=0" [data]="table.data" [settings]="table.settings"
+                  id="meetingAdminList">
+              </smart-table>
+          </div>
+      </div>
+
+  </nb-card-body>
+</nb-card>
