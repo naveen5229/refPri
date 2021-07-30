@@ -429,6 +429,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/leave-policy',
         home: true,
       },
+      {
+        title: 'Employee Leave Balance',
+        icon: 'wifi-outline',
+        link: '/pages/employee-leave-balance',
+        home: true,
+      },
     ]
   },
   {
