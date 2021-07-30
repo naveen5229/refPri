@@ -98,6 +98,7 @@
           <label>{{evenArray[i].r_colalias}} <span style="color: red" *ngIf="evenArray[i].r_required">*</span></label>
         </div>
 
+
         <div class="col-8">
           <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
           <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control"
