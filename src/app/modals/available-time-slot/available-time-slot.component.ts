@@ -27,14 +27,19 @@ export class AvailableTimeSlotComponent implements OnInit {
     showTicks: true,
     minLimit: 1,
     translate: (value: number): string => {
-      switch (value - parseInt(JSON.stringify(value))) {
+       switch (value - parseInt(JSON.stringify(value))) {
         case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
         case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
         case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
         default: return `${parseInt(JSON.stringify(value))}`;
       }
     },
-   };
+    //  getLegend: (value: number): string => {
+    //   if (value == 11.50) {
+    //     return `<b>${value}</b>`;
+    //   }
+    // }
+     };
 
   busySchedules = [];
   seperateInfo = {
@@ -60,14 +65,21 @@ export class AvailableTimeSlotComponent implements OnInit {
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
     console.log('this.common.params.preBookedScheduler: ', this.common.params.preBookedScheduler);
 
-this.common.params.preBookedScheduler.forEach((element:any,mainindex:number,mainarray:any) => {
-mainarray.forEach((item:any,index:number,array:any)=>{
-console.log('item: ', item);
-console.log('item.schedule[0].meeting_host',item.schedule[0].meeting_host);
- element.option.ticksTooltip = (val: any): any => `Host: ${item.schedule[0].meeting_host}`;
-})
+// this.common.params.preBookedScheduler.forEach((element:any,mainindex:number) => {
+//   console.log('element',element)
+// element.schedule.forEach((item:any,index:number)=>{
+// console.log('schedule',item);
+//   element.option.getLegend = (value: number): string => {
+//     let val = this.getvalue(value)
+//     console.log(value,val,item.fromTime)
+//       if (val == item.fromTime) {
+//         return `<b class="meeting-host">${item.meeting_host}</b>`;
+//       }
+//     }
+// });
+// });
 
-});
+
 
 
     let bookedSchedules = [];
@@ -77,6 +89,7 @@ console.log('item.schedule[0].meeting_host',item.schedule[0].meeting_host);
         schedule['schedule'].map(data => bookedSchedules.push(data));
       }
     });
+
 
 
 
@@ -155,6 +168,18 @@ console.log('item.schedule[0].meeting_host',item.schedule[0].meeting_host);
       return parseInt(moment(day).format("HH")) + 1;
     }
   }
+
+
+getvalue(value){
+let val = JSON.stringify(value).split('.');
+// console.log(val[1]);
+switch(val[1]){
+  case '15': { return val[0] + '.25' } break;
+        case '3': { return val[0] + '.5' } break;
+        case '45': { return val[0] + '.75' } break;
+        default : return (!val[1]) ? `${val[0]}` : `${val[0]}.${val[1]}`;
+}
+}
 
   addTime() {
     if (this.type === 'time') {
