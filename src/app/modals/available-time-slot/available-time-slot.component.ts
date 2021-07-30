@@ -27,14 +27,19 @@ export class AvailableTimeSlotComponent implements OnInit {
     showTicks: true,
     minLimit: 1,
     translate: (value: number): string => {
-      switch (value - parseInt(JSON.stringify(value))) {
+       switch (value - parseInt(JSON.stringify(value))) {
         case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
         case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
         case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
         default: return `${parseInt(JSON.stringify(value))}`;
       }
     },
-  };
+    //  getLegend: (value: number): string => {
+    //   if (value == 11.50) {
+    //     return `<b>${value}</b>`;
+    //   }
+    // }
+     };
 
   busySchedules = [];
   seperateInfo = {
@@ -52,32 +57,53 @@ export class AvailableTimeSlotComponent implements OnInit {
     public common: CommonService,
     public modalService: NgbModal,
     public userService: UserService) {
-    console.log('params', this.common.params, moment(this.today).format("HH"));
+
     this.title = this.common.params.title;
 
     this.timeRangeSlotSwitch = this.common.params.freeSlots;
-    console.log('shifting data',this.timeRangeSlotSwitch)
 
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
+    console.log('this.common.params.preBookedScheduler: ', this.common.params.preBookedScheduler);
+
+// this.common.params.preBookedScheduler.forEach((element:any,mainindex:number) => {
+//   console.log('element',element)
+// element.schedule.forEach((item:any,index:number)=>{
+// console.log('schedule',item);
+//   element.option.getLegend = (value: number): string => {
+//     let val = this.getvalue(value)
+//     console.log(value,val,item.fromTime)
+//       if (val == item.fromTime) {
+//         return `<b class="meeting-host">${item.meeting_host}</b>`;
+//       }
+//     }
+// });
+// });
+
+
+
+
     let bookedSchedules = [];
     this.common.params.preBookedScheduler.map(schedule => {
+
       if (schedule['schedule'] && schedule['schedule'].length > 0) {
         schedule['schedule'].map(data => bookedSchedules.push(data));
       }
     });
-    console.log(this.busySchedules, bookedSchedules);
-    console.log('book schedules', bookedSchedules);
-    console.log('param values',this.common.params);
+
+
+
+
 
     this.common.params.preBookedScheduler.map((item:any)=>{
     item.option.translate((value:any)=>{
-    console.log('translate values',value);
+
     });
     });
 
   for(let item of this.common.params.preBookedScheduler){
-   console.log('trasnslate options',item.option.translate);
+
   }
+
 
     this.options.getTickColor = (value: number): string => {
       for (let i = 0; i < bookedSchedules.length; i++) {
@@ -109,7 +135,7 @@ export class AvailableTimeSlotComponent implements OnInit {
       }
       this.value = slotFrom;
       this.highValue = slotTo;
-      console.log('after time assign', this.value, this.highValue);
+
     }
 
     //if time restricted
@@ -129,7 +155,7 @@ export class AvailableTimeSlotComponent implements OnInit {
 
   setMinTime(day) {
     let min = parseInt(moment(day).format("mm"));
-    console.log(min);
+
     if(min == 0){
       return parseInt(moment(day).format("HH"));
     }else if (min >= 0 && min <= 15) {
@@ -142,6 +168,18 @@ export class AvailableTimeSlotComponent implements OnInit {
       return parseInt(moment(day).format("HH")) + 1;
     }
   }
+
+
+getvalue(value){
+let val = JSON.stringify(value).split('.');
+// console.log(val[1]);
+switch(val[1]){
+  case '15': { return val[0] + '.25' } break;
+        case '3': { return val[0] + '.5' } break;
+        case '45': { return val[0] + '.75' } break;
+        default : return (!val[1]) ? `${val[0]}` : `${val[0]}.${val[1]}`;
+}
+}
 
   addTime() {
     if (this.type === 'time') {
@@ -158,7 +196,7 @@ export class AvailableTimeSlotComponent implements OnInit {
       fromTime.set({ minute: 0 });
       toTime.set({ minute: 0 });
 
-      console.log(from[1], to[1]);
+
       switch (from[1]) {
         case '25': { interval.from.mm = '15', fromTime.set({ minute: 15 }); } break;
         case '5': { interval.from.mm = '30', fromTime.set({ minute: 30 }); } break;
@@ -174,13 +212,13 @@ export class AvailableTimeSlotComponent implements OnInit {
       let timeDuration = moment.utc(toTime.diff(fromTime)).format('HH:mm:ss');
       interval.duration.hh = timeDuration.split(':')[0];
       interval.duration.mm = timeDuration.split(':')[1];
-      console.log('fromTime:', fromTime, 'toTime:', toTime, 'timeDuration', timeDuration);
+
       this.closeModal(true, interval)
     }
   }
 
   // getSeperateInfo(event, schedule) {
-  //   console.log(" schedule", event, schedule);
+  //
   //   this.seperateInfo = schedule;
   //   if (this.seperateInfo.schedule && this.seperateInfo.schedule.length > 1) {
   //     // let tooltipEle = document.getElementById('ngx-tooltip');
@@ -195,16 +233,18 @@ export class AvailableTimeSlotComponent implements OnInit {
 
   manageIcons(schedule, iconState) {
     this.busySchedules.forEach(ele => {
-      ele.detaildIcon = true
+
+    ele.detaildIcon = true;
+    ele.option.ticksTooltip = (val: string): string => `Host: ${ele.host}`;
+
       if (ele.userid == schedule.userid) {
         ele.detaildIcon = iconState
       }
     });
-    console.log('edited:', this.busySchedules)
+
   }
 
   shiftSlot() {
-    console.log(this.timeRangeSlotSwitch,this.rangePos)
     this.value = this.setMinTime(this.timeRangeSlotSwitch[this.rangePos].start);
     this.highValue = this.setMinTime(this.timeRangeSlotSwitch[this.rangePos].end);
     if (this.rangePos >= this.timeRangeSlotSwitch.length - 1) {
@@ -214,3 +254,5 @@ export class AvailableTimeSlotComponent implements OnInit {
     }
   }
 }
+
+//  ticksTooltip: (val: number): string => `Tooltip: ${val}`,

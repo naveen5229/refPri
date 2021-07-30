@@ -791,18 +791,18 @@ this.meetingData.upcomingData.splice(index,1);
       this.common.loading--;
       if (res['code'] === 1) {
         let schedules = [];
-        if (res['data'])
-        console.log('res[data]', res['data']);
+        if (res['data'] != null){
           res['data'].map(events => {
             schedules.push({
               start: events.meeting_time,
               end: events.meeting_end_time,
               title: `${events.title},Host:${events.meeting_host}`,
-               color: events.m_type == 2 ? 'rgb(212 135 127)' : 'rgb(133 196 204)',
+              color: events.m_type == 2 ? 'rgb(212 135 127)' : 'rgb(133 196 204)',
               description: events.title
              })
             // ,title:'fetching'
-          })
+         });
+        }
         this.calendarOptions.events = schedules;
         console.log('this.calendarOptions.events: ', this.calendarOptions.events);
         this.calendarOptions.initialView = 'timeGridDay';
@@ -821,9 +821,11 @@ this.meetingData.upcomingData.splice(index,1);
 
   }
 
-  checkSchedule(type) {
+  checkSchedule(type:any) {
     this.selectAvailability = type == 0?"Select User " : "Select Room";
+    console.log('this.selectAvailability: ', this.selectAvailability);
     this.scheduleType = type;
+    console.log('this.scheduleType: ', this.scheduleType);
     this.checkAvailability();
   }
 }

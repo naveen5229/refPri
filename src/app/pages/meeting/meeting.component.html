@@ -37,17 +37,12 @@
         <div class="row align-items-center">
           <div class="col-4">
             <div class="row">
-              <div class="col-6">
-                <label class="form-check-inline">
-                  <input class="form-check-input" type="radio" name="mode" value="0" (click)="checkSchedule('0')"
-                    checked>
-                  User
-                </label>
-              </div>
-              <div class="col-6">
-                <label class="form-check-inline">
-                  <input class="form-check-input" type="radio" name="mode" value="1" (click)="checkSchedule('1')">
-                  Room
+              <div class="col-12">
+                <label class="form-check-inline" *ngFor="let item of ['User','Room'];index as i">
+                  <input class="form-check-input" [checked]="scheduleType == i" [name]="item" type="radio"
+                    [value]="i"
+                    (click)="checkSchedule(i);">
+                  {{item}}
                 </label>
               </div>
             </div>
