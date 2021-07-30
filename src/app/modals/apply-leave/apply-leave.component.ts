@@ -616,7 +616,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
 
     this.common.loading++;
-    this.api.post('Admin/getMeetingSchedule', params).subscribe(res => {
+    this.api.post('Admin/getMeetingScheduleApp', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] === 1) {
         console.log('getMeetingSchedule',res);

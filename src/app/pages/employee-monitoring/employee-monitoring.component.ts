@@ -158,17 +158,31 @@ export class EmployeeMonitoringComponent implements OnInit {
       wifi: { placeholder: 'Wifi' }
     };
   }
-
+  test(report,index,type){
+    console.log(report);
+    let latlng = this.mapService.createLatLng(26.9124336, 75.78727090000007);
+    if(type==1){
+    latlng = this.mapService.createLatLng(report.lat,report.lng);
+    }
+    this.mapService.zoomAt(latlng,12);
+    this.mapService.toggleBounceMF(index,type);
+  }
   getSmartTableRows() {
-    return this.reports.map(report => {
+    return this.reports.map((report,index) => {
       let row = {};
       for (let heading in this.getSmartTableHeadings()) {
-        let action: any = null;
+        let action: any = null;  
         let value = report[heading];
+        if (heading === 'name') {action = this.viewRoute.bind(this, report);
+        }
 
-        if (heading === 'name') action = this.viewRoute.bind(this, report);
-
-        row[heading] = { value, action };
+        row[heading] = { value, action,colActions: {
+          click: '',
+          dblclick: '',
+          // mouseover: this.test.bind(this,report),
+          mouseover: this.test.bind(this,report, index,1),
+          mouseout: this.test.bind(this, report,index, 2)
+        } };
 
         if (heading === 'checkbox') row[heading] = {
           isCheckbox: true,
