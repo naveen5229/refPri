@@ -1,4 +1,4 @@
-<nb-card (click)="$event.target.id != 'filterPop' ? filterEnabled = false:null ">
+<nb-card>
   <nb-card-header>
     <div class="row">
       <div class="col-12">
@@ -23,7 +23,9 @@
 
       <div class="col-6 text-right" *ngIf="windowType=='meetings'">
         <div class="row">
-          <div class="col-4"></div>
+          <div class="col-4">
+          </div>
+
           <div class="col-8" style="display: flex;">
             <input type="search" class="form-control" [(ngModel)]="searchTerm" (search)="getFilteredData()"
               placeholder="Search By Meeting Title/Date/Host Name">
@@ -38,10 +40,14 @@
           <div class="col-4">
             <div class="row">
               <div class="col-12">
-                <label class="form-check-inline" *ngFor="let item of ['User','Room'];index as i">
-                  <input class="form-check-input" [checked]="scheduleType == i" [name]="item" type="radio" [value]="i"
-                    (click)="checkSchedule(i);">
-                  {{item}}
+                <label class="form-check-inline">
+                  <input class="form-check-input" name="scheduletype" checked type="radio" (click)="checkSchedule(0);">
+                  User
+                </label>
+
+                <label class="form-check-inline">
+                  <input class="form-check-input" name="scheduletype" type="radio" (click)="checkSchedule(1);">
+                  Room
                 </label>
               </div>
             </div>
@@ -117,20 +123,18 @@
                 </div>
               </div>
               <div class="col-3 pr-0 past-meeting-actions">
-                <span id="chatIcon" title="Chat" class="cursor-pointer"
+                <span id="chatIcon" title="Chat" class="cursor-pointer1"
                   *ngIf="meeting._meeting_type != 2 || ![meeting._aduserid,meeting._host].includes(loggedInUser)"
                   (click)="ticketMessage(meeting, 0)">
-                  <i class="fas fa-comments text-warning" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+                  <i class="fas fa-comments text-warning" title="chat"
+                    *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
 
                   <div style="display:inline; position: relative;"><i class="fas fa-comments text-success new-comment"
-                      *ngIf="meeting._unreadcount > 0"><span class="chat-items">{{meeting._unreadcount}}</span></i>
+                      *ngIf="meeting._unreadcount > 0" title="chat"><span
+                        class="chat-items">{{meeting._unreadcount}}</span></i>
                   </div>
-
-                  <i class="fas fa-comments no-comment" *ngIf="meeting._unreadcount == -1"></i>
+                  <i class="fas fa-comments no-comment" title="chat" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
-
-
-
                 <span id="editMeeting"
                   *ngIf="[meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && [0,2].includes(meeting._status)">
                   <i class="fas fa-edit text-info" title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"

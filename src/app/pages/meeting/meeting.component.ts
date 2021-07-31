@@ -16,7 +16,7 @@ import { param } from 'jquery';
   styleUrls: ['./meeting.component.scss']
 })
 export class MeetingComponent implements OnInit {
-  scheduleType:any = '0';
+  scheduleType:number = 0;
   searchTerm = '';
   windowType = 'meetings';
   currentDate = new Date();
@@ -97,7 +97,7 @@ export class MeetingComponent implements OnInit {
   clickout(event) {
     console.log('event triggered:', event);
     if ((event.target.innerText >= 1 && event.target.innerText <= 10000) || event.target.innerText == 'Cancel' || event.target.innerText == 'Set' || ['feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'].includes(event.target.innerText.toLowerCase())) return;
-    if (document.getElementById('pastfilterPop')) document.getElementById('pastfilterPop').style.display = 'none';
+    if (document.getElementById('filterPop')) document.getElementById('filterPop').style.display = 'none';
   }
 
   constructor(public common: CommonService,
@@ -779,9 +779,9 @@ this.meetingData.upcomingData.splice(index,1);
       endDate: this.common.dateFormatter1(this.schedule.endTime)
     }
 
-    if (this.scheduleType == '0') {
+    if (this.scheduleType == 0) {
       params.roomId = null;
-    } else if (this.scheduleType == '1') {
+    } else if (this.scheduleType == 1) {
       params.host = null;
     }
 
@@ -821,8 +821,8 @@ this.meetingData.upcomingData.splice(index,1);
 
   }
 
-  checkSchedule(type:any) {
-    this.selectAvailability = type == 0?"Select User " : "Select Room";
+  checkSchedule(type:number) {
+    this.selectAvailability = type == 0 ?"Select User " : "Select Room";
     console.log('this.selectAvailability: ', this.selectAvailability);
     this.scheduleType = type;
     console.log('this.scheduleType: ', this.scheduleType);
