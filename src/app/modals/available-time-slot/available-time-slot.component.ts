@@ -46,12 +46,7 @@ export class AvailableTimeSlotComponent implements OnInit {
           return `${parseInt(JSON.stringify(value))}`;
       }
     },
-    //  getLegend: (value: number): string => {
-    //   if (value == 11.50) {
-    //     return `<b>${value}</b>`;
-    //   }
-    // }
-  };
+    };
 
   busySchedules = [];
   seperateInfo = {
@@ -82,19 +77,18 @@ export class AvailableTimeSlotComponent implements OnInit {
       this.common.params.preBookedScheduler
     );
 
-    this.common.params.preBookedScheduler.map(
-      (element: any, mainindex: number) => {
-        element.schedule.map((item: any, index: number) => {
-          console.log("schedule", item);
-          element.option.getLegend = (value: number): string => {
-            if (value == item.fromTime) {
-              // console.log('val: ', val);
-              return `<b class="meeting-host">${item.meeting_host}</b>`;
-            }
-          };
-        });
-      }
-    );
+    // this.common.params.preBookedScheduler.map(
+    //   (element: any, mainindex: number) => {
+    //     element.schedule.map((item: any, index: number) => {
+    //       console.log("schedule", item);
+    //       element.option.getLegend = (value: number): string => {
+    //         if (value == item.fromTime) {
+    //           return `<b class="meeting-host">${item.meeting_host}</b>`;
+    //         }
+    //       };
+    //     });
+    //   }
+    // );
 
     console.log(
       "this.common.params.preBookedScheduler",
