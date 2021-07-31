@@ -4,10 +4,11 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
+
 <div class="modal-body timeslotbody">
   <div class="row mt-2">
     <div class="col-12 my-auto">
-      <label>Select Time Interval:<span class="text-danger">*</span><i class="fas fa-angle-double-right cursor-pointer" title="Find Next Available slot" (click)="shiftSlot()"></i></label>
+      <label class="time-repeater">Select Time Interval:<span class="text-danger">*</span><i class="fas fa-angle-double-right cursor-pointer" title="Find Next Available slot" (click)="shiftSlot()"></i></label>
     </div>
     <div class="col-12">
       <div class="row" class="custom-slider">
@@ -27,7 +28,6 @@
     </div>
 
     <div class="col-12">
-
       <div class="position-relative">
         <div class="custom-slider range2" *ngFor="let booked of schedule.schedule">
           <ngx-slider [(value)]="booked.fromTime" [(highValue)]="booked.toTime" [options]="schedule.option"

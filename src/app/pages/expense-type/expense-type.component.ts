@@ -125,7 +125,7 @@ getExpenseTypeList(){
       this.common.loading--;
       if (res['code'] !=1) { this.common.showError(res['msg']); return false; };
       this.expenseTypeList = res['data'] || [];
-   //   this.renderTable();
+      this.renderTable();
       console.log(this.expenseTypeList);
     }, err => {
       this.common.loading--;
@@ -221,6 +221,7 @@ deleteExpenseType(item?: any) {
   ngOnInit() {
   // this.getCategoris();
   this.getExpenseTypeList();
+  this.dtTrigger.next();
   }
 
 }
