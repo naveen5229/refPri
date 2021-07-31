@@ -444,6 +444,10 @@ export class TicketComponent implements OnInit {
     }
   }
 
+splicetrash(arr:any,index:number){
+arr.length > 1 ? arr.splice(index,1):arr[0].map(item=>item.param_value = null);
+}
+
   openAddTicketModal() {
     document.getElementById('addTicketModal').style.display = 'block';
   }
@@ -1046,7 +1050,7 @@ export class TicketComponent implements OnInit {
       refType: 2,
     };
     this.common.params = { actionData, title: title, button: "Save" };
-    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static', scrollable: true  });
+    const activeModal = this.modalService.open(TicketClosingFormComponent, { size: 'xl', container: 'nb-layout', backdrop: 'static', scrollable: true  });
     activeModal.result.then(data => {
       if (data.response) {
         console.log(data, 'response');

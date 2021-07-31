@@ -110,7 +110,7 @@
 
 <!--start: addTicketModal -->
 <div class="modal modal-overflow" id="addTicketModal">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add Ticket</h5>
@@ -118,10 +118,10 @@
       </div>
       <div class="modal-body">
         <div class="row form-group">
-          <div class="col-4">
+          <div class="col-1">
             <label>Ticket Process</label>
           </div>
-          <div class="col-8">
+          <div class="col-11">
             <auto-suggestion [data]="tpList" display="name" placeholder="Ticket Process" name="tpName" id="tpName"
               (onSelected)="onSelectedTp($event)"
               [preSelected]="ticketForm.tp.id ? {name: ticketForm.tp.name}:{name:''}" autocomplete="off">
@@ -133,14 +133,15 @@
           <hr>
         </div>
         <div *ngFor="let dd of oddArray ; let i = index; " class="row">
-          <div *ngIf="oddArray[i]" [class]="evenArray.length > 0 ? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
+          <div *ngIf="oddArray[i]" [class]="oddArray[i].r_coltype == 'table' ? 'col-12' : 'col-6'"
+            style="margin-bottom: 1rem;">
             <div *ngIf="oddArray[i].r_colalias" class="row">
-              <div class="col-4">
+              <div [class]="oddArray[i].r_coltype == 'table' ? 'col-1 pr-0':'col-2 pr-0'">
                 <label>{{oddArray[i].r_colalias}}<span style="color: red"
                     *ngIf="oddArray[i].r_required">*</span></label>
               </div>
 
-              <div class="col-8">
+              <div  [class]="oddArray[i].r_coltype == 'table' ? 'col-11':'col-10'">
                 <!-- <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
                                     *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
                 <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control"
@@ -217,10 +218,11 @@
                             (click)="AddTableRow(oddArray[i]._param_child[0],oddArray[i]._param_child)">
                             <i class="fa fa-plus text-primary cursor-pointer"></i>
                           </button>
-                          <button *ngIf="v !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                            title="Remove Row" (click)="oddArray[i]._param_child.splice(v,1)">
+                          <button *ngIf="!isDisabled" type="button" class="btn btn-bg-transparent"
+                            title="Remove Row" (click)="splicetrash(oddArray[i]._param_child,v)">
                             <i class="fa fa-trash"></i>
                           </button>
+                          <!-- td.param_value -->
                         </td>
                       </tr>
                     </tbody>
@@ -265,19 +267,19 @@
             </div>
           </div>
 
-          <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
+          <div *ngIf="evenArray[i]" [class]="evenArray[i].r_coltype == 'table' ? 'col-12':'col-6'">
             <span *ngIf="evenArray[i].r_colalias" class="row">
-              <div class="col-4">
+              <div  [class]="evenArray[i].r_coltype == 'table' ? 'col-1 pr-0':'col-2 pr-0'">
                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
                     *ngIf="evenArray[i].r_required">*</span></label>
               </div>
 
-              <div class="col-8">
+              <div [class]="evenArray[i].r_coltype == 'table' ? 'col-1':'col-10'">
                 <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
                                     *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
                 <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control"
                   [(ngModel)]=evenArray[i].r_value rows="1"></textarea>
-                <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
+                <input type="number" class="form-control mb-2" [(ngModel)]=evenArray[i].r_value
                   *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues"
                   [ngStyle]="((evenArray[i].r_coltitle).toLowerCase()=='latitude') ? {'width':'75%','display':'initial'} : ''">
                 <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value"

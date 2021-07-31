@@ -124,14 +124,14 @@
                 <i class="fa fa-thumbs-up text-success" (click)="changeTicketStatusWithConfirm(item,101,5)"
                   *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
                   aria-hidden="true"></i>
-                <i class="fas fa-trash-alt" *ngIf="selectedTab != 'cc' && item.assignedby == currentUser"
+                <i class="fas fa-trash-alt"  title="delete leave request" *ngIf="selectedTab != 'cc' && item.assignedby == currentUser"
                   (click)="deleteLeave(item)"></i>
                 <i class="fa fa-ban" aria-hidden="true"
                   *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
                   (click)="changeTicketStatusWithConfirm(item,101,-1)"></i>
-                <i class="fas fa-check-square text-warning" *ngIf="selectedTab == 'cc'" aria-hidden="true"
+                <i class="fas fa-check-square text-warning" title="acknowledge leave"  *ngIf="selectedTab == 'cc'" aria-hidden="true"
                   (click)="updateTransactionStatusWithConfirm()"></i>
-                <i class="fas fa-comments" aria-hidden="true" (click)="ticketMessage(item,101)"></i>
+                <i class="fas fa-comments" aria-hidden="true" title=""  (click)="ticketMessage(item,101)"></i>
               </div>
             </td>
           </tr>

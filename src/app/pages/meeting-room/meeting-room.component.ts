@@ -140,7 +140,7 @@ generateHeadingsRoom() {
 actionIcons(param:any) {
   console.log("action icons params",param);
   let Icons = [{
-    class: "btn btn-primary cursor-pointer",
+    class: "btn btn-primary cursor-pointer mr-2",
     action: this.editMeetingRoom.bind(this,param),
     txt: "Edit",
     title: "Edit",
