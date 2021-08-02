@@ -42,6 +42,7 @@ export class TaskComponent implements OnInit {
   ccTaskList = [];
   projectTaskList = [];
   holdTaskList = [];
+  ccUser = [];
   SearchBy = "By Task";
   fabAction = false;
   processTicketNotiSts = {};
@@ -1831,6 +1832,7 @@ export class TaskComponent implements OnInit {
   // end unread task for me list
 
   actionIcons(ticket, type) {
+    console.log("ticket", ticket);
     let icons = [
       {
         class: "fas fa-comments",
@@ -1896,9 +1898,9 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == 101 || type == 103 || type == -102) {
-
       if (ticket._status == 5 || ticket._status == -1) {
-        if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) && (ticket._status == -1 || ticket._assigned_user_id != this.userService.loggedInUser.id)) {
+        if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) &&
+         (ticket._status == -1 || ticket._assigned_user_id != this.userService.loggedInUser.id)) {
 
         } else {
           icons.push({
@@ -1911,6 +1913,29 @@ export class TaskComponent implements OnInit {
       } else if (ticket._reply_demanded > 0) {
         // no action for reply demanded pending
       } else if (ticket._status == 2) {
+        if(ticket.status!="Ack" && ticket.ticket_type== "Broadcast"){
+          console.log("Task not acknowledged");
+        icons.push({
+          class: "fa fa-check-square text-warning",
+          action: this.ackTaskByCcUser(ticket, type),
+          txt: "",
+          title: "Mark Ack as CC Task",
+        });
+      }
+      // else if(ticket.status=="Ack" && ticket._tktype == 114){
+      //   icons.push({
+      //     class: "fa fa-thumbs-up text-success",
+      //     action: this.changeTicketStatusWithConfirm.bind(
+      //       this,
+      //       ticket,
+      //       type,
+      //       5
+      //     ),
+      //     txt: "",
+      //     title: "Mark Completed",
+      //   });
+      // }
+      else{
         icons.push({
           class: "fa fa-thumbs-up text-success",
           action: this.changeTicketStatusWithConfirm.bind(
@@ -1922,6 +1947,7 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Completed",
         });
+      }
         if (type == 101 && [101, 102].includes(ticket._tktype)) {
           //for hold
           icons.push({
@@ -1944,25 +1970,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Rejected",
           });
         }
-      } else if (ticket._status == 3 && [101, 102].includes(ticket._tktype)) {
-        icons.push({
-          class: "fa fa-play-circle",
-          action: this.changeTicketStatusWithConfirm.bind(
-            this,
-            ticket,
-            type,
-            2
-          ),
-          txt: "",
-          title: "Make Task as Unhold",
-        });
       } else if (ticket._status == 0) {
-        icons.push({
-          class: "fa fa-check-square text-warning",
-          action: this.updateTicketStatus.bind(this, ticket, type, 2),
-          txt: "",
-          title: "Mark Ack",
-        });
         icons.push({
           class: "fa fa-times text-danger",
           action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -2234,6 +2242,8 @@ export class TaskComponent implements OnInit {
         remark: remark,
         taskId: ticket._refid,
         ticketType: ticket._tktype,
+        assignedby: ticket._assignee_user_id,
+        tabType: type
       };
       // if (status != -1) this.collapseUnreadTaskUpdateStatus(type, ticket, status);
       // console.log("params:", params, ticket, this.unreadTaskForMeList); return false;
@@ -2283,7 +2293,27 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
-    console.log(status, 'status')
+    let stat : any;
+    let up_time: any;
+    console.log(status, 'status');
+//     if(ticket.expdate != null && ticket.ticket_type == "Broadcast"){
+//       let params =  "?taskId=" + ticket._refid;
+//     this.api.get("AdminTask/getStatusByTask"+ params).subscribe(res => {
+//       console.log("res data", res['data']);
+//       if (res['code'] > 0) {
+//         this.ccUser = res['data'] || [];
+//         stat = this.ccUser[0].status;
+//         up_time =this.ccUser[0].update_time;
+//     } else {
+//         this.common.showError(res['msg']);
+//           }
+//         },
+//           err => {
+//             this.common.showError();
+//             console.log('Error: ', err);
+//           });
+// }
+//  else{
     if (ticket._refid) {
       let preTitle = "Complete";
       if (!status) {
@@ -2317,6 +2347,7 @@ export class TaskComponent implements OnInit {
     } else {
       this.common.showError("Task ID Not Available");
     }
+  // }
   }
 
   ticketMessage(ticket, type) {
@@ -2670,7 +2701,9 @@ export class TaskComponent implements OnInit {
         taskId: ticket._refid,
         ticketType: ticket._tktype,
         status: status,
-        userName: this.userService.loggedInUser.name
+        userName: this.userService.loggedInUser.name,
+        expdate: ticket._expdate,
+        assignedby: ticket._assignee_user_id,
       };
       // this.unreadTaskForMeList = this.unreadTaskForMeList.filter(ele => { return ele._tktid != params.ticketId });
       // this.setTableUnreadTaskForMe(type);
@@ -2699,6 +2732,9 @@ export class TaskComponent implements OnInit {
             // } else {
             //   this.getTaskByType(type)
             // };
+            if(ticket.status == 0){
+              ticket.status = 2;
+            }
             if (status == -1) this.getTaskByType(type);
           } else {
             this.common.showError(res["data"]);
@@ -2718,28 +2754,28 @@ export class TaskComponent implements OnInit {
   collapseUnreadTaskUpdateStatus(ticket, type, status) {
     console.log(ticket)
     let activeRowData = this.unreadTaskForMeList.find(task => task._tktid === ticket._tktid);
-    if (activeRowData._isremind == 1 || activeRowData._is_star_mark == 1) {
-    } else {
-      this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
-    }
+     if (activeRowData._isremind == 1 || activeRowData._is_star_mark == 1) {
+     } else {
+       this.unreadTaskForMeList = this.unreadTaskForMeList.filter(task => task._tktid !== ticket._tktid);
+     }
 
-    console.log(this.unreadTaskForMeList)
-    console.log(activeRowData)
-    if (ticket._cc_user_id && !ticket._cc_status) {
-      activeRowData._cc_status = 1;
-      console.log('Mark Ack as CC Task : 1');
-      this.ackTaskByCcUser(ticket, type);
-    }
-    if (ticket._tktype == 110 && !ticket._mp_status) {
-      activeRowData._mp_status = (status) ? status : 1;
-      console.log('Mark ack as meeting user : 2');
-      this.ackTaskByCcUser(ticket, type);
-    }
-    if (ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) {
-      activeRowData._status = 2;
-      console.log('Mark Ack : 3');
-      this.updateTicketStatus(ticket, type, 2);
-    }
+     console.log(this.unreadTaskForMeList)
+     console.log(activeRowData)
+     if (ticket._cc_user_id && !ticket._cc_status) {
+       activeRowData._cc_status = 1;
+       console.log('Mark Ack as CC Task : 1');
+       this.ackTaskByCcUser(ticket, type);
+     }
+     if (ticket._tktype == 110 && !ticket._mp_status) {
+       activeRowData._mp_status = (status) ? status : 1;
+       console.log('Mark ack as meeting user : 2');
+       this.ackTaskByCcUser(ticket, type);
+     }
+     if (ticket._status == 0 && ticket._assignee_user_id == this.userService.loggedInUser.id) {
+       activeRowData._status = 2;
+       console.log('Mark Ack : 3');
+       this.updateTicketStatus(ticket, type, 2);
+     }
     if ([101, 102].includes(ticket._tktype) && !ticket._assigned_user_status && ticket._assigned_user_id == this.userService.loggedInUser.id) {
       activeRowData._assigned_user_status = 1;
       console.log('Mark Ack as Assigner : 4');
@@ -2755,6 +2791,7 @@ export class TaskComponent implements OnInit {
       console.log('Mark Ack as Completed Task : 6');
       this.ackTaskByAssigner(ticket, type);
     }
+
     console.log('edited:', activeRowData)
 
     this.setTableUnreadTaskForMe(type);

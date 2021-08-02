@@ -1,3 +1,4 @@
+import { ConfirmComponent } from './../../modals/confirm/confirm.component';
 import { TableService } from './../../Service/Table/table.service';
 import { Subject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
@@ -33,6 +34,9 @@ export class LeaveManagementComponent implements OnInit {
 
   ngOnInit() {
   }
+
+
+
 
   getAllAdmin() {
     this.api.get("Admin/getAllAdmin.json").subscribe(

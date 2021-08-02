@@ -81,6 +81,8 @@ import { MeetingComponent } from './meeting/meeting.component';
 import { MeetingRoomComponent } from './meeting-room/meeting-room.component';
 import { CallAdminReportComponent } from './call-admin-report/call-admin-report.component';
 import { LeavePolicyComponent } from './leave-policy/leave-policy.component';
+import { EmployeeLeaveBalanceComponent } from './employee-leave-balance/employee-leave-balance.component';
+import { MeetingAdminReportComponent } from './meeting-admin-report/meeting-admin-report.component';
 
 const routes: Routes = [{
   path: '',
@@ -496,8 +498,17 @@ const routes: Routes = [{
     component:LeavePolicyComponent,
     canActivate: [AuthGuard, RouteGuard]
     },
-    
-    
+    {
+      path:'employee-leave-balance',
+      component:EmployeeLeaveBalanceComponent,
+      canActivate: [AuthGuard, RouteGuard]
+      },
+      {
+        path: 'meeting-admin-report',
+        component: MeetingAdminReportComponent,
+        canActivate: [AuthGuard, RouteGuard]
+        },
+
   ],
 }];
 

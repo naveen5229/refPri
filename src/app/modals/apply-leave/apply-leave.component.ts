@@ -38,9 +38,25 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     desc: null,
     to: null,
     cc: [],
-    endDate: this.common.getDate(2),
+    //endDate: new Date,
+     endDate: this.getDate(),
     type: 4,
     chatFeature: false
+  }
+
+  getDate(days = null, addType = null) {
+    let tempDate = new Date();
+    if (days && days != "") {
+      if (addType && addType == 'minus') {
+        tempDate.setDate(tempDate.getDate() - days);
+      } else {
+        tempDate.setDate(tempDate.getDate() + days);
+      }
+    }
+    else if (!days && !addType){
+      return null;
+    }
+    return tempDate;
   }
 
   userGroupList = [];
@@ -121,7 +137,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           let scheduledTimeTO = moment(new Date(this.common.params.meetingData.schedule_time));
           scheduledTimeTO.add(parseInt(timeduration[0]), 'hours').hours();
           scheduledTimeTO.add(parseInt(timeduration[1]), 'minutes').minutes();
-          console.log('toTime:', scheduledTimeTO);
+
 
           let scheduledTimeFromHr = new Date(this.common.params.meetingData.schedule_time).getHours();
           let scheduledTimeFromMin = new Date(this.common.params.meetingData.schedule_time).getMinutes();
@@ -137,7 +153,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           };
         }
 
-        console.log('Duration:', durationtime, 'selectedTime:', this.selectedTime)
+
 
         this.meetingForm = {
           parentId: null,
@@ -154,7 +170,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           buzz: this.common.params.meetingData._buzz,
           reqId: this.common.params.meetingData._refid
         }
-        console.log(this.meetingForm)
+
       } else if (this.common.params.meetingData && !this.common.params.isEdit) {
         this.meetingForm.parentId = this.common.params.meetingData._refid;
         this.meetingForm.subject = this.common.params.meetingData.subject;
@@ -166,7 +182,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.meetingForm.host = { id: this.common.params.meetingData._host, name: this.common.params.meetingData.host };
         this.meetingForm.buzz = this.common.params.meetingData._buzz;
       }
-      console.log('after', this.meetingForm)
+
     }
 
     this.setTimeValues();
@@ -216,13 +232,15 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       this.common.loading--;
       if (res['code'] > 0) {
         this.meetingRoomList = res['data'] || [];
+
+        this.common.allmeeting = this.meetingRoomList;
       } else {
         this.common.showError(res['msg']);
       }
     }, err => {
       this.common.loading--;
       this.common.showError();
-      console.log('Error: ', err);
+
     });
   }
 
@@ -250,7 +268,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
           this.leaveArray.To = toUser;
           this.leaveArray.cc = ccUsers;
-          console.log("leaveArray111:", this.leaveArray);
+
         }
       } else {
         this.common.showError(res['msg']);
@@ -258,12 +276,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }, err => {
       this.common.loading--;
       this.common.showError();
-      console.log('Error: ', err);
+
     });
   }
 
   requestLeave() {
-    console.log("leaveArray:", this.leaveArray)
+
     let startDate = null;
     let endDate = null;
     if (this.leaveArray.type == 1) {
@@ -306,7 +324,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
     this.common.loading++;
     this.api.post('AdminTask/addLeaveRequest', params).subscribe(res => {
-      console.log(res);
+
       this.common.loading--;
       if (res['code'] === 1) {
         if (res['data'][0]['y_id'] > 0) {
@@ -323,16 +341,17 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       this.common.loading--;
       this.common.showError();
     })
-    console.log(params, 'updated');
+
   }
 
   addBroadcast() {
     if (!this.broadcast.subject) {
       return this.common.showError("Subject is missing");
     }
-    if (!this.broadcast.endDate) {
-      return this.common.showError("Date is missing");
-    } else if (this.broadcast.endDate && this.broadcast.endDate < this.common.getDate()) {
+    // if (!this.broadcast.endDate) {
+    //   return this.common.showError("Date is missing");
+    // } else
+    if (this.broadcast.endDate && this.broadcast.endDate < this.common.getDate()) {
       return this.common.showError("Date must be Current/future date");
     } else if (!this.broadcast.cc || !this.broadcast.cc.length) {
       return this.common.showError("User is missing");
@@ -351,8 +370,16 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       })
     }
 
+  let dat:any;
+  if(this.broadcast.endDate == null){
+    dat = 'null';
+  }
+  else {
+    dat = this.common.dateFormatter(this.broadcast.endDate);
+  }
+    console.log("end date", dat);
     let params = {
-      date: this.common.dateFormatter(this.broadcast.endDate),
+      date: dat,
       to: this.userService.loggedInUser.id,
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,
@@ -363,7 +390,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
     this.common.loading++;
     this.api.post('AdminTask/addBroadcast', params).subscribe(res => {
-      console.log(res);
+
       this.common.loading--;
       if (res['code'] === 1) {
         if (res['data'][0]['y_id'] > 0) {
@@ -382,7 +409,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   selectedMeetingUser(event) {
-    console.log("event:", event[event.length - 1]);
+
     if (event && event.length && !event[event.length - 1].groupId) {
       this.getUserPresence(event[event.length - 1].id);
     }
@@ -401,12 +428,12 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }, err => {
       this.common.loading--;
       this.common.showError();
-      console.log('Error: ', err);
+
     });
   }
 
   adduserConfirm(userPresence, userId) {
-    // console.log("userPresence:",userPresence);
+    //
     if (!userPresence) {
       this.common.params = {
         title: 'User Presence',
@@ -423,7 +450,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
   addMeeting(isChat = null) {
     this.isSaveWithChat = isChat;
-    console.log("addmeeting:", this.meetingForm);
+
     if (this.meetingForm.fromTime && this.selectedTime.from.hh) {
       this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
       this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
@@ -448,7 +475,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     //   return this.common.showError("Meeting time is missing");
     // }
 
-    console.log('before setting time:', this.selectedTime)
+
     // if (this.meetingForm.fromTime) {
     //   this.meetingForm.fromTime.setHours(parseInt(this.selectedTime.from.hh));
     //   this.meetingForm.fromTime.setMinutes(parseInt(this.selectedTime.from.mm));
@@ -484,8 +511,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       buzz: this.meetingForm.buzz,
       requestId: (this.meetingForm.reqId) ? this.meetingForm.reqId : null
     }
-    // console.log("add meeting:", params); return false;
-      console.log("add meeting:", params);
+    //
+
     if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId && this.formType==2) {
       this.common.params = {
         title: 'Alert',
@@ -504,7 +531,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   saveMeeting(params) {
-    // return console.log('inside add meeting:', params);
+    // return
     this.common.loading++;
     this.api.post('Admin/saveMeetingDetail', params).subscribe(res => {
       this.common.loading--;
@@ -552,7 +579,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   freeSchedulesForShifting = [];
 
   checkAvailability() {
-    console.log("checkAvailability:", this.meetingForm, this.formType)
+
     if (this.formType == 2 && (!this.meetingForm.cc || !this.meetingForm.cc.length)) {
       return this.common.showError("User is missing");
     } else if (!this.meetingForm.host.id) {
@@ -578,7 +605,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         }
       })
     }
-    console.log('CC inserted............', CC);
+
 
     let params = {
       requestId: this.meetingForm.reqId,
@@ -594,16 +621,17 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     this.api.post('Admin/getMeetingSchedule', params).subscribe(res => {
       this.common.loading--;
       if (res['code'] === 1) {
-        console.log('getMeetingSchedule',res);
-        console.log(this.hours, this.minutes);
+
+
         // this.selectedTime = { hh: '', mm: '' };
         this.freeSchedulesForShifting = (res['data'] && res['data'].length > 0) ? res['data'][0].available_slots : [];
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
-          return { userid: (timeranges.userid) ? timeranges.userid : timeranges.room_id, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name, is_todo: timeranges.is_todo }
-          console.log(': ', );
+          return { userid: (timeranges.userid) ? timeranges.userid : timeranges.room_id, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name, is_todo: timeranges.is_todo,meeting_host:timeranges.meeting_host }
         }) : [];
+
+
 
 
         let preBookedScheduler: any = [];
@@ -613,19 +641,27 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             if (data._id == this.meetingForm.roomId) userHostUsersList.push({ id: data._id, name: data.room_name })
           });
         }
-        console.log('userHostUsersList.........', userHostUsersList);
+
         userHostUsersList.push(this.meetingForm.host);
         let uniqueUsers = this.common.arrayUnique(userHostUsersList, 'id');
         if (this.busySchedules && this.busySchedules.length > 0) {
-          let groupUser = _.groupBy(this.busySchedules, 'name');
-          console.log(groupUser)
-          Object.keys(groupUser).map(key => {
-            console.log(key);
+          let groupUser:any = _.groupBy(this.busySchedules, 'name');
+
+          Object.keys(groupUser).map((key:any,groupindex:number) => {
+
+
+
             if (groupUser[key] && groupUser[key].length > 0) {
-              console.log(groupUser[key]);
-              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true });
-              console.log(preBookedScheduler);
+
+              //  groupUser[key].forEach((item:any)=>{
+              //   preBookedScheduler.push({
+              //   meeting_host:item.meeting_host
+              // })
+              //  })
+              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true});
+
               groupUser[key].map(schedule => {
+
                 let slotFrom = null;
                 let slotTo = null;
                 switch (schedule.slotFrom['mm']) {
@@ -640,18 +676,23 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
                   case '45': slotTo = (schedule.slotTo['hh'] + '.75'); break;
                   default: slotTo = schedule.slotTo['hh'];
                 }
-                console.log(slotFrom, slotTo);
-                preBookedScheduler.forEach(data => {
-                  if (data.name === key) data.schedule.push({ fromTime: slotFrom, toTime: slotTo, is_todo: schedule.is_todo })
+
+                preBookedScheduler.forEach((data:any,index:number) => {
+                 console.log('index: ', index);
+                 console.log('schedule.meeting_host: ', schedule.meeting_host);
+
+                  if (data.name === key) data.schedule.push({fromTime: slotFrom, toTime: slotTo, is_todo: schedule.is_todo,meeting_host:schedule.meeting_host })
+
                 });
-              })
-            }
-          });
+
+ })
+ }
+});
 
           if (preBookedScheduler && uniqueUsers && preBookedScheduler.length < uniqueUsers.length) {
             let presentStatus = [];
             preBookedScheduler.map(data => presentStatus.push(data.userid));
-            console.log(presentStatus, uniqueUsers);
+
             uniqueUsers.map(user => {
               if (presentStatus.includes(user['id'])) return;
               preBookedScheduler.push({ userid: user['id'], name: user['name'].split('-')[0], schedule: [{ fromTime: null, toTime: null, is_todo: 0 }], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true });
@@ -663,10 +704,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
           });
         }
 
-        console.log('preBookedScheduler:', preBookedScheduler);
-        preBookedScheduler.map(data => data.option.translate = (value: number): string => {
-        console.log('translate value',value);
 
+        preBookedScheduler.map(data => data.option.translate = (value: number): string => {
           switch (value - parseInt(JSON.stringify(value))) {
             case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
             case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
@@ -682,7 +721,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
         this.availableSlot(preBookedScheduler);
 
-        console.log('slot recorded:', preBookedScheduler, this.busySchedules);
+
         // this.validateAvailability();
         // this.showHours = true;
         // document.getElementById('timePickerModalCustom').style.display = 'block';
@@ -696,26 +735,26 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   // validateAvailability() {
-  //   console.log("selected time", this.selectedTime);
+  //
   //   this.setTimeValues();
   //   if (this.busySchedules && this.busySchedules.length) {
   //     // modified area else part : start
   //     this.busySchedules.forEach(schedule => {
   //       if (schedule.slotFrom['hh'] == schedule.slotTo['hh'] && schedule.slotFrom['mm'] == 0 && schedule.slotTo['mm'] > 55) {
-  //         console.log(`schedule.slotFrom['hh'] == schedule.slotTo['hh'] && schedule.slotFrom['mm'] == 0 && schedule.slotTo['mm'] > 55`);
+  //
   //         let index = this.hours.findIndex(ele => ele.val == schedule.slotFrom['hh']);
   //         this.hours[index].isValidate = false;
   //         this.hours[index].roomId = (schedule.roomId) ? true : false;
   //       } else if (schedule.slotFrom['hh'] < schedule.slotTo['hh']) {
   //         if (schedule.slotFrom['mm'] == 0) {
-  //           console.log(`schedule.slotFrom['hh'] < schedule.slotTo['hh'] && schedule.slotFrom['mm'] == 0`);
+  //
   //           for (let i = schedule.slotFrom['hh']; i < schedule.slotTo['hh']; i++) {
   //             let index = this.hours.findIndex(ele => ele.val == i);
   //             this.hours[index].isValidate = false;
   //             this.hours[index].roomId = (schedule.roomId) ? true : false;
   //           }
   //         } else if ((parseInt(schedule.slotTo['hh']) - parseInt(schedule.slotFrom['hh'])) > 1 && schedule.slotFrom['mm'] > 0) {
-  //           console.log(`schedule.slotFrom['hh'] < schedule.slotTo['hh'] && schedule.slotFrom['mm'] > 0`);
+  //
   //           for (let i = parseInt(schedule.slotFrom['hh']) + 1; i < schedule.slotTo['hh']; i++) {
   //             let index = this.hours.findIndex(ele => ele.val == i);
   //             this.hours[index].isValidate = false;
@@ -735,7 +774,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   //     if (this.selectedTime.hh && this.selectedTime.hh.trim() != '') {
   //       this.busySchedules.forEach(schedule => {
   //         if (schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] == schedule.slotTo['hh']) {
-  //           console.log(`schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] == schedule.slotTo['hh']`);
+  //
   //           this.minutes.forEach(minute => {
   //             if (schedule.slotTo['mm'] >= minute.val && schedule.slotFrom['mm'] <= minute.val) {
   //               minute.isValidate = false;
@@ -744,13 +783,13 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   //           })
   //         } else if (schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] < schedule.slotTo['hh']) {
   //           if (schedule.slotFrom['hh'] == 0) {
-  //             console.log(`schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] < schedule.slotTo['hh'] && schedule.slotFrom['hh'] == 0`);
+  //
   //             this.minutes.forEach(minute => {
   //               minute.isValidate = false;
   //               minute.roomId = (schedule.roomId) ? true : false;
   //             })
   //           } else {
-  //             console.log(`schedule.slotFrom['hh'] == this.selectedTime.hh && schedule.slotFrom['hh'] < schedule.slotTo['hh'] && schedule.slotFrom['hh'] > 0`);
+  //
   //             this.minutes.forEach(minute => {
   //               if (schedule.slotTo['mm'] < minute.val) {
   //                 minute.isValidate = false;
@@ -759,15 +798,15 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   //             })
   //           }
   //         } else if (schedule.slotFrom['hh'] < this.selectedTime.hh && schedule.slotTo['hh'] > this.selectedTime.hh) {
-  //           console.log(`schedule.slotFrom['hh'] < this.selectedTime.hh && schedule.slotTo['hh'] > this.selectedTime.hh`);
+  //
   //           this.minutes.forEach(minute => {
   //             minute.isValidate = false;
   //             minute.roomId = (schedule.roomId) ? true : false;
   //           })
   //         } else if (schedule.slotTo['hh'] == this.selectedTime.hh) {
-  //           console.log('end date selected', schedule)
+  //
   //           this.minutes.forEach(minute => {
-  //             console.log(schedule.slotTo['mm'], minute.val)
+  //
   //             if (schedule.slotTo['mm'] > minute.val) {
   //               minute.isValidate = false;
   //               minute.roomId = (schedule.roomId) ? true : false;
@@ -801,7 +840,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   //       // })
   //     }
   //   }
-  //   console.log(this.hours, this.minutes);
+  //
   // }
 
   // setExptTimeFromCustomSelection(value, type) {
@@ -820,7 +859,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   availableSlot(preBookedScheduler) {
-    console.log('today', this.common.dateFormatter1(this.meetingForm.fromTime),this.common.dateFormatter1(this.common.getDate()))
+
     this.common.params = {
       title: 'User Availability',
       preBookedScheduler: preBookedScheduler,
@@ -831,7 +870,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     const activeModal = this.modalService.open(AvailableTimeSlotComponent, {  container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "timeslot" });
     activeModal.result.then(data => {
       if (data.response) {
-        console.log('modal Works', data);
+
         this.selectedTime.from = data.range.from;
         this.selectedTime.to = data.range.to;
 
@@ -857,7 +896,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
   }
 
   todoUserChangeEvent(event) {
-    console.log(event)
+
     this.meetingForm.host = event;
     if (event.id == this.userService._details.id) {
       this.isBuzzandButton = true;
