@@ -445,8 +445,16 @@ export class TicketComponent implements OnInit {
   }
 
 splicetrash(arr:any,index:number){
-arr.length > 1 ? arr.splice(index,1):arr[0].map(item=>item.param_value = null);
+let remove = () =>{
+arr[0].map((item:any)=>{
+  item.param_value = null;
+  item.entity_value = null
+})
+};
+arr.length > 1 ? arr.splice(index,1):remove();
+
 }
+
 
   openAddTicketModal() {
     document.getElementById('addTicketModal').style.display = 'block';
@@ -1232,7 +1240,7 @@ arr.length > 1 ? arr.splice(index,1):arr[0].map(item=>item.param_value = null);
   }
 
   saveTicket() {
-    console.log('this.oddarray',this.oddArray);
+   return  console.log('this.oddarray',this.oddArray,this.evenArray);
     let detailsInfo = this.evenArray.concat(this.oddArray);
     let details = detailsInfo.map(detail => {
       let copyDetails = Object.assign({}, detail);

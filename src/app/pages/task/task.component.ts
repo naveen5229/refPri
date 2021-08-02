@@ -280,6 +280,7 @@ export class TaskComponent implements OnInit {
     };
   }
 
+
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;

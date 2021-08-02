@@ -18,6 +18,7 @@ import { param } from 'jquery';
 export class MeetingComponent implements OnInit {
   scheduleType:number = 0;
   searchTerm = '';
+  currentUser:any;
   windowType = 'meetings';
   currentDate = new Date();
   filterEnabled:boolean = false;
@@ -101,7 +102,7 @@ export class MeetingComponent implements OnInit {
   }
 
   constructor(public common: CommonService,
-    public userService: UserService, public api: ApiService, public modalService: NgbModal,) {
+    public userService: UserService, public api: ApiService, public modalService: NgbModal) {
     console.log('this.calendarOptions',this.calendarOptions)
     this.loggedInUser = this.userService._details.id;
     this.getAllAdmin();
@@ -110,10 +111,12 @@ export class MeetingComponent implements OnInit {
     this.getEntityDetails();
     this.getRoomList();
     this.common.refresh = this.refresh.bind(this);
+    this.currentUser = this.userService._details.id;;
   }
 
   ngOnInit() {
  console.log('calendarOptions',this.calendarOptions);
+ console.log(' this.userService._details.name: ',  this.userService._details.name);
   }
 
   refresh() {
@@ -377,6 +380,7 @@ this.meetingData.upcomingData.splice(index,1);
 
 
   changeTicketStatusWithConfirm(ticket, type, status) {
+  console.log('ticket: ', ticket);
     console.log(status, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
