@@ -278,9 +278,10 @@
 
                 <span id="RejectCancel"
                   *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null
-                  &&meeting._mp_status!=-1)) || (meeting._status != -1 &&
+                  && meeting._mp_status!=-1)) || (meeting._status != -1 &&
                 meeting._host == this.userService.loggedInUser.id)">
-                  <i class="fas fa-window-close text-danger" title="Reject/Cancel"
+                  <i [class]="meeting._host == this.userService.loggedInUser.id ?'fas fa-window-close text-danger': 'fa fa-close text-danger'"
+                    [title]="meeting._host == this.userService.loggedInUser.id ? 'Reject/Cancel':'decline meeting'"
                     (click)="updateMeetingStatus(meeting, 'upcoming','reject')"></i>
                 </span>
 
