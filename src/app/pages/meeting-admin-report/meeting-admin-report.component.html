@@ -8,8 +8,12 @@
   <nb-card-body>
       <div class="tabs_style_main">
           <ul class="tabs_style text-left">
+            <li [ngClass]="activeTab=='all-meeting'?'active':''"
+                  (click)="activeTab='all-meeting';getData()">
+                  All Meetings
+              </li>
               <li [ngClass]="activeTab=='user-meeting'?'active':''" (click)="activeTab='user-meeting';getData()">
-                  User Meeting List
+                  User Meetings
               </li>
               <li [ngClass]="activeTab=='follow-up-meeting'?'active':''"
                   (click)="activeTab='follow-up-meeting';getData()">

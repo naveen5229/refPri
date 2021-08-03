@@ -83,6 +83,8 @@ import { CallAdminReportComponent } from './call-admin-report/call-admin-report.
 import { LeavePolicyComponent } from './leave-policy/leave-policy.component';
 import { EmployeeLeaveBalanceComponent } from './employee-leave-balance/employee-leave-balance.component';
 import { MeetingAdminReportComponent } from './meeting-admin-report/meeting-admin-report.component';
+import { EmailTemplateComponent } from './email-template/email-template.component';
+import { ManageWFHComponent } from './manage-wfh/manage-wfh.component';
 
 const routes: Routes = [{
   path: '',
@@ -508,7 +510,16 @@ const routes: Routes = [{
         component: MeetingAdminReportComponent,
         canActivate: [AuthGuard, RouteGuard]
         },
-
+        {
+          path: 'email-template',
+          component: EmailTemplateComponent,
+          canActivate: [AuthGuard, RouteGuard]
+        },
+        {
+          path: 'manage-WFH',
+          component: ManageWFHComponent,
+          canActivate: [AuthGuard, RouteGuard]
+        },
   ],
 }];
 

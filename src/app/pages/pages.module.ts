@@ -89,6 +89,8 @@ import { CallAdminReportComponent } from './call-admin-report/call-admin-report.
 import { LeavePolicyComponent } from './leave-policy/leave-policy.component';
 import { EmployeeLeaveBalanceComponent } from './employee-leave-balance/employee-leave-balance.component';
 import { MeetingAdminReportComponent } from './meeting-admin-report/meeting-admin-report.component';
+import { EmailTemplateComponent } from './email-template/email-template.component';
+import { ManageWFHComponent } from './manage-wfh/manage-wfh.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -186,6 +188,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     LeavePolicyComponent,
     EmployeeLeaveBalanceComponent,
     MeetingAdminReportComponent,
+    EmailTemplateComponent,
+    ManageWFHComponent,
   ],
 })
 export class PagesModule {

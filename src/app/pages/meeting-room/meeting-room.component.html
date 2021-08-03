@@ -12,31 +12,31 @@
       </auto-suggestion>
     </div>
   </div> -->
-      <div class="col-1 pr-0">
-        <label>Select Office</label>
-      </div>
-      <div class="col-3">
-        <!-- <div class="col-12" style="display:inline-block;"> -->
-        <auto-suggestion (onSelected)="selectOffice($event)" [display]="['name']" [data]="officeDataForWifi"
-          placeholder="Office" seperator="-" [preSelected]="{name:name}" className="borderStyle" inputId="id">
-        </auto-suggestion>
-        <!-- </div> -->
-      </div>
+ <div class="col-1 pr-0">
+   <label>Select Office</label>
+ </div>
+ <div class="col-3">
+   <!-- <div class="col-12" style="display:inline-block;"> -->
+   <auto-suggestion (onSelected)="selectOffice($event)" [display]="['name']" [data]="officeDataForWifi"
+     placeholder="Office" seperator="-" [preSelected]="{name:name}" className="borderStyle" inputId="id">
+   </auto-suggestion>
+   <!-- </div> -->
+ </div>
 
-      <div class="col-2">
-        <label>Enter Meeting Room Name</label>
-      </div>
+ <div class="col-2">
+   <label>Enter Meeting Room Name</label>
+ </div>
 
-      <div class="col-3">
-        <input type="text" class="form-control" id="meetingRoomName" placeholder="Enter Meeting Room Name"
-          [(ngModel)]="meetingRoomName">
-      </div>
+ <div class="col-3">
+   <input type="text" class="form-control" id="meetingRoomName" placeholder="Enter Meeting Room Name"
+     [(ngModel)]="meetingRoomName">
+ </div>
 
-      <div class="col-3">
-        <button (click)='addMeetingRoom()' class="btn btn-primary mr-2">{{btn}}</button>
-        <button type="reset" class="btn btn-danger" (click)="resetDetails()"> Reset </button>
-      </div>
-    </div>
+ <div class="col-3">
+   <button (click)='addMeetingRoom()' class="btn btn-primary mr-2">{{btn}}</button>
+   <button type="reset" class="btn btn-danger" (click)="resetDetails()"> Reset </button>
+ </div>
+ </div>
   </nb-card-body>
 </nb-card>
 

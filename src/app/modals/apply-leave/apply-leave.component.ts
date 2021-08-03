@@ -351,7 +351,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     // if (!this.broadcast.endDate) {
     //   return this.common.showError("Date is missing");
     // } else
-    if (this.broadcast.endDate && this.broadcast.endDate < this.common.getDate()) {
+    if (this.broadcast.endDate && this.broadcast.endDate >= this.common.getDate()) {
       return this.common.showError("Date must be Current/future date");
     } else if (!this.broadcast.cc || !this.broadcast.cc.length) {
       return this.common.showError("User is missing");
