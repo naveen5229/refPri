@@ -1242,6 +1242,7 @@ backClicked() {
 
 
 splicetrash(arr:any,index:number){
+console.log('arr: ', arr);
 let remove = () =>{
 arr[0].map((item:any)=>{
   item.param_value = null;

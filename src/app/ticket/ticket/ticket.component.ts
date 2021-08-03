@@ -1,3 +1,4 @@
+import { AutoSuggestionComponent } from './../../directives/auto-suggestion/auto-suggestion.component';
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../Service/common/common.service';
 import { ApiService } from '../../Service/Api/api.service';
@@ -445,11 +446,15 @@ export class TicketComponent implements OnInit {
   }
 
 splicetrash(arr:any,index:number){
+console.log('arr: ', arr);
 let remove = () =>{
 arr[0].map((item:any)=>{
   item.param_value = null;
-  item.entity_value = null
-})
+  item.entity_value = null;
+});
+
+
+
 };
 arr.length > 1 ? arr.splice(index,1):remove();
 
@@ -468,6 +473,7 @@ arr.length > 1 ? arr.splice(index,1):remove();
   onSelectedTp(event) {
     console.log("event:", event);
     this.ticketForm.tp.id = event._id;
+    console.log('this.ticketForm.tp.id: ', this.ticketForm.tp.id);
     this.ticketForm.tp.name = event.name;
 
     this.tpPropertyList = [];
@@ -1240,7 +1246,7 @@ arr.length > 1 ? arr.splice(index,1):remove();
   }
 
   saveTicket() {
-   return  console.log('this.oddarray',this.oddArray,this.evenArray);
+  //  return  console.log('this.oddarray',this.oddArray,this.evenArray);
     let detailsInfo = this.evenArray.concat(this.oddArray);
     let details = detailsInfo.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -1255,12 +1261,12 @@ arr.length > 1 ? arr.splice(index,1):remove();
       priCatId: this.categoryIds.priCat,
       secCatId: this.categoryIds.secCat,
       typeId: this.categoryIds.type,
-      tpId: this.ticketForm.tp.id ? this.ticketForm.tp.id : null,
+      tpId: this.ticketForm.tp.id,
       info: JSON.stringify(details),
       isAllocated: false,
       requestId: (this.ticketForm.requestId > 0) ? this.ticketForm.requestId : null
     }
-    // console.log("ticketForm:", params); return false;
+    console.log("ticketForm:", params);
     this.common.loading++;
     this.api.post('Ticket/saveTicket', params).subscribe(res => {
       this.common.loading--;
