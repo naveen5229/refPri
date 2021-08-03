@@ -157,10 +157,16 @@
                     (click)="editMeeting(meeting, 0, false)"> -->
                 </span>
 
+                <!-- <span id="retweet" class="text-warning"
+                  *ngIf="[meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && meeting._tktid > 0  && [5,-1].includes(meeting._status) && meeting._meeting_type != 2">
+                  <i class="fa fa-retweet" title="Re-Active" (click)="changeTicketStatusWithConfirm(meeting, 0, 0)"></i>
+                </span> -->
+
                 <span id="retweet" class="text-warning"
                   *ngIf="[meeting._host, meeting._aduserid].includes(this.userService.loggedInUser.id) && meeting._tktid > 0  && [5,-1].includes(meeting._status) && meeting._meeting_type != 2">
                   <i class="fa fa-retweet" title="Re-Active" (click)="changeTicketStatusWithConfirm(meeting, 0, 0)"></i>
                 </span>
+
 
                 <span id="statusAction"
                   *ngIf="[0,2].includes(meeting._status) && [meeting._host].includes(this.userService.loggedInUser.id)">
@@ -239,18 +245,44 @@
                   <i class="fas fa-comments no-comment" *ngIf="meeting._unreadcount == -1"></i>
                 </span>
 
-                <span class="cancel-meeting" title="cancel meeting"
+                <!-- <span class="cancel-meeting"
+                  *ngIf="meeting.host == userService._details.name && meeting.status != 'Rejected'"
+                  title="cancel meeting" (click)="changeTicketStatusWithConfirm(meeting, 0, -2)"> <i
+                    class="fas fa-window-close text-danger"></i>
+                </span> -->
+
+
+                <!-- <span class="cancel-meeting" title="cancel meeting"
+                  *ngIf="meeting.host == userService._details.name && meeting.status != 'Rejected'"
                   (click)="changeTicketStatusWithConfirm(meeting, 0, -1)"> <i
                     class="fas fa-window-close text-danger"></i>
                 </span>
+
+                <span class="decline meeting" *ngIf="meeting.host != userService._details.name" title="decline meeting"
+                  (click)="changeTicketStatusWithConfirm(meeting, 0, -2)"> <i class="fas fa-close text-danger"></i>
+                </span> -->
+
+
+                <!-- <p> {{meeting.host}} - {{ userService._details.name}}</p> -->
                 <!-- <span class="mark-complete" (click)="getUserActivityUpdate(meeting, 0, 5)"> <i
                     class="fa fa-thumbs-up text-success"></i> </span> -->
 
 
-                <span id="acceptReject" *ngIf="(meeting._tktype == 110 && meeting._mp_status == 0) || (meeting._status == 0 &&
+                <span id="Ack"
+                  *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null && meeting._mp_status==0)) ||
+                  (meeting._status == 0 &&
                 meeting._host == this.userService.loggedInUser.id)">
                   <i class="fa fa-check-square text-secondary" title="Ack"
                     (click)="updateMeetingStatus(meeting, 'upcoming','ack')"></i>
+                </span>
+
+                <span id="RejectCancel"
+                  *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null
+                  && meeting._mp_status!=-1)) || (meeting._status != -1 &&
+                meeting._host == this.userService.loggedInUser.id)">
+                  <i [class]="meeting._host == this.userService.loggedInUser.id ?'fas fa-window-close text-danger': 'fa fa-close text-danger'"
+                    [title]="meeting._host == this.userService.loggedInUser.id ? 'Reject/Cancel':'decline meeting'"
+                    (click)="updateMeetingStatus(meeting, 'upcoming','reject')"></i>
                 </span>
 
 
@@ -457,4 +489,9 @@
       (click)="getUserActivityUpdate(meeting, 0, 5)"></i>
 
   </span>
-</div> --> -->
+</div> -->
+
+
+
+
+

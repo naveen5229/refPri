@@ -141,7 +141,7 @@
                     *ngIf="oddArray[i].r_required">*</span></label>
               </div>
 
-              <div  [class]="oddArray[i].r_coltype == 'table' ? 'col-11':'col-10'">
+              <div [class]="oddArray[i].r_coltype == 'table' ? 'col-11':'col-10'">
                 <!-- <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
                                     *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
                 <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control"
@@ -153,14 +153,21 @@
                   *ngIf="oddArray[i].r_coltype =='date'" [isTime]="true">
                 </uj-date-time-picker>
 
-                <auto-suggestion
-                  *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'"
+                <!-- {{oddArray[i].r_coltitle | json}} -->
+                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && oddArray[i].r_coltitle =='primary category'"
                   [data]="priCatList" display="name"
                   [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Primary Category'"
                   name="secCat" id="secCat"
                   (onSelected)="oddArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                   [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                 </auto-suggestion>
+<!--
+                <div *ngIf="oddArray[i].r_coltype =='auto' && oddArray[i].r_coltitle =='primary category'">
+                  <p style="background-color: aqua;width: 100%;height: 200px;"> Primary categoty is available </p>
+                </div> -->
+
+
+                <!-- {{oddArray[i].r_coltitle | json}} -->
                 <auto-suggestion
                   *ngIf="oddArray[i].r_coltype ==='auto' && (oddArray[i].r_coltitle).toLowerCase()==='seconday category'"
                   [data]="secCatList" display="name"
@@ -206,6 +213,8 @@
                           </select>
                           <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
                             placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
+
+
                           <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
                             [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
                             name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
@@ -218,8 +227,8 @@
                             (click)="AddTableRow(oddArray[i]._param_child[0],oddArray[i]._param_child)">
                             <i class="fa fa-plus text-primary cursor-pointer"></i>
                           </button>
-                          <button *ngIf="!isDisabled" type="button" class="btn btn-bg-transparent"
-                            title="Remove Row" (click)="splicetrash(oddArray[i]._param_child,v)">
+                          <button *ngIf="!isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row"
+                            (click)="splicetrash(oddArray[i]._param_child,v)">
                             <i class="fa fa-trash"></i>
                           </button>
                           <!-- td.param_value -->
@@ -269,7 +278,7 @@
 
           <div *ngIf="evenArray[i]" [class]="evenArray[i].r_coltype == 'table' ? 'col-12':'col-6'">
             <span *ngIf="evenArray[i].r_colalias" class="row">
-              <div  [class]="evenArray[i].r_coltype == 'table' ? 'col-1 pr-0':'col-2 pr-0'">
+              <div [class]="evenArray[i].r_coltype == 'table' ? 'col-1 pr-0':'col-2 pr-0'">
                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
                     *ngIf="evenArray[i].r_required">*</span></label>
               </div>
@@ -286,14 +295,17 @@
                   *ngIf="evenArray[i].r_coltype =='date'" [isTime]="true">
                 </uj-date-time-picker>
 
+                <!-- {{evenArray[i].r_coltitle | json}} -->
                 <auto-suggestion
-                  *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
+                  *ngIf="evenArray[i].r_coltype =='auto' && evenArray[i].r_coltitle == 'primary category'"
                   [data]="priCatList" display="name"
                   [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Primary Category'"
                   name="secCat" id="secCat"
                   (onSelected)="evenArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                   [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                 </auto-suggestion>
+
+                <!-- {{evenArray[i].r_coltitle | json}} -->
                 <auto-suggestion
                   *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'"
                   [data]="secCatList" display="name"
@@ -340,8 +352,9 @@
                             placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
                           <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
                             [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
-                            name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
-                            [preSelected]="{option: td.entity_value}" autocomplete="off">
+                            name="entityFieldTable" id="entityFieldTable" (unSelected)="td.param_value = null"
+                            (onSelected)="td.param_value=($event._id);" [preSelected]="{option: td.entity_value}"
+                            autocomplete="off">
                           </auto-suggestion>
                         </td>
                         <td>
@@ -350,8 +363,8 @@
                             (click)="AddTableRow(evenArray[i]._param_child[0],evenArray[i]._param_child)">
                             <i class="fa fa-plus text-primary cursor-pointer"></i>
                           </button>
-                          <button *ngIf="v !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                            title="Remove Row" (click)="evenArray[i]._param_child.splice(v,1)">
+                          <button *ngIf="!isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row"
+                            (click)="splicetrash(evenArray[i]._param_child,v)">
                             <i class="fa fa-trash"></i>
                           </button>
                         </td>

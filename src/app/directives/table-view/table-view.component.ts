@@ -53,6 +53,18 @@ export class TableViewComponent implements OnInit {
     console.log("additionalFields:", this.tableHeader, this.additionalFields);
   }
 
+
+splicetrash(arr:any,index:number){
+let remove = () =>{
+arr[0].map((item:any)=>{
+  item.param_value = null;
+  item.entity_value = null
+})
+};
+arr.length > 1 ? arr.splice(index,1):remove();
+
+}
+
   onSelectNotBind(event, row) {
     console.log(event)
     let selectEl = event.target;

@@ -18,6 +18,7 @@ import { param } from 'jquery';
 export class MeetingComponent implements OnInit {
   scheduleType:number = 0;
   searchTerm = '';
+  currentUser:any;
   windowType = 'meetings';
   currentDate = new Date();
   filterEnabled:boolean = false;
@@ -101,7 +102,7 @@ export class MeetingComponent implements OnInit {
   }
 
   constructor(public common: CommonService,
-    public userService: UserService, public api: ApiService, public modalService: NgbModal,) {
+    public userService: UserService, public api: ApiService, public modalService: NgbModal) {
     console.log('this.calendarOptions',this.calendarOptions)
     this.loggedInUser = this.userService._details.id;
     this.getAllAdmin();
@@ -110,10 +111,12 @@ export class MeetingComponent implements OnInit {
     this.getEntityDetails();
     this.getRoomList();
     this.common.refresh = this.refresh.bind(this);
+    this.currentUser = this.userService._details.id;;
   }
 
   ngOnInit() {
  console.log('calendarOptions',this.calendarOptions);
+ console.log(' this.userService._details.name: ',  this.userService._details.name);
   }
 
   refresh() {
@@ -377,6 +380,7 @@ this.meetingData.upcomingData.splice(index,1);
 
 
   changeTicketStatusWithConfirm(ticket, type, status) {
+  console.log('ticket: ', ticket);
     console.log(status, 'status')
     if (ticket._refid) {
       let preTitle = "Complete";
@@ -405,6 +409,9 @@ this.meetingData.upcomingData.splice(index,1);
       activeModal.result.then((data) => {
         console.log("Confirm response:", data);
         if (data.response) {
+          if(type == 1){
+
+          }
           this.updateTicketStatus(ticket, type, status, data.remark);
         }
       });
@@ -453,6 +460,7 @@ this.meetingData.upcomingData.splice(index,1);
         isExternal: this.advFldForMtngCmplt.is_external,
         mappedRefid: this.advFldForMtngCmplt.mapped_refid
       };
+      // return console.log('params:',params)
       // if (status != -1) this.collapseUnreadTaskUpdateStatus(type, ticket, status);
       // console.log("params:", params, ticket, this.unreadTaskForMeList); return false;
       // this.common.loading++;
@@ -517,7 +525,7 @@ this.meetingData.upcomingData.splice(index,1);
   updateMeetingStatus(ticket, type, statusType) {
     console.log(ticket);
     if (type == 'upcoming') {
-      if ((ticket._tktype == 110 && ticket._mp_status == 0) && (ticket._status == 0 && ticket._host == this.userService.loggedInUser.id)) {
+      if ((ticket._tktype == 110 && ticket._mp_status == 0) && (ticket._status == 0 && ticket._host == this.userService.loggedInUser.id) || (ticket._tktype == 110 && (ticket._mp_status!=null && ticket._mp_status != -1)) && (ticket._status != -1 && ticket._host == this.userService.loggedInUser.id)) {
         if (statusType == 'ack') {
           this.updateAsCcUser(ticket, 1);
           this.updateTicketStatus(ticket, 0, 2);
@@ -526,13 +534,13 @@ this.meetingData.upcomingData.splice(index,1);
           this.updateTicketStatus(ticket, 0, -1);
         }
       } else {
-        if (ticket._tktype == 110 && ticket._mp_status == 0) {
+        if (ticket._tktype == 110 && ticket._mp_status == 0 || ticket._tktype == 110 && (ticket._mp_status!=null && ticket._mp_status != -1)) {
           if (statusType == 'ack') {
             this.updateAsCcUser(ticket, 1);
           } else if (statusType == 'reject') {
             this.updateAsCcUser(ticket, -1);
           }
-        } else if (ticket._status == 0 && ticket._host == this.userService.loggedInUser.id) {
+        } else if (ticket._status == 0 && ticket._host == this.userService.loggedInUser.id || ticket._status != -1 && ticket._host == this.userService.loggedInUser.id) {
           if (statusType == 'ack') {
             this.updateTicketStatus(ticket, 0, 2);
           } else if (statusType == 'reject') {
@@ -578,6 +586,7 @@ this.meetingData.upcomingData.splice(index,1);
         status: status,
         userName: this.userService.loggedInUser.name
       };
+      // return console.log('params:',params)
       this.api.post("AdminTask/ackTaskByCcUser", params).subscribe(
         (res) => {
           // this.common.loading--;
