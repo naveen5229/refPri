@@ -96,14 +96,14 @@ export class EmailTemplateComponent implements OnInit {
         });
   }
 
-  addTemplate(formType:any) {
+  addTemplate() {
     let title = "Add Template";
     let btn = "Add";
 
     this.common.params = {
       userList: this.adminList,
       groupList: this.groupList,
-      formType: formType,
+      // formType: formType,
       title: title,
       btn: btn
     };
