@@ -1912,7 +1912,7 @@ export class TaskComponent implements OnInit {
         }
       } else if (ticket._reply_demanded > 0) {
         // no action for reply demanded pending
-      }   if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
+      } else  if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
         console.log("Task not acknowledged");
       icons.push({
         class: "fa fa-check-square text-warning",
