@@ -73,8 +73,10 @@ const routes: Routes = [
   },
   { path: 'pages/leave-type-management/:id', component: ModalContainerComponent },
   // { path: 'pages/task/chatbox', component: TaskComponent},
-  { path: '', redirectTo: localStorage.getItem("LANDING_PAGE"), pathMatch: 'full' },
-  { path: '**', redirectTo: localStorage.getItem("LANDING_PAGE") },
+  { path: '', redirectTo:'pages/task', pathMatch: 'full' },
+  { path: '**', redirectTo: 'pages/task' },
+  // { path: '', redirectTo: localStorage.getItem("LANDING_PAGE"), pathMatch: 'full' },
+  // { path: '**', redirectTo: localStorage.getItem("LANDING_PAGE") },
 ];
 
 const config: ExtraOptions = {

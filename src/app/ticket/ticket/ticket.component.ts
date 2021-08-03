@@ -20,6 +20,13 @@ import { LocationSelectionComponent } from '../../modals/location-selection/loca
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements OnInit {
+  additionalFields = [];
+  tableHeader = null;
+  isDisabled = false;
+
+  arraytype:any;
+  arraytypeIndex:number;
+
   ticketDetailTitle = 'Ticket Info';
   loginUserId = this.userService.loggedInUser.id;
   activeTab = 'allocatedTkt';
@@ -179,6 +186,46 @@ export class TicketComponent implements OnInit {
     this.getTicketProcessList();
     this.getUserGroupList();
     this.common.refresh = this.refresh.bind(this);
+     if (this.additionalFields && this.additionalFields.length > 0) {
+      this.tableHeader = JSON.parse(JSON.stringify(this.additionalFields[0]));
+      this.additionalFields.forEach(element => {
+        element.forEach(e => {
+          e["isNotBindFixedvalue"] = (e["isNotBindFixedvalue"]) ? e["isNotBindFixedvalue"] : false;
+          e["notBindFixedvalue"] = (e["notBindFixedvalue"]) ? e["notBindFixedvalue"] : null;
+          if (e.param_type == 'date') {
+            e.param_value = (e.param_value) ? new Date(e.param_value) : new Date();
+          } else if (e.param_type == 'entity') {
+            if (e.param_value > 0 && e.param_info && e.param_info.length) {
+              let entity_value = e.param_info.find(x => { return x._id == e.param_value });
+              e['entity_value'] = (entity_value) ? entity_value.option : null;
+            } else {
+              e['entity_value'] = null;
+            }
+          } else if (e.param_value && e.param_info && e.param_info.length) { // for not bind dropdown
+            let notBindFixedvalue = e.param_info.find(x => { return x.option == e.param_value });
+            if (!notBindFixedvalue) {
+              let notBindOption = e.param_info.find(x => x.isNonBind);
+              e["isNotBindFixedvalue"] = true;
+              e["notBindFixedvalue"] = e.param_value;
+              e["param_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
+            }
+          }
+
+          //earlier code
+          // if (e.r_value && e.param_info && e.param_info.length) { // for not bind dropdown
+          //   let notBindFixedvalue = e.param_info.find(x => { return x.option == e.r_value });
+          //   if (!notBindFixedvalue) {
+          //     let notBindOption = e.param_info.find(x => x.isNonBind);
+          //     e["isNotBindFixedvalue"] = true;
+          //     e["notBindFixedvalue"] = e.r_value;
+          //     e["r_value"] = (notBindOption && notBindOption.option) ? notBindOption.option : null;
+          //   }
+          // }
+          //earlier code
+
+        });
+      });
+    }
   }
 
   refresh() {
@@ -248,6 +295,7 @@ export class TicketComponent implements OnInit {
       if (res['code'] > 0) {
         if (res['data']) {
           this.ticketFormFields = res['data'];
+          console.log('fields data',this.ticketFormFields)
           // if (this.activeTab == 'completedTkt') {
             if (refType == 1) {
               this.closingFormInfo = this.ticketFormFields;
@@ -281,14 +329,14 @@ export class TicketComponent implements OnInit {
     });
   }
 
-  onSelectNotBind(event,row){
-    let selectEl = event.target;
-    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
-    row.isNotBindFixedvalue = false;
-    if(JSON.parse(testval)){
-      row.isNotBindFixedvalue = true;
-    }
-  }
+  // onSelectNotBind(event,row){
+  //   let selectEl = event.target;
+  //   let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
+  //   row.isNotBindFixedvalue = false;
+  //   if(JSON.parse(testval)){
+  //     row.isNotBindFixedvalue = true;
+  //   }
+  // }
 
   formatArray() {
     this.evenArray = [];
@@ -329,8 +377,51 @@ export class TicketComponent implements OnInit {
         this.oddArray.push(dd);
       }
     });
-    console.log("evenArray", this.evenArray);
-    console.log("oddArray", this.oddArray);
+
+  }
+
+
+//  close(res) {
+//     this.activeModal.close({ response: res, data: (this.additionalFields && this.additionalFields.length > 0) ? this.additionalFields : null });
+//   }
+
+  // AddTableRow() {
+  //   let temp = JSON.parse(JSON.stringify(this.tableHeader));
+  //   temp.forEach(e => {
+  //     e.param_value = (e.param_type == 'date') ? new Date() : null;
+  //   });
+  //   this.additionalFields.push(temp);
+  // }
+
+
+    AddTableRow(header,fields) {
+    let temp = JSON.parse(JSON.stringify(header));
+    temp.forEach(e => {
+      e.param_value = (e.param_type == 'date') ? new Date() : null;
+    });
+    fields.push(temp);
+  }
+
+ addTransaction() {
+ console.log('oddarray',this.oddArray);
+    // console.log("additionalFields:", this.additionalFields);
+    // this.close(true);
+  }
+
+  // addTransaction() {
+  //   // console.log("additionalFields:", this.additionalFields);
+  //   this.close(true);
+  // }
+
+  onSelectNotBind(event, row) {
+    console.log(event, row)
+    let selectEl = event.target;
+    let testval = selectEl.options[selectEl.selectedIndex].getAttribute('isNotBind');
+    console.log(testval)
+    row.isNotBindFixedvalue = false;
+    if (JSON.parse(testval)) {
+      row.isNotBindFixedvalue = true;
+    }
   }
 
   resetTicketForm() {
@@ -377,11 +468,15 @@ export class TicketComponent implements OnInit {
     setTimeout(() => {
       this.getTicketFormField(0);
       this.getTicketProcessProperty();
+
+
     }, 500);
 
     for (let i = 1; i <= 3; i++) {
       this.getCatListByType(event._id, i)
     }
+
+
 
   }
 
@@ -1133,6 +1228,7 @@ export class TicketComponent implements OnInit {
   }
 
   saveTicket() {
+    console.log('this.oddarray',this.oddArray);
     let detailsInfo = this.evenArray.concat(this.oddArray);
     let details = detailsInfo.map(detail => {
       let copyDetails = Object.assign({}, detail);
@@ -1176,29 +1272,15 @@ export class TicketComponent implements OnInit {
     })
   }
 
-  AdditionalForm(arraytype, i) {
-    let additionalData = null;
-    if (arraytype === 'oddArray') {
-      additionalData = this.oddArray[i]._param_child;
-    } else if (arraytype === 'evenArray') {
-      additionalData = this.evenArray[i]._param_child;
-    }
-    console.log(additionalData, 'final data');
-    this.common.params = { additionalform: (additionalData && additionalData.length > 0) ? additionalData : null };
-    const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
-    activeModal.result.then(data => {
-      if (data.response) {
-        console.log(data.data, 'response')
-        if (data.data) {
-          if (arraytype === 'oddArray') {
-            this.oddArray[i]._param_child = data.data;
-          } else if (arraytype === 'evenArray') {
-            this.evenArray[i]._param_child = data.data;
-          }
-        }
-      }
-    });
-  }
+  // AdditionalForm(arraytype, i) {
+  //   console.log('arraytype: ', arraytype);
+  //   console.log('oddarray',this.oddArray)
+  //   let additionalData:any = null;
+  //   additionalData = arraytype == 'oddArray' ? this.oddArray[i]._param_child : this.evenArray[i]._param_child;
+  //   this.additionalFields =  additionalData ? additionalData: null;
+  //   this.tableHeader = this.additionalFields[0];
+  //   console.log('this.additionalFields: ', this.additionalFields);
+  //   }
 
   AdditionalFormNew(data) {
     console.log('final data:',data);
@@ -1528,7 +1610,14 @@ export class TicketComponent implements OnInit {
       this.common.showError();
       console.log('Error: ', err);
     });
-  }
+
+console.log('this.primaryFormInfo',this.primaryFormInfo);
+if(this.primaryFormInfo.length > 0){
+console.log('this.primaryFormInfo',this.primaryFormInfo);
+// this.AdditionalFormNew(primary._param_child);
+}
+
+}
 
   adduserConfirm(userPresence) {
     if (!userPresence) {

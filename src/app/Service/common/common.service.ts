@@ -21,7 +21,7 @@ export class CommonService {
   loading = 0;
   refresh = null;
   tempLineBreak = {};
-
+  allmeeting:any[] = [];
   params = null;
   taskBgColor = {
     pending: "#fff",

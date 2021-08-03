@@ -4,6 +4,16 @@
     //background: #ffe4d1;
     // height: 2px;
   }
+.ngx-slider[disabled] .ngx-slider-tick{
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+
+.ngx-slider[disabled]{
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+
   .custom-slider .ngx-slider .ngx-slider-selection {
     background: orange;
   }
@@ -106,6 +116,28 @@
   .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
     background: orange;
   }
+
+
+.custom-slider .ngx-slider .ngx-slider-tick-legend {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  max-width: 70px;
+  white-space: normal;
+
+  b.meeting-host {
+    position: relative;
+    font-size: 7px;
+    display: inline-block;
+    line-height: 12px;
+    font-weight: 500;
+    width: 50px;
+  }
+}
+
+
 }
 
 .ngx-tooltip {
@@ -138,3 +170,19 @@
   max-height: calc(100vh - 105px);
   overflow: auto;
 }
+
+
+.time-repeater i {
+     font-size: 20px;
+     margin-left: 5px;
+     background: #f3f8fb;
+     border-radius: 4px;
+     padding: 1px 4px;
+     color: gray;
+     border: 1px solid #3366ff85;
+     position: relative;
+     top: 3px;
+     display: inline-block;
+}
+
+

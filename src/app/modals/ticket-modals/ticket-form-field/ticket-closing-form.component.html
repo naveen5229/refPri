@@ -8,7 +8,7 @@
 
   <!-- start:dyn field -->
   <div *ngFor="let dd of oddArray ; let i = index; " class="row">
-    <div *ngIf="oddArray[i]" [class]="(evenArray.length > 0 && !oddArray[i].isExpand)? 'col-6' : 'col-12'"
+    <div *ngIf="oddArray[i]" [class]="'col-12'"
       style="margin-bottom: 1rem;">
       <div *ngIf="oddArray[i].r_colalias" class="row">
         <div class="col-4">
@@ -92,11 +92,12 @@
       </div>
     </div>
 
-    <div *ngIf="evenArray[i]" [class]="(oddArray.length > 0 && !evenArray[i].isExpand)? 'col-6' : 'col-12'">
+    <div *ngIf="evenArray[i]" [class]="'col-12'">
       <span *ngIf="evenArray[i].r_colalias" class="row">
         <div class="col-4">
           <label>{{evenArray[i].r_colalias}} <span style="color: red" *ngIf="evenArray[i].r_required">*</span></label>
         </div>
+
 
         <div class="col-8">
           <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
