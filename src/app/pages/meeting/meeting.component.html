@@ -268,16 +268,14 @@
                     class="fa fa-thumbs-up text-success"></i> </span> -->
 
 
-                <span id="Ack"
-                  *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null && meeting._mp_status==0)) ||
+                <span id="Ack" *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null && meeting._mp_status==0)) ||
                   (meeting._status == 0 &&
                 meeting._host == this.userService.loggedInUser.id)">
                   <i class="fa fa-check-square text-secondary" title="Ack"
                     (click)="updateMeetingStatus(meeting, 'upcoming','ack')"></i>
                 </span>
 
-                <span id="RejectCancel"
-                  *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null
+                <span id="RejectCancel" *ngIf="(meeting._host != userService._details.id && (meeting._mp_status!=null
                   && meeting._mp_status!=-1)) || (meeting._status != -1 &&
                 meeting._host == this.userService.loggedInUser.id)">
                   <i [class]="meeting._host == this.userService.loggedInUser.id ?'fas fa-window-close text-danger': 'fa fa-close text-danger'"
@@ -490,8 +488,3 @@
 
   </span>
 </div> -->
-
-
-
-
-

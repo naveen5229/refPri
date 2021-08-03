@@ -9,17 +9,13 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
-  B_URL: string = 'https://dev.elogist.in/booster_webservices/';
-  // T_URL: string = 'https://13.126.215.102//dev.elogist.in/transtrucknew/';
+  // I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
+  // B_URL: string = 'https://dev.elogist.in/booster_webservices/';
+  // T_URL: string = 'https://dev.elogist.in/transtrucknew/';
 
-  T_URL: string = 'https://dev.elogist.in/transtrucknew/';
-
-
-
-  // I_URL: string = 'https://elogist.in/itrm_webservices/';
-  // B_URL: string = 'https://elogist.in/booster_webservices/';
-  // T_URL: string = 'https://elogist.in/transtrucknew/';git
+  I_URL: string = 'https://elogist.in/itrm_webservices/';
+  B_URL: string = 'https://elogist.in/booster_webservices/';
+  T_URL: string = 'https://elogist.in/transtrucknew/';
 
   entryMode = this.user._loggedInBy == 'admin' ? '1' : '3';
 
