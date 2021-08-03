@@ -141,7 +141,8 @@ import { ApplyWFHComponent } from './modals/apply-wfh/apply-wfh.component';
 import { ModalComponent } from './modals/modal/modal.component';
 import { ModalContainerComponent } from './modals/modal-container/modal-container.component';
 import { GeneralModalComponent } from './modals/general-modal/general-modal.component';
-
+import { AddEmailTemplateComponent } from './modals/add-email-template/add-email-template.component';
+import { CKEditorModule } from 'ckeditor4-angular';
 
 
 const PAGE_COMPONENTS = [
@@ -243,6 +244,7 @@ const PAGE_COMPONENTS = [
   ModalContainerComponent,
   ApplyWFHComponent,
   GeneralModalComponent,
+  AddEmailTemplateComponent
  ];
 
 @NgModule({
@@ -264,8 +266,8 @@ const PAGE_COMPONENTS = [
     MobileNoComponent,
     TicketFieldsComponent,
     ApplyWFHComponent,
-    ApplyWFHComponent,
     TicketFieldsComponent,
+    AddEmailTemplateComponent,
      // SmartDataTableComponent,
 
     // SendmessageComponent,
@@ -305,6 +307,7 @@ const PAGE_COMPONENTS = [
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
     ReactiveFormsModule,
+    CKEditorModule
   ],
   providers: [MessagingService,AsyncPipe,
     { provide: APP_BASE_HREF, useValue: '/' }

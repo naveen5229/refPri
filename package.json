@@ -75,6 +75,7 @@
     "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^0.7.0",
     "ckeditor": "4.7.3",
+    "ckeditor4-angular": "^2.2.1",
     "classlist.js": "1.1.20150312",
     "core-js": "2.5.1",
     "datatables.net": "^1.10.25",

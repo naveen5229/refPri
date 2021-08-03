@@ -435,6 +435,12 @@ export const MENU_ITEMS = JSON.stringify([
         link: '/pages/employee-leave-balance',
         home: true,
       },
+      {
+        title: 'Manage WFH',
+        icon: 'wifi-outline',
+        link: '/pages/manage-WFH',
+        home: true,
+      },
     ]
   },
   {
@@ -766,6 +772,18 @@ export const MENU_ITEMS = JSON.stringify([
         home: true,
       }
     ]
+  },
+  {
+    title: "Email Template",
+    icon: 'scissors-outline',
+    home: true,
+    children: [
+       {
+           title: 'Email Template Management',
+          icon: 'people-outline',
+          link: '/pages/email-template',
+          home: true,
+        }
+  ]
   }
-
 ]);

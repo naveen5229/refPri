@@ -62,7 +62,7 @@
             <label>Days<span class="text-danger">*</span></label>
         </div>
         <div class="col-7">
-            <input style="width: 100%;" type="number" id="days" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days">
+            <input style="width: 100%;" type="number" id="days" maxlength="2" placeholder="Days" class="form-control" [(ngModel)]="scheduledTask.days" required min=0 oninput="validity.valid||(value=0);">
         </div>
     </div>
     <div class="row mb-2">
@@ -70,7 +70,7 @@
             <label>Hours<span class="text-danger">*</span></label>
         </div>
         <div class="col-7">
-            <input style="width: 100%;" type="number" id="hours" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours">
+            <input style="width: 100%;" type="number" id="hours" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours" min=0 oninput="validity.valid||(value=0);">
         </div>
     </div>
     <div class="row mb-2">
@@ -78,8 +78,8 @@
             <label>CC users:</label>
         </div>
         <div class="col-7">
-            <auto-suggestion [data]="adminWithGroup" display="name" seperator="-" placeholder="Select CC Users" 
-            [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event" 
+            <auto-suggestion [data]="adminWithGroup" display="name" seperator="-" placeholder="Select CC Users"
+            [preSelected]="scheduledTask.ccUsers" (onSelected)="scheduledTask.ccUsers = $event"
             inputId="ccUsers" name="ccUsers" isMultiSelect="true" [bGConditions]='bGConditions'></auto-suggestion>
         </div>
     </div>

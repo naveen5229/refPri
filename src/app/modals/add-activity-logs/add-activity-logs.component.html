@@ -20,7 +20,7 @@
     <br>
     <div class="row">
         <div class="col-lg-4">
-            <label>Activity Description :-</label>
+            <label>Activity Description<span class="text-danger">*</span> :-</label>
         </div>
         <div class="col-lg-8">
             <textarea type="text" class="form-control " [(ngModel)]='activity.desc' placeholder="Activity Description" required [readonly]="timeValidity"></textarea>
@@ -29,7 +29,7 @@
     <br>
     <div class="row">
         <div class="col-lg-4">
-            <label>Contact Person :-</label>
+            <label>Contact Person<span class="text-danger">*</span> :-</label>
         </div>
         <div class="col-lg-8">
             <textarea type="text" class="form-control " [(ngModel)]='activity.contact' placeholder="Contact Person" required [readonly]="timeValidity"></textarea>
@@ -38,7 +38,7 @@
     <br>
     <div class="row">
         <div class="col-lg-4">
-            <label>Outcome :-</label>
+            <label>Outcome<span class="text-danger">*</span> :-</label>
         </div>
         <div class="col-lg-8">
             <textarea type="text" class="form-control " [(ngModel)]='activity.outcome' placeholder="Outcome" required [readonly]="timeValidity"></textarea>

@@ -1,0 +1,81 @@
+<nb-card style="border: 0px;">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3">
+        <h5 class="heading-design">Email Template Management</h5>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body style="padding: 1rem .2rem;">
+    <div class="out-topnav" style="text-align: left;">
+      <div class="toptab" style="text-align: left;">
+        <div class="hiddenby">
+          <!-- <p class="nav-link" [ngClass]="{'active':selectedPage=='addTemplate'}"
+            (click)="selectedPage='addTemplate';addTemplate(null)">
+            <b>Add Template</b>
+          </p> -->
+          <button class="btn btn-primary btn-sm allicons cursor-pointer" id="addMeeting" (click)="getTemplate()"><label class="pl-1">
+            List Template
+          </label></button>
+        <button class="btn btn-primary btn-sm allicons ml-2" id="addMeeting"
+          (click)="addTemplate();windowType='addTemplate'"
+          [ngClass]="windowType=='addTemplate'?'active':''"><i
+          class="fa fa-plus" style="font-size: 13px;" aria-hidden="true"></i>Add Template</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <table class="table table-primary ng-datatable" datatable [dtOptions]="dtOptions" [dtTrigger]="dttrigger">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Template Name</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Is Default</th>
+          <th class="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of groupList;index as i">
+          <td>{{i+1}}</td>
+          <td> {{item.name}}</td>
+          <td>{{item.Status}}</td>
+          <td>{{item.assignedby}}</td>
+          <td>{{item.assignedby}}</td>
+          <td>
+            <div class="action-block icon-action">
+              <!-- <i class="fa fa-check" *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
+                aria-hidden="true"></i>
+              <i class="fas fa-trash-alt" *ngIf="selectedTab != 'cc' && item.assignedby == currentUser"
+                (click)="deleteLeave(item)"></i>
+              <i class="fa fa-ban" aria-hidden="true"
+                *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"></i>
+              <i class="fas fa-check-square text-warning" *ngIf="selectedTab == 'cc'" aria-hidden="true"></i>
+              <i class="fas fa-comments" aria-hidden="true"></i> -->
+              <button class="btn btn-danger" (click)="deleteTemplate(item)"> delete </button>
+                <button class="btn btn-success" (click)="editTemplate(item)"> edit </button>
+                <button class="btn btn-info" (click)="viewDetails(item)"> View </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <ngx-my-leaves *ngIf="selectedPage=='my-leaves'"></ngx-my-leaves>
+    <ngx-holidays *ngIf="selectedPage=='holidays'"></ngx-holidays> -->
+    <!-- <div class="input-group">
+      <i>Department: </i>
+      <button type="button" class="btn btn-primary">
+        <i class="fas fa-search"></i>
+      </button>
+      <div class="form-outline">
+        <select [(ngModel)]="selectedDept.id">
+       <option *ngFor="let dept of departments" [value]="dept._id">{{dept.name}}</option>
+       </select>
+      </div>
+    </div> -->
+  </nb-card-body>
+</nb-card>
