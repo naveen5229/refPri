@@ -1870,6 +1870,19 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Delete Task",
         });
+        if(ticket.assignedto == this.userService.loggedInUser.name && ticket._tktype == 114){
+          icons.push({
+            class: "fa fa-thumbs-up text-success",
+            action: this.changeTicketStatusWithConfirm.bind(
+              this,
+              ticket,
+              type,
+              5
+            ),
+            txt: "",
+            title: "Mark Completed",
+          });
+        }
       }
       if (ticket._status == 2 && [101, 102].includes(ticket._tktype)) {
         //for hold

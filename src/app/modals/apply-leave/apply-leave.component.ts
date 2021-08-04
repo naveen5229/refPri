@@ -9,6 +9,7 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import _ from 'lodash';
 import * as moment from 'moment';
 import { TaskMessageComponent } from '../task-message/task-message.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-apply-leave',
@@ -107,7 +108,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal,
-    public userService: UserService) {
+    public userService: UserService,
+    public datePipe: DatePipe) {
 
     this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
     this.userGroupList = this.common.params.groupList;
@@ -351,7 +353,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     // if (!this.broadcast.endDate) {
     //   return this.common.showError("Date is missing");
     // } else
-    if (this.broadcast.endDate && this.broadcast.endDate >= this.common.getDate()) {
+   let end =  this.common.dateFormatter(this.broadcast.endDate, 'MMDDYYYY', false, "-");
+   let current =  this.common.dateFormatter(this.common.getDate(), 'MMDDYYYY', false, "-");
+   if (this.broadcast.endDate && end < current) {
       return this.common.showError("Date must be Current/future date");
     } else if (!this.broadcast.cc || !this.broadcast.cc.length) {
       return this.common.showError("User is missing");
