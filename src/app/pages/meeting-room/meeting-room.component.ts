@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { ApiService } from '../../Service/Api/api.service';
 import { CommonService } from '../../Service/common/common.service';
 
@@ -140,15 +141,15 @@ generateHeadingsRoom() {
 actionIcons(param:any) {
   console.log("action icons params",param);
   let Icons = [{
-    class: "btn btn-primary cursor-pointer",
+    class: "fa fa-edit",
     action: this.editMeetingRoom.bind(this,param),
-    txt: "Edit",
+    txt: "",
     title: "Edit",
   },
   {
-    class: "btn btn-primary",
+    class: "fa fa-trash",
     action: this.deleteMeetingRoom.bind(this,param),
-    txt: "Delete",
+    txt: "",
     title: "Delete",
   }];
 
@@ -187,11 +188,17 @@ editMeetingRoom(param:any){
       this.meetingRoomName = param[property];
     }
     else{
+      if(property=="office_name" && param[property]!=null){
       let y = this.officeDataForWifi.find(x => x.name === param[property]);
       console.log("y office id",y);
       this.officeListId = y._id;
       this.name = y.name;
     }
+    else{
+      this.officeListId = 0;
+      this.name = "Is Null";
+    }
+  }
   }
     //  this.wifiFoId = this.transId;
 
@@ -205,21 +212,26 @@ let id:any;
     if(property.charAt(0)=="_")
            id = param[property];
   }
-  // let params = {
-  //   foid: this.wifiFoId,
-  // }
-  let par: any = {
-    id: id,
-  }
+  this.common.params = {
+    title: "Delete Meeting Room ",
+    description: '<b>Are You Sure To Delete This Meeting Room ?<b>',
+    isRemark: false,
+  };
+  const activeModal = this.modalService.open(ConfirmComponent, { size: "sm", container: "nb-layout", backdrop: "static", keyboard: false, windowClass: "accountModalClass", });
+  activeModal.result.then((data) => {
+    if (data.response) {
+      let par: any = {
+        id: id,
+      };
+  this.common.loading++;
   this.api.post('Admin/deleteMeetingRoom', par)
   .subscribe((res: any) => {
     this.common.loading--;
     if (res['code']>0) {
-      // this.getMeetingRoomList(params.foid);
       this.resetDetails();
+      this.common.showToast(res['msg']);
       this.getMeetingRoomList();
       this.getOfficeDataForWifi();
-
     } else {
       this.common.showError("error");
     }
@@ -229,19 +241,16 @@ let id:any;
   });
 console.log("delete id", id);
 }
+});
+}
 
 addMeetingRoom() {
   let param = {
-    // foid: this.wifiFoId,
     name: this.meetingRoomName,
     officeid: this.officeListId,
     nId:this.id,
     requestId: null
   }
-  // if(!param.foid){
-  //   this.common.showError("FO-User is missing");
-  //   return false;
-  // }
   if(!param.name || param.name.trim()==""){
     this.common.showError("Room Name is missing");
     return false;

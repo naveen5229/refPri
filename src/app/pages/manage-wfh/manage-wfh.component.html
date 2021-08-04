@@ -1,0 +1,78 @@
+<nb-card>
+  <nb-card-header>
+    <h5> {{title}}</h5>
+  </nb-card-header>
+
+  <nb-card-body class="min-h-auto">
+    <form class="expense-form">
+      <div class="row align-items-center">
+        <div class="col-md-2 form-group">
+          <label for=""> Search By: </label>
+        </div>
+        <div class="col-md-3 form-group">
+          <select [(ngModel)]="type" class="form-control">
+            <option selected="1" value="1">Company</option>
+            <option value="2">Department</option>
+            <option value="3">Group</option>
+            <option value="4">User</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group col-xl-4 col-lg-6 col-sm-12">
+            <label for="my-input" class="required">List</label>
+            <auto-suggestion (onSelected)="typeId = $event" [data]="typeList" display="name" seperator="-"
+            placeholder="Search Assignee User" autocomplete="off" name="typeId" inputId="typeId">
+          </auto-suggestion>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row align-items-center mt-4">
+        <div class="col-md-10">
+          <div class="action-block">
+            <button type="back" class="btn btn-danger" (click)="common.backClicked()"> Back </button>
+            <button type="submit" class="btn btn-primary" (click)="SubmitLeaveType()"> {{btn}} </button>
+            <button type="reset" class="btn btn-danger" (click)="resetType()"> Reset </button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>
+    <h5> Leave Types </h5>
+  </nb-card-header>
+  <nb-card-body class="min-h-auto">
+    <table datatable class="table table-primary ng-datatable" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+      <thead>
+        <tr>
+          <th> S.No. </th>
+          <th> Leave type </th>
+          <th> Leave Count </th>
+          <th> Action </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of leaveTypeList;index as i">
+          <td> {{i+1}} </td>
+          <td> {{item.leave_type}} </td>
+          <td> {{item.leave_days}}
+          </td>
+          <td>
+            <div class="action-block">
+              <button class="btn btn-danger" (click)="deleteLeaveType(item)"> delete </button>
+              <button class="btn btn-success" (click)="editLeaveType(item)"> edit </button>
+              <button class="btn btn-info" (click)="viewDetails(item)"> View </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>

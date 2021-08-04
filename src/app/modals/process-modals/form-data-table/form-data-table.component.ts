@@ -73,6 +73,18 @@ export class FormDataTableComponent implements OnInit {
 
   ngOnInit() { }
 
+splicetrash(arr:any,index:number){
+console.log('arr: ', arr);
+let remove = () =>{
+arr[0].map((item:any)=>{
+  item.param_value = null;
+  item.entity_value = null
+})
+};
+arr.length > 1 ? arr.splice(index,1):remove();
+
+}
+
   close(res) {
     this.activeModal.close({ response: res, data: (this.additionalFields && this.additionalFields.length > 0) ? this.additionalFields : null });
   }

@@ -230,7 +230,6 @@ export class CommonService {
     let hours = d.getHours() <= 9 ? "0" + d.getHours() : d.getHours();
     let minutes = d.getMinutes() <= 9 ? "0" + d.getMinutes() : d.getMinutes();
     let seconds = d.getSeconds() <= 9 ? "0" + d.getSeconds() : d.getSeconds();
-
     return hours + ":" + minutes + ":" + seconds;
   }
 
@@ -1240,6 +1239,18 @@ backClicked() {
 
 }
 
+
+splicetrash(arr:any,index:number){
+console.log('arr: ', arr);
+let remove = () =>{
+arr[0].map((item:any)=>{
+  item.param_value = null;
+  item.entity_value = null
+})
+};
+arr.length > 1 ? arr.splice(index,1):remove();
+
+}
 
 }
 

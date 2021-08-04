@@ -236,7 +236,7 @@ full-calendar {
     font-size: 8px;
     position: relative;
     top: -19px;
-    left: -5px;
+    left: -7px;
     //  font-weight: 600;
   }
 }
@@ -270,16 +270,18 @@ full-calendar {
   }
 
   span.new-comment {
-    font-size: 8px;
+    font-size: 8px !important;
     position: absolute;
     left: -6px;
     top: 3px;
-
   }
 }
 
 
 .cursor-pointer:hover  .new-comment span{
  top: 2px;
-//  transition: all linear 0.2s;
+}
+
+.cursor-pointer1:hover .new-comment span {
+      top: -19px;
 }

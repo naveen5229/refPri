@@ -110,7 +110,7 @@
 
 <!--start: addTicketModal -->
 <div class="modal modal-overflow" id="addTicketModal">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add Ticket</h5>
@@ -118,10 +118,10 @@
       </div>
       <div class="modal-body">
         <div class="row form-group">
-          <div class="col-4">
+          <div class="col-1">
             <label>Ticket Process</label>
           </div>
-          <div class="col-8">
+          <div class="col-11">
             <auto-suggestion [data]="tpList" display="name" placeholder="Ticket Process" name="tpName" id="tpName"
               (onSelected)="onSelectedTp($event)"
               [preSelected]="ticketForm.tp.id ? {name: ticketForm.tp.name}:{name:''}" autocomplete="off">
@@ -133,14 +133,15 @@
           <hr>
         </div>
         <div *ngFor="let dd of oddArray ; let i = index; " class="row">
-          <div *ngIf="oddArray[i]" [class]="evenArray.length > 0 ? 'col-6' : 'col-12'" style="margin-bottom: 1rem;">
+          <div *ngIf="oddArray[i]" [class]="oddArray[i].r_coltype == 'table' ? 'col-12' : 'col-6'"
+            style="margin-bottom: 1rem;">
             <div *ngIf="oddArray[i].r_colalias" class="row">
-              <div class="col-4">
+              <div [class]="oddArray[i].r_coltype == 'table' ? 'col-1 pr-0':'col-2 pr-0'">
                 <label>{{oddArray[i].r_colalias}}<span style="color: red"
                     *ngIf="oddArray[i].r_required">*</span></label>
               </div>
 
-              <div class="col-8">
+              <div [class]="oddArray[i].r_coltype == 'table' ? 'col-11':'col-10'">
                 <!-- <input type="text" class="form-control" [(ngModel)]=oddArray[i].r_value
                                     *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues "> -->
                 <textarea *ngIf="oddArray[i].r_coltype == 'text' && !oddArray[i].r_fixedvalues" class="form-control"
@@ -152,14 +153,21 @@
                   *ngIf="oddArray[i].r_coltype =='date'" [isTime]="true">
                 </uj-date-time-picker>
 
-                <auto-suggestion
-                  *ngIf="oddArray[i].r_coltype =='auto' && (oddArray[i].r_coltitle).toLowerCase()=='primary category'"
+                <!-- {{oddArray[i].r_coltitle | json}} -->
+                <auto-suggestion *ngIf="oddArray[i].r_coltype =='auto' && oddArray[i].r_coltitle =='primary category'"
                   [data]="priCatList" display="name"
                   [placeholder]="(oddArray[i].r_colalias) ? 'Select '+oddArray[i].r_colalias : 'Select Primary Category'"
                   name="secCat" id="secCat"
                   (onSelected)="oddArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                   [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                 </auto-suggestion>
+<!--
+                <div *ngIf="oddArray[i].r_coltype =='auto' && oddArray[i].r_coltitle =='primary category'">
+                  <p style="background-color: aqua;width: 100%;height: 200px;"> Primary categoty is available </p>
+                </div> -->
+
+
+                <!-- {{oddArray[i].r_coltitle | json}} -->
                 <auto-suggestion
                   *ngIf="oddArray[i].r_coltype ==='auto' && (oddArray[i].r_coltitle).toLowerCase()==='seconday category'"
                   [data]="secCatList" display="name"
@@ -205,6 +213,8 @@
                           </select>
                           <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
                             placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
+
+
                           <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
                             [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
                             name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
@@ -217,10 +227,11 @@
                             (click)="AddTableRow(oddArray[i]._param_child[0],oddArray[i]._param_child)">
                             <i class="fa fa-plus text-primary cursor-pointer"></i>
                           </button>
-                          <button *ngIf="v !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                            title="Remove Row" (click)="oddArray[i]._param_child.splice(v,1)">
+                          <button *ngIf="!isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row"
+                            (click)="splicetrash(oddArray[i]._param_child,v)">
                             <i class="fa fa-trash"></i>
                           </button>
+                          <!-- td.param_value -->
                         </td>
                       </tr>
                     </tbody>
@@ -265,33 +276,36 @@
             </div>
           </div>
 
-          <div *ngIf="evenArray[i]" [class]="oddArray.length > 0? 'col-6' : 'col-12'">
+          <div *ngIf="evenArray[i]" [class]="evenArray[i].r_coltype == 'table' ? 'col-12':'col-6'">
             <span *ngIf="evenArray[i].r_colalias" class="row">
-              <div class="col-4">
+              <div [class]="evenArray[i].r_coltype == 'table' ? 'col-1 pr-0':'col-2 pr-0'">
                 <label>{{evenArray[i].r_colalias}} <span style="color: red"
                     *ngIf="evenArray[i].r_required">*</span></label>
               </div>
 
-              <div class="col-8">
+              <div [class]="evenArray[i].r_coltype == 'table' ? 'col-1':'col-10'">
                 <!-- <input type="text" class="form-control" [(ngModel)]=evenArray[i].r_value
                                     *ngIf="evenArray[i].r_coltype == 'text'  && !evenArray[i].r_fixedvalues"> -->
                 <textarea *ngIf="evenArray[i].r_coltype == 'text' && !evenArray[i].r_fixedvalues" class="form-control"
                   [(ngModel)]=evenArray[i].r_value rows="1"></textarea>
-                <input type="number" class="form-control" [(ngModel)]=evenArray[i].r_value
+                <input type="number" class="form-control mb-2" [(ngModel)]=evenArray[i].r_value
                   *ngIf="evenArray[i].r_coltype == 'number'  && !evenArray[i].r_fixedvalues"
                   [ngStyle]="((evenArray[i].r_coltitle).toLowerCase()=='latitude') ? {'width':'75%','display':'initial'} : ''">
                 <uj-date-time-picker (onChanged)="evenArray[i].r_value = $event" [dateTimeValue]="evenArray[i].r_value"
                   *ngIf="evenArray[i].r_coltype =='date'" [isTime]="true">
                 </uj-date-time-picker>
 
+                <!-- {{evenArray[i].r_coltitle | json}} -->
                 <auto-suggestion
-                  *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='primary category'"
+                  *ngIf="evenArray[i].r_coltype =='auto' && evenArray[i].r_coltitle == 'primary category'"
                   [data]="priCatList" display="name"
                   [placeholder]="(evenArray[i].r_colalias) ? 'Select '+evenArray[i].r_colalias : 'Select Primary Category'"
                   name="secCat" id="secCat"
                   (onSelected)="evenArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                   [preSelected]="{name:evenArray[i].r_value}" autocomplete="off">
                 </auto-suggestion>
+
+                <!-- {{evenArray[i].r_coltitle | json}} -->
                 <auto-suggestion
                   *ngIf="evenArray[i].r_coltype =='auto' && (evenArray[i].r_coltitle).toLowerCase()=='seconday category'"
                   [data]="secCatList" display="name"
@@ -338,8 +352,9 @@
                             placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
                           <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
                             [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
-                            name="entityFieldTable" id="entityFieldTable" (onSelected)="td.param_value=($event._id);"
-                            [preSelected]="{option: td.entity_value}" autocomplete="off">
+                            name="entityFieldTable" id="entityFieldTable" (unSelected)="td.param_value = null"
+                            (onSelected)="td.param_value=($event._id);" [preSelected]="{option: td.entity_value}"
+                            autocomplete="off">
                           </auto-suggestion>
                         </td>
                         <td>
@@ -348,8 +363,8 @@
                             (click)="AddTableRow(evenArray[i]._param_child[0],evenArray[i]._param_child)">
                             <i class="fa fa-plus text-primary cursor-pointer"></i>
                           </button>
-                          <button *ngIf="v !== 0 && !isDisabled" type="button" class="btn btn-bg-transparent"
-                            title="Remove Row" (click)="evenArray[i]._param_child.splice(v,1)">
+                          <button *ngIf="!isDisabled" type="button" class="btn btn-bg-transparent" title="Remove Row"
+                            (click)="splicetrash(evenArray[i]._param_child,v)">
                             <i class="fa fa-trash"></i>
                           </button>
                         </td>
@@ -551,8 +566,8 @@
                     <i class="fas fa-globe-africa"></i>
                   </label>
                 </div>
-                <input type="text" *ngIf="opening.r_fixedvalues && opening.isNotBindFixedvalue" class="form-control"
-                  placeholder="Enter value" [(ngModel)]="opening.notBindFixedvalue" readonly>
+                <!-- <input type="text" *ngIf="opening.r_fixedvalues && opening.isNotBindFixedvalue" class="form-control"
+                  placeholder="Enter value" [(ngModel)]="opening.notBindFixedvalue" readonly> -->
               </div>
             </div>
           </div>
@@ -583,8 +598,8 @@
                   <span class="blue cursor-pointer"
                     (click)="common.checkFile(primary.r_url,primary.r_doc_name)">{{primary.r_doc_name}}</span>
                 </span>
-                <input type="text" *ngIf="primary.r_fixedvalues && primary.isNotBindFixedvalue" class="form-control"
-                  placeholder="Enter value" [(ngModel)]="primary.notBindFixedvalue" readonly>
+                <!-- <input type="text" *ngIf="primary.r_fixedvalues && primary.isNotBindFixedvalue" class="form-control"
+                  placeholder="Enter value" [(ngModel)]="primary.notBindFixedvalue" readonly> -->
               </div>
             </div>
           </div>
