@@ -39,7 +39,7 @@
 .login-form{
     width: 40%;
     margin-left: auto;
-    padding: 20px 30px;
+    //padding: 20px 30px;
     i{
         color: #2ca9e0;
     }
@@ -48,7 +48,7 @@
 {
     text-align: center;
  img{
-   width: 300px;
+   width: 50%;
 }
 }
 
@@ -56,10 +56,11 @@
 .title {
     color: $darkblue;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .sub-title {
-    color:$light-1;
+    color:#000;
     font-weight: normal;
     font-size: $font-sm-xxl;
     letter-spacing: 0.2px;

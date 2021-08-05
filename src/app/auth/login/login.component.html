@@ -3,10 +3,10 @@
     <!-- <i *ngIf="listenOTP"  (click)="backToLogin()" class="icon ion-md-arrow-round-back back-icon"></i> -->
     <i *ngIf="listenOTP" (click)="backToLogin()" class="fas fa-chevron-left fa-2x"></i>
     <div class="logo">
-        <img src="assets/images/prime_logo.png">
+        <img src="assets/images/prime_logo.png" class="img-fluid">
     </div>
     <h1 id="title" class="title">{{(user._loggedInBy == 'admin')?'Admin':'Customer'}} Login</h1>
-    <p class="sub-title">eLogist is building an integrated AI-driven utilisation based digital platform for the Transportation industry</p>
+    <!-- <p class="sub-title">eLogist is building an integrated AI-driven utilisation based digital platform for the Transportation industry</p> -->
     <div *ngIf="!listenOTP">
         <form #mobileForm="ngForm" (submit)="mobileForm.valid && sendOTP()">
             <div class="form-group">
