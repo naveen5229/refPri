@@ -95,13 +95,16 @@ else{
         console.log('this.fields : ', this.fields );
 
         this.fields.map((item:any)=>{
-        item._param_child =  JSON.parse(item._param_child);
+          if(item._param_child){
+            item._param_child =  JSON.parse(item._param_child);
+          }
         });
         this.colinitialization();
       }, err => {
         this.common.loading--;
         this.common.showError();
       });
+
   }
 
   drop(event: CdkDragDrop<string[]>) {

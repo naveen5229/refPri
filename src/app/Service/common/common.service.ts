@@ -1240,6 +1240,18 @@ backClicked() {
 }
 
 
+splicetrash(arr:any,index:number){
+console.log('arr: ', arr);
+let remove = () =>{
+arr[0].map((item:any)=>{
+  item.param_value = null;
+  item.entity_value = null
+})
+};
+arr.length > 1 ? arr.splice(index,1):remove();
+
+}
+
 }
 
 

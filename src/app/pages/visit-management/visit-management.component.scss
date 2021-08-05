@@ -482,6 +482,7 @@ $color-primary:#72b3c7;
     border-radius: 2px;
     backface-visibility: hidden;
     box-shadow: 0px 0px 3px 1px #00000052;
+    position: relative;
 
     &.rejected {
       background-color: #ababab;
@@ -754,8 +755,8 @@ td.expanse {
 }
 
 
-td.date{
- width: 100px;
+td.date {
+  width: 100px;
 }
 
 
@@ -809,9 +810,9 @@ th.action.sorting {
 // }
 
 ::ng-deep {
-.tooltip{
- left: -35px !important;
-}
+  .tooltip {
+    left: -35px !important;
+  }
 
   #route-maper-map+.row {
     margin-top: 15px;
@@ -831,7 +832,7 @@ th.action.sorting {
 
 
 .expanse p {
-  padding:0;
+  padding: 0;
   font-size: 12px;
   cursor: pointer;
   backface-visibility: hidden;
@@ -857,32 +858,60 @@ div#expenseInfoModal {
 
 
 
- ::ng-deep {
-.modal-body.tooltip-modal {
-  width: 500px;
-  height: auto;
-  padding: 0;
+::ng-deep {
+  .modal-body.tooltip-modal {
+    width: 500px;
+    height: auto;
+    padding: 0;
 
-  table {
-    margin-bottom: 0;
+    table {
+      margin-bottom: 0;
+    }
+
+  }
+
+  .arrow::before {
+    top: 0;
+    border-width: 0.4rem 0.4rem 0;
+    border-top-color: #72b3c7 !important;
+  }
+
+
+  .tooltip-inner {
+    max-width: unset;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    background-color: transparent;
+    border-radius: 0.25rem;
   }
 
 }
-.arrow::before {
-  top: 0;
-  border-width: 0.4rem 0.4rem 0;
-  border-top-color: #72b3c7 !important;
+
+::ng-deep {
+  .image-remark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    max-width: 250px;
+    background-color: white;
+  }
 }
 
-
-.tooltip-inner {
-  max-width: unset;
-  padding: 0;
+.image-remark-tootlip {
+  position: absolute;
+  right: 6px;
   color: #fff;
-  text-align: center;
-  background-color: transparent;
-  border-radius: 0.25rem;
 }
 
-
+.image-remark {
+  padding: 20px;
+  display: flex;
+  justify-content: flex-start;
+  min-width: 150px;
+  max-width: 250px;
+  background-color: white;
+  color: black;
+  box-shadow: 1px 0px 10px 0px rgba(0, 0, 0, 0.38) !important;
 }

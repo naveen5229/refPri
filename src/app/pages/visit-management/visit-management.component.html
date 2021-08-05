@@ -24,7 +24,8 @@
               </div>
               <div class="col-6 d-flex justify-content-end">
                 <div class="form-group mb-0"> <label>Start Date</label>
-                  <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="false" [maxd]="currentDate">
+                  <uj-date-time-picker (onChanged)="startDate=($event)" [dateTimeValue]="startDate" [isTime]="false"
+                    [maxd]="currentDate">
                   </uj-date-time-picker>
                 </div>
 
@@ -53,8 +54,10 @@
                 <th>
                   <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No.
                     </label>
-                    <input class="form-check-input" [(ngModel)]="alluserselect" (click)="(!(allUsers && allUsers.length>1) || isAllCheckboxDisable) ? selectAllUser($event) : null"
-                      type="checkbox" value="" id="flexCheckChecked" [disabled]="!(allUsers && allUsers.length>1) || isAllCheckboxDisable">
+                    <input class="form-check-input" [(ngModel)]="alluserselect"
+                      (click)="(!(allUsers && allUsers.length>1) || isAllCheckboxDisable) ? selectAllUser($event) : null"
+                      type="checkbox" value="" id="flexCheckChecked"
+                      [disabled]="!(allUsers && allUsers.length>1) || isAllCheckboxDisable">
                   </div>
                 </th>
                 <th>Name</th>
@@ -74,7 +77,8 @@
                 <td>
                   <div class="form-check user-check-label d-flex"> <label for=""> {{i+1}} </label> <input
                       class="form-check-input" [(ngModel)]="item.checked" type="checkbox" value="" id="flexCheckChecked"
-                      (click)="selectUser(i)" [disabled]="item._user_id==userService.loggedInUser.id || item.is_disable"></div>
+                      (click)="selectUser(i)"
+                      [disabled]="item._user_id==userService.loggedInUser.id || item.is_disable"></div>
                 </td>
                 <td class="name">{{item.name}}</td>
                 <td class="date">{{item.sqdate2}}</td>
@@ -83,8 +87,8 @@
                 <td class="expanse">
                   <p class="mb-0 text-primary"
                     (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
-                    [ngbTooltip]="tipContent"   container="body"
-                    [disableTooltip]="!item.total_expense_actual"> <i [class]="common.currencyClass"></i>
+                    [ngbTooltip]="tipContent" container="body" [disableTooltip]="!item.total_expense_actual"> <i
+                      [class]="common.currencyClass"></i>
                     {{item.total_expense_actual}} </p>
 
                 </td>
@@ -226,31 +230,47 @@
                       'zoom':detailDataIndex == i && detailImageZoom }"
                       (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
                       (mouseout)="detailImageZoom = false;changeColorUsingLatlng (item,2)">
+                      <a href="javascript:void(0)" class="image-remark-tootlip" [ngbTooltip]="tipContent1"
+                        container="body" placement="bottom"> <i
+                          class="fa fa-info-circle" aria-hidden="true"></i> </a>
 
-                 <img class="img-fluid" [src]="item._url" [alt]="item.image">
-                 <div class="actions">
-                   <button class="btn btn-primary" [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id || selectedExpense.is_disable"
-                     (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(1,item)">
-                     approve
-                   </button>
-                   <button class="btn btn-danger" [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id || selectedExpense.is_disable"
-                     (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(-1,item)">
-                     Reject
-                    </button>
-                   <button class="btn btn-info" (click)="openLink(i,'detail Image')">
-                     View
-                    </button>
-                   <button class="btn btn-success" [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'" [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
-                    link
-                   </button>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
+                       <ng-template #tipContent1>
+                       <div class="image-remark">
+                         <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo iusto possimus itaque
+                           repellat
+                           adipisci pariatur quod iure voluptatum facere, provident fugit fugiat, numquam doloremque
+                           architecto eaque eos officia aut aperiam? </p>
+                       </div>
+                        </ng-template>
+
+                      <img class="img-fluid" [src]="item._url" [alt]="item.image">
+                      <div class="actions">
+                        <button class="btn btn-primary"
+                          [disabled]="item._status==1 || selectedExpense._user_id==userService.loggedInUser.id || selectedExpense.is_disable"
+                          (click)="(item._status==1 || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(1,item)">
+                          approve
+                        </button>
+                        <button class="btn btn-danger"
+                          [disabled]="[-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id || selectedExpense.is_disable"
+                          (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(-1,item)">
+                          Reject
+                        </button>
+                        <button class="btn btn-info" (click)="openLink(i,'detail Image')">
+                          View
+                        </button>
+                        <button class="btn btn-success"
+                          [title]="(item._mapped_id>0) ? 'Already mapped with an entity':'Click to map with an entity'"
+                          [disabled]="item._mapped_id>0" (click)="(item._mapped_id>0) ? null : openMappingModal(item);">
+                          link
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="row no-gutters expense-info">
           <div class="col-md-6">
@@ -291,7 +311,8 @@
                         <td class="actions">
                           <div class="action-block">
                             <button *ngIf="selectedExpense._user_id!=userService.loggedInUser.id"
-                              class="btn btn-danger btn-reject" [disabled]="item.amount_new===0 || selectedExpense.is_disable"
+                              class="btn btn-danger btn-reject"
+                              [disabled]="item.amount_new===0 || selectedExpense.is_disable"
                               (click)="item.amount_new = 0;updateOnsiteExpenseStatus(item)">
                               {{item.amount_new===0 ? 'Rejected':'Reject' }}
                             </button>

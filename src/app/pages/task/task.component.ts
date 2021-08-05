@@ -280,6 +280,7 @@ export class TaskComponent implements OnInit {
     };
   }
 
+
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
@@ -1911,6 +1912,15 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == 101 || type == 103 || type == -102) {
+      if(ticket._status==0 && ticket.ticket_type== "Broadcast" || ticket._status==0 && ticket.ticket_type== "Scheduled"){
+        console.log("Task not acknowledged");
+      icons.push({
+        class: "fa fa-check-square text-warning",
+        action: this.ackTaskByCcUser.bind(this,ticket, type, 1),
+        txt: "",
+        title: "Mark Ack as CC Task",
+      });
+    }
       if (ticket._status == 5 || ticket._status == -1) {
         if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) &&
          (ticket._status == -1 || ticket._assigned_user_id != this.userService.loggedInUser.id)) {
@@ -1925,16 +1935,7 @@ export class TaskComponent implements OnInit {
         }
       } else if (ticket._reply_demanded > 0) {
         // no action for reply demanded pending
-      } else  if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
-        console.log("Task not acknowledged");
-      icons.push({
-        class: "fa fa-check-square text-warning",
-        action: this.ackTaskByCcUser(ticket, type),
-        txt: "",
-        title: "Mark Ack as CC Task",
-      });
-    }
-      else if (ticket._status == 2) {
+      } else if (ticket._status == 2) {
         icons.push({
           class: "fa fa-thumbs-up text-success",
           action: this.changeTicketStatusWithConfirm.bind(
@@ -1968,7 +1969,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Rejected",
           });
         }
-      } else if (ticket._status == 0 && ticket.ticket_type!= "Broadcast") {
+      } else if (ticket._status == 0) {
         icons.push({
           class: "fa fa-times text-danger",
           action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
