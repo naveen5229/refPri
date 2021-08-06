@@ -280,6 +280,7 @@ export class TaskComponent implements OnInit {
     };
   }
 
+
   keyHandler(event) {
     const key = event.key.toLowerCase();
     let activeId = document.activeElement.id;
@@ -1913,30 +1914,16 @@ export class TaskComponent implements OnInit {
         }
       } else if (ticket._reply_demanded > 0) {
         // no action for reply demanded pending
-      } else if (ticket._status == 2) {
-        if(ticket.status!="Ack" && ticket.ticket_type== "Broadcast"){
-          console.log("Task not acknowledged");
-        icons.push({
-          class: "fa fa-check-square text-warning",
-          action: this.ackTaskByCcUser(ticket, type),
-          txt: "",
-          title: "Mark Ack as CC Task",
-        });
-      }
-      // else if(ticket.status=="Ack" && ticket._tktype == 114){
-      //   icons.push({
-      //     class: "fa fa-thumbs-up text-success",
-      //     action: this.changeTicketStatusWithConfirm.bind(
-      //       this,
-      //       ticket,
-      //       type,
-      //       5
-      //     ),
-      //     txt: "",
-      //     title: "Mark Completed",
-      //   });
-      // }
-      else{
+      } else  if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
+        console.log("Task not acknowledged");
+      icons.push({
+        class: "fa fa-check-square text-warning",
+        action: this.ackTaskByCcUser(ticket, type),
+        txt: "",
+        title: "Mark Ack as CC Task",
+      });
+    }
+      else if (ticket._status == 2) {
         icons.push({
           class: "fa fa-thumbs-up text-success",
           action: this.changeTicketStatusWithConfirm.bind(
@@ -1948,7 +1935,6 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Mark Completed",
         });
-      }
         if (type == 101 && [101, 102].includes(ticket._tktype)) {
           //for hold
           icons.push({
@@ -1971,12 +1957,25 @@ export class TaskComponent implements OnInit {
             title: "Mark Rejected",
           });
         }
-      } else if (ticket._status == 0) {
+      } else if (ticket._status == 0 && ticket.ticket_type!= "Broadcast") {
         icons.push({
           class: "fa fa-times text-danger",
           action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
           txt: "",
           title: "Mark Rejected",
+        });
+      }
+      else if(ticket._status==1 && ticket.ticket_type== "Broadcast"){
+        icons.push({
+          class: "fa fa-thumbs-up text-success",
+          action: this.changeTicketStatusWithConfirm.bind(
+            this,
+            ticket,
+            type,
+            5
+          ),
+          txt: "",
+          title: "Mark Completed",
         });
       }
     }
@@ -3086,7 +3085,7 @@ export class TaskComponent implements OnInit {
               this.openSearchTaskModal();
               this.setTableSearchTaskList();
             } else {
-              this.common.showToast("No data found");
+              this.common.showError("No data found");
             }
           } else {
             this.common.showError(res["msg"]);

@@ -1,22 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '../../@core/mock/users.service';
-import { ApiService } from '../../Service/Api/api.service';
-import { CommonService } from '../../Service/common/common.service';
-import { Options } from '@angular-slider/ngx-slider';
-import { parse } from 'querystring';
-import * as moment from 'moment';
-import { scheduled } from 'rxjs';
+import { Component, OnInit } from "@angular/core";
+import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { UserService } from "../../@core/mock/users.service";
+import { ApiService } from "../../Service/Api/api.service";
+import { CommonService } from "../../Service/common/common.service";
+import {
+  Options,
+  CustomStepDefinition,
+  LabelType,
+} from "@angular-slider/ngx-slider";
+import { parse } from "querystring";
+import * as moment from "moment";
+import { scheduled } from "rxjs";
 
 @Component({
-  selector: 'ngx-available-time-slot',
-  templateUrl: './available-time-slot.component.html',
-  styleUrls: ['./available-time-slot.component.scss']
+  selector: "ngx-available-time-slot",
+  templateUrl: "./available-time-slot.component.html",
+  styleUrls: ["./available-time-slot.component.scss"],
 })
 export class AvailableTimeSlotComponent implements OnInit {
   detailedSlot = null;
-  type = 'time';
-  title = 'Available Slot';
+  type = "time";
+  title = "Available Slot";
+  alphabet: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   today = new Date();
   value: number = 1;
   highValue: number = 2;
@@ -28,130 +33,154 @@ export class AvailableTimeSlotComponent implements OnInit {
     minLimit: 1,
     translate: (value: number): string => {
       switch (value - parseInt(JSON.stringify(value))) {
-        case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
-        case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
-        case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
-        default: return `${parseInt(JSON.stringify(value))}`;
+        case 0.25:
+          return `${parseInt(JSON.stringify(value))}.15`;
+          break;
+        case 0.5:
+          return `${parseInt(JSON.stringify(value))}.30`;
+          break;
+        case 0.75:
+          return `${parseInt(JSON.stringify(value))}.45`;
+          break;
+        default:
+          return `${parseInt(JSON.stringify(value))}`;
       }
     },
-    //  getLegend: (value: number): string => {
-    //   if (value == 11.50) {
-    //     return `<b>${value}</b>`;
-    //   }
-    // }
-  };
+   };
 
   busySchedules = [];
   seperateInfo = {
-    name: '',
+    name: "",
     option: {},
     schedule: [],
-    userid: null
+    userid: null,
   };
   timeRangeSlotSwitch = [];
   rangePos = 1;
 
-
-  constructor(public activeModal: NgbActiveModal,
+  constructor(
+    public activeModal: NgbActiveModal,
     public api: ApiService,
     public common: CommonService,
     public modalService: NgbModal,
-    public userService: UserService) {
-
+    public userService: UserService
+  ) {
     this.title = this.common.params.title;
-
     this.timeRangeSlotSwitch = this.common.params.freeSlots;
+    if (
+      this.common.params.preBookedScheduler &&
+      this.common.params.preBookedScheduler.length > 0
+    )
+      this.busySchedules = this.common.params.preBookedScheduler;
+    console.log(
+      "this.common.params.preBookedScheduler: ",
+      this.common.params.preBookedScheduler
+    );
 
-    if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
-   
-    console.log('this.common.params.preBookedScheduler: ', this.common.params.preBookedScheduler);
-
-    // this.common.params.preBookedScheduler.forEach((element:any,mainindex:number) => {
-    //   console.log('element',element)
-    // element.schedule.forEach((item:any,index:number)=>{
-    // console.log('schedule',item);
-    //   element.option.getLegend = (value: number): string => {
-    //     let val = this.getvalue(value)
-    //     console.log(value,val,item.fromTime)
-    //       if (val == item.fromTime) {
-    //         return `<b class="meeting-host">${item.meeting_host}</b>`;
-    //       }
-    //     }
-    // });
-    // });
-
-
-
+  
 
     let bookedSchedules = [];
-    this.common.params.preBookedScheduler.map(schedule => {
-
-      if (schedule['schedule'] && schedule['schedule'].length > 0) {
-        schedule['schedule'].map(data => bookedSchedules.push(data));
+    this.common.params.preBookedScheduler.map((schedule) => {
+      if (schedule["schedule"] && schedule["schedule"].length > 0) {
+        schedule["schedule"].map((data) => bookedSchedules.push(data));
       }
     });
 
-
-
-
-
     this.common.params.preBookedScheduler.map((item: any) => {
-      item.option.translate((value: any) => {
-
-      });
+      item.option.translate((value: any) => {});
     });
 
     for (let item of this.common.params.preBookedScheduler) {
-
     }
-
 
     this.options.getTickColor = (value: number): string => {
       for (let i = 0; i < bookedSchedules.length; i++) {
-        if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && !bookedSchedules[i].is_todo) {
-          return 'blue';
-        } else if (value >= bookedSchedules[i].fromTime && value <= bookedSchedules[i].toTime && bookedSchedules[i].is_todo) {
-          return 'red';
+        if (
+          value >= bookedSchedules[i].fromTime &&
+          value <= bookedSchedules[i].toTime &&
+          !bookedSchedules[i].is_todo
+        ) {
+          return "blue";
+        } else if (
+          value >= bookedSchedules[i].fromTime &&
+          value <= bookedSchedules[i].toTime &&
+          bookedSchedules[i].is_todo
+        ) {
+          return "red";
         }
       }
-    }
+    };
 
     //if edit previous time selected
     if (this.common.params.selectedTime) {
       let slotFrom = null;
       let slotTo = null;
       switch (this.common.params.selectedTime.from.mm) {
-        case '15': slotFrom = (this.common.params.selectedTime.from.hh + '.25'); break;
-        case '30': slotFrom = (this.common.params.selectedTime.from.hh + '.50'); break;
-        case '45': slotFrom = (this.common.params.selectedTime.from.hh + '.75'); break;
+        case "15":
+          slotFrom = this.common.params.selectedTime.from.hh + ".25";
+          break;
+        case "30":
+          slotFrom = this.common.params.selectedTime.from.hh + ".50";
+          break;
+        case "45":
+          slotFrom = this.common.params.selectedTime.from.hh + ".75";
+          break;
         // default: slotFrom = this.common.params.selectedTime.from.hh ? this.common.params.selectedTime.from.hh : this.setMinTime();
-        default: slotFrom = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].start) : this.setMinTime(this.today);
+        default:
+          slotFrom =
+            this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0
+              ? this.setMinTime(this.timeRangeSlotSwitch[0].start)
+              : this.setMinTime(this.today);
       }
       switch (this.common.params.selectedTime.to.mm) {
-        case '15': slotTo = (this.common.params.selectedTime.to.hh + '.25'); break;
-        case '30': slotTo = (this.common.params.selectedTime.to.hh + '.50'); break;
-        case '45': slotTo = (this.common.params.selectedTime.to.hh + '.75'); break;
+        case "15":
+          slotTo = this.common.params.selectedTime.to.hh + ".25";
+          break;
+        case "30":
+          slotTo = this.common.params.selectedTime.to.hh + ".50";
+          break;
+        case "45":
+          slotTo = this.common.params.selectedTime.to.hh + ".75";
+          break;
         // default: slotTo = this.common.params.selectedTime.to.hh ? this.common.params.selectedTime.to.hh : this.setMinTime() + 1;
-        default: slotTo = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].to) : this.setMinTime(this.today) + 1;
+        default:
+          slotTo =
+            this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0
+              ? this.setMinTime(this.timeRangeSlotSwitch[0].to)
+              : this.setMinTime(this.today) + 1;
       }
       this.value = slotFrom;
       this.highValue = slotTo;
-
     }
 
     //if time restricted
     if (this.common.params.timeRestrict) {
-      this.value = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].start) : this.setMinTime(this.today);
-      this.highValue = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].end) : this.setMinTime(this.today) + 1;
-      this.options.minLimit = (this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0) ? this.setMinTime(this.timeRangeSlotSwitch[0].start) : this.setMinTime(this.today);
+      this.value =
+        this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0
+          ? this.setMinTime(this.timeRangeSlotSwitch[0].start)
+          : this.setMinTime(this.today);
+      this.highValue =
+        this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0
+          ? this.setMinTime(this.timeRangeSlotSwitch[0].end)
+          : this.setMinTime(this.today) + 1;
+      this.options.minLimit =
+        this.timeRangeSlotSwitch && this.timeRangeSlotSwitch.length > 0
+          ? this.setMinTime(this.timeRangeSlotSwitch[0].start)
+          : this.setMinTime(this.today);
     }
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  letterToIndex(letter: string): number {
+    return this.alphabet.indexOf(letter);
   }
 
   closeModal(res, range = null) {
-    this.activeModal.close({ response: res, range: range });
+    this.activeModal.close({
+      response: res,
+      range: range,
+    });
   }
 
   setMinTime(day) {
@@ -160,61 +189,135 @@ export class AvailableTimeSlotComponent implements OnInit {
     if (min == 0) {
       return parseInt(moment(day).format("HH"));
     } else if (min >= 0 && min <= 15) {
-      return parseFloat(moment(day).format("HH") + '.25');
+      return parseFloat(moment(day).format("HH") + ".25");
     } else if (min > 15 && min <= 30) {
-      return parseFloat(moment(day).format("HH") + '.50');
+      return parseFloat(moment(day).format("HH") + ".50");
     } else if (min > 30 && min <= 45) {
-      return parseFloat(moment(day).format("HH") + '.75');
+      return parseFloat(moment(day).format("HH") + ".75");
     } else {
       return parseInt(moment(day).format("HH")) + 1;
     }
   }
 
-
   getvalue(value) {
-    let val = JSON.stringify(value).split('.');
+    let val = JSON.stringify(value).split(".");
     // console.log(val[1]);
     switch (val[1]) {
-      case '15': { return val[0] + '.25' } break;
-      case '3': { return val[0] + '.5' } break;
-      case '45': { return val[0] + '.75' } break;
-      default: return (!val[1]) ? `${val[0]}` : `${val[0]}.${val[1]}`;
+      case "15":
+        {
+          return val[0] + ".25";
+        }
+        break;
+      case "3":
+        {
+          return val[0] + ".5";
+        }
+        break;
+      case "45":
+        {
+          return val[0] + ".75";
+        }
+        break;
+      default:
+        return !val[1] ? `${val[0]}` : `${val[0]}.${val[1]}`;
     }
   }
 
   addTime() {
-    if (this.type === 'time') {
-      let from = JSON.stringify(this.value).split('.');
-      let to = JSON.stringify(this.highValue).split('.');
-      let interval = { from: { hh: null, mm: '00' }, to: { hh: null, mm: '00' }, duration: { hh: null, mm: '00' } }
+    if (this.type === "time") {
+      let from = JSON.stringify(this.value).split(".");
+      let to = JSON.stringify(this.highValue).split(".");
+      let interval = {
+        from: {
+          hh: null,
+          mm: "00",
+        },
+        to: {
+          hh: null,
+          mm: "00",
+        },
+        duration: {
+          hh: null,
+          mm: "00",
+        },
+      };
       interval.from.hh = from[0];
       interval.to.hh = to[0];
 
       let fromTime = moment();
       let toTime = moment();
-      fromTime.set({ hour: parseInt(from[0]) });
-      toTime.set({ hour: parseInt(to[0]) });
-      fromTime.set({ minute: 0 });
-      toTime.set({ minute: 0 });
-
+      fromTime.set({
+        hour: parseInt(from[0]),
+      });
+      toTime.set({
+        hour: parseInt(to[0]),
+      });
+      fromTime.set({
+        minute: 0,
+      });
+      toTime.set({
+        minute: 0,
+      });
 
       switch (from[1]) {
-        case '25': { interval.from.mm = '15', fromTime.set({ minute: 15 }); } break;
-        case '5': { interval.from.mm = '30', fromTime.set({ minute: 30 }); } break;
-        case '75': { interval.from.mm = '45', fromTime.set({ minute: 45 }); } break;
+        case "25":
+          {
+            (interval.from.mm = "15"),
+              fromTime.set({
+                minute: 15,
+              });
+          }
+          break;
+        case "5":
+          {
+            (interval.from.mm = "30"),
+              fromTime.set({
+                minute: 30,
+              });
+          }
+          break;
+        case "75":
+          {
+            (interval.from.mm = "45"),
+              fromTime.set({
+                minute: 45,
+              });
+          }
+          break;
       }
 
       switch (to[1]) {
-        case '25': { interval.to.mm = '15', toTime.set({ minute: 15 }); } break;
-        case '5': { interval.to.mm = '30', toTime.set({ minute: 30 }); } break;
-        case '75': { interval.to.mm = '45', toTime.set({ minute: 45 }); } break;
+        case "25":
+          {
+            (interval.to.mm = "15"),
+              toTime.set({
+                minute: 15,
+              });
+          }
+          break;
+        case "5":
+          {
+            (interval.to.mm = "30"),
+              toTime.set({
+                minute: 30,
+              });
+          }
+          break;
+        case "75":
+          {
+            (interval.to.mm = "45"),
+              toTime.set({
+                minute: 45,
+              });
+          }
+          break;
       }
 
-      let timeDuration = moment.utc(toTime.diff(fromTime)).format('HH:mm:ss');
-      interval.duration.hh = timeDuration.split(':')[0];
-      interval.duration.mm = timeDuration.split(':')[1];
+      let timeDuration = moment.utc(toTime.diff(fromTime)).format("HH:mm:ss");
+      interval.duration.hh = timeDuration.split(":")[0];
+      interval.duration.mm = timeDuration.split(":")[1];
 
-      this.closeModal(true, interval)
+      this.closeModal(true, interval);
     }
   }
 
@@ -233,21 +336,21 @@ export class AvailableTimeSlotComponent implements OnInit {
   // }
 
   manageIcons(schedule, iconState) {
-    this.busySchedules.forEach(ele => {
-
+    this.busySchedules.forEach((ele) => {
       ele.detaildIcon = true;
       ele.option.ticksTooltip = (val: string): string => `Host: ${ele.host}`;
 
       if (ele.userid == schedule.userid) {
-        ele.detaildIcon = iconState
+        ele.detaildIcon = iconState;
       }
     });
-
   }
 
   shiftSlot() {
     this.value = this.setMinTime(this.timeRangeSlotSwitch[this.rangePos].start);
-    this.highValue = this.setMinTime(this.timeRangeSlotSwitch[this.rangePos].end);
+    this.highValue = this.setMinTime(
+      this.timeRangeSlotSwitch[this.rangePos].end
+    );
     if (this.rangePos >= this.timeRangeSlotSwitch.length - 1) {
       this.rangePos = 0;
     } else {

@@ -14,7 +14,7 @@ export class MeetingAdminReportComponent implements OnInit {
 
   endTime = new Date();
   startTime = new Date();
-  activeTab = 'user-meeting';
+  activeTab = 'all-meeting';
   filterby = 'entitywise';
   table = {
     data: {
@@ -71,7 +71,10 @@ export class MeetingAdminReportComponent implements OnInit {
     if (this.activeTab == 'user-meeting') {
       type = 1;
     } else if (this.activeTab == 'follow-up-meeting') {
-      type = 2
+      type = 2;
+    }
+    else if (this.activeTab == 'all-meeting'){
+      type = 3;
     }
 
     const params =

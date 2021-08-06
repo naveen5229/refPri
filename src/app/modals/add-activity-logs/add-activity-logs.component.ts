@@ -80,7 +80,7 @@ export class AddActivityLogsComponent implements OnInit {
     if (this.activity.desc == null) {
       this.common.showError('Enter Description');
     } else if (!this.activity.refId && this.activity.contact == null) {
-      this.common.showError('Enter Contatc Person');
+      this.common.showError('Enter Contact Person');
     } else if (!this.activity.refId && this.activity.outcome == null) {
       this.common.showError('Enter Outcome');
     } else if (this.timeValidity && this.activity.hour > this.oldTime) {
