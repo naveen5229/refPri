@@ -1009,6 +1009,7 @@ export class TaskComponent implements OnInit {
   // end unread lead
 
   getTaskByType(type, startDate = null, endDate = null) {
+    console.log("getTaskByType : ",type);
     this.activeSabTab = 0;
     this.todoVisi = false;
     this.common.loading++;
@@ -2254,6 +2255,7 @@ export class TaskComponent implements OnInit {
   }
 
   updateTicketStatus(ticket, type, status, remark = null) {
+    console.log("updateTicketStatus : ",type);
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -2313,6 +2315,9 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
+  console.log('status: ', status);
+  console.log('type,: ', type,);
+  console.log('ticket: ', ticket);
     let stat : any;
     let up_time: any;
     console.log(status, 'status');
@@ -2335,9 +2340,11 @@ export class TaskComponent implements OnInit {
 // }
 //  else{
     if (ticket._refid) {
-      let preTitle = "Complete";
+      let preTitle = `complete`;
+      let taskTitle = `<span class="task-title"> ${ticket.task_subject}</span> Task`;
       if (!status) {
         preTitle = "Re-Active";
+
       } else if (status === -1) {
         preTitle = "Reject";
       } else if (status == 3) {
@@ -2348,7 +2355,7 @@ export class TaskComponent implements OnInit {
       this.common.params = {
         title: preTitle + " Task ",
         description:
-          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Task" + `<b>`,
+          `<b>Are You Sure You Want To  ${preTitle} ${taskTitle} </b>`,
         isRemark: status == 3 ? true : false,
       };
       const activeModal = this.modalService.open(ConfirmComponent, {
@@ -3104,7 +3111,7 @@ export class TaskComponent implements OnInit {
               this.openSearchTaskModal();
               this.setTableSearchTaskList();
             } else {
-              this.common.showToast("No data found");
+              this.common.showError("No data found");
             }
           } else {
             this.common.showError(res["msg"]);

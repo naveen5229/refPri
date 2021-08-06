@@ -177,6 +177,7 @@ export class KanbanBoardComponent implements OnInit {
     this.processId = lead._id;
     this.processName = lead.name;
     this.defaultIdentity = lead._default_identity;
+    this.common.params = {defaultIdentity:lead._default_identity};
     let params = `processId=${lead._id}&filter=null`
     this.common.loading++;
     this.api.get(`Processes/getProcessBoardView?` + params).subscribe((res) => {
@@ -210,6 +211,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   getAllUserGroup(boardData) {
+    debugger;
     this.cardsUserGroup = [];
     let userGroup = [];
     if (boardData) {
@@ -888,7 +890,7 @@ export class KanbanBoardComponent implements OnInit {
       identity: null,
       priOwnId: null,
       isDisabled: false,
-      _default_identity: this.defaultIdentity,
+      _default_identity: this.defaultIdentity?this.defaultIdentity:this.common.params.defaultIdentity,
     }
     this.common.params = { processList: this.processList, adminList: this.adminList, rowData: data, title: "Add Transaction ", button: "Add" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });

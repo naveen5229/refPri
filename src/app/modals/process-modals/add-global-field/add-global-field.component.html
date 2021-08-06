@@ -59,6 +59,9 @@
           </span>
       </div>
       <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="col-2 pt-4">
+        <label><input type="checkbox" [(ngModel)]="form.is_required"> Is Required ?</label>
+      </div>
+      <div *ngIf="form.typeId =='text' || form.typeId =='number'" class="col-2 pt-4">
         <label><input type="checkbox" [(ngModel)]="form.isFixedValue"> Is Dropdown ?</label>
       </div>
       <div class="pt-4 text-right" [ngClass]="(['text','number','table'].includes(form.typeId)) ? 'col-3' : 'col-6'">

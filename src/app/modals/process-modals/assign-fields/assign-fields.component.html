@@ -26,11 +26,13 @@
               [cdkDropListConnectedTo]="[assignLeft,assignRight]" class="drag-list" (cdkDropListDropped)="drop($event)">
               <div class="drag-box " style="background: #D3D3D3;min-height:60px"
                 *ngFor="let item of unassign;index as i" cdkDrag>
-                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control">
+                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control" >
 
+              <div class="drag-box " style="background: #D3D3D3;min-height:60px" *ngFor="let item of unassign" cdkDrag>
+                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control">
                   <div>{{item.r_blockname}}</div>
                 </div>
-                <div><input type="checkbox" [(ngModel)]="item.r_required"> <label for="" class="mb-0">is required</label> </div>
+                <div><input type="checkbox" [(ngModel)]="item.r_required"> is required</div>
               </div>
             </div>
           </div>
@@ -41,27 +43,19 @@
             <div id="assign-left" cdkDropList #assignLeft="cdkDropList" [cdkDropListData]="assign.left"
               [cdkDropListConnectedTo]="[unAssignList, assignRight]" class="drag-list"
               (cdkDropListDropped)="drop($event)">
-              <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.left;index as i" cdkDrag>
+              <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.left" cdkDrag>
                 <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                   <div>{{item.r_blockname}}</div>
                 </div>
                 <div
-                  *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType))) && (item.param_type != 'attachment' && item.param_type != 'table')">
+                  *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && refType==0)) && (item.param_type != 'attachment' && item.param_type != 'table')">
                   <i class="fa fa-star cursorOnStar"
                     [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'" aria-hidden="true"
                     [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
                     (click)="markImportant(item)"></i>
                 </div>
-
-                <div *ngIf="item && ((formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType)))
-                  && (item.param_type != 'attachment' && item.param_type == 'table')"
-                  (click)="gettablefields(item,content,i)">
-                  <i class="fa fa-star cursorOnStar" title="set required table fields"></i>
-                </div>
-
-
-                <div *ngIf="item" class="required-label">
-                  <input type="checkbox" [(ngModel)]="item.r_required"> <label>is required</label>
+                <div *ngIf="item">
+                  <input type="checkbox" [(ngModel)]="item.r_required"> is required
                 </div>
               </div>
             </div>
@@ -73,26 +67,19 @@
             <div id="assign-right" cdkDropList #assignRight="cdkDropList" [cdkDropListData]="assign.right"
               [cdkDropListConnectedTo]="[unAssignList, assignLeft]" class="drag-list"
               (cdkDropListDropped)="drop($event)">
-              <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.right;index as i" cdkDrag>
-                <div *ngIf="item" (click)="gettablefields(item,content,i)"><input type="text"
-                    [(ngModel)]="item.r_coltitle" class="form control" (click)="$event.stoppropagation()">
+              <div class="drag-box" style="min-height:60px" *ngFor="let item of assign.right" cdkDrag>
+                <div *ngIf="item"><input type="text" [(ngModel)]="item.r_coltitle" class="form control">
                   <div>{{item.r_blockname}}</div>
                 </div>
                 <div
-                  *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType))) && (item.param_type != 'attachment' && item.param_type != 'table')">
+                  *ngIf="item && ((!formType && [0,2].includes(refType)) || (formType == 11 && refType==0)) && (item.param_type != 'attachment' && item.param_type != 'table')">
                   <i class="fa fa-star cursorOnStar"
                     [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'" aria-hidden="true"
                     [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
                     (click)="markImportant(item)"></i>
                 </div>
-                <div *ngIf="item && ((formType && [0,2].includes(refType)) || (formType == 11 && [0,2].includes(refType)))
-                  && (item.param_type != 'attachment' && item.param_type == 'table')"
-                  (click)="gettablefields(item,content,i)">
-                  <i class="fa fa-star cursorOnStar" title="set required table fields"></i>
-                </div>
-
-                <div *ngIf="item" class="required-label">
-                  <input type="checkbox" [(ngModel)]="item.r_required"> <label>is required</label>
+                <div *ngIf="item">
+                  <input type="checkbox" [(ngModel)]="item.r_required"> is required
                 </div>
               </div>
             </div>
@@ -106,52 +93,3 @@
 <div *ngIf="fields.length>0" class="modal-footer">
   <button class="btn btn-primary" (click)="saveColumns();">Save</button>
 </div>
-
-
-<ng-template #content let-c="close" let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title text-white text-capitalize" id="modal-basic-title"> table Fields </h5>
-    <button type="button" class="close" aria-label="Close" (click)="c('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <form action="">
-      <div class="row">
-        <div class="col-md-12">
-          <h5 class="modal-title text-center"> Table: {{tableData.coltitle}} </h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-primary ticket-field-table mb-0">
-            <tbody>
-              <tr *ngFor="let item of tableData._param_child;index as i">
-                <td class="text-capitalize"> {{item.r_coltitle}} </td>
-                <td>
-                  <div class="form-check">
-                    <!-- <input class="form-check-input" type="checkbox" (click)="setfieldRequired(i)"
-                      [(ngModel)]="item.r_isdashboard_info" [ngModelOptions]="{standalone: true}" value=""
-                      id="flexCheckDefault"> -->
-                    <i class="fa fa-star cursorOnStar"
-                      [ngClass]="item.r_isdashboard_info == true ? 'text-warning' : 'text-muted'" aria-hidden="true"
-                      [title]="item.r_isdashboard_info == true ? 'Star unmark' : 'Star mark'"
-                      (click)="markImportant(item)"></i>
-
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Cross click')">Cancel</button>
-    <button type="button" class="btn btn-outline-dark" (click)="saveRequired()">Save</button>
-  </div>
-</ng-template>
-
-

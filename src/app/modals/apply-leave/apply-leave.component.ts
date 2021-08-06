@@ -40,7 +40,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     to: null,
     cc: [],
     //endDate: new Date,
-     endDate: this.getDate(),
+    endDate: this.getDate(),
     type: 4,
     chatFeature: false
   }
@@ -54,7 +54,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         tempDate.setDate(tempDate.getDate() + days);
       }
     }
-    else if (!days && !addType){
+    else if (!days && !addType) {
       return null;
     }
     return tempDate;
@@ -111,10 +111,16 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     public userService: UserService,
     public datePipe: DatePipe) {
 
+      
     this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
     this.userGroupList = this.common.params.groupList;
+<<<<<<< HEAD
     console.log("userList", this.userList);
     console.log("userGroupList", this.userGroupList);
+=======
+    console.log("this.userList",this.userList);
+      console.log("this.userGroupList",this.userGroupList);
+>>>>>>> 3b4e297ac58da7e94c01efdf5522615ba2dc1a90
     if (this.userGroupList) {
       this.userWithGroup = this.userGroupList.concat(this.userList);
     } else {
@@ -129,7 +135,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     } else if (this.formType == 2) {
       this.getMeetingRoomList();
       if (this.common.params.meetingData && this.common.params.isEdit) {
-        if(this.common.params.meetingData._meeting_type == 2) this.formType = 8;
+        if (this.common.params.meetingData._meeting_type == 2) this.formType = 8;
         this.isEdit = this.common.params.isEdit;
 
         let durationtime = null;
@@ -376,6 +382,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       })
     }
 
+<<<<<<< HEAD
     let dat:any;
     let enddate: any;
     if(this.broadcast.endDate == null){
@@ -389,6 +396,17 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       console.log("end date", enddate);
       let params = {
         date: enddate,
+=======
+    let dat: any;
+    if (this.broadcast.endDate == null) {
+      dat = 'null';
+    }
+    else {
+      dat = this.common.dateFormatter(this.broadcast.endDate);
+    }
+    let params = {
+      date: dat,
+>>>>>>> 3b4e297ac58da7e94c01efdf5522615ba2dc1a90
       to: this.userService.loggedInUser.id,
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,
@@ -396,6 +414,8 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       type: this.broadcast.type,
       chatFeature: this.broadcast.chatFeature
     }
+
+    console.log("params", params);
 
     this.common.loading++;
     this.api.post('AdminTask/addBroadcast', params).subscribe(res => {
@@ -522,7 +542,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     }
     //
 
-    if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId && this.formType==2) {
+    if ((this.meetingForm.type == 1 && (!this.meetingForm.link || this.meetingForm.link.trim() == "")) || (!this.meetingForm.type || this.meetingForm.type == 0) && !this.meetingForm.roomId && this.formType == 2) {
       this.common.params = {
         title: 'Alert',
         description: `<b>${(this.meetingForm.type == 1) ? 'Meeting Link' : 'Meeting Room'} not available.<br>Create Anyway..`
@@ -637,7 +657,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         this.busySchedules = (res['data'] && res['data'].length > 0) ? res['data'].map(timeranges => {
           let from = timeranges.meeting_time.split('T')[1];
           let to = timeranges.meeting_end_time.split('T')[1];
-          return { userid: (timeranges.userid) ? timeranges.userid : timeranges.room_id, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name, is_todo: timeranges.is_todo,meeting_host:timeranges.meeting_host }
+          return { userid: (timeranges.userid) ? timeranges.userid : timeranges.room_id, slotFrom: { hh: from.split(':')[0], mm: from.split(':')[1] }, slotTo: { hh: to.split(':')[0], mm: to.split(':')[1] }, roomId: timeranges.room_id, name: timeranges.user_name, is_todo: timeranges.is_todo, meeting_host: timeranges.meeting_host }
         }) : [];
 
 
@@ -654,9 +674,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
         userHostUsersList.push(this.meetingForm.host);
         let uniqueUsers = this.common.arrayUnique(userHostUsersList, 'id');
         if (this.busySchedules && this.busySchedules.length > 0) {
-          let groupUser:any = _.groupBy(this.busySchedules, 'name');
+          let groupUser: any = _.groupBy(this.busySchedules, 'name');
 
-          Object.keys(groupUser).map((key:any,groupindex:number) => {
+          Object.keys(groupUser).map((key: any, groupindex: number) => {
 
 
 
@@ -667,7 +687,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
               //   meeting_host:item.meeting_host
               // })
               //  })
-              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true});
+              preBookedScheduler.push({ userid: groupUser[key][0].userid, name: key, schedule: [], option: { floor: 7, ceil: 22, step: 0.05, showTicks: true, disabled: true }, detaildIcon: true });
 
               groupUser[key].map(schedule => {
 
@@ -686,17 +706,17 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
                   default: slotTo = schedule.slotTo['hh'];
                 }
 
-                preBookedScheduler.forEach((data:any,index:number) => {
-                 console.log('index: ', index);
-                 console.log('schedule.meeting_host: ', schedule.meeting_host);
+                preBookedScheduler.forEach((data: any, index: number) => {
+                  console.log('index: ', index);
+                  console.log('schedule.meeting_host: ', schedule.meeting_host);
 
-                  if (data.name === key) data.schedule.push({fromTime: slotFrom, toTime: slotTo, is_todo: schedule.is_todo,meeting_host:schedule.meeting_host })
+                  if (data.name === key) data.schedule.push({ fromTime: slotFrom, toTime: slotTo, is_todo: schedule.is_todo, meeting_host: schedule.meeting_host })
 
                 });
 
- })
- }
-});
+              })
+            }
+          });
 
           if (preBookedScheduler && uniqueUsers && preBookedScheduler.length < uniqueUsers.length) {
             let presentStatus = [];
@@ -721,6 +741,18 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
             case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
             default: return `${parseInt(JSON.stringify(value))}`;
           }
+        });
+
+        preBookedScheduler.map(data => data.option['getLegend'] = (value: any): any => {
+          let host = null;
+          if (data.schedule) {
+            data.schedule.forEach(sc => {
+              if (sc.fromTime+.15 == value) {
+                host = sc.meeting_host;
+              }
+            });
+          }
+          return host ? '<span>'+host.split(" ")[0]+'</span>' : null;
         });
 
         // preBookedScheduler.map(data => data.option.getLegend = (value: number): string => {
@@ -874,9 +906,9 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       preBookedScheduler: preBookedScheduler,
       selectedTime: this.selectedTime,
       timeRestrict: (this.common.dateFormatter1(this.meetingForm.fromTime) <= this.common.dateFormatter1(this.common.getDate())) ? true : false,
-      freeSlots:this.freeSchedulesForShifting
+      freeSlots: this.freeSchedulesForShifting
     }
-    const activeModal = this.modalService.open(AvailableTimeSlotComponent, {  container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "timeslot" });
+    const activeModal = this.modalService.open(AvailableTimeSlotComponent, { container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "timeslot" });
     activeModal.result.then(data => {
       if (data.response) {
 

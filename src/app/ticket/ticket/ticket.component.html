@@ -161,7 +161,7 @@
                   (onSelected)="oddArray[i].r_value=($event.name);categoryIds.priCat=($event.id);"
                   [preSelected]="{name:oddArray[i].r_value}" autocomplete="off">
                 </auto-suggestion>
-<!--
+                <!--
                 <div *ngIf="oddArray[i].r_coltype =='auto' && oddArray[i].r_coltitle =='primary category'">
                   <p style="background-color: aqua;width: 100%;height: 200px;"> Primary categoty is available </p>
                 </div> -->
@@ -214,6 +214,10 @@
                           <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
                             placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
 
+                          <input type="checkbox" *ngIf="td.param_type == 'checkbox'" class="form-control checkbox"
+                            [(ngModel)]="td.param_value">
+
+                          <input type="text" type="file" *ngIf="td.param_type == 'attachment'" class="form-control">
 
                           <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
                             [placeholder]="(td.param_name) ? 'Select '+td.param_name : 'Select Entity'"
@@ -221,7 +225,7 @@
                             [preSelected]="{option: td.entity_value}" autocomplete="off">
                           </auto-suggestion>
                         </td>
-                        <td>
+                        <td class="add-action">
                           <button type="button" *ngIf="v == oddArray[i]._param_child.length-1"
                             class="btn btn-bg-transparent" title="Add Row"
                             (click)="AddTableRow(oddArray[i]._param_child[0],oddArray[i]._param_child)">

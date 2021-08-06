@@ -285,3 +285,11 @@ full-calendar {
 .cursor-pointer1:hover .new-comment span {
       top: -19px;
 }
+
+
+
+:host ::ng-deep{
+.fc-v-event .fc-event-main-frame {
+flex-direction: row !important;
+}
+}

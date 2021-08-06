@@ -8,7 +8,7 @@ export class TableService {
   constructor() { }
 
 
-options(length:number,exportnumber:number,title?:any){
+options(length:number,exportnumber:number,title?:any,dom?:any){
 let tableTitle = title ? title.toUpperCase(): 'Inplant Automation';
 let arr:number[] = [];
 let i:number = 0;
@@ -18,38 +18,42 @@ let exportsOptions = {
     pageLength:length,
     lengthMenu: [5,10,25,50],
     processing: true,
-        dom: 'Blfrtip',
+        dom: dom || 'Blfrtip',
               buttons: [
             {
                 extend: 'copy',
                 text:'<i class="fa fa-clipboard" aria-hidden="true"></i>',
+                titleAttr: 'Copy',
                 title: tableTitle ,
                 exportOptions: {
                 columns: arr,
-              }
+                 }
             },
             {
                 extend: 'csv',
                 text:'<i class="fas fa-file-csv"></i>',
+                titleAttr: 'CSV',
                 title: tableTitle ,
                 exportOptions: {
-                columns: arr
+                columns: arr,
                 }
             },
             {
                 extend: 'excel',
                 text:'<i class="fa fa-file-excel" aria-hidden="true"></i>',
+                titleAttr: 'Excel',
                 title: tableTitle ,
                 exportOptions: {
-                columns: arr
+                columns: arr,
                 }
             },
             {
                 extend: 'print',
                 text:'<i class="fa fa-print" aria-hidden="true"></i>',
+                titleAttr: 'Print',
                 title: tableTitle,
                 exportOptions: {
-                columns: arr
+                columns: arr,
                 }
             },
          ],
