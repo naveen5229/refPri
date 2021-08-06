@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, HostListener, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ImageViewComponent } from './../../modals/image-view/image-view.component';
 import { TableService } from './../../Service/Table/table.service';
@@ -74,15 +74,32 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   wayPoints = null;
   multiMarkerInfoWindow: any;
   // end: map
-
   detaildate:any;
   isAllCheckboxDisable = false;
 
   constructor(public modalService: NgbModal,
     public common:CommonService,
-    public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
+    public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService,private elem: ElementRef) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
+
+    // let menusidebar = document.getElementsByClassName('menu-sidebar');
+    // menusidebar[0].classList.remove('expanded');
+    // menusidebar[0].classList.add('compacted');
+
+
+  }
+
+ @HostListener('document:click', ['$event'])
+ DocumentClick(event: Event) {
+  console.log('event: ', event.target);
+    if  (!this.elem.nativeElement.contains(event.target)) {
+    let menusidebar:any = document.getElementsByClassName('menu-sidebar');
+     if  (menusidebar[0].contains(event.target)) {
+      menusidebar[0].classList.remove('compacted');
+      menusidebar[0].classList.add('expanded');
+  }
+}
 
   }
 
