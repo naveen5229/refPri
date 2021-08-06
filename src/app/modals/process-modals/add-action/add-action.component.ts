@@ -116,6 +116,19 @@ export class AddActionComponent implements OnInit {
     });
   }
 
+  selectedMode(event){
+    this.actionForm.modes = event;
+    // let demo = null;
+    // console.log(this.actionForm.modes);
+    // this.actionForm.modes.map(af=>{
+    //     this.modeList.map(mf=>{
+    //       if(mf.id!=af.id){
+    //         demo = mf
+    //       }
+    //     })
+    // });
+  }
+
   saveProcessAction() {
     if (this.actionForm.name == null || this.actionForm.process.id == null) {
       this.common.showError('Please Fill All Mandatory Field');

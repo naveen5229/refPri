@@ -60,7 +60,7 @@
             <label><b>Modes</b></label>
             <auto-suggestion [data]="modeList" display="name" placeholder="Select Modes" name="modes" inputId="modesId"
                 autocomplete="off" [preSelected]="actionForm.modes" isMultiSelect="true"
-                (onSelected)="actionForm.modes = $event">
+                (onSelected)="selectedMode($event)">
             </auto-suggestion>
         </div>
     </div>

@@ -32,6 +32,7 @@
         <div class="col-4 pr-0">
             <label>State Owner</label>
             <auto-suggestion [data]="adminList" display="name" seperator="-" placeholder="Select state owner" (onSelected)="userTag = $event" inputId="stateOwner" name="stateOwner" autocomplete="off" [preSelected]="(userTag.id>0) ? {name: userTag.name} : {name: ''}"></auto-suggestion>
+            <span style="color: red; font-size: 10px;">User can either be owner or state user </span>
         </div>
 
         <div class="col-4 pr-0">

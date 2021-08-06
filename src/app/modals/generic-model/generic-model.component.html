@@ -1,5 +1,9 @@
 <div class="modal-header">
   <h5 class="modal-title" id="modal-basic-title">{{title}}</h5>
+  <button class="btn default btn-sm ml-2 p-0 exel-icon" style="line-height: 0;" title="download excel"
+                (click)="this.common.getCSVFromTableId('genericTable')">
+                <i class="fas fa-file-excel"></i>
+            </button>
   <button type="button" class="close" aria-label="Close" (click)="closeModal()">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -11,5 +15,5 @@
       <i class="fas fa-file-excel"></i>
     </button>
   </div>
-  <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings"></smart-table>
+  <smart-table *ngIf="data && data.length" [data]="table.data" [settings]="table.settings" id="genericTable"></smart-table>
 </div>

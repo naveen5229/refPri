@@ -116,6 +116,7 @@ export class SmartTableComponent implements OnInit {
       } else if (value && value.toString().toLowerCase().includes(search.toLowerCase())) return true;
       return false;
     });
+    console.log("key=",key,this.columns);
 
     if (search.includes('>') || search.includes('<') || search.includes('!')) {
       if (search.includes('>')) this.sortColumn(key, 'asc')

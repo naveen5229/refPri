@@ -1009,6 +1009,7 @@ export class TaskComponent implements OnInit {
   // end unread lead
 
   getTaskByType(type, startDate = null, endDate = null) {
+    console.log("getTaskByType : ",type);
     this.activeSabTab = 0;
     this.todoVisi = false;
     this.common.loading++;
@@ -2233,6 +2234,7 @@ export class TaskComponent implements OnInit {
   }
 
   updateTicketStatus(ticket, type, status, remark = null) {
+    console.log("updateTicketStatus : ",type);
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -3083,7 +3085,7 @@ export class TaskComponent implements OnInit {
               this.openSearchTaskModal();
               this.setTableSearchTaskList();
             } else {
-              this.common.showToast("No data found");
+              this.common.showError("No data found");
             }
           } else {
             this.common.showError(res["msg"]);
