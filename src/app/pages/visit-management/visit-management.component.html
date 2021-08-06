@@ -198,11 +198,20 @@
             <div class="col-block">
               <div class="card">
                 <div class="card-header">
-                  <h5 class="card-title"> location map</h5>
-                  <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View
-                    Route</button>
-                  <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch"
-                    (click)="switchLatLngHandler()">{{(switchButton=="Live"? 'Actual Route' : 'Ideal Route')}}</button>
+                  <div class="location-title">
+                    <!-- <h5 class="card-title"> location map</h5> -->
+                    <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()"><i
+                        class="fas fa-route mr-2"></i> View
+                      Route </button>
+                    <p class="mb-0"> Distance: <b> {{distance}}km</b></p>
+                  </div>
+
+                  <div class="route-btn">
+                    <button class="btn-sm ml-2" [class]="switchButton == item ? 'btn btn-primary':'btn btn-secondary'"
+                      *ngFor="let item of distancetype" [class.active]="switchButton == item" id="routeTypeSwitch"
+                      (click)="switchLatLngHandler(item)">
+                      {{item == 'Live'? 'Actual Route':'Ideal Route'}}</button>
+                  </div>
                 </div>
                 <div class="card-body">
                   <div class="location-map">
@@ -230,18 +239,22 @@
                       'zoom':detailDataIndex == i && detailImageZoom }"
                       (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
                       (mouseout)="detailImageZoom = false;changeColorUsingLatlng (item,2)">
-                      <a href="javascript:void(0)" class="image-remark-tootlip" [ngbTooltip]="tipContent1"
+                      <!-- <a href="javascript:void(0)" class="image-remark-tootlip" [ngbTooltip]="tipContent1"
                         container="body" placement="bottom"> <i
-                          class="fa fa-info-circle" aria-hidden="true"></i> </a>
+                          class="fa fa-info-circle" aria-hidden="true"></i> </a> -->
 
-                       <ng-template #tipContent1>
-                       <div class="image-remark">
+                      <a href="javascript:void(0)" class="image-remark-tootlip"> <i class="fa fa-info-circle"
+                          aria-hidden="true"></i>
+                      </a>
+
+                      <!-- <ng-template #tipContent1>
+                        <div class="image-remark">
                          <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo iusto possimus itaque
                            repellat
                            adipisci pariatur quod iure voluptatum facere, provident fugit fugiat, numquam doloremque
                            architecto eaque eos officia aut aperiam? </p>
                        </div>
-                        </ng-template>
+                      </ng-template> -->
 
                       <img class="img-fluid" [src]="item._url" [alt]="item.image">
                       <div class="actions">

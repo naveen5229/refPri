@@ -28,6 +28,8 @@ export class MyLeavesComponent implements OnInit {
   allLeaves: any = [];
   // dtOptions: DataTables.Settings = {};
   dtOptions: any = {};
+  mindate:any;
+  maxdate:any;
 
   @ViewChild(DataTableDirective, { static: false })
   dtElement: any;
@@ -55,15 +57,17 @@ export class MyLeavesComponent implements OnInit {
     public tableservice: TableService,
     public modalService: NgbModal) {
     this.common.refresh = this.refresh.bind(this);
+    this.startDate = this.common.getDate();
+    this.endDate = this.common.getDate();
     this.getAllAdmin();
     this.getUserGroupList();
     this.getMyLeaves();
     this.getDepartmentList();
-    this.currentUser = this.user._details.name
+    this.currentUser = this.user._details.name;
   }
   ngOnInit() {
     this.renderCircleProgress();
-    this.dtOptions = this.tableservice.options(10, 7, 'LEAVE REPORT');
+    this.dtOptions = this.tableservice.options(50, 7, 'LEAVE REPORT');
   }
 
   refresh() {
@@ -244,12 +248,21 @@ export class MyLeavesComponent implements OnInit {
         });
   }
 
+
+
+getleavebydate(){
+if (this.startDate && this.endDate){
+  this.getMyLeaves();
+}
+}
   getMyLeaves() {
+    this.mindate = this.common.getDate(-30);
+    this.maxdate = this.common.getDate();
     this.myLeaves = [];
     let startDate = this.leaveTypes == 4 ? new Date() : this.startDate;
     let params = "leaveType=" + this.leaveTypes +
-      "&startDate=" + this.common.dateFormatter1(startDate) +
-      "&endDate=" + this.common.dateFormatter1(this.endDate);
+      "&startDate=" + this.common.dateFormatter1(this.startDate) +
+      "&endDate=" + this.common.dateFormatter1(this.endDate)
     console.log("params====", params);
     this.resetTable();
     this.common.loading++;

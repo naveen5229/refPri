@@ -86,13 +86,10 @@ export class AvailableTimeSlotComponent implements OnInit {
               if (value == item.fromTime) {
               // console.log("item.fromTime", item.fromTime);
               console.log('val: ', value);
-             return `<b class="meeting-host">${'Manish'}</b>`;
+             return `<b class="meeting-host">${item.meeting_host}</b>`;
             }
-
           };
         });
-
-
       }
     );
 

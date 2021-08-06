@@ -207,6 +207,7 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   getAllUserGroup(boardData) {
+    debugger;
     this.cardsUserGroup = [];
     let userGroup = [];
     if (boardData) {

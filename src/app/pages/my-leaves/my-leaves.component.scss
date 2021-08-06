@@ -113,17 +113,17 @@ $active-btn:#ea7736;
 }
 
 .toptab {
-   padding: 10px 0px;
-   margin: 0;
-   display: flex;
-   flex-direction: row;
-   justify-content: flex-end;
-   gap: 5px;
-   align-items: center;
-   position: absolute;
-   right: 228px;
-   top: 3px;
-   width: 100%;
+  padding: 10px 0px;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 5px;
+  align-items: center;
+  position: absolute;
+  right: 228px;
+  top: 3px;
+  width: 100%;
 }
 
 .out-topnav-dept::-webkit-scrollbar {
@@ -133,12 +133,12 @@ $active-btn:#ea7736;
 }
 
 .search-block {
- button.search-btn{
-height: 28px;
-display: flex;
-align-items: center;
-justify-content: center;
- }
+  button.search-btn {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 
 }
@@ -149,17 +149,17 @@ justify-content: center;
   transition: .5s;
 
   .nav-link {
-      font-size: .75rem;
-      text-align: center;
-      padding: 4px 15px;
-      background-color: #c4c4c4;
-      color: #fff;
-      cursor: pointer;
-      border-bottom: 1px solid white;
-      margin-bottom: 0rem;
-      word-break: keep-all;
-      white-space: nowrap;
-      margin-right: 0;
+    font-size: .75rem;
+    text-align: center;
+    padding: 4px 15px;
+    background-color: #c4c4c4;
+    color: #fff;
+    cursor: pointer;
+    border-bottom: 1px solid white;
+    margin-bottom: 0rem;
+    word-break: keep-all;
+    white-space: nowrap;
+    margin-right: 0;
 
     &.active {
       background-color: $active-btn;
@@ -313,21 +313,21 @@ $color in $CirlceColors {
     }
 
     .progress-value {
-  display: flex;
-border-radius: 50%;
-font-size: 16px;
-text-align: center;
-line-height: 18px;
-align-items: center;
-justify-content: center;
-height: 100%;
-font-weight: 600;
-position: absolute;
-z-index: 20;
-width:$size - 13px;
-background: #ffffff;
-height:$size - 13px;
-left: 6px;
+      display: flex;
+      border-radius: 50%;
+      font-size: 16px;
+      text-align: center;
+      line-height: 18px;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-weight: 600;
+      position: absolute;
+      z-index: 20;
+      width: $size - 13px;
+      background: #ffffff;
+      height: $size - 13px;
+      left: 6px;
 
 
       div {
@@ -435,15 +435,25 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 
 
-.date-filter{
-    position: absolute;
-    top: 13px;
-    left: 346px;
+.date-filter {
+  position: absolute;
+  top: 13px;
+  left: 205px;
+  display: flex;
+
+  .form-group {
     display: flex;
+    align-items: center;
+
+    label {
+      margin-bottom: 0;
+      margin-right: 8px;
+    }
+  }
 }
 
-.new-commentt  {
-  span{
+.new-commentt {
+  span {
     min-width: 13px;
     min-height: 13px;
     display: block;
@@ -604,4 +614,8 @@ svg circle:nth-child(2) {
   .container .card {
     margin: 20px auto;
   }
+}
+
+.new-comment span {
+  top: -1px;
 }
