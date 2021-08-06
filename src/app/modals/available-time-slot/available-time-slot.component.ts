@@ -77,7 +77,26 @@ export class AvailableTimeSlotComponent implements OnInit {
       this.common.params.preBookedScheduler
     );
 
-  
+    this.common.params.preBookedScheduler.map(
+      (element: any, mainindex: number) => {
+           console.log("schedule", element);
+           element.schedule.forEach((item: any, index: number,elementArray:any) => {
+           console.log('item.fromTime: ', item.fromTime);
+            element.option.getLegend = (value: number): string => {
+              if (value == item.fromTime) {
+              // console.log("item.fromTime", item.fromTime);
+              console.log('val: ', value);
+             return `<b class="meeting-host">${item.meeting_host}</b>`;
+            }
+          };
+        });
+      }
+    );
+
+    console.log(
+      "this.common.params.preBookedScheduler",
+      this.common.params.preBookedScheduler
+    );
 
     let bookedSchedules = [];
     this.common.params.preBookedScheduler.map((schedule) => {

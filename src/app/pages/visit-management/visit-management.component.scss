@@ -901,7 +901,8 @@ div#expenseInfoModal {
 
 .image-remark-tootlip {
   position: absolute;
-  right: 6px;
+  // right: 6px;
+  left: 6px;
   color: #fff;
 }
 
@@ -914,4 +915,24 @@ div#expenseInfoModal {
   background-color: white;
   color: black;
   box-shadow: 1px 0px 10px 0px rgba(0, 0, 0, 0.38) !important;
+}
+
+
+.route-btn{
+ display: flex;
+ align-items: center;
+ gap: 5px;
+.btn.active{
+// background-color: #005780;
+// border-color: #005780;
+}
+
+}
+
+
+.location-title{
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
 }

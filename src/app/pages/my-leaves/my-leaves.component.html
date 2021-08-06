@@ -79,64 +79,88 @@
             </div>
           </div>
           <div class="date-filter">
-            <uj-date-time-picker [isTime]="false"> </uj-date-time-picker>
-            <uj-date-time-picker [isTime]="false"> </uj-date-time-picker>
-             <div class="search-block">
-               <button type="button" class="btn btn-primary search-btn"> <i class="fa fa-search"></i> </button>
-             </div>
-          </div>
+            <div class="form-group">
+              <label for=""> Start Date </label>
+              <uj-date-time-picker [isTime]="false" title="start date" [mind]="mindate" [maxd]="maxdate"
+                (onChanged)="startDate = $event">
+              </uj-date-time-picker>
+            </div>
 
+
+
+
+            <div class="form-group">
+              <label>  End Date </label>
+              <uj-date-time-picker [isTime]="false" [mind]="mindate" [maxd]="maxdate" (onChanged)="endDate = $event">
+              </uj-date-time-picker>
+            </div>
+
+
+            <div class="search-block">
+              <button type="button" class="btn btn-primary search-btn" (click)="getleavebydate()"> <i
+                  class="fa fa-search"></i> </button>
+            </div>
+          </div>
 
         </div>
 
       </div>
       <!-- <smart-table [data]="table.data" [settings]="table.settings" id="tableLeaves"></smart-table> -->
 
-      <table class="table table-primary ng-datatable" datatable [dtOptions]="dtOptions" [dtTrigger]="dttrigger">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Task Subject</th>
-            <th>Status</th>
-            <th>AssignedBy</th>
-            <th>AssignedTo</th>
-            <th>From Date</th>
-            <th> To Date </th>
-            <th>Completed Date</th>
-            <th>Tickect Type</th>
-            <th class="action">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of myLeaves;index as i">
-            <td>{{i+1}}</td>
-            <td> {{item.task_subject}}</td>
-            <td>{{item.Status}}</td>
-            <td>{{item.assignedby}}</td>
-            <td>{{item.assignedto}}</td>
+      <div class=" leave-table no-lengthmenu">
+        <table class="table table-primary ng-datatable" datatable [dtOptions]="dtOptions" [dtTrigger]="dttrigger">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Task Subject</th>
+              <th>Status</th>
+              <th>AssignedBy</th>
+              <th>AssignedTo</th>
+              <th>From Date</th>
+              <th> To Date </th>
+              <th>Completed Date</th>
+              <th>Tickect Type</th>
+              <th class="action">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of myLeaves;index as i">
+              <td>{{i+1}}</td>
+              <td> {{item.task_subject}}</td>
+              <td>{{item.Status}}</td>
+              <td>{{item.assignedby}}</td>
+              <td>{{item.assignedto}}</td>
 
-            <td>{{item.from_date}}</td>
-            <td>{{item.to_date}}</td>
-            <td>{{item.completeddate}}</td>
-            <td>{{item.ticket_type}}</td>
-            <td>
-              <div class="action-block icon-action">
-                <i class="fa fa-thumbs-up text-success" (click)="changeTicketStatusWithConfirm(item,101,5)"
-                  *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
-                  aria-hidden="true"></i>
-                <i class="fas fa-trash-alt"  title="delete leave request" *ngIf="selectedTab != 'cc' && item.assignedby == currentUser"
-                  (click)="deleteLeave(item)"></i>
-                <i class="fa fa-ban" aria-hidden="true"
-                  *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
-                  (click)="changeTicketStatusWithConfirm(item,101,-1)"></i>
-                <i class="fas fa-check-square text-warning" title="acknowledge leave"  *ngIf="selectedTab == 'cc'" aria-hidden="true"
-                  (click)="updateTransactionStatusWithConfirm()"></i>
-                <i class="fas fa-comments" aria-hidden="true" title=""  (click)="ticketMessage(item,101)"></i>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td>{{item.from_date}}</td>
+              <td>{{item.to_date}}</td>
+              <td>{{item.completeddate}}</td>
+              <td>{{item.ticket_type}}</td>
+              <td>
+                <div class="action-block icon-action">
+                  <i class="fa fa-thumbs-up text-success" (click)="changeTicketStatusWithConfirm(item,101,5)"
+                    *ngIf="selectedTab != 'cc' && item.assignedto == currentUser" aria-hidden="true"></i>
+
+                  <i class="fa fa-ban" aria-hidden="true" *ngIf="selectedTab != 'cc' && item.assignedto == currentUser"
+                    (click)="changeTicketStatusWithConfirm(item,101,-1)"></i>
+                  <i class="fas fa-check-square text-warning" title="acknowledge leave" *ngIf="selectedTab == 'cc'"
+                    aria-hidden="true" (click)="updateTransactionStatusWithConfirm()"></i>
+                  <i class="fas fa-comments" *ngIf="item._unreadcount == 0" aria-hidden="true" title=""
+                    (click)="ticketMessage(item,101)"></i>
+
+                  <div style="display:inline; position: relative;"><i class="fas fa-comments text-success new-comment"
+                      *ngIf="item._unreadcount > 0" (click)="ticketMessage(item,101)" title="chat"><span
+                        class="chat-items">{{item._unreadcount}}</span></i>
+                  </div>
+                  <i class="fas fa-trash-alt" title="delete leave request"
+                    *ngIf="selectedTab != 'cc' && item.assignedby == currentUser" (click)="deleteLeave(item)"></i>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
     </div>
   </nb-card-body>
 </nb-card>

@@ -44,6 +44,9 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   dtOptions =  this.table.options(10,9,'USER EXPENSES');
   dtTrigger: Subject<any> = new Subject<any>();
   updatedExpenses = [];
+  distancetype:any[] = ['Live','Recorded'];
+  distance:number = 0;
+  alltravelDistance:any[] = [];
   expenseSearch = {
     admin : { id: this.userService.loggedInUser.id, name: this.userService.loggedInUser.name }
   };
@@ -53,7 +56,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   expenseList = [];
 
   // start:map
-  switchButton = 'Live';
+  switchButton:any = [];
   map;
   poly;
   markers = [];
@@ -80,6 +83,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
     public mapService: MapService, public api: ApiService,public userService: UserService,private datePipe:DatePipe, public table:TableService) {
     this.common.refresh = this.refreshPage.bind(this);
     this.getAllAdmin();
+
   }
 
   ngOnInit() {}
@@ -607,6 +611,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
           this.common.loading--;
           if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
           let travelDistanceLatLng = res['data'] || [];
+          this.alltravelDistance = res['data'] || [];
 
           if (travelDistanceLatLng[0]['wayPoints'] && travelDistanceLatLng[0]['wayPoints'].length > 0) {
             travelDistanceLatLng[0]['wayPoints'].forEach((element, index) => {
@@ -626,7 +631,7 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
           } else {
             this.calcRoadDistance(this.travelDistanceData[0]);
           }
-
+        this.switchLatLngHandler(this.distancetype[0]);
         }, err => {
           this.common.loading--;
           this.common.showError();
@@ -906,19 +911,20 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
 
-  switchLatLngHandler() {
+  switchLatLngHandler(swicthbtn:string) {
+  this.switchButton = swicthbtn;
+  console.log('this.switchButton: ', this.switchButton);
     switch (this.switchButton) {
       case 'Live':
         const seprateLiveObject = this.travelDistanceData[1];
         const manuplateLive = { dis: seprateLiveObject.disLive, wayPointdata: seprateLiveObject.wayPointdataLive, wayPoints: seprateLiveObject.wayPointsLive };
-        console.log('Passed', manuplateLive);
+        this.distance = this.alltravelDistance[0].dis;
         this.calcRoadDistance(manuplateLive);
-        this.switchButton = 'Recorded';
         break;
       case 'Recorded':
-        console.log('Passed', this.travelDistanceData[0]);
         this.calcRoadDistance(this.travelDistanceData[0]);
-        this.switchButton = 'Live';
+        let distance:any  = Math.floor((this.alltravelDistance[1].disLive)) / 1000;
+        this.distance = distance.toFixed(2);
         break;
     }
   }

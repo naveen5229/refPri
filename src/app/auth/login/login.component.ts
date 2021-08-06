@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.route.params.subscribe(params => {
       console.log(params);
       if (params.type && (params.type.toLowerCase() == 'admin')) {
-        this.button = 'Generate Qr-Code';
+        this.button = 'Generate QR-Code';
         this.user._loggedInBy = params.type.toLowerCase();
       } else if (params.type) {
         this.router.navigate(['/auth/login']);

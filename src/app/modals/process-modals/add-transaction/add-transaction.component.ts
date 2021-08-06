@@ -93,11 +93,10 @@ export class AddTransactionComponent implements OnInit {
         console.log(this.common.params.processList[i]);
           this.transForm.isAutoIdentity = this.common.params.processList[i]._default_identity
         }
-        
+
      }
       console.log("this.transForm.isAutoIdentity",this.transForm.isAutoIdentity);
-
-      this.onSelectProcess();
+      // this.onSelectProcess();
     }
   }
 
