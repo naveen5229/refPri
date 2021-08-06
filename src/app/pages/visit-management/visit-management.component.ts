@@ -564,15 +564,28 @@ export class VisitManagementComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  openLink(index:number,type) {
-    let images:any = [];
+  openLink(index:number,type:number) {
+if(type == 0){
+  let images:any = [];
     this.onsiteImages.map(data => {
       images.push({name:type,image:data._url});
     });
-
     const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout' });
     activeModal.componentInstance.index = index;
     activeModal.componentInstance.imageList = { images, title: 'Image',index:index };
+}
+
+else if(type == 1) {
+   let images:any = [];
+    this.expenseList.map(data => {
+      images.push({name:type,image:data._url});
+    });
+    const activeModal = this.modalService.open(ImageViewComponent, { size: 'lg', container: 'nb-layout' });
+    activeModal.componentInstance.index = index;
+    activeModal.componentInstance.imageList = { images, title: 'Image',index:index };
+}
+
+
   }
 
 

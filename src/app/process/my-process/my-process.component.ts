@@ -155,7 +155,6 @@ export class MyProcessComponent implements OnInit {
     // console.log("addProcessLead");
     console.log('called addtransaction');
     let processList = this.processList.filter(process => {return process._is_active});
-    // debugger;
     this.common.params = { processList: processList, adminList: this.adminList, title: "Add Transaction ", button: "Add" }
     const activeModal = this.modalService.open(AddTransactionComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {

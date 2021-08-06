@@ -109,7 +109,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     public modalService: NgbModal,
     public userService: UserService) {
 
-      
+
     this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
     this.userGroupList = this.common.params.groupList;
     console.log("this.userList",this.userList);
@@ -729,7 +729,7 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
               }
             });
           }
-          return host ? '<span>'+host.split(" ")[0]+'</span>' : null;
+          return host ? '<span class="meeting-host-tick">'+host.split(" ")[0]+'</span>' : null;
         });
 
         // preBookedScheduler.map(data => data.option.getLegend = (value: number): string => {
