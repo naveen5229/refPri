@@ -111,16 +111,11 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
     public userService: UserService,
     public datePipe: DatePipe) {
 
-      
+
     this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
     this.userGroupList = this.common.params.groupList;
-<<<<<<< HEAD
-    console.log("userList", this.userList);
-    console.log("userGroupList", this.userGroupList);
-=======
     console.log("this.userList",this.userList);
       console.log("this.userGroupList",this.userGroupList);
->>>>>>> 3b4e297ac58da7e94c01efdf5522615ba2dc1a90
     if (this.userGroupList) {
       this.userWithGroup = this.userGroupList.concat(this.userList);
     } else {
@@ -382,7 +377,6 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       })
     }
 
-<<<<<<< HEAD
     let dat:any;
     let enddate: any;
     if(this.broadcast.endDate == null){
@@ -396,17 +390,6 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       console.log("end date", enddate);
       let params = {
         date: enddate,
-=======
-    let dat: any;
-    if (this.broadcast.endDate == null) {
-      dat = 'null';
-    }
-    else {
-      dat = this.common.dateFormatter(this.broadcast.endDate);
-    }
-    let params = {
-      date: dat,
->>>>>>> 3b4e297ac58da7e94c01efdf5522615ba2dc1a90
       to: this.userService.loggedInUser.id,
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,
