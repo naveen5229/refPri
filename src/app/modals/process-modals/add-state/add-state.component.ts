@@ -18,7 +18,7 @@ export class AddStateComponent implements OnInit {
   userTag = { id: null, name: null }
   stateUser = [];
   // nextState = null;
-  typeId = null;
+  typeId = "1";
   stateName = null;
   processId = null;
   processName = null;
@@ -246,10 +246,10 @@ export class AddStateComponent implements OnInit {
     // this.isDefault = (data._is_default) ? true : false;
     this.btn1 = "Update";
     // this.nextStates = this.nextStates
-  } 
+  }
 
   resetData() {
-    this.typeId = null;
+    this.typeId = "1";
     this.stateName = null;
     this.nextStates = null;
     // this.nextState = null;

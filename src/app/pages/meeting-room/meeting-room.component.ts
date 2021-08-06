@@ -1,3 +1,4 @@
+import { UserService } from './../../Service/user/user.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
@@ -16,7 +17,8 @@ export class MeetingRoomComponent implements OnInit {
   id = null;
   constructor(public common: CommonService,
     public api: ApiService,
-    public modalService: NgbModal) {
+    public modalService: NgbModal,
+    public userService: UserService) {
       this.id = null;
       // this.getFoData(null);
       this.getMeetingRoomList();
@@ -29,7 +31,7 @@ export class MeetingRoomComponent implements OnInit {
   officeDataForWifi = [];
   FoData = [];
   name="Elogist(605-606)";
-
+     permit : any;
  resetDetails(){
     this.meetingRoomName = null;
     this.meetingRoomList = [];
@@ -179,31 +181,60 @@ getTableColumnsRoom() {
 }
 
 editMeetingRoom(param:any){
+  this.resetDetails();
+  let userId = this.userService._details.id;
+  let id2:any;
+  let user: 0;
   for(const property in param) {
     if(property.charAt(0)=="_"){
-      this.id = param[property];
-    console.log("this.id", this.id);
-    }
-    else if(property=="room_name"){
-      this.meetingRoomName = param[property];
-    }
-    else{
-      if(property=="office_name" && param[property]!=null){
-      let y = this.officeDataForWifi.find(x => x.name === param[property]);
-      console.log("y office id",y);
-      this.officeListId = y._id;
-      this.name = y.name;
-    }
-    else{
-      this.officeListId = 0;
-      this.name = "Is Null";
+      id2 = param[property];
+    console.log("id", id2);
     }
   }
-  }
-    //  this.wifiFoId = this.transId;
+  this.common.loading++;
+   this.api.get('Admin/getPermission?id='+id2).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] >0){
+        this.permit = res['data'][0].aduserid;
+        console.log('permit', this.permit);
+        user = this.permit;
+      }else{
+        this.common.showError(res['msg']);
+      };
+      if(this.userService._details.isSuperUser == true || userId == this.permit){
+        for(const property in param) {
+          if(property.charAt(0)=="_"){
+            this.id = param[property];
+          console.log("this.id", this.id);
+          }
+          else if(property=="room_name"){
+            this.meetingRoomName = param[property];
+          }
+          else{
+            if(property=="office_name" && param[property]!=null){
+            let y = this.officeDataForWifi.find(x => x.name === param[property]);
+            console.log("y office id",y);
+            this.officeListId = y._id;
+            this.name = y.name;
+          }
+          else{
+            this.officeListId = 0;
+            this.name = "Is Null";
+          }
+        }
+                }
+              console.log("edit param", param);
+              this.btn = "update";
+    }
+    else{
+      this.common.showError("Not authorized");
+    }
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
 
-console.log("edit param", param);
-this.btn = "update";
 }
 
 deleteMeetingRoom(param:{}){
