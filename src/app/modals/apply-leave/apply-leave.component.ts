@@ -113,12 +113,14 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
 
     this.userList = this.common.params.userList.map(x => { return { id: x.id, name: x.name, groupId: null, groupuser: null } });
     this.userGroupList = this.common.params.groupList;
+    console.log("userList", this.userList);
+    console.log("userGroupList", this.userGroupList);
     if (this.userGroupList) {
       this.userWithGroup = this.userGroupList.concat(this.userList);
     } else {
       this.userWithGroup = this.userList.concat(this.userGroupList);
     }
-
+    console.log("userWithGroup", this.userWithGroup);
     this.formType = (this.common.params.formType > 0) ? this.common.params.formType : null;
     this.title = (this.common.params.title) ? this.common.params.title : "Apply Leave";
     this.btn = (this.common.params.btn) ? this.common.params.btn : "Apply";
@@ -374,16 +376,19 @@ export class ApplyLeaveComponent implements OnInit { //user for two forms 1. lea
       })
     }
 
-  let dat:any;
-  if(this.broadcast.endDate == null){
-    dat = 'null';
-  }
-  else {
-    dat = this.common.dateFormatter(this.broadcast.endDate);
-  }
-    console.log("end date", dat);
-    let params = {
-      date: dat,
+    let dat:any;
+    let enddate: any;
+    if(this.broadcast.endDate == null){
+      enddate = 'null';
+    }
+    else {
+      dat = this.common.dateFormatter(this.broadcast.endDate,"",false);
+      enddate = `${dat} 23:59:59`;
+    }
+      console.log("end ", this.broadcast.endDate);
+      console.log("end date", enddate);
+      let params = {
+        date: enddate,
       to: this.userService.loggedInUser.id,
       cc: JSON.stringify(CC),
       subject: this.broadcast.subject,

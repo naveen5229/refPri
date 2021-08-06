@@ -15,7 +15,7 @@ export class AddDashboardFieldComponent implements OnInit {
   form = {
     requestId: null,
     process: { id: null, name: null },
-    type: null,
+    type: 1,
     refId: null,
     refType: null,
     infoId: null,
@@ -256,7 +256,7 @@ export class AddDashboardFieldComponent implements OnInit {
 
   resetData() {
     this.form.requestId = null;
-    this.form.type = null;
+    this.form.type = 1;
     this.form.refId = null;
     this.form.refType = null;
     this.form.infoId = null;

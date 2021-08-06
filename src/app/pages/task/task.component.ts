@@ -1912,7 +1912,7 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == 101 || type == 103 || type == -102) {
-      if(ticket._status==0 && ticket.ticket_type== "Broadcast" || ticket._status==0 && ticket.ticket_type== "Scheduled"){
+      if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
         console.log("Task not acknowledged");
       icons.push({
         class: "fa fa-check-square text-warning",
@@ -1921,6 +1921,14 @@ export class TaskComponent implements OnInit {
         title: "Mark Ack as CC Task",
       });
     }
+    if(ticket._status==0 && ticket.ticket_type== "Scheduled"){
+    icons.push({
+      class: "fa fa-check-square text-warning",
+      action: this.updateTicketStatus.bind(this,ticket, type, 2),
+      txt: "",
+      title: "Mark Ack",
+    });
+  }
       if (ticket._status == 5 || ticket._status == -1) {
         if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) &&
          (ticket._status == -1 || ticket._assigned_user_id != this.userService.loggedInUser.id)) {
@@ -2747,7 +2755,7 @@ export class TaskComponent implements OnInit {
             if(ticket.status == 0){
               ticket.status = 2;
             }
-            if (status == -1) this.getTaskByType(type);
+            if (status == -1 || status==1 && ticket._tktype == 114) this.getTaskByType(type);
           } else {
             this.common.showError(res["data"]);
           }
