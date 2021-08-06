@@ -5,12 +5,13 @@ import { from } from 'rxjs';
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener } from '@angular/core';
 import { AnalyticsService } from './@core/utils/analytics.service';
 import { CommonService } from './Service/common/common.service';
 import { UserService } from './Service/user/user.service';
 import { ApiService } from './Service/Api/api.service';
 import { MessagingService } from './Service/messaging.service';
+import { ActivityService } from './Service/Acivity/activity.service';
 
 @Component({
   selector: 'ngx-app',
@@ -29,12 +30,13 @@ export class AppComponent implements OnInit {
   title = 'push-notification';
   message;
   datatabledata:any[] = [];
-
+  timeout: any;
   constructor(private analytics: AnalyticsService,
     public common: CommonService,
     public user: UserService,
     public api: ApiService,
-    private messagingService: MessagingService
+    private messagingService: MessagingService,
+    public activity : ActivityService
     ) {
     // if (this.user._details) {
     //   this.getUserPagesList();
@@ -51,6 +53,19 @@ export class AppComponent implements OnInit {
   this.message = this.messagingService.currentMessage
   }
 
+  @HostListener('document:mousemove', ['$event'])
+  onmousemove = () => {
+    if (this.user._loggedInBy !== 'customer') return;
+
+    if (this.activity.state == 'inactive') {
+      this.activity.state = 'active';
+    }
+
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      this.activity.state = 'inactive';
+    }, 120000);
+  }
 
 getdatatabledata(){
 let data = from(expenses);

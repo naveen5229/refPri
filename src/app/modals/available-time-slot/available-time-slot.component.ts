@@ -27,7 +27,7 @@ export class AvailableTimeSlotComponent implements OnInit {
     showTicks: true,
     minLimit: 1,
     translate: (value: number): string => {
-       switch (value - parseInt(JSON.stringify(value))) {
+      switch (value - parseInt(JSON.stringify(value))) {
         case 0.25: return `${parseInt(JSON.stringify(value))}.15`; break;
         case 0.5: return `${parseInt(JSON.stringify(value))}.30`; break;
         case 0.75: return `${parseInt(JSON.stringify(value))}.45`; break;
@@ -39,7 +39,7 @@ export class AvailableTimeSlotComponent implements OnInit {
     //     return `<b>${value}</b>`;
     //   }
     // }
-     };
+  };
 
   busySchedules = [];
   seperateInfo = {
@@ -63,21 +63,22 @@ export class AvailableTimeSlotComponent implements OnInit {
     this.timeRangeSlotSwitch = this.common.params.freeSlots;
 
     if (this.common.params.preBookedScheduler && this.common.params.preBookedScheduler.length > 0) this.busySchedules = this.common.params.preBookedScheduler;
+   
     console.log('this.common.params.preBookedScheduler: ', this.common.params.preBookedScheduler);
 
-// this.common.params.preBookedScheduler.forEach((element:any,mainindex:number) => {
-//   console.log('element',element)
-// element.schedule.forEach((item:any,index:number)=>{
-// console.log('schedule',item);
-//   element.option.getLegend = (value: number): string => {
-//     let val = this.getvalue(value)
-//     console.log(value,val,item.fromTime)
-//       if (val == item.fromTime) {
-//         return `<b class="meeting-host">${item.meeting_host}</b>`;
-//       }
-//     }
-// });
-// });
+    // this.common.params.preBookedScheduler.forEach((element:any,mainindex:number) => {
+    //   console.log('element',element)
+    // element.schedule.forEach((item:any,index:number)=>{
+    // console.log('schedule',item);
+    //   element.option.getLegend = (value: number): string => {
+    //     let val = this.getvalue(value)
+    //     console.log(value,val,item.fromTime)
+    //       if (val == item.fromTime) {
+    //         return `<b class="meeting-host">${item.meeting_host}</b>`;
+    //       }
+    //     }
+    // });
+    // });
 
 
 
@@ -94,15 +95,15 @@ export class AvailableTimeSlotComponent implements OnInit {
 
 
 
-    this.common.params.preBookedScheduler.map((item:any)=>{
-    item.option.translate((value:any)=>{
+    this.common.params.preBookedScheduler.map((item: any) => {
+      item.option.translate((value: any) => {
 
+      });
     });
-    });
 
-  for(let item of this.common.params.preBookedScheduler){
+    for (let item of this.common.params.preBookedScheduler) {
 
-  }
+    }
 
 
     this.options.getTickColor = (value: number): string => {
@@ -156,9 +157,9 @@ export class AvailableTimeSlotComponent implements OnInit {
   setMinTime(day) {
     let min = parseInt(moment(day).format("mm"));
 
-    if(min == 0){
+    if (min == 0) {
       return parseInt(moment(day).format("HH"));
-    }else if (min >= 0 && min <= 15) {
+    } else if (min >= 0 && min <= 15) {
       return parseFloat(moment(day).format("HH") + '.25');
     } else if (min > 15 && min <= 30) {
       return parseFloat(moment(day).format("HH") + '.50');
@@ -170,16 +171,16 @@ export class AvailableTimeSlotComponent implements OnInit {
   }
 
 
-getvalue(value){
-let val = JSON.stringify(value).split('.');
-// console.log(val[1]);
-switch(val[1]){
-  case '15': { return val[0] + '.25' } break;
-        case '3': { return val[0] + '.5' } break;
-        case '45': { return val[0] + '.75' } break;
-        default : return (!val[1]) ? `${val[0]}` : `${val[0]}.${val[1]}`;
-}
-}
+  getvalue(value) {
+    let val = JSON.stringify(value).split('.');
+    // console.log(val[1]);
+    switch (val[1]) {
+      case '15': { return val[0] + '.25' } break;
+      case '3': { return val[0] + '.5' } break;
+      case '45': { return val[0] + '.75' } break;
+      default: return (!val[1]) ? `${val[0]}` : `${val[0]}.${val[1]}`;
+    }
+  }
 
   addTime() {
     if (this.type === 'time') {
@@ -234,8 +235,8 @@ switch(val[1]){
   manageIcons(schedule, iconState) {
     this.busySchedules.forEach(ele => {
 
-    ele.detaildIcon = true;
-    ele.option.ticksTooltip = (val: string): string => `Host: ${ele.host}`;
+      ele.detaildIcon = true;
+      ele.option.ticksTooltip = (val: string): string => `Host: ${ele.host}`;
 
       if (ele.userid == schedule.userid) {
         ele.detaildIcon = iconState

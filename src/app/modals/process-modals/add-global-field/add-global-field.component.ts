@@ -41,6 +41,7 @@ export class AddGlobalFieldComponent implements OnInit {
     name: null,
     order:null,
     isFixedValue:false,
+    is_required:false,
     fixValues: [{option: ''}],
     childArray: []
   };
@@ -195,7 +196,7 @@ export class AddGlobalFieldComponent implements OnInit {
       param: this.form.name,
       type: this.form.typeId,
       drpOption: (this.form.isFixedValue) ? this.form.fixValues : null,
-      is_required: false,
+      is_required: this.form.is_required,
       order: this.form.order,
       param_child: childArray
     }

@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate, Rout
 import { Observable } from 'rxjs';
 import { UserService } from '../Service/user/user.service';
 import { CommonService } from '../Service/common/common.service';
+import { ActivityService } from '../Service/Acivity/activity.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class AuthGuard implements CanActivate  {
 
   constructor(public user: UserService,
     public common: CommonService,
-    private router: Router) {
+    private router: Router,
+    public activity:ActivityService) {
   }
 
   canActivate(next: ActivatedRouteSnapshot,
@@ -22,6 +24,7 @@ export class AuthGuard implements CanActivate  {
       this.router.navigate(['/auth/login']);
       return false;
     } else {
+      this.activity.routerDetection(state.url);
       return true;
     }
   }

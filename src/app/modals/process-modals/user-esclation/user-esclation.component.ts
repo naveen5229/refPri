@@ -148,6 +148,10 @@ export class UserEsclationComponent implements OnInit {
   }
 
   saveEsclation() {
+    if(!this.esclationMatrix.userId.id){
+      this.common.showError("User Missing");
+      return;
+    }
     let params = {
       processId: this.esclationMatrix.processID,
       actionId: this.esclationMatrix.actionId,
