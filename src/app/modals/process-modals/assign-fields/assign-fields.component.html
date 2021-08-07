@@ -26,7 +26,7 @@
               [cdkDropListConnectedTo]="[assignLeft,assignRight]" class="drag-list" (cdkDropListDropped)="drop($event)">
               <div class="drag-box " style="background: #D3D3D3;min-height:60px"
                 *ngFor="let item of unassign;index as i" cdkDrag>
-                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control" >
+                <div><input type="text" [(ngModel)]=item.r_coltitle class="form control" disabled = true>
 
                   <div>{{item.r_blockname}}</div>
                 </div>
@@ -61,7 +61,7 @@
 
 
                 <div *ngIf="item" class="required-label">
-                  <input type="checkbox" [(ngModel)]="item.r_required"> <label>is required</label>
+                  <input type="checkbox" [(ngModel)]="item.r_required" disabled = true> <label>is required</label>
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@
                 </div>
 
                 <div *ngIf="item" class="required-label">
-                  <input type="checkbox" [(ngModel)]="item.r_required"> <label>is required</label>
+                  <input type="checkbox" [(ngModel)]="item.r_required" disabled = true> <label>is required</label>
                 </div>
               </div>
             </div>
