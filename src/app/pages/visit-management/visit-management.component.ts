@@ -948,13 +948,16 @@ else if(type == 1) {
       case 'Live':
         const seprateLiveObject = this.travelDistanceData[1];
         const manuplateLive = { dis: seprateLiveObject.disLive, wayPointdata: seprateLiveObject.wayPointdataLive, wayPoints: seprateLiveObject.wayPointsLive };
-        this.distance = this.alltravelDistance[0].dis;
+        let distance1:any  = Math.floor((this.alltravelDistance[0].dis)) / 1000;
+        this.distance = distance1.toFixed(1);
+        console.log('this.distance : ', this.distance );
         this.calcRoadDistance(manuplateLive);
         break;
       case 'Recorded':
         this.calcRoadDistance(this.travelDistanceData[0]);
         let distance:any  = Math.floor((this.alltravelDistance[1].disLive)) / 1000;
-        this.distance = distance.toFixed(2);
+        this.distance = distance.toFixed(1);
+        console.log('this.distance : ', this.distance );
         break;
     }
   }
