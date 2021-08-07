@@ -48,90 +48,96 @@
             </div>
           </form>
 
-          <table class="table table-primary ng-dataTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
-            <thead>
-              <tr>
-                <th>
-                  <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No.
-                    </label>
-                    <input class="form-check-input" [(ngModel)]="alluserselect"
-                      (click)="(!(allUsers && allUsers.length>1) || isAllCheckboxDisable) ? selectAllUser($event) : null"
-                      type="checkbox" value="" id="flexCheckChecked"
-                      [disabled]="!(allUsers && allUsers.length>1) || isAllCheckboxDisable">
-                  </div>
-                </th>
-                <th>Name</th>
-                <th class="date">Date</th>
-                <th>Travel Expense</th>
-                <th>Other Expense</th>
-                <th>Total Expense</th>
-                <th>System Travel (KM)</th>
-                <th>Total Image</th>
-                <th>Status</th>
-                <th>Approvable Expense</th>
-                <th class="action">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of allVisits;let i = index">
-                <td>
-                  <div class="form-check user-check-label d-flex"> <label for=""> {{i+1}} </label> <input
-                      class="form-check-input" [(ngModel)]="item.checked" type="checkbox" value="" id="flexCheckChecked"
-                      (click)="selectUser(i)"
-                      [disabled]="item._user_id==userService.loggedInUser.id || item.is_disable"></div>
-                </td>
-                <td class="name">{{item.name}}</td>
-                <td class="date">{{item.sqdate2}}</td>
-                <td class="date">{{(item.system_expense>0) ? item.system_expense : item.travel_amount}}</td>
-                <td class="date">{{item.other_amount}}</td>
-                <td class="expanse">
-                  <p class="mb-0 text-primary"
-                    (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
-                    [ngbTooltip]="tipContent" container="body" [disableTooltip]="!item.total_expense_actual"> <i
-                      [class]="common.currencyClass"></i>
-                    {{item.total_expense_actual}} </p>
-
-                </td>
-                <td>{{item.total_distance}}</td>
-                <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
-                <td
-                  [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">
-                  {{(item._onside_img) ? item.status : 'N/A'}}</td>
-                <td class="expanse">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="basic-addon1"><i [class]="common.currencyClass"></i></span>
+          <div class="visit-table-container">
+            <span class="distance-indicator">All distances are in kilometer </span>
+            <table class="table table-primary ng-dataTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check user-check-label user-check-label-heading   d-flex"> <label for=""> S. No.
+                      </label>
+                      <input class="form-check-input" [(ngModel)]="alluserselect"
+                        (click)="(!(allUsers && allUsers.length>1) || isAllCheckboxDisable) ? selectAllUser($event) : null"
+                        type="checkbox" value="" id="flexCheckChecked"
+                        [disabled]="!(allUsers && allUsers.length>1) || isAllCheckboxDisable">
                     </div>
-                    <input type="number" class="form-control" style="width: 40%;"
-                      [(ngModel)]="updatedExpenses[i]['total_amount']">
-                  </div>
-                </td>
-                <td class="expance-action">
-                  <div class="action-block">
-                    <div class="d-flex">
-                      <button type="button" class="btn btn-success btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) || item.is_disable"
-                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingleWithConfirm(1,updatedExpenses[i]) : null">
-                        Approve
-                      </button>
+                  </th>
+                  <th>Name</th>
+                  <th class="date">Date</th>
+                  <th>Travel Expense</th>
+                  <th>Other Expense</th>
+                  <th>Total Expense</th>
+                  <th title="syetem travel (KM)">System Travel.</th>
+                  <th title="Actual Travel (KM)">Actual Travel.</th>
+                  <th>Total Image</th>
+                  <th>Status</th>
+                  <th>Approvable Expense</th>
+                  <th class="action">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of allVisits;let i = index">
+                  <td>
+                    <div class="form-check user-check-label d-flex"> <label for=""> {{i+1}} </label> <input
+                        class="form-check-input" [(ngModel)]="item.checked" type="checkbox" value=""
+                        id="flexCheckChecked" (click)="selectUser(i)"
+                        [disabled]="item._user_id==userService.loggedInUser.id || item.is_disable"></div>
+                  </td>
+                  <td class="name">{{item.name}}</td>
+                  <td class="date">{{item.sqdate2}}</td>
+                  <td class="date">{{(item.system_expense>0) ? item.system_expense : item.travel_amount}}</td>
+                  <td class="date">{{item.other_amount}}</td>
+                  <td class="expanse">
+                    <p class="mb-0 text-primary"
+                      (mouseenter)="(item.total_expense_actual>0) ? openExpenseInfoModal(item,$event) : null"
+                      [ngbTooltip]="tipContent" container="body" [disableTooltip]="!item.total_expense_actual"> <i
+                        [class]="common.currencyClass"></i>
+                      {{item.total_expense_actual}} </p>
 
-                      <button type="button" class="btn btn-danger btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) || item.is_disable"
-                        (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingleWithConfirm(-1,updatedExpenses[i]) : null">
-                        Reject
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-sm"
-                        [disabled]="!(item._onside_img && item._onside_img.length)"
-                        (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">
-                        View
-                      </button>
+                  </td>
+                  <td>{{item.total_distance}}</td>
+                  <td>{{item.distanceActual}}</td>
+                  <td>{{(item._onside_img) ? item._onside_img.length : 0}}</td>
+                  <td
+                    [class]="(item.status=='Approved')?'text-success':((item.status=='Rejected' && item._onside_img) ? 'text-danger': '')">
+                    {{(item._onside_img) ? item.status : 'N/A'}}</td>
+                  <td class="expanse">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i [class]="common.currencyClass"></i></span>
+                      </div>
+                      <input type="number" class="form-control" style="width: 40%;"
+                        [(ngModel)]="updatedExpenses[i]['total_amount']">
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
+                  <td class="expance-action">
+                    <div class="action-block">
+                      <div class="d-flex">
+                        <button type="button" class="btn btn-success btn-sm"
+                          [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) || item.is_disable"
+                          (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id) ? saveVerifiedExpenseSingleWithConfirm(1,updatedExpenses[i]) : null">
+                          Approve
+                        </button>
+
+                        <button type="button" class="btn btn-danger btn-sm"
+                          [disabled]="!(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) || item.is_disable"
+                          (click)="(item._onside_img && item._onside_img.length && item._user_id!=userService.loggedInUser.id && updatedExpenses[i]['total_amount']>0) ? saveVerifiedExpenseSingleWithConfirm(-1,updatedExpenses[i]) : null">
+                          Reject
+                        </button>
+
+                        <button type="button" class="btn btn-primary btn-sm"
+                          [disabled]="!(item._onside_img && item._onside_img.length)"
+                          (click)="(item._onside_img && item._onside_img.length) ? viewExpenseDetail(item) : null">
+                          View
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </div>
       <div *ngIf="allVisits && allVisits.length && allUsers && allUsers.length>1" class="row">
@@ -240,8 +246,7 @@
                       (mouseover)="detailImageHandler(i);changeColorUsingLatlng(item,1)"
                       (mouseout)="detailImageZoom = false;changeColorUsingLatlng (item,2)">
                       <a href="javascript:void(0)" class="image-remark-tootlip" [ngbTooltip]="tipContent1"
-                        container="body" placement="bottom"> <i
-                          class="fa fa-info-circle" aria-hidden="true"></i> </a>
+                        container="body" placement="bottom"> <i class="fa fa-info-circle" aria-hidden="true"></i> </a>
 
                       <!-- <a href="javascript:void(0)" class="image-remark-tootlip"> <i class="fa fa-info-circle"
                           aria-hidden="true"></i>
@@ -249,8 +254,8 @@
 
                       <ng-template #tipContent1>
                         <div class="image-remark">
-                         <p> {{item.remark}} </p>
-                       </div>
+                          <p> {{item.remark}} </p>
+                        </div>
                       </ng-template>
 
                       <img class="img-fluid" [src]="item._url" [alt]="item.image">

@@ -482,11 +482,27 @@ smart-table {
 }
 
 
- ::ng-deep {
+::ng-deep {
   .modal-body {
     .task-title {
-          color: #D61414;
-          font-weight: bold;
+      color: #D61414;
+      font-weight: bold;
     }
+  }
+
+  #tableUnreadTaskForMeList {
+    table tr th {
+      &:nth-child(2) {
+        max-width: 125px !important;
+      }
+    }
+  }
+
+  #tableUnreadLeads{
+   table tr th{
+    &:nth-child(5){
+      max-width: 125px !important;
+    }
+   }
   }
 }
