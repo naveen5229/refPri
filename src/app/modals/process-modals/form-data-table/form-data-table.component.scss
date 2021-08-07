@@ -5,3 +5,17 @@
     border: 1px solid $light-7 !important;
     border-bottom: 1px solid $light-7 !important;
 }
+
+
+.add-action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 150px;
+
+  button {
+    padding: 5px 9px;
+    text-align: center;
+  }
+
+}

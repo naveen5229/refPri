@@ -184,6 +184,9 @@ export class KanbanBoardComponent implements OnInit {
       this.common.loading--;
       if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
       let boardData = res['data'] || [];
+      boardData.map(element => {
+        element.data = _.orderBy(element.data,'_transaction_id', 'desc');
+      });
       this.cards = boardData;
       this.cardsForFilter = JSON.parse(JSON.stringify(boardData));
       this.placeCardLength(this.cards);

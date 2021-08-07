@@ -77,16 +77,18 @@ export class AddActivityLogsComponent implements OnInit {
       description: this.activity.desc,
       contactPerson: this.activity.contact,
     };
-    if (this.activity.desc == null) {
+    if (this.activity.desc == null || this.activity.desc.trim() == "") {
       this.common.showError('Enter Description');
-    } else if (!this.activity.refId && this.activity.contact == null) {
+    } else if (!this.activity.refId && this.activity.contact == null || this.activity.contact.trim() == "" || !this.activity.refId && this.activity.contact.trim() == "") {
       this.common.showError('Enter Contact Person');
-    } else if (!this.activity.refId && this.activity.outcome == null) {
+    } else if (!this.activity.refId && this.activity.outcome == null || this.activity.outcome.trim() == "" || !this.activity.refId && this.activity.outcome.trim() == "") {
       this.common.showError('Enter Outcome');
     } else if (this.timeValidity && this.activity.hour > this.oldTime) {
       this.common.showError('Spend Time Can Not Be Increased From The Last Saved Time');
       this.activity.hour = this.oldTime;
-    } else {
+    } else if (this.activity.hour.getHours() == 0 && this.activity.hour.getMinutes() == 0){
+           this.common.showError('Spend Time can not be zero');
+     } else {
       // return console.log('params', params);
       this.common.loading++;
       this.api.post('Admin/saveActivityLogByRefId', params)

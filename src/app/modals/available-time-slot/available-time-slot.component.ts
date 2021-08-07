@@ -54,6 +54,7 @@ export class AvailableTimeSlotComponent implements OnInit {
     option: {},
     schedule: [],
     userid: null,
+
   };
   timeRangeSlotSwitch = [];
   rangePos = 1;
@@ -77,7 +78,7 @@ export class AvailableTimeSlotComponent implements OnInit {
       this.common.params.preBookedScheduler
     );
 
-  
+
 
     let bookedSchedules = [];
     this.common.params.preBookedScheduler.map((schedule) => {

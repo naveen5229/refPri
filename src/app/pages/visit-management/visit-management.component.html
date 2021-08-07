@@ -198,11 +198,20 @@
             <div class="col-block">
               <div class="card">
                 <div class="card-header">
-                  <h5 class="card-title"> location map</h5>
-                  <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()">View
-                    Route</button>
-                  <button class="btn btn-primary btn-sm ml-2" id="routeTypeSwitch"
-                    (click)="switchLatLngHandler()">{{(switchButton=="Live"? 'Actual Route' : 'Ideal Route')}}</button>
+                  <div class="location-title">
+                    <!-- <h5 class="card-title"> location map</h5> -->
+                    <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()"><i
+                        class="fas fa-route mr-2"></i> View
+                      Route </button>
+                    <p class="mb-0"> Distance: <b> {{distance}}km</b></p>
+                  </div>
+
+                  <div class="route-btn">
+                    <button class="btn-sm ml-2" [class]="switchButton == item ? 'btn btn-primary':'btn btn-secondary'"
+                      *ngFor="let item of distancetype" [class.active]="switchButton == item" id="routeTypeSwitch"
+                      (click)="switchLatLngHandler(item)">
+                      {{item == 'Live'? 'Actual Route':'Ideal Route'}}</button>
+                  </div>
                 </div>
                 <div class="card-body">
                   <div class="location-map">
@@ -234,14 +243,15 @@
                         container="body" placement="bottom"> <i
                           class="fa fa-info-circle" aria-hidden="true"></i> </a>
 
-                       <ng-template #tipContent1>
-                       <div class="image-remark">
-                         <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo iusto possimus itaque
-                           repellat
-                           adipisci pariatur quod iure voluptatum facere, provident fugit fugiat, numquam doloremque
-                           architecto eaque eos officia aut aperiam? </p>
+                      <!-- <a href="javascript:void(0)" class="image-remark-tootlip"> <i class="fa fa-info-circle"
+                          aria-hidden="true"></i>
+                      </a> -->
+
+                      <ng-template #tipContent1>
+                        <div class="image-remark">
+                         <p> {{item.remark}} </p>
                        </div>
-                        </ng-template>
+                      </ng-template>
 
                       <img class="img-fluid" [src]="item._url" [alt]="item.image">
                       <div class="actions">
@@ -255,7 +265,7 @@
                           (click)="([-99,-1].includes(item._status) || selectedExpense._user_id==userService.loggedInUser.id) ? null : updateOnsiteImageStatusWithConfirm(-1,item)">
                           Reject
                         </button>
-                        <button class="btn btn-info" (click)="openLink(i,'detail Image')">
+                        <button class="btn btn-info" (click)="openLink(i,0)">
                           View
                         </button>
                         <button class="btn btn-success"
@@ -336,7 +346,7 @@
                     <div class="expense-image" *ngFor="let item of expenseList;index as i"
                       [class.active]="expenseIndex == i" (click)="expenseIndex = i">
                       <button *ngIf="item._url" class="btn image-view" data-toggle="modal" data-target="#image-model"
-                        [disabled]="!item._url" (click)="openLink('detail Image',item._url)">
+                        [disabled]="!item._url" (click)="openLink(i,1)">
                         <i class="fa fa-eye"></i>
                       </button>
 
