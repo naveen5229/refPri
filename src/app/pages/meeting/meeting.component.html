@@ -289,10 +289,25 @@
                 </span> -->
 
                 <span id="editMeeting" title="edit meeting"
-                  *ngIf="meeting._host == loggedInUser && meeting._aduserid == loggedInUser">
+                  *ngIf="meeting._host == loggedInUser && meeting._aduserid == loggedInUser || meeting.host ==
+                  loggedInUser">
                   <i class="fas fa-edit text-info" title="{{meeting._meeting_type == 2 ? 'Edit Todo' : 'Edit Meeting'}}"
                     (click)="editMeeting(meeting, 2, true)"></i>
                 </span>
+
+
+                <span id="chatIcon" title="Chat" class="cursor-pointer" *ngIf="meeting._meeting_type == 2"
+                  (click)="ticketMessage(meeting, 0)">
+                  <i class="fas fa-comments no-comment" *ngIf="meeting._tktid > 0 && !meeting._unreadcount"></i>
+
+                  <div style="display:inline; position: relative;" *ngIf="meeting._unreadcount > 0"><i
+                      class="fas fa-comments text-success new-comment"><span
+                        class="new-comment">{{meeting._unreadcount}}</span></i>
+                  </div>
+
+                  <!-- <i class="fas fa-comments no-comment" *ngIf="meeting._unreadcount == -1"></i> -->
+                </span>
+
 
                 <!--
                       <span id="acceptReject" *ngIf="(meeting._tktype == 110 && meeting._mp_status == 0) || (meeting._status == 0 &&
