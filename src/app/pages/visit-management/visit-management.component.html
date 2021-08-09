@@ -209,7 +209,7 @@
                     <button class="btn btn-primary btn-sm mt-1" id="viewRouteBtn" (click)="viewRoute()"><i
                         class="fas fa-route mr-2"></i> View
                       Route </button>
-                    <p class="mb-0"> Distance: <b> {{distance}}km</b></p>
+                    <p class="mb-0"> Distance: <b> {{distance == 0 ? 0 : distance}}km</b></p>
                   </div>
 
                   <div class="route-btn">
