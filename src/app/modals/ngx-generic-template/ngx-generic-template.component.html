@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h6 style="color: white;" class="modal-title p-1" id="modal-basic-title">{{templateDetails['heading']}}</h6>
+  <div class="text-right">
+    <button type="button" class="close doNotPrint" aria-label="Close" (click)="closeModal(false,-1)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
+<div class="modal-body">
+
+    <div class="row mt-2" *ngFor="let fields of templateVariable">
+
+      <div class="col-lg-4">
+        <label>{{fields['colTitle']}} <label *ngIf="fields['isImp']" style="color: red;">*</label>:-</label>
+      </div>
+
+      <div class="col-lg-8" *ngIf="fields['colType']=='auto'">
+        <auto-suggestion (onSelected)="formVariable[fields['paramName']]=$event" [data]="fields['children']" display="name" placeholder="{{fields['placeholder']}}" inputId="selectRM" name="selectRM">
+        </auto-suggestion>
+      </div>
+      <div class="col-lg-8" *ngIf="fields['colType']=='text'">
+        <input type="text" class="form-control" [(ngModel)]="formVariable[fields['paramName']]" placeholder="{{fields['placeholder']}}">
+      </div>
+      <div class="col-lg-8" *ngIf="fields['colType']=='number'">
+        <input type="number" class="form-control" [(ngModel)]="formVariable[fields['paramName']]" placeholder="{{fields['placeholder']}}">
+      </div>
+      <div class="col-lg-8" *ngIf="fields['colType']=='date'">
+        <uj-date-time-picker [isStart]="true" [isTime]="false" (onChanged)="formVariable[fields['paramName']]=$event" [dateTimeValue]="formVariable[fields['paramName']]">
+        </uj-date-time-picker>
+      </div>
+    </div>
+
+    <div class="row text-right mt-2">
+      <div class="col-12">
+          <button value="Admin Tools" class="btn btn-danger" (click)="closeModal(false,0)">{{templateDetails['button2']}}</button>
+          <button value="Admin Tools" class="btn btn-primary ml-2" (click)="submitForm()">{{templateDetails['button1']}}</button>
+      </div>
+  </div>
+</div>
