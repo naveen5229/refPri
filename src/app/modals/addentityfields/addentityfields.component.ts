@@ -310,7 +310,7 @@ console.log(apiBase, params)
   }
 
   sampleCsv() {
-    window.open(this.api.I_URL + "sample/entitySample.csv");
+    window.open('https://elogist.in/transtruck/partnerdashboard/api/entitySample.csv');
   }
 
 }
