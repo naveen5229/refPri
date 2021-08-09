@@ -1009,6 +1009,7 @@ export class TaskComponent implements OnInit {
   // end unread lead
 
   getTaskByType(type, startDate = null, endDate = null) {
+    console.log("getTaskByType : ",type);
     this.activeSabTab = 0;
     this.todoVisi = false;
     this.common.loading++;
@@ -1871,6 +1872,19 @@ export class TaskComponent implements OnInit {
           txt: "",
           title: "Delete Task",
         });
+        if(ticket.assignedto == this.userService.loggedInUser.name && ticket._tktype == 114){
+          icons.push({
+            class: "fa fa-thumbs-up text-success",
+            action: this.changeTicketStatusWithConfirm.bind(
+              this,
+              ticket,
+              type,
+              5
+            ),
+            txt: "",
+            title: "Mark Completed",
+          });
+        }
       }
       if (ticket._status == 2 && [101, 102].includes(ticket._tktype)) {
         //for hold
@@ -1899,6 +1913,23 @@ export class TaskComponent implements OnInit {
         });
       }
     } else if (type == 101 || type == 103 || type == -102) {
+      if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
+        console.log("Task not acknowledged");
+      icons.push({
+        class: "fa fa-check-square text-warning",
+        action: this.ackTaskByCcUser.bind(this,ticket, type, 1),
+        txt: "",
+        title: "Mark Ack as CC Task",
+      });
+    }
+    if(ticket._status==0 && ticket.ticket_type== "Scheduled"){
+    icons.push({
+      class: "fa fa-check-square text-warning",
+      action: this.updateTicketStatus.bind(this,ticket, type, 2),
+      txt: "",
+      title: "Mark Ack",
+    });
+  }
       if (ticket._status == 5 || ticket._status == -1) {
         if ([104, 111, 112, 113, 114, 115].includes(ticket._tktype) &&
          (ticket._status == -1 || ticket._assigned_user_id != this.userService.loggedInUser.id)) {
@@ -1913,16 +1944,7 @@ export class TaskComponent implements OnInit {
         }
       } else if (ticket._reply_demanded > 0) {
         // no action for reply demanded pending
-      } else  if(ticket._status==0 && ticket.ticket_type== "Broadcast"){
-        console.log("Task not acknowledged");
-      icons.push({
-        class: "fa fa-check-square text-warning",
-        action: this.ackTaskByCcUser(ticket, type),
-        txt: "",
-        title: "Mark Ack as CC Task",
-      });
-    }
-      else if (ticket._status == 2) {
+      } else if (ticket._status == 2) {
         icons.push({
           class: "fa fa-thumbs-up text-success",
           action: this.changeTicketStatusWithConfirm.bind(
@@ -1956,7 +1978,7 @@ export class TaskComponent implements OnInit {
             title: "Mark Rejected",
           });
         }
-      } else if (ticket._status == 0 && ticket.ticket_type!= "Broadcast") {
+      } else if (ticket._status == 0) {
         icons.push({
           class: "fa fa-times text-danger",
           action: this.changeTicketStatusWithConfirm.bind(this, ticket, type, -1),
@@ -2233,6 +2255,7 @@ export class TaskComponent implements OnInit {
   }
 
   updateTicketStatus(ticket, type, status, remark = null) {
+    console.log("updateTicketStatus : ",type);
     if (ticket._tktid) {
       let params = {
         ticketId: ticket._tktid,
@@ -2292,6 +2315,9 @@ export class TaskComponent implements OnInit {
   }
 
   changeTicketStatusWithConfirm(ticket, type, status) {
+  console.log('status: ', status);
+  console.log('type,: ', type,);
+  console.log('ticket: ', ticket);
     let stat : any;
     let up_time: any;
     console.log(status, 'status');
@@ -2314,9 +2340,11 @@ export class TaskComponent implements OnInit {
 // }
 //  else{
     if (ticket._refid) {
-      let preTitle = "Complete";
+      let preTitle = `complete`;
+      let taskTitle = `<span class="task-title"> ${ticket.task_subject}</span> Task`;
       if (!status) {
         preTitle = "Re-Active";
+
       } else if (status === -1) {
         preTitle = "Reject";
       } else if (status == 3) {
@@ -2327,7 +2355,7 @@ export class TaskComponent implements OnInit {
       this.common.params = {
         title: preTitle + " Task ",
         description:
-          `<b>&nbsp;` + "Are You Sure To " + preTitle + " This Task" + `<b>`,
+          `<b>Are You Sure You Want To  ${preTitle} ${taskTitle} </b>`,
         isRemark: status == 3 ? true : false,
       };
       const activeModal = this.modalService.open(ConfirmComponent, {
@@ -2734,7 +2762,7 @@ export class TaskComponent implements OnInit {
             if(ticket.status == 0){
               ticket.status = 2;
             }
-            if (status == -1) this.getTaskByType(type);
+            if (status == -1 || status==1 && ticket._tktype == 114) this.getTaskByType(type);
           } else {
             this.common.showError(res["data"]);
           }
@@ -3083,7 +3111,7 @@ export class TaskComponent implements OnInit {
               this.openSearchTaskModal();
               this.setTableSearchTaskList();
             } else {
-              this.common.showToast("No data found");
+              this.common.showError("No data found");
             }
           } else {
             this.common.showError(res["msg"]);

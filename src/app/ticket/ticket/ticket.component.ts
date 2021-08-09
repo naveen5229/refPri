@@ -452,9 +452,6 @@ arr[0].map((item:any)=>{
   item.param_value = null;
   item.entity_value = null;
 });
-
-
-
 };
 arr.length > 1 ? arr.splice(index,1):remove();
 
@@ -1302,7 +1299,7 @@ arr.length > 1 ? arr.splice(index,1):remove();
 
   AdditionalFormNew(data) {
     console.log('final data:',data);
-    this.common.params = { additionalform: (data.length > 0) ? data : null,isDisabled:true };
+    this.common.params = { additionalform: (data.length > 0) ? data : null,isDisabled:false };
     const activeModal = this.modalService.open(FormDataTableComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
   }
 

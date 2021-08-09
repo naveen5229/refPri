@@ -70,7 +70,7 @@
             <label>Hours<span class="text-danger">*</span></label>
         </div>
         <div class="col-7">
-            <input style="width: 100%;" type="number" id="hours" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours" min=0 oninput="validity.valid||(value=0);">
+            <input style="width: 100%;" type="number" id="hours" maxlength="2" placeholder="Hours" class="form-control" [(ngModel)]="scheduledTask.hours" min=0 max=24 oninput="validity.valid||(value=0);">
         </div>
     </div>
     <div class="row mb-2">

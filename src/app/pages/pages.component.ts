@@ -18,13 +18,11 @@ export class PagesComponent {
 
   constructor(public menuService: NbMenuService,
     public user: UserService) {
-    console.log("Ritika     "+user._menu);
   }
 
   ngAfterViewInit() {
     document.getElementsByTagName('nb-sidebar')[0]['onclick'] = event => {
       let srcElement = event.srcElement;
-      console.log("Ritika     "+event.srcElement);
       if (srcElement.className === 'menu-title' && srcElement.tagName === 'SPAN') {
         this.jrxLogin(srcElement.parentElement.text);
       }

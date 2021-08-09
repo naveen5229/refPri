@@ -91,6 +91,7 @@
 }
 
 :host ::ng-deep {
+
   .fa,
   .fas {
     font-size: 18px;
@@ -252,32 +253,39 @@ smart-table {
     justify-content: space-around;
     height: 320px;
   }
+
   .fhide {
     opacity: 0;
     height: 0;
     transition: opacity 0.9s;
+
     button {
       display: none;
 
       transition: display 0.9s;
     }
   }
+
   .fshow {
     opacity: 1;
     height: 320px;
     transition: opacity 0.9s;
+
     button {
       display: block;
       transition: display 0.9s;
     }
   }
 }
+
 .outerbtn {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+
   .noticon {
     position: relative;
+
     .count {
       width: 26px;
       height: 26px;
@@ -293,22 +301,26 @@ smart-table {
       color: #fff;
       font-size: 12px;
     }
+
     .allicons {
       img {
         width: 18px;
       }
+
       .fab {
         font-size: 18px;
       }
     }
   }
 }
+
 .blink {
   border-radius: 50%;
   width: 80px;
   height: 80px;
   opacity: 0.25;
 }
+
 .orange {
   background-color: orange;
   border: orange;
@@ -317,19 +329,23 @@ smart-table {
   -o-animation: up-right 1s infinite;
   animation: up-right 1s infinite;
 }
+
 .green {
   background-color: green;
   border: green;
 }
+
 @keyframes up-right {
   0% {
     transform: scale(1);
     opacity: 0.25;
   }
+
   50% {
     transform: scale (1, 5);
     opacity: 1;
   }
+
   100% {
     transform: scale(1);
     opacity: 0.25;
@@ -341,6 +357,7 @@ smart-table {
   position: absolute;
   right: 15px;
   bottom: 0px;
+
   .todobtns {
     button {
       border: 0;
@@ -348,6 +365,7 @@ smart-table {
       color: #fff;
       border-radius: 3px;
     }
+
     button:focus {
       outline: 0;
     }
@@ -379,9 +397,11 @@ smart-table {
         text-align: end;
       }
     }
+
     .todoouter {
       overflow: auto;
       height: 90%;
+
       .todolist {
         text-align: center;
         background: #fff;
@@ -391,6 +411,7 @@ smart-table {
         display: flex;
       }
     }
+
     .todoTitle {
       width: 78%;
       text-align: left;
@@ -405,6 +426,7 @@ smart-table {
       text-align: center;
       border-left: 1px solid #3366ff;
       padding: 5px 0px;
+
       button {
         border-radius: 40px;
         border: 0;
@@ -413,10 +435,12 @@ smart-table {
         width: 30px;
         height: 30px;
         transition: 0.1s;
+
         i {
           font-size: 12px;
         }
       }
+
       button:hover {
         background-color: #e4f0fe;
         border-radius: 40px;
@@ -424,6 +448,7 @@ smart-table {
         height: 30px;
         transition: 0.1s;
       }
+
       button:focus {
         outline: 0;
       }
@@ -437,6 +462,7 @@ smart-table {
       color: white;
       height: 38px;
       border-radius: 15px;
+
       // border-bottom-left-radius: 0;
       // border-bottom-right-radius: 0;
       // padding: 0 20px;
@@ -448,8 +474,35 @@ smart-table {
         font-weight: 600;
       }
     }
+
     .todoHeading:hover {
       cursor: pointer;
     }
+  }
+}
+
+
+::ng-deep {
+  .modal-body {
+    .task-title {
+      color: #D61414;
+      font-weight: bold;
+    }
+  }
+
+  #tableUnreadTaskForMeList {
+    table tr th {
+      &:nth-child(2) {
+        max-width: 125px !important;
+      }
+    }
+  }
+
+  #tableUnreadLeads{
+   table tr th{
+    &:nth-child(5){
+      max-width: 125px !important;
+    }
+   }
   }
 }

@@ -4,6 +4,7 @@ import { UserService } from '../../Service/user/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../Service/common/common.service';
 import { MessagingService } from '../../Service/messaging.service';
+import { ActivityService } from '../../Service/Acivity/activity.service';
 
 @Component({
   selector: 'ngx-login',
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     public common: CommonService,
     public user: UserService,
+    public activity:ActivityService,
     public messageService: MessagingService) {
   }
 
@@ -36,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.route.params.subscribe(params => {
       console.log(params);
       if (params.type && (params.type.toLowerCase() == 'admin')) {
-        this.button = 'Generate Qr-Code';
+        this.button = 'Generate QR-Code';
         this.user._loggedInBy = params.type.toLowerCase();
       } else if (params.type) {
         this.router.navigate(['/auth/login']);
@@ -187,8 +189,12 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem('LANDING_PAGE','pages/task' );
               }
             });
+            this.activity.heartbeat();
+            this.activity.activityHandler("login");
           }else{
             localStorage.setItem('LANDING_PAGE','pages/task' );
+            this.activity.heartbeat();
+            this.activity.activityHandler("login");
           }
 
           this.user._details = res['data'][0];

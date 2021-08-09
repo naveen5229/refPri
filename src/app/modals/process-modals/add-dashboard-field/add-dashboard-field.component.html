@@ -14,7 +14,8 @@
         <div class="col-3">
             <label>Field Types<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.type" (change)="onSelectType()">
-                <option *ngFor="let o of typeList;" [value]="o.id" class="form-control">{{o.name}}</option>
+                <option value="null" disabled>Select a Value</option>
+                <option *ngFor="let o of typeList;" [value]="o.id">{{o.name}}</option>
             </select>
         </div>
         <div class="col-3" *ngIf="!fromPage">
@@ -27,14 +28,14 @@
             <label>Reference Type<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.stateActionId" #selectList (change)="setSubType(selectList.value)">
                 <option value="null" disabled>Select a Value</option>
-                <option *ngFor="let s of stateOrActionList;" value="{{ s | json }}" class="form-control">{{s.title}}</option>
+                <option *ngFor="let s of stateOrActionList;" value="{{ s | json }}">{{s.title}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Select Field<span class="text-danger">*</span></label>
             <select class="form-control" [(ngModel)]="form.infoId" (change)="onSelectField(selectField.value)" #selectField>
                 <option value="null" disabled>Select a Value</option>
-                <option *ngFor="let s of fieldDataList;" value="{{ s | json }}" class="form-control">{{s.name}}</option>
+                <option *ngFor="let s of fieldDataList;" value="{{ s | json }}">{{s.name}}</option>
             </select>
         </div>
         <div class="col-3">

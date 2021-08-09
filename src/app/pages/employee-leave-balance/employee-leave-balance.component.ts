@@ -357,7 +357,7 @@ export class EmployeeLeaveBalanceComponent implements OnInit {
   }
 
   sampleCsv() {
-    window.open(this.api.I_URL + "sample/employeeLeaveBalnceCsvSample.csv");
+    window.open("https://elogist.in/transtruck/partnerdashboard/api/eemployeeLeaveBalnceCsvSample.csv");
   }
 
 

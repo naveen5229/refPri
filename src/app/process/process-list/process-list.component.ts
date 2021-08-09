@@ -141,7 +141,10 @@ export class ProcessListComponent implements OnInit {
             action: null,
             icons: this.actionIcons(process)
           };
-        } else {
+        }else if(key.toLowerCase() == 'ack_to_aduser') {
+          column[key] = { value: ""+process[key], class: 'black', action: '' };
+        }
+         else {
           column[key] = { value: process[key], class: 'black', action: '' };
         }
       }

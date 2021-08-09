@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../../Service/Api/api.service';
 import { UserService } from '../../../Service/user/user.service';
 import { CommonService } from '../../../Service/common/common.service';
+import { ActivityService } from '../../../Service/Acivity/activity.service';
 
 
 @Component({
@@ -55,6 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private api: ApiService,
     public userService: UserService,
     public common: CommonService,
+    public activity:ActivityService,
     private breakpointService: NbMediaBreakpointsService) {
     if (this.userService._details == null) {
       this.router.navigate(['/auth/login']);
@@ -135,6 +137,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.userService.reset();
             this.userService.clearStorage();
             this.common.showToast(res['msg']);
+            this.activity.activityHandler('logout');
             if (loggedInBy == 'customer') {
               this.router.navigate(['/auth/login']);
             } else {
