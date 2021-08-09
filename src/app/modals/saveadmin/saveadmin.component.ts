@@ -281,12 +281,17 @@ export class SaveadminComponent implements OnInit {
         return this.common.showError("Date of joining must not be future date");
       } else if (this.isOtherShow && (!this.Fouser.attenMedium || this.Fouser.attenMedium == '000')) {
         return this.common.showError("Attendance medium is missing");
-      } else if (params.id > 0 && !params.isActive && !params.dol) {
-        return this.common.showError("Date of leaving is missing");
+      } else if (params.id > 0 && !params.isActive) {
+        //  && !params.dol
+        if (!params.dol) {
+          return this.common.showError("Date of leaving is missing");
+        }else{
+          this.assignWorkLoad(this.Fouser.id, params);
+        }
       }
       else {
         // return false;
-        this.assignWorkLoad(this.Fouser.id, params);
+        this.saveAdminConfirm(params);
       }
 
     } else if (this.user._loggedInBy == 'customer') {
@@ -540,7 +545,7 @@ export class SaveadminComponent implements OnInit {
     };
     let templateDetails = {
       heading: 'Assign Reporting Manager',
-      button1: 'Next',
+      button1: 'Save',
       button2: 'Cancel'
     }
     const activeModal = this.modalService.open(NgxGenericTemplateComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
@@ -599,7 +604,7 @@ export class SaveadminComponent implements OnInit {
       if (data.res) {
         this.updateWorkload(data.params, paramsForSaveAdmin)
       } else {
-        if(data.apiHit == 0){
+        if (data.apiHit == 0) {
           this.saveAdminConfirm(paramsForSaveAdmin);
         }
       }
