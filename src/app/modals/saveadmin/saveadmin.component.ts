@@ -8,6 +8,8 @@ import { LocationSelectionComponent } from '../location-selection/location-selec
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { MapService } from '../../Service/map/map.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { param } from 'jquery';
+import { NgxGenericTemplateComponent } from '../ngx-generic-template/ngx-generic-template.component';
 
 @Component({
   selector: 'saveadmin',
@@ -15,6 +17,7 @@ import { ConfirmComponent } from '../confirm/confirm.component';
   styleUrls: ['./saveadmin.component.scss']
 })
 export class SaveadminComponent implements OnInit {
+  adminList = [];
   rowId = null;
   isOtherShow = false;
   isUpdate = false;
@@ -101,6 +104,7 @@ export class SaveadminComponent implements OnInit {
     this.getDepartments();
     if (this.common.params && this.common.params.title == 'Edit Admin') {
       console.log(this.common.params.activeAdminDetail);
+      this.adminList = this.common.params.adminList;
       this.activeAdminDetails = this.common.params.activeAdminDetail;
       this.Fouser.id = this.activeAdminDetails['id'];
       this.Fouser.name = this.activeAdminDetails['name'];
@@ -282,34 +286,9 @@ export class SaveadminComponent implements OnInit {
       }
       else {
         // return false;
-        this.common.loading++;
-        this.api.post('Admin/save', params)
-          .subscribe(res => {
-            this.common.loading--;
-            this.data = res['data']
-            if (res['code'] == 1) {
-              if (this.data[0]['y_id'] <= 0) {
-                this.common.showError(this.data[0]['y_msg']);
-              } else {
-                if (!this.isOtherShow && !this.Fouser.id) {
-                  this.Fouser.id = this.data[0]['y_id'];
-                  this.Fouser.isActive = 'true';
-                }
-                this.common.showToast(this.data[0]['y_msg']);
-                this.isOtherShow = !this.isOtherShow;
-                if (!this.isOtherShow || this.Fouser.isActive == 'false') {
-                  this.closeModal(true);
-                }
-              }
-            } else {
-              this.common.showError(res['msg']);
-            }
-          }, err => {
-            this.common.loading--;
-            console.error(err);
-            this.common.showError();
-          });
+        this.assignWorkLoad(this.Fouser.id, params);
       }
+
     } else if (this.user._loggedInBy == 'customer') {
       let params = {
         foadminuserId: null,
@@ -409,6 +388,38 @@ export class SaveadminComponent implements OnInit {
     }
   }
 
+  saveAdminConfirm(params) {
+    // return console.log('inside save admin confirm');
+    this.common.loading++;
+    this.api.post('Admin/save', params)
+      .subscribe(res => {
+        this.common.loading--;
+        this.data = res['data']
+        if (res['code'] == 1) {
+          if (this.data[0]['y_id'] <= 0) {
+            this.common.showError(this.data[0]['y_msg']);
+          } else {
+            if (!this.isOtherShow && !this.Fouser.id) {
+              this.Fouser.id = this.data[0]['y_id'];
+              this.Fouser.isActive = 'true';
+            }
+            this.common.showToast(this.data[0]['y_msg']);
+            this.isOtherShow = !this.isOtherShow;
+            if (!this.isOtherShow || this.Fouser.isActive == 'false') {
+              this.closeModal(true);
+            }
+          }
+        } else {
+          this.common.showError(res['msg']);
+        }
+      }, err => {
+        this.common.loading--;
+        console.error(err);
+        this.common.showError();
+      });
+  }
+
+
   onNext() {
     this.isOtherShow = true;
   }
@@ -497,7 +508,7 @@ export class SaveadminComponent implements OnInit {
       this.common.loading--;
       if (res['code'] > 0) {
         if (res['data'] && res['data'].length > 0) {
-          this.openConfirmBox();
+          this.assignRM(res['data'], this.Fouser.id);
         }
       };
     }, err => {
@@ -515,6 +526,103 @@ export class SaveadminComponent implements OnInit {
     const activeModal = this.modalService.open(ConfirmComponent, { size: 'sm', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
     activeModal.result.then(data => {
       this.Fouser.isActive = 'true';
+    });
+  }
+
+  assignRM(users, oldRmId) {
+    let modalBody = [
+      { colTitle: 'Select RM', colType: 'auto', isImp: true, paramName: 'newRmId', placeholder: 'Select Reporting Manager', children: this.adminList }
+    ];
+    let params = {
+      newRmId: null,
+      oldRmId: oldRmId,
+      // reportingUsers: [].concat(users.map(ele => { return ele.id })),
+    };
+    let templateDetails = {
+      heading: 'Assign Reporting Manager',
+      button1: 'Next',
+      button2: 'Cancel'
+    }
+    const activeModal = this.modalService.open(NgxGenericTemplateComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.componentInstance.templateVariable = modalBody;
+    activeModal.componentInstance.templateDetails = templateDetails;
+    activeModal.componentInstance.formVariable = params;
+    activeModal.result.then(data => {
+      if (data.res) {
+        this.Fouser.isActive = 'false';
+        this.updateRM(data.params);
+        // this.assignWorkLoad();
+      } else {
+        this.Fouser.isActive = 'true';
+      }
+    });
+    console.log(modalBody, params, templateDetails)
+  }
+
+  updateRM(params) {
+    let paramsUpdate = {
+      newUserId: params.newRmId.id,
+      oldUserId: params.oldRmId
+    };
+    // return console.log('From Update RM',paramsUpdate,params);
+    this.common.loading++;
+    this.api.post('Admin/changeRM', paramsUpdate).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+      this.common.showToast(res['msg']);
+      // this.assignWorkLoad(params.oldRmId);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
+    });
+  }
+
+  assignWorkLoad(oldRmId, paramsForSaveAdmin) {
+    let modalBody = [
+      { colTitle: 'Assign WorkLoad', colType: 'auto', isImp: true, paramName: 'newUserId', children: this.adminList }
+    ];
+    let params = {
+      oldUserId: oldRmId,
+      newUserId: null
+    };
+    let templateDetails = {
+      heading: 'Assign Workload',
+      button1: 'Save',
+      button2: 'Skip'
+    }
+    const activeModal = this.modalService.open(NgxGenericTemplateComponent, { size: 'md', container: 'nb-layout', backdrop: 'static', keyboard: false, windowClass: "accountModalClass" });
+    activeModal.componentInstance.templateVariable = modalBody;
+    activeModal.componentInstance.templateDetails = templateDetails;
+    activeModal.componentInstance.formVariable = params;
+    activeModal.result.then(data => {
+      if (data.res) {
+        this.updateWorkload(data.params, paramsForSaveAdmin)
+      } else {
+        if(data.apiHit == 0){
+          this.saveAdminConfirm(paramsForSaveAdmin);
+        }
+      }
+    });
+  }
+
+  updateWorkload(params, paramsForSaveAdmin) {
+    let paramsUpdate = {
+      newUserId: params.newUserId.id,
+      oldUserId: params.oldUserId
+    };
+    // return console.log('From Update Workload',paramsUpdate,params);
+    this.common.loading++;
+    this.api.post('Admin/transferWork', paramsUpdate).subscribe(res => {
+      this.common.loading--;
+      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
+      this.saveAdminConfirm(paramsForSaveAdmin);
+      this.common.showToast(res['msg']);
+      // this.assignWorkLoad(oldRmId);
+    }, err => {
+      this.common.loading--;
+      this.common.showError();
+      console.log(err);
     });
   }
 }
