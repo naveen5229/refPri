@@ -29,6 +29,12 @@
                                 [attr.isNotBind]="fixValue.isNonBind">
                                 {{fixValue.option}}</option>
                         </select>
+
+                          <input type="checkbox" *ngIf="td.param_type == 'checkbox'" class="form-control checkbox"
+                            [(ngModel)]="td.param_value">
+
+                          <input type="text" type="file" *ngIf="td.param_type == 'attachment'" class="form-control">
+
                         <input type="text" *ngIf="td.param_info && td.isNotBindFixedvalue" class="form-control"
                             placeholder="Enter value" [(ngModel)]="td.notBindFixedvalue">
                         <auto-suggestion *ngIf="td.param_type =='entity'" [data]="td.param_info" display="option"
