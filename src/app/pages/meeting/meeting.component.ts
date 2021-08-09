@@ -802,12 +802,10 @@ this.meetingData.upcomingData.splice(index,1);
         let schedules = [];
         if (res['data'] != null){
           res['data'].map(events => {
-           let div =  document.createElement('div');
-           div.innerHTML = events.meeting_host
-            schedules.push({
+              schedules.push({
               start: events.meeting_time,
               end: events.meeting_end_time,
-              title: `${events.title},Host:${div}`,
+              title: `${events.title},Host:${events.meeting_host}`,
               color: events.m_type == 2 ? 'rgb(212 135 127)' : 'rgb(133 196 204)',
               description: events.title
              })
