@@ -127,7 +127,7 @@ export class AdminToolComponent implements OnInit {
   }
 
   editActiveAdmin(activeAdmin) {
-    this.common.params = { activeAdminDetail: activeAdmin, title: "Edit Admin", button: "Update" };
+    this.common.params = { activeAdminDetail: activeAdmin, title: "Edit Admin", button: "Update",adminList:this.activeAdminUserList };
     const activeModal = this.modalService.open(SaveadminComponent, { size: 'lg', container: 'nb-layout', backdrop: 'static' });
     activeModal.result.then(data => {
       console.log(data);

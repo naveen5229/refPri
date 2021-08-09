@@ -143,6 +143,7 @@ import { ModalContainerComponent } from './modals/modal-container/modal-containe
 import { GeneralModalComponent } from './modals/general-modal/general-modal.component';
 import { AddEmailTemplateComponent } from './modals/add-email-template/add-email-template.component';
 import { CKEditorModule } from 'ckeditor4-angular';
+import { NgxGenericTemplateComponent } from './modals/ngx-generic-template/ngx-generic-template.component';
 
 
 const PAGE_COMPONENTS = [
@@ -244,7 +245,8 @@ const PAGE_COMPONENTS = [
   ModalContainerComponent,
   ApplyWFHComponent,
   GeneralModalComponent,
-  AddEmailTemplateComponent
+  AddEmailTemplateComponent,
+  NgxGenericTemplateComponent
  ];
 
 @NgModule({

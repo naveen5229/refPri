@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
+  // I_URL: string = 'http://192.168.0.25/itrm_webservices/';
+
   I_URL: string = 'https://dev.elogist.in/itrm_webservices/';
   B_URL: string = 'https://dev.elogist.in/booster_webservices/';
   T_URL: string = 'https://dev.elogist.in/transtrucknew/';
