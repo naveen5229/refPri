@@ -285,7 +285,7 @@ export class SaveadminComponent implements OnInit {
         //  && !params.dol
         if (!params.dol) {
           return this.common.showError("Date of leaving is missing");
-        }else{
+        } else {
           this.assignWorkLoad(this.Fouser.id, params);
         }
       }
@@ -620,9 +620,19 @@ export class SaveadminComponent implements OnInit {
     this.common.loading++;
     this.api.post('Admin/transferWork', paramsUpdate).subscribe(res => {
       this.common.loading--;
-      if (res['code'] === 0) { this.common.showError(res['msg']); return false; };
-      this.saveAdminConfirm(paramsForSaveAdmin);
-      this.common.showToast(res['msg']);
+      if (res['code'] == 1) {
+        if (this.data[0]['y_id'] <= 0) {
+          this.common.showError(this.data[0]['y_msg']);
+        } else {
+          this.saveAdminConfirm(paramsForSaveAdmin);
+        }
+      } else {
+        this.common.showError(res['msg']);
+      }
+      // if (res['code'] === 0) { 
+      //   this.common.showError(res['msg']); return false; };
+      // this.saveAdminConfirm(paramsForSaveAdmin);
+      // this.common.showToast(res['msg']);
       // this.assignWorkLoad(oldRmId);
     }, err => {
       this.common.loading--;
